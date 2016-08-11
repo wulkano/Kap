@@ -1,0 +1,33 @@
+{
+  "name": "focus",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "xo",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodeTheory/focus.git"
+  },
+  "author": "Matheus Fernandes <npm@matheus.top> (https://matheus.top/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CodeTheory/focus-core/issues"
+  },
+  "homepage": "https://github.com/CodeTheory/focus-core#readme",
+  "dependencies": {
+    "electron": "^1.3.3"
+  },
+  "devDependencies": {
+    "xo": "^0.16.0"
+  },
+  "xo": {
+    "esnext": true,
+    "envs": [
+      "node",
+      "browser"
+    ]
+  }
+}
