@@ -1,5 +1,5 @@
 const {app, BrowserWindow, ipcMain} = require('electron');
-const focusCore = require('../aperture').main;
+const aperture = require('../aperture').main;
 
 let win;
 
@@ -19,7 +19,7 @@ function createWindow() {
 		event.sender.send('start-capturing', Date.now());
 	});
 
-	focusCore.init(app, win);
+	aperture.init(app, win);
 }
 
 app.on('ready', createWindow);
