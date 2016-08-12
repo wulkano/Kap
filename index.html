@@ -5,16 +5,42 @@
     <title>Hello World!</title>
   </head>
   <body>
-    <h1>Hello World!</h1>
-    We are using node <script>document.write(process.versions.node)</script>,
-    Chrome <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
-
-    <video autoplay="true"></video>
+    <a id="start" href="#">Start</a>
+    <a id="stop" href="#">Stop and save</a>
+    <a id="toggle" href="#">Toggle thumbnail size</a><br>
+    <video id="thumbnail" width="500px" autoplay="true"></video>
   </body>
   <script>
-    const focusCore = require('../aperture').renderer;
+    const aperture = require('../aperture').renderer;
 
-    focusCore.init();
+    aperture.init();
+
+    const thumbnail = document.querySelector('#thumbnail');
+    document.querySelector('#start').onclick = () => {
+      aperture.startRecording().then(url => {
+        thumbnail.src = url;
+      })
+    };
+
+    document.querySelector('#stop').onclick = () => {
+      const url = aperture.stopRecording();
+
+      var a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = `Screen record ${Date()}.webm`;
+      document.body.appendChild(a);
+      a.click();
+    };
+
+    document.querySelector('#toggle').onclick = () => {
+      if (thumbnail.width === 500) {
+        console.log('here');
+        thumbnail.removeAttribute('width');
+      } else {
+        console.log('here2');
+        thumbnail.width = '500';
+      }
+    };
   </script>
 </html>
