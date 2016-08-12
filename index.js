@@ -18,11 +18,12 @@ function createWindow() {
 		console.log(arg);
 		event.sender.send('start-capturing', Date.now());
 	});
-
-	aperture.init(app, win);
 }
 
-app.on('ready', createWindow);
+app.on('ready', () => {
+	aperture.init();
+	createWindow();
+});
 
 app.on('window-all-closed', () => {
 	if (process.platform !== 'darwin') {
