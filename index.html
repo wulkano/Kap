@@ -7,9 +7,6 @@
   <body>
     <a id="start" href="#">Start</a>
     <a id="stop" href="#">Stop and save</a>
-    <a id="toggle" href="#">Toggle thumbnail size</a>
-    <div id="stats" style="float: right; color: red;"></div><br>
-    <video id="thumbnail" width="500px" autoplay="true"></video>
   </body>
   <script>
     const aperture = require('../aperture').renderer;
@@ -17,32 +14,8 @@
     aperture.init();
 
     const thumbnail = document.querySelector('#thumbnail');
-    document.querySelector('#start').onclick = () => {
-      aperture.startRecording().then(url => {
-        aperture.debugStream(thumbnail, document.querySelector('#stats'));
-        thumbnail.src = url;
-      })
-    };
+    document.querySelector('#start').onclick = () => {};
 
-    document.querySelector('#stop').onclick = () => {
-      const url = aperture.stopRecording();
-
-      var a = document.createElement('a');
-      a.style.display = 'none';
-      a.href = url;
-      a.download = `Screen record ${Date()}.webm`;
-      document.body.appendChild(a);
-      a.click();
-    };
-
-    document.querySelector('#toggle').onclick = () => {
-      if (thumbnail.width === 500) {
-        console.log('here');
-        thumbnail.removeAttribute('width');
-      } else {
-        console.log('here2');
-        thumbnail.width = '500';
-      }
-    };
+    document.querySelector('#stop').onclick = () => {};
   </script>
 </html>
