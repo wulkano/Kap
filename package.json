@@ -18,7 +18,8 @@
   },
   "homepage": "https://github.com/CodeTheory/focus-core#readme",
   "dependencies": {
-    "electron": "^1.3.3"
+    "electron": "^1.3.3",
+    "electron-rebuild": "^1.2.0"
   },
   "devDependencies": {
     "xo": "^0.16.0"

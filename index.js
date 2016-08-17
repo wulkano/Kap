@@ -1,5 +1,5 @@
 const {app, BrowserWindow, ipcMain} = require('electron');
-const aperture = require('../aperture').main;
+const aperture = require('../aperture').main();
 
 let win;
 
@@ -14,14 +14,23 @@ function createWindow() {
 		win = null;
 	});
 
-	ipcMain.on('renderer-ready', (event, arg) => {
-		console.log(arg);
-		event.sender.send('start-capturing', Date.now());
+	ipcMain.on('start-recording', event => {
+		aperture.startRecording()
+			.then(() => console.log('started recording'))
+			.catch(console.error);
+
+		event.sender.send('started-recording', Date.now());
+	});
+
+	ipcMain.on('stop-recording', () => {
+		console.log('ipc#stop-rec');
+		aperture.stopRecording({destinationPath: '/Users/matheus/Desktop/test.mov'})
+			.then(console.log)
+			.catch(console.error);
 	});
 }
 
 app.on('ready', () => {
-	aperture.init();
 	createWindow();
 });
 

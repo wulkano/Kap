@@ -9,13 +9,21 @@
     <a id="stop" href="#">Stop and save</a>
   </body>
   <script>
-    const aperture = require('../aperture').renderer;
-
-    aperture.init();
+    const {ipcRenderer} = require('electron');
 
     const thumbnail = document.querySelector('#thumbnail');
-    document.querySelector('#start').onclick = () => {};
+    document.querySelector('#start').onclick = () => {
+      let time;
+      ipcRenderer.on('started-recording', (event, when) => {
+        console.log(`Started recording after ${(when - time) / 1000}s`);
+      });
 
-    document.querySelector('#stop').onclick = () => {};
+      time = Date.now();
+      ipcRenderer.send('start-recording');
+    };
+
+    document.querySelector('#stop').onclick = () => {
+      ipcRenderer.send('stop-recording');
+    };
   </script>
 </html>
