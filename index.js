@@ -1,3 +1,6 @@
+const {homedir} = require('os');
+const path = require('path');
+
 const {app, BrowserWindow, ipcMain} = require('electron');
 const aperture = require('aperture.js')();
 
@@ -24,7 +27,7 @@ function createWindow() {
 
 	ipcMain.on('stop-recording', () => {
 		console.log('ipc#stop-rec');
-		aperture.stopRecording({destinationPath: '/Users/matheus/Desktop/test.mov'})
+		aperture.stopRecording({destinationPath: path.join(homedir(), 'Desktop', 'test.mov')})
 			.then(console.log)
 			.catch(console.error);
 	});
