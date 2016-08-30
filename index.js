@@ -1,5 +1,5 @@
 const {app, BrowserWindow, ipcMain} = require('electron');
-const aperture = require('../aperture').main();
+const aperture = require('aperture.js')();
 
 let win;
 

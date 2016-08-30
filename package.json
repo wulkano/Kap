@@ -7,7 +7,7 @@
   "scripts": {
     "test": "xo",
     "start": "electron .",
-    "postinstall": "./node_modules/.bin/electron-rebuild -e ./node_modules/electron -m ../aperture/node_modules"
+    "postinstall": "./node_modules/.bin/electron-rebuild -e ./node_modules/electron"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/CodeTheory/focus-core#readme",
   "dependencies": {
+    "aperture.js": "0.0.0",
     "electron": "^1.3.3",
     "electron-rebuild": "^1.2.0"
   },
