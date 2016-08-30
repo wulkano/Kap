@@ -16,7 +16,7 @@ function createWindow() {
 
 	ipcMain.on('start-recording', event => {
 		aperture.startRecording()
-			.then(() => console.log('started recording'))
+			.then(() => console.log('started recording', aperture.path))
 			.catch(console.error);
 
 		event.sender.send('started-recording', Date.now());
