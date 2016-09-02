@@ -1,8 +1,4 @@
-const {homedir} = require('os');
-const path = require('path');
-
-const {app, BrowserWindow, ipcMain} = require('electron');
-const aperture = require('aperture.js')();
+const {app, BrowserWindow} = require('electron');
 
 let win;
 
@@ -15,23 +11,6 @@ function createWindow() {
 
 	win.on('closed', () => {
 		win = null;
-	});
-
-	ipcMain.on('start-recording', event => {
-		aperture.startRecording()
-			.then(() => {
-				event.sender.send('started-recording', Date.now());
-			})
-			.catch(console.error);
-	});
-
-	ipcMain.on('stop-recording', event => {
-		console.log('ipc#stop-rec');
-		aperture.stopRecording()
-			.then(filePath => {
-				event.sender.send('stopped-recording', filePath);
-			})
-			.catch(console.error);
 	});
 }
 

@@ -1,13 +1,13 @@
-const {ipcRenderer} = require('electron');
+const aperture = require('aperture.js')();
 
 function startRecording() {
-	let time;
-	ipcRenderer.on('started-recording', (event, when) => {
-		console.log(`Started recording after ${(when - time) / 1000}s`);
-	});
+	const past = Date.now();
 
-	time = Date.now();
-	ipcRenderer.send('start-recording');
+	aperture.startRecording()
+		.then(() => {
+			console.log(`Started recording after ${(Date.now() - past) / 1000}s`);
+		})
+		.catch(console.error);
 }
 
 function askUserToSaveFile(opts) {
@@ -24,13 +24,11 @@ function askUserToSaveFile(opts) {
 }
 
 function stopRecording() {
-	ipcRenderer.on('stopped-recording', (event, filePath) => {
-			askUserToSaveFile({
-				fileName: `Screen record ${Date()}.mp4`,
-				filePath
-			});
-	});
-	ipcRenderer.send('stop-recording');
+	aperture.stopRecording()
+		.then(filePath => {
+			const fileName = `Screen record ${Date()}.mp4`;
+			askUserToSaveFile({fileName, filePath});
+		});
 }
 
 document.querySelector('#start').onclick = startRecording;
