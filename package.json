@@ -25,6 +25,7 @@
     "electron": "^1.3.3",
     "electron-builder": "^6.3.5",
     "gulp": "^3.9.1",
+    "gulp-pug": "^3.0.4",
     "xo": "^0.16.0"
   },
   "xo": {
