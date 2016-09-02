@@ -19,16 +19,18 @@ function createWindow() {
 
 	ipcMain.on('start-recording', event => {
 		aperture.startRecording()
-			.then(() => console.log('started recording', aperture.path))
+			.then(() => {
+				event.sender.send('started-recording', Date.now());
+			})
 			.catch(console.error);
-
-		event.sender.send('started-recording', Date.now());
 	});
 
-	ipcMain.on('stop-recording', () => {
+	ipcMain.on('stop-recording', event => {
 		console.log('ipc#stop-rec');
-		aperture.stopRecording({destinationPath: path.join(homedir(), 'Desktop', 'test.mov')})
-			.then(console.log)
+		aperture.stopRecording()
+			.then(filePath => {
+				event.sender.send('stopped-recording', filePath);
+			})
 			.catch(console.error);
 	});
 }
