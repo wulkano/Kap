@@ -7,6 +7,7 @@
   "scripts": {
     "test": "xo",
     "start": "electron .",
+    "pack": "electron-packager . --prune --platform darwin --arch x64 --out dist"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,7 @@
   "dependencies": {
     "aperture.js": "0.0.0-4",
     "electron": "^1.3.3",
+    "electron-packager": "^7.7.0"
   },
   "devDependencies": {
     "xo": "^0.16.0"
