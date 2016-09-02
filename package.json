@@ -23,9 +23,11 @@
   },
   "homepage": "https://github.com/CodeTheory/focus-core#readme",
   "devDependencies": {
+    "babel-preset-es2015": "^6.14.0",
     "electron": "^1.3.3",
     "electron-builder": "^6.3.5",
     "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
     "gulp-pug": "^3.0.4",
     "xo": "^0.16.0"
   },
