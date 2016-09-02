@@ -2,15 +2,7 @@
   "name": "focus",
   "private": true,
   "version": "0.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "xo",
-    "start": "electron .",
-    "pack": "build --dir",
-    "dist": "build",
-    "postinstall": "install-app-deps"
-  },
+  "description": "The best way to record your screen",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/CodeTheory/focus.git"
@@ -21,10 +13,8 @@
     "url": "https://github.com/CodeTheory/focus-core/issues"
   },
   "homepage": "https://github.com/CodeTheory/focus-core#readme",
-  "devDependencies": {
-    "electron": "^1.3.3",
-    "electron-builder": "^6.3.5",
-    "xo": "^0.16.0"
+  "dependencies": {
+    "aperture.js": "0.0.0-4"
   },
   "xo": {
     "esnext": true,
@@ -32,9 +22,5 @@
       "node",
       "browser"
     ]
-  },
-  "build": {
-    "appId": "com.wulkano.focus",
-    "category": "public.app-category.productivity"
   }
 }
