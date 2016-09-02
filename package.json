@@ -6,9 +6,10 @@
   "main": "index.js",
   "scripts": {
     "test": "xo",
-    "start": "electron app",
-    "pack": "build --dir",
-    "dist": "build",
+    "build": "npm run test && gulp build",
+    "start": "npm run build && electron app",
+    "pack": "npm run build && build --dir",
+    "dist": "npm run build && build",
     "postinstall": "install-app-deps"
   },
   "repository": {
