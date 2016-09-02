@@ -14,7 +14,8 @@
   },
   "homepage": "https://github.com/CodeTheory/focus-core#readme",
   "dependencies": {
-    "aperture.js": "0.0.0-4"
+    "aperture.js": "0.0.0-4",
+    "menubar": "^5.1.0"
   },
   "xo": {
     "esnext": true,
