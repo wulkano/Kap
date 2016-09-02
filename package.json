@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "xo",
-    "start": "electron .",
+    "start": "electron app",
     "pack": "build --dir",
     "dist": "build",
     "postinstall": "install-app-deps"
