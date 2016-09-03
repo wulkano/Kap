@@ -1,17 +1,39 @@
 document.addEventListener('DOMContentLoaded', () => {
 	const aperture = require('aperture.js')();
+	const spinnerFrames = ['🕐', '🕑', '🕒', '🕓', '🕔', '🕕', '🕖', '🕗', '🕘', '🕙', '🕚'];
+	let currentSpinnerFrame = 0;
+
 	let recording = false;
+
+	function startSpinner() {
+		spinnerIntervalId = setInterval(() => {
+			const frame = spinnerFrames[currentSpinnerFrame];
+			currentSpinnerFrame = ++currentSpinnerFrame % spinnerFrames.length;
+
+			title.innerText = `Starting ${frame}`;
+		}, 100);
+	}
+
+	function stopSpinner() {
+		clearInterval(spinnerIntervalId);
+	}
 
 	function startRecording() {
 		const past = Date.now();
-
+		startSpinner();
 		recording = true;
 		aperture.startRecording()
 			.then(() => {
+				stopSpinner();
+				title.innerText = 'Recording ✅';
 				console.log(`Started recording after ${(Date.now() - past) / 1000}s`);
 			})
-			.catch(console.error);
+			.catch(err => {
 				recording = false;
+				console.error(err);
+				stopSpinner();
+				title.innerText = 'Error 😔';
+			});
 	}
 
 	function askUserToSaveFile(opts) {
@@ -31,6 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		aperture.stopRecording()
 			.then(filePath => {
 				recording = false;
+				title.innerText = 'Focus';
 				const fileName = `Screen record ${Date()}.mp4`;
 				askUserToSaveFile({fileName, filePath});
 			});
