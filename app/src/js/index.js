@@ -1,9 +1,42 @@
 document.addEventListener('DOMContentLoaded', () => {
+	const fs = require('fs');
+
 	const aperture = require('aperture.js')();
+	const fileSize = require('file-size');
+	const moment = require('moment');
+
+	const title = document.querySelector('#title');
+	const time = document.querySelector('#time');
+	const size = document.querySelector('#size');
+
 	const spinnerFrames = ['🕐', '🕑', '🕒', '🕓', '🕔', '🕕', '🕖', '🕗', '🕘', '🕙', '🕚'];
 	let currentSpinnerFrame = 0;
 
 	let recording = false;
+
+	let monitoringIntervalId;
+	let spinnerIntervalId;
+
+	function startMonitoringElapsedTimeAndSize(filePath) {
+		const startedAt = moment();
+
+		monitoringIntervalId = setInterval(() => {
+			// TODO: split this into two intervals: one for time (1000ms)
+			// and one for size (500ms)
+			const now = moment();
+
+			const elapsed = moment.utc(now.diff(startedAt)).format('mm:ss');
+			time.innerText = elapsed;
+
+			fs.stat(filePath, (err, stats) => {
+				size.innerText = fileSize(stats.size).human('si');
+			});
+		}, 500);
+	}
+
+	function stopMonitoring() {
+		clearInterval(monitoringIntervalId);
+	}
 
 	function startSpinner() {
 		spinnerIntervalId = setInterval(() => {
@@ -23,9 +56,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		startSpinner();
 		recording = true;
 		aperture.startRecording()
-			.then(() => {
+			.then(filePath => {
 				stopSpinner();
 				title.innerText = 'Recording ✅';
+				startMonitoringElapsedTimeAndSize(filePath);
 				console.log(`Started recording after ${(Date.now() - past) / 1000}s`);
 			})
 			.catch(err => {
@@ -53,7 +87,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		aperture.stopRecording()
 			.then(filePath => {
 				recording = false;
+				stopMonitoring();
 				title.innerText = 'Focus';
+				time.innerText = '00:00';
+				size.innerText = '0 kB';
 				const fileName = `Screen record ${Date()}.mp4`;
 				askUserToSaveFile({fileName, filePath});
 			});
