@@ -17,8 +17,19 @@ html {
   flex-direction: column;
 }
 
+.horizontal-section {
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: center;
+	justify-content: space-between;
+}
+
 #title {
 	font-size: 10pt;
+}
+
+#time, #size {
+	font-size: 9pt;
 }
 
 .btn {
