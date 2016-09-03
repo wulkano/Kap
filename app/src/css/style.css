@@ -24,11 +24,11 @@ html {
 	justify-content: space-between;
 }
 
-#title {
+.title {
 	font-size: 10pt;
 }
 
-#time, #size {
+.time, .size {
 	font-size: 9pt;
 }
 
@@ -36,7 +36,7 @@ html {
 	cursor: pointer
 }
 
-#start {
+.start {
 	width: 4em;
 	height: 4em;
 	background: linear-gradient(rgb(255, 97, 89), rgb(255, 95, 82), rgb(255, 58, 48));
