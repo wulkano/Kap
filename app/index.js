@@ -13,5 +13,7 @@ if (process.env.DEBUG_FOCUS) {
 }
 
 menubar.on('after-create-window', () => {
-	menubar.window.openDevTools();
+	if (process.env.DEBUG_FOCUS) {
+		menubar.window.openDevTools();
+	}
 });
