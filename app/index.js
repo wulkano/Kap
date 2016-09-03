@@ -5,6 +5,10 @@ const menubar = require('menubar')({
 	icon: path.join(__dirname, 'static', 'icon.png')
 });
 
+if (process.env.DEBUG_FOCUS) {
+	menubar.setOption('alwaysOnTop', true);
+}
+
 menubar.on('after-create-window', () => {
 	menubar.window.openDevTools();
 });
