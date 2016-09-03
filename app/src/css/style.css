@@ -25,7 +25,6 @@ html {
 }
 
 .title {
-	cursor: -webkit-grab;
 	font-size: 10pt;
 }
 
@@ -33,12 +32,6 @@ html {
 	padding-left: 100%;
 	padding-right: 100%;
 	-webkit-app-region: drag;
-	cursor: -webkit-grab;
-}
-
-.title-wrapper:active, .title:active {
-	cursor: -webkit-grabbing;
-	cursor: grabbing;
 }
 
 .time, .size {
