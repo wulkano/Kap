@@ -56,3 +56,8 @@ html {
 	border-radius: 50%;
 	margin: 1em;
 }
+
+* { /* TODO make this rule more specific */
+	-webkit-user-select: none;
+	cursor: default;
+}
