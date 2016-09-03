@@ -1,14 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
 	const aperture = require('aperture.js')();
+	let recording = false;
 
 	function startRecording() {
 		const past = Date.now();
 
+		recording = true;
 		aperture.startRecording()
 			.then(() => {
 				console.log(`Started recording after ${(Date.now() - past) / 1000}s`);
 			})
 			.catch(console.error);
+				recording = false;
 	}
 
 	function askUserToSaveFile(opts) {
@@ -27,12 +30,17 @@ document.addEventListener('DOMContentLoaded', () => {
 	function stopRecording() {
 		aperture.stopRecording()
 			.then(filePath => {
+				recording = false;
 				const fileName = `Screen record ${Date()}.mp4`;
 				askUserToSaveFile({fileName, filePath});
 			});
 	}
 
-	document.querySelector('#start').onclick = startRecording;
-
-	document.querySelector('#stop').onclick = stopRecording;
+	document.querySelector('#start').onclick = () => {
+		if (recording) {
+			stopRecording();
+		} else {
+			startRecording();
+		}
+	};
 });
