@@ -9,6 +9,8 @@ const menubar = require('menubar')({
 });
 
 if (process.env.DEBUG_FOCUS) {
+	const electronExecutable = `${__dirname}/../node_modules/electron/dist/Electron.app/Contents/MacOS/Electron`;
+	require('electron-reload')(`${__dirname}/dist`, {electron: electronExecutable}); // eslint-disable-line import/newline-after-import
 	menubar.setOption('alwaysOnTop', true);
 }
 

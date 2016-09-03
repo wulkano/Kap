@@ -19,3 +19,7 @@ gulp.task('build', () => {
 		.pipe(uglify())
 		.pipe(gulp.dest('app/dist'));
 });
+
+gulp.task('watch', ['build'], () => {
+	gulp.watch('app/src/**', ['build']);
+});

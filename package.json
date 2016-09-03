@@ -7,7 +7,7 @@
   "scripts": {
     "test": "xo",
     "build": "npm run test && gulp build",
-    "start": "npm run build && DEBUG_FOCUS=1 electron app",
+    "start": "DEBUG_FOCUS=1 concurrently --kill-others 'gulp watch' 'electron app'",
     "pack": "npm run build && build --dir",
     "dist": "npm run build && build",
     "postinstall": "install-app-deps"
