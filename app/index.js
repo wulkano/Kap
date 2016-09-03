@@ -2,7 +2,8 @@ const path = require('path');
 
 const menubar = require('menubar')({
 	index: `file://${__dirname}/dist/index.html`,
-	icon: path.join(__dirname, 'static', 'icon.png')
+	icon: path.join(__dirname, 'static', 'icon.png'),
+	transparent: true
 });
 
 if (process.env.DEBUG_FOCUS) {
