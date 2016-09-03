@@ -3,8 +3,11 @@ html(lang='en')
   head
     meta(charset="UTF-8")
     title Focus
+    link(href='clear.min.css', rel='stylesheet', type='text/css')
+    link(href='style.css', rel='stylesheet', type='text/css')
     script(src="index.js")
   body
-    a#start(href="#") Start 
-    br
-    a#stop(href="#") Stop and save
+    .content
+      p#title Focus
+      div#start.btn Start recording
+      div#stop.btn Stop recording
