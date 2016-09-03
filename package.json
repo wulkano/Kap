@@ -41,7 +41,9 @@
     "rules": {
       "import/no-extraneous-dependencies": 0
     },
-    "ignores": ["app/dist/**"]
+    "ignores": [
+      "app/dist/**"
+    ]
   },
   "build": {
     "appId": "com.wulkano.focus",
