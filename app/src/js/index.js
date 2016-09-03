@@ -5,9 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	const fileSize = require('file-size');
 	const moment = require('moment');
 
-	const title = document.querySelector('#title');
-	const time = document.querySelector('#time');
-	const size = document.querySelector('#size');
+	const title = document.querySelector('.title');
+	const time = document.querySelector('.time');
+	const size = document.querySelector('.size');
 
 	const spinnerFrames = ['🕐', '🕑', '🕒', '🕓', '🕔', '🕕', '🕖', '🕗', '🕘', '🕙', '🕚'];
 	let currentSpinnerFrame = 0;
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			});
 	}
 
-	document.querySelector('#start').onclick = () => {
+	document.querySelector('.start').onclick = () => {
 		if (recording) {
 			stopRecording();
 		} else {
