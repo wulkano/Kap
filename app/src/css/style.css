@@ -29,8 +29,8 @@ html {
 }
 
 .title-wrapper {
-	padding-left: 100%;
-	padding-right: 100%;
+	width: 100%;
+	text-align: center;
 	-webkit-app-region: drag;
 }
 
