@@ -80,14 +80,14 @@ html {
   border-top: 0.15em solid rgb(156, 156, 156);;
   margin-right: 0.5em;
   transition: all .3s ease;
-}
 
-.arrow.up {
-  transform: rotate(-45deg);
-}
+  &.up {
+    transform: rotate(-45deg);
+  }
 
-.arrow.down {
-  transform: rotate(135deg);
+  &.down {
+    transform: rotate(135deg);
+  }
 }
 
 .settings {

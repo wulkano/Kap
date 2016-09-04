@@ -2,6 +2,7 @@ const babel = require('gulp-babel');
 const cssnano = require('cssnano');
 const gulp = require('gulp');
 const postcss = require('gulp-postcss');
+const postcssNested = require('postcss-nested');
 const pug = require('gulp-pug');
 const uglify = require('gulp-uglify');
 
@@ -11,7 +12,7 @@ gulp.task('build', () => {
     .pipe(gulp.dest('app/dist'));
 
   gulp.src('app/src/css/*')
-    .pipe(postcss([cssnano]))
+    .pipe(postcss([postcssNested, cssnano]))
     .pipe(gulp.dest('app/dist'));
 
   gulp.src('app/src/js/*')
