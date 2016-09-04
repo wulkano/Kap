@@ -34,6 +34,7 @@
     "gulp-pug": "^3.0.4",
     "gulp-uglify": "^2.0.0",
     "postcss-nested": "^1.0.0",
+    "postcss-simple-vars": "^3.0.0",
     "xo": "^0.16.0"
   },
   "xo": {
