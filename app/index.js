@@ -18,7 +18,7 @@ if (process.env.DEBUG_FOCUS) {
 
 menubar.on('after-create-window', () => {
   if (process.env.DEBUG_FOCUS) {
-    menubar.window.openDevTools();
+    menubar.window.openDevTools({mode: 'detach'});
   }
   menubar.window.setResizable(false);
 });
