@@ -36,6 +36,7 @@
     "xo": "^0.16.0"
   },
   "xo": {
+    "space": 2,
     "esnext": true,
     "envs": [
       "node",

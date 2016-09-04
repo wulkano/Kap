@@ -6,51 +6,51 @@
 
 html {
   background-color: #242424; /* from chrome devtools' dark theme */
-	color: rgb(156, 156, 156);
-	font-family: "San Francisco";
+  color: rgb(156, 156, 156);
+  font-family: "San Francisco";
 }
 
 .content {
-	display: flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
 
 .horizontal-section {
-	display: flex;
-	flex-wrap: nowrap;
-	align-items: center;
-	justify-content: space-between;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .title {
-	font-size: 10pt;
+  font-size: 10pt;
 }
 
 .title-wrapper {
-	width: 100%;
-	text-align: center;
-	-webkit-app-region: drag;
+  width: 100%;
+  text-align: center;
+  -webkit-app-region: drag;
 }
 
 .time, .size {
-	font-size: 9pt;
+  font-size: 9pt;
 }
 
 .btn {
-	cursor: pointer
+  cursor: pointer
 }
 
 .start {
-	width: 4em;
-	height: 4em;
-	background: linear-gradient(rgb(255, 97, 89), rgb(255, 95, 82), rgb(255, 58, 48));
-	border-radius: 50%;
-	margin: 1em;
+  width: 4em;
+  height: 4em;
+  background: linear-gradient(rgb(255, 97, 89), rgb(255, 95, 82), rgb(255, 58, 48));
+  border-radius: 50%;
+  margin: 1em;
 }
 
 * { /* TODO make this rule more specific */
-	-webkit-user-select: none;
-	cursor: default;
+  -webkit-user-select: none;
+  cursor: default;
 }

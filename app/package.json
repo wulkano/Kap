@@ -21,6 +21,7 @@
     "moment": "^2.14.1"
   },
   "xo": {
+    "space": 2,
     "esnext": true,
     "envs": [
       "node",
