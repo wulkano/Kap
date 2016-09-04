@@ -18,4 +18,5 @@ menubar.on('after-create-window', () => {
   if (process.env.DEBUG_FOCUS) {
     menubar.window.openDevTools();
   }
+  menubar.window.setResizable(false);
 });
