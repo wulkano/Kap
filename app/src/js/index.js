@@ -1,5 +1,11 @@
 const {ipcRenderer} = require('electron');
 
+function setWindowSize() {
+  const width = document.documentElement.scrollWidth;
+  const height = document.documentElement.scrollHeight;
+  ipcRenderer.send('set-window-size', {width, height});
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const fs = require('fs');
 
@@ -105,10 +111,19 @@ document.addEventListener('DOMContentLoaded', () => {
       startRecording();
     }
   };
+
+  document.querySelector('.settings-title-wrapper').onclick = function () {
+    const arrow = this.children[1];
+    const settings = document.querySelector('.settings');
+
+    arrow.classList.toggle('up');
+    arrow.classList.toggle('down');
+
+    settings.classList.toggle('hidden');
+    setWindowSize();
+
+    window.arrow = arrow;
+  };
 });
 
-window.addEventListener('load', () => {
-  const width = document.documentElement.scrollWidth;
-  const height = document.documentElement.scrollHeight;
-  ipcRenderer.send('set-window-size', {width, height});
-});
+window.addEventListener('load', setWindowSize);

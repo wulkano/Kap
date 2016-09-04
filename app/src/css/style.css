@@ -24,7 +24,7 @@ html {
   justify-content: space-between;
 }
 
-.title {
+.title, .settings-title {
   font-size: 10pt;
 }
 
@@ -53,4 +53,48 @@ html {
 * { /* TODO make this rule more specific */
   -webkit-user-select: none;
   cursor: default;
+}
+
+.settings-title-wrapper {
+  width: 100%;
+  height: 2em;
+  background-color: #191919;
+  cursor: pointer;
+}
+
+.settings-title-wrapper * {
+  cursor: pointer;
+}
+
+.settings-title {
+  margin-left: 0.75em;
+}
+
+.arrow {
+  margin-right: 0.75em;
+  content: "";
+  display: inline-block;
+  width: 0.5em;
+  height: 0.5em;
+  border-right: 0.15em solid rgb(156, 156, 156);;
+  border-top: 0.15em solid rgb(156, 156, 156);;
+  margin-right: 0.5em;
+  transition: all .3s ease;
+}
+
+.arrow.up {
+  transform: rotate(-45deg);
+}
+
+.arrow.down {
+  transform: rotate(135deg);
+}
+
+.settings {
+  overflow: hidden;
+  height: 5em;
+}
+
+.settings.hidden {
+  height: 0em;
 }
