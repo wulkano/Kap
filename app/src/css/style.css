@@ -1,3 +1,6 @@
+$background-color: #242424; /* from chrome devtools' dark theme */
+$text-color: rgb(156, 156, 156);
+
 @font-face {
   font-family: "San Francisco";
   font-weight: 400;
@@ -5,8 +8,8 @@
 }
 
 html {
-  background-color: #242424; /* from chrome devtools' dark theme */
-  color: rgb(156, 156, 156);
+  background-color: $background-color;
+  color: $text-color;
   font-family: "San Francisco";
 }
 
