@@ -1,3 +1,5 @@
+const {ipcRenderer} = require('electron');
+
 document.addEventListener('DOMContentLoaded', () => {
   const fs = require('fs');
 
@@ -103,4 +105,10 @@ document.addEventListener('DOMContentLoaded', () => {
       startRecording();
     }
   };
+});
+
+window.addEventListener('load', () => {
+  const width = document.documentElement.scrollWidth;
+  const height = document.documentElement.scrollHeight;
+  ipcRenderer.send('set-window-size', {width, height});
 });

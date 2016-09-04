@@ -1,10 +1,12 @@
 const path = require('path');
 
+const {ipcMain} = require('electron');
 const menubar = require('menubar')({
   index: `file://${__dirname}/dist/index.html`,
   icon: path.join(__dirname, 'static', 'iconTemplate.png'),
   width: 250,
-  height: 150,
+  height: 500,
+  preloadWindow: true,
   transparent: true
 });
 
@@ -19,4 +21,10 @@ menubar.on('after-create-window', () => {
     menubar.window.openDevTools();
   }
   menubar.window.setResizable(false);
+});
+
+ipcMain.on('set-window-size', (event, args) => {
+  if (args.width && args.height && menubar.window) {
+    menubar.window.setSize(args.width, args.height, true); // true == animate
+  }
 });
