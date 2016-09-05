@@ -18,7 +18,8 @@
     "aperture.js": "0.0.0-5",
     "file-size": "^1.0.0",
     "menubar": "^5.1.0",
-    "moment": "^2.14.1"
+    "moment": "^2.14.1",
+    "opn": "^4.0.2"
   },
   "xo": {
     "space": 2,
