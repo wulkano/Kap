@@ -7,7 +7,8 @@ const menubar = require('menubar')({
   width: 250,
   height: 500,
   preloadWindow: true,
-  transparent: true
+  transparent: true,
+  resizable: false
 });
 
 if (process.env.DEBUG_FOCUS) {
@@ -20,7 +21,6 @@ menubar.on('after-create-window', () => {
   if (process.env.DEBUG_FOCUS) {
     menubar.window.openDevTools({mode: 'detach'});
   }
-  menubar.window.setResizable(false);
 });
 
 ipcMain.on('set-window-size', (event, args) => {
