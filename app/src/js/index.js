@@ -13,6 +13,7 @@ function setWindowSize() {
 
 document.addEventListener('DOMContentLoaded', () => {
   const fps = document.querySelector('#fps');
+  const options = document.querySelector('#options');
   const title = document.querySelector('.title');
   const time = document.querySelector('.time');
   const settingsTitleWrapper = document.querySelector('.settings-title-wrapper');
@@ -142,6 +143,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (this.value.trim() === '' || this.value === '0') {
       this.value = 30;
     }
+  };
+
+  options.onclick = () => {
+    const {bottom, left} = options.getBoundingClientRect();
+    ipcRenderer.send('show-options-menu', {x: left, y: bottom});
   };
 });
 

@@ -117,3 +117,12 @@ input {
     text-align: right;
   }
 }
+
+#options {
+  position: absolute;
+  padding: 0.25em;
+  top: 0;
+  right: 0;
+  height: 1.5em;
+  -webkit-filter: contrast(22%); /* rgb(156, 156, 156) */
+}
