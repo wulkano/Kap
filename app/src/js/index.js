@@ -12,6 +12,7 @@ function setWindowSize() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  const fps = document.querySelector('#fps');
   const title = document.querySelector('.title');
   const time = document.querySelector('.time');
   const settingsTitleWrapper = document.querySelector('.settings-title-wrapper');
@@ -64,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const past = Date.now();
     startSpinner();
     recording = true;
-    aperture.startRecording()
+    aperture.startRecording({fps: fps.value})
       .then(filePath => {
         stopSpinner();
         title.innerText = 'Recording ✅';
