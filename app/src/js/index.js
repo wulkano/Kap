@@ -126,6 +126,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.arrow = arrow;
   };
+
+  fps.onkeyup = function () {
+    if (!/^[0-9]{1,2}$/.test(this.value) && this.value.trim() !== '') {
+      this.value = 30;
+    } else if (this.value < 0) {
+      this.value = 0;
+    } else if (this.value > 60) {
+      this.value = 60;
+    }
+  };
+
+  fps.onblur = function () {
+    if (this.value.trim() === '' || this.value === '0') {
+      this.value = 30;
+    }
+  };
 });
 
 window.addEventListener('load', setWindowSize);
