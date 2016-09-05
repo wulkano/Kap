@@ -34,6 +34,14 @@ const optionsMenu = Menu.buildFromTemplate([
   {
     label: 'About',
     click: () => opn('http://wulka.no', {wait: false})
+  },
+  {
+    type: 'separator'
+  },
+  {
+    label: 'Quit',
+    accelerator: 'Cmd+Q', // TODO change this when support for win/linux is added
+    click: () => menubar.app.quit()
   }
 ]);
 
