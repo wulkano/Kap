@@ -115,6 +115,7 @@ input {
   &#fps {
     width: 2em;
     text-align: right;
+    cursor: text;
   }
 }
 
