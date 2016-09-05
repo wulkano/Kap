@@ -1,4 +1,9 @@
+const fs = require('fs');
+
+const aperture = require('aperture.js')();
+const fileSize = require('file-size');
 const {ipcRenderer} = require('electron');
+const moment = require('moment');
 
 function setWindowSize() {
   const width = document.documentElement.scrollWidth;
@@ -7,12 +12,6 @@ function setWindowSize() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const fs = require('fs');
-
-  const aperture = require('aperture.js')();
-  const fileSize = require('file-size');
-  const moment = require('moment');
-
   const title = document.querySelector('.title');
   const time = document.querySelector('.time');
   const size = document.querySelector('.size');
