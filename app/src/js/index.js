@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const past = Date.now();
     startSpinner();
     recording = true;
+    document.activeElement.blur(); // make sure the fps `onblur` validations are executed
     aperture.startRecording({fps: fps.value})
       .then(filePath => {
         stopSpinner();
