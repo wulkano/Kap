@@ -14,7 +14,9 @@ function setWindowSize() {
 document.addEventListener('DOMContentLoaded', () => {
   const title = document.querySelector('.title');
   const time = document.querySelector('.time');
+  const settingsTitleWrapper = document.querySelector('.settings-title-wrapper');
   const size = document.querySelector('.size');
+  const startBtn = document.querySelector('.start');
 
   const spinnerFrames = ['🕐', '🕑', '🕒', '🕓', '🕔', '🕕', '🕖', '🕗', '🕘', '🕙', '🕚'];
   let currentSpinnerFrame = 0;
@@ -103,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 
-  document.querySelector('.start').onclick = () => {
+  startBtn.onclick = () => {
     if (recording) {
       stopRecording();
     } else {
@@ -111,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  document.querySelector('.settings-title-wrapper').onclick = function () {
+  settingsTitleWrapper.onclick = function () {
     const arrow = this.children[1];
     const settings = document.querySelector('.settings');
 
