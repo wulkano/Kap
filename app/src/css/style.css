@@ -37,8 +37,17 @@ html {
   -webkit-app-region: drag;
 }
 
-.time, .size {
+#time, #size {
+  position: absolute;
   font-size: 9pt;
+}
+
+#time {
+  left: 5em;
+}
+
+#size {
+  left: calc(64%);
 }
 
 .btn, .btn * {

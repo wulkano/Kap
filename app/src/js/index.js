@@ -16,9 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const fpsInputWrapper = document.querySelector('.fps-input-wrapper');
   const options = document.querySelector('#options');
   const title = document.querySelector('.title');
-  const time = document.querySelector('.time');
+  const time = document.querySelector('#time');
   const settingsTitleWrapper = document.querySelector('.settings-title-wrapper');
-  const size = document.querySelector('.size');
+  const size = document.querySelector('#size');
   const startBtn = document.querySelector('.start');
 
   const spinnerFrames = ['🕐', '🕑', '🕒', '🕓', '🕔', '🕕', '🕖', '🕗', '🕘', '🕙', '🕚'];
