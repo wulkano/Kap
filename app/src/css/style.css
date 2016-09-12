@@ -72,7 +72,6 @@ html {
 
   img {
     height: 1.5em;
-    -webkit-filter: contrast(22%); /* rgb(156, 156, 156) */
   }
 }
 
@@ -175,5 +174,4 @@ input {
   top: 0;
   right: 0;
   height: 1.5em;
-  -webkit-filter: contrast(22%); /* rgb(156, 156, 156) */
 }
