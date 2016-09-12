@@ -18,8 +18,8 @@ html(lang='en')
       .settings-title-wrapper.horizontal-section
         p.settings-title Settings
         .arrow.down
-      .settings.hidden
-        input#fps(value='30')
-        label#fps-label(for='fps') FPS
-        .record-size 1920x1080 (placeholder)
-        .file-type saving to mp4 (placeholder)
+      .settings.hidden.horizontal-section
+        .fps-input-wrapper
+          input#fps(value='30')
+          label#fps-label(for='fps') &nbsp;FPS
+        #file-type MP4

@@ -98,25 +98,52 @@ html {
   height: 5em;
   text-align: center;
   font-size: 1em;
+  width: 100%;
+  padding-left: 2em;
+  padding-right: 2em;
 }
 
 .settings.hidden {
   height: 0em;
 }
 
+.fps-input-wrapper {
+  position: relative;
+  padding: .2em;
+  border-radius: 5px;
+}
+
 input {
   color: $text-color;
-  border: 1px solid transparent;
-  border-radius: 5px;
+  border: 0 solid transparent;
   background: transparent;
   box-sizing: border-box;
   font-size: 1em;
 
   &#fps {
-    width: 2em;
+    width: 1.3em;
+    padding: 0;
     text-align: right;
     cursor: text;
   }
+}
+
+#file-type {
+  padding: .2em;
+  border-radius: 5px;
+}
+
+.fps-input-wrapper, #file-type {
+  cursor: pointer;
+
+  &:hover {
+    background: #191919;
+    border: 1em;
+  }
+}
+
+#fps-label:hover {
+  cursor: pointer;
 }
 
 #options {

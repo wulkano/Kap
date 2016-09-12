@@ -13,6 +13,7 @@ function setWindowSize() {
 
 document.addEventListener('DOMContentLoaded', () => {
   const fps = document.querySelector('#fps');
+  const fpsInputWrapper = document.querySelector('.fps-input-wrapper');
   const options = document.querySelector('#options');
   const title = document.querySelector('.title');
   const time = document.querySelector('.time');
@@ -148,6 +149,11 @@ document.addEventListener('DOMContentLoaded', () => {
   options.onclick = () => {
     const {bottom, left} = options.getBoundingClientRect();
     ipcRenderer.send('show-options-menu', {x: left, y: bottom});
+  };
+
+  fpsInputWrapper.onclick = () => {
+    fps.focus();
+    fps.value = fps.value; // move the carret to the end
   };
 });
 
