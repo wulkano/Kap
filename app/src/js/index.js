@@ -15,11 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const fps = document.querySelector('#fps');
   const fpsInputWrapper = document.querySelector('.fps-input-wrapper');
   const options = document.querySelector('#options');
-  const title = document.querySelector('.title');
-  const time = document.querySelector('#time');
+  const recordBtn = document.querySelector('#record');
   const settingsTitleWrapper = document.querySelector('.settings-title-wrapper');
   const size = document.querySelector('#size');
-  const recordBtn = document.querySelector('#record');
+  const time = document.querySelector('#time');
+  const title = document.querySelector('.title');
 
   const spinnerFrames = ['🕐', '🕑', '🕒', '🕓', '🕔', '🕕', '🕖', '🕗', '🕘', '🕙', '🕚'];
   let currentSpinnerFrame = 0;
