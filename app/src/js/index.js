@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const time = document.querySelector('#time');
   const settingsTitleWrapper = document.querySelector('.settings-title-wrapper');
   const size = document.querySelector('#size');
-  const startBtn = document.querySelector('.start');
+  const recordBtn = document.querySelector('#record');
 
   const spinnerFrames = ['🕐', '🕑', '🕒', '🕓', '🕔', '🕕', '🕖', '🕗', '🕘', '🕙', '🕚'];
   let currentSpinnerFrame = 0;
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 
-  startBtn.onclick = () => {
+  recordBtn.onclick = () => {
     if (recording) {
       stopRecording();
     } else {

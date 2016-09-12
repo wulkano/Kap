@@ -54,7 +54,7 @@ html {
   cursor: pointer
 }
 
-.start {
+#record {
   width: 3em;
   height: 3em;
   background: linear-gradient(rgb(255, 97, 89), rgb(255, 95, 82), rgb(255, 58, 48));
