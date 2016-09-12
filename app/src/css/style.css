@@ -46,8 +46,8 @@ html {
 }
 
 .start {
-  width: 4em;
-  height: 4em;
+  width: 3em;
+  height: 3em;
   background: linear-gradient(rgb(255, 97, 89), rgb(255, 95, 82), rgb(255, 58, 48));
   border-radius: 50%;
   margin: 1em;
