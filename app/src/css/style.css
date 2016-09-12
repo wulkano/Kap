@@ -62,6 +62,20 @@ html {
   margin: 1em;
 }
 
+.circle {
+  justify-content: center;
+  width: 3em;
+  height: 3em;
+  border-radius: 50%;
+  border: .15em solid $text-color;
+  margin-bottom: 1em;
+
+  img {
+    height: 1.5em;
+    -webkit-filter: contrast(22%); /* rgb(156, 156, 156) */
+  }
+}
+
 * { /* TODO make this rule more specific */
   -webkit-user-select: none;
   cursor: default;
