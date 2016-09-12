@@ -12,6 +12,8 @@ function setWindowSize() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  const cropBtn = document.querySelector('#crop');
+  const cropBtnImg = document.querySelector('#crop-btn-img');
   const fps = document.querySelector('#fps');
   const fpsInputWrapper = document.querySelector('.fps-input-wrapper');
   const options = document.querySelector('#options');
@@ -154,6 +156,17 @@ document.addEventListener('DOMContentLoaded', () => {
   fpsInputWrapper.onclick = () => {
     fps.focus();
     fps.value = fps.value; // move the carret to the end
+  };
+
+  cropBtn.onclick = function () {
+    if (this.classList.contains('active')) { // is active (green)
+      cropBtnImg.src = '../static/crop.png';
+      cropBtnImg.srcset = '../static/crop.png 1x, ../static/crop@2x.png 2x';
+    } else { // is not active (gray)
+      cropBtnImg.src = '../static/crop-active.png';
+      cropBtnImg.srcset = '../static/crop-active.png 1x, ../static/crop-active@2x.png 2x';
+    }
+    this.classList.toggle('active');
   };
 });
 

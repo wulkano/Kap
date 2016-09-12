@@ -1,5 +1,6 @@
 $background-color: #242424; /* from chrome devtools' dark theme */
 $text-color: #9c9c9c;
+$green: #4CAF50;
 
 @font-face {
   font-family: "San Francisco";
@@ -70,6 +71,10 @@ html {
   border: .15em solid $text-color;
   margin-bottom: 1em;
 
+  &.active {
+    border-color: $green;
+  }
+  
   img {
     height: 1.5em;
   }
