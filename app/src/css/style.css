@@ -41,7 +41,7 @@ html {
   font-size: 9pt;
 }
 
-.btn {
+.btn, .btn * {
   cursor: pointer
 }
 
