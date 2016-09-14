@@ -1,6 +1,8 @@
 const path = require('path');
 
-const {ipcMain, Menu} = require('electron');
+const electron = require('electron');
+
+const {BrowserWindow, ipcMain, Menu} = electron;
 const menubar = require('menubar')({
   index: `file://${__dirname}/dist/index.html`,
   icon: path.join(__dirname, 'static', 'iconTemplate.png'),
@@ -51,5 +53,36 @@ ipcMain.on('show-options-menu', (event, coordinates) => {
     coordinates.y = parseInt(coordinates.y.toFixed(), 10);
 
     optionsMenu.popup(coordinates.x + 4, coordinates.y); // 4 is the magic number ✨
+  }
+});
+
+let cropperWindow;
+
+ipcMain.on('open-cropper-window', () => {
+  if (!cropperWindow) {
+    const {workAreaSize} = electron.screen.getPrimaryDisplay();
+    cropperWindow = new BrowserWindow({
+      width: workAreaSize.width,
+      height: workAreaSize.height,
+      frame: false,
+      transparent: true,
+      resizable: false
+    });
+    cropperWindow.loadURL(`file://${__dirname}/dist/cropper.html`);
+    cropperWindow.setIgnoreMouseEvents(false); // TODO this should be false by default
+
+    if (process.env.DEBUG_FOCUS) {
+      cropperWindow.openDevTools({mode: 'detach'});
+    }
+
+    cropperWindow.on('closed', () => {
+      cropperWindow = undefined;
+    });
+  }
+});
+
+ipcMain.on('close-cropper-window', () => {
+  if (cropperWindow) {
+    cropperWindow.close(); // TODO: cropperWindow.hide()
   }
 });
