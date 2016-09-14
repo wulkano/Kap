@@ -20,12 +20,6 @@ if (process.env.DEBUG_FOCUS) {
   menubar.setOption('alwaysOnTop', true);
 }
 
-menubar.on('after-create-window', () => {
-  if (process.env.DEBUG_FOCUS) {
-    menubar.window.openDevTools({mode: 'detach'});
-  }
-});
-
 ipcMain.on('set-window-size', (event, args) => {
   if (args.width && args.height && menubar.window) {
     menubar.window.setSize(args.width, args.height, true); // true == animate
@@ -85,4 +79,18 @@ ipcMain.on('close-cropper-window', () => {
   if (cropperWindow) {
     cropperWindow.close(); // TODO: cropperWindow.hide()
   }
+});
+
+menubar.on('after-create-window', () => {
+  if (process.env.DEBUG_FOCUS) {
+    menubar.window.openDevTools({mode: 'detach'});
+  }
+
+  menubar.window.on('blur', () => {
+    if (cropperWindow && !cropperWindow.isFocused()) {
+      // close the cropper window if the main window loses focus and the cropper window
+      // is not focused
+      cropperWindow.close();
+    }
+  });
 });
