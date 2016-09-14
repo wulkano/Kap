@@ -1,0 +1,38 @@
+html, body, #background {
+  width: 100%;
+  height: 100%;
+}
+
+#background {
+}
+
+#rect {
+  position: absolute;
+  width: 16em;
+  height: 16em;
+  top: calc(50vh - 8em);
+  left: calc(50vw - 8em);
+  border: 1px dashed white;
+  outline: 100vw solid rgba(1, 1, 1, 0.1);
+  background-color: rgba(255, 255, 255, 0.1);
+  z-index: 1;
+  cursor: -webkit-grab;
+  &:active {
+    cursor: -webkit-grabbing;
+  }
+}
+
+.corner-btn {
+  position: absolute;
+  width: 1em;
+  height: 1em;
+  z-index: 2;
+}
+
+#top-left-btn, #bottom-right-btn {
+  cursor: nwse-resize;
+}
+
+#top-right-btn, #bottom-left-btn {
+  cursor: nesw-resize;
+}
