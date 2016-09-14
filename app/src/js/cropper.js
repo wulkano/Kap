@@ -46,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function mouseUp() {
-    console.log(clickWasInsideOfTheRect);
     mouseIsDownOnRect = false;
     mouseIsDownOnTLBtn = false;
     mouseIsDownOnTRBtn = false;
@@ -105,23 +104,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function mouseMove(event) { // TODO: https://cdn.meme.am/instances/500x/58848550.jpg
     if (mouseIsDownOnTLBtn) {
-      console.log('top left');
       rect.style.top = `${parseInt(rect.style.top, 10) + event.movementY}px`;
       rect.style.left = `${parseInt(rect.style.left, 10) + event.movementX}px`;
       rect.style.width = `${parseInt(rect.style.width, 10) - event.movementX}px`;
       rect.style.height = `${parseInt(rect.style.height, 10) - event.movementY}px`;
     } else if (mouseIsDownOnTRBtn) {
-      console.log('top right');
       rect.style.top = `${parseInt(rect.style.top, 10) + event.movementY}px`;
       rect.style.width = `${parseInt(rect.style.width, 10) + event.movementX}px`;
       rect.style.height = `${parseInt(rect.style.height, 10) - event.movementY}px`;
     } else if (mouseIsDownOnBLBtn) {
-      console.log('bottom left');
       rect.style.left = `${parseInt(rect.style.left, 10) + event.movementX}px`;
       rect.style.width = `${parseInt(rect.style.width, 10) - event.movementX}px`;
       rect.style.height = `${parseInt(rect.style.height, 10) + event.movementY}px`;
     } else if (mouseIsDownOnBRBtn) {
-      console.log('bottom right');
       rect.style.width = `${Math.abs(rect.offsetLeft - event.pageX)}px`;
       rect.style.height = `${Math.abs(rect.offsetTop - event.pageY)}px`;
     } else if (mouseIsDownOnRect) {
