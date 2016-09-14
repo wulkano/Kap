@@ -71,10 +71,6 @@ html {
   border: .15em solid $text-color;
   margin-bottom: 1em;
 
-  &.active {
-    border-color: $green;
-  }
-  
   img {
     height: 1.5em;
   }

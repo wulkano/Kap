@@ -159,15 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   cropBtn.onclick = function () {
-    if (this.classList.contains('active')) { // is active (green)
-      cropBtnImg.src = '../static/crop.png';
-      cropBtnImg.srcset = '../static/crop.png 1x, ../static/crop@2x.png 2x';
-    } else { // is not active (gray)
-      cropBtnImg.src = '../static/crop-active.png';
-      cropBtnImg.srcset = '../static/crop-active.png 1x, ../static/crop-active@2x.png 2x';
-    }
     ipcRenderer.send('open-cropper-window');
-    this.classList.toggle('active');
   };
 });
 
