@@ -53,6 +53,8 @@ ipcMain.on('show-options-menu', (event, coordinates) => {
 let cropperWindow;
 
 ipcMain.on('open-cropper-window', () => {
+  menubar.window.setAlwaysOnTop(true); // TODO send a PR to `menubar`
+  menubar.setOption('alwaysOnTop', true);
   if (!cropperWindow) {
     const {workAreaSize} = electron.screen.getPrimaryDisplay();
     cropperWindow = new BrowserWindow({
@@ -77,6 +79,8 @@ ipcMain.on('open-cropper-window', () => {
 
 ipcMain.on('close-cropper-window', () => {
   if (cropperWindow) {
+    menubar.window.setAlwaysOnTop(false); // TODO send a PR to `menubar`
+    menubar.setOption('alwaysOnTop', false);
     cropperWindow.close(); // TODO: cropperWindow.hide()
   }
 });
