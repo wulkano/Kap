@@ -70,7 +70,6 @@ ipcMain.on('open-cropper-window', () => {
   if (cropperWindow) {
     cropperWindow.focus();
   } else {
-    const {workAreaSize} = electron.screen.getPrimaryDisplay();
     cropperWindow = new BrowserWindow({
       width: 500,
       height: 500,
