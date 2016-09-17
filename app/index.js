@@ -124,3 +124,7 @@ ipcMain.on('get-cropper-bounds', event => {
     event.returnValue = cropperWindow.getContentBounds();
   }
 });
+
+ipcMain.on('is-cropper-active', event => {
+  event.returnValue = Boolean(cropperWindow);
+});

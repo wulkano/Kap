@@ -71,7 +71,21 @@ document.addEventListener('DOMContentLoaded', () => {
     startSpinner();
     recording = true;
     document.activeElement.blur(); // make sure the fps `onblur` validations are executed
-    aperture.startRecording({fps: fps.value})
+
+    let cropperBounds;
+    if (ipcRenderer.sendSync('is-cropper-active')) {
+      cropperBounds = ipcRenderer.sendSync('get-cropper-bounds');
+      // convert the coordinates to cartesian coordinates, which are used by CoreMedia
+      cropperBounds.y = screen.height - (cropperBounds.y + cropperBounds.height);
+
+       // the dashed border is 2px wide
+      cropperBounds.x += 2;
+      cropperBounds.y += 2;
+      cropperBounds.width -= 4;
+      cropperBounds.height -= 4;
+    }
+
+    aperture.startRecording({fps: fps.value, cropArea: cropperBounds})
       .then(filePath => {
         stopSpinner();
         title.innerText = 'Recording ✅';
