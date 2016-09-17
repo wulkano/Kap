@@ -13,7 +13,6 @@ function setWindowSize() {
 
 document.addEventListener('DOMContentLoaded', () => {
   const cropBtn = document.querySelector('#crop');
-  const cropBtnImg = document.querySelector('#crop-btn-img');
   const fps = document.querySelector('#fps');
   const fpsInputWrapper = document.querySelector('.fps-input-wrapper');
   const options = document.querySelector('#options');
