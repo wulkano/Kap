@@ -54,6 +54,16 @@ ipcMain.on('show-options-menu', (event, coordinates) => {
 
 let cropperWindow;
 
+function setCropperWindowOnBlur() {
+  cropperWindow.on('blur', () => {
+    if (!mainWindow.isFocused() &&
+        !cropperWindow.webContents.isDevToolsFocused() &&
+        !mainWindow.webContents.isDevToolsFocused()) {
+      cropperWindow.close();
+    }
+  });
+}
+
 ipcMain.on('open-cropper-window', () => {
   mainWindow.setAlwaysOnTop(true); // TODO send a PR to `menubar`
   menubar.setOption('alwaysOnTop', true);
@@ -73,6 +83,11 @@ ipcMain.on('open-cropper-window', () => {
 
     if (process.env.DEBUG_FOCUS) {
       cropperWindow.openDevTools({mode: 'detach'});
+      cropperWindow.webContents.on('devtools-opened', () => {
+        setCropperWindowOnBlur();
+      });
+    } else {
+      setCropperWindowOnBlur();
     }
 
     cropperWindow.on('closed', () => {
