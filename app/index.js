@@ -72,8 +72,8 @@ ipcMain.on('open-cropper-window', () => {
   } else {
     const {workAreaSize} = electron.screen.getPrimaryDisplay();
     cropperWindow = new BrowserWindow({
-      width: workAreaSize.width,
-      height: workAreaSize.height,
+      width: 500,
+      height: 500,
       frame: false,
       transparent: true,
       resizable: false
