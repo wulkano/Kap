@@ -42,7 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
       time.innerText = elapsed;
 
       fs.stat(filePath, (err, stats) => {
-        size.innerText = fileSize(stats.size).human('si');
+        if (!err) {
+          size.innerText = fileSize(stats.size).human('si');
+        } // TODO: track this error
       });
     }, 500);
   }
