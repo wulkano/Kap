@@ -116,11 +116,11 @@ menubar.on('after-create-window', () => {
       cropperWindow.close();
     }
   });
+});
 
-  ipcMain.on('get-cropper-bounds', event => {
-    if (cropperWindow) {
-      console.log('event', cropperWindow.getContentBounds());
-      event.returnValue = cropperWindow.getContentBounds();
-    }
-  });
+ipcMain.on('get-cropper-bounds', event => {
+  if (cropperWindow) {
+    console.log('event', cropperWindow.getContentBounds());
+    event.returnValue = cropperWindow.getContentBounds();
+  }
 });
