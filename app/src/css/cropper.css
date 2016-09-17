@@ -30,6 +30,6 @@ rect.stroke-black {
 rect.stroke-white {
   stroke: white;
   fill: none;
-  stroke-dasharray: 2,2;
+  stroke-dasharray: 3,3;
   stroke-width: 3px;
 }
