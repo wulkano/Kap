@@ -57,7 +57,9 @@ let cropperWindow;
 ipcMain.on('open-cropper-window', () => {
   mainWindow.setAlwaysOnTop(true); // TODO send a PR to `menubar`
   menubar.setOption('alwaysOnTop', true);
-  if (!cropperWindow) {
+  if (cropperWindow) {
+    cropperWindow.focus();
+  } else {
     const {workAreaSize} = electron.screen.getPrimaryDisplay();
     cropperWindow = new BrowserWindow({
       width: workAreaSize.width,
