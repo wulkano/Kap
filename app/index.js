@@ -14,6 +14,8 @@ const menubar = require('menubar')({
 });
 const opn = require('opn');
 
+let mainWindow;
+
 if (process.env.DEBUG_FOCUS) {
   const electronExecutable = `${__dirname}/../node_modules/electron/dist/Electron.app/Contents/MacOS/Electron`;
   require('electron-reload')(`${__dirname}/dist`, {electron: electronExecutable}); // eslint-disable-line import/newline-after-import
@@ -21,8 +23,8 @@ if (process.env.DEBUG_FOCUS) {
 }
 
 ipcMain.on('set-window-size', (event, args) => {
-  if (args.width && args.height && menubar.window) {
-    menubar.window.setSize(args.width, args.height, true); // true == animate
+  if (args.width && args.height && mainWindow) {
+    mainWindow.setSize(args.width, args.height, true); // true == animate
   }
 });
 
@@ -53,7 +55,7 @@ ipcMain.on('show-options-menu', (event, coordinates) => {
 let cropperWindow;
 
 ipcMain.on('open-cropper-window', () => {
-  menubar.window.setAlwaysOnTop(true); // TODO send a PR to `menubar`
+  mainWindow.setAlwaysOnTop(true); // TODO send a PR to `menubar`
   menubar.setOption('alwaysOnTop', true);
   if (!cropperWindow) {
     const {workAreaSize} = electron.screen.getPrimaryDisplay();
@@ -79,18 +81,19 @@ ipcMain.on('open-cropper-window', () => {
 
 ipcMain.on('close-cropper-window', () => {
   if (cropperWindow) {
-    menubar.window.setAlwaysOnTop(false); // TODO send a PR to `menubar`
+    mainWindow.setAlwaysOnTop(false); // TODO send a PR to `menubar`
     menubar.setOption('alwaysOnTop', false);
     cropperWindow.close(); // TODO: cropperWindow.hide()
   }
 });
 
 menubar.on('after-create-window', () => {
+  mainWindow = menubar.window;
   if (process.env.DEBUG_FOCUS) {
-    menubar.window.openDevTools({mode: 'detach'});
+    mainWindow.openDevTools({mode: 'detach'});
   }
 
-  menubar.window.on('blur', () => {
+  mainWindow.on('blur', () => {
     if (cropperWindow && !cropperWindow.isFocused()) {
       // close the cropper window if the main window loses focus and the cropper window
       // is not focused
