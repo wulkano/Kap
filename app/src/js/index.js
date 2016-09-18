@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fps: fps.value,
       cropArea: cropperBounds,
       compress: compressCheckbox.checked
-      })
+    })
       .then(filePath => {
         stopSpinner();
         title.innerText = 'Recording ✅';
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function stopRecording() {
     stopMonitoring();
     stopSpinner();
-    startSpinner('Processing')
+    startSpinner('Processing');
     aperture.stopRecording()
       .then(filePath => {
         recording = false;
