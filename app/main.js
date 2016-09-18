@@ -4,8 +4,8 @@ const electron = require('electron');
 
 const {BrowserWindow, ipcMain, Menu} = electron;
 const menubar = require('menubar')({
-  index: `file://${__dirname}/dist/index.html`,
-  icon: path.join(__dirname, 'static', 'iconTemplate.png'),
+  index: `file://${__dirname}/index.html`,
+  icon: path.join(__dirname, '..', 'static', 'iconTemplate.png'),
   width: 250,
   height: 500,
   preloadWindow: true,
@@ -16,10 +16,9 @@ const opn = require('opn');
 
 let mainWindow;
 let recording = false;
-
 if (process.env.DEBUG_FOCUS) {
-  const electronExecutable = `${__dirname}/../node_modules/electron/dist/Electron.app/Contents/MacOS/Electron`; // TODO send a PR
-  require('electron-reload')(`${__dirname}/dist`, {electron: electronExecutable}); // eslint-disable-line import/newline-after-import
+  const electronExecutable = `${__dirname}/../../node_modules/electron/dist/Electron.app/Contents/MacOS/Electron`; // TODO send a PR
+  require('electron-reload')(__dirname, {electron: electronExecutable}); // eslint-disable-line import/newline-after-import
   menubar.setOption('alwaysOnTop', true);
 }
 
@@ -79,7 +78,7 @@ ipcMain.on('open-cropper-window', () => {
       transparent: true,
       resizable: true
     });
-    cropperWindow.loadURL(`file://${__dirname}/dist/cropper.html`);
+    cropperWindow.loadURL(`file://${__dirname}/cropper.html`);
     cropperWindow.setIgnoreMouseEvents(false); // TODO this should be false by default
 
     if (process.env.DEBUG_FOCUS) {

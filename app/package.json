@@ -1,6 +1,6 @@
 {
   "name": "focus",
-  "main": "index.js",
+  "main": "dist/main.js",
   "private": true,
   "version": "0.0.0",
   "description": "The best way to record your screen",
