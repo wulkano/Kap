@@ -57,7 +57,8 @@
     "category": "public.app-category.productivity",
     "files": [
       "**/*",
-      "!src"
+      "!src",
+      "!main.js"
     ]
   }
 }

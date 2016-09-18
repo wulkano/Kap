@@ -20,6 +20,11 @@ gulp.task('build', () => {
     .pipe(babel({presets: ['es2015']}))
     .pipe(uglify())
     .pipe(gulp.dest('app/dist'));
+
+  gulp.src('app/main.js')
+    .pipe(babel({presets: ['es2015']}))
+    .pipe(uglify())
+    .pipe(gulp.dest('app/dist'));
 });
 
 gulp.task('watch', ['build'], () => {
