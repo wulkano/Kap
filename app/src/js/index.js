@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function startRecording() {
+    ipcRenderer.send('will-start-recording');
     const past = Date.now();
     startSpinner('Starting');
     recording = true;
@@ -98,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(`Started recording after ${(Date.now() - past) / 1000}s`);
       })
       .catch(err => {
+        ipcRenderer.send('will-stop-recording');
         recording = false;
         console.error(err);
         stopSpinner();
@@ -119,6 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function stopRecording() {
+    ipcRenderer.send('will-stop-recording');
     stopMonitoring();
     stopSpinner();
     startSpinner('Processing');

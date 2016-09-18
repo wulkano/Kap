@@ -15,6 +15,7 @@ const menubar = require('menubar')({
 const opn = require('opn');
 
 let mainWindow;
+let recording = false;
 
 if (process.env.DEBUG_FOCUS) {
   const electronExecutable = `${__dirname}/../node_modules/electron/dist/Electron.app/Contents/MacOS/Electron`; // TODO send a PR
@@ -58,7 +59,8 @@ function setCropperWindowOnBlur() {
   cropperWindow.on('blur', () => {
     if (!mainWindow.isFocused() &&
         !cropperWindow.webContents.isDevToolsFocused() &&
-        !mainWindow.webContents.isDevToolsFocused()) {
+        !mainWindow.webContents.isDevToolsFocused() &&
+        !recording) {
       cropperWindow.close();
     }
   });
@@ -96,7 +98,7 @@ ipcMain.on('open-cropper-window', () => {
 });
 
 ipcMain.on('close-cropper-window', () => {
-  if (cropperWindow) {
+  if (cropperWindow && !recording) {
     mainWindow.setAlwaysOnTop(false); // TODO send a PR to `menubar`
     menubar.setOption('alwaysOnTop', false);
     cropperWindow.close(); // TODO: cropperWindow.hide()
@@ -110,7 +112,7 @@ menubar.on('after-create-window', () => {
   }
 
   mainWindow.on('blur', () => {
-    if (cropperWindow && !cropperWindow.isFocused()) {
+    if (cropperWindow && !cropperWindow.isFocused() && !recording) {
       // close the cropper window if the main window loses focus and the cropper window
       // is not focused
       cropperWindow.close();
@@ -127,4 +129,20 @@ ipcMain.on('get-cropper-bounds', event => {
 
 ipcMain.on('is-cropper-active', event => {
   event.returnValue = Boolean(cropperWindow);
+});
+
+ipcMain.on('will-start-recording', () => {
+  recording = true;
+  if (cropperWindow) {
+    cropperWindow.setResizable(false);
+    cropperWindow.setIgnoreMouseEvents(true);
+    cropperWindow.setAlwaysOnTop(true);
+  }
+});
+
+ipcMain.on('will-stop-recording', () => {
+  recording = false;
+  if (cropperWindow) {
+    cropperWindow.close();
+  }
 });
