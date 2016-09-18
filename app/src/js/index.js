@@ -12,6 +12,7 @@ function setWindowSize() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  const compressCheckbox = document.querySelector('#compress');
   const cropBtn = document.querySelector('#crop');
   const fps = document.querySelector('#fps');
   const fpsInputWrapper = document.querySelector('.fps-input-wrapper');
@@ -53,12 +54,12 @@ document.addEventListener('DOMContentLoaded', () => {
     clearInterval(monitoringIntervalId);
   }
 
-  function startSpinner() {
+  function startSpinner(text) {
     spinnerIntervalId = setInterval(() => {
       const frame = spinnerFrames[currentSpinnerFrame];
       currentSpinnerFrame = ++currentSpinnerFrame % spinnerFrames.length;
 
-      title.innerText = `Starting ${frame}`;
+      title.innerText = `${text} ${frame}`;
     }, 100);
   }
 
@@ -68,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function startRecording() {
     const past = Date.now();
-    startSpinner();
+    startSpinner('Starting');
     recording = true;
     document.activeElement.blur(); // make sure the fps `onblur` validations are executed
 
@@ -85,7 +86,11 @@ document.addEventListener('DOMContentLoaded', () => {
       cropperBounds.height -= 4;
     }
 
-    aperture.startRecording({fps: fps.value, cropArea: cropperBounds})
+    aperture.startRecording({
+      fps: fps.value,
+      cropArea: cropperBounds,
+      compress: compressCheckbox.checked
+      })
       .then(filePath => {
         stopSpinner();
         title.innerText = 'Recording ✅';
@@ -114,10 +119,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function stopRecording() {
+    stopMonitoring();
+    stopSpinner();
+    startSpinner('Processing')
     aperture.stopRecording()
       .then(filePath => {
         recording = false;
-        stopMonitoring();
+        stopSpinner();
         title.innerText = 'Focus';
         time.innerText = '00:00';
         size.innerText = '0 kB';
