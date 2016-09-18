@@ -17,7 +17,7 @@ const opn = require('opn');
 let mainWindow;
 
 if (process.env.DEBUG_FOCUS) {
-  const electronExecutable = `${__dirname}/../node_modules/electron/dist/Electron.app/Contents/MacOS/Electron`;
+  const electronExecutable = `${__dirname}/../node_modules/electron/dist/Electron.app/Contents/MacOS/Electron`; // TODO send a PR
   require('electron-reload')(`${__dirname}/dist`, {electron: electronExecutable}); // eslint-disable-line import/newline-after-import
   menubar.setOption('alwaysOnTop', true);
 }
