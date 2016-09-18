@@ -54,6 +54,10 @@
   "build": {
     "asar": false,
     "appId": "com.wulkano.focus",
-    "category": "public.app-category.productivity"
+    "category": "public.app-category.productivity",
+    "files": [
+      "**/*",
+      "!src"
+    ]
   }
 }
