@@ -151,12 +151,7 @@ input {
   }
 }
 
-#file-type {
-  padding: .2em;
-  border-radius: 5px;
-}
-
-.fps-input-wrapper, #file-type {
+.fps-input-wrapper {
   cursor: pointer;
 
   &:hover {
