@@ -1,6 +1,7 @@
 const fs = require('fs');
 
 const aperture = require('aperture.js')();
+const aspectRatio = require('aspectratio');
 const fileSize = require('file-size');
 const {ipcRenderer} = require('electron');
 const moment = require('moment');
@@ -12,10 +13,12 @@ function setMainWindowSize() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  const aspectRatioSelector = document.querySelector('#aspect-ratio-selector');
   const bigRedBtn = document.querySelector('#big-red-btn');
   const controlsTitleWrapper = document.querySelector('.controls-title-wrapper');
   const inputWidth = document.querySelector('#aspect-ratio-width');
   const inputHeight = document.querySelector('#aspect-ratio-height');
+  const linkBtn = document.querySelector('.link-btn');
   const options = document.querySelector('.options');
   const size = document.querySelector('#size');
   const swapBtn = document.querySelector('.swap-btn');
@@ -29,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let lastValidInputWidth = 512;
   let lastValidInputHeight = 512;
+  let aspectRatioBaseValues = [lastValidInputWidth, lastValidInputHeight];
 
   function startMonitoringElapsedTimeAndSize(filePath) {
     const startedAt = moment();
@@ -193,6 +197,15 @@ document.addEventListener('DOMContentLoaded', () => {
       min: 1,
       onInvalid: shake
     });
+
+    if (linkBtn.classList.contains('active')) {
+      const tmp = aspectRatio.resize(...aspectRatioBaseValues, this.value);
+      if (tmp[1]) {
+        lastValidInputHeight = tmp[1];
+        inputHeight.value = tmp[1];
+      }
+    }
+
     lastValidInputWidth = this.value || lastValidInputWidth;
   };
 
@@ -208,6 +221,15 @@ document.addEventListener('DOMContentLoaded', () => {
       min: 1,
       onInvalid: shake
     });
+
+    if (linkBtn.classList.contains('active')) {
+      const tmp = aspectRatio.resize(...aspectRatioBaseValues, undefined, this.value);
+      if (tmp[0]) {
+        lastValidInputWidth = tmp[0];
+        inputWidth.value = tmp[0];
+      }
+    }
+
     lastValidInputHeight = this.value || lastValidInputHeight;
   };
 
@@ -219,6 +241,10 @@ document.addEventListener('DOMContentLoaded', () => {
     [inputWidth.value, inputHeight.value] = [inputHeight.value, inputWidth.value];
     inputWidth.oninput();
     inputHeight.oninput();
+  };
+
+  linkBtn.onclick = function () {
+    this.classList.toggle('active');
   };
 });
 
