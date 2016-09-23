@@ -144,7 +144,16 @@ document.addEventListener('DOMContentLoaded', () => {
     event.stopPropagation();
   };
 
-  function validateNumericInput(value, opts) {
+  function shake(input) {
+    input.classList.add('invalid');
+
+    input.addEventListener('webkitAnimationEnd', () => {
+      input.classList.remove('invalid');
+    })
+  }
+
+  function validateNumericInput(input, opts) {
+    let value = input.value;
     if (value === '' && opts.empty) {
       return value;
     }
@@ -156,14 +165,17 @@ document.addEventListener('DOMContentLoaded', () => {
     value = parseInt(value, 10);
 
     if (!/^\d{1,5}$/.test(value)) {
+      opts.onInvalid(input);
       return opts.lastValidValue;
     }
 
     if (opts.max && value > opts.max) {
+      opts.onInvalid(input);
       return opts.max;
     }
 
     if (opts.min && value < opts.min) {
+      opts.onInvalid(input);
       return opts.min;
     }
 
@@ -171,14 +183,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   inputWidth.oninput = function () {
-    this.value = validateNumericInput(this.value, {
+    this.value = validateNumericInput(this, {
       lastValidValue: lastValidInputWidth,
       empty: true,
       max: screen.width,
-      min: 1
+      min: 1,
+      onInvalid: shake
     });
     lastValidInputWidth = this.value || lastValidInputWidth;
-    // TODO: show some visual feedback when the input is invalid (shake the input?)
   };
 
   inputWidth.onblur = function () {
@@ -186,14 +198,14 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   inputHeight.oninput = function () {
-    this.value = validateNumericInput(this.value, {
+    this.value = validateNumericInput(this, {
       lastValidValue: lastValidInputHeight,
       empty: true,
       max: screen.height - screen.availTop, // currently we can't draw over the menubar,
-      min: 1
+      min: 1,
+      onInvalid: shake
     });
     lastValidInputHeight = this.value || lastValidInputHeight;
-    // TODO: show some visual feedback when the input is invalid (shake the input?)
   };
 
   inputHeight.onblur = function () {
