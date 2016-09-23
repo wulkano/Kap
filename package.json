@@ -30,6 +30,7 @@
     "electron-reload": "^1.0.2",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
+    "gulp-inject-svg": "^0.1.8",
     "gulp-postcss": "^6.1.1",
     "gulp-pug": "^3.0.4",
     "gulp-uglify": "^2.0.0",
