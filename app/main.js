@@ -22,7 +22,7 @@ if (process.env.DEBUG_FOCUS) {
   menubar.setOption('alwaysOnTop', true);
 }
 
-ipcMain.on('set-window-size', (event, args) => {
+ipcMain.on('set-main-window-size', (event, args) => {
   if (args.width && args.height && mainWindow) {
     mainWindow.setSize(args.width, args.height, true); // true == animate
   }

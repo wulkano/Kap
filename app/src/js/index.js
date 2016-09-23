@@ -8,7 +8,7 @@ const moment = require('moment');
 function setWindowSize() {
   const width = document.documentElement.scrollWidth;
   const height = document.documentElement.scrollHeight;
-  ipcRenderer.send('set-window-size', {width, height});
+  ipcRenderer.send('set-main-window-size', {width, height});
 }
 
 document.addEventListener('DOMContentLoaded', () => {
