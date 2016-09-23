@@ -5,7 +5,7 @@ const fileSize = require('file-size');
 const {ipcRenderer} = require('electron');
 const moment = require('moment');
 
-function setWindowSize() {
+function setMainWindowSize() {
   const width = document.documentElement.scrollWidth;
   const height = document.documentElement.scrollHeight;
   ipcRenderer.send('set-main-window-size', {width, height});
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
     triangle.classList.toggle('up');
 
     controls.classList.toggle('hidden');
-    setWindowSize();
+    setMainWindowSize();
   };
 
   options.onclick = event => {
@@ -222,4 +222,4 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 });
 
-window.addEventListener('load', setWindowSize);
+window.addEventListener('load', setMainWindowSize);
