@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     input.addEventListener('webkitAnimationEnd', () => {
       input.classList.remove('invalid');
-    })
+    });
 
     return true;
   }
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
     [inputWidth.value, inputHeight.value] = [inputHeight.value, inputWidth.value];
     inputWidth.oninput();
     inputHeight.oninput();
-  }
+  };
 });
 
 window.addEventListener('load', setWindowSize);
