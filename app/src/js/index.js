@@ -26,6 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let monitoringIntervalId;
 
+  let lastValidInputWidth = 500;
+  let lastValidInputHeight = 500;
+
   function startMonitoringElapsedTimeAndSize(filePath) {
     const startedAt = moment();
 
@@ -140,6 +143,62 @@ document.addEventListener('DOMContentLoaded', () => {
     ipcRenderer.send('show-options-menu', {x: left, y: bottom});
     event.stopPropagation();
   };
+
+  function validateNumericInput(value, opts) {
+    if (value === '' && opts.empty) {
+      return value;
+    }
+
+    if (!value || !opts || ! opts.lastValidValue) {
+      return undefined;
+    }
+
+    value = parseInt(value, 10);
+
+    if (!/^\d{1,5}$/.test(value)) {
+      return opts.lastValidValue;
+    }
+
+    if (opts.max && value > opts.max) {
+      return opts.max;
+    }
+
+    if (opts.min && value < opts.min) {
+      return opts.min;
+    }
+
+    return value;
+  }
+
+  inputWidth.oninput = function () {
+    this.value = validateNumericInput(this.value, {
+      lastValidValue: lastValidInputWidth,
+      empty: true,
+      max: screen.width,
+      min: 1
+    });
+    lastValidInputWidth = this.value || lastValidInputWidth;
+    // TODO: show some visual feedback when the input is invalid (shake the input?)
+  }
+
+  inputWidth.onblur = function () {
+    this.value = this.value || lastValidInputWidth; // prevent the input from staying empty
+  }
+
+  inputHeight.oninput = function () {
+    this.value = validateNumericInput(this.value, {
+      lastValidValue: lastValidInputHeight,
+      empty: true,
+      max: screen.height - screen.availTop, // currently we can't draw over the menubar,
+      min: 1
+    });
+    lastValidInputHeight = this.value || lastValidInputHeight;
+    // TODO: show some visual feedback when the input is invalid (shake the input?)
+  }
+
+  inputHeight.onblur = function () {
+    this.value = this.value || lastValidInputHeight; // prevent the input from staying empty
+  }
 });
 
 window.addEventListener('load', setWindowSize);
