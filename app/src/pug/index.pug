@@ -25,11 +25,11 @@ html(lang='en')
       .controls.vertical-section.align-itens-flex-start
         p#aspect-ratio-title.row Aspect ratio
         select#aspect-ratio-selector.row
-          option(data-aspect-ratio='custom') Custom
           option(data-aspect-ratio='16:9') 16:9 (1600x900)
           option(data-aspect-ratio='5:4') 5:4 (1280x1024)
           option(data-aspect-ratio='4:3') 4:3 (1024x768)
-          option(data-aspect-ratio='1:1') 1:1 (512x512)
+          option(data-aspect-ratio='1:1', selected='selected') 1:1 (512x512)
+          option(data-aspect-ratio='custom') Custom
         #aspect-ratio-wrapper.horizontal-section.align-itens-flex-end
           .vertical-section.align-itens-flex-start
             label(for='aspect-ratio-width') Width
