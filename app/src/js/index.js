@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let monitoringIntervalId;
 
-  let lastValidInputWidth = 500;
-  let lastValidInputHeight = 500;
+  let lastValidInputWidth = 512;
+  let lastValidInputHeight = 512;
 
   function startMonitoringElapsedTimeAndSize(filePath) {
     const startedAt = moment();
@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   inputWidth.onblur = function () {
-    this.value = this.value || 500; // prevent the input from staying empty
+    this.value = this.value || 512; // prevent the input from staying empty
   };
 
   inputHeight.oninput = function () {
@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   inputHeight.onblur = function () {
-    this.value = this.value || 500; // prevent the input from staying empty
+    this.value = this.value || 512; // prevent the input from staying empty
   };
 
   swapBtn.onclick = () => {
