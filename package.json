@@ -7,7 +7,7 @@
     "test": "xo",
     "build": "npm run test && gulp build",
     "start": "DEBUG_FOCUS=1 concurrently --kill-others 'gulp watch' 'electron app'",
-    "pack": "npm run build && build --dir; cd dist/mac; zip --symlinks -r focus focus.app",
+    "pack": "npm run build && build --dir; cd dist/mac; zip --symlinks -r -q focus focus.app",
     "dist": "npm run build && build",
     "postinstall": "install-app-deps"
   },
