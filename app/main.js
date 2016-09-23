@@ -65,15 +65,15 @@ function setCropperWindowOnBlur() {
   });
 }
 
-ipcMain.on('open-cropper-window', () => {
+ipcMain.on('open-cropper-window', (event, size) => {
   mainWindow.setAlwaysOnTop(true); // TODO send a PR to `menubar`
   menubar.setOption('alwaysOnTop', true);
   if (cropperWindow) {
     cropperWindow.focus();
   } else {
     cropperWindow = new BrowserWindow({
-      width: 500,
-      height: 500,
+      width: size.width,
+      height: size.height,
       frame: false,
       transparent: true,
       resizable: true
