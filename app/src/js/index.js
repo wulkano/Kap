@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const inputHeight = document.querySelector('#aspect-ratio-height');
   const options = document.querySelector('.options');
   const size = document.querySelector('#size');
+  const swapBtn = document.querySelector('.swap-btn');
   const time = document.querySelector('#time');
   const triangle = document.querySelector('#triangle');
   const windowTitle = document.querySelector('#window-title');
@@ -211,6 +212,12 @@ document.addEventListener('DOMContentLoaded', () => {
   inputHeight.onblur = function () {
     this.value = this.value || 500; // prevent the input from staying empty
   };
+
+  swapBtn.onclick = () => {
+    [inputWidth.value, inputHeight.value] = [inputHeight.value, inputWidth.value];
+    inputWidth.oninput();
+    inputHeight.oninput();
+  }
 });
 
 window.addEventListener('load', setWindowSize);
