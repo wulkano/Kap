@@ -182,8 +182,8 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   inputWidth.onblur = function () {
-    this.value = this.value || lastValidInputWidth; // prevent the input from staying empty
-  }
+    this.value = this.value || 500; // prevent the input from staying empty
+  };
 
   inputHeight.oninput = function () {
     this.value = validateNumericInput(this.value, {
@@ -197,8 +197,8 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   inputHeight.onblur = function () {
-    this.value = this.value || lastValidInputHeight; // prevent the input from staying empty
-  }
+    this.value = this.value || 500; // prevent the input from staying empty
+  };
 });
 
 window.addEventListener('load', setWindowSize);
