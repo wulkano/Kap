@@ -6,6 +6,7 @@ $divider-color: rgba(0, 0, 0, 0.1);
 $default-font-size: 0.8750em;
 $box-shadow-inputs: 0px 1px 1px 0px rgba(0,0,0,0.20), 0px 0px 0px 1px rgba(0,0,0,0.10);
 $blue: #3B99FC;
+$red: #FF6159;
 
 
 @font-face {
@@ -82,9 +83,14 @@ html {
 #big-red-btn {
   @extend .btn;
   @extend .circle;
-  border: 2px solid #FF6159;
+  border: 2px solid $red;
   margin: 1em;
   justify-content: center;
+  transition: background-color .5s ease;
+
+  &.filled {
+    background-color: $red;
+  }
 
   svg {
     width: 1.3750em;

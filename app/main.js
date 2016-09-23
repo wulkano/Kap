@@ -101,6 +101,7 @@ ipcMain.on('open-cropper-window', (event, size) => {
 
     cropperWindow.on('closed', () => {
       cropperWindow = undefined;
+      mainWindow.webContents.send('cropper-window-closed');
     });
   }
 });

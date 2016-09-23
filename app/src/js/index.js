@@ -129,6 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
           width: parseInt(inputWidth.value, 10),
           height: parseInt(inputHeight.value, 10)
         });
+        this.classList.add('filled');
+        this.attributes['data-state'].value = 'ready-to-record';
       }
       // startRecording();
     }
@@ -264,6 +266,11 @@ document.addEventListener('DOMContentLoaded', () => {
       setCropperWindowSize(...values);
     }
   };
+
+  ipcRenderer.on('cropper-window-closed', () => {
+    bigRedBtn.classList.remove('filled');
+    bigRedBtn.attributes['data-state'].value = 'initial';
+  });
 });
 
 window.addEventListener('load', setMainWindowSize);
