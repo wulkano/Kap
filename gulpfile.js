@@ -3,6 +3,7 @@ const cssnano = require('cssnano');
 const gulp = require('gulp');
 const injectSvg = require('gulp-inject-svg');
 const postcss = require('gulp-postcss');
+const postcssExtend = require('postcss-extend');
 const postcssNested = require('postcss-nested');
 const postcsssSimpleVars = require('postcss-simple-vars');
 const pug = require('gulp-pug');
@@ -15,7 +16,7 @@ gulp.task('build', () => {
     .pipe(gulp.dest('app/dist'));
 
   gulp.src('app/src/css/*')
-    .pipe(postcss([postcsssSimpleVars, postcssNested, cssnano]))
+    .pipe(postcss([postcsssSimpleVars, postcssExtend, postcssNested, cssnano]))
     .pipe(gulp.dest('app/dist'));
 
   gulp.src('app/src/js/*')
