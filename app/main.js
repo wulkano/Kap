@@ -15,7 +15,10 @@ const menubar = require('menubar')({
 const opn = require('opn');
 
 let mainWindow;
+let cropperWindow;
+
 let recording = false;
+
 if (process.env.DEBUG_FOCUS) {
   const electronExecutable = `${__dirname}/../../node_modules/electron/dist/Electron.app/Contents/MacOS/Electron`; // TODO send a PR
   require('electron-reload')(__dirname, {electron: electronExecutable}); // eslint-disable-line import/newline-after-import
@@ -26,6 +29,13 @@ ipcMain.on('set-main-window-size', (event, args) => {
   if (args.width && args.height && mainWindow) {
     [args.width, args.height] = [parseInt(args.width, 10), parseInt(args.height, 10)];
     mainWindow.setSize(args.width, args.height, true); // true == animate
+  }
+});
+
+ipcMain.on('set-cropper-window-size', (event, args) => {
+  if (args.width && args.height && cropperWindow) {
+    [args.width, args.height] = [parseInt(args.width, 10), parseInt(args.height, 10)];
+    cropperWindow.setSize(args.width, args.height, true); // true == animate
   }
 });
 
@@ -52,8 +62,6 @@ ipcMain.on('show-options-menu', (event, coordinates) => {
     optionsMenu.popup(coordinates.x + 4, coordinates.y); // 4 is the magic number ✨
   }
 });
-
-let cropperWindow;
 
 function setCropperWindowOnBlur() {
   cropperWindow.on('blur', () => {

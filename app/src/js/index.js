@@ -189,6 +189,13 @@ document.addEventListener('DOMContentLoaded', () => {
     return value;
   }
 
+  function setCropperWindowSize(width, height) {
+    ipcRenderer.send('set-cropper-window-size', {
+      width: width || lastValidInputWidth,
+      height: height || lastValidInputHeight
+    });
+  }
+
   inputWidth.oninput = function () {
     this.value = validateNumericInput(this, {
       lastValidValue: lastValidInputWidth,
@@ -207,6 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     lastValidInputWidth = this.value || lastValidInputWidth;
+    setCropperWindowSize();
   };
 
   inputWidth.onblur = function () {
@@ -231,6 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     lastValidInputHeight = this.value || lastValidInputHeight;
+    setCropperWindowSize();
   };
 
   inputHeight.onblur = function () {
@@ -245,6 +254,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   linkBtn.onclick = function () {
     this.classList.toggle('active');
+  };
+
+  aspectRatioSelector.onchange = function () {
+    const values = this.value.split('x');
+    if (values.length === 2) {
+      [inputWidth.value, inputHeight.value] = values;
+      aspectRatioBaseValues = values;
+      setCropperWindowSize(...values);
+    }
   };
 });
 
