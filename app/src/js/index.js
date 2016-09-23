@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     clearInterval(monitoringIntervalId);
   }
 
-  function startRecording() {
+  function startRecording() { // eslint-disable-line no-unused-vars
     ipcRenderer.send('will-start-recording');
     const past = Date.now();
     recording = true;
@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return value;
     }
 
-    if (!value || !opts || ! opts.lastValidValue) {
+    if (!value || !opts || !opts.lastValidValue) {
       return undefined;
     }
 
@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     lastValidInputWidth = this.value || lastValidInputWidth;
     // TODO: show some visual feedback when the input is invalid (shake the input?)
-  }
+  };
 
   inputWidth.onblur = function () {
     this.value = this.value || lastValidInputWidth; // prevent the input from staying empty
@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     lastValidInputHeight = this.value || lastValidInputHeight;
     // TODO: show some visual feedback when the input is invalid (shake the input?)
-  }
+  };
 
   inputHeight.onblur = function () {
     this.value = this.value || lastValidInputHeight; // prevent the input from staying empty
