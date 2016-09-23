@@ -151,6 +151,8 @@ document.addEventListener('DOMContentLoaded', () => {
     input.addEventListener('webkitAnimationEnd', () => {
       input.classList.remove('invalid');
     })
+
+    return true;
   }
 
   function validateNumericInput(input, opts) {
@@ -195,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   inputWidth.onblur = function () {
-    this.value = this.value || 512; // prevent the input from staying empty
+    this.value = this.value || (shake(this) && 512); // prevent the input from staying empty
   };
 
   inputHeight.oninput = function () {
@@ -210,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   inputHeight.onblur = function () {
-    this.value = this.value || 512; // prevent the input from staying empty
+    this.value = this.value || (shake(this) && 512); // prevent the input from staying empty
   };
 
   swapBtn.onclick = () => {
