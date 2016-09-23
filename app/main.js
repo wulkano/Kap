@@ -6,7 +6,7 @@ const {BrowserWindow, ipcMain, Menu} = electron;
 const menubar = require('menubar')({
   index: `file://${__dirname}/index.html`,
   icon: path.join(__dirname, '..', 'static', 'iconTemplate.png'),
-  width: 250,
+  width: 320,
   height: 500,
   preloadWindow: true,
   transparent: true,
