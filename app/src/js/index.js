@@ -12,24 +12,19 @@ function setWindowSize() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const compressCheckbox = document.querySelector('#compress');
-  const cropBtn = document.querySelector('#crop');
-  const fps = document.querySelector('#fps');
-  const fpsInputWrapper = document.querySelector('.fps-input-wrapper');
-  const options = document.querySelector('#options');
-  const recordBtn = document.querySelector('#record');
-  const settingsTitleWrapper = document.querySelector('.settings-title-wrapper');
+  const bigRedBtn = document.querySelector('#big-red-btn');
+  const controlsTitleWrapper = document.querySelector('.controls-title-wrapper');
+  const inputWidth = document.querySelector('#aspect-ratio-width');
+  const inputHeight = document.querySelector('#aspect-ratio-height');
+  const options = document.querySelector('.options');
   const size = document.querySelector('#size');
   const time = document.querySelector('#time');
-  const title = document.querySelector('.title');
-
-  const spinnerFrames = ['🕐', '🕑', '🕒', '🕓', '🕔', '🕕', '🕖', '🕗', '🕘', '🕙', '🕚'];
-  let currentSpinnerFrame = 0;
+  const triangle = document.querySelector('#triangle');
+  const windowTitle = document.querySelector('#window-title');
 
   let recording = false;
 
   let monitoringIntervalId;
-  let spinnerIntervalId;
 
   function startMonitoringElapsedTimeAndSize(filePath) {
     const startedAt = moment();
@@ -54,23 +49,9 @@ document.addEventListener('DOMContentLoaded', () => {
     clearInterval(monitoringIntervalId);
   }
 
-  function startSpinner(text) {
-    spinnerIntervalId = setInterval(() => {
-      const frame = spinnerFrames[currentSpinnerFrame];
-      currentSpinnerFrame = ++currentSpinnerFrame % spinnerFrames.length;
-
-      title.innerText = `${text} ${frame}`;
-    }, 100);
-  }
-
-  function stopSpinner() {
-    clearInterval(spinnerIntervalId);
-  }
-
   function startRecording() {
     ipcRenderer.send('will-start-recording');
     const past = Date.now();
-    startSpinner('Starting');
     recording = true;
     document.activeElement.blur(); // make sure the fps `onblur` validations are executed
 
@@ -88,13 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     aperture.startRecording({
-      fps: fps.value,
-      cropArea: cropperBounds,
-      compress: compressCheckbox.checked
+      cropArea: cropperBounds
     })
       .then(filePath => {
-        stopSpinner();
-        title.innerText = 'Recording ✅';
+        windowTitle.innerText = 'Recording ✅';
         startMonitoringElapsedTimeAndSize(filePath);
         console.log(`Started recording after ${(Date.now() - past) / 1000}s`);
       })
@@ -102,8 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ipcRenderer.send('will-stop-recording');
         recording = false;
         console.error(err);
-        stopSpinner();
-        title.innerText = 'Error 😔';
+        windowTitle.innerText = 'Error 😔';
       });
   }
 
@@ -123,13 +100,10 @@ document.addEventListener('DOMContentLoaded', () => {
   function stopRecording() {
     ipcRenderer.send('will-stop-recording');
     stopMonitoring();
-    stopSpinner();
-    startSpinner('Processing');
     aperture.stopRecording()
       .then(filePath => {
         recording = false;
-        stopSpinner();
-        title.innerText = 'Focus';
+        windowTitle.innerText = 'Focus';
         time.innerText = '00:00';
         size.innerText = '0 kB';
         const fileName = `Screen record ${Date()}.mp4`;
@@ -137,55 +111,34 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 
-  recordBtn.onclick = () => {
+  bigRedBtn.onclick = function () {
     if (recording) {
       stopRecording();
     } else {
-      startRecording();
+      const state = this.attributes['data-state'].value;
+      if (state === 'initial') {
+        ipcRenderer.send('open-cropper-window', {
+          width: parseInt(inputWidth.value, 10),
+          height: parseInt(inputHeight.value, 10)
+        });
+      }
+      // startRecording();
     }
   };
 
-  settingsTitleWrapper.onclick = function () {
-    const arrow = this.children[1];
-    const settings = document.querySelector('.settings');
+  controlsTitleWrapper.onclick = function () {
+    const controls = document.querySelector('.controls');
 
-    arrow.classList.toggle('up');
-    arrow.classList.toggle('down');
+    triangle.classList.toggle('up');
 
-    settings.classList.toggle('hidden');
+    controls.classList.toggle('hidden');
     setWindowSize();
-
-    window.arrow = arrow;
   };
 
-  fps.onkeyup = function () {
-    if (!/^[0-9]{1,2}$/.test(this.value) && this.value.trim() !== '') {
-      this.value = 30;
-    } else if (this.value < 0) {
-      this.value = 0;
-    } else if (this.value > 60) {
-      this.value = 60;
-    }
-  };
-
-  fps.onblur = function () {
-    if (this.value.trim() === '' || this.value === '0') {
-      this.value = 30;
-    }
-  };
-
-  options.onclick = () => {
+  options.onclick = event => {
     const {bottom, left} = options.getBoundingClientRect();
     ipcRenderer.send('show-options-menu', {x: left, y: bottom});
-  };
-
-  fpsInputWrapper.onclick = () => {
-    fps.focus();
-    fps.value = fps.value; // move the carret to the end
-  };
-
-  cropBtn.onclick = function () {
-    ipcRenderer.send('open-cropper-window');
+    event.stopPropagation();
   };
 });
 

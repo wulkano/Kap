@@ -1,6 +1,12 @@
-$background-color: #242424; /* from chrome devtools' dark theme */
-$text-color: #9c9c9c;
-$green: #4CAF50;
+$primary-background-color: #FFFFFF;
+$secondary-background-color: #ECECEC;
+$primary-text-color: #585858;
+$secondary-text-color: #9C9C9C;
+$divider-color: rgba(0, 0, 0, 0.1);
+$default-font-size: 0.8750em;
+$box-shadow-inputs: 0px 1px 1px 0px rgba(0,0,0,0.20), 0px 0px 0px 1px rgba(0,0,0,0.10);
+$blue: #3B99FC;
+
 
 @font-face {
   font-family: "San Francisco";
@@ -9,33 +15,45 @@ $green: #4CAF50;
 }
 
 html {
-  background-color: $background-color;
-  color: $text-color;
+  background-color: $secondary-background-color;
+  color: $secondary-text-color;
   font-family: "San Francisco";
 }
 
-.content {
+.content { /* TODO: remove this and apply this styles to `body`? */
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
 
-.horizontal-section {
+#header {
+  background-color: $primary-background-color;
+  width: 100%;
+  justify-content: center;
+}
+
+.horizontal-section, .vertical-section {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
 }
 
-.title, .settings-title {
-  font-size: 10pt;
+.vertical-section {
+  flex-direction: column;
+}
+
+#window-title, #controls-title {
+  color: $primary-text-color;
+  font-size: $default-font-size;
 }
 
 .title-wrapper {
   width: 100%;
   text-align: center;
   -webkit-app-region: drag;
+  background-color: $primary-background-color;
 }
 
 #time, #size {
@@ -44,35 +62,33 @@ html {
 }
 
 #time {
-  left: 5em;
+  left: 7em;
 }
 
 #size {
-  left: calc(64%);
+  left: 65%;
 }
 
 .btn, .btn * {
   cursor: pointer
 }
 
-#record {
-  width: 3em;
-  height: 3em;
-  background: linear-gradient(rgb(255, 97, 89), rgb(255, 95, 82), rgb(255, 58, 48));
+.circle {
+  width: 4em;
+  height: 4em;
   border-radius: 50%;
-  margin: 1em;
 }
 
-.circle {
+#big-red-btn {
+  @extend .btn;
+  @extend .circle;
+  border: 2px solid #FF6159;
+  margin: 1em;
   justify-content: center;
-  width: 3em;
-  height: 3em;
-  border-radius: 50%;
-  border: .15em solid $text-color;
-  margin-bottom: 1em;
 
-  img {
-    height: 1.5em;
+  svg {
+    width: 1.3750em;
+    height: 1.3750em;
   }
 }
 
@@ -81,93 +97,126 @@ html {
   cursor: default;
 }
 
-.settings-title-wrapper {
+.controls-title-wrapper {
   width: 100%;
   height: 2em;
-  background-color: #191919;
-  cursor: pointer;
+  background-color: $secondary-background-color;
+  padding-left: 0.6250em;
+  padding-right: 0.6250em;
 }
 
-.settings-title-wrapper * {
-  cursor: pointer;
+.controls-title-wrapper * {
+  @extend .btn;
 }
 
-.settings-title {
+#controls-title {
   margin-left: 0.75em;
 }
 
-.arrow {
-  margin-right: 0.75em;
+#triangle {
   content: "";
   display: inline-block;
-  width: 0.5em;
-  height: 0.5em;
-  border-right: 0.15em solid rgb(156, 156, 156);;
-  border-top: 0.15em solid rgb(156, 156, 156);;
-  margin-right: 0.5em;
+  width: 0;
+  height: 0;
+  border-right: 0.3em solid transparent;
+  border-top: 0.3125em solid $primary-text-color;
+  border-left: 0.3em solid transparent;
+  margin-left: 0.25em; /* TODO: remove this */
   transition: all .3s ease;
 
   &.up {
-    transform: rotate(-45deg);
-  }
-
-  &.down {
-    transform: rotate(135deg);
+    transform: rotate(-180deg);
   }
 }
 
-.settings {
+.controls {
   overflow: hidden;
-  height: 5em;
+  /*height: 5em;*/
   text-align: center;
-  font-size: 1em;
   width: 100%;
-  padding-left: 2em;
-  padding-right: 2em;
+  padding: 1em;
 }
 
-.settings.hidden {
-  height: 0em;
+.controls.hidden {
+  display: none;
 }
 
-.fps-input-wrapper {
-  position: relative;
-  padding: .2em;
-  border-radius: 5px;
-}
-
-input {
-  color: $text-color;
-  border: 0 solid transparent;
-  background: transparent;
-  box-sizing: border-box;
-  font-size: 1em;
-
-  &#fps {
-    width: 1.3em;
-    padding: 0;
-    text-align: right;
-    cursor: text;
-  }
-}
-
-.fps-input-wrapper {
-  cursor: pointer;
-
-  &:hover {
-    background: #191919;
-    border: 1em;
-  }
-}
-
-#fps-label:hover {
-  cursor: pointer;
-}
-
-#options {
-  position: absolute;
-  padding: 0.25em;
-  top: 0;
-  right: 0;
+.options {
+  padding: .25em;
+  width: 1.5em;
   height: 1.5em;
+}
+
+.horizontal-divider {
+  width: 100%;
+  height: 1px; /* TODO: change this to `em` */
+  background-color: $divider-color;
+}
+
+.vertical-divider {
+  width: 1px;
+  height: 100%; /* TODO: change this to `em` */
+  background-color: $divider-color;
+}
+
+#aspect-ratio-title {
+  color: $primary-text-color;
+  font-size: $default-font-size;
+  line-height: normal;
+}
+
+label {
+  font-size: 0.6250em;
+  line-height: normal;
+}
+
+.align-itens-flex-start {
+  align-items: flex-start;
+}
+
+.align-itens-flex-end {
+  align-items: flex-end;
+}
+
+.aspect-ratio-input-wrapper {
+  width: 6.3em;
+  height: 1.5em;
+}
+
+#aspect-ratio-selector {
+  width: 100%;
+}
+
+.row {
+  margin-bottom: 0.75em;
+}
+
+.column {
+  margin-right: 0.5em;
+}
+
+
+input[type=text] {
+  width: 100%;
+  height: 100%;
+  padding-left: 0.3em;
+}
+
+.button-group {
+  border: none;
+  background: #FCFBFC;
+  box-shadow: $box-shadow-inputs;
+  border-radius: 3px;
+  width: 4em;
+  height: 1.35em;
+
+  svg {
+    @extend .btn;
+    width: 75%;
+    height: 115%;
+
+    &:active, &.active {
+      fill: $blue;
+    }
+  }
 }
