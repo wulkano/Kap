@@ -143,7 +143,7 @@ html {
   padding: 1em;
 }
 
-.controls.hidden {
+.hidden {
   display: none;
 }
 
