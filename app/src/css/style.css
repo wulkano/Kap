@@ -224,6 +224,10 @@ input[type=text] {
     &:active, &.active {
       fill: $blue;
     }
+
+    &.disabled {
+      pointer-events: none;
+    }
   }
 }
 

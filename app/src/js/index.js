@@ -26,8 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const triangle = document.querySelector('#triangle');
   const windowTitle = document.querySelector('#window-title');
 
-  let recording = false;
-
   let monitoringIntervalId;
 
   let lastValidInputWidth = 512;
@@ -57,11 +55,31 @@ document.addEventListener('DOMContentLoaded', () => {
     clearInterval(monitoringIntervalId);
   }
 
-  function startRecording() { // eslint-disable-line no-unused-vars
+  function setMainWindowTitle(title) {
+    windowTitle.innerText = title;
+  }
+
+  function disableInputs() {
+    aspectRatioSelector.disabled = true;
+    inputWidth.disabled = true;
+    inputHeight.disabled = true;
+    linkBtn.classList.add('disabled');
+    swapBtn.classList.add('disabled');
+  }
+
+  function enableInputs() {
+    aspectRatioSelector.disabled = false;
+    inputWidth.disabled = false;
+    inputHeight.disabled = false;
+    linkBtn.classList.remove('disabled');
+    swapBtn.classList.remove('disabled');
+  }
+
+  function startRecording() {
+    disableInputs();
     ipcRenderer.send('will-start-recording');
+    setMainWindowTitle('Getting ready...');
     const past = Date.now();
-    recording = true;
-    document.activeElement.blur(); // make sure the fps `onblur` validations are executed
 
     let cropperBounds;
     if (ipcRenderer.sendSync('is-cropper-active')) {
@@ -80,15 +98,17 @@ document.addEventListener('DOMContentLoaded', () => {
       cropArea: cropperBounds
     })
       .then(filePath => {
-        windowTitle.innerText = 'Recording ✅';
+        bigRedBtn.attributes['data-state'].value = 'ready-to-stop';
+        bigRedBtn.children[0].classList.add('hidden'); // crop btn
+        bigRedBtn.children[1].classList.remove('hidden'); // stop btn
         startMonitoringElapsedTimeAndSize(filePath);
+        setMainWindowTitle('Recording');
         console.log(`Started recording after ${(Date.now() - past) / 1000}s`);
       })
       .catch(err => {
         ipcRenderer.send('will-stop-recording');
-        recording = false;
         console.error(err);
-        windowTitle.innerText = 'Error 😔';
+        setMainWindowTitle('Error');
       });
   }
 
@@ -110,29 +130,31 @@ document.addEventListener('DOMContentLoaded', () => {
     stopMonitoring();
     aperture.stopRecording()
       .then(filePath => {
-        recording = false;
         windowTitle.innerText = 'Focus';
         time.innerText = '00:00';
         size.innerText = '0 kB';
         const fileName = `Screen record ${Date()}.mp4`;
+        bigRedBtn.attributes['data-state'].value = 'initial';
+        bigRedBtn.children[0].classList.remove('hidden'); // crop btn
+        bigRedBtn.children[1].classList.add('hidden'); // stop btn
+        enableInputs();
         askUserToSaveFile({fileName, filePath});
       });
   }
 
   bigRedBtn.onclick = function () {
-    if (recording) {
+    const state = this.attributes['data-state'].value;
+    if (state === 'initial') {
+      ipcRenderer.send('open-cropper-window', {
+        width: parseInt(inputWidth.value, 10),
+        height: parseInt(inputHeight.value, 10)
+      });
+      this.classList.add('filled');
+      this.attributes['data-state'].value = 'ready-to-record';
+    } else if (state === 'ready-to-record') {
+      startRecording();
+    } else if (state === 'ready-to-stop') {
       stopRecording();
-    } else {
-      const state = this.attributes['data-state'].value;
-      if (state === 'initial') {
-        ipcRenderer.send('open-cropper-window', {
-          width: parseInt(inputWidth.value, 10),
-          height: parseInt(inputHeight.value, 10)
-        });
-        this.classList.add('filled');
-        this.attributes['data-state'].value = 'ready-to-record';
-      }
-      // startRecording();
     }
   };
 
