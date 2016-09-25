@@ -6,14 +6,14 @@
   "description": "The best way to record your screen",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CodeTheory/focus.git"
+    "url": "git+https://github.com/wulkano/focus.git"
   },
   "author": "Matheus Fernandes <npm@matheus.top> (https://matheus.top/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/CodeTheory/focus-core/issues"
+    "url": "https://github.com/wulkano/focus-core/issues"
   },
-  "homepage": "https://github.com/CodeTheory/focus-core#readme",
+  "homepage": "https://github.com/wulkano/focus-core#readme",
   "dependencies": {
     "aperture.js": "0.0.0-9",
     "aspectratio": "^2.2.2",
