@@ -11,9 +11,9 @@
   "author": "Matheus Fernandes <npm@matheus.top> (https://matheus.top/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/wulkano/focus-core/issues"
+    "url": "https://github.com/wulkano/focus/issues"
   },
-  "homepage": "https://github.com/wulkano/focus-core#readme",
+  "homepage": "https://github.com/wulkano/focus#readme",
   "dependencies": {
     "aperture.js": "0.0.0-9",
     "aspectratio": "^2.2.2",
