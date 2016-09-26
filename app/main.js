@@ -14,6 +14,8 @@ const menubar = require('menubar')({
 });
 const opn = require('opn');
 
+require('./error-report');
+
 let mainWindow;
 let cropperWindow;
 

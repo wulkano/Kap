@@ -6,6 +6,8 @@ const fileSize = require('file-size');
 const {ipcRenderer} = require('electron');
 const moment = require('moment');
 
+require('./error-report');
+
 function setMainWindowSize() {
   const width = document.documentElement.scrollWidth;
   const height = document.documentElement.scrollHeight;

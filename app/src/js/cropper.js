@@ -1,5 +1,7 @@
 const {ipcRenderer} = require('electron');
 
+require('./error-report');
+
 document.addEventListener('DOMContentLoaded', () => {
   function autoDestroy() {
     ipcRenderer.send('close-cropper-window');
