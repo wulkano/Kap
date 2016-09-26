@@ -17,6 +17,7 @@
   "dependencies": {
     "aperture.js": "0.0.0-9",
     "aspectratio": "^2.2.2",
+    "electron-is-dev": "^0.1.2",
     "file-size": "^1.0.0",
     "menubar": "^5.1.0",
     "moment": "^2.14.1",
