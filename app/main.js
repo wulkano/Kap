@@ -3,6 +3,7 @@ const path = require('path');
 const electron = require('electron');
 
 const {BrowserWindow, ipcMain, Menu} = electron;
+const isDev = require('electron-is-dev');
 const menubar = require('menubar')({
   index: `file://${__dirname}/index.html`,
   icon: path.join(__dirname, '..', 'static', 'iconTemplate.png'),
@@ -21,7 +22,7 @@ let cropperWindow;
 
 let recording = false;
 
-if (process.env.DEBUG_FOCUS) {
+if (isDev) {
   const electronExecutable = `${__dirname}/../../node_modules/electron/dist/Electron.app/Contents/MacOS/Electron`; // TODO send a PR
   require('electron-reload')(__dirname, {electron: electronExecutable}); // eslint-disable-line import/newline-after-import
   menubar.setOption('alwaysOnTop', true);
@@ -92,7 +93,7 @@ ipcMain.on('open-cropper-window', (event, size) => {
     cropperWindow.loadURL(`file://${__dirname}/cropper.html`);
     cropperWindow.setIgnoreMouseEvents(false); // TODO this should be false by default
 
-    if (process.env.DEBUG_FOCUS) {
+    if (isDev) {
       cropperWindow.openDevTools({mode: 'detach'});
       cropperWindow.webContents.on('devtools-opened', () => {
         setCropperWindowOnBlur();
@@ -118,7 +119,7 @@ ipcMain.on('close-cropper-window', () => {
 
 menubar.on('after-create-window', () => {
   mainWindow = menubar.window;
-  if (process.env.DEBUG_FOCUS) {
+  if (isDev) {
     mainWindow.openDevTools({mode: 'detach'});
   }
 
