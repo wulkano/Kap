@@ -7,7 +7,12 @@ $default-font-size: 0.8750em;
 $box-shadow-inputs: 0px 1px 1px 0px rgba(0,0,0,0.20), 0px 0px 0px 1px rgba(0,0,0,0.10);
 $blue: #3B99FC;
 $red: #FF6159;
+$window-border-radius: 5px;
 
+.content, .title-wrapper {
+  border-top-left-radius: $window-border-radius;
+  border-top-right-radius: $window-border-radius;
+}
 
 @font-face {
   font-family: "San Francisco";
@@ -16,12 +21,12 @@ $red: #FF6159;
 }
 
 html {
-  background-color: $secondary-background-color;
   color: $secondary-text-color;
   font-family: "San Francisco";
 }
 
 .content { /* TODO: remove this and apply this styles to `body`? */
+  background-color: $secondary-background-color;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -254,4 +259,17 @@ input.invalid {
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   perspective: 1000px;
+}
+
+#tray-triangle {
+  margin: auto;
+  width: 0;
+  height: 0;
+  border-right: 0.6em solid transparent;
+  border-bottom: 0.6125em solid $primary-background-color;
+  border-left: 0.6em solid transparent;
+
+  &.hide {
+    border-bottom: 0.6125em solid transparent !important;
+  }
 }
