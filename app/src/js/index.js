@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const size = document.querySelector('#size');
   const swapBtn = document.querySelector('.swap-btn');
   const time = document.querySelector('#time');
+  const trayTriangle = document.querySelector('#tray-triangle');
   const triangle = document.querySelector('#triangle');
   const windowTitle = document.querySelector('#window-title');
 
@@ -294,6 +295,14 @@ document.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.on('cropper-window-closed', () => {
     bigRedBtn.classList.remove('filled');
     bigRedBtn.attributes['data-state'].value = 'initial';
+  });
+
+  ipcRenderer.on('hide-tray-triangle', () => {
+    trayTriangle.classList.add('hide');
+  });
+
+  ipcRenderer.on('show-tray-triangle', () => {
+    trayTriangle.classList.remove('hide');
   });
 });
 

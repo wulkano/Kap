@@ -19,6 +19,8 @@ require('./error-report');
 
 let mainWindow;
 let cropperWindow;
+let tray;
+let positioner;
 
 let recording = false;
 
@@ -117,10 +119,32 @@ ipcMain.on('close-cropper-window', () => {
   }
 });
 
+function resetMainWindowShadow() {
+  const size = mainWindow.getSize();
+  setTimeout(() => {
+    size[1]++;
+    mainWindow.setSize(...size, true);
+  }, 100);
+  setTimeout(() => {
+    size[1]--;
+    mainWindow.setSize(...size, true);
+  }, 110);
+}
+
 menubar.on('after-create-window', () => {
+  let expectedWindowPosition;
+  const currentWindowPosition = {};
   mainWindow = menubar.window;
   if (isDev) {
     mainWindow.openDevTools({mode: 'detach'});
+  }
+
+  function recomputeExpectedWindowPosition() {
+    expectedWindowPosition = positioner.calculate('trayCenter', tray.getBounds());
+  }
+
+  function recomputeCurrentWindowPosition() {
+    [currentWindowPosition.x, currentWindowPosition.y] = mainWindow.getPosition();
   }
 
   mainWindow.on('blur', () => {
@@ -129,7 +153,41 @@ menubar.on('after-create-window', () => {
       // is not focused
       cropperWindow.close();
     }
+
+    recomputeExpectedWindowPosition();
+    recomputeCurrentWindowPosition();
+    if (expectedWindowPosition.x !== currentWindowPosition.x|| expectedWindowPosition.y !== currentWindowPosition.y) { // this line is too long
+      menubar.setOption('x', currentWindowPosition.x);
+      menubar.setOption('y', currentWindowPosition.y);
+    } else { // reset the position if the window is back at it's original position
+      menubar.setOption('x', undefined);
+      menubar.setOption('y', undefined);
+    }
   });
+
+  let wasAutoMoved = false;
+  mainWindow.on('move', () => { // unfortunately this is just an alias for 'moved'
+    recomputeExpectedWindowPosition();
+    recomputeCurrentWindowPosition();
+    const diff = {
+      x: Math.abs(expectedWindowPosition.x - currentWindowPosition.x),
+      y: Math.abs(expectedWindowPosition.y - currentWindowPosition.y)
+    };
+    if (diff.y < 50 && diff.x < 50 && !wasAutoMoved) {
+      wasAutoMoved = true;
+      mainWindow.setPosition(expectedWindowPosition.x, expectedWindowPosition.y, true);
+      setTimeout(() => {wasAutoMoved = false}, 1000); // this needs to be handled in a better way
+      mainWindow.webContents.send('show-tray-triangle');
+      resetMainWindowShadow();
+    } else {
+      console.log(diff);
+      mainWindow.webContents.send('hide-tray-triangle');
+      resetMainWindowShadow();
+    }
+  });
+
+  tray = menubar.tray;
+  positioner = menubar.positioner;
 });
 
 ipcMain.on('get-cropper-bounds', event => {
