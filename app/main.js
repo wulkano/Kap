@@ -173,12 +173,11 @@ menubar.on('after-create-window', () => {
       x: Math.abs(expectedWindowPosition.x - currentWindowPosition.x),
       y: Math.abs(expectedWindowPosition.y - currentWindowPosition.y)
     };
-    if (diff.y < 50 && diff.x < 50 && !wasAutoMoved) {
-      wasAutoMoved = true;
-      mainWindow.setPosition(expectedWindowPosition.x, expectedWindowPosition.y, true);
-      setTimeout(() => {wasAutoMoved = false}, 1000); // this needs to be handled in a better way
+
+    if (diff.y < 50 && diff.x < 50) {
       mainWindow.webContents.send('stick-to-menubar');
       resetMainWindowShadow();
+      positioner.move('trayCenter', tray.getBounds());
     } else {
       console.log(diff);
       mainWindow.webContents.send('unstick-from-menubar');
