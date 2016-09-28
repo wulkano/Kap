@@ -177,8 +177,10 @@ menubar.on('after-create-window', () => {
     if (diff.y < 50 && diff.x < 50) {
       mainWindow.webContents.send('stick-to-menubar');
       resetMainWindowShadow();
+      tray.setHighlightMode('always');
       positioner.move('trayCenter', tray.getBounds());
     } else {
+      tray.setHighlightMode('never');
       mainWindow.webContents.send('unstick-from-menubar');
       resetMainWindowShadow();
     }
