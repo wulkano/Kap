@@ -179,7 +179,6 @@ menubar.on('after-create-window', () => {
       resetMainWindowShadow();
       positioner.move('trayCenter', tray.getBounds());
     } else {
-      console.log(diff);
       mainWindow.webContents.send('unstick-from-menubar');
       resetMainWindowShadow();
     }
@@ -191,7 +190,6 @@ menubar.on('after-create-window', () => {
 
 ipcMain.on('get-cropper-bounds', event => {
   if (cropperWindow) {
-    console.log('event', cropperWindow.getContentBounds());
     event.returnValue = cropperWindow.getContentBounds();
   }
 });
