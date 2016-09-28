@@ -315,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
       trafficLights.classList.add('invisible');
       ipcRenderer.send('hide-main-window');
     }
-  }
+  };
 });
 
 window.addEventListener('load', setMainWindowSize);

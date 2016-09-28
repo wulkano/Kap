@@ -156,7 +156,7 @@ menubar.on('after-create-window', () => {
 
     recomputeExpectedWindowPosition();
     recomputeCurrentWindowPosition();
-    if (expectedWindowPosition.x !== currentWindowPosition.x|| expectedWindowPosition.y !== currentWindowPosition.y) { // this line is too long
+    if (expectedWindowPosition.x !== currentWindowPosition.x || expectedWindowPosition.y !== currentWindowPosition.y) { // this line is too long
       menubar.setOption('x', currentWindowPosition.x);
       menubar.setOption('y', currentWindowPosition.y);
     } else { // reset the position if the window is back at it's original position
@@ -165,7 +165,6 @@ menubar.on('after-create-window', () => {
     }
   });
 
-  let wasAutoMoved = false;
   mainWindow.on('move', () => { // unfortunately this is just an alias for 'moved'
     recomputeExpectedWindowPosition();
     recomputeCurrentWindowPosition();
