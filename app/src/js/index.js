@@ -297,11 +297,11 @@ document.addEventListener('DOMContentLoaded', () => {
     bigRedBtn.attributes['data-state'].value = 'initial';
   });
 
-  ipcRenderer.on('hide-tray-triangle', () => {
+  ipcRenderer.on('unstick-from-menubar', () => {
     trayTriangle.classList.add('hide');
   });
 
-  ipcRenderer.on('show-tray-triangle', () => {
+  ipcRenderer.on('stick-to-menubar', () => {
     trayTriangle.classList.remove('hide');
   });
 });

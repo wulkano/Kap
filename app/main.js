@@ -177,11 +177,11 @@ menubar.on('after-create-window', () => {
       wasAutoMoved = true;
       mainWindow.setPosition(expectedWindowPosition.x, expectedWindowPosition.y, true);
       setTimeout(() => {wasAutoMoved = false}, 1000); // this needs to be handled in a better way
-      mainWindow.webContents.send('show-tray-triangle');
+      mainWindow.webContents.send('stick-to-menubar');
       resetMainWindowShadow();
     } else {
       console.log(diff);
-      mainWindow.webContents.send('hide-tray-triangle');
+      mainWindow.webContents.send('unstick-from-menubar');
       resetMainWindowShadow();
     }
   });
