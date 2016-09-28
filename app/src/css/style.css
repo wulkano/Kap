@@ -268,6 +268,7 @@ input.invalid {
   border-right: 0.6em solid transparent;
   border-bottom: 0.6125em solid $primary-background-color;
   border-left: 0.6em solid transparent;
+  transition: all .3s ease;
 
   &.hide {
     border-bottom: 0.6125em solid transparent;
