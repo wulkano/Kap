@@ -211,6 +211,9 @@ input[type=text] {
   width: 100%;
   height: 100%;
   padding-left: 0.3em;
+
+  /* fixes a REALLY anoying "bug" that places a 1px white border on the input – tested on El Capitan */
+  border: 1px solid #CCCCCC;
 }
 
 .button-group {
