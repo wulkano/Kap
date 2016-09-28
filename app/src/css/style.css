@@ -270,6 +270,6 @@ input.invalid {
   border-left: 0.6em solid transparent;
 
   &.hide {
-    border-bottom: 0.6125em solid transparent !important;
+    border-bottom: 0.6125em solid transparent;
   }
 }
