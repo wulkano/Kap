@@ -140,7 +140,10 @@ document.addEventListener('DOMContentLoaded', () => {
         windowTitle.innerText = 'Kap';
         time.innerText = '00:00';
         size.innerText = '0 kB';
-        const fileName = `Screen record ${Date()}.mp4`;
+
+        const now = moment();
+        const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.mp4`;
+
         bigRedBtn.attributes['data-state'].value = 'initial';
         bigRedBtn.children[0].classList.remove('hidden'); // crop btn
         bigRedBtn.children[1].classList.add('hidden'); // stop btn
