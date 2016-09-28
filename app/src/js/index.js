@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
     stopMonitoring();
     aperture.stopRecording()
       .then(filePath => {
-        windowTitle.innerText = 'Focus';
+        windowTitle.innerText = 'Kap';
         time.innerText = '00:00';
         size.innerText = '0 kB';
         const fileName = `Screen record ${Date()}.mp4`;

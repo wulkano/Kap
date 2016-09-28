@@ -1,19 +1,19 @@
 {
-  "name": "focus",
+  "name": "Kap",
   "main": "dist/main.js",
   "private": true,
   "version": "0.0.0",
   "description": "The best way to record your screen",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wulkano/focus.git"
+    "url": "git+https://github.com/wulkano/kap.git"
   },
   "author": "Matheus Fernandes <npm@matheus.top> (https://matheus.top/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/wulkano/focus/issues"
+    "url": "https://github.com/wulkano/kap/issues"
   },
-  "homepage": "https://github.com/wulkano/focus#readme",
+  "homepage": "https://github.com/wulkano/kap#readme",
   "dependencies": {
     "aperture.js": "0.0.0-9",
     "aspectratio": "^2.2.2",
