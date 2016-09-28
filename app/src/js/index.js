@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const aspectRatioSelector = document.querySelector('#aspect-ratio-selector');
   const bigRedBtn = document.querySelector('#big-red-btn');
   const controlsTitleWrapper = document.querySelector('.controls-title-wrapper');
+  const hideWindow = document.querySelector('.hide-window');
   const inputWidth = document.querySelector('#aspect-ratio-width');
   const inputHeight = document.querySelector('#aspect-ratio-height');
   const linkBtn = document.querySelector('.link-btn');
@@ -26,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const swapBtn = document.querySelector('.swap-btn');
   const time = document.querySelector('#time');
   const trayTriangle = document.querySelector('#tray-triangle');
+  const trafficLights = document.querySelector('#traffic-lights');
   const triangle = document.querySelector('#triangle');
   const windowTitle = document.querySelector('#window-title');
 
@@ -299,11 +301,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ipcRenderer.on('unstick-from-menubar', () => {
     trayTriangle.classList.add('hide');
+    trafficLights.classList.remove('invisible');
   });
 
   ipcRenderer.on('stick-to-menubar', () => {
     trayTriangle.classList.remove('hide');
+    trafficLights.classList.add('invisible');
   });
+
+  hideWindow.onclick = () => {
+    if (!trafficLights.classList.contains('invisible')) {
+      trayTriangle.classList.remove('hide');
+      trafficLights.classList.add('invisible');
+      ipcRenderer.send('hide-main-window');
+    }
+  }
 });
 
 window.addEventListener('load', setMainWindowSize);

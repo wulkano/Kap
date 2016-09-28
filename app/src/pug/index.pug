@@ -10,6 +10,10 @@ html(lang='en')
     #tray-triangle
     .content
       .title-wrapper
+        #traffic-lights.invisible
+          img.hide-window(src='/app/static/traffic-light-close.svg')
+          img(src='/app/static/traffic-light-disabled.svg')
+          img(src='/app/static/traffic-light-disabled.svg')
         p#window-title Focus
       #header.horizontal-section
         #time 00:00

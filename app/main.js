@@ -213,3 +213,10 @@ ipcMain.on('will-stop-recording', () => {
     cropperWindow.close();
   }
 });
+
+ipcMain.on('hide-main-window', () => {
+  mainWindow.hide();
+  menubar.setOption('x', undefined);
+  menubar.setOption('y', undefined);
+  // TODO: maybe enable offscreen rendering so the traffic lights can disappear
+});

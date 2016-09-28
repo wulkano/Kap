@@ -273,3 +273,28 @@ input.invalid {
     border-bottom: 0.6125em solid transparent;
   }
 }
+
+#traffic-lights {
+  position: absolute;
+  left: 8px;
+  transition: all .3s ease;
+  svg {
+    margin-right: 3.5px;
+  }
+  &.invisible {
+    opacity: 0;
+  }
+}
+
+.hide-window {
+  &, & * {
+    cursor: default !important; /* there's hrefs on the SVG 😒 */
+  }
+  &:active g use {
+    fill: #BF4942;
+  }
+
+  &:hover g g {
+    display: inherit;
+  }
+}
