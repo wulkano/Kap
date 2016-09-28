@@ -108,6 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
         bigRedBtn.children[1].classList.remove('hidden'); // stop btn
         startMonitoringElapsedTimeAndSize(filePath);
         setMainWindowTitle('Recording');
+        ipcRenderer.send('started-recording');
         console.log(`Started recording after ${(Date.now() - past) / 1000}s`);
       })
       .catch(err => {
@@ -135,6 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
     stopMonitoring();
     aperture.stopRecording()
       .then(filePath => {
+        ipcRenderer.send('stopped-recording');
         windowTitle.innerText = 'Kap';
         time.innerText = '00:00';
         size.innerText = '0 kB';
@@ -316,6 +318,8 @@ document.addEventListener('DOMContentLoaded', () => {
       ipcRenderer.send('hide-main-window');
     }
   };
+
+  ipcRenderer.on('stop-recording', stopRecording);
 });
 
 window.addEventListener('load', setMainWindowSize);

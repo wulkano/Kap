@@ -17,6 +17,8 @@ const opn = require('opn');
 
 require('./error-report');
 
+let appState = 'initial';
+let shouldStopWhenTrayIsClicked = false;
 let mainWindow;
 let cropperWindow;
 let tray;
@@ -131,6 +133,12 @@ function resetMainWindowShadow() {
   }, 110);
 }
 
+function resetTrayIcon() {
+  appState = 'initial'; // if the icon is being reseted, we are not recording anymore
+  shouldStopWhenTrayIsClicked = false;
+  tray.setImage(path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'));
+}
+
 menubar.on('after-create-window', () => {
   let expectedWindowPosition;
   const currentWindowPosition = {};
@@ -187,6 +195,19 @@ menubar.on('after-create-window', () => {
 
   tray = menubar.tray;
   positioner = menubar.positioner;
+
+  tray.on('click', () => {
+    if (appState === 'recording' && shouldStopWhenTrayIsClicked) {
+      mainWindow.webContents.send('stop-recording');
+    }
+  });
+
+  mainWindow.on('hide', () => {
+    if (appState === 'recording') {
+      tray.setImage(path.join(__dirname, '..', 'static', 'menubarStopTemplate.png'));
+      shouldStopWhenTrayIsClicked = true;
+    }
+  });
 });
 
 ipcMain.on('get-cropper-bounds', event => {
@@ -207,6 +228,12 @@ ipcMain.on('will-start-recording', () => {
     cropperWindow.setAlwaysOnTop(true);
   }
 });
+
+ipcMain.on('started-recording', () => {
+  appState = 'recording';
+});
+
+ipcMain.on('stopped-recording', resetTrayIcon);
 
 ipcMain.on('will-stop-recording', () => {
   recording = false;
