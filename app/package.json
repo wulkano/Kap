@@ -2,7 +2,7 @@
   "name": "Kap",
   "main": "dist/main.js",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0-beta-1",
   "description": "The best way to record your screen",
   "repository": {
     "type": "git",
