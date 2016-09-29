@@ -33,7 +33,16 @@ html {
   flex-direction: column;
 }
 
+.webkit-drag {
+  -webkit-app-region: drag;
+  cursor: -webkit-grab;
+  &:active {
+    cursor: -webkit-grabbing;
+  }
+}
+
 #header {
+  @extend .webkit-drag;
   background-color: $primary-background-color;
   width: 100%;
   justify-content: center;
@@ -56,9 +65,9 @@ html {
 }
 
 .title-wrapper {
+  @extend .webkit-drag;
   width: 100%;
   text-align: center;
-  -webkit-app-region: drag;
   background-color: $primary-background-color;
 }
 
