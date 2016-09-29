@@ -191,7 +191,7 @@ menubar.on('after-create-window', () => {
     } else {
       tray.setHighlightMode('never');
       mainWindow.webContents.send('unstick-from-menubar');
-      resetMainWindowShadow();
+      setTimeout(() => resetMainWindowShadow(), 100);
     }
   });
 
