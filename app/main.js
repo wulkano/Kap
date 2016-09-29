@@ -15,7 +15,9 @@ const menubar = require('menubar')({
 });
 const opn = require('opn');
 
-require('./error-report');
+const autoUpdater = require('./auto-updater');
+
+require('./reporter');
 
 let appState = 'initial';
 let shouldStopWhenTrayIsClicked = false;
@@ -208,6 +210,8 @@ menubar.on('after-create-window', () => {
       shouldStopWhenTrayIsClicked = true;
     }
   });
+
+  autoUpdater.init(mainWindow);
 });
 
 ipcMain.on('get-cropper-bounds', event => {

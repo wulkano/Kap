@@ -6,7 +6,7 @@ const fileSize = require('file-size');
 const {ipcRenderer} = require('electron');
 const moment = require('moment');
 
-require('./error-report');
+require('./reporter');
 
 function setMainWindowSize() {
   const width = document.documentElement.scrollWidth;
@@ -323,6 +323,16 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   ipcRenderer.on('stop-recording', stopRecording);
+
+  ipcRenderer.on('update-downloaded', () => {
+    const title = 'An update is available 🎉';
+    const body = 'Click here to install it 😊';
+
+    const notification = new Notification(title, {body});
+    notification.onclick = () => {
+      ipcRenderer.send('install-update');
+    };
+  });
 });
 
 window.addEventListener('load', setMainWindowSize);

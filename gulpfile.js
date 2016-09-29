@@ -27,7 +27,7 @@ gulp.task('build:css', () =>
     .pipe(gulp.dest('app/dist')));
 
 gulp.task('build:js', () =>
-  gulp.src('app/src/js/*')
+  gulp.src(['app/src/js/*.js', 'app/auto-updater.js'])
     .pipe(babel({presets: ['es2015']}))
     .pipe(uglify())
     .pipe(gulp.dest('app/dist')));
@@ -39,6 +39,6 @@ gulp.task('default', ['build']);
 gulp.task('watch', ['build'], () => {
   gulp.watch('app/src/pug/*.pug', ['build:pug']);
   gulp.watch('app/src/css/*.css', ['build:css']);
-  gulp.watch('app/src/js/*.js', ['build:js']);
+  gulp.watch(['app/src/js/*.js', 'app/auto-updater.js'], ['build:js']);
   gulp.watch('app/main.js', ['build:main']);
 });
