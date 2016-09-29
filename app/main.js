@@ -175,6 +175,7 @@ menubar.on('after-create-window', () => {
     }
   });
 
+  let wasStuck = true;
   mainWindow.on('move', () => { // unfortunately this is just an alias for 'moved'
     recomputeExpectedWindowPosition();
     recomputeCurrentWindowPosition();
@@ -184,14 +185,21 @@ menubar.on('after-create-window', () => {
     };
 
     if (diff.y < 50 && diff.x < 50) {
-      mainWindow.webContents.send('stick-to-menubar');
-      resetMainWindowShadow();
+      if (!wasStuck) {
+        mainWindow.webContents.send('stick-to-menubar');
+        resetMainWindowShadow();
+        wasStuck = true;
+      }
+      // the `move` event is called when the user reselases the mouse button
+      // because of that, we need to move the window to it's expected position, since the
+      // user will never release the mouse in the *right* position (diff.[x, y] === 0)
       tray.setHighlightMode('always');
       positioner.move('trayCenter', tray.getBounds());
-    } else {
-      tray.setHighlightMode('never');
+    } else if (wasStuck) {
       mainWindow.webContents.send('unstick-from-menubar');
       setTimeout(() => resetMainWindowShadow(), 100);
+      tray.setHighlightMode('never');
+      wasStuck = false;
     }
   });
 
