@@ -304,6 +304,10 @@ document.addEventListener('DOMContentLoaded', () => {
     bigRedBtn.attributes['data-state'].value = 'initial';
   });
 
+  ipcRenderer.on('cropper-window-new-size', (event, size) => {
+    [inputWidth.value, inputHeight.value] = [size.width, size.height];
+  });
+
   ipcRenderer.on('unstick-from-menubar', () => {
     trayTriangle.classList.add('hide');
     trafficLights.classList.remove('invisible');

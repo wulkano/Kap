@@ -113,6 +113,12 @@ ipcMain.on('open-cropper-window', (event, size) => {
       cropperWindow = undefined;
       mainWindow.webContents.send('cropper-window-closed');
     });
+
+    cropperWindow.on('resize', () => {
+      const size = {};
+      [size.width, size.height] = cropperWindow.getSize();
+      mainWindow.webContents.send('cropper-window-new-size', size);
+    });
   }
 });
 
