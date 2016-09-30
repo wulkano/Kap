@@ -21,6 +21,7 @@ require('./reporter');
 
 let appState = 'initial';
 let cropperWindow;
+let isDetached = false;
 let mainWindow;
 let positioner;
 let shouldStopWhenTrayIsClicked = false;
@@ -189,6 +190,7 @@ menubar.on('after-create-window', () => {
         mainWindow.webContents.send('stick-to-menubar');
         resetMainWindowShadow();
         wasStuck = true;
+        isDetached = false;
       }
       // the `move` event is called when the user reselases the mouse button
       // because of that, we need to move the window to it's expected position, since the
@@ -200,6 +202,7 @@ menubar.on('after-create-window', () => {
       setTimeout(() => resetMainWindowShadow(), 100);
       tray.setHighlightMode('never');
       wasStuck = false;
+      isDetached = true;
     }
   });
 
@@ -243,6 +246,9 @@ ipcMain.on('will-start-recording', () => {
 
 ipcMain.on('started-recording', () => {
   appState = 'recording';
+  if (!isDetached) {
+    mainWindow.hide();
+  }
 });
 
 ipcMain.on('stopped-recording', resetTrayIcon);
