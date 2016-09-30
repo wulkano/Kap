@@ -20,11 +20,11 @@ const autoUpdater = require('./auto-updater');
 require('./reporter');
 
 let appState = 'initial';
-let shouldStopWhenTrayIsClicked = false;
-let mainWindow;
 let cropperWindow;
-let tray;
+let mainWindow;
 let positioner;
+let shouldStopWhenTrayIsClicked = false;
+let tray;
 
 let recording = false;
 
