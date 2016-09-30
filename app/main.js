@@ -222,6 +222,12 @@ menubar.on('after-create-window', () => {
     }
   });
 
+  menubar.on('show', () => {
+    if (mainWindowIsDetached) {
+      console.log('here');
+      tray.setHighlightMode('never');
+    }
+  })
   autoUpdater.init(mainWindow);
 });
 
