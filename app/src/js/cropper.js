@@ -1,6 +1,6 @@
 const {ipcRenderer} = require('electron');
 
-require('./error-report');
+require('./reporter');
 
 document.addEventListener('DOMContentLoaded', () => {
   function autoDestroy() {
