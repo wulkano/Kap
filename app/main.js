@@ -227,7 +227,7 @@ menubar.on('after-create-window', () => {
       console.log('here');
       tray.setHighlightMode('never');
     }
-  })
+  });
   autoUpdater.init(mainWindow);
 });
 
