@@ -8,8 +8,8 @@
     "build": "npm run test && gulp build",
     "watch": "gulp watch",
     "start": "electron app",
-    "pack": "npm run build && build --dir; cd dist/mac; zip --symlinks -r -q Kap Kap.app",
     "dist": "npm run build && build",
+    "pack": "npm run build && build --dir",
     "postinstall": "install-app-deps"
   },
   "repository": {
