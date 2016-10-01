@@ -51,8 +51,7 @@ ipcMain.on('set-cropper-window-size', (event, args) => {
 
 const optionsMenu = Menu.buildFromTemplate([
   {
-    label: 'About',
-    click: () => opn('http://wulka.no', {wait: false})
+    role: 'about'
   },
   {
     type: 'separator'
