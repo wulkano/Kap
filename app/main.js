@@ -57,6 +57,13 @@ const optionsMenu = Menu.buildFromTemplate([
     type: 'separator'
   },
   {
+    label: 'Sign up for updates',
+    click: () => opn('http://eepurl.com/ch90_1', {wait: false})
+  },
+  {
+    type: 'separator'
+  },
+  {
     label: 'Quit',
     accelerator: 'Cmd+Q', // TODO change this when support for win/linux is added
     click: () => menubar.app.quit()
