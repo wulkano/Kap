@@ -245,13 +245,14 @@ menubar.on('after-create-window', () => {
       tray.setHighlightMode('never');
     }
   });
-  autoUpdater.init(mainWindow);
 
   app.on('activate', () => { // == dockIcon.onclick
     if (!mainWindow.isVisible()) {
       mainWindow.show();
     }
   });
+
+  autoUpdater.init(mainWindow);
 });
 
 ipcMain.on('get-cropper-bounds', event => {
