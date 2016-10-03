@@ -227,6 +227,8 @@ menubar.on('after-create-window', () => {
   tray.on('click', () => {
     if (appState === 'recording' && shouldStopWhenTrayIsClicked) {
       mainWindow.webContents.send('stop-recording');
+    } else if (app.dock.isVisible()) {
+      mainWindow.show();
     }
   });
 
