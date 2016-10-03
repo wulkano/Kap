@@ -255,6 +255,10 @@ menubar.on('after-create-window', () => {
 
   autoUpdater.init(mainWindow);
   analytics.init();
+  mainWindow.once('ready-to-show', () => {
+    positioner.move('trayCenter', tray.getBounds()); // not sure why the fuck this is needed (ﾉಠдಠ)ﾉ︵┻━┻
+    mainWindow.show();
+  });
 });
 
 ipcMain.on('get-cropper-bounds', event => {
