@@ -24,7 +24,6 @@
     "menubar": "git://github.com/matheuss/menubar.git",
     "moment": "^2.14.1",
     "ms": "^0.7.1",
-    "opn": "^4.0.2",
     "raven": "^0.12.1"
   },
   "xo": {
