@@ -16,6 +16,7 @@ const menubar = require('menubar')({
 const opn = require('opn');
 
 const autoUpdater = require('./auto-updater');
+const analytics = require('./analytics');
 
 require('./reporter');
 
@@ -253,6 +254,7 @@ menubar.on('after-create-window', () => {
   });
 
   autoUpdater.init(mainWindow);
+  analytics.init();
 });
 
 ipcMain.on('get-cropper-bounds', event => {
@@ -281,7 +283,10 @@ ipcMain.on('started-recording', () => {
   }
 });
 
-ipcMain.on('stopped-recording', resetTrayIcon);
+ipcMain.on('stopped-recording', () => {
+  resetTrayIcon();
+  analytics.track('recording/finished');
+});
 
 ipcMain.on('will-stop-recording', () => {
   recording = false;
