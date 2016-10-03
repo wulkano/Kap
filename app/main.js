@@ -101,7 +101,8 @@ ipcMain.on('open-cropper-window', (event, size) => {
       height: size.height,
       frame: false,
       transparent: true,
-      resizable: true
+      resizable: true,
+      shadow: false
     });
     cropperWindow.loadURL(`file://${__dirname}/cropper.html`);
     cropperWindow.setIgnoreMouseEvents(false); // TODO this should be false by default
