@@ -2,7 +2,7 @@ const path = require('path');
 
 const electron = require('electron');
 
-const {BrowserWindow, ipcMain, Menu} = electron;
+const {app, BrowserWindow, ipcMain, Menu} = electron;
 const isDev = require('electron-is-dev');
 const menubar = require('menubar')({
   index: `file://${__dirname}/index.html`,
@@ -200,6 +200,7 @@ menubar.on('after-create-window', () => {
     if (diff.y < 50 && diff.x < 50) {
       if (!wasStuck) {
         mainWindow.webContents.send('stick-to-menubar');
+        app.dock.hide();
         resetMainWindowShadow();
         wasStuck = true;
         mainWindowIsDetached = false;
@@ -211,6 +212,8 @@ menubar.on('after-create-window', () => {
       positioner.move('trayCenter', tray.getBounds());
     } else if (wasStuck) {
       mainWindow.webContents.send('unstick-from-menubar');
+      app.dock.show();
+      setTimeout(() => mainWindow.show(), 250);
       setTimeout(() => resetMainWindowShadow(), 100);
       tray.setHighlightMode('never');
       wasStuck = false;
@@ -240,6 +243,12 @@ menubar.on('after-create-window', () => {
     }
   });
   autoUpdater.init(mainWindow);
+
+  app.on('activate', () => { // == dockIcon.onclick
+    if (!mainWindow.isVisible()) {
+      mainWindow.show();
+    }
+  });
 });
 
 ipcMain.on('get-cropper-bounds', event => {
@@ -279,7 +288,4 @@ ipcMain.on('will-stop-recording', () => {
 
 ipcMain.on('hide-main-window', () => {
   mainWindow.hide();
-  menubar.setOption('x', undefined);
-  menubar.setOption('y', undefined);
-  // TODO: maybe enable offscreen rendering so the traffic lights can disappear
 });

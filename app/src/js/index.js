@@ -320,8 +320,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   hideWindow.onclick = () => {
     if (!trafficLights.classList.contains('invisible')) {
-      trayTriangle.classList.remove('hide');
-      trafficLights.classList.add('invisible');
       ipcRenderer.send('hide-main-window');
     }
   };
