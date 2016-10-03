@@ -4,16 +4,13 @@
   "private": true,
   "version": "0.1.0-beta-1",
   "description": "The best way to record your screen",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/wulkano/kap.git"
-  },
+  "repository": "wulkano/kap",
   "author": "Wulkano AS <team@wulka.no> (https://wulka.no/)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/wulkano/kap/issues"
   },
-  "homepage": "https://github.com/wulkano/kap#readme",
+  "homepage": "https://getkap.co",
   "dependencies": {
     "aperture.js": "0.0.0-10",
     "aspectratio": "^2.2.2",

@@ -1,8 +1,7 @@
 {
-  "name": "Kap",
-  "private": true,
-  "version": "0.0.0",
-  "description": "",
+  "repository": "wulkano/kap",
+  "author": "Wulkano AS <team@wulka.no> (https://wulka.no/)",
+  "license": "MIT",
   "scripts": {
     "test": "xo",
     "build": "npm run test && gulp build",
@@ -12,16 +11,6 @@
     "pack": "npm run build && build --dir",
     "postinstall": "install-app-deps"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/wulkano/kap.git"
-  },
-  "author": "Wulkano AS <team@wulka.no> (https://wulka.no/)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/wulkano/kap/issues"
-  },
-  "homepage": "https://github.com/wulkano/kap#readme",
   "devDependencies": {
     "babel-preset-es2015": "^6.14.0",
     "cssnano": "^3.7.4",
