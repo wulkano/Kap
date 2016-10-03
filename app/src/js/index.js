@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const aspectRatioSelector = document.querySelector('#aspect-ratio-selector');
   const bigRedBtn = document.querySelector('#big-red-btn');
   const controlsTitleWrapper = document.querySelector('.controls-title-wrapper');
-  const hideWindow = document.querySelector('.hide-window');
+  const hideWindowBtn = document.querySelector('.hide-window');
   const inputWidth = document.querySelector('#aspect-ratio-width');
   const inputHeight = document.querySelector('#aspect-ratio-height');
   const linkBtn = document.querySelector('.link-btn');
@@ -318,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
     trafficLights.classList.add('invisible');
   });
 
-  hideWindow.onclick = () => {
+  hideWindowBtn.onclick = () => {
     if (!trafficLights.classList.contains('invisible')) {
       ipcRenderer.send('hide-main-window');
     }
