@@ -13,10 +13,10 @@ const menubar = require('menubar')({
   transparent: true,
   resizable: false
 });
-const opn = require('opn');
 
 const autoUpdater = require('./auto-updater');
 const analytics = require('./analytics');
+const {applicationMenu, cogMenu} = require('./menus');
 
 require('./reporter');
 
@@ -50,33 +50,12 @@ ipcMain.on('set-cropper-window-size', (event, args) => {
   }
 });
 
-const optionsMenu = Menu.buildFromTemplate([
-  {
-    role: 'about'
-  },
-  {
-    type: 'separator'
-  },
-  {
-    label: 'Sign up for updates',
-    click: () => opn('http://eepurl.com/ch90_1', {wait: false})
-  },
-  {
-    type: 'separator'
-  },
-  {
-    label: 'Quit',
-    accelerator: 'Cmd+Q', // TODO change this when support for win/linux is added
-    click: () => menubar.app.quit()
-  }
-]);
-
 ipcMain.on('show-options-menu', (event, coordinates) => {
   if (coordinates && coordinates.x && coordinates.y) {
     coordinates.x = parseInt(coordinates.x.toFixed(), 10);
     coordinates.y = parseInt(coordinates.y.toFixed(), 10);
 
-    optionsMenu.popup(coordinates.x + 4, coordinates.y); // 4 is the magic number ✨
+    cogMenu.popup(coordinates.x + 4, coordinates.y); // 4 is the magic number ✨
   }
 });
 
@@ -259,6 +238,7 @@ menubar.on('after-create-window', () => {
     positioner.move('trayCenter', tray.getBounds()); // not sure why the fuck this is needed (ﾉಠдಠ)ﾉ︵┻━┻
     mainWindow.show();
   });
+  Menu.setApplicationMenu(applicationMenu);
 });
 
 ipcMain.on('get-cropper-bounds', event => {
