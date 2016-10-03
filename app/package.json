@@ -19,6 +19,7 @@
     "aspectratio": "^2.2.2",
     "electron-is-dev": "^0.1.2",
     "file-size": "^1.0.0",
+    "insight": "^0.8.3",
     "menubar": "git://github.com/matheuss/menubar.git",
     "moment": "^2.14.1",
     "ms": "^0.7.1",
