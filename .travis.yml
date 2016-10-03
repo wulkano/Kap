@@ -1,0 +1,10 @@
+os:
+  - osx
+
+osx_image: xcode7.3
+language: node_js
+sudo: false
+node_js: node
+
+script:
+  - npm run dist
