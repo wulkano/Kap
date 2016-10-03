@@ -33,7 +33,7 @@ let recording = false;
 if (isDev) {
   const electronExecutable = `${__dirname}/../../node_modules/electron/dist/Electron.app/Contents/MacOS/Electron`; // TODO send a PR
   require('electron-reload')(__dirname, {electron: electronExecutable}); // eslint-disable-line import/newline-after-import
-  menubar.setOption('alwaysOnTop', true);
+  // menubar.setOption('alwaysOnTop', true);
 }
 
 ipcMain.on('set-main-window-size', (event, args) => {
