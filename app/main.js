@@ -302,3 +302,7 @@ ipcMain.on('will-stop-recording', () => {
 ipcMain.on('hide-main-window', () => {
   mainWindow.hide();
 });
+
+ipcMain.on('minimize-main-window', () => {
+  mainWindow.minimize();
+});

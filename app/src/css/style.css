@@ -299,15 +299,20 @@ input.invalid {
   }
 }
 
-.hide-window {
+.hide-window, .minimize-window {
   &, & * {
     cursor: default !important; /* there's hrefs on the SVG 😒 */
   }
-  &:active g use {
-    fill: #BF4942;
-  }
 
-  &:hover g g {
+  &:hover g g, &:hover g path {
     display: inherit;
   }
+}
+
+.hide-window:active g use {
+  fill: #BF4942;
+}
+
+.minimize-window:active g use {
+  fill: #BF8E22;
 }

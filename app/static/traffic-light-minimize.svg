@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <linearGradient id="e" x1="50%" x2="50%" y1="0%" y2="100%">
+      <stop stop-color="#DFA023" offset="0%"/>
+      <stop stop-color="#DF9F22" offset="100%"/>
+    </linearGradient>
+    <ellipse id="d" cx="6" cy="6" rx="6" ry="6"/>
+    <mask id="f" width="12" height="12" x="0" y="0" fill="white">
+      <use xlink:href="#a"/>
+    </mask>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <use fill="#FFC02F" stroke="url(#e)" mask="url(#f)" xlink:href="#d"/>
+    <path class="hidden" stroke="#995700" d="M2,6 L10,6"/>
+  </g>
+</svg>

@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const inputWidth = document.querySelector('#aspect-ratio-width');
   const inputHeight = document.querySelector('#aspect-ratio-height');
   const linkBtn = document.querySelector('.link-btn');
+  const minimizeWindowBtn = document.querySelector('.minimize-window');
   const options = document.querySelector('.options');
   const size = document.querySelector('#size');
   const swapBtn = document.querySelector('.swap-btn');
@@ -321,6 +322,12 @@ document.addEventListener('DOMContentLoaded', () => {
   hideWindowBtn.onclick = () => {
     if (!trafficLights.classList.contains('invisible')) {
       ipcRenderer.send('hide-main-window');
+    }
+  };
+
+  minimizeWindowBtn.onclick = () => {
+    if (!trafficLights.classList.contains('invisible')) {
+      ipcRenderer.send('minimize-main-window');
     }
   };
 
