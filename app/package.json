@@ -12,7 +12,7 @@
   },
   "homepage": "https://getkap.co",
   "dependencies": {
-    "aperture.js": "0.0.0-10",
+    "aperture.js": "0.0.0-11",
     "aspectratio": "^2.2.2",
     "electron-is-dev": "^0.1.2",
     "file-size": "^1.0.0",
