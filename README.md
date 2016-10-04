@@ -8,7 +8,19 @@
 Download the latest release [here](https://getkap.co/download)
 
 ## Contribute
-TODO: Fill this in Matheus
+
+1. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
+2. Install the dependencies: `npm install`
+3. Build the code and watch for changes: `npm run watch`
+4. Run the app: `npm start`
+
+To make sure that your code works in the finished app, you can generate the binary:
+
+```
+$ npm run pack
+```
+
+After that, you'll see the binary in the `./dist` folder :smile:
 
 ## Related Repositories
 - [Website](https://github.com/wulkano/kap-website)
