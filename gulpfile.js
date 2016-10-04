@@ -7,12 +7,10 @@ const postcssExtend = require('postcss-extend');
 const postcssNested = require('postcss-nested');
 const postcsssSimpleVars = require('postcss-simple-vars');
 const pug = require('gulp-pug');
-const uglify = require('gulp-uglify');
 
 gulp.task('build:main', () =>
   gulp.src('app/src/main/*.js')
-    .pipe(babel({presets: ['es2015']}))
-    .pipe(uglify())
+    .pipe(babel())
     .pipe(gulp.dest('app/dist')));
 
 gulp.task('build:pug', () =>
@@ -28,8 +26,7 @@ gulp.task('build:css', () =>
 
 gulp.task('build:js', () =>
   gulp.src('app/src/renderer/js/*.js')
-    .pipe(babel({presets: ['es2015']}))
-    .pipe(uglify())
+    .pipe(babel())
     .pipe(gulp.dest('app/dist')));
 
 gulp.task('build', ['build:main', 'build:pug', 'build:css', 'build:js']);
