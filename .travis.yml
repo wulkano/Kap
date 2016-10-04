@@ -8,3 +8,6 @@ node_js: node
 
 script:
   - npm run dist
+
+notifications:
+  slack: wulkano:CFDovXeQYTQyIIA4YQUD5UEK
