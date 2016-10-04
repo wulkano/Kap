@@ -1,222 +1,303 @@
-$primary-background-color: #FFFFFF;
-$secondary-background-color: #ECECEC;
+/*
+  Kap.app main styling
+  ----
+  Uses eightpoint (github.com/wulkano/eightpoint as a reset).
+  ( ͡° ͜ʖ ͡°)
+*/
+
+/* Variables */
+$background-primary: #FFFFFF;
+$background-secondary: #ECECEC;
 $primary-text-color: #585858;
 $secondary-text-color: #9C9C9C;
 $divider-color: rgba(0, 0, 0, 0.1);
-$default-font-size: 0.8750em;
+$default-font-size: 1.4rem;
 $box-shadow-inputs: 0px 1px 1px 0px rgba(0,0,0,0.20), 0px 0px 0px 1px rgba(0,0,0,0.10);
 $blue: #3B99FC;
 $red: #FF6159;
 $window-border-radius: 5px;
 
-.content, .title-wrapper {
-  border-top-left-radius: $window-border-radius;
-  border-top-right-radius: $window-border-radius;
-}
-
-body {
-  color: $secondary-text-color;
-  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue";
-}
-
-.content { /* TODO: remove this and apply this styles to `body`? */
-  background-color: $secondary-background-color;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.webkit-drag {
-  -webkit-app-region: drag;
-  cursor: -webkit-grab;
-  &:active {
-    cursor: -webkit-grabbing;
-  }
-}
-
-#header {
-  @extend .webkit-drag;
-  background-color: $primary-background-color;
-  width: 100%;
-  justify-content: center;
-}
-
-.horizontal-section, .vertical-section {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.vertical-section {
-  flex-direction: column;
-}
-
-#window-title, #controls-title {
-  color: $primary-text-color;
-  font-size: $default-font-size;
-}
-
-.title-wrapper {
-  @extend .webkit-drag;
-  width: 100%;
-  text-align: center;
-  background-color: $primary-background-color;
-}
-
-#time, #size {
-  position: absolute;
-  font-size: 9pt;
-}
-
-#time {
-  left: 7em;
-}
-
-#size {
-  left: 65%;
-}
-
-.btn, .btn * {
-  cursor: pointer
-}
-
-.circle {
-  width: 4em;
-  height: 4em;
-  border-radius: 50%;
-}
-
-#big-red-btn {
-  @extend .btn;
-  @extend .circle;
-  border: 2px solid $red;
-  margin: 1em;
-  justify-content: center;
-  transition: background-color .5s ease;
-
-  &.filled {
-    background-color: $red;
-  }
-
-  svg {
-    width: 1.3750em;
-    height: 1.3750em;
-  }
-}
 
 * { /* TODO make this rule more specific */
   -webkit-user-select: none;
   cursor: default;
 }
 
-.controls-title-wrapper {
+/* Set base colour and font stack */
+body {
+  color: $secondary-text-color;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue";
+}
+
+select {
   width: 100%;
-  height: 2em;
-  background-color: $secondary-background-color;
-  padding-left: 0.6250em;
-  padding-right: 0.6250em;
+  -webkit-appearance: none;
+  height: 24px;
+  padding-left: 8px;
+  padding-right: 8px;
+  position: relative;
+  background: transparent;
+  border: none;
+  top: -3px;
 }
 
-.controls-title-wrapper * {
-  @extend .btn;
+.select-element {
+  position: relative;
+  height: 24px;
+  width: 100%;
+  background: white;
+  border-radius: 3px;
+  background-position: 0 0, 100% 0;
+  background-repeat: no-repeat;
+  background-size: 1px 100%;
+  background-color: #FCFBFC;
+  box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.2), 0px 0px 0px 1px rgba(0,0,0,0.1), inset 0px 1px 0px 0px #FFFFFF;
+
+  &:after {
+    display: block;
+    content: '\25be';
+    text-align: center;
+    font-size: 1.2rem;
+    pointer-events: none;
+    color: white;
+    width: 16px;
+    height: 24px;
+    background-image: linear-gradient(-180deg, #74B6F8 0%, #007AFF 100%);
+    top: 0;
+    right: 0;
+    border-radius: 0 3px 3px 0;
+    position: absolute;
+    border-top: 1px solid #74B6F8;
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid #007AFF;
+  }
 }
 
-#controls-title {
-  margin-left: 0.75em;
+/* Helper Classes */
+.btn { cursor: pointer }
+.circle { border-radius: 50%; }
+.container {
+  display: flex;
+  padding-left: 1.6rem;
+  padding-right: 1.6rem;
 }
+.hidden { display: none; }
+.webkit-drag {
+  -webkit-app-region: drag;
+  cursor: -webkit-grab;
+}
+.horizontal-section { display: flex; }
 
-#triangle {
-  content: "";
-  display: inline-block;
+
+/* Tray Arrow */
+.tray-arrow {
+  margin: auto;
   width: 0;
   height: 0;
-  border-right: 0.3em solid transparent;
-  border-top: 0.3125em solid $primary-text-color;
-  border-left: 0.3em solid transparent;
-  margin-left: 0.25em; /* TODO: remove this */
+  border-right: 1rem solid transparent;
+  border-bottom: 1rem solid $background-primary;
+  border-left: 1rem solid transparent;
   transition: all .3s ease;
 
-  &.up {
+  &.hide { display: none; }
+}
+
+/* Window Title Bar */
+.title-bar {
+  @extend .webkit-drag;
+  width: 100%;
+  height: 2.8rem;
+  text-align: center;
+  background-color: $background-primary;
+  position: relative;
+}
+
+.title-bar__controls {
+  position: absolute;
+  left: 8px;
+  transition: all .3s ease;
+  svg {
+    margin-right: 3.5px;
+  }
+  &.invisible {
+    opacity: 0;
+  }
+}
+
+.title-bar__controls .hide-window, .title-bar__controls .minimize-window {
+  &, & * {
+    cursor: default !important; /* there's hrefs on the SVG 😒 */
+  }
+
+  &:hover g g, &:hover g path {
+    display: inherit;
+  }
+}
+
+.hide-window:active g use {
+  fill: #BF4942;
+}
+
+.minimize-window:active g use {
+  fill: #BF8E22;
+}
+
+.window__title {
+  color: $primary-text-color;
+  font-size: $default-font-size;
+  line-height: 2.8rem;
+  cursor: -wekit-grab;
+}
+
+/* Content Wrapper */
+.content {
+  background-color: $background-secondary;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 5px;
+}
+
+
+
+/* Kap Header */
+.kap-header {
+  @extend .webkit-drag;
+  display: flex;
+  background-color: $background-primary;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  height: 12.8rem;
+  border-bottom: 1px solid #CCCCCC;
+
+  &__text {
+    font-size: 1.2rem;
+    cursor: -webkit-grab;
+
+    &:first-child {
+      text-align: right;
+      flex: 1;
+    }
+
+    &:last-child {
+      text-align: left;
+      flex: 1;
+    }
+  }
+}
+
+.record {
+  @extend .btn;
+  @extend .circle;
+  display: flex;
+  border: 2px solid $red;
+  width: 6.4rem;
+  height: 6.4rem;
+  margin: 0 2rem;
+  justify-content: center;
+  align-items: center;
+  transition: background-color .12s ease-in-out;
+
+  &.filled { background-color: $red; }
+  &:hover {
+    background: $red;
+    svg { fill: white; }
+  }
+
+  svg {
+    width: 2.4rem;
+    height: 2.4rem;
+    transition: background .12s ease-in-out;
+  }
+}
+
+
+/* Controls Section */
+.controls { width: 100%; }
+
+.controls__toggle {
+  display: flex;
+  height: 3.2rem;
+  width: 100%;
+  align-items: center;
+  font-size: 1.4rem;
+  cursor: pointer;
+  background: #F3F3F3;
+
+  .triangle.up {
     transform: rotate(-180deg);
   }
 }
 
-.controls {
-  overflow: hidden;
-  /*height: 5em;*/
-  text-align: center;
-  width: 100%;
-  padding: 1em;
-}
-
-.hidden {
-  display: none;
-}
-
-.options {
-  padding: .25em;
-  width: 1.5em;
-  height: 1.5em;
-}
-
-.horizontal-divider {
-  width: 100%;
-  height: 1px; /* TODO: change this to `em` */
-  background-color: $divider-color;
-}
-
-.vertical-divider {
-  width: 1px;
-  height: 100%; /* TODO: change this to `em` */
-  background-color: $divider-color;
-}
-
-#aspect-ratio-title {
+.controls__title {
   color: $primary-text-color;
-  font-size: $default-font-size;
-  line-height: normal;
+  cursor: pointer;
+  margin-left: 1rem;
 }
 
-label {
-  font-size: 0.6250em;
-  line-height: normal;
+.controls__options {
+  margin-left: auto;
+  padding: .25em;
+  width: 2.4rem;
+  height: 2.4rem;
+  fill: #8C8C8C;
+  cursor: pointer;
+
+  &:hover { fill: #4D4D4D; }
 }
 
-.align-itens-flex-start {
-  align-items: flex-start;
+.controls-content {
+  border-top: 1px solid #CCCCCC;
 }
 
-.align-itens-flex-end {
+.controls-section {
+  padding-top: 1.6rem;
+  padding-bottom: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  &__title {
+    color: $primary-text-color;
+    font-size: 1.4rem;
+  }
+
+  &__row {
+    display: flex;
+    width: 100%;
+  }
+}
+
+
+/* Aspect Ratio Controls */
+.controls-section__row + .controls-section__row { margin-top: 10px; }
+
+.aspect-ratio {
+  justify-content: space-between;
   align-items: flex-end;
 }
 
-.aspect-ratio-input-wrapper {
-  width: 6.3em;
-  height: 1.5em;
+.aspect-ratio__input label {
+  font-size: 1rem;
+  line-height: normal;
+  display: block;
 }
 
-#aspect-ratio-selector {
-  width: 100%;
-}
-
-.row {
-  margin-bottom: 0.75em;
-}
-
-.column {
-  margin-right: 0.5em;
-}
-
-
-input[type=text] {
-  width: 100%;
-  height: 100%;
-  padding-left: 0.3em;
-
-  /* fixes a REALLY anoying "bug" that places a 1px white border on the input – tested on El Capitan */
+.aspect-ratio__input input {
+  width: 101px;
+  height: 2.4rem;
   border: 1px solid #CCCCCC;
+  padding: 0 8px;
+}
+
+.aspect-ratio__options {
+  border-radius: 3px;
+  width: 64px;
+  height: 2.4rem;
+  align-items: flex-start;
 }
 
 .button-group {
@@ -224,21 +305,30 @@ input[type=text] {
   background: #FCFBFC;
   box-shadow: $box-shadow-inputs;
   border-radius: 3px;
-  width: 4em;
-  height: 1.35em;
+  width: 6.4rem;
+  height: 2.4rem;
+  display: flex;
+  justify-content: space-around;
+
+  li {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:not(:last-child) { border-right: 1px solid rgba(0, 0, 0, 0.1); }
+  }
 
   svg {
     @extend .btn;
-    width: 75%;
-    height: 115%;
+    width: 2.4rem;
+    height: 2.4rem;
+    fill: #8C8C8C;
+    transition: fill 0.12s ease-in-out;
 
-    &:active, &.active {
-      fill: $blue;
-    }
-
-    &.disabled {
-      pointer-events: none;
-    }
+    &:hover { fill: #4D4D4D; }
+    &:active, &.active { fill: $blue; }
+    &.disabled { pointer-events: none; }
   }
 }
 
@@ -265,48 +355,4 @@ input.invalid {
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   perspective: 1000px;
-}
-
-#tray-triangle {
-  margin: auto;
-  width: 0;
-  height: 0;
-  border-right: 0.6em solid transparent;
-  border-bottom: 0.6125em solid $primary-background-color;
-  border-left: 0.6em solid transparent;
-  transition: all .3s ease;
-
-  &.hide {
-    border-bottom: 0.6125em solid transparent;
-  }
-}
-
-#traffic-lights {
-  position: absolute;
-  left: 8px;
-  transition: all .3s ease;
-  svg {
-    margin-right: 3.5px;
-  }
-  &.invisible {
-    opacity: 0;
-  }
-}
-
-.hide-window, .minimize-window {
-  &, & * {
-    cursor: default !important; /* there's hrefs on the SVG 😒 */
-  }
-
-  &:hover g g, &:hover g path {
-    display: inherit;
-  }
-}
-
-.hide-window:active g use {
-  fill: #BF4942;
-}
-
-.minimize-window:active g use {
-  fill: #BF8E22;
 }

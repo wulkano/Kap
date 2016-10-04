@@ -16,22 +16,22 @@ function setMainWindowSize() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const aspectRatioSelector = document.querySelector('#aspect-ratio-selector');
-  const bigRedBtn = document.querySelector('#big-red-btn');
-  const controlsTitleWrapper = document.querySelector('.controls-title-wrapper');
+  const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
+  const bigRedBtn = document.querySelector('.record');
+  const controlsTitleWrapper = document.querySelector('.controls__toggle');
   const hideWindowBtn = document.querySelector('.hide-window');
   const inputWidth = document.querySelector('#aspect-ratio-width');
   const inputHeight = document.querySelector('#aspect-ratio-height');
   const linkBtn = document.querySelector('.link-btn');
   const minimizeWindowBtn = document.querySelector('.minimize-window');
-  const options = document.querySelector('.options');
-  const size = document.querySelector('#size');
+  const options = document.querySelector('.controls__options');
+  const size = document.querySelector('.size');
   const swapBtn = document.querySelector('.swap-btn');
-  const time = document.querySelector('#time');
-  const trayTriangle = document.querySelector('#tray-triangle');
-  const trafficLights = document.querySelector('#traffic-lights');
-  const triangle = document.querySelector('#triangle');
-  const windowTitle = document.querySelector('#window-title');
+  const time = document.querySelector('.time');
+  const trayTriangle = document.querySelector('.tray-arrow');
+  const trafficLights = document.querySelector('.title-bar__controls');
+  const triangle = document.querySelector('.triangle');
+  const windowTitle = document.querySelector('.window__title');
 
   let monitoringIntervalId;
 
@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   controlsTitleWrapper.onclick = function () {
-    const controls = document.querySelector('.controls');
+    const controls = document.querySelector('.controls-content');
 
     triangle.classList.toggle('up');
 

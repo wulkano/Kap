@@ -7,46 +7,57 @@ html(lang='en')
     link(href='style.css', rel='stylesheet', type='text/css')
     script(src="index.js")
     script(src='disable-zoom.js')
+
   body
-    #tray-triangle
-    .content
-      .title-wrapper
-        #traffic-lights.invisible
+    //- Arrow pointing to the tray when Kap is underneath the tray icon
+    .tray-arrow
+
+    //- App content wrapper
+    main.content
+
+      //- Title Bar
+      .title-bar
+        .title-bar__controls.invisible
           img.hide-window(src='/app/static/traffic-light-close.svg')
           img.minimize-window(src='/app/static/traffic-light-minimize.svg')
           img(src='/app/static/traffic-light-disabled.svg')
-        p#window-title Kap
-      #header.horizontal-section
-        #time 00:00
-        #big-red-btn.horizontal-section(data-state='initial')
-          img.crop-btn(src='/app/static/crop.svg')
-          img.stop-btn.hidden(src='/app/static/stop.svg')
-        #size 0 kB
-      .horizontal-divider
-      .controls-title-wrapper.horizontal-section.btn
-        .horizontal-section
-          #triangle.down
-          p#controls-title Controls
-        img.options(src='/app/static/gear.svg')
-      .horizontal-divider
-      .controls.vertical-section.align-itens-flex-start.hidden
-        p#aspect-ratio-title.row Aspect ratio
-        select#aspect-ratio-selector.row
-          option(value='1600x900') 16:9 (1600x900)
-          option(value='1280x1024') 5:4 (1280x1024)
-          option(value='1024x768') 4:3 (1024x768)
-          option(value='512x512', selected='selected') 1:1 (512x512)
-          option(data-aspect-ratio='custom') Custom
-        #aspect-ratio-wrapper.horizontal-section.align-itens-flex-end
-          .vertical-section.align-itens-flex-start
-            label(for='aspect-ratio-width') Width
-            .aspect-ratio-input-wrapper.column
-              input#aspect-ratio-width(type='text', value='512')
-          .button-group.horizontal-section.column
-            img.swap-btn(src='/app/static/swap.svg')
-            .vertical-divider
-            img.link-btn(src='/app/static/link.svg')
-          .vertical-section.align-itens-flex-start
-            label(for='aspect-ratio-height') Height
-            .aspect-ratio-input-wrapper
-              input#aspect-ratio-height(type='text', value='512')
+        span.window__title Kap
+
+      //- Main App area/header (record button container)
+      header.kap-header
+        .kap-header__text.time 00:00
+        .record(data-state='initial')
+          img.record__crop(src='/app/static/crop.svg')
+          img.record__stop.hidden(src='/app/static/stop.svg')
+        .kap-header__text.size 0 kB
+
+      //- Kap Controls
+      section.controls
+        .controls__toggle.container
+          img.triangle(src='/app/static/dropdown-arrow.svg')
+          span.controls__title Controls
+          img.controls__options(src='/app/static/gear.svg')
+
+        .controls-content.container
+          .controls-section
+            span.controls-section__title Aspect ratio
+            .controls-section__row
+              .select-element
+                select.aspect-ratio-selector
+                  option(value='1600x900') 16:9 (1600x900)
+                  option(value='1280x1024') 5:4 (1280x1024)
+                  option(value='1024x768') 4:3 (1024x768)
+                  option(value='512x512', selected='selected') 1:1 (512x512)
+                  option(data-aspect-ratio='custom') Custom
+            .controls-section__row.aspect-ratio
+              .aspect-ratio__input
+                label(for='aspect-ratio-width') Width
+                input#aspect-ratio-width(type='text', value='512')
+              ul.aspect-ratio__options.button-group
+                li
+                  img.swap-btn(src='/app/static/swap.svg')
+                li
+                  img.link-btn(src='/app/static/link.svg')
+              .aspect-ratio__input
+                label(for='aspect-ratio-height') Height
+                input#aspect-ratio-height(type='text', value='512')
