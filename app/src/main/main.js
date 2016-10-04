@@ -3,6 +3,10 @@ import path from 'path';
 import {app, BrowserWindow, ipcMain, Menu} from 'electron';
 import isDev from 'electron-is-dev';
 
+import autoUpdater from './auto-updater';
+import analytics from './analytics';
+import {applicationMenu, cogMenu} from './menus';
+
 const menubar = require('menubar')({
   index: `file://${__dirname}/index.html`,
   icon: path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'),
@@ -12,10 +16,6 @@ const menubar = require('menubar')({
   transparent: true,
   resizable: false
 });
-
-import autoUpdater from './auto-updater';
-import analytics from './analytics';
-import {applicationMenu, cogMenu} from './menus';
 
 require('./reporter');
 
