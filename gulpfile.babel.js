@@ -1,12 +1,12 @@
-const babel = require('gulp-babel');
-const cssnano = require('cssnano');
-const gulp = require('gulp');
-const injectSvg = require('gulp-inject-svg');
-const postcss = require('gulp-postcss');
-const postcssExtend = require('postcss-extend');
-const postcssNested = require('postcss-nested');
-const postcsssSimpleVars = require('postcss-simple-vars');
-const pug = require('gulp-pug');
+import babel from 'gulp-babel';
+import cssnano from 'cssnano';
+import gulp from 'gulp';
+import injectSvg from 'gulp-inject-svg';
+import postcss from 'gulp-postcss';
+import postcssExtend from 'postcss-extend';
+import postcssNested from 'postcss-nested';
+import postcsssSimpleVars from 'postcss-simple-vars';
+import pug from 'gulp-pug';
 
 gulp.task('build:main', () =>
   gulp.src('app/src/main/*.js')
