@@ -5,7 +5,7 @@ const {version} = require('../package');
 
 const reporter = require('./reporter');
 
-const FEED_URL = `http://kap-updates.now.sh/update/osx/${version}`;
+const FEED_URL = `https://kap-updates.now.sh/update/osx/${version}`;
 
 function init(window) {
   autoUpdater.setFeedURL(FEED_URL);
