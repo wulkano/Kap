@@ -129,18 +129,16 @@ select {
     cursor: default !important; /* there's hrefs on the SVG 😒 */
   }
 
-  &:hover g g, &:hover g path {
-    display: inherit;
-  }
+  /*&:hover g g, &:hover g path { display: inherit; }*/
 }
 
-.hide-window:active g use {
-  fill: #BF4942;
+.title-bar__controls:hover .hide-window g g, .title-bar__controls:hover .minimize-window g g, .title-bar__controls:hover .hide-window g path, .title-bar__controls:hover .minimize-window g path, {
+  display: inherit;
 }
 
-.minimize-window:active g use {
-  fill: #BF8E22;
-}
+.hide-window:active g use { fill: #BF4942; }
+
+.minimize-window:active g use { fill: #BF8E22; }
 
 .window__title {
   color: $primary-text-color;
