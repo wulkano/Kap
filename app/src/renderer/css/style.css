@@ -14,15 +14,9 @@ $window-border-radius: 5px;
   border-top-right-radius: $window-border-radius;
 }
 
-@font-face {
-  font-family: "San Francisco";
-  font-weight: 400;
-  src: url("../static/san-francisco.woff");
-}
-
 html {
   color: $secondary-text-color;
-  font-family: "San Francisco";
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue";
 }
 
 .content { /* TODO: remove this and apply this styles to `body`? */
