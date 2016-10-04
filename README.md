@@ -1,8 +1,8 @@
-<div style="text-align: center;">
+<p align="center">
   <img src="https://getkap.co/images/favicon/kap.svg" height="75">
-  <p style="margin-top: 25px; font-size: 32px;">Kap</p>
-  <p>An open-source screen recorder built with web technology.<p>
-</div>
+  <h3 align="center">Kap</h3>
+  <p align="center">An open-source screen recorder built with web technology.<p>
+</p>
 
 ## Download
 Download the latest release [here](https://getkap.co/download).
