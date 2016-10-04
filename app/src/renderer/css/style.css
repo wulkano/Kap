@@ -14,7 +14,7 @@ $window-border-radius: 5px;
   border-top-right-radius: $window-border-radius;
 }
 
-html {
+body {
   color: $secondary-text-color;
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue";
 }
