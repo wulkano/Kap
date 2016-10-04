@@ -9,7 +9,7 @@ import reporter from './reporter';
 const FEED_URL = `https://kap-updates.now.sh/update/osx/${version}`;
 
 function init(window) {
-  if (isDev()) {
+  if (isDev) {
     return;
   }
   autoUpdater.setFeedURL(FEED_URL);
