@@ -202,10 +202,6 @@ select {
   transition: background-color .12s ease-in-out;
 
   &.filled { background-color: $red; }
-  &:hover {
-    background: $red;
-    svg { fill: white; }
-  }
 
   svg {
     width: 2.4rem;
