@@ -1,4 +1,5 @@
 import {autoUpdater, ipcMain} from 'electron';
+import isDev from 'electron-is-dev';
 import ms from 'ms';
 
 import {version} from '../package';
@@ -8,6 +9,9 @@ import reporter from './reporter';
 const FEED_URL = `https://kap-updates.now.sh/update/osx/${version}`;
 
 function init(window) {
+  if (isDev()) {
+    return;
+  }
   autoUpdater.setFeedURL(FEED_URL);
   setTimeout(() => {
     autoUpdater.checkForUpdates();
