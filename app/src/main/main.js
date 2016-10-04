@@ -263,6 +263,7 @@ ipcMain.on('started-recording', () => {
   appState = 'recording';
   if (!mainWindowIsDetached) {
     mainWindow.hide();
+    tray.setHighlightMode('never');
   }
 });
 
