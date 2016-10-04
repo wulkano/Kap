@@ -1,5 +1,5 @@
-const firstRun = require('first-run');
-const Insight = require('insight');
+import firstRun from 'first-run';
+import Insight from 'insight';
 
 const pkg = require('../package');
 

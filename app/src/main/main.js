@@ -1,9 +1,8 @@
-const path = require('path');
+import path from 'path';
 
-const electron = require('electron');
+import {app, BrowserWindow, ipcMain, Menu} from 'electron';
+import isDev from 'electron-is-dev';
 
-const {app, BrowserWindow, ipcMain, Menu} = electron;
-const isDev = require('electron-is-dev');
 const menubar = require('menubar')({
   index: `file://${__dirname}/index.html`,
   icon: path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'),
@@ -14,9 +13,9 @@ const menubar = require('menubar')({
   resizable: false
 });
 
-const autoUpdater = require('./auto-updater');
-const analytics = require('./analytics');
-const {applicationMenu, cogMenu} = require('./menus');
+import autoUpdater from './auto-updater';
+import analytics from './analytics';
+import {applicationMenu, cogMenu} from './menus';
 
 require('./reporter');
 

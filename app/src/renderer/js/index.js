@@ -1,12 +1,13 @@
-const fs = require('fs');
+import fs from 'fs';
 
-const aperture = require('aperture.js')();
-const aspectRatio = require('aspectratio');
-const fileSize = require('file-size');
-const {ipcRenderer} = require('electron');
-const moment = require('moment');
+import aspectRatio from 'aspectratio';
+import fileSize from 'file-size';
+import {ipcRenderer} from 'electron';
+import moment from 'moment';
 
 require('./reporter');
+
+const aperture = require('aperture.js')();
 
 function setMainWindowSize() {
   const width = document.documentElement.scrollWidth;

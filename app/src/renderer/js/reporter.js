@@ -1,4 +1,4 @@
-const isDev = require('electron-is-dev');
+import isDev from 'electron-is-dev';
 
 let ravenClient;
 if (!isDev) {

@@ -1,9 +1,9 @@
-const {autoUpdater, ipcMain} = require('electron');
-const ms = require('ms');
+import {autoUpdater, ipcMain} from 'electron';
+import ms from 'ms';
 
-const {version} = require('../package');
+import {version} from '../package';
 
-const reporter = require('./reporter');
+import reporter from './reporter';
 
 const FEED_URL = `https://kap-updates.now.sh/update/osx/${version}`;
 

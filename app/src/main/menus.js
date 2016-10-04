@@ -1,9 +1,8 @@
-const {app, Menu} = require('electron');
-const {openExternal} = require('electron').shell;
+import {app, Menu, shell} from 'electron';
 
 const signInForUpdates = {
   label: 'Sign up for updates',
-  click: () => openExternal('http://eepurl.com/ch90_1')
+  click: () => shell.openExternal('http://eepurl.com/ch90_1')
 };
 
 const cogMenu = [
@@ -36,7 +35,7 @@ const applicationMenu = [
       signInForUpdates,
       {
         label: 'Contribute',
-        click: () => openExternal('https://github.com/wulkano/kap')
+        click: () => shell.openExternal('https://github.com/wulkano/kap')
       },
       {
         type: 'separator'
@@ -134,11 +133,11 @@ const applicationMenu = [
     submenu: [
       {
         label: 'Kap Website',
-        click: () => openExternal('https://getkap.co')
+        click: () => shell.openExternal('https://getkap.co')
       },
       {
         label: 'GitHub repository',
-        click: () => openExternal('https://github.com/wulkano/kap')
+        click: () => shell.openExternal('https://github.com/wulkano/kap')
       }
     ]
   }
