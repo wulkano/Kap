@@ -295,11 +295,11 @@ ipcMain.on('move-cropper-window', (event, data) => {
   const position = cropperWindow.getPosition();
   if (data.direction === 'left') {
     position[0] -= data.amount;
-  } else if(data.direction === 'up') {
+  } else if (data.direction === 'up') {
     position[1] -= data.amount;
-  } else if(data.direction === 'right') {
+  } else if (data.direction === 'right') {
     position[0] += data.amount;
-  } else if(data.direction === 'down') {
+  } else if (data.direction === 'down') {
     position[1] += data.amount;
   }
 

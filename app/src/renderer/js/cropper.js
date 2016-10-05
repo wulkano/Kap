@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
       timeoutId = undefined;
     }
 
-    if(intervalId) {
+    if (intervalId) {
       clearInterval(intervalId);
       intervalId = undefined;
     }
