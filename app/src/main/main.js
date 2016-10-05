@@ -1,7 +1,10 @@
+import {homedir} from 'os';
 import path from 'path';
+import {rename as fsRename} from 'fs';
 
-import {app, BrowserWindow, ipcMain, Menu} from 'electron';
+import {app, dialog, BrowserWindow, ipcMain, Menu} from 'electron';
 import isDev from 'electron-is-dev';
+import mkdirp from 'mkdirp';
 
 import autoUpdater from './auto-updater';
 import analytics from './analytics';
@@ -311,4 +314,22 @@ ipcMain.on('move-cropper-window', (event, data) => {
   }
 
   cropperWindow.setPosition(...position);
+});
+
+ipcMain.on('ask-user-to-save-file', (event, data) => {
+  const kapturesDir = `${homedir()}/Movies/Kaptures`;
+  mkdirp(kapturesDir, err => {
+    if (err) {
+      // can be ignored
+    }
+    dialog.showSaveDialog({
+      title: data.fileName,
+      defaultPath: `${kapturesDir}/${data.fileName}`,
+      filters: [{name: 'Movies', extensions: ['mp4']}]
+    }, fileName => {
+      if (fileName) {
+        fsRename(data.filePath, fileName);
+      }
+    });
+  });
 });
