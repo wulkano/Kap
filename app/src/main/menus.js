@@ -65,6 +65,26 @@ const applicationMenu = [
     ]
   },
   {
+    label: 'File',
+    submenu: [
+      {
+        label: 'New Recording',
+        accelerator: 'CmdOrCtrl+N',
+        click(item, focusedWindow) {
+          focusedWindow.webContents.send('prepare-recording');
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Close',
+        accelerator: 'CmdOrCtrl+W',
+        role: 'close'
+      }
+    ]
+  },
+  {
     label: 'Edit',
     submenu: [
       {

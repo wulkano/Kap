@@ -23,6 +23,7 @@ let appState = 'initial';
 let cropperWindow;
 let mainWindowIsDetached = false;
 let mainWindow;
+let mainWindowIsNew = true;
 let positioner;
 let shouldStopWhenTrayIsClicked = false;
 let tray;
@@ -205,6 +206,10 @@ menubar.on('after-create-window', () => {
   positioner = menubar.positioner;
 
   tray.on('click', () => {
+    if (mainWindowIsNew) {
+      mainWindowIsNew = false;
+      positioner.move('trayCenter', tray.getBounds()); // not sure why the fuck this is needed (ﾉಠдಠ)ﾉ︵┻━┻
+    }
     if (appState === 'recording' && shouldStopWhenTrayIsClicked) {
       mainWindow.webContents.send('stop-recording');
     } else if (app.dock.isVisible()) {
@@ -231,12 +236,14 @@ menubar.on('after-create-window', () => {
     }
   });
 
-  autoUpdater.init(mainWindow);
-  analytics.init();
   mainWindow.once('ready-to-show', () => {
     positioner.move('trayCenter', tray.getBounds()); // not sure why the fuck this is needed (ﾉಠдಠ)ﾉ︵┻━┻
     mainWindow.show();
   });
+
+  mainWindowIsNew = true;
+  autoUpdater.init(mainWindow);
+  analytics.init();
   Menu.setApplicationMenu(applicationMenu);
 });
 
