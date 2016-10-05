@@ -17,7 +17,6 @@ $blue: #3B99FC;
 $red: #FF6159;
 $window-border-radius: 5px;
 
-
 * { /* TODO make this rule more specific */
   -webkit-user-select: none;
   cursor: default;
@@ -88,7 +87,6 @@ select {
 }
 .horizontal-section { display: flex; }
 
-
 /* Tray Arrow */
 .tray-arrow {
   margin: auto;
@@ -158,8 +156,6 @@ select {
   border-radius: 5px;
 }
 
-
-
 /* Kap Header */
 .kap-header {
   @extend .webkit-drag;
@@ -207,7 +203,6 @@ select {
     transition: background .12s ease-in-out;
   }
 }
-
 
 /* Controls Section */
 .controls { width: 100%; }
@@ -264,7 +259,6 @@ select {
     width: 100%;
   }
 }
-
 
 /* Aspect Ratio Controls */
 .controls-section__row + .controls-section__row { margin-top: 10px; }
