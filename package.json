@@ -9,7 +9,8 @@
     "start": "electron app",
     "dist": "npm run build && build",
     "pack": "npm run build && build --dir",
-    "postinstall": "install-app-deps"
+    "postinstall": "install-app-deps",
+    "prepush": "npm run test"
   },
   "devDependencies": {
     "babel-plugin-transform-es2015-modules-commonjs": "^6.16.0",
