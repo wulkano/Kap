@@ -1,5 +1,4 @@
 import fs from 'fs';
-
 import aspectRatio from 'aspectratio';
 import fileSize from 'file-size';
 import {ipcRenderer} from 'electron';
@@ -16,8 +15,10 @@ function setMainWindowSize() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+
+  // Element definitions
   const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
-  const bigRedBtn = document.querySelector('.record');
+  const recordBtn = document.querySelector('.record');
   const controlsTitleWrapper = document.querySelector('.controls__toggle');
   const hideWindowBtn = document.querySelector('.hide-window');
   const inputWidth = document.querySelector('#aspect-ratio-width');
@@ -33,8 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const triangle = document.querySelector('.triangle');
   const windowTitle = document.querySelector('.window__title');
 
+  // Initial variables
   let monitoringIntervalId;
-
   let lastValidInputWidth = 512;
   let lastValidInputHeight = 512;
   let aspectRatioBaseValues = [lastValidInputWidth, lastValidInputHeight];
@@ -105,9 +106,9 @@ document.addEventListener('DOMContentLoaded', () => {
       cropArea: cropperBounds
     })
       .then(filePath => {
-        bigRedBtn.attributes['data-state'].value = 'ready-to-stop';
-        bigRedBtn.children[0].classList.add('hidden'); // crop btn
-        bigRedBtn.children[1].classList.remove('hidden'); // stop btn
+        recordBtn.attributes['data-state'].value = 'ready-to-stop';
+        recordBtn.children[0].classList.add('hidden'); // crop btn
+        recordBtn.children[1].classList.remove('hidden'); // stop btn
         startMonitoringElapsedTimeAndSize(filePath);
         setMainWindowTitle('Recording');
         ipcRenderer.send('started-recording');
@@ -146,28 +147,34 @@ document.addEventListener('DOMContentLoaded', () => {
         const now = moment();
         const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.mp4`;
 
-        bigRedBtn.attributes['data-state'].value = 'initial';
-        bigRedBtn.children[0].classList.remove('hidden'); // crop btn
-        bigRedBtn.children[1].classList.add('hidden'); // stop btn
+        recordBtn.attributes['data-state'].value = 'initial';
+        recordBtn.children[0].classList.remove('hidden'); // crop btn
+        recordBtn.children[1].classList.add('hidden'); // stop btn
         enableInputs();
         askUserToSaveFile({fileName, filePath});
       });
   }
 
-  bigRedBtn.onclick = function () {
-    const state = this.attributes['data-state'].value;
+  // Prepare recording button for recording state
+  // - Either opens the crop window or starts recording
+  function prepareRecordButton() {
+    const state = recordBtn.attributes['data-state'].value;
     if (state === 'initial') {
       ipcRenderer.send('open-cropper-window', {
         width: parseInt(inputWidth.value, 10),
         height: parseInt(inputHeight.value, 10)
       });
-      this.classList.add('filled');
-      this.attributes['data-state'].value = 'ready-to-record';
+      recordBtn.classList.add('filled');
+      recordBtn.attributes['data-state'].value = 'ready-to-record';
     } else if (state === 'ready-to-record') {
       startRecording();
     } else if (state === 'ready-to-stop') {
       stopRecording();
     }
+  }
+
+  recordBtn.onclick = function() {
+    prepareRecordButton();
   };
 
   controlsTitleWrapper.onclick = function () {
@@ -301,9 +308,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  ipcRenderer.on('prepare-recording', () => prepareRecordButton());
+
   ipcRenderer.on('cropper-window-closed', () => {
-    bigRedBtn.classList.remove('filled');
-    bigRedBtn.attributes['data-state'].value = 'initial';
+    recordBtn.classList.remove('filled');
+    recordBtn.attributes['data-state'].value = 'initial';
   });
 
   ipcRenderer.on('cropper-window-new-size', (event, size) => {
