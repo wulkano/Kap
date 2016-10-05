@@ -97,7 +97,7 @@ select {
   border-left: 1rem solid transparent;
   transition: all .3s ease;
 
-  &.hide { display: none; }
+  &.hide { border-bottom: 0.6125em solid transparent; }
 }
 
 /* Window Title Bar */
