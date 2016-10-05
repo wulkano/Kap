@@ -125,12 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
       throw new Error('askUserToSaveFile must be called with {filePath, fileName}');
     }
 
-    const a = document.createElement('a');
-    a.style.display = 'none';
-    a.href = opts.filePath;
-    a.download = opts.fileName;
-    document.body.appendChild(a);
-    a.click();
+    ipcRenderer.send('ask-user-to-save-file', opts);
   }
 
   function stopRecording() {
