@@ -15,7 +15,6 @@ function setMainWindowSize() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-
   // Element definitions
   const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
   const recordBtn = document.querySelector('.record');
@@ -173,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  recordBtn.onclick = function() {
+  recordBtn.onclick = function () {
     prepareRecordButton();
   };
 
