@@ -240,7 +240,7 @@ menubar.on('after-create-window', () => {
     positioner.move('trayCenter', tray.getBounds()); // not sure why the fuck this is needed (ﾉಠдಠ)ﾉ︵┻━┻
     mainWindow.show();
   });
-  
+
   mainWindowIsNew = true;
   autoUpdater.init(mainWindow);
   analytics.init();
