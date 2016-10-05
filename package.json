@@ -22,6 +22,7 @@
     "gulp-inject-svg": "^0.1.8",
     "gulp-postcss": "^6.1.1",
     "gulp-pug": "^3.0.4",
+    "husky": "^0.11.8",
     "postcss-extend": "^1.0.5",
     "postcss-nested": "^1.0.0",
     "postcss-simple-vars": "^3.0.0",
