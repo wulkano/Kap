@@ -65,6 +65,16 @@ const applicationMenu = [
     ]
   },
   {
+    label: 'File',
+    submenu: [
+      {
+        label: 'Close',
+        accelerator: 'CmdOrCtrl+W',
+        role: 'close'
+      }
+    ]
+  },
+  {
     label: 'Edit',
     submenu: [
       {
