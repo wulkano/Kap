@@ -293,15 +293,22 @@ ipcMain.on('move-cropper-window', (event, data) => {
   }
 
   const position = cropperWindow.getPosition();
-  if (data.direction === 'left') {
-    position[0] -= data.amount;
-  } else if (data.direction === 'up') {
-    position[1] -= data.amount;
-  } else if (data.direction === 'right') {
-    position[0] += data.amount;
-  } else if (data.direction === 'down') {
-    position[1] += data.amount;
+  const amount = data.amount;
+  
+  switch(data.direction){
+    case 'left':
+      position[0] -= amount;
+      break;
+    case 'up':
+      position[1] -= amount;
+      break;
+    case 'right':
+      position[0] += amount;
+      break;
+    case 'down':
+      position[1] += amount;
+      break;
   }
-
+  
   cropperWindow.setPosition(...position);
 });
