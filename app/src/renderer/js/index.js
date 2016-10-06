@@ -233,6 +233,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function handleKeyDown(event) {
+    if (event.keyCode === 38) { // up
+      this.value++;
+      this.oninput();
+    } else if (event.keyCode === 40) { // down
+      this.value--;
+      this.oninput();
+    }
+  }
+
   inputWidth.oninput = function () {
     this.value = validateNumericInput(this, {
       lastValidValue: lastValidInputWidth,
@@ -253,6 +263,8 @@ document.addEventListener('DOMContentLoaded', () => {
     lastValidInputWidth = this.value || lastValidInputWidth;
     setCropperWindowSize();
   };
+
+  inputWidth.onkeydown = handleKeyDown;
 
   inputWidth.onblur = function () {
     this.value = this.value || (shake(this) && 512); // prevent the input from staying empty
@@ -278,6 +290,8 @@ document.addEventListener('DOMContentLoaded', () => {
     lastValidInputHeight = this.value || lastValidInputHeight;
     setCropperWindowSize();
   };
+
+  inputHeight.onkeydown = handleKeyDown;
 
   inputHeight.onblur = function () {
     this.value = this.value || (shake(this) && 512); // prevent the input from staying empty
