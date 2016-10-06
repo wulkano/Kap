@@ -234,6 +234,7 @@ input {
   font-size: 1rem;
   line-height: normal;
   display: block;
+  margin-bottom: 0.5em;
 }
 
 .aspect-ratio__input input {
