@@ -295,7 +295,7 @@ ipcMain.on('move-cropper-window', (event, data) => {
   const position = cropperWindow.getPosition();
   const amount = data.amount;
 
-  switch(data.direction) {
+  switch (data.direction) {
     case 'left':
       position[0] -= amount;
       break;
