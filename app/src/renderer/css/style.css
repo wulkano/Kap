@@ -29,6 +29,10 @@ body {
 }
 
 select { width: 100%; }
+input {
+  border: none;
+  box-shadow: 0 0 0 1px #CCCCCC;
+}
 
 /* Helper Classes */
 .btn { cursor: pointer }
@@ -235,7 +239,6 @@ select { width: 100%; }
 .aspect-ratio__input input {
   width: 101px;
   height: 2.4rem;
-  border: 1px solid #CCCCCC;
   padding: 0 8px;
 }
 
