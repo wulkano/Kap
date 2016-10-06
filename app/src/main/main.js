@@ -294,8 +294,8 @@ ipcMain.on('move-cropper-window', (event, data) => {
 
   const position = cropperWindow.getPosition();
   const amount = data.amount;
-  
-  switch(data.direction){
+
+  switch(data.direction) {
     case 'left':
       position[0] -= amount;
       break;
@@ -308,7 +308,10 @@ ipcMain.on('move-cropper-window', (event, data) => {
     case 'down':
       position[1] += amount;
       break;
+    default:
+      // Catch occasions where direction is not defined for whatever reason (should never happen).
+      break;
   }
-  
+
   cropperWindow.setPosition(...position);
 });
