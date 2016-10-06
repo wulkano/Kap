@@ -2,6 +2,10 @@
   <img src="https://getkap.co/images/favicon/kap.svg" height="75">
   <h3 align="center">Kap</h3>
   <p align="center">An open-source screen recorder built with web technology<p>
+  <p align="center">
+    [![Build Status](https://travis-ci.org/wulkano/kap.svg?branch=master)](https://travis-ci.org/wulkano/kap)
+    [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
+  </p>
 </p>
 
 ## Download
