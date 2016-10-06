@@ -234,11 +234,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function handleKeyDown(event) {
+    const multiplier = event.shiftKey ? 10 : 1;
+    const parsedValue = parseInt(this.value, 10);
     if (event.keyCode === 38) { // up
-      this.value++;
+      this.value = parsedValue + (1 * multiplier); // eslint-disable-line no-implicit-coercion
       this.oninput();
     } else if (event.keyCode === 40) { // down
-      this.value--;
+      this.value = parsedValue - (1 * multiplier); // eslint-disable-line no-implicit-coercion
       this.oninput();
     }
   }
