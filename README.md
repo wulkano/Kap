@@ -8,6 +8,12 @@
 ## Download
 Download the latest release [here](https://getkap.co/download)
 
+Kap is also available with Homebrew Cask. Download using the following commands:
+```
+$ brew cask update
+$ brew cask install kap
+```
+
 ## Contribute
 
 1. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
@@ -26,3 +32,8 @@ After that, you'll see the binary in the `./dist` folder :smile:
 ## Related Repositories
 - [Website](https://github.com/wulkano/kap-website)
 - [Aperture](https://github.com/wulkano/aperture)
+
+
+## Thanks
+- Thanks to [Dave](https://twitter.com/doot0) for the advice before launch.
+- Credit goes to [▲ZEIT](https://github.com/zeit) for the README formatting
