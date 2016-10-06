@@ -18,7 +18,6 @@ const menubar = require('menubar')({
   preloadWindow: true,
   transparent: true,
   resizable: false,
-  maxWidth: 320,
   minWidth: 320
 });
 
