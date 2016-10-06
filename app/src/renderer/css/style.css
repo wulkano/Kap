@@ -230,6 +230,12 @@ input {
   align-items: flex-end;
 }
 
+.aspect-ratio__input {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .aspect-ratio__input label {
   font-size: 1rem;
   line-height: normal;
@@ -239,8 +245,8 @@ input {
 
 .aspect-ratio__input input {
   width: 101px;
-  height: 2.4rem;
   padding: 0 8px;
+  height: 1.8rem;
 }
 
 .aspect-ratio__options {
@@ -256,12 +262,13 @@ input {
   box-shadow: $box-shadow-inputs;
   border-radius: 3px;
   width: 6.4rem;
-  height: 2.4rem;
+  height: 1.8rem;
   display: flex;
   justify-content: space-around;
 
   li {
     width: 50%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -271,8 +278,8 @@ input {
 
   svg {
     @extend .btn;
+    height: 100%;
     width: 2.4rem;
-    height: 2.4rem;
     fill: #8C8C8C;
     transition: fill 0.12s ease-in-out;
 
