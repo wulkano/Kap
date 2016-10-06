@@ -26,6 +26,7 @@ $window-border-radius: 5px;
 body {
   color: $secondary-text-color;
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue";
+  overflow: hidden;
 }
 
 select { width: 100%; }
