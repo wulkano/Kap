@@ -17,7 +17,9 @@ const menubar = require('menubar')({
   height: 500,
   preloadWindow: true,
   transparent: true,
-  resizable: false
+  resizable: false,
+  maxWidth: 320,
+  minWidth: 320
 });
 
 require('./reporter');
