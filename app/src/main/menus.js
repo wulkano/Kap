@@ -1,10 +1,17 @@
-import {app, Menu, shell} from 'electron';
-import {changeOutputDestination} from './main';
+import {app, Menu, shell, dialog} from 'electron';
+import settings from 'electron-settings';
 
 const signInForUpdates = {
   label: 'Sign up for updates',
   click: () => shell.openExternal('http://eepurl.com/ch90_1')
 };
+
+function changeOutputDestination() {
+  const location = dialog.showOpenDialog({properties: ['openDirectory']});
+  if (location) {
+    settings.set('output-destination', location[0]);
+  }
+}
 
 const cogMenu = [
   {
@@ -14,7 +21,7 @@ const cogMenu = [
     type: 'separator'
   },
   {
-    label: 'Change Output Destination',
+    label: 'Change default output destination',
     click: () => changeOutputDestination()
   },
   {
