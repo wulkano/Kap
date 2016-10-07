@@ -26,6 +26,7 @@ require('./reporter');
 
 let appState = 'initial';
 let cropperWindow;
+const cropperWindowBuffer = 4;
 let mainWindowIsDetached = false;
 let mainWindow;
 let mainWindowIsNew = true;
@@ -51,7 +52,7 @@ ipcMain.on('set-main-window-size', (event, args) => {
 ipcMain.on('set-cropper-window-size', (event, args) => {
   if (args.width && args.height && cropperWindow) {
     [args.width, args.height] = [parseInt(args.width, 10), parseInt(args.height, 10)];
-    cropperWindow.setSize(args.width, args.height, true); // true == animate
+    cropperWindow.setSize(args.width + cropperWindowBuffer, args.height + cropperWindowBuffer, true); // true == animate
   }
 });
 
@@ -82,8 +83,8 @@ ipcMain.on('open-cropper-window', (event, size) => {
     cropperWindow.focus();
   } else {
     cropperWindow = new BrowserWindow({
-      width: size.width,
-      height: size.height,
+      width: size.width + cropperWindowBuffer,
+      height: size.height + cropperWindowBuffer,
       frame: false,
       transparent: true,
       resizable: true,
