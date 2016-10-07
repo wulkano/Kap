@@ -3,6 +3,7 @@ import path from 'path';
 import {rename as fsRename} from 'fs';
 
 import {app, dialog, BrowserWindow, ipcMain, Menu} from 'electron';
+import settings from 'electron-settings';
 import isDev from 'electron-is-dev';
 import mkdirp from 'mkdirp';
 
@@ -328,7 +329,7 @@ ipcMain.on('move-cropper-window', (event, data) => {
 });
 
 ipcMain.on('ask-user-to-save-file', (event, data) => {
-  const kapturesDir = `${homedir()}/Movies/Kaptures`;
+  const kapturesDir = settings.getSync('output-destination') || `${homedir()}/Movies/Kaptures`;
   mkdirp(kapturesDir, err => {
     if (err) {
       // can be ignored
@@ -344,3 +345,12 @@ ipcMain.on('ask-user-to-save-file', (event, data) => {
     });
   });
 });
+
+function changeOutputDestination() {
+  const location = dialog.showOpenDialog({properties: ['openDirectory']});
+  if (location) {
+    settings.set('output-destination', location[0])
+  }
+}
+
+exports.changeOutputDestination = changeOutputDestination;

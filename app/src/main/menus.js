@@ -1,4 +1,5 @@
 import {app, Menu, shell} from 'electron';
+import {changeOutputDestination} from './main';
 
 const signInForUpdates = {
   label: 'Sign up for updates',
@@ -8,6 +9,13 @@ const signInForUpdates = {
 const cogMenu = [
   {
     role: 'about'
+  },
+  {
+    type: 'separator'
+  },
+  {
+    'label': 'Change Output Destination',
+    click: () => changeOutputDestination()
   },
   {
     type: 'separator'
