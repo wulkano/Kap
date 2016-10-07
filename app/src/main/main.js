@@ -349,7 +349,7 @@ ipcMain.on('ask-user-to-save-file', (event, data) => {
 function changeOutputDestination() {
   const location = dialog.showOpenDialog({properties: ['openDirectory']});
   if (location) {
-    settings.set('output-destination', location[0])
+    settings.set('output-destination', location[0]);
   }
 }
 

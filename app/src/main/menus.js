@@ -14,7 +14,7 @@ const cogMenu = [
     type: 'separator'
   },
   {
-    'label': 'Change Output Destination',
+    label: 'Change Output Destination',
     click: () => changeOutputDestination()
   },
   {
