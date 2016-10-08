@@ -2,3 +2,7 @@ node_modules
 *.log
 dist
 .DS_Store
+
+# IDEA
+.idea/
+*.iml

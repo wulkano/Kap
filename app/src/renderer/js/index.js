@@ -1,4 +1,5 @@
 import fs from 'fs';
+import {platform as osPlatform} from 'os';
 import aspectRatio from 'aspectratio';
 import fileSize from 'file-size';
 import {ipcRenderer} from 'electron';
@@ -6,6 +7,7 @@ import moment from 'moment';
 
 require('./reporter');
 
+const platform = osPlatform();
 const aperture = require('aperture.js')();
 
 function setMainWindowSize() {
@@ -16,6 +18,7 @@ function setMainWindowSize() {
 
 document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
+  const content = document.querySelector('.content');
   const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
   const recordBtn = document.querySelector('.record');
   const controlsTitleWrapper = document.querySelector('.controls__toggle');
@@ -29,9 +32,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const swapBtn = document.querySelector('.swap-btn');
   const time = document.querySelector('.time');
   const trayTriangle = document.querySelector('.tray-arrow');
+  const titleBar = document.querySelector('.title-bar');
   const trafficLights = document.querySelector('.title-bar__controls');
   const triangle = document.querySelector('.triangle');
   const windowTitle = document.querySelector('.window__title');
+
+  if (platform === 'darwin') {
+    content.classList.add('darwin');
+    titleBar.style.display = 'block';
+    trayTriangle.style.display = 'block';
+  }
 
   // Initial variables
   let monitoringIntervalId;

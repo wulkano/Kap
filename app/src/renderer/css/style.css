@@ -52,6 +52,7 @@ input {
 
 /* Tray Arrow */
 .tray-arrow {
+  display: none; /* hide here, reenable in js by checking if platform is mac */
   margin: auto;
   width: 0;
   height: 0;
@@ -66,6 +67,7 @@ input {
 /* Window Title Bar */
 .title-bar {
   @extend .webkit-drag;
+  display: none; /* hide by default, force show it through JS when we're on mac */
   width: 100%;
   height: 2.8rem;
   text-align: center;
@@ -116,6 +118,10 @@ input {
   align-items: center;
   flex-direction: column;
   overflow: hidden;
+}
+
+/* On mac, curve the window */
+.content.darwin {
   border-radius: 5px;
 }
 

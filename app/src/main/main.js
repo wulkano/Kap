@@ -1,4 +1,4 @@
-import {homedir} from 'os';
+import {homedir, platform as osPlatform} from 'os';
 import path from 'path';
 import {rename as fsRename} from 'fs';
 
@@ -11,11 +11,14 @@ import autoUpdater from './auto-updater';
 import analytics from './analytics';
 import {applicationMenu, cogMenu} from './menus';
 
+const platform = osPlatform();
+
 const menubar = require('menubar')({
   index: `file://${__dirname}/index.html`,
   icon: path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'),
   width: 320,
   height: 500,
+  frame: platform !== 'darwin',
   preloadWindow: true,
   transparent: true,
   resizable: false,
@@ -42,10 +45,14 @@ if (isDev) {
   // menubar.setOption('alwaysOnTop', true);
 }
 
+if (platform !== 'darwin') {
+  menubar.setOption('alwaysOnTop', true);
+}
+
 ipcMain.on('set-main-window-size', (event, args) => {
   if (args.width && args.height && mainWindow) {
     [args.width, args.height] = [parseInt(args.width, 10), parseInt(args.height, 10)];
-    mainWindow.setSize(args.width, args.height, true); // true == animate
+    mainWindow.setContentSize(args.width, args.height, true); // true == animate
   }
 });
 
@@ -187,7 +194,9 @@ menubar.on('after-create-window', () => {
     if (diff.y < 50 && diff.x < 50) {
       if (!wasStuck) {
         mainWindow.webContents.send('stick-to-menubar');
-        app.dock.hide();
+        if (platform === 'darwin') {
+          app.dock.hide();
+        }
         resetMainWindowShadow();
         wasStuck = true;
         mainWindowIsDetached = false;
@@ -199,7 +208,9 @@ menubar.on('after-create-window', () => {
       positioner.move('trayCenter', tray.getBounds());
     } else if (wasStuck) {
       mainWindow.webContents.send('unstick-from-menubar');
-      app.dock.show();
+      if (platform === 'darwin') {
+        app.dock.show();
+      }
       setTimeout(() => mainWindow.show(), 250);
       setTimeout(() => resetMainWindowShadow(), 100);
       tray.setHighlightMode('never');
@@ -218,7 +229,7 @@ menubar.on('after-create-window', () => {
     }
     if (appState === 'recording' && shouldStopWhenTrayIsClicked) {
       mainWindow.webContents.send('stop-recording');
-    } else if (app.dock.isVisible()) {
+    } else if (platform === 'darwin' && app.dock.isVisible()) {
       mainWindow.show();
     }
   });
