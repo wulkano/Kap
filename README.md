@@ -36,4 +36,4 @@ After that, you'll see the binary in the `./dist` folder :smile:
 
 ## Thanks
 - Credit goes to [▲ZEIT](https://github.com/zeit) for the README formatting and for hosting our downloads and updates!
-- All and any contributors that help Kap in it's journey to help make screen recording and sharing easy
+- All and any contributors that help Kap in its journey to help make screen recording and sharing easy
