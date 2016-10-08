@@ -15,6 +15,7 @@
     "aperture.js": "0.0.0-11",
     "aspectratio": "^2.2.2",
     "electron-is-dev": "^0.1.2",
+    "electron-settings": "^2.2.1",
     "file-size": "^1.0.0",
     "first-run": "^1.2.0",
     "insight": "^0.8.3",
