@@ -6,7 +6,7 @@
 </p>
 
 ## Download
-Download the latest release [here](https://getkap.co/download)
+Download the latest release [here](https://getkap.co/download). (macOS/OS X only)
 
 Kap is also available with Homebrew Cask. Download using the following commands:
 ```
