@@ -9,8 +9,9 @@
     "start": "electron app",
     "dist": "npm run build && build",
     "pack": "npm run build && build --dir",
-    "postinstall": "install-app-deps",
-    "prepush": "npm run test"
+    "postinstall": "install-app-deps && npm run ffmpeg",
+    "prepush": "npm run test",
+    "ffmpeg": "node scripts/download-ffmpeg.js"
   },
   "devDependencies": {
     "babel-plugin-transform-es2015-modules-commonjs": "^6.16.0",
