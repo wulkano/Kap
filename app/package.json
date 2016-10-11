@@ -25,15 +25,5 @@
     "ms": "^0.7.1",
     "raven": "^0.12.1"
   },
-  "xo": {
-    "space": 2,
-    "esnext": true,
-    "envs": [
-      "node",
-      "browser"
-    ],
-    "rules": {
-      "import/no-extraneous-dependencies": 0
-    }
-  }
+  "xo": false
 }

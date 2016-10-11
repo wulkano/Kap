@@ -37,7 +37,10 @@
       "browser"
     ],
     "rules": {
-      "import/no-extraneous-dependencies": 0
+      "import/no-extraneous-dependencies": 0,
+      "import/no-unresolved": 0,
+      "import/named": 0,
+      "import/default": 0
     },
     "ignores": [
       "app/dist/**"

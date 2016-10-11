@@ -10,6 +10,7 @@ import mkdirp from 'mkdirp';
 import autoUpdater from './auto-updater';
 import analytics from './analytics';
 import {applicationMenu, cogMenu} from './menus';
+import {init as initErrorReporter} from './reporter';
 
 const menubar = require('menubar')({
   index: `file://${__dirname}/index.html`,
@@ -21,8 +22,6 @@ const menubar = require('menubar')({
   resizable: false,
   minWidth: 320
 });
-
-require('./reporter');
 
 let appState = 'initial';
 let cropperWindow;
@@ -250,6 +249,7 @@ menubar.on('after-create-window', () => {
   mainWindowIsNew = true;
   autoUpdater.init(mainWindow);
   analytics.init();
+  initErrorReporter();
   Menu.setApplicationMenu(applicationMenu);
 });
 

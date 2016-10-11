@@ -1,10 +1,12 @@
 import fs from 'fs';
+
+import {ipcRenderer} from 'electron';
+
 import aspectRatio from 'aspectratio';
 import fileSize from 'file-size';
-import {ipcRenderer} from 'electron';
 import moment from 'moment';
 
-require('./reporter');
+import {init as initErrorReporter} from './reporter';
 
 const aperture = require('aperture.js')();
 
@@ -364,6 +366,8 @@ document.addEventListener('DOMContentLoaded', () => {
       ipcRenderer.send('install-update');
     };
   });
+
+  initErrorReporter();
 });
 
 window.addEventListener('load', setMainWindowSize);
