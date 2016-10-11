@@ -7,7 +7,7 @@ import settings from 'electron-settings';
 import isDev from 'electron-is-dev';
 import mkdirp from 'mkdirp';
 
-import autoUpdater from './auto-updater';
+// import autoUpdater from './auto-updater';
 import analytics from './analytics';
 import {applicationMenu, cogMenu} from './menus';
 
@@ -248,7 +248,7 @@ menubar.on('after-create-window', () => {
   });
 
   mainWindowIsNew = true;
-  autoUpdater.init(mainWindow);
+  // autoUpdater.init(mainWindow);
   analytics.init();
   Menu.setApplicationMenu(applicationMenu);
 });
