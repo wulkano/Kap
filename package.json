@@ -27,7 +27,7 @@
     "postcss-extend": "^1.0.5",
     "postcss-nested": "^1.0.0",
     "postcss-simple-vars": "^3.0.0",
-    "xo": "^0.16.0"
+    "xo": "^0.17.0"
   },
   "xo": {
     "space": 2,
