@@ -20,20 +20,24 @@ function setMainWindowSize() {
 document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
   const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
-  const recordBtn = document.querySelector('.record');
+  const controlsSection = document.querySelector('section.controls');
   const controlsTitleWrapper = document.querySelector('.controls__toggle');
   const exportAs = document.querySelector('#export-as');
+  const header = document.querySelector('.kap-header');
   const hideWindowBtn = document.querySelector('.hide-window');
   const inputWidth = document.querySelector('#aspect-ratio-width');
   const inputHeight = document.querySelector('#aspect-ratio-height');
   const linkBtn = document.querySelector('.link-btn');
   const minimizeWindowBtn = document.querySelector('.minimize-window');
   const options = document.querySelector('.controls__options');
+  const progressBar = document.querySelector('#progress-bar');
+  const progressBarSection = document.querySelector('section.progress');
+  const recordBtn = document.querySelector('.record');
   const size = document.querySelector('.size');
   const swapBtn = document.querySelector('.swap-btn');
   const time = document.querySelector('.time');
-  const trayTriangle = document.querySelector('.tray-arrow');
   const trafficLights = document.querySelector('.title-bar__controls');
+  const trayTriangle = document.querySelector('.tray-arrow');
   const triangle = document.querySelector('.triangle');
   const windowTitle = document.querySelector('.window__title');
 
@@ -156,12 +160,32 @@ document.addEventListener('DOMContentLoaded', () => {
           restoreInputs();
           askUserToSaveFile({fileName, filePath, type: 'mp4'});
         } else { // gif
-          convertToGif(filePath)
+          restoreInputs();
+
+          header.classList.add('hidden');
+          controlsSection.classList.add('hidden');
+          progressBarSection.classList.remove('hidden');
+          setMainWindowSize();
+
+          const intervalId = setInterval(() => {
+            // ffmpeg don't report progress when creating the palette so we create a fake
+            // progress report...
+            progressBar.value += 0.5;
+          }, 250);
+
+          function progressCallback(percentage) { // eslint-disable-line no-inner-declarations
+            // ...until ffmpeg reports progress for the first time
+            clearInterval(intervalId);
+            progressBar.value = percentage;
+          }
+
+          convertToGif(filePath, progressCallback)
             .then(gifPath => {
               const now = moment();
               const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.gif`;
 
-              restoreInputs();
+              progressBar.value = 100;
+
               askUserToSaveFile({fileName, filePath: gifPath, type: 'gif'});
             });
             // TODO catch
@@ -383,6 +407,14 @@ document.addEventListener('DOMContentLoaded', () => {
     notification.onclick = () => {
       ipcRenderer.send('install-update');
     };
+  });
+
+  ipcRenderer.on('save-dialog-closed', () => {
+    progressBarSection.classList.add('hidden');
+    header.classList.remove('hidden');
+    controlsSection.classList.remove('hidden');
+    progressBar.value = 0;
+    setMainWindowSize();
   });
 });
 

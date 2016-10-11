@@ -344,6 +344,7 @@ ipcMain.on('ask-user-to-save-file', (event, data) => {
       if (fileName) {
         fsRename(data.filePath, fileName);
       }
+      mainWindow.webContents.send('save-dialog-closed');
     });
   });
 });

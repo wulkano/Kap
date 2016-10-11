@@ -22,7 +22,12 @@ html(lang='en')
           img.minimize-window(src='/app/static/traffic-light-minimize.svg')
           img(src='/app/static/traffic-light-disabled.svg')
         span.window__title Kap
-
+      
+      //- Progress bar 
+      section.progress.hidden
+        progress#progress-bar.progress-bar(max='100', value='0')
+        label.progress-bar-label(for='progress-bar') Processing...
+        
       //- Main App area/header (record button container)
       header.kap-header
         .kap-header__text.time 00:00

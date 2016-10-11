@@ -43,7 +43,7 @@ input {
   padding-left: 1.6rem;
   padding-right: 1.6rem;
 }
-.hidden { display: none; }
+.hidden { display: none !important; }
 .webkit-drag {
   -webkit-app-region: drag;
   cursor: -webkit-grab;
@@ -313,4 +313,25 @@ input.invalid {
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   perspective: 1000px;
+}
+
+section.progress {
+  @extend .webkit-drag;
+  background-color: $background-primary;
+  width: 100%;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  height: 12.6rem;
+  padding-bottom: 2.8rem; /* to compensate the tittle bar */
+}
+
+.progress-bar-label {
+  position: absolute;
+  font-size: $default-font-size;
+  top: 9.5rem;
+}
+
+.progress-bar {
+  height: 2rem; /* (ﾉಠдಠ)ﾉ︵┻━┻ */
 }

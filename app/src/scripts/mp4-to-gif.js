@@ -1,11 +1,15 @@
 import {join as joinPath} from 'path';
 
 import execa from 'execa';
+import moment from 'moment';
 import tmp from 'tmp';
 
 const ffmpeg = joinPath(__dirname, '..', 'vendor', 'ffmpeg');
 
-function convert(filePath) {
+const durationRegex = /Duration: (\d\d:\d\d:\d\d.\d\d)/gm;
+const frameRegex = /frame=\s+(\d+)/gm;
+
+function convert(filePath, progressCallback) {
   return new Promise((resolve, reject) => {
     const palettePath = tmp.tmpNameSync({postfix: '.png'});
     const gifPath = tmp.tmpNameSync({postfix: '.gif'});
@@ -28,7 +32,20 @@ function convert(filePath) {
           gifPath
         ]);
 
-        converter.stderr.on('data', data => console.log(data.toString()));
+        let amountOfFrames;
+
+        converter.stderr.on('data', data => {
+          data = data.toString().trim();
+          const matchesDuration = durationRegex.exec(data);
+          const matchesFrame = frameRegex.exec(data);
+
+          if (matchesDuration) {
+            amountOfFrames = Math.ceil(moment.duration(matchesDuration[1]).asSeconds() * 30);
+          } else if (matchesFrame) {
+            const currentFrame = matchesFrame[1];
+            progressCallback(Math.ceil(currentFrame / amountOfFrames * 100));
+          }
+        });
         converter.on('error', reject);
         converter.on('exit', code => {
           if (code === 0) {
