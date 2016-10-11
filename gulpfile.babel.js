@@ -29,7 +29,12 @@ gulp.task('build:js', () =>
     .pipe(babel())
     .pipe(gulp.dest('app/dist')));
 
-gulp.task('build', ['build:main', 'build:pug', 'build:css', 'build:js']);
+gulp.task('build:scripts', () =>
+  gulp.src('app/src/scripts/*.js')
+    .pipe(babel())
+    .pipe(gulp.dest('app/dist')));
+
+gulp.task('build', ['build:main', 'build:pug', 'build:css', 'build:js', 'build:scripts']);
 
 gulp.task('default', ['build']);
 
@@ -37,5 +42,6 @@ gulp.task('watch', ['build'], () => {
   gulp.watch('app/src/renderer/pug/*.pug', ['build:pug']);
   gulp.watch('app/src/renderer/css/*.css', ['build:css']);
   gulp.watch('app/src/renderer/js/*.js', ['build:js']);
+  gulp.watch('app/src/scripts/*.js', ['build:scripts']);
   gulp.watch('app/src/main/*.js', ['build:main']);
 });
