@@ -60,3 +60,9 @@ html(lang='en')
               .aspect-ratio__input
                 label(for='aspect-ratio-height') Height
                 input#aspect-ratio-height(type='text', value='512')
+            //- TODO remove this `style`👇
+            span.controls-section__title(style='padding-top: 1rem') Export as
+            .controls-section__row
+              select#export-as
+                option(value='gif') GIF
+                option(value='mp4') MP4

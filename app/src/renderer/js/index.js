@@ -1,8 +1,11 @@
 import fs from 'fs';
+
 import aspectRatio from 'aspectratio';
 import fileSize from 'file-size';
 import {ipcRenderer} from 'electron';
 import moment from 'moment';
+
+import {convert as convertToGif} from './mp4-to-gif';
 
 require('./reporter');
 
@@ -19,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
   const recordBtn = document.querySelector('.record');
   const controlsTitleWrapper = document.querySelector('.controls__toggle');
+  const exportAs = document.querySelector('#export-as');
   const hideWindowBtn = document.querySelector('.hide-window');
   const inputWidth = document.querySelector('#aspect-ratio-width');
   const inputHeight = document.querySelector('#aspect-ratio-height');
@@ -128,6 +132,13 @@ document.addEventListener('DOMContentLoaded', () => {
     ipcRenderer.send('ask-user-to-save-file', opts);
   }
 
+  function restoreInputs() {
+    recordBtn.attributes['data-state'].value = 'initial';
+    recordBtn.children[0].classList.remove('hidden'); // crop btn
+    recordBtn.children[1].classList.add('hidden'); // stop btn
+    enableInputs();
+  }
+
   function stopRecording() {
     ipcRenderer.send('will-stop-recording');
     stopMonitoring();
@@ -138,14 +149,23 @@ document.addEventListener('DOMContentLoaded', () => {
         time.innerText = '00:00';
         size.innerText = '0 kB';
 
-        const now = moment();
-        const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.mp4`;
+        if (exportAs.value === 'mp4') {
+          const now = moment();
+          const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.mp4`;
 
-        recordBtn.attributes['data-state'].value = 'initial';
-        recordBtn.children[0].classList.remove('hidden'); // crop btn
-        recordBtn.children[1].classList.add('hidden'); // stop btn
-        enableInputs();
-        askUserToSaveFile({fileName, filePath});
+          restoreInputs();
+          askUserToSaveFile({fileName, filePath, type: 'mp4'});
+        } else { // gif
+          convertToGif(filePath)
+            .then(gifPath => {
+              const now = moment();
+              const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.gif`;
+
+              restoreInputs();
+              askUserToSaveFile({fileName, filePath: gifPath, type: 'gif'});
+            });
+            // TODO catch
+        }
       });
   }
 
