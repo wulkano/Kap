@@ -27,15 +27,5 @@
     "raven": "^0.12.1",
     "tmp": "0.0.29"
   },
-  "xo": {
-    "space": 2,
-    "esnext": true,
-    "envs": [
-      "node",
-      "browser"
-    ],
-    "rules": {
-      "import/no-extraneous-dependencies": 0
-    }
-  }
+  "xo": false
 }

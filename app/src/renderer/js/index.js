@@ -1,13 +1,13 @@
 import fs from 'fs';
 
+import {ipcRenderer} from 'electron';
+
 import aspectRatio from 'aspectratio';
 import fileSize from 'file-size';
-import {ipcRenderer} from 'electron';
 import moment from 'moment';
 
 import {convert as convertToGif} from './mp4-to-gif';
-
-require('./reporter');
+import {init as initErrorReporter} from './reporter';
 
 const aperture = require('aperture.js')();
 
@@ -416,6 +416,8 @@ document.addEventListener('DOMContentLoaded', () => {
     progressBar.value = 0;
     setMainWindowSize();
   });
+
+  initErrorReporter();
 });
 
 window.addEventListener('load', setMainWindowSize);
