@@ -1,6 +1,6 @@
 {
   "name": "Kap",
-  "main": "dist/main",
+  "main": "dist/main/index.js",
   "private": true,
   "version": "0.3.0-beta",
   "description": "The best way to record your screen",
