@@ -4,6 +4,7 @@ import ms from 'ms';
 
 import {version} from '../../package';
 
+import {log} from '../common/logger';
 import reporter from '../common/reporter';
 
 const FEED_URL = `https://kap-updates.now.sh/update/osx/${version}`;
@@ -21,10 +22,10 @@ function init(window) {
     autoUpdater.checkForUpdates();
   }, ms('5m'));
 
-  autoUpdater.on('update-available', () => console.log('update available, starting download'));
+  autoUpdater.on('update-available', () => log('update available, starting download'));
 
   autoUpdater.on('update-downloaded', () => {
-    console.log('update downloaded, will notify the user');
+    log('update downloaded, will notify the user');
     window.webContents.send('update-downloaded');
   });
 
@@ -33,7 +34,7 @@ function init(window) {
   });
 
   autoUpdater.on('error', err => {
-    console.error('Error fetching updates', err);
+    log('Error fetching updates', err);
     reporter.report(err);
   });
 }

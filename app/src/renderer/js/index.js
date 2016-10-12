@@ -8,6 +8,7 @@ import moment from 'moment';
 
 import {convert as convertToGif} from '../../scripts/mp4-to-gif';
 import {init as initErrorReporter} from '../../common/reporter';
+import {log} from '../../common/logger';
 
 const aperture = require('aperture.js')();
 
@@ -120,11 +121,11 @@ document.addEventListener('DOMContentLoaded', () => {
         startMonitoringElapsedTimeAndSize(filePath);
         setMainWindowTitle('Recording');
         ipcRenderer.send('started-recording');
-        console.log(`Started recording after ${(Date.now() - past) / 1000}s`);
+        log(`Started recording after ${(Date.now() - past) / 1000}s`);
       })
       .catch(err => {
         ipcRenderer.send('will-stop-recording');
-        console.error(err);
+        log(err);
         setMainWindowTitle('Error');
       });
   }
@@ -411,6 +412,8 @@ document.addEventListener('DOMContentLoaded', () => {
     progressBarLabel.innerText = 'Analyzing...';
     setMainWindowSize();
   });
+
+  ipcRenderer.on('log', (event, msgs) => console.log(...msgs));
 
   initErrorReporter();
 });

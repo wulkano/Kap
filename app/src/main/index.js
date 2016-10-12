@@ -8,6 +8,7 @@ import isDev from 'electron-is-dev';
 import mkdirp from 'mkdirp';
 
 import {init as initErrorReporter} from '../common/reporter';
+import logger from '../common/logger';
 
 // import autoUpdater from './auto-updater';
 import analytics from './analytics';
@@ -251,6 +252,7 @@ menubar.on('after-create-window', () => {
   // autoUpdater.init(mainWindow);
   analytics.init();
   initErrorReporter();
+  logger.init(mainWindow);
   Menu.setApplicationMenu(applicationMenu);
 });
 
