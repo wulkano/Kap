@@ -2,7 +2,7 @@ import {autoUpdater, ipcMain} from 'electron';
 import isDev from 'electron-is-dev';
 import ms from 'ms';
 
-import {version} from '../package';
+import {version} from '../../package';
 
 import reporter from '../common/reporter';
 
