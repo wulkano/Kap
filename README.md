@@ -10,7 +10,7 @@ Download the latest release [here](https://getkap.co/download). (macOS/OS X only
 
 Kap is also available with Homebrew Cask. Download using the following commands:
 ```
-$ brew cask update
+$ brew update
 $ brew cask install kap
 ```
 
