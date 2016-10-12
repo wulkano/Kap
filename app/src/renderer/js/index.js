@@ -6,8 +6,8 @@ import aspectRatio from 'aspectratio';
 import fileSize from 'file-size';
 import moment from 'moment';
 
-import {convert as convertToGif} from './mp4-to-gif';
-import {init as initErrorReporter} from './reporter';
+import {convert as convertToGif} from '../../scripts/mp4-to-gif';
+import {init as initErrorReporter} from '../../common/reporter';
 
 const aperture = require('aperture.js')();
 

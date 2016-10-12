@@ -11,33 +11,33 @@ import pug from 'gulp-pug';
 gulp.task('build:js:main', () =>
   gulp.src('app/src/main/*.js')
     .pipe(babel())
-    .pipe(gulp.dest('app/dist')));
+    .pipe(gulp.dest('app/dist/main')));
 
 gulp.task('build:pug', () =>
   gulp.src('app/src/renderer/pug/*')
     .pipe(pug())
     .pipe(injectSvg())
-    .pipe(gulp.dest('app/dist')));
+    .pipe(gulp.dest('app/dist/renderer/html')));
 
 gulp.task('build:css', () =>
   gulp.src('app/src/renderer/css/*')
     .pipe(postcss([postcsssSimpleVars, postcssExtend, postcssNested, cssnano]))
-    .pipe(gulp.dest('app/dist')));
+    .pipe(gulp.dest('app/dist/renderer/css')));
 
 gulp.task('build:js:renderer', () =>
   gulp.src('app/src/renderer/js/*.js')
     .pipe(babel())
-    .pipe(gulp.dest('app/dist')));
+    .pipe(gulp.dest('app/dist/renderer/js')));
 
 gulp.task('build:scripts', () =>
   gulp.src('app/src/scripts/*.js')
     .pipe(babel())
-    .pipe(gulp.dest('app/dist')));
+    .pipe(gulp.dest('app/dist/scripts')));
 
 gulp.task('build:js:common', () =>
   gulp.src('app/src/common/*.js')
     .pipe(babel())
-    .pipe(gulp.dest('app/dist')));
+    .pipe(gulp.dest('app/dist/common')));
 
 gulp.task('build', ['build:js:main', 'build:pug', 'build:css', 'build:js:renderer', 'build:scripts', 'build:js:common']);
 

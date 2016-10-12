@@ -1,6 +1,6 @@
 import {ipcRenderer} from 'electron';
 
-import {init as initErrorReporter} from './reporter';
+import {init as initErrorReporter} from '../../common/reporter';
 
 const arrows = {
   left: 37,

@@ -4,7 +4,7 @@ import ms from 'ms';
 
 import {version} from '../package';
 
-import reporter from './reporter';
+import reporter from '../common/reporter';
 
 const FEED_URL = `https://kap-updates.now.sh/update/osx/${version}`;
 

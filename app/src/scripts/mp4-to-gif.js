@@ -4,7 +4,7 @@ import execa from 'execa';
 import moment from 'moment';
 import tmp from 'tmp';
 
-const ffmpeg = joinPath(__dirname, '..', 'vendor', 'ffmpeg');
+const ffmpeg = joinPath(__dirname, '..', '..', 'vendor', 'ffmpeg');
 
 const durationRegex = /Duration: (\d\d:\d\d:\d\d.\d\d)/gm;
 const frameRegex = /frame=\s+(\d+)/gm;

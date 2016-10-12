@@ -7,14 +7,15 @@ import settings from 'electron-settings';
 import isDev from 'electron-is-dev';
 import mkdirp from 'mkdirp';
 
+import {init as initErrorReporter} from '../common/reporter';
+
 // import autoUpdater from './auto-updater';
 import analytics from './analytics';
 import {applicationMenu, cogMenu} from './menus';
-import {init as initErrorReporter} from './reporter';
 
 const menubar = require('menubar')({
-  index: `file://${__dirname}/index.html`,
-  icon: path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'),
+  index: `file://${__dirname}/../renderer/html/index.html`,
+  icon: path.join(__dirname, '..', '..', 'static', 'menubarDefaultTemplate.png'),
   width: 320,
   height: 500,
   preloadWindow: true,
@@ -36,7 +37,7 @@ let tray;
 let recording = false;
 
 if (isDev) {
-  const electronExecutable = `${__dirname}/../../node_modules/electron/dist/Electron.app/Contents/MacOS/Electron`; // TODO send a PR
+  const electronExecutable = `${__dirname}/../../../node_modules/electron/dist/Electron.app/Contents/MacOS/Electron`; // TODO send a PR
   require('electron-reload')(__dirname, {electron: electronExecutable}); // eslint-disable-line import/newline-after-import
   // menubar.setOption('alwaysOnTop', true);
 }
@@ -89,7 +90,7 @@ ipcMain.on('open-cropper-window', (event, size) => {
       resizable: true,
       shadow: false
     });
-    cropperWindow.loadURL(`file://${__dirname}/cropper.html`);
+    cropperWindow.loadURL(`file://${__dirname}/../renderer/html/cropper.html`);
     cropperWindow.setIgnoreMouseEvents(false); // TODO this should be false by default
 
     if (isDev) {
@@ -137,7 +138,7 @@ function resetMainWindowShadow() {
 function resetTrayIcon() {
   appState = 'initial'; // if the icon is being reseted, we are not recording anymore
   shouldStopWhenTrayIsClicked = false;
-  tray.setImage(path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'));
+  tray.setImage(path.join(__dirname, '..', '..', 'static', 'menubarDefaultTemplate.png'));
 }
 
 menubar.on('after-create-window', () => {
@@ -224,7 +225,7 @@ menubar.on('after-create-window', () => {
 
   mainWindow.on('hide', () => {
     if (appState === 'recording') {
-      tray.setImage(path.join(__dirname, '..', 'static', 'menubarStopTemplate.png'));
+      tray.setImage(path.join(__dirname, '..', '..', 'static', 'menubarStopTemplate.png'));
       shouldStopWhenTrayIsClicked = true;
     }
   });
