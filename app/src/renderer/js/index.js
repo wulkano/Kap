@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const minimizeWindowBtn = document.querySelector('.minimize-window');
   const options = document.querySelector('.controls__options');
   const progressBar = document.querySelector('#progress-bar');
+  const progressBarLabel = document.querySelector('.progress-bar-label');
   const progressBarSection = document.querySelector('section.progress');
   const recordBtn = document.querySelector('.record');
   const size = document.querySelector('.size');
@@ -167,15 +168,9 @@ document.addEventListener('DOMContentLoaded', () => {
           progressBarSection.classList.remove('hidden');
           setMainWindowSize();
 
-          const intervalId = setInterval(() => {
-            // ffmpeg don't report progress when creating the palette so we create a fake
-            // progress report...
-            progressBar.value += 0.5;
-          }, 250);
-
           function progressCallback(percentage) { // eslint-disable-line no-inner-declarations
-            // ...until ffmpeg reports progress for the first time
-            clearInterval(intervalId);
+            progressBarLabel.innerText = 'Processing...';
+            console.log(percentage);
             progressBar.value = percentage;
           }
 
@@ -413,7 +408,8 @@ document.addEventListener('DOMContentLoaded', () => {
     progressBarSection.classList.add('hidden');
     header.classList.remove('hidden');
     controlsSection.classList.remove('hidden');
-    progressBar.value = 0;
+    delete progressBar.value;
+    progressBarLabel.innerText = 'Analyzing...';
     setMainWindowSize();
   });
 
