@@ -170,7 +170,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
           function progressCallback(percentage) { // eslint-disable-line no-inner-declarations
             progressBarLabel.innerText = 'Processing...';
-            console.log(percentage);
             progressBar.value = percentage;
           }
 
