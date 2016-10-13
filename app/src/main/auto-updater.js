@@ -9,20 +9,31 @@ import reporter from '../common/reporter';
 
 const FEED_URL = `https://kap-updates.now.sh/update/osx/${version}`;
 
+function createInterval() {
+  return setInterval(() => {
+    autoUpdater.checkForUpdates();
+  }, ms('30m'));
+}
+
 function init(window) {
   if (isDev) {
     return;
   }
+
   autoUpdater.setFeedURL(FEED_URL);
+
   setTimeout(() => {
+    log('checking');
     autoUpdater.checkForUpdates();
-  }, ms('5s'));
+  }, ms('5s')); // at this point the app is fully started and ready for everything
 
-  setInterval(() => {
-    autoUpdater.checkForUpdates();
-  }, ms('5m'));
+  let intervalId = createInterval();
 
-  autoUpdater.on('update-available', () => log('update available, starting download'));
+  autoUpdater.on('update-available', () => {
+    clearInterval(intervalId);
+    intervalId = undefined;
+    log('update available, starting download');
+  });
 
   autoUpdater.on('update-downloaded', () => {
     log('update downloaded, will notify the user');
@@ -34,6 +45,10 @@ function init(window) {
   });
 
   autoUpdater.on('error', err => {
+    if (intervalId === undefined) { // if the error occurred during the download
+      intervalId = createInterval();
+    }
+
     log('Error fetching updates', err);
     reporter.report(err);
   });
