@@ -333,7 +333,7 @@ ipcMain.on('move-cropper-window', (event, data) => {
 });
 
 ipcMain.on('ask-user-to-save-file', (event, data) => {
-  const kapturesDir = settings.getSync('output-destination') || `${homedir()}/Movies/Kaptures`; // TODO
+  const kapturesDir = settings.getSync('save-to-directory') || `${homedir()}/Movies/Kaptures`; // TODO
   const filters = data.type === 'mp4' ? [{name: 'Movies', extensions: ['mp4']}] : [{name: 'Images', extensions: ['gif']}];
   mkdirp(kapturesDir, err => {
     if (err) {
