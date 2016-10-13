@@ -82,6 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     inputHeight.disabled = true;
     linkBtn.classList.add('disabled');
     swapBtn.classList.add('disabled');
+    exportAs.disabled = true;
   }
 
   function enableInputs() {
@@ -90,6 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
     inputHeight.disabled = false;
     linkBtn.classList.remove('disabled');
     swapBtn.classList.remove('disabled');
+    exportAs.disabled = false;
   }
 
   function startRecording() {
