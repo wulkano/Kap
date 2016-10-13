@@ -10,7 +10,7 @@ import mkdirp from 'mkdirp';
 import {init as initErrorReporter} from '../common/reporter';
 import logger from '../common/logger';
 
-// import autoUpdater from './auto-updater';
+import autoUpdater from './auto-updater';
 import analytics from './analytics';
 import {applicationMenu, cogMenu} from './menus';
 
@@ -249,7 +249,7 @@ menubar.on('after-create-window', () => {
   });
 
   mainWindowIsNew = true;
-  // autoUpdater.init(mainWindow);
+  autoUpdater.init(mainWindow);
   analytics.init();
   initErrorReporter();
   logger.init(mainWindow);
