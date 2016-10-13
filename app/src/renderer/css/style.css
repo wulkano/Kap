@@ -339,7 +339,7 @@ section.progress {
 .progress-bar-label {
   position: absolute;
   font-size: $default-font-size;
-  top: 9.5rem;
+  bottom: 4.75rem;
 }
 
 .progress-bar {
