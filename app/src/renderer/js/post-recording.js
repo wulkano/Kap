@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const loopOffBtn = document.querySelector('#loop-off');
   const loopOnBtn = document.querySelector('#loop-on');
   const preview = document.querySelector('#preview');
-  const saveBtn = document.querySelector('save');
+  const saveBtn = document.querySelector('.save');
 
   let fps = 30;
   let loop = true;
