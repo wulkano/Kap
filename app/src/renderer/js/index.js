@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import {ipcRenderer} from 'electron';
+import {ipcRenderer, shell} from 'electron';
 
 import aspectRatio from 'aspectratio';
 import fileSize from 'file-size';
@@ -30,17 +30,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const inputHeight = document.querySelector('#aspect-ratio-height');
   const linkBtn = document.querySelector('.link-btn');
   const minimizeWindowBtn = document.querySelector('.minimize-window');
+  const openReleaseNotesBtn = document.querySelector('.open-release-notes');
   const options = document.querySelector('.controls__options');
   const progressBar = document.querySelector('#progress-bar');
   const progressBarLabel = document.querySelector('.progress-bar-label');
   const progressBarSection = document.querySelector('section.progress');
   const recordBtn = document.querySelector('.record');
+  const restartAndInstallUpdateBtn = document.querySelector('.restart-and-install-update');
   const size = document.querySelector('.size');
   const swapBtn = document.querySelector('.swap-btn');
   const time = document.querySelector('.time');
+  const titleBar = document.querySelector('.title-bar');
   const trafficLights = document.querySelector('.title-bar__controls');
   const trayTriangle = document.querySelector('.tray-arrow');
   const triangle = document.querySelector('.triangle');
+  const updateNotification = document.querySelector('.update-notification');
   const windowTitle = document.querySelector('.window__title');
 
   // Initial variables
@@ -48,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastValidInputWidth = 512;
   let lastValidInputHeight = 512;
   let aspectRatioBaseValues = [lastValidInputWidth, lastValidInputHeight];
+  let hasUpdateNotification = false;
 
   function startMonitoringElapsedTimeAndSize(filePath) {
     const startedAt = moment();
@@ -372,13 +377,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  function setTrayTriangleVisible(visible = true) {
+    const color = hasUpdateNotification ? '#28CA42' : 'white';
+    trayTriangle.style.borderBottom = `1rem solid ${visible ? color : 'transparent'}`;
+  }
+
   ipcRenderer.on('unstick-from-menubar', () => {
-    trayTriangle.classList.add('hide');
+    setTrayTriangleVisible(false);
     trafficLights.classList.remove('invisible');
   });
 
   ipcRenderer.on('stick-to-menubar', () => {
-    trayTriangle.classList.remove('hide');
+    setTrayTriangleVisible();
     trafficLights.classList.add('invisible');
   });
 
@@ -400,10 +410,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const title = 'An update is available 🎉';
     const body = 'Click here to install it 😊';
 
+    hasUpdateNotification = true;
+    titleBar.classList.add('has-update-notification');
+    updateNotification.classList.remove('hidden');
+
+    // if the traffic lights are invisible, the triangle should be visible
+    // if they are visible, the tray triangle should be invisible
+    setTrayTriangleVisible(trafficLights.classList.contains('invisible')); // to update the color
+
+    setMainWindowSize();
+
+    openReleaseNotesBtn.onclick = () => shell.openExternal('https://github.com/wulkano/kap/releases/latest');
+    restartAndInstallUpdateBtn.onclick = () => ipcRenderer.send('install-update');
+
     const notification = new Notification(title, {body});
-    notification.onclick = () => {
-      ipcRenderer.send('install-update');
-    };
+    notification.onclick = () => ipcRenderer.send('install-update');
   });
 
   ipcRenderer.on('save-dialog-closed', () => {
