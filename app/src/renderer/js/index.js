@@ -10,6 +10,9 @@ import {convert as convertToGif} from '../../scripts/mp4-to-gif';
 import {init as initErrorReporter} from '../../common/reporter';
 import {log} from '../../common/logger';
 
+// note: `./` == `/app/dist/renderer/html`, not `js`
+import {handleKeyDown, validateNumericInput} from '../js/input-utils';
+
 const aperture = require('aperture.js')();
 
 function setMainWindowSize() {
@@ -239,53 +242,11 @@ document.addEventListener('DOMContentLoaded', () => {
     return true;
   }
 
-  function validateNumericInput(input, opts) {
-    let value = input.value;
-    if (value === '' && opts.empty) {
-      return value;
-    }
-
-    if (!value || !opts || !opts.lastValidValue) {
-      return undefined;
-    }
-
-    value = parseInt(value, 10);
-
-    if (!/^\d{1,5}$/.test(value)) {
-      opts.onInvalid(input);
-      return opts.lastValidValue;
-    }
-
-    if (opts.max && value > opts.max) {
-      opts.onInvalid(input);
-      return opts.max;
-    }
-
-    if (opts.min && value < opts.min) {
-      opts.onInvalid(input);
-      return opts.min;
-    }
-
-    return value;
-  }
-
   function setCropperWindowSize(width, height) {
     ipcRenderer.send('set-cropper-window-size', {
       width: width || lastValidInputWidth,
       height: height || lastValidInputHeight
     });
-  }
-
-  function handleKeyDown(event) {
-    const multiplier = event.shiftKey ? 10 : 1;
-    const parsedValue = parseInt(this.value, 10);
-    if (event.keyCode === 38) { // up
-      this.value = parsedValue + (1 * multiplier); // eslint-disable-line no-implicit-coercion
-      this.oninput();
-    } else if (event.keyCode === 40) { // down
-      this.value = parsedValue - (1 * multiplier); // eslint-disable-line no-implicit-coercion
-      this.oninput();
-    }
   }
 
   inputWidth.oninput = function () {
