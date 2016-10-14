@@ -35,6 +35,7 @@ section.controls {
   height: 4.8rem;
   display: flex;
   justify-content: space-around;
+  align-items: center;
 }
 
 
@@ -50,12 +51,87 @@ section.controls {
   @extend .flex;
 }
 
-.button-group {
-  @extend .flex;
+span, .cancel, .save {
+  font-size: 1.2rem;
 }
 
-span {
-  font-size: 1.2rem;
+input[type=text] {
+  width: 5rem;
+  height: 2.5rem;
+  padding-left: 1rem;
+  background: #FFFFFF;
+  border: 1px solid #CCCCCC;
+  box-shadow: inset 0 1px 0 0 #FFFFFF;
+  border-radius: 3px;
+}
+
+.size > span, .fps > span, .loop > span { margin-right: 15px }
+.size > input + input { margin-left: 5px }
+
+ul {
+  @extend .flex;
+  cursor: pointer;
+  width: 9.6rem;
+  height: 2.4rem;
+  text-align: center;
+
+  background-image: linear-gradient(-180deg, #FEFEFE 0%, #F1F1F1 100%);
+  background: #F9F9F9;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.20), 0 0 0 1px rgba(0,0,0,0.10), inset 0 1px 0 0 #FFFFFF;
+  border-radius: 3px;
+}
+
+li {
+  width: 100%;
+  line-height: 2rem;
+
+  &.active {
+    background: #3B99FC;
+    border: 1px solid #2D91FC;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.20);
+    color: white;
+
+    height: calc(100% + 2px);
+
+    &:first-child {
+      border-radius: 3px 0 0 3px;
+      transform: translate(-1px, -1px);
+    }
+
+    &:last-child {
+      border-radius: 0 3px 3px 0;
+      transform: translate(1px, -1px);
+    }
+  }
+}
+
+.window-controls {
+  @extend .flex;
+
+  & > div + div { margin-left: 15px }
+}
+
+.cancel, .save {
+  cursor: pointer;
+  height: 2.4rem;
+  text-align: center;
+}
+
+.cancel {
+  width: 7.2rem;
+  background-image: linear-gradient(-180deg, #FEFEFE 0%, #F1F1F1 100%);
+  background: #F9F9F9;
+  box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.20), 0px 0px 0px 1px rgba(0,0,0,0.10), inset 0px 1px 0px 0px #FFFFFF;
+  border-radius: 3px;
+}
+
+.save {
+  width: 6.2rem;
+  background: #3B99FC;
+  border: 1px solid #2D91FC;
+  box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.20);
+  border-radius: 3px;
+  color: white;
 }
 
 @keyframes shake {

@@ -94,19 +94,27 @@ document.addEventListener('DOMContentLoaded', () => {
     this.value = this.value || (shake(this) && lastValidInputHeight); // prevent the input from staying empty
   };
 
-  fps15Btn.onclick = () => {
+  fps15Btn.onclick = function () {
+    this.classList.add('active');
+    fps30Btn.classList.remove('active');
     fps = 15;
   };
 
-  fps30Btn.onclick = () => {
+  fps30Btn.onclick = function () {
+    this.classList.add('active');
+    fps15Btn.classList.remove('active');
     fps = 30;
   };
 
-  loopOffBtn.onclick = () => {
+  loopOffBtn.onclick = function () {
+    this.classList.add('active');
+    loopOnBtn.classList.remove('active');
     loop = false;
   };
 
-  loopOnBtn.onclick = () => {
+  loopOnBtn.onclick = function () {
+    this.classList.add('active');
+    loopOffBtn.classList.remove('active');
     loop = true;
   };
 
