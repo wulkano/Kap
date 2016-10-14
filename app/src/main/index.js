@@ -147,6 +147,7 @@ menubar.on('after-create-window', () => {
   let expectedWindowPosition;
   const currentWindowPosition = {};
   mainWindow = menubar.window;
+  app.mainWindow = mainWindow;
   if (isDev) {
     mainWindow.openDevTools({mode: 'detach'});
   }
