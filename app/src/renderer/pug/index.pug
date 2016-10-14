@@ -21,7 +21,7 @@ html(lang='en')
           img.hide-window(src='/app/static/traffic-light-close.svg')
           img.minimize-window(src='/app/static/traffic-light-minimize.svg')
           img(src='/app/static/traffic-light-disabled.svg')
-        span.window__title Kap
+        span.window__title.txt Kap
         .update-notification.hidden
           span An update is available 🎉
           ul
@@ -33,26 +33,26 @@ html(lang='en')
       //- Progress bar 
       section.progress.hidden
         progress#progress-bar.progress-bar(max='100')
-        label.progress-bar-label(for='progress-bar') Analyzing...
+        label.progress-bar-label.txt(for='progress-bar') Analyzing...
         
       //- Main App area/header (record button container)
       header.kap-header
-        .kap-header__text.time 00:00
+        .kap-header__text.time.txt 00:00
         .record(data-state='initial')
           img.record__crop(src='/app/static/crop.svg')
           img.record__stop.hidden(src='/app/static/stop.svg')
-        .kap-header__text.size 0 kB
+        .kap-header__text.size.txt 0 kB
 
       //- Kap Controls
       section.controls
         .controls__toggle.container
           img.triangle(src='/app/static/dropdown-arrow.svg')
-          span.controls__title Controls
+          span.controls__title.txt Controls
           img.controls__options(src='/app/static/gear.svg')
 
         .controls-content.container.hidden
           .controls-section
-            span.controls-section__title Aspect ratio
+            span.controls-section__title.txt Aspect ratio
             .controls-section__row
               select.aspect-ratio-selector
                 option(value='1600x900') 16:9 (1600x900)
@@ -62,7 +62,7 @@ html(lang='en')
                 option(data-aspect-ratio='custom') Custom
             .controls-section__row.aspect-ratio
               .aspect-ratio__input
-                label(for='aspect-ratio-width') Width
+                label.txt(for='aspect-ratio-width') Width
                 input#aspect-ratio-width(type='text', value='512')
               ul.aspect-ratio__options.button-group
                 li
@@ -70,10 +70,10 @@ html(lang='en')
                 li
                   img.link-btn(src='/app/static/link.svg')
               .aspect-ratio__input
-                label(for='aspect-ratio-height') Height
+                label.txt(for='aspect-ratio-height') Height
                 input#aspect-ratio-height(type='text', value='512')
             //- TODO remove this `style`👇
-            span.controls-section__title(style='padding-top: 1rem') Export as
+            span.controls-section__title.txt(style='padding-top: 1rem') Export as
             .controls-section__row
               select#export-as
                 option(value='gif') GIF

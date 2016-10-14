@@ -19,8 +19,6 @@ function init(mainWindow) {
 function log(...msgs) {
   if (process.type === 'browser') { // main process
     if (window && windowIsReady) {
-      console.log(...msgs);
-      console.log(window.webContents);
       window.webContents.send('log', msgs);
     } else {
       pendingMessages.push(msgs);

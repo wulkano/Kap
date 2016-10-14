@@ -18,9 +18,9 @@ $blue: #3B99FC;
 $green: #28CA42;
 $window-border-radius: 5px;
 
-* { /* TODO make this rule more specific */
-  -webkit-user-select: none;
-  cursor: default;
+.txt {
+  -webkit-user-select: none !important;
+  cursor: default !important;
 }
 
 /* Set base colour and font stack */

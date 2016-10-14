@@ -6,10 +6,10 @@ const signInForUpdates = {
   click: () => shell.openExternal('http://eepurl.com/ch90_1')
 };
 
-function changeOutputDestination() {
+function changeSaveToDirectory() {
   const location = dialog.showOpenDialog({properties: ['openDirectory']});
   if (location) {
-    settings.set('output-destination', location[0]);
+    settings.set('save-to-directory', location[0]);
   }
 }
 
@@ -21,8 +21,8 @@ const cogMenu = [
     type: 'separator'
   },
   {
-    label: 'Change default output destination',
-    click: () => changeOutputDestination()
+    label: 'Save to...',
+    click: () => changeSaveToDirectory()
   },
   {
     type: 'separator'
@@ -88,6 +88,13 @@ const applicationMenu = [
         click(item, focusedWindow) {
           focusedWindow.webContents.send('prepare-recording');
         }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Save to...',
+        click: () => changeSaveToDirectory()
       },
       {
         type: 'separator'
