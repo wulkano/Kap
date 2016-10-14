@@ -380,6 +380,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ipcRenderer.on('log', (event, msgs) => console.log(...msgs));
 
+  ipcRenderer.on('export-to-gif', (event, data) => {
+    header.classList.add('hidden');
+    controlsSection.classList.add('hidden');
+    progressBarSection.classList.remove('hidden');
+    setMainWindowSize();
+
+    function progressCallback(percentage) {
+      // eslint-disable-line no-inner-declarations
+      progressBarLabel.innerText = 'Processing...';
+      progressBar.value = percentage;
+    }
+
+    data.progressCallback = progressCallback;
+
+    convertToGif(data).then(gifPath => {
+      const now = moment();
+      const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.gif`;
+
+      progressBar.value = 100;
+
+      askUserToSaveFile({fileName, filePath: gifPath, type: 'gif'});
+    });
+    // TODO catch
+  });
+
   initErrorReporter();
 });
 

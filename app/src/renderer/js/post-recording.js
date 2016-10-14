@@ -114,6 +114,17 @@ document.addEventListener('DOMContentLoaded', () => {
     ipcRenderer.send('close-post-recording-window');
   };
 
+  saveBtn.onclick = () => {
+    ipcRenderer.send('export-to-gif', {
+      filePath: preview.src,
+      width: inputWidth.value,
+      height: inputHeight.value,
+      fps,
+      loop
+    });
+    ipcRenderer.send('close-post-recording-window');
+  };
+
   ipcRenderer.on('video-src', (event, src) => {
     preview.src = src;
   });

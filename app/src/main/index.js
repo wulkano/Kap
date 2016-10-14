@@ -377,3 +377,8 @@ ipcMain.on('close-post-recording-window', () => {
     postRecWindow.close();
   }
 });
+
+ipcMain.on('export-to-gif', (event, data) => {
+  mainWindow.webContents.send('export-to-gif', data);
+  mainWindow.show();
+});
