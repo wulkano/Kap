@@ -29,6 +29,8 @@ function convert(opts) {
           palettePath,
           '-filter_complex',
           `fps=${opts.fps},scale=${opts.width}:${opts.height}:flags=lanczos[x]; [x][1:v]paletteuse`,
+          `-loop`,
+          `${opts.loop === true ? '0' : '-1'}`, // 0 == forever; -1 == no loop
           gifPath
         ]);
 
