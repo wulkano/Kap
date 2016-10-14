@@ -166,26 +166,28 @@ document.addEventListener('DOMContentLoaded', () => {
         } else { // gif
           restoreInputs();
 
-          header.classList.add('hidden');
-          controlsSection.classList.add('hidden');
-          progressBarSection.classList.remove('hidden');
-          setMainWindowSize();
+          // header.classList.add('hidden');
+          // controlsSection.classList.add('hidden');
+          // progressBarSection.classList.remove('hidden');
+          // setMainWindowSize();
+          //
+          // function progressCallback(percentage) { // eslint-disable-line no-inner-declarations
+          //   progressBarLabel.innerText = 'Processing...';
+          //   progressBar.value = percentage;
+          // }
+          //
+          // convertToGif(filePath, progressCallback)
+          //   .then(gifPath => {
+          //     const now = moment();
+          //     const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.gif`;
+          //
+          //     progressBar.value = 100;
+          //
+          //     askUserToSaveFile({fileName, filePath: gifPath, type: 'gif'});
+          //   });
+          //   // TODO catch
 
-          function progressCallback(percentage) { // eslint-disable-line no-inner-declarations
-            progressBarLabel.innerText = 'Processing...';
-            progressBar.value = percentage;
-          }
-
-          convertToGif(filePath, progressCallback)
-            .then(gifPath => {
-              const now = moment();
-              const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.gif`;
-
-              progressBar.value = 100;
-
-              askUserToSaveFile({fileName, filePath: gifPath, type: 'gif'});
-            });
-            // TODO catch
+          ipcRenderer.send('open-post-recording-window', filePath);
         }
       });
   }

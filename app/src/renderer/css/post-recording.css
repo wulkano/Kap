@@ -1,0 +1,59 @@
+$background-color: #FFFFFF;
+
+body {
+  background-color: $background-color;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue";
+}
+
+main.content {
+  display: flex;
+  flex-direction: column;
+}
+
+video {
+  width: 800px;
+  height: 400px;
+}
+
+progress {
+  -webkit-appearance: none;
+  height: 4px;
+  width: 100%;
+
+  &::-webkit-progress-bar {
+    background-color: #C6C6C6;
+  }
+
+  &::-webkit-progress-value {
+    background-color: #3995F4;
+  }
+}
+
+section.controls {
+  -webkit-app-region: drag;
+  cursor: -webkit-grab;
+  height: 4.8rem;
+  display: flex;
+  justify-content: space-around;
+}
+
+
+.flex {
+  display: flex;
+}
+
+.fps {
+  @extend .flex;
+}
+
+.loop {
+  @extend .flex;
+}
+
+.button-group {
+  @extend .flex;
+}
+
+span {
+  font-size: 1.2rem;
+}

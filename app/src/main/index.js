@@ -32,6 +32,7 @@ let mainWindowIsDetached = false;
 let mainWindow;
 let mainWindowIsNew = true;
 let positioner;
+let postRecWindow;
 let shouldStopWhenTrayIsClicked = false;
 let tray;
 
@@ -350,4 +351,29 @@ ipcMain.on('ask-user-to-save-file', (event, data) => {
       mainWindow.webContents.send('save-dialog-closed');
     });
   });
+});
+
+ipcMain.on('open-post-recording-window', (event, videoSrc) => {
+  postRecWindow = new BrowserWindow({
+    width: 800,
+    height: 452,
+    frame: false,
+    transparent: true,
+    resizable: false,
+    shadow: true
+  });
+
+  postRecWindow.loadURL(`file://${__dirname}/../renderer/html/post-recording.html`);
+
+  postRecWindow.webContents.on('did-finish-load', () => postRecWindow.webContents.send('video-src', videoSrc));
+
+  postRecWindow.on('closed', () => {
+    postRecWindow = undefined;
+  });
+});
+
+ipcMain.on('close-post-recording-window', () => {
+  if (postRecWindow) {
+    postRecWindow.close();
+  }
 });
