@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const fps30Btn = document.querySelector('#fps-30');
   const loopOffBtn = document.querySelector('#loop-off');
   const loopOnBtn = document.querySelector('#loop-on');
+  const notification = document.querySelector('.notification');
   const preview = document.querySelector('#preview');
   const saveBtn = document.querySelector('.save');
 
@@ -22,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastValidInputWidth;
   let lastValidInputHeight;
   let aspectRatioBaseValues;
+  let notificationTimeoutId;
 
   window.fps = fps;
   window.loop = loop;
@@ -36,11 +38,11 @@ document.addEventListener('DOMContentLoaded', () => {
     preview.oncanplay = undefined;
   };
 
-  function shake(input) {
-    input.classList.add('invalid');
+  function shake(el) {
+    el.classList.add('shake');
 
-    input.addEventListener('webkitAnimationEnd', () => {
-      input.classList.remove('invalid');
+    el.addEventListener('webkitAnimationEnd', () => {
+      el.classList.remove('shake');
     });
 
     return true;
@@ -135,5 +137,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ipcRenderer.on('video-src', (event, src) => {
     preview.src = src;
+  });
+
+  ipcRenderer.on('show-notification', () => {
+    notification.style.opacity = 1;
+    shake(notification);
+    if (notificationTimeoutId) {
+      clearTimeout(notificationTimeoutId);
+    }
+    notificationTimeoutId = setTimeout(() => {
+      notification.style.opacity = 0;
+    }, 5000);
   });
 });

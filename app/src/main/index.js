@@ -215,6 +215,9 @@ menubar.on('after-create-window', () => {
   positioner = menubar.positioner;
 
   tray.on('click', () => {
+    if (postRecWindow) {
+      postRecWindow.show();
+    }
     if (mainWindowIsNew) {
       mainWindowIsNew = false;
       positioner.move('trayCenter', tray.getBounds()); // not sure why the fuck this is needed (ﾉಠдಠ)ﾉ︵┻━┻
@@ -354,7 +357,14 @@ ipcMain.on('ask-user-to-save-file', (event, data) => {
   });
 });
 
-ipcMain.on('open-post-recording-window', (event, videoSrc) => {
+ipcMain.on('open-post-recording-window', (event, opts) => {
+  if (postRecWindow) {
+    postRecWindow.show();
+    if (opts.notify === true) {
+      postRecWindow.webContents.send('show-notification');
+    }
+    return;
+  }
   postRecWindow = new BrowserWindow({
     width: 800,
     height: 452,
@@ -366,11 +376,14 @@ ipcMain.on('open-post-recording-window', (event, videoSrc) => {
 
   postRecWindow.loadURL(`file://${__dirname}/../renderer/html/post-recording.html`);
 
-  postRecWindow.webContents.on('did-finish-load', () => postRecWindow.webContents.send('video-src', videoSrc));
+  postRecWindow.webContents.on('did-finish-load', () => postRecWindow.webContents.send('video-src', opts.filePath));
 
   postRecWindow.on('closed', () => {
     postRecWindow = undefined;
+    app.postRecWindow = undefined;
   });
+
+  app.postRecWindow = postRecWindow;
 });
 
 ipcMain.on('close-post-recording-window', () => {
@@ -382,4 +395,18 @@ ipcMain.on('close-post-recording-window', () => {
 ipcMain.on('export-to-gif', (event, data) => {
   mainWindow.webContents.send('export-to-gif', data);
   mainWindow.show();
+});
+
+ipcMain.on('set-main-window-visibility', (event, opts) => {
+  if (opts.alwaysOnTop === true && opts.temporary === true && opts.forHowLong) {
+    menubar.setOption('alwaysOnTop', true);
+
+    setTimeout(() => {
+      menubar.setOption('alwaysOnTop', false);
+      tray.setHighlightMode('never');
+      if (mainWindowIsDetached === false) {
+        mainWindow.hide();
+      }
+    }, opts.forHowLong);
+  }
 });

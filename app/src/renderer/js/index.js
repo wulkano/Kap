@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import {ipcRenderer} from 'electron';
+import {ipcRenderer, remote} from 'electron';
 
 import aspectRatio from 'aspectratio';
 import fileSize from 'file-size';
@@ -190,9 +190,19 @@ document.addEventListener('DOMContentLoaded', () => {
           //   });
           //   // TODO catch
 
-          ipcRenderer.send('open-post-recording-window', filePath);
+          ipcRenderer.send('open-post-recording-window', {filePath});
         }
       });
+  }
+
+  function shake(el) {
+    el.classList.add('shake');
+
+    el.addEventListener('webkitAnimationEnd', () => {
+      el.classList.remove('shake');
+    });
+
+    return true;
   }
 
   // Prepare recording button for recording state
@@ -214,7 +224,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   recordBtn.onclick = function () {
-    prepareRecordButton();
+    if (remote.app.postRecWindow) {
+      // we need to keep the window visible to show the shake animation
+      // (it'll be auto hidden by `menubar` when the post recording window gain focus)
+      ipcRenderer.send('set-main-window-visibility', {
+        alwaysOnTop: true,
+        temporary: true,
+        forHowLong: 1000
+      });
+      shake(this);
+      ipcRenderer.send('open-post-recording-window', {notify: true});
+    } else {
+      prepareRecordButton();
+    }
   };
 
   controlsTitleWrapper.onclick = function () {
@@ -231,16 +253,6 @@ document.addEventListener('DOMContentLoaded', () => {
     ipcRenderer.send('show-options-menu', {x: left, y: bottom});
     event.stopPropagation();
   };
-
-  function shake(input) {
-    input.classList.add('invalid');
-
-    input.addEventListener('webkitAnimationEnd', () => {
-      input.classList.remove('invalid');
-    });
-
-    return true;
-  }
 
   function setCropperWindowSize(width, height) {
     ipcRenderer.send('set-cropper-window-size', {
