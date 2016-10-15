@@ -51,7 +51,7 @@ section.controls {
   @extend .flex;
 }
 
-span, .cancel, .save {
+span, .discard, .save {
   font-size: 1.2rem;
 }
 
@@ -111,13 +111,13 @@ li {
   & > div + div { margin-left: 15px }
 }
 
-.cancel, .save {
+.discard, .save {
   cursor: pointer;
   height: 2.4rem;
   text-align: center;
 }
 
-.cancel {
+.discard {
   width: 7.2rem;
   background-image: linear-gradient(-180deg, #FEFEFE 0%, #F1F1F1 100%);
   background: #F9F9F9;

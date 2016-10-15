@@ -6,7 +6,7 @@ import aspectRatio from 'aspectratio';
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 
 document.addEventListener('DOMContentLoaded', () => {
-  const cancelBtn = document.querySelector('.cancel');
+  const discardBtn = document.querySelector('.discard');
   const inputHeight = document.querySelector('.input-height');
   const inputWidth = document.querySelector('.input-width');
   const fps15Btn = document.querySelector('#fps-15');
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loop = true;
   };
 
-  cancelBtn.onclick = () => {
+  discardBtn.onclick = () => {
     ipcRenderer.send('close-post-recording-window');
   };
 
