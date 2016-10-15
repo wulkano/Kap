@@ -1,4 +1,4 @@
-import {ipcRenderer} from 'electron';
+import {remote, ipcRenderer} from 'electron';
 
 import aspectRatio from 'aspectratio';
 
@@ -120,8 +120,24 @@ document.addEventListener('DOMContentLoaded', () => {
     loop = true;
   };
 
-  discardBtn.onclick = () => {
-    ipcRenderer.send('close-post-recording-window');
+  function confirmDiscard() {
+    remote.dialog.showMessageBox(remote.app.postRecWindow, {
+      type: 'question',
+      buttons: ['No', 'Yes'],
+      message: 'Are you sure that you want to discard this recording?',
+      detail: 'It will not be saved'
+    }, response => {
+      if (response === 1) { // `Yes`
+        ipcRenderer.send('close-post-recording-window');
+      }
+    });
+  }
+
+  discardBtn.onclick = confirmDiscard;
+  window.onkeyup = event => {
+    if (event.keyCode === 27) { // esc
+      confirmDiscard();
+    }
   };
 
   saveBtn.onclick = () => {
