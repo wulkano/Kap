@@ -34,21 +34,27 @@ section.controls {
   cursor: -webkit-grab;
   height: 4.8rem;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 }
 
-
-.flex {
+.video-controls {
   display: flex;
+  justify-content: space-between;
+  width: 48.5rem;
+  margin-left: 16px;
 }
 
-.fps {
-  @extend .flex;
+
+.window-controls {
+  display: flex;
+  margin-right: 16px;
+
+  & > div + div { margin-left: 15px }
 }
 
-.loop {
-  @extend .flex;
+.fps, .loop {
+  display: flex;
 }
 
 span, .discard, .save {
@@ -65,11 +71,11 @@ input[type=text] {
   border-radius: 3px;
 }
 
-.size > span, .fps > span, .loop > span { margin-right: 15px }
-.size > input + input { margin-left: 5px }
+.size > span, .fps > span, .loop > span { margin-right: 16px }
+.size > input + input { margin-left: 6px }
 
 ul {
-  @extend .flex;
+  display: flex;
   cursor: pointer;
   width: 9.6rem;
   height: 2.4rem;
@@ -103,12 +109,6 @@ li {
       transform: translate(1px, -1px);
     }
   }
-}
-
-.window-controls {
-  @extend .flex;
-
-  & > div + div { margin-left: 15px }
 }
 
 .discard, .save {
