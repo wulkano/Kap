@@ -38,12 +38,6 @@ let tray;
 
 let recording = false;
 
-if (isDev) {
-  const electronExecutable = `${__dirname}/../../../node_modules/electron/dist/Electron.app/Contents/MacOS/Electron`; // TODO send a PR
-  require('electron-reload')(__dirname, {electron: electronExecutable}); // eslint-disable-line import/newline-after-import
-  // menubar.setOption('alwaysOnTop', true);
-}
-
 ipcMain.on('set-main-window-size', (event, args) => {
   if (args.width && args.height && mainWindow) {
     [args.width, args.height] = [parseInt(args.width, 10), parseInt(args.height, 10)];

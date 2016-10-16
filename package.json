@@ -19,7 +19,6 @@
     "cssnano": "^3.7.7",
     "electron": "^1.4.3",
     "electron-builder": "^7.11.4",
-    "electron-reload": "^1.0.2",
     "execa": "^0.5.0",
     "got": "^6.5.0",
     "gulp": "^3.9.1",
