@@ -388,7 +388,9 @@ ipcMain.on('close-post-recording-window', () => {
   if (postRecWindow) {
     postRecWindow.close();
     menubar.setOption('hidden', false);
-    if (mainWindowIsDetached === false) {
+    if (mainWindowIsDetached === true) {
+      mainWindow.show();
+    } else {
       app.dock.hide();
     }
   }
