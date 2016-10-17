@@ -135,6 +135,8 @@ function resetTrayIcon() {
   appState = 'initial'; // if the icon is being reseted, we are not recording anymore
   shouldStopWhenTrayIsClicked = false;
   tray.setImage(path.join(__dirname, '..', '..', 'static', 'menubarDefaultTemplate.png'));
+  menubar.setOption('alwaysOnTop', false);
+  mainWindow.setAlwaysOnTop(false);
 }
 
 menubar.on('after-create-window', () => {
