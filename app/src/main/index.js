@@ -210,7 +210,7 @@ menubar.on('after-create-window', () => {
 
   tray.on('click', () => {
     if (postRecWindow) {
-      postRecWindow.show();
+      return postRecWindow.show();
     }
     if (mainWindowIsNew) {
       mainWindowIsNew = false;
@@ -237,7 +237,7 @@ menubar.on('after-create-window', () => {
   });
 
   app.on('activate', () => { // == dockIcon.onclick
-    if (!mainWindow.isVisible()) {
+    if (!mainWindow.isVisible() && postRecWindow === undefined) {
       mainWindow.show();
     }
   });
@@ -378,11 +378,19 @@ ipcMain.on('open-post-recording-window', (event, opts) => {
   });
 
   app.postRecWindow = postRecWindow;
+  menubar.setOption('hidden', true);
+  mainWindow.hide();
+  tray.setHighlightMode('never');
+  app.dock.show();
 });
 
 ipcMain.on('close-post-recording-window', () => {
   if (postRecWindow) {
     postRecWindow.close();
+    menubar.setOption('hidden', false);
+    if (mainWindowIsDetached === false) {
+      app.dock.hide();
+    }
   }
 });
 
