@@ -23,9 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastValidInputHeight;
   let aspectRatioBaseValues;
 
-  window.fps = fps;
-  window.loop = loop;
-
   preview.oncanplay = function () {
     aspectRatioBaseValues = [this.videoWidth, this.videoHeight];
     [inputWidth.value, inputHeight.value] = aspectRatioBaseValues;
