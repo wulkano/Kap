@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const loopOffBtn = document.querySelector('#loop-off');
   const loopOnBtn = document.querySelector('#loop-on');
   const preview = document.querySelector('#preview');
+  const progressBar = document.querySelector('progress');
   const saveBtn = document.querySelector('.save');
 
   let fps = 30;
@@ -27,6 +28,11 @@ document.addEventListener('DOMContentLoaded', () => {
     aspectRatioBaseValues = [this.videoWidth, this.videoHeight];
     [inputWidth.value, inputHeight.value] = aspectRatioBaseValues;
     [lastValidInputWidth, lastValidInputHeight] = aspectRatioBaseValues;
+
+    progressBar.max = preview.duration;
+    setInterval(() => {
+      progressBar.value = preview.currentTime;
+    }, 1);
 
     // remove the listener since it's called
     // every time the video loops
