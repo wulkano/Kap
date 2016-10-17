@@ -365,9 +365,7 @@ ipcMain.on('open-post-recording-window', (event, opts) => {
     width: 768,
     height: 432,
     frame: false,
-    transparent: true,
-    resizable: false,
-    shadow: true
+    resizable: false
   });
 
   postRecWindow.loadURL(`file://${__dirname}/../renderer/html/post-recording.html`);
