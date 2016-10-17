@@ -3,6 +3,16 @@ $background-color: #FFFFFF;
 body {
   background-color: $background-color;
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue";
+  -webkit-app-region: drag;
+  cursor: -webkit-grab;
+}
+
+span {
+  -webkit-user-select: none !important;
+}
+
+input {
+  -webkit-app-region: no-drag;
 }
 
 main.content {
@@ -30,8 +40,6 @@ progress {
 }
 
 section.controls {
-  -webkit-app-region: drag;
-  cursor: -webkit-grab;
   height: 4.8rem;
   display: flex;
   justify-content: space-between;
