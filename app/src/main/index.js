@@ -32,16 +32,11 @@ let mainWindowIsDetached = false;
 let mainWindow;
 let mainWindowIsNew = true;
 let positioner;
+let postRecWindow;
 let shouldStopWhenTrayIsClicked = false;
 let tray;
 
 let recording = false;
-
-if (isDev) {
-  const electronExecutable = `${__dirname}/../../../node_modules/electron/dist/Electron.app/Contents/MacOS/Electron`; // TODO send a PR
-  require('electron-reload')(__dirname, {electron: electronExecutable}); // eslint-disable-line import/newline-after-import
-  // menubar.setOption('alwaysOnTop', true);
-}
 
 ipcMain.on('set-main-window-size', (event, args) => {
   if (args.width && args.height && mainWindow) {
@@ -140,12 +135,15 @@ function resetTrayIcon() {
   appState = 'initial'; // if the icon is being reseted, we are not recording anymore
   shouldStopWhenTrayIsClicked = false;
   tray.setImage(path.join(__dirname, '..', '..', 'static', 'menubarDefaultTemplate.png'));
+  menubar.setOption('alwaysOnTop', false);
+  mainWindow.setAlwaysOnTop(false);
 }
 
 menubar.on('after-create-window', () => {
   let expectedWindowPosition;
   const currentWindowPosition = {};
   mainWindow = menubar.window;
+  app.mainWindow = mainWindow;
   if (isDev) {
     mainWindow.openDevTools({mode: 'detach'});
   }
@@ -213,6 +211,9 @@ menubar.on('after-create-window', () => {
   positioner = menubar.positioner;
 
   tray.on('click', () => {
+    if (postRecWindow) {
+      return postRecWindow.show();
+    }
     if (mainWindowIsNew) {
       mainWindowIsNew = false;
       positioner.move('trayCenter', tray.getBounds()); // not sure why the fuck this is needed (ﾉಠдಠ)ﾉ︵┻━┻
@@ -238,7 +239,7 @@ menubar.on('after-create-window', () => {
   });
 
   app.on('activate', () => { // == dockIcon.onclick
-    if (!mainWindow.isVisible()) {
+    if (!mainWindow.isVisible() && postRecWindow === undefined) {
       mainWindow.show();
     }
   });
@@ -350,4 +351,66 @@ ipcMain.on('ask-user-to-save-file', (event, data) => {
       mainWindow.webContents.send('save-dialog-closed');
     });
   });
+});
+
+ipcMain.on('open-post-recording-window', (event, opts) => {
+  if (postRecWindow) {
+    postRecWindow.show();
+    if (opts.notify === true) {
+      postRecWindow.webContents.send('show-notification');
+    }
+    return;
+  }
+  postRecWindow = new BrowserWindow({
+    width: 768,
+    height: 432,
+    frame: false,
+    resizable: false
+  });
+
+  postRecWindow.loadURL(`file://${__dirname}/../renderer/html/post-recording.html`);
+
+  postRecWindow.webContents.on('did-finish-load', () => postRecWindow.webContents.send('video-src', opts.filePath));
+
+  postRecWindow.on('closed', () => {
+    postRecWindow = undefined;
+    app.postRecWindow = undefined;
+  });
+
+  app.postRecWindow = postRecWindow;
+  menubar.setOption('hidden', true);
+  mainWindow.hide();
+  tray.setHighlightMode('never');
+  app.dock.show();
+});
+
+ipcMain.on('close-post-recording-window', () => {
+  if (postRecWindow) {
+    postRecWindow.close();
+    menubar.setOption('hidden', false);
+    if (mainWindowIsDetached === true) {
+      mainWindow.show();
+    } else {
+      app.dock.hide();
+    }
+  }
+});
+
+ipcMain.on('export-to-gif', (event, data) => {
+  mainWindow.webContents.send('export-to-gif', data);
+  mainWindow.show();
+});
+
+ipcMain.on('set-main-window-visibility', (event, opts) => {
+  if (opts.alwaysOnTop === true && opts.temporary === true && opts.forHowLong) {
+    menubar.setOption('alwaysOnTop', true);
+
+    setTimeout(() => {
+      menubar.setOption('alwaysOnTop', false);
+      tray.setHighlightMode('never');
+      if (mainWindowIsDetached === false) {
+        mainWindow.hide();
+      }
+    }, opts.forHowLong);
+  }
 });

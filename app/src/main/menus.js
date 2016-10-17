@@ -102,7 +102,9 @@ const applicationMenu = [
       {
         label: 'Close',
         accelerator: 'CmdOrCtrl+W',
-        role: 'close'
+        click() {
+          app.mainWindow.hide();
+        }
       }
     ]
   },

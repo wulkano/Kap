@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import {ipcRenderer, shell} from 'electron';
+import {ipcRenderer, remote, shell} from 'electron';
 
 import aspectRatio from 'aspectratio';
 import fileSize from 'file-size';
@@ -9,6 +9,9 @@ import moment from 'moment';
 import {convert as convertToGif} from '../../scripts/mp4-to-gif';
 import {init as initErrorReporter} from '../../common/reporter';
 import {log} from '../../common/logger';
+
+// note: `./` == `/app/dist/renderer/html`, not `js`
+import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 
 const aperture = require('aperture.js')();
 
@@ -171,28 +174,40 @@ document.addEventListener('DOMContentLoaded', () => {
         } else { // gif
           restoreInputs();
 
-          header.classList.add('hidden');
-          controlsSection.classList.add('hidden');
-          progressBarSection.classList.remove('hidden');
-          setMainWindowSize();
+          // header.classList.add('hidden');
+          // controlsSection.classList.add('hidden');
+          // progressBarSection.classList.remove('hidden');
+          // setMainWindowSize();
+          //
+          // function progressCallback(percentage) { // eslint-disable-line no-inner-declarations
+          //   progressBarLabel.innerText = 'Processing...';
+          //   progressBar.value = percentage;
+          // }
+          //
+          // convertToGif(filePath, progressCallback)
+          //   .then(gifPath => {
+          //     const now = moment();
+          //     const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.gif`;
+          //
+          //     progressBar.value = 100;
+          //
+          //     askUserToSaveFile({fileName, filePath: gifPath, type: 'gif'});
+          //   });
+          //   // TODO catch
 
-          function progressCallback(percentage) { // eslint-disable-line no-inner-declarations
-            progressBarLabel.innerText = 'Processing...';
-            progressBar.value = percentage;
-          }
-
-          convertToGif(filePath, progressCallback)
-            .then(gifPath => {
-              const now = moment();
-              const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.gif`;
-
-              progressBar.value = 100;
-
-              askUserToSaveFile({fileName, filePath: gifPath, type: 'gif'});
-            });
-            // TODO catch
+          ipcRenderer.send('open-post-recording-window', {filePath});
         }
       });
+  }
+
+  function shake(el) {
+    el.classList.add('shake');
+
+    el.addEventListener('webkitAnimationEnd', () => {
+      el.classList.remove('shake');
+    });
+
+    return true;
   }
 
   // Prepare recording button for recording state
@@ -214,7 +229,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   recordBtn.onclick = function () {
-    prepareRecordButton();
+    if (remote.app.postRecWindow) {
+      // we need to keep the window visible to show the shake animation
+      // (it'll be auto hidden by `menubar` when the post recording window gain focus)
+      ipcRenderer.send('set-main-window-visibility', {
+        alwaysOnTop: true,
+        temporary: true,
+        forHowLong: 1000
+      });
+      shake(this);
+      ipcRenderer.send('open-post-recording-window', {notify: true});
+    } else {
+      prepareRecordButton();
+    }
   };
 
   controlsTitleWrapper.onclick = function () {
@@ -232,63 +259,11 @@ document.addEventListener('DOMContentLoaded', () => {
     event.stopPropagation();
   };
 
-  function shake(input) {
-    input.classList.add('invalid');
-
-    input.addEventListener('webkitAnimationEnd', () => {
-      input.classList.remove('invalid');
-    });
-
-    return true;
-  }
-
-  function validateNumericInput(input, opts) {
-    let value = input.value;
-    if (value === '' && opts.empty) {
-      return value;
-    }
-
-    if (!value || !opts || !opts.lastValidValue) {
-      return undefined;
-    }
-
-    value = parseInt(value, 10);
-
-    if (!/^\d{1,5}$/.test(value)) {
-      opts.onInvalid(input);
-      return opts.lastValidValue;
-    }
-
-    if (opts.max && value > opts.max) {
-      opts.onInvalid(input);
-      return opts.max;
-    }
-
-    if (opts.min && value < opts.min) {
-      opts.onInvalid(input);
-      return opts.min;
-    }
-
-    return value;
-  }
-
   function setCropperWindowSize(width, height) {
     ipcRenderer.send('set-cropper-window-size', {
       width: width || lastValidInputWidth,
       height: height || lastValidInputHeight
     });
-  }
-
-  function handleKeyDown(event) {
-    const multiplier = event.shiftKey ? 10 : 1;
-    const parsedValue = parseInt(this.value, 10);
-    if (event.keyCode === 38) { // up
-      this.value = parsedValue + (1 * multiplier); // eslint-disable-line no-implicit-coercion
-      this.oninput();
-    } else if (event.keyCode === 40) { // down
-      this.value = parsedValue - (1 * multiplier); // eslint-disable-line no-implicit-coercion
-      this.oninput();
-    }
   }
 
   inputWidth.oninput = function () {
@@ -437,6 +412,31 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('log', (event, msgs) => console.log(...msgs));
+
+  ipcRenderer.on('export-to-gif', (event, data) => {
+    header.classList.add('hidden');
+    controlsSection.classList.add('hidden');
+    progressBarSection.classList.remove('hidden');
+    setMainWindowSize();
+
+    function progressCallback(percentage) {
+      // eslint-disable-line no-inner-declarations
+      progressBarLabel.innerText = 'Processing...';
+      progressBar.value = percentage;
+    }
+
+    data.progressCallback = progressCallback;
+
+    convertToGif(data).then(gifPath => {
+      const now = moment();
+      const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.gif`;
+
+      progressBar.value = 100;
+
+      askUserToSaveFile({fileName, filePath: gifPath, type: 'gif'});
+    });
+    // TODO catch
+  });
 
   initErrorReporter();
 });
