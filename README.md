@@ -33,6 +33,8 @@ After that, you'll see the binary in the `./dist` folder :smile:
 - [Website](https://github.com/wulkano/kap-website)
 - [Aperture](https://github.com/wulkano/aperture)
 
+## Newsletter
+Subscribe [here](http://eepurl.com/ch90_1).
 
 ## Thanks
 - Credit goes to [▲ZEIT](https://github.com/zeit) for the README formatting and for hosting our downloads and updates!
