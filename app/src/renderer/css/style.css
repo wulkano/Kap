@@ -5,6 +5,8 @@
   ( ͡° ͜ʖ ͡°)
 */
 
+@import 'Eightpoint/dist/eight.min';
+
 /* Variables */
 $background-primary: #FFFFFF;
 $background-secondary: #ECECEC;
@@ -30,10 +32,43 @@ body {
   overflow: hidden;
 }
 
-select { width: 100%; }
-input {
+select {
+  width: 100%;
+  -webkit-appearance: none;
+  height: 24px;
+  padding-left: 8px;
+  padding-right: 8px;
+  position: relative;
+  background: transparent;
   border: none;
-  box-shadow: 0 0 0 1px #CCCCCC;
+  top: -3px;
+}
+
+.select-element {
+  position: relative;
+  height: 24px;
+  width: 100%;
+  background: white;
+  border-radius: 3px;
+  background-position: 0 0, 100% 0;
+  background-repeat: no-repeat;
+  background-size: 1px 100%;
+  background-color: #F9F9F9;
+  box-shadow: 0 1px 1px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.1), inset 0 1px 0 0 #FFFFFF, inset 0 1px rgba(255, 255, 255, 1);
+
+  &:after {
+    display: block;
+    content: '\25be';
+    text-align: center;
+    font-size: 1.2rem;
+    pointer-events: none;
+    color: #8C8C8C;
+    width: 16px;
+    height: 24px;
+    top: 0;
+    right: 4px;
+    position: absolute;
+  }
 }
 
 /* Helper Classes */
@@ -127,6 +162,64 @@ input {
   border-radius: 5px;
 }
 
+/*
+  Components
+  ----
+*/
+
+/* Inputs */
+input, .input {
+  border-radius: 3px;
+  background: white;
+  border: 0;
+  height: 2.4rem;
+  padding: 0 0.8rem;
+  box-shadow: 0 0 0 1px #CCCCCC;
+}
+
+button {
+  height: 2.4rem;
+}
+
+/* Button Groups */
+.button-group {
+  border: none;
+  background: #F9F9F9;
+  box-shadow: $box-shadow-inputs, 0 1px rgba(255, 255, 255, 1);
+  border-radius: 3px;
+  width: 6.4rem;
+  height: 2.4rem;
+  display: flex;
+  justify-content: space-around;
+
+  button {
+    flex: 1 0 50%;
+    background: transparent;
+    border: 0;
+    height: 100%;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:not(:last-child) { border-right: 1px solid rgba(0, 0, 0, 0.1); }
+  }
+
+  svg {
+    @extend .btn;
+    height: 2.4rem;
+    width: 2.4rem;
+    fill: #8C8C8C;
+    transition: fill 0.12s ease-in-out;
+
+    &:hover { fill: #4D4D4D; }
+    &:active, &.active { fill: $blue; }
+    &.disabled { pointer-events: none; }
+  }
+}
+
+
+
 /* Kap Header */
 .kap-header {
   @extend .webkit-drag;
@@ -213,6 +306,10 @@ input {
 
 .controls-content {
   border-top: 1px solid #CCCCCC;
+  display: flex;
+  flex-direction: column;
+
+  &:not()
 }
 
 .controls-section {
@@ -225,11 +322,17 @@ input {
   &__title {
     color: $primary-text-color;
     font-size: 1.4rem;
+    line-height: normal;
+    margin-bottom: 8px;
   }
 
   &__row {
     display: flex;
     width: 100%;
+  }
+
+  & + .controls-section {
+    border-top: 1px solid #D3D3D3;
   }
 }
 
@@ -256,8 +359,6 @@ input {
 
 .aspect-ratio__input input {
   width: 101px;
-  padding: 0 8px;
-  height: 1.8rem;
 }
 
 .aspect-ratio__options {
@@ -265,39 +366,6 @@ input {
   width: 64px;
   height: 2.4rem;
   align-items: flex-start;
-}
-
-.button-group {
-  border: none;
-  background: #FCFBFC;
-  box-shadow: $box-shadow-inputs;
-  border-radius: 3px;
-  width: 6.4rem;
-  height: 1.8rem;
-  display: flex;
-  justify-content: space-around;
-
-  li {
-    width: 50%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &:not(:last-child) { border-right: 1px solid rgba(0, 0, 0, 0.1); }
-  }
-
-  svg {
-    @extend .btn;
-    height: 100%;
-    width: 2.4rem;
-    fill: #8C8C8C;
-    transition: fill 0.12s ease-in-out;
-
-    &:hover { fill: #4D4D4D; }
-    &:active, &.active { fill: $blue; }
-    &.disabled { pointer-events: none; }
-  }
 }
 
 @keyframes shake {

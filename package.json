@@ -29,6 +29,7 @@
     "husky": "^0.11.9",
     "ora": "^0.3.0",
     "postcss-extend": "^1.0.5",
+    "postcss-import": "^8.1.2",
     "postcss-nested": "^1.0.0",
     "postcss-simple-vars": "^3.0.0",
     "xo": "^0.17.0"
@@ -63,5 +64,8 @@
     "plugins": [
       "transform-es2015-modules-commonjs"
     ]
+  },
+  "dependencies": {
+    "Eightpoint": "wulkano/eightpoint"
   }
 }

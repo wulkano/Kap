@@ -6,6 +6,7 @@ import postcss from 'gulp-postcss';
 import postcssExtend from 'postcss-extend';
 import postcssNested from 'postcss-nested';
 import postcsssSimpleVars from 'postcss-simple-vars';
+import atImport from 'postcss-import';
 import pug from 'gulp-pug';
 
 gulp.task('build:js:main', () =>
@@ -21,7 +22,7 @@ gulp.task('build:pug', () =>
 
 gulp.task('build:css', () =>
   gulp.src('app/src/renderer/css/*')
-    .pipe(postcss([postcsssSimpleVars, postcssExtend, postcssNested, cssnano]))
+    .pipe(postcss([atImport, postcsssSimpleVars, postcssExtend, postcssNested, cssnano]))
     .pipe(gulp.dest('app/dist/renderer/css')));
 
 gulp.task('build:js:renderer', () =>
