@@ -1,10 +1,27 @@
 import {app, Menu, shell, dialog} from 'electron';
 import settings from 'electron-settings';
+import AutoLauch from 'auto-launch';
 
 const signInForUpdates = {
   label: 'Sign up for updates',
   click: () => shell.openExternal('http://eepurl.com/ch90_1')
 };
+
+const kapLauncher = new AutoLauch({
+  name: 'kap'
+});
+
+function startupLaunch() {
+  kapLauncher.isEnabled().then(result => {
+    if (result === false) {
+      kapLauncher.enable();
+      settings.setSync('kap-launch', true);
+    } else {
+      kapLauncher.disable();
+      settings.setSync('kap-launch', false);
+    }
+  });
+}
 
 function changeSaveToDirectory() {
   const location = dialog.showOpenDialog({properties: ['openDirectory']});
@@ -23,6 +40,12 @@ const cogMenu = [
   {
     label: 'Save to...',
     click: () => changeSaveToDirectory()
+  },
+  {
+    label: 'Open on startup',
+    type: 'checkbox',
+    checked: settings.getSync('kap-launch'),
+    click: () => startupLaunch()
   },
   {
     type: 'separator'
