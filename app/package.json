@@ -14,7 +14,6 @@
   "dependencies": {
     "aperture.js": "^0.1.0",
     "aspectratio": "^2.2.2",
-    "auto-launch": "^5.0.1",
     "electron-is-dev": "^0.1.2",
     "electron-settings": "^2.2.1",
     "execa": "^0.5.0",
