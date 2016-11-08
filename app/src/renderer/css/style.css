@@ -13,13 +13,14 @@ $secondary-text-color: #9C9C9C;
 $divider-color: rgba(0, 0, 0, 0.1);
 $default-font-size: 1.4rem;
 $box-shadow-inputs: 0px 1px 1px 0px rgba(0,0,0,0.20), 0px 0px 0px 1px rgba(0,0,0,0.10);
-$blue: #3B99FC;
 $red: #FF6159;
+$blue: #3B99FC;
+$green: #28CA42;
 $window-border-radius: 5px;
 
-* { /* TODO make this rule more specific */
-  -webkit-user-select: none;
-  cursor: default;
+.txt {
+  -webkit-user-select: none !important;
+  cursor: default !important;
 }
 
 /* Set base colour and font stack */
@@ -43,7 +44,7 @@ input {
   padding-left: 1.6rem;
   padding-right: 1.6rem;
 }
-.hidden { display: none; }
+.hidden { display: none !important; }
 .webkit-drag {
   -webkit-app-region: drag;
   cursor: -webkit-grab;
@@ -60,8 +61,6 @@ input {
   border-bottom: 1rem solid $background-primary;
   border-left: 1rem solid transparent;
   transition: all .3s ease;
-
-  &.hide { border-bottom: 0.6125em solid transparent; }
 }
 
 /* Window Title Bar */
@@ -73,6 +72,15 @@ input {
   text-align: center;
   background-color: $background-primary;
   position: relative;
+
+  &.has-update-notification {
+    height: 5.6rem;
+    background-color: $green;
+  }
+
+  &.has-update-notification .window__title {
+    color: white;
+  }
 }
 
 .title-bar__controls {
@@ -134,7 +142,6 @@ input {
   justify-content: center;
   align-items: center;
   height: 12.8rem;
-  border-bottom: 1px solid #CCCCCC;
 
   &__text {
     font-size: 1.2rem;
@@ -174,7 +181,10 @@ input {
 }
 
 /* Controls Section */
-.controls { width: 100%; }
+.controls {
+  width: 100%;
+  border-top: 1px solid #CCCCCC;
+ }
 
 .controls__toggle {
   display: flex;
@@ -314,9 +324,57 @@ input {
   }
 }
 
-input.invalid {
+.shake {
   animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   perspective: 1000px;
+}
+
+section.progress {
+  @extend .webkit-drag;
+  background-color: $background-primary;
+  width: 100%;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  height: 12.6rem;
+  padding-bottom: 2.8rem; /* to compensate the tittle bar */
+}
+
+.progress-bar-label {
+  position: absolute;
+  font-size: $default-font-size;
+  bottom: 4.75rem;
+}
+
+.progress-bar {
+  height: 2rem; /* (ﾉಠдಠ)ﾉ︵┻━┻ */
+}
+
+.update-notification {
+  @extend .webkit-drag;
+  display: flex;
+  background-color: #28ca42;
+  width: 100%;
+  height: 2.75rem;
+  color: #fff!important;
+  flex-direction: column;
+
+  & span {
+    font-size: 1.2rem;
+  }
+
+  & ul {
+    display: flex;
+    position: absolute;
+    right: .5rem;
+    margin-left: auto;
+
+    & li svg {
+      padding: .25em;
+      width: 2.4rem;
+      height: 2.4rem;
+    }
+  }
 }

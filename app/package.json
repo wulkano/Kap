@@ -1,8 +1,8 @@
 {
   "name": "Kap",
-  "main": "dist/main.js",
+  "main": "dist/main/index.js",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "The best way to record your screen",
   "repository": "wulkano/kap",
   "author": "Wulkano AS <team@wulka.no> (https://wulka.no/)",
@@ -15,6 +15,8 @@
     "aperture.js": "git://github.com/PaulBGD/aperture.js",
     "aspectratio": "^2.2.2",
     "electron-is-dev": "^0.1.2",
+    "electron-settings": "^2.2.1",
+    "execa": "^0.5.0",
     "file-size": "^1.0.0",
     "first-run": "^1.2.0",
     "insight": "^0.8.3",
@@ -22,17 +24,8 @@
     "mkdirp": "^0.5.1",
     "moment": "^2.14.1",
     "ms": "^0.7.1",
-    "raven": "^0.12.1"
+    "raven": "^0.12.1",
+    "tmp": "0.0.29"
   },
-  "xo": {
-    "space": 2,
-    "esnext": true,
-    "envs": [
-      "node",
-      "browser"
-    ],
-    "rules": {
-      "import/no-extraneous-dependencies": 0
-    }
-  }
+  "xo": false
 }

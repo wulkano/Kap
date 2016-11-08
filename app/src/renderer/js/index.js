@@ -1,11 +1,18 @@
 import fs from 'fs';
 import {platform as osPlatform} from 'os';
+
+import {ipcRenderer, remote, shell} from 'electron';
+
 import aspectRatio from 'aspectratio';
 import fileSize from 'file-size';
-import {ipcRenderer} from 'electron';
 import moment from 'moment';
 
-require('./reporter');
+import {convert as convertToGif} from '../../scripts/mp4-to-gif';
+import {init as initErrorReporter} from '../../common/reporter';
+import {log} from '../../common/logger';
+
+// note: `./` == `/app/dist/renderer/html`, not `js`
+import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 
 const platform = osPlatform();
 const aperture = require('aperture.js')();
@@ -20,14 +27,22 @@ document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
   const content = document.querySelector('.content');
   const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
-  const recordBtn = document.querySelector('.record');
+  const controlsSection = document.querySelector('section.controls');
   const controlsTitleWrapper = document.querySelector('.controls__toggle');
+  const exportAs = document.querySelector('#export-as');
+  const header = document.querySelector('.kap-header');
   const hideWindowBtn = document.querySelector('.hide-window');
   const inputWidth = document.querySelector('#aspect-ratio-width');
   const inputHeight = document.querySelector('#aspect-ratio-height');
   const linkBtn = document.querySelector('.link-btn');
   const minimizeWindowBtn = document.querySelector('.minimize-window');
+  const openReleaseNotesBtn = document.querySelector('.open-release-notes');
   const options = document.querySelector('.controls__options');
+  const progressBar = document.querySelector('#progress-bar');
+  const progressBarLabel = document.querySelector('.progress-bar-label');
+  const progressBarSection = document.querySelector('section.progress');
+  const recordBtn = document.querySelector('.record');
+  const restartAndInstallUpdateBtn = document.querySelector('.restart-and-install-update');
   const size = document.querySelector('.size');
   const swapBtn = document.querySelector('.swap-btn');
   const time = document.querySelector('.time');
@@ -35,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const titleBar = document.querySelector('.title-bar');
   const trafficLights = document.querySelector('.title-bar__controls');
   const triangle = document.querySelector('.triangle');
+  const updateNotification = document.querySelector('.update-notification');
   const windowTitle = document.querySelector('.window__title');
 
   if (platform === 'darwin') {
@@ -48,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastValidInputWidth = 512;
   let lastValidInputHeight = 512;
   let aspectRatioBaseValues = [lastValidInputWidth, lastValidInputHeight];
+  let hasUpdateNotification = false;
 
   function startMonitoringElapsedTimeAndSize(filePath) {
     const startedAt = moment();
@@ -82,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
     inputHeight.disabled = true;
     linkBtn.classList.add('disabled');
     swapBtn.classList.add('disabled');
+    exportAs.disabled = true;
   }
 
   function enableInputs() {
@@ -90,6 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
     inputHeight.disabled = false;
     linkBtn.classList.remove('disabled');
     swapBtn.classList.remove('disabled');
+    exportAs.disabled = false;
   }
 
   function startRecording() {
@@ -121,11 +140,11 @@ document.addEventListener('DOMContentLoaded', () => {
         startMonitoringElapsedTimeAndSize(filePath);
         setMainWindowTitle('Recording');
         ipcRenderer.send('started-recording');
-        console.log(`Started recording after ${(Date.now() - past) / 1000}s`);
+        log(`Started recording after ${(Date.now() - past) / 1000}s`);
       })
       .catch(err => {
         ipcRenderer.send('will-stop-recording');
-        console.error(err);
+        log(err);
         setMainWindowTitle('Error');
       });
   }
@@ -138,6 +157,13 @@ document.addEventListener('DOMContentLoaded', () => {
     ipcRenderer.send('ask-user-to-save-file', opts);
   }
 
+  function restoreInputs() {
+    recordBtn.attributes['data-state'].value = 'initial';
+    recordBtn.children[0].classList.remove('hidden'); // crop btn
+    recordBtn.children[1].classList.add('hidden'); // stop btn
+    enableInputs();
+  }
+
   function stopRecording() {
     ipcRenderer.send('will-stop-recording');
     stopMonitoring();
@@ -148,15 +174,49 @@ document.addEventListener('DOMContentLoaded', () => {
         time.innerText = '00:00';
         size.innerText = '0 kB';
 
-        const now = moment();
-        const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.mp4`;
+        if (exportAs.value === 'mp4') {
+          const now = moment();
+          const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.mp4`;
 
-        recordBtn.attributes['data-state'].value = 'initial';
-        recordBtn.children[0].classList.remove('hidden'); // crop btn
-        recordBtn.children[1].classList.add('hidden'); // stop btn
-        enableInputs();
-        askUserToSaveFile({fileName, filePath});
+          restoreInputs();
+          askUserToSaveFile({fileName, filePath, type: 'mp4'});
+        } else { // gif
+          restoreInputs();
+
+          // header.classList.add('hidden');
+          // controlsSection.classList.add('hidden');
+          // progressBarSection.classList.remove('hidden');
+          // setMainWindowSize();
+          //
+          // function progressCallback(percentage) { // eslint-disable-line no-inner-declarations
+          //   progressBarLabel.innerText = 'Processing...';
+          //   progressBar.value = percentage;
+          // }
+          //
+          // convertToGif(filePath, progressCallback)
+          //   .then(gifPath => {
+          //     const now = moment();
+          //     const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.gif`;
+          //
+          //     progressBar.value = 100;
+          //
+          //     askUserToSaveFile({fileName, filePath: gifPath, type: 'gif'});
+          //   });
+          //   // TODO catch
+
+          ipcRenderer.send('open-post-recording-window', {filePath});
+        }
       });
+  }
+
+  function shake(el) {
+    el.classList.add('shake');
+
+    el.addEventListener('webkitAnimationEnd', () => {
+      el.classList.remove('shake');
+    });
+
+    return true;
   }
 
   // Prepare recording button for recording state
@@ -178,7 +238,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   recordBtn.onclick = function () {
-    prepareRecordButton();
+    if (remote.app.postRecWindow) {
+      // we need to keep the window visible to show the shake animation
+      // (it'll be auto hidden by `menubar` when the post recording window gain focus)
+      ipcRenderer.send('set-main-window-visibility', {
+        alwaysOnTop: true,
+        temporary: true,
+        forHowLong: 1000
+      });
+      shake(this);
+      ipcRenderer.send('open-post-recording-window', {notify: true});
+    } else {
+      prepareRecordButton();
+    }
   };
 
   controlsTitleWrapper.onclick = function () {
@@ -196,63 +268,11 @@ document.addEventListener('DOMContentLoaded', () => {
     event.stopPropagation();
   };
 
-  function shake(input) {
-    input.classList.add('invalid');
-
-    input.addEventListener('webkitAnimationEnd', () => {
-      input.classList.remove('invalid');
-    });
-
-    return true;
-  }
-
-  function validateNumericInput(input, opts) {
-    let value = input.value;
-    if (value === '' && opts.empty) {
-      return value;
-    }
-
-    if (!value || !opts || !opts.lastValidValue) {
-      return undefined;
-    }
-
-    value = parseInt(value, 10);
-
-    if (!/^\d{1,5}$/.test(value)) {
-      opts.onInvalid(input);
-      return opts.lastValidValue;
-    }
-
-    if (opts.max && value > opts.max) {
-      opts.onInvalid(input);
-      return opts.max;
-    }
-
-    if (opts.min && value < opts.min) {
-      opts.onInvalid(input);
-      return opts.min;
-    }
-
-    return value;
-  }
-
   function setCropperWindowSize(width, height) {
     ipcRenderer.send('set-cropper-window-size', {
       width: width || lastValidInputWidth,
       height: height || lastValidInputHeight
     });
-  }
-
-  function handleKeyDown(event) {
-    const multiplier = event.shiftKey ? 10 : 1;
-    const parsedValue = parseInt(this.value, 10);
-    if (event.keyCode === 38) { // up
-      this.value = parsedValue + (1 * multiplier); // eslint-disable-line no-implicit-coercion
-      this.oninput();
-    } else if (event.keyCode === 40) { // down
-      this.value = parsedValue - (1 * multiplier); // eslint-disable-line no-implicit-coercion
-      this.oninput();
-    }
   }
 
   inputWidth.oninput = function () {
@@ -341,13 +361,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  function setTrayTriangleVisible(visible = true) {
+    const color = hasUpdateNotification ? '#28CA42' : 'white';
+    trayTriangle.style.borderBottom = `1rem solid ${visible ? color : 'transparent'}`;
+  }
+
   ipcRenderer.on('unstick-from-menubar', () => {
-    trayTriangle.classList.add('hide');
+    setTrayTriangleVisible(false);
     trafficLights.classList.remove('invisible');
   });
 
   ipcRenderer.on('stick-to-menubar', () => {
-    trayTriangle.classList.remove('hide');
+    setTrayTriangleVisible();
     trafficLights.classList.add('invisible');
   });
 
@@ -369,11 +394,60 @@ document.addEventListener('DOMContentLoaded', () => {
     const title = 'An update is available 🎉';
     const body = 'Click here to install it 😊';
 
+    hasUpdateNotification = true;
+    titleBar.classList.add('has-update-notification');
+    updateNotification.classList.remove('hidden');
+
+    // if the traffic lights are invisible, the triangle should be visible
+    // if they are visible, the tray triangle should be invisible
+    setTrayTriangleVisible(trafficLights.classList.contains('invisible')); // to update the color
+
+    setMainWindowSize();
+
+    openReleaseNotesBtn.onclick = () => shell.openExternal('https://github.com/wulkano/kap/releases/latest');
+    restartAndInstallUpdateBtn.onclick = () => ipcRenderer.send('install-update');
+
     const notification = new Notification(title, {body});
-    notification.onclick = () => {
-      ipcRenderer.send('install-update');
-    };
+    notification.onclick = () => ipcRenderer.send('install-update');
   });
+
+  ipcRenderer.on('save-dialog-closed', () => {
+    progressBarSection.classList.add('hidden');
+    header.classList.remove('hidden');
+    controlsSection.classList.remove('hidden');
+    delete progressBar.value;
+    progressBarLabel.innerText = 'Analyzing...';
+    setMainWindowSize();
+  });
+
+  ipcRenderer.on('log', (event, msgs) => console.log(...msgs));
+
+  ipcRenderer.on('export-to-gif', (event, data) => {
+    header.classList.add('hidden');
+    controlsSection.classList.add('hidden');
+    progressBarSection.classList.remove('hidden');
+    setMainWindowSize();
+
+    function progressCallback(percentage) {
+      // eslint-disable-line no-inner-declarations
+      progressBarLabel.innerText = 'Processing...';
+      progressBar.value = percentage;
+    }
+
+    data.progressCallback = progressCallback;
+
+    convertToGif(data).then(gifPath => {
+      const now = moment();
+      const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.gif`;
+
+      progressBar.value = 100;
+
+      askUserToSaveFile({fileName, filePath: gifPath, type: 'gif'});
+    });
+    // TODO catch
+  });
+
+  initErrorReporter();
 });
 
 window.addEventListener('load', setMainWindowSize);

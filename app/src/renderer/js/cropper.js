@@ -1,6 +1,6 @@
 import {ipcRenderer} from 'electron';
 
-require('./reporter');
+import {init as initErrorReporter} from '../../common/reporter';
 
 const arrows = {
   left: 37,
@@ -54,4 +54,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('keyup', keyUp, false);
   window.addEventListener('keydown', keyDown, false);
+  initErrorReporter();
 });

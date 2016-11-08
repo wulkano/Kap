@@ -1,0 +1,37 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset="UTF-8")
+    link(href='../css/clear.min.css', rel='stylesheet', type='text/css')
+    link(href='../css/post-recording.css', rel='stylesheet', type='text/css')
+    script(src="../js/post-recording.js")
+    title Kap
+  body
+    main.content
+      video#preview(autoplay loop)
+      progress(max='100', value=50)
+      section.controls
+        .video-controls
+          .size
+            span Size
+            input.input-width(type='text')
+            input.input-height(type='text')
+          .fps
+            span FPS
+            ul
+              li#fps-15
+                span 15
+              li#fps-30.active
+                span 30
+          .loop
+            span Loop
+            ul
+              li#loop-on.active
+                span On
+              li#loop-off
+                span Off
+        .window-controls
+          .discard 
+            span Discard
+          .save 
+            span Save

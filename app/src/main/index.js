@@ -7,25 +7,31 @@ import settings from 'electron-settings';
 import isDev from 'electron-is-dev';
 import mkdirp from 'mkdirp';
 
+import {init as initErrorReporter} from '../common/reporter';
+import logger from '../common/logger';
+
 import autoUpdater from './auto-updater';
 import analytics from './analytics';
 import {applicationMenu, cogMenu} from './menus';
 
 const platform = osPlatform();
 
+if (platform === 'linux') {
+  app.commandLine.appendSwitch('enable-transparent-visuals');
+  app.commandLine.appendSwitch('disable-gpu');
+}
+
 const menubar = require('menubar')({
-  index: `file://${__dirname}/index.html`,
-  icon: path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'),
+  index: `file://${__dirname}/../renderer/html/index.html`,
+  icon: path.join(__dirname, '..', '..', 'static', 'menubarDefaultTemplate.png'),
   width: 320,
   height: 500,
   frame: platform !== 'darwin',
   preloadWindow: true,
-  transparent: true,
+  transparent: platform === 'darwin',
   resizable: false,
   minWidth: 320
 });
-
-require('./reporter');
 
 let appState = 'initial';
 let cropperWindow;
@@ -34,6 +40,7 @@ let mainWindowIsDetached = false;
 let mainWindow;
 let mainWindowIsNew = true;
 let positioner;
+let postRecWindow;
 let shouldStopWhenTrayIsClicked = false;
 let tray;
 
@@ -97,7 +104,7 @@ ipcMain.on('open-cropper-window', (event, size) => {
       resizable: true,
       shadow: false
     });
-    cropperWindow.loadURL(`file://${__dirname}/cropper.html`);
+    cropperWindow.loadURL(`file://${__dirname}/../renderer/html/cropper.html`);
     cropperWindow.setIgnoreMouseEvents(false); // TODO this should be false by default
 
     if (isDev) {
@@ -145,13 +152,16 @@ function resetMainWindowShadow() {
 function resetTrayIcon() {
   appState = 'initial'; // if the icon is being reseted, we are not recording anymore
   shouldStopWhenTrayIsClicked = false;
-  tray.setImage(path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'));
+  tray.setImage(path.join(__dirname, '..', '..', 'static', 'menubarDefaultTemplate.png'));
+  menubar.setOption('alwaysOnTop', false);
+  mainWindow.setAlwaysOnTop(false);
 }
 
 menubar.on('after-create-window', () => {
   let expectedWindowPosition;
   const currentWindowPosition = {};
   mainWindow = menubar.window;
+  app.mainWindow = mainWindow;
   if (isDev) {
     mainWindow.openDevTools({mode: 'detach'});
   }
@@ -223,6 +233,9 @@ menubar.on('after-create-window', () => {
   positioner = menubar.positioner;
 
   tray.on('click', () => {
+    if (postRecWindow) {
+      return postRecWindow.show();
+    }
     if (mainWindowIsNew) {
       mainWindowIsNew = false;
       positioner.move('trayCenter', tray.getBounds()); // not sure why the fuck this is needed (ﾉಠдಠ)ﾉ︵┻━┻
@@ -236,7 +249,7 @@ menubar.on('after-create-window', () => {
 
   mainWindow.on('hide', () => {
     if (appState === 'recording') {
-      tray.setImage(path.join(__dirname, '..', 'static', 'menubarStopTemplate.png'));
+      tray.setImage(path.join(__dirname, '..', '..', 'static', 'menubarStopTemplate.png'));
       shouldStopWhenTrayIsClicked = true;
     }
   });
@@ -248,7 +261,7 @@ menubar.on('after-create-window', () => {
   });
 
   app.on('activate', () => { // == dockIcon.onclick
-    if (!mainWindow.isVisible()) {
+    if (!mainWindow.isVisible() && postRecWindow === undefined) {
       mainWindow.show();
     }
   });
@@ -261,6 +274,8 @@ menubar.on('after-create-window', () => {
   mainWindowIsNew = true;
   autoUpdater.init(mainWindow);
   analytics.init();
+  initErrorReporter();
+  logger.init(mainWindow);
   Menu.setApplicationMenu(applicationMenu);
 });
 
@@ -341,7 +356,8 @@ ipcMain.on('move-cropper-window', (event, data) => {
 });
 
 ipcMain.on('ask-user-to-save-file', (event, data) => {
-  const kapturesDir = settings.getSync('output-destination') || `${homedir()}/Movies/Kaptures`;
+  const kapturesDir = settings.getSync('save-to-directory') || `${homedir()}/Movies/Kaptures`; // TODO
+  const filters = data.type === 'mp4' ? [{name: 'Movies', extensions: ['mp4']}] : [{name: 'Images', extensions: ['gif']}];
   mkdirp(kapturesDir, err => {
     if (err) {
       // can be ignored
@@ -349,11 +365,77 @@ ipcMain.on('ask-user-to-save-file', (event, data) => {
     dialog.showSaveDialog({
       title: data.fileName,
       defaultPath: `${kapturesDir}/${data.fileName}`,
-      filters: [{name: 'Movies', extensions: ['mp4']}]
+      filters
     }, fileName => {
       if (fileName) {
         fsRename(data.filePath, fileName);
       }
+      mainWindow.webContents.send('save-dialog-closed');
     });
   });
+});
+
+ipcMain.on('open-post-recording-window', (event, opts) => {
+  if (postRecWindow) {
+    postRecWindow.show();
+    if (opts.notify === true) {
+      postRecWindow.webContents.send('show-notification');
+    }
+    return;
+  }
+  postRecWindow = new BrowserWindow({
+    width: 768,
+    height: 432,
+    frame: false,
+    resizable: false
+  });
+
+  postRecWindow.loadURL(`file://${__dirname}/../renderer/html/post-recording.html`);
+
+  postRecWindow.webContents.on('did-finish-load', () => postRecWindow.webContents.send('video-src', opts.filePath));
+
+  postRecWindow.on('closed', () => {
+    postRecWindow = undefined;
+    app.postRecWindow = undefined;
+  });
+
+  app.postRecWindow = postRecWindow;
+  menubar.setOption('hidden', true);
+  mainWindow.hide();
+  tray.setHighlightMode('never');
+
+  if (platform === 'darwin') {
+    app.dock.show();
+  }
+});
+
+ipcMain.on('close-post-recording-window', () => {
+  if (postRecWindow) {
+    postRecWindow.close();
+    menubar.setOption('hidden', false);
+    if (mainWindowIsDetached === true) {
+      mainWindow.show();
+    } else if (platform === 'darwin') {
+      app.dock.hide();
+    }
+  }
+});
+
+ipcMain.on('export-to-gif', (event, data) => {
+  mainWindow.webContents.send('export-to-gif', data);
+  mainWindow.show();
+});
+
+ipcMain.on('set-main-window-visibility', (event, opts) => {
+  if (opts.alwaysOnTop === true && opts.temporary === true && opts.forHowLong) {
+    menubar.setOption('alwaysOnTop', true);
+
+    setTimeout(() => {
+      menubar.setOption('alwaysOnTop', false);
+      tray.setHighlightMode('never');
+      if (mainWindowIsDetached === false) {
+        mainWindow.hide();
+      }
+    }, opts.forHowLong);
+  }
 });

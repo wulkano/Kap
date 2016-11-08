@@ -6,11 +6,11 @@
 </p>
 
 ## Download
-Download the latest release [here](https://getkap.co/download)
+Download the latest release [here](https://getkap.co/download). (macOS/OS X only)
 
 Kap is also available with Homebrew Cask. Download using the following commands:
 ```
-$ brew cask update
+$ brew update
 $ brew cask install kap
 ```
 
@@ -33,7 +33,9 @@ After that, you'll see the binary in the `./dist` folder :smile:
 - [Website](https://github.com/wulkano/kap-website)
 - [Aperture](https://github.com/wulkano/aperture)
 
+## Newsletter
+Subscribe [here](http://eepurl.com/ch90_1).
 
 ## Thanks
 - Credit goes to [▲ZEIT](https://github.com/zeit) for the README formatting and for hosting our downloads and updates!
-- All and any contributors that help Kap in it's journey to help make screen recording and sharing easy
+- All and any contributors that help Kap in its journey to help make screen recording and sharing easy

@@ -1,7 +1,7 @@
 import firstRun from 'first-run';
 import Insight from 'insight';
 
-const pkg = require('../package');
+const pkg = require('../../package');
 
 const trackingCode = 'UA-84705099-2';
 

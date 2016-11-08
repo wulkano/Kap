@@ -6,10 +6,25 @@ const signInForUpdates = {
   click: () => shell.openExternal('http://eepurl.com/ch90_1')
 };
 
-function changeOutputDestination() {
+const launchSettings = {
+  openAtLogin: false
+};
+
+function startupLaunch() {
+  if (app.getLoginItemSettings().openAtLogin === true) {
+    launchSettings.openAtLogin = false;
+    settings.setSync('kap-startup', false);
+  } else {
+    launchSettings.openAtLogin = true;
+    settings.setSync('kap-startup', true);
+  }
+  app.setLoginItemSettings(launchSettings);
+}
+
+function changeSaveToDirectory() {
   const location = dialog.showOpenDialog({properties: ['openDirectory']});
   if (location) {
-    settings.set('output-destination', location[0]);
+    settings.set('save-to-directory', location[0]);
   }
 }
 
@@ -21,8 +36,14 @@ const cogMenu = [
     type: 'separator'
   },
   {
-    label: 'Change default output destination',
-    click: () => changeOutputDestination()
+    label: 'Save to...',
+    click: () => changeSaveToDirectory()
+  },
+  {
+    label: 'Open on startup',
+    type: 'checkbox',
+    checked: settings.getSync('kap-startup'),
+    click: () => startupLaunch()
   },
   {
     type: 'separator'
@@ -93,9 +114,18 @@ const applicationMenu = [
         type: 'separator'
       },
       {
+        label: 'Save to...',
+        click: () => changeSaveToDirectory()
+      },
+      {
+        type: 'separator'
+      },
+      {
         label: 'Close',
         accelerator: 'CmdOrCtrl+W',
-        role: 'close'
+        click() {
+          app.mainWindow.hide();
+        }
       }
     ]
   },
