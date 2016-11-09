@@ -32,7 +32,8 @@
     "postcss-import": "^8.1.2",
     "postcss-nested": "^1.0.0",
     "postcss-simple-vars": "^3.0.0",
-    "xo": "^0.17.0"
+    "xo": "^0.17.0",
+    "eightpoint": "0.0.1"
   },
   "xo": {
     "space": 2,
@@ -65,7 +66,5 @@
       "transform-es2015-modules-commonjs"
     ]
   },
-  "dependencies": {
-    "Eightpoint": "wulkano/eightpoint"
-  }
+  "dependencies": {}
 }
