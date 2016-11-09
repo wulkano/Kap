@@ -287,6 +287,70 @@ button {
   }
 }
 
+/*
+  Dark version of controls
+  Usage : Just need to add .dark to the section.controls
+*/
+
+
+.dark {
+  border-top-color: transparent;
+
+  .controls__toggle {
+    background-color: #2D2D2D;
+  }
+
+  .controls__title {
+    color: #FFFFFF;
+  }
+
+  .controls-content {
+    border-color: #000000;
+  }
+
+  .controls-section {
+    background-color: #222222;
+  }
+
+  .controls-section__title {
+    color: #FFFFFF;
+  }
+
+  .select-element {
+    background-color: rgba(0, 0, 0, 0.2);
+    box-shadow: none;
+  }
+
+  select {
+    background-color: #414141;
+    color: #FFFFFF;
+    box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.20), 0px 0px 0px 1px rgba(0,0,0,0.10), inset 0px 1px 0px 0px rgba(255,255,255,0.05);
+  }
+
+  .aspect-ratio__input label {
+    color: #D7D7D7;
+  }
+
+  .aspect-ratio__input input {
+    background-color: #2D2D2D;
+    color: white;
+    box-shadow: 0 0 0 1px #414141;
+  }
+
+  .button-group {
+    background-color: #414141;
+    box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.20), 0px 0px 0px 1px rgba(0,0,0,0.10), inset 0px 1px 0px 0px rgba(255,255,255,0.05);
+  }
+
+  .button-group svg:hover:not(.active) {
+    fill: rgba(255, 255, 255, 0.1);
+  }
+
+  .controls-section+.controls-section {
+    border-top-color: #000000;
+  }
+}
+
 .controls__title {
   color: $primary-text-color;
   cursor: pointer;
