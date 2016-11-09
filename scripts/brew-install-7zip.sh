@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-# TODO brew update
+brew update
 brew install p7zip
