@@ -1,4 +1,4 @@
-import { src, dest, watch as watchSrc, parallel, series } from 'gulp';
+import {src, dest, watch as watchSrc, parallel, series} from 'gulp';
 import babel from 'gulp-babel';
 import del from 'del';
 import cssnano from 'cssnano';
