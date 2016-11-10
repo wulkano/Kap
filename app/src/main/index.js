@@ -26,6 +26,8 @@ const menubar = require('menubar')({
 });
 
 settings.defaults({
+  kapturesDir: `${homedir()}/Movies/Kaptures`,
+  openOnStartup: false,
   cropperWindow: {
     size: {
       width: 512,
@@ -269,7 +271,21 @@ menubar.on('after-create-window', () => {
   });
 
   app.on('will-quit', () => {
-    settings.resetToDefaultsSync();
+    /**
+     * TODO: refactor to reset defaults on `specific` value(s)
+     * Issue opened for `electron-settings`
+     * https://github.com/nathanbuchar/electron-settings/issues/43
+     */
+    settings.setSync('cropperWindow', {
+      size: {
+        width: 512,
+        height: 512
+      },
+      position: {
+        x: 'center',
+        y: 'center'
+      }
+    });
   });
 
   mainWindow.once('ready-to-show', () => {
@@ -362,7 +378,7 @@ ipcMain.on('move-cropper-window', (event, data) => {
 });
 
 ipcMain.on('ask-user-to-save-file', (event, data) => {
-  const kapturesDir = settings.getSync('save-to-directory') || `${homedir()}/Movies/Kaptures`; // TODO
+  const kapturesDir = settings.getSync('kapturesDir');
   const filters = data.type === 'mp4' ? [{name: 'Movies', extensions: ['mp4']}] : [{name: 'Images', extensions: ['gif']}];
   mkdirp(kapturesDir, err => {
     if (err) {
