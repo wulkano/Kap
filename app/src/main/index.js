@@ -25,6 +25,19 @@ const menubar = require('menubar')({
   minWidth: 320
 });
 
+settings.defaults({
+  cropperWindow: {
+    size: {
+      width: 512,
+      height: 512
+    },
+    position: {
+      x: 'center',
+      y: 'center'
+    }
+  }
+});
+
 let appState = 'initial';
 let cropperWindow;
 const cropperWindowBuffer = 4;
@@ -78,13 +91,17 @@ ipcMain.on('open-cropper-window', (event, size) => {
   if (cropperWindow) {
     cropperWindow.focus();
   } else {
+    const {width = size.width, height = size.height} = settings.getSync('cropperWindow.size');
+    const {x, y} = settings.getSync('cropperWindow.position');
     cropperWindow = new BrowserWindow({
-      width: size.width + cropperWindowBuffer,
-      height: size.height + cropperWindowBuffer,
+      width: width + cropperWindowBuffer,
+      height: height + cropperWindowBuffer,
       frame: false,
       transparent: true,
       resizable: true,
-      shadow: false
+      shadow: false,
+      x,
+      y
     });
     cropperWindow.loadURL(`file://${__dirname}/../renderer/html/cropper.html`);
     cropperWindow.setIgnoreMouseEvents(false); // TODO this should be false by default
@@ -107,6 +124,13 @@ ipcMain.on('open-cropper-window', (event, size) => {
       const size = {};
       [size.width, size.height] = cropperWindow.getSize();
       mainWindow.webContents.send('cropper-window-new-size', size);
+      settings.setSync('cropperWindow.size', size);
+    });
+
+    cropperWindow.on('move', () => {
+      const position = {};
+      [position.x, position.y] = cropperWindow.getPosition();
+      settings.setSync('cropperWindow.position', position);
     });
   }
 });
@@ -242,6 +266,10 @@ menubar.on('after-create-window', () => {
     if (!mainWindow.isVisible() && postRecWindow === undefined) {
       mainWindow.show();
     }
+  });
+
+  app.on('will-quit', () => {
+    settings.resetToDefaultsSync();
   });
 
   mainWindow.once('ready-to-show', () => {
