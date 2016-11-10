@@ -48,13 +48,10 @@ select {
   position: relative;
   height: 24px;
   width: 100%;
-  background: white;
   border-radius: 3px;
-  background-position: 0 0, 100% 0;
-  background-repeat: no-repeat;
-  background-size: 1px 100%;
-  background-color: #F9F9F9;
-  box-shadow: 0 1px 1px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.1), inset 0 1px 0 0 #FFFFFF, inset 0 1px rgba(255, 255, 255, 1);
+  background-color: #414141;
+  box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.20), 0px 0px 0px 1px rgba(0,0,0,0.10), inset 0px 1px 0px 0px rgba(255,255,255,0.05);
+  color: white;
 
   &:after {
     display: block;
@@ -68,6 +65,18 @@ select {
     top: 0;
     right: 4px;
     position: absolute;
+  }
+
+  select { color: white; }
+
+  &.is-light {
+    background: white;
+    background-position: 0 0, 100% 0;
+    background-repeat: no-repeat;
+    background-size: 1px 100%;
+    background-color: #F9F9F9;
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.1), inset 0 1px 0 0 #FFFFFF, inset 0 1px rgba(255, 255, 255, 1);
+    select { color: $primary-text-color; }
   }
 }
 
@@ -184,13 +193,13 @@ button {
 /* Button Groups */
 .button-group {
   border: none;
-  background: #F9F9F9;
-  box-shadow: $box-shadow-inputs, 0 1px rgba(255, 255, 255, 1);
   border-radius: 3px;
   width: 6.4rem;
   height: 2.4rem;
   display: flex;
   justify-content: space-around;
+  background-color: #414141;
+  box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.20), 0px 0px 0px 1px rgba(0,0,0,0.10), inset 0px 1px 0px 0px rgba(255,255,255,0.05);
 
   button {
     flex: 1 0 50%;
@@ -209,12 +218,19 @@ button {
     @extend .btn;
     height: 2.4rem;
     width: 2.4rem;
-    fill: #8C8C8C;
+    fill: #919191;
     transition: fill 0.12s ease-in-out;
 
-    &:hover { fill: #4D4D4D; }
+    &:hover:not(:active):not(.active) { fill: #AEAEAE; }
     &:active, &.active { fill: $blue; }
     &.disabled { pointer-events: none; }
+  }
+
+  &.is-light {
+    background: #F9F9F9;
+    box-shadow: $box-shadow-inputs, 0 1px rgba(255, 255, 255, 1);
+
+    svg { fill: #8C8C8C; }
   }
 }
 
@@ -228,7 +244,7 @@ button {
   width: 100%;
   justify-content: center;
   align-items: center;
-  height: 12.8rem;
+  height: 12.4rem;
 
   &__text {
     font-size: 1.2rem;
@@ -267,142 +283,90 @@ button {
   }
 }
 
-/* Controls Section */
+/*
+  Controls Section
+  ----
+
+  Controls shown in the main Kap window.
+
+*/
 .controls {
   width: 100%;
-  border-top: 1px solid #CCCCCC;
- }
+  color: white;
 
-.controls__toggle {
-  display: flex;
-  height: 3.2rem;
-  width: 100%;
-  align-items: center;
-  font-size: 1.4rem;
-  cursor: pointer;
-  background: #F3F3F3;
-
-  .triangle.up {
-    transform: rotate(-180deg);
-  }
-}
-
-/*
-  Dark version of controls
-  Usage : Just need to add .dark to the section.controls
-*/
-
-
-.dark {
-  border-top-color: transparent;
-
-  .controls__toggle {
-    background-color: #2D2D2D;
-  }
-
-  .controls__title {
-    color: #FFFFFF;
-  }
-
-  .controls-content {
-    border-color: #000000;
-  }
-
-  .controls-section {
-    background-color: #222222;
-  }
-
-  .controls-section__title {
-    color: #FFFFFF;
-  }
-
-  .select-element {
-    background-color: rgba(0, 0, 0, 0.2);
-    box-shadow: none;
-  }
-
-  select {
-    background-color: #414141;
-    color: #FFFFFF;
-    box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.20), 0px 0px 0px 1px rgba(0,0,0,0.10), inset 0px 1px 0px 0px rgba(255,255,255,0.05);
-  }
-
-  .aspect-ratio__input label {
-    color: #D7D7D7;
-  }
-
-  .aspect-ratio__input input {
-    background-color: #2D2D2D;
-    color: white;
-    box-shadow: 0 0 0 1px #414141;
-  }
-
-  .button-group {
-    background-color: #414141;
-    box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.20), 0px 0px 0px 1px rgba(0,0,0,0.10), inset 0px 1px 0px 0px rgba(255,255,255,0.05);
-  }
-
-  .button-group svg:hover:not(.active) {
-    fill: rgba(255, 255, 255, 0.1);
-  }
-
-  .controls-section+.controls-section {
-    border-top-color: #000000;
-  }
-}
-
-.controls__title {
-  color: $primary-text-color;
-  cursor: pointer;
-  margin-left: 1rem;
-}
-
-.controls__options {
-  margin-left: auto;
-  padding: .25em;
-  width: 2.4rem;
-  height: 2.4rem;
-  fill: #8C8C8C;
-  cursor: pointer;
-
-  &:hover { fill: #4D4D4D; }
-}
-
-.controls-content {
-  border-top: 1px solid #CCCCCC;
-  display: flex;
-  flex-direction: column;
-
-  &:not()
-}
-
-.controls-section {
-  padding-top: 1.6rem;
-  padding-bottom: 1.6rem;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-
-  &__title {
-    color: $primary-text-color;
-    font-size: 1.4rem;
-    line-height: normal;
-    margin-bottom: 8px;
-  }
-
-  &__row {
+  /* Toggle of controls section */
+  &-toggle {
     display: flex;
+    height: 3.2rem;
     width: 100%;
+    align-items: center;
+    font-size: 1.4rem;
+    cursor: pointer;
+    background: #2D2D2D;
+    color: white;
+
+    /* Text inside the toggle */
+    &__title {
+      cursor: pointer;
+      margin-left: 1rem;
+    }
+
+    /* Directional transform of arrow in toggle */
+    .triangle.up { transform: rotate(-180deg); }
   }
 
-  & + .controls-section {
-    border-top: 1px solid #D3D3D3;
+  /* App options menu, to the right of the toggle */
+  &-options {
+    margin-left: auto;
+    padding: .25em;
+    width: 2.2rem;
+    height: 2.2rem;
+    fill: #8C8C8C;
+    cursor: pointer;
+
+    &:hover { fill: #4D4D4D; }
+  }
+
+
+  /* Container for all controls after toggle has been clicked */
+  &-content {
+    border-top: 1px solid #1B1B1B;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Sections within the control content */
+  &-section {
+    padding-top: 1.6rem;
+    padding-bottom: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background: #222222;
+
+    /* Add a border-top to each following element of the same class */
+    & + .controls-section { border-top: 1px solid #1B1B1B; }
+
+    &__title {
+      color: $primary-text-color;
+      font-size: 1.4rem;
+      letter-spacing: -.010rem;
+      line-height: normal;
+      margin-bottom: 14px;
+      color: white;
+    }
+
+    &__row {
+      display: flex;
+      width: 100%;
+
+      & + .controls-section__row { margin-top: 8px; }
+    }
   }
 }
+
 
 /* Aspect Ratio Controls */
-.controls-section__row + .controls-section__row { margin-top: 10px; }
-
 .aspect-ratio {
   justify-content: space-between;
   align-items: flex-end;
@@ -419,10 +383,14 @@ button {
   line-height: normal;
   display: block;
   margin-bottom: 0.5em;
+  color: #D7D7D7;
 }
 
 .aspect-ratio__input input {
   width: 101px;
+  background-color: #2D2D2D;
+  color: white;
+  box-shadow: 0 0 0 1px #414141;
 }
 
 .aspect-ratio__options {
