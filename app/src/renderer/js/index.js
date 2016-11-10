@@ -10,7 +10,7 @@ import {convert as convertToGif} from '../../scripts/mp4-to-gif';
 import {init as initErrorReporter} from '../../common/reporter';
 import {log} from '../../common/logger';
 
-// note: `./` == `/app/dist/renderer/html`, not `js`
+// note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 
 const aperture = require('aperture.js')();

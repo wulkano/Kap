@@ -2,7 +2,7 @@ import {remote, ipcRenderer} from 'electron';
 
 import aspectRatio from 'aspectratio';
 
-// note: `./` == `/app/dist/renderer/html`, not `js`
+// note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 
 document.addEventListener('DOMContentLoaded', () => {
