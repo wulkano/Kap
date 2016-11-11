@@ -18,7 +18,10 @@ const aperture = require('aperture.js')();
 function setMainWindowSize() {
   const width = document.documentElement.scrollWidth;
   const height = document.documentElement.scrollHeight;
-  ipcRenderer.send('set-main-window-size', {width, height});
+  ipcRenderer.send('set-main-window-size', {
+    width: width,
+    height: height
+  });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -170,7 +173,11 @@ document.addEventListener('DOMContentLoaded', () => {
           const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.mp4`;
 
           restoreInputs();
-          askUserToSaveFile({fileName, filePath, type: 'mp4'});
+          askUserToSaveFile({
+            fileName: fileName,
+            filePath: filePath,
+            type: 'mp4'
+          });
         } else { // gif
           restoreInputs();
 
@@ -195,7 +202,9 @@ document.addEventListener('DOMContentLoaded', () => {
           //   });
           //   // TODO catch
 
-          ipcRenderer.send('open-post-recording-window', {filePath});
+          ipcRenderer.send('open-post-recording-window', {
+            filePath: filePath
+          });
         }
       });
   }
@@ -398,7 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
     openReleaseNotesBtn.onclick = () => shell.openExternal('https://github.com/wulkano/kap/releases/latest');
     restartAndInstallUpdateBtn.onclick = () => ipcRenderer.send('install-update');
 
-    const notification = new Notification(title, {body});
+    const notification = new Notification(title, {body: body});
     notification.onclick = () => ipcRenderer.send('install-update');
   });
 
@@ -433,7 +442,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       progressBar.value = 100;
 
-      askUserToSaveFile({fileName, filePath: gifPath, type: 'gif'});
+      askUserToSaveFile({
+        fileName: fileName,
+        filePath: gifPath,
+        type: 'gif'
+      });
     });
     // TODO catch
   });

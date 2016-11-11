@@ -17,7 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function move(direction, amount) {
-    ipcRenderer.send('move-cropper-window', {direction, amount});
+    ipcRenderer.send('move-cropper-window', {
+      direction: direction,
+      amount: amount
+    });
   }
 
   let intervalId;

@@ -47,7 +47,8 @@
     "rules": {
       "import/no-extraneous-dependencies": 0,
       "import/named": 0,
-      "import/default": 0
+      "import/default": 0,
+      "object-shorthand": ["error", "never"]
     },
     "ignores": [
       "app/dist/**"
