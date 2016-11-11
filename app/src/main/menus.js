@@ -13,10 +13,10 @@ const launchSettings = {
 function startupLaunch() {
   if (app.getLoginItemSettings().openAtLogin === true) {
     launchSettings.openAtLogin = false;
-    settings.setSync('kap-startup', false);
+    settings.setSync('openOnStartup', false);
   } else {
     launchSettings.openAtLogin = true;
-    settings.setSync('kap-startup', true);
+    settings.setSync('openOnStartup', true);
   }
   app.setLoginItemSettings(launchSettings);
 }
@@ -24,7 +24,7 @@ function startupLaunch() {
 function changeSaveToDirectory() {
   const location = dialog.showOpenDialog({properties: ['openDirectory']});
   if (location) {
-    settings.set('save-to-directory', location[0]);
+    settings.set('kapturesDir', location[0]);
   }
 }
 
@@ -42,7 +42,7 @@ const cogMenu = [
   {
     label: 'Open on startup',
     type: 'checkbox',
-    checked: settings.getSync('kap-startup'),
+    checked: settings.getSync('openOnStartup'),
     click: () => startupLaunch()
   },
   {
