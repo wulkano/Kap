@@ -1,4 +1,4 @@
-@include 'eightpoint/dist/eight.min';
+@import 'eightpoint/dist/eight.min';
 
 html, body {
   width: 100%;

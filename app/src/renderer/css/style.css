@@ -183,7 +183,11 @@ input, .input {
   border: 0;
   height: 2.4rem;
   padding: 0 0.8rem;
-  box-shadow: 0 0 0 1px #CCCCCC;
+  background-color: #2D2D2D;
+  color: white;
+  border: 1px solid #545454;
+
+  &:focus { border-color: #3B99FC; }
 }
 
 button {
@@ -388,9 +392,6 @@ button {
 
 .aspect-ratio__input input {
   width: 101px;
-  background-color: #2D2D2D;
-  color: white;
-  box-shadow: 0 0 0 1px #414141;
 }
 
 .aspect-ratio__options {
