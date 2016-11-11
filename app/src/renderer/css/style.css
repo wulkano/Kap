@@ -5,6 +5,8 @@
   ( ͡° ͜ʖ ͡°)
 */
 
+@import 'eightpoint/dist/eight.min';
+
 /* Variables */
 $background-primary: #FFFFFF;
 $background-secondary: #ECECEC;
@@ -30,10 +32,52 @@ body {
   overflow: hidden;
 }
 
-select { width: 100%; }
-input {
+select {
+  width: 100%;
+  -webkit-appearance: none;
+  height: 24px;
+  padding-left: 8px;
+  padding-right: 8px;
+  position: relative;
+  background: transparent;
   border: none;
-  box-shadow: 0 0 0 1px #CCCCCC;
+  top: -3px;
+}
+
+.select-element {
+  position: relative;
+  height: 24px;
+  width: 100%;
+  border-radius: 3px;
+  background-color: #414141;
+  box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.20), 0px 0px 0px 1px rgba(0,0,0,0.10), inset 0px 1px 0px 0px rgba(255,255,255,0.05);
+  color: white;
+
+  &:after {
+    display: block;
+    content: '\25be';
+    text-align: center;
+    font-size: 1.2rem;
+    pointer-events: none;
+    color: #8C8C8C;
+    width: 16px;
+    height: 24px;
+    top: 0;
+    right: 4px;
+    position: absolute;
+  }
+
+  select { color: white; }
+
+  &.is-light {
+    background: white;
+    background-position: 0 0, 100% 0;
+    background-repeat: no-repeat;
+    background-size: 1px 100%;
+    background-color: #F9F9F9;
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.1), inset 0 1px 0 0 #FFFFFF, inset 0 1px rgba(255, 255, 255, 1);
+    select { color: $primary-text-color; }
+  }
 }
 
 /* Helper Classes */
@@ -127,6 +171,75 @@ input {
   border-radius: 5px;
 }
 
+/*
+  Components
+  ----
+*/
+
+/* Inputs */
+input, .input {
+  border-radius: 3px;
+  background: white;
+  border: 0;
+  height: 2.4rem;
+  padding: 0 0.8rem;
+  background-color: #2D2D2D;
+  color: white;
+  border: 1px solid #545454;
+
+  &:focus { border-color: #3B99FC; }
+}
+
+button {
+  height: 2.4rem;
+}
+
+/* Button Groups */
+.button-group {
+  border: none;
+  border-radius: 3px;
+  width: 6.4rem;
+  height: 2.4rem;
+  display: flex;
+  justify-content: space-around;
+  background-color: #414141;
+  box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.20), 0px 0px 0px 1px rgba(0,0,0,0.10), inset 0px 1px 0px 0px rgba(255,255,255,0.05);
+
+  button {
+    flex: 1 0 50%;
+    background: transparent;
+    border: 0;
+    height: 100%;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:not(:last-child) { border-right: 1px solid rgba(0, 0, 0, 0.1); }
+  }
+
+  svg {
+    @extend .btn;
+    height: 2.4rem;
+    width: 2.4rem;
+    fill: #919191;
+    transition: fill 0.12s ease-in-out;
+
+    &:hover:not(:active):not(.active) { fill: #AEAEAE; }
+    &:active, &.active { fill: $blue; }
+    &.disabled { pointer-events: none; }
+  }
+
+  &.is-light {
+    background: #F9F9F9;
+    box-shadow: $box-shadow-inputs, 0 1px rgba(255, 255, 255, 1);
+
+    svg { fill: #8C8C8C; }
+  }
+}
+
+
+
 /* Kap Header */
 .kap-header {
   @extend .webkit-drag;
@@ -135,7 +248,7 @@ input {
   width: 100%;
   justify-content: center;
   align-items: center;
-  height: 12.8rem;
+  height: 12.4rem;
 
   &__text {
     font-size: 1.2rem;
@@ -174,68 +287,90 @@ input {
   }
 }
 
-/* Controls Section */
+/*
+  Controls Section
+  ----
+
+  Controls shown in the main Kap window.
+
+*/
 .controls {
   width: 100%;
-  border-top: 1px solid #CCCCCC;
- }
+  color: white;
 
-.controls__toggle {
-  display: flex;
-  height: 3.2rem;
-  width: 100%;
-  align-items: center;
-  font-size: 1.4rem;
-  cursor: pointer;
-  background: #F3F3F3;
-
-  .triangle.up {
-    transform: rotate(-180deg);
-  }
-}
-
-.controls__title {
-  color: $primary-text-color;
-  cursor: pointer;
-  margin-left: 1rem;
-}
-
-.controls__options {
-  margin-left: auto;
-  padding: .25em;
-  width: 2.4rem;
-  height: 2.4rem;
-  fill: #8C8C8C;
-  cursor: pointer;
-
-  &:hover { fill: #4D4D4D; }
-}
-
-.controls-content {
-  border-top: 1px solid #CCCCCC;
-}
-
-.controls-section {
-  padding-top: 1.6rem;
-  padding-bottom: 1.6rem;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-
-  &__title {
-    color: $primary-text-color;
-    font-size: 1.4rem;
-  }
-
-  &__row {
+  /* Toggle of controls section */
+  &-toggle {
     display: flex;
+    height: 3.2rem;
     width: 100%;
+    align-items: center;
+    font-size: 1.4rem;
+    cursor: pointer;
+    background: #2D2D2D;
+    color: white;
+
+    /* Text inside the toggle */
+    &__title {
+      cursor: pointer;
+      margin-left: 1rem;
+    }
+
+    /* Directional transform of arrow in toggle */
+    .triangle.up { transform: rotate(-180deg); }
+  }
+
+  /* App options menu, to the right of the toggle */
+  &-options {
+    margin-left: auto;
+    padding: .25em;
+    width: 2.2rem;
+    height: 2.2rem;
+    fill: #8C8C8C;
+    cursor: pointer;
+
+    &:hover { fill: #4D4D4D; }
+  }
+
+
+  /* Container for all controls after toggle has been clicked */
+  &-content {
+    border-top: 1px solid #1B1B1B;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Sections within the control content */
+  &-section {
+    padding-top: 1.6rem;
+    padding-bottom: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background: #222222;
+
+    /* Add a border-top to each following element of the same class */
+    & + .controls-section { border-top: 1px solid #1B1B1B; }
+
+    &__title {
+      color: $primary-text-color;
+      font-size: 1.4rem;
+      letter-spacing: -.010rem;
+      line-height: normal;
+      margin-bottom: 14px;
+      color: white;
+    }
+
+    &__row {
+      display: flex;
+      width: 100%;
+
+      & + .controls-section__row { margin-top: 8px; }
+    }
   }
 }
+
 
 /* Aspect Ratio Controls */
-.controls-section__row + .controls-section__row { margin-top: 10px; }
-
 .aspect-ratio {
   justify-content: space-between;
   align-items: flex-end;
@@ -252,12 +387,11 @@ input {
   line-height: normal;
   display: block;
   margin-bottom: 0.5em;
+  color: #D7D7D7;
 }
 
 .aspect-ratio__input input {
   width: 101px;
-  padding: 0 8px;
-  height: 1.8rem;
 }
 
 .aspect-ratio__options {
@@ -265,39 +399,6 @@ input {
   width: 64px;
   height: 2.4rem;
   align-items: flex-start;
-}
-
-.button-group {
-  border: none;
-  background: #FCFBFC;
-  box-shadow: $box-shadow-inputs;
-  border-radius: 3px;
-  width: 6.4rem;
-  height: 1.8rem;
-  display: flex;
-  justify-content: space-around;
-
-  li {
-    width: 50%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &:not(:last-child) { border-right: 1px solid rgba(0, 0, 0, 0.1); }
-  }
-
-  svg {
-    @extend .btn;
-    height: 100%;
-    width: 2.4rem;
-    fill: #8C8C8C;
-    transition: fill 0.12s ease-in-out;
-
-    &:hover { fill: #4D4D4D; }
-    &:active, &.active { fill: $blue; }
-    &.disabled { pointer-events: none; }
-  }
 }
 
 @keyframes shake {

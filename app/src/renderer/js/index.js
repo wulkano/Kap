@@ -10,7 +10,7 @@ import {convert as convertToGif} from '../../scripts/mp4-to-gif';
 import {init as initErrorReporter} from '../../common/reporter';
 import {log} from '../../common/logger';
 
-// note: `./` == `/app/dist/renderer/html`, not `js`
+// note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 
 const aperture = require('aperture.js')();
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
   const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
   const controlsSection = document.querySelector('section.controls');
-  const controlsTitleWrapper = document.querySelector('.controls__toggle');
+  const controlsTitleWrapper = document.querySelector('.controls-toggle');
   const exportAs = document.querySelector('#export-as');
   const header = document.querySelector('.kap-header');
   const hideWindowBtn = document.querySelector('.hide-window');
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const linkBtn = document.querySelector('.link-btn');
   const minimizeWindowBtn = document.querySelector('.minimize-window');
   const openReleaseNotesBtn = document.querySelector('.open-release-notes');
-  const options = document.querySelector('.controls__options');
+  const options = document.querySelector('.controls-options');
   const progressBar = document.querySelector('#progress-bar');
   const progressBarLabel = document.querySelector('.progress-bar-label');
   const progressBarSection = document.querySelector('section.progress');

@@ -15,7 +15,7 @@ import analytics from './analytics';
 import {applicationMenu, cogMenu} from './menus';
 
 const menubar = require('menubar')({
-  index: `file://${__dirname}/../renderer/html/index.html`,
+  index: `file://${__dirname}/../renderer/views/index.html`,
   icon: path.join(__dirname, '..', '..', 'static', 'menubarDefaultTemplate.png'),
   width: 320,
   height: 500,
@@ -86,7 +86,7 @@ ipcMain.on('open-cropper-window', (event, size) => {
       resizable: true,
       shadow: false
     });
-    cropperWindow.loadURL(`file://${__dirname}/../renderer/html/cropper.html`);
+    cropperWindow.loadURL(`file://${__dirname}/../renderer/views/cropper.html`);
     cropperWindow.setIgnoreMouseEvents(false); // TODO this should be false by default
 
     if (isDev) {
@@ -368,7 +368,7 @@ ipcMain.on('open-post-recording-window', (event, opts) => {
     resizable: false
   });
 
-  postRecWindow.loadURL(`file://${__dirname}/../renderer/html/post-recording.html`);
+  postRecWindow.loadURL(`file://${__dirname}/../renderer/views/post-recording.html`);
 
   postRecWindow.webContents.on('did-finish-load', () => postRecWindow.webContents.send('video-src', opts.filePath));
 
