@@ -8,9 +8,18 @@ html(lang='en')
   body
     main.content
       video#preview(autoplay loop)
-      progress(max='100', value=50)
+      section.video-controls
+        .video-controls-left
+          .video-playback
+            img.video-pause-icon(src='/app/static/video-pause.svg')
+            img.video-play-icon(src='/app/static/video-play.svg')
+          .video-time
+            span.duration
+        progress(max='100', value=50)
+        .video-controls-right
+          span WIP
       section.controls
-        .video-controls
+        .video-options
           .size
             span Size
             input.input-width(type='text')

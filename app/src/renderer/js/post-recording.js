@@ -1,4 +1,5 @@
 import {remote, ipcRenderer} from 'electron';
+import moment from 'moment';
 
 import aspectRatio from 'aspectratio';
 
@@ -16,6 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const preview = document.querySelector('#preview');
   const progressBar = document.querySelector('progress');
   const saveBtn = document.querySelector('.save');
+  const videoPlayback = document.querySelector('.video-playback');
+  const videoDuration = document.querySelector('.duration');
 
   let fps = 30;
   let loop = true;
@@ -32,12 +35,24 @@ document.addEventListener('DOMContentLoaded', () => {
     progressBar.max = preview.duration;
     setInterval(() => {
       progressBar.value = preview.currentTime;
+      // probably going to redo this, super ugly.
+      videoDuration.textContent =
+      `${moment().startOf('day').seconds(preview.currentTime).format('m:ss')} /  ${moment().startOf('day').seconds(preview.duration).format('m:ss')}`;
     }, 1);
 
     // remove the listener since it's called
     // every time the video loops
     preview.oncanplay = undefined;
   };
+
+  videoPlayback.addEventListener('click', () => {
+    videoPlayback.classList.toggle('paused');
+    if (preview.paused) {
+      preview.play();
+    } else {
+      preview.pause();
+    }
+  });
 
   function shake(el) {
     el.classList.add('shake');
