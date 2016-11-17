@@ -424,9 +424,9 @@ ipcMain.on('open-post-recording-window', (event, opts) => {
   // note : the only working solution I found was to get the screen size and apply
   // before entering fullscreen. WIP
 
-  // let screenSize = screen.getPrimaryDisplay().size;
+  const screenSize = screen.getPrimaryDisplay().size;
   ipcMain.on('enter-fullscreen-post-recording-window', () => {
-    // postRecWindow.setSize(screenSize.width, screenSize.height);
+    postRecWindow.setSize(screenSize.width, screenSize.height);
     app.postRecWindow.setFullScreen(true);
   });
 
