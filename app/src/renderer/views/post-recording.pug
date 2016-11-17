@@ -17,7 +17,12 @@ html(lang='en')
             span.duration
         progress(max='100', value=50)
         .video-controls-right
-          span WIP
+          .video-volume
+            img.video-volume-up(src='/app/static/video-volume-up.svg')
+            img.video-volume-off(src='/app/static/video-volume-off.svg')
+          .video-fullscreen
+            img.video-fullscreen-enter(src='/app/static/video-fullscreen.svg')
+            img.video-fullscreen-exit(src='/app/static/video-fullscreen-exit.svg')
       section.controls
         .video-options
           .size

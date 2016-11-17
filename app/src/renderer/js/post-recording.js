@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveBtn = document.querySelector('.save');
   const videoPlayback = document.querySelector('.video-playback');
   const videoDuration = document.querySelector('.duration');
+  const videoVolume = document.querySelector('.video-volume');
+  const videoFullscreen = document.querySelector('.video-fullscreen');
 
   let fps = 30;
   let loop = true;
@@ -52,6 +54,15 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       preview.pause();
     }
+  });
+
+  videoVolume.addEventListener('click', () => {
+    videoVolume.classList.toggle('active');
+  });
+
+  videoFullscreen.addEventListener('click', () => {
+    videoFullscreen.classList.toggle('active');
+    ipcRenderer.send('enter-fullscreen-post-recording-window');
   });
 
   function shake(el) {

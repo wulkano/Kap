@@ -26,8 +26,11 @@ video {
 progress {
   -webkit-appearance: none;
   height: 6px;
-  width: 70%;
+  min-width: 50%;
   display: flex;
+  flex-grow: 1;
+  margin-right: 3rem;
+  margin-left: 4em;
 
   &::-webkit-progress-bar {
     background-color: #C6C6C6;
@@ -61,12 +64,11 @@ section.controls {
 }
 
 .video-controls-left,
-.video-controls-right {
-  display: flex;
-}
-
+.video-controls-right,
 .video-playback,
-.video-time {
+.video-time,
+.video-volume,
+.video-fullscreen {
   display: flex;
 }
 
@@ -75,11 +77,11 @@ section.controls {
   cursor: pointer;
 }
 
-.video-playback.paused .video-play-icon{
+.video-playback.paused .video-play-icon {
   display: inline;
 }
 
-.video-playback.paused .video-pause-icon{
+.video-playback.paused .video-pause-icon {
   display: none;
 }
 
@@ -94,6 +96,35 @@ section.controls {
 
 .video-time .duration {
   font-size: 1.3rem;
+}
+
+.video-volume-up {
+  display: none;
+}
+
+.video-volume.active .video-volume-off {
+  display: none;
+}
+
+.video-volume.active .video-volume-up {
+  display: inline;
+}
+
+.video-fullscreen {
+  margin-right: -.6rem;
+  margin-left: 1.6rem;
+}
+
+.video-fullscreen-exit {
+  display: none;
+}
+
+.video-fullscreen.active .video-fullscreen-enter {
+  display: none;
+}
+
+.video-fullscreen.active .video-fullscreen-exit {
+  display: inline;
 }
 
 .video-options {
