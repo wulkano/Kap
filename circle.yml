@@ -8,3 +8,8 @@ machine:
 test:
   override:
     - npm run dist
+deployment:
+  master:
+    branch: master
+    commands:
+      - cp dist/mac/*.dmg $CIRCLE_ARTIFACTS
