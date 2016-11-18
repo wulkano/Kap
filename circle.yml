@@ -1,4 +1,7 @@
 machine:
+  environment:
+    XCODE_SCHEME: symbolicator
+    XCODE_WORKSPACE: symbolicator
   xcode:
     version: 7.3
 
