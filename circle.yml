@@ -1,10 +1,10 @@
+# https://discuss.circleci.com/t/is-there-a-way-to-force-building-on-os-x/4079/12
 machine:
   environment:
     XCODE_SCHEME: symbolicator
     XCODE_WORKSPACE: symbolicator
   xcode:
     version: 7.3
-
 test:
   override:
     - npm run dist
