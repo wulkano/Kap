@@ -1,0 +1,90 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset="UTF-8")
+    title Preferences
+    link(href='../css/preferences.css', rel='stylesheet', type='text/css')
+    script(src="../js/preferences.js")
+    script(src='../js/disable-zoom.js')
+
+  body
+
+    //- App content wrapper
+    main.content.preferences
+
+      header.window-header
+        //- Title Bar
+        .title-bar
+          .title-bar__controls
+            img.hide-window(src='/app/static/traffic-light-close.svg')
+            img.minimize-window(src='/app/static/traffic-light-minimize.svg')
+            img(src='/app/static/traffic-light-disabled.svg')
+          span.window__title.txt Preferences
+
+        nav.prefs-nav
+          a.is-active(href)
+            img(src='/app/static/settings.svg')
+          a(href)
+            img(src='/app/static/tune.svg')
+          a(href)
+            img(src='/app/static/accessibility.svg')
+      .js-prefs-sections
+
+        section.js-prefs-section.settings
+          .preference.container
+            .preference-part
+              .preference-content
+                .preference__title Save to...
+                .preference__description Change the default directory to where your Kaptures are saved
+              .preference-input.c-toggle
+                button.button--secondary.js-choose-save Choose
+          .preference.container
+            .preference-part
+              .preference-content
+                .preference__title Start automatically
+                .preference__description Launch Kap on system startup
+              .preference-input.c-toggle
+                input.c-toggle__input(type="checkbox" name="c-toggle-input" id="startup")
+                label.c-toggle__label(for="startup")
+          .preference.container
+            .preference-part
+              .preference-content
+                .preference__title Allow analytics
+                .preference__description Help us improve Kap by sending anonymous usage stats
+              .preference-input.c-toggle
+                input.c-toggle__input(type="checkbox" name="c-toggle-input" id="startup")
+                label.c-toggle__label(for="startup")
+
+
+
+        //- Advanced preferences
+        section.js-prefs-section.advanced(style="display: none;")
+          .preference.container
+            .preference-part
+              .preference-content
+                .preference__title Show mouse clicks
+                .preference__description Display the cursor in your recordings
+              .preference-input.c-toggle
+                input.c-toggle__input(type="checkbox" name="c-toggle-input" id="c-toggle-input")
+                label.c-toggle__label(for="c-toggle-input")
+            .preference-part
+              .preference-content
+                .preference__description Highlight clicks
+              .preference-input.c-toggle
+                input.c-toggle__input(type="checkbox" name="c-toggle-input" id="c-toggle-input")
+                label.c-toggle__label(for="c-toggle-input")
+          .preference.container
+            .preference-part
+              .preference-content
+                .preference__title Capture frame rate
+                .preference__description Capturing at a higher frame rate might impact performance
+              .preference-input.c-range
+                input(type="range")
+          .preference.container
+            .preference-part
+              .preference-content
+                .preference__title Sound
+                .preference__description Enable sound
+              .preference-input.c-toggle
+                input.c-toggle__input(type="checkbox" name="c-toggle-input" id="c-toggle-input")
+                label.c-toggle__label(for="c-toggle-input")
