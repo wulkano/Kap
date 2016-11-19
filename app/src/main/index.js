@@ -53,6 +53,9 @@ let postRecWindow;
 let prefsWindow;
 let shouldStopWhenTrayIsClicked = false;
 let tray;
+const launchSettings = {
+  openAtLogin: false
+};
 
 let recording = false;
 
@@ -89,6 +92,24 @@ function setCropperWindowOnBlur() {
     }
   });
 }
+
+ipcMain.on('change-save-directory', () => {
+  const location = dialog.showOpenDialog({properties: ['openDirectory']});
+  if (location) {
+    settings.set('kapturesDir', location[0]);
+  }
+});
+
+ipcMain.on('launch-at-startup', () => {
+  if (app.getLoginItemSettings().openAtLogin === true) {
+    launchSettings.openAtLogin = false;
+    settings.setSync('openOnStartup', false);
+  } else {
+    launchSettings.openAtLogin = true;
+    settings.setSync('openOnStartup', true);
+  }
+  app.setLoginItemSettings(launchSettings);
+});
 
 ipcMain.on('open-cropper-window', (event, size) => {
   mainWindow.setAlwaysOnTop(true); // TODO send a PR to `menubar`

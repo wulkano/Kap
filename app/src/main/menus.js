@@ -21,23 +21,19 @@ function startupLaunch() {
   app.setLoginItemSettings(launchSettings);
 }
 
-function changeSaveToDirectory() {
-  const location = dialog.showOpenDialog({properties: ['openDirectory']});
-  if (location) {
-    settings.set('kapturesDir', location[0]);
-  }
-}
-
 const cogMenu = [
   {
     role: 'about'
   },
   {
-    type: 'separator'
+    label: 'Preferences',
+    accelerator: 'Cmd+,',
+    click(i, focusedWindow) {
+      focusedWindow.webContents.send('open-preferences-window');
+    }
   },
   {
-    label: 'Save to...',
-    click: () => changeSaveToDirectory()
+    type: 'separator'
   },
   {
     label: 'Open on startup',
