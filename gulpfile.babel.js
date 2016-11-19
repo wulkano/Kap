@@ -19,7 +19,7 @@ const DIST_DIR = 'app/dist';
 const JS_GLOB = `${SRC_DIR}/**/*.js`;
 const CSS_GLOB = `${SRC_DIR}/**/*.css`;
 const VIEWS_GLOB = `${SRC_DIR}/**/*.pug`;
-// const MISC_GLOB = [`${SRC_DIR}/**/*`, `!${JS_GLOB}`, `!${CSS_GLOB}`, `!${VIEWS_GLOB}`];
+const SVG_GLOB = `app/static/**/*.svg`;
 
 // Clean DIST directory
 export function clean() {
@@ -50,6 +50,7 @@ export function watch() {
   watchSrc(JS_GLOB, scripts);
   watchSrc(CSS_GLOB, styles);
   watchSrc(VIEWS_GLOB, views);
+  watchSrc(SVG_GLOB, views);
 }
 
 const mainTasks = parallel(scripts, styles, views);
