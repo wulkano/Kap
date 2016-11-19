@@ -6,6 +6,7 @@ import {app, dialog, BrowserWindow, ipcMain, Menu} from 'electron';
 import settings from 'electron-settings';
 import isDev from 'electron-is-dev';
 import mkdirp from 'mkdirp';
+import {createSelector} from 'linux-area-selector';
 
 import {init as initErrorReporter} from '../common/reporter';
 import logger from '../common/logger';
@@ -13,8 +14,6 @@ import logger from '../common/logger';
 import autoUpdater from './auto-updater';
 import analytics from './analytics';
 import {applicationMenu, cogMenu} from './menus';
-
-import {createSelector} from 'linux-area-selector';
 
 const platform = osPlatform();
 
@@ -104,7 +103,7 @@ function setCropperWindowOnBlur() {
         !recording) {
         selectorWindow.close();
       }
-    })
+    });
   }
 }
 
@@ -145,7 +144,7 @@ ipcMain.on('open-cropper-window', (event, size) => {
           selectorWindow.kill();
           selectorWindow = null;
         }
-      })
+      });
     } else {
       cropperWindow = new BrowserWindow({
         width: width + cropperWindowBuffer,
