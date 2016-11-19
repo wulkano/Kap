@@ -50,6 +50,7 @@ let mainWindow;
 let mainWindowIsNew = true;
 let positioner;
 let postRecWindow;
+let prefsWindow;
 let shouldStopWhenTrayIsClicked = false;
 let tray;
 
@@ -459,4 +460,24 @@ ipcMain.on('set-main-window-visibility', (event, opts) => {
       }
     }, opts.forHowLong);
   }
+});
+
+// Preferences Window
+// ----
+ipcMain.on('open-preferences-window', (event, opts) => {
+  if (prefsWindow) {
+    prefsWindow.show();
+    if (opts.notify === true) {
+      prefsWindow.webContents.send('show-notification');
+    }
+    return;
+  }
+  prefsWindow = new BrowserWindow({
+    width: 480,
+    height: 480,
+    frame: false,
+    resizable: false
+  });
+
+  prefsWindow.loadURL(`file://${__dirname}/../renderer/views/preferences.html`);
 });

@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const triangle = document.querySelector('.triangle');
   const updateNotification = document.querySelector('.update-notification');
   const windowTitle = document.querySelector('.window__title');
+  const prefsBtn = document.querySelector('.prefs-btn');
 
   // Initial variables
   let monitoringIntervalId;
@@ -242,6 +243,10 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       prepareRecordButton();
     }
+  };
+
+  prefsBtn.onclick = function () {
+    ipcRenderer.send('open-preferences-window');
   };
 
   controlsTitleWrapper.onclick = function () {
