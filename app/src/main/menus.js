@@ -1,4 +1,4 @@
-import {app, Menu, shell, dialog} from 'electron';
+import {app, Menu, shell} from 'electron';
 import settings from 'electron-settings';
 
 const signInForUpdates = {
@@ -108,10 +108,6 @@ const applicationMenu = [
       },
       {
         type: 'separator'
-      },
-      {
-        label: 'Save to...',
-        click: () => changeSaveToDirectory()
       },
       {
         type: 'separator'

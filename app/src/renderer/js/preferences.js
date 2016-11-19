@@ -1,9 +1,7 @@
 import {ipcRenderer} from 'electron';
 import settings from 'electron-settings';
 
-
 document.addEventListener('DOMContentLoaded', () => {
-
   settings.get('openOnStartup').then(val => {
     console.log(val);
   });
@@ -15,5 +13,4 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('test');
     ipcRenderer.send('change-save-directory');
   };
-
 });
