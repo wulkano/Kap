@@ -14,12 +14,9 @@ import autoUpdater from './auto-updater';
 import analytics from './analytics';
 import {applicationMenu, cogMenu} from './menus';
 
-const platform = osPlatform();
+import {createSelector} from 'linux-area-selector';
 
-if (platform === 'linux') {
-  app.commandLine.appendSwitch('enable-transparent-visuals');
-  app.commandLine.appendSwitch('disable-gpu');
-}
+const platform = osPlatform();
 
 const menubar = require('menubar')({
   index: `file://${__dirname}/../renderer/views/index.html`,
@@ -50,6 +47,8 @@ settings.defaults({
 
 let appState = 'initial';
 let cropperWindow;
+let selectorWindow; // the cropperWindow, but for linux!
+let selectorBounds; // the x/y/width/height for the selector window, since there's no getter
 const cropperWindowBuffer = 4;
 let mainWindowIsDetached = false;
 let mainWindow;
@@ -60,12 +59,6 @@ let shouldStopWhenTrayIsClicked = false;
 let tray;
 
 let recording = false;
-
-if (isDev) {
-  const electronExecutable = `${__dirname}/../../node_modules/electron/dist/Electron.app/Contents/MacOS/Electron`; // TODO send a PR
-  require('electron-reload')(__dirname, {electron: electronExecutable}); // eslint-disable-line import/newline-after-import
-  // menubar.setOption('alwaysOnTop', true);
-}
 
 if (platform !== 'darwin') {
   menubar.setOption('alwaysOnTop', true);
@@ -95,14 +88,24 @@ ipcMain.on('show-options-menu', (event, coordinates) => {
 });
 
 function setCropperWindowOnBlur() {
-  cropperWindow.on('blur', () => {
-    if (!mainWindow.isFocused() &&
+  if (cropperWindow) {
+    cropperWindow.on('blur', () => {
+      if (!mainWindow.isFocused() &&
         !cropperWindow.webContents.isDevToolsFocused() &&
         !mainWindow.webContents.isDevToolsFocused() &&
         !recording) {
-      cropperWindow.close();
-    }
-  });
+        cropperWindow.close();
+      }
+    });
+  } else {
+    selectorWindow.on('blur', () => {
+      if (!mainWindow.isFocused() &&
+        !mainWindow.webContents.isDevTools.focused() &&
+        !recording) {
+        selectorWindow.close();
+      }
+    })
+  }
 }
 
 ipcMain.on('open-cropper-window', (event, size) => {
@@ -113,53 +116,90 @@ ipcMain.on('open-cropper-window', (event, size) => {
   } else {
     const {width = size.width, height = size.height} = settings.getSync('cropperWindow.size');
     const {x, y} = settings.getSync('cropperWindow.position');
-    cropperWindow = new BrowserWindow({
-      width: width + cropperWindowBuffer,
-      height: height + cropperWindowBuffer,
-      frame: false,
-      transparent: true,
-      resizable: true,
-      shadow: false,
-      x,
-      y
-    });
-    cropperWindow.loadURL(`file://${__dirname}/../renderer/views/cropper.html`);
-    cropperWindow.setIgnoreMouseEvents(false); // TODO this should be false by default
-
-    if (isDev) {
-      cropperWindow.openDevTools({mode: 'detach'});
-      cropperWindow.webContents.on('devtools-opened', () => {
-        setCropperWindowOnBlur();
+    if (platform === 'linux') {
+      selectorWindow = createSelector(x, y, width, height);
+      selectorWindow.on('end', () => {
+        selectorWindow = undefined;
+        mainWindow.webContents.send('cropper-window-closed');
       });
+      selectorWindow.on('move', event => {
+        console.log(event);
+        // because GTK/GDK makes it hard to get move/resize events differently, we do this
+        const size = {
+          width: event.width,
+          height: event.height
+        };
+        mainWindow.webContents.send('cropper-window-new-size', size);
+        settings.setSync('cropperWindow.size', size);
+
+        const position = {
+          x: event.x,
+          y: event.y
+        };
+        settings.setSync('cropperWindow.position', position);
+
+        selectorBounds = event;
+      });
+      selectorWindow.on('blur', () => {
+        if (!recording) {
+          selectorWindow.kill();
+          selectorWindow = null;
+        }
+      })
     } else {
-      setCropperWindowOnBlur();
+      cropperWindow = new BrowserWindow({
+        width: width + cropperWindowBuffer,
+        height: height + cropperWindowBuffer,
+        frame: false,
+        transparent: true,
+        resizable: true,
+        shadow: false,
+        x,
+        y
+      });
+      cropperWindow.loadURL(`file://${__dirname}/../renderer/views/cropper.html`);
+      cropperWindow.setIgnoreMouseEvents(false); // TODO this should be false by default
+
+      if (isDev) {
+        cropperWindow.openDevTools({mode: 'detach'});
+        cropperWindow.webContents.on('devtools-opened', () => {
+          setCropperWindowOnBlur();
+        });
+      } else {
+        setCropperWindowOnBlur();
+      }
+
+      cropperWindow.on('closed', () => {
+        cropperWindow = undefined;
+        mainWindow.webContents.send('cropper-window-closed');
+      });
+
+      cropperWindow.on('resize', () => {
+        const size = {};
+        [size.width, size.height] = cropperWindow.getSize();
+        mainWindow.webContents.send('cropper-window-new-size', size);
+        settings.setSync('cropperWindow.size', size);
+      });
+
+      cropperWindow.on('move', () => {
+        const position = {};
+        [position.x, position.y] = cropperWindow.getPosition();
+        settings.setSync('cropperWindow.position', position);
+      });
     }
-
-    cropperWindow.on('closed', () => {
-      cropperWindow = undefined;
-      mainWindow.webContents.send('cropper-window-closed');
-    });
-
-    cropperWindow.on('resize', () => {
-      const size = {};
-      [size.width, size.height] = cropperWindow.getSize();
-      mainWindow.webContents.send('cropper-window-new-size', size);
-      settings.setSync('cropperWindow.size', size);
-    });
-
-    cropperWindow.on('move', () => {
-      const position = {};
-      [position.x, position.y] = cropperWindow.getPosition();
-      settings.setSync('cropperWindow.position', position);
-    });
   }
 });
 
 ipcMain.on('close-cropper-window', () => {
-  if (cropperWindow && !recording) {
+  if ((cropperWindow || selectorWindow) && !recording) {
     mainWindow.setAlwaysOnTop(false); // TODO send a PR to `menubar`
     menubar.setOption('alwaysOnTop', false);
-    cropperWindow.close(); // TODO: cropperWindow.hide()
+    if (cropperWindow) {
+      cropperWindow.close(); // TODO: cropperWindow.hide()
+    } else {
+      selectorWindow.kill();
+      selectorWindow = null;
+    }
   }
 });
 
@@ -204,6 +244,8 @@ menubar.on('after-create-window', () => {
     if (cropperWindow && !cropperWindow.isFocused() && !recording) {
       // close the cropper window if the main window loses focus and the cropper window
       // is not focused
+      //
+      // the equivalent linux code is above in their blur event
       cropperWindow.close();
     }
 
@@ -326,11 +368,13 @@ menubar.on('after-create-window', () => {
 ipcMain.on('get-cropper-bounds', event => {
   if (cropperWindow) {
     event.returnValue = cropperWindow.getContentBounds();
+  } else if (selectorWindow) {
+    event.returnValue = selectorBounds;
   }
 });
 
 ipcMain.on('is-cropper-active', event => {
-  event.returnValue = Boolean(cropperWindow);
+  event.returnValue = Boolean(cropperWindow || selectorWindow);
 });
 
 ipcMain.on('will-start-recording', () => {
@@ -359,6 +403,10 @@ ipcMain.on('will-stop-recording', () => {
   recording = false;
   if (cropperWindow) {
     cropperWindow.close();
+  }
+  if (selectorWindow) {
+    selectorWindow.kill();
+    selectorWindow = undefined;
   }
 });
 

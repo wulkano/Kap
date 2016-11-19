@@ -21,6 +21,7 @@
     "file-size": "^1.0.0",
     "first-run": "^1.2.0",
     "insight": "^0.8.3",
+    "linux-area-selector": "^1.2.0",
     "menubar": "git://github.com/matheuss/menubar.git",
     "mkdirp": "^0.5.1",
     "moment": "^2.14.1",
