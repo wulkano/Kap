@@ -1,0 +1,68 @@
+@import '../_variables';
+
+/*
+  Input Styling Component ✏️
+  ----
+  - Stylesheet Partial, for inclusion where inputs are used
+  - Any extensions to input styling should go in this file
+*/
+
+/* Ensure focus on inputs doesn't allow app dragging */
+input { -webkit-app-region: no-drag; }
+
+/*
+  Custom select element styling
+  - Use `select` tag wrapped within div with the class of `.select-element`.
+*/
+.select-element {
+  position: relative;
+  height: 24px;
+  width: 100%;
+  border-radius: 3px;
+  background-color: $grey;
+  box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.20), 0px 0px 0px 1px rgba(0,0,0,0.10), inset 0px 1px 0px 0px rgba(255,255,255,0.05);
+  color: white;
+
+  &:after {
+    display: block;
+    content: '\25be';
+    text-align: center;
+    font-size: 1.2rem;
+    pointer-events: none;
+    color: $grey-light;
+    width: 16px;
+    height: 24px;
+    top: 0;
+    right: 4px;
+    position: absolute;
+  }
+
+  select { color: white; }
+
+  &.is-light {
+    background: white;
+    background-position: 0 0, 100% 0;
+    background-repeat: no-repeat;
+    background-size: 1px 100%;
+    background-color: #F9F9F9;
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.1), inset 0 1px 0 0 #FFFFFF, inset 0 1px rgba(255, 255, 255, 1);
+    select { color: $color-primary; }
+  }
+}
+
+
+/*
+  Custom input styling
+*/
+input, .input {
+  border-radius: 3px;
+  background: white;
+  border: 0;
+  height: 2.4rem;
+  padding: 0 0.8rem;
+  background-color: #2D2D2D;
+  color: white;
+  border: 1px solid #545454;
+
+  &:focus { border-color: #3B99FC; }
+}
