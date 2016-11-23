@@ -40,6 +40,8 @@ settings.defaults({
   }
 });
 
+settings.applyDefaultsSync();
+
 let appState = 'initial';
 let cropperWindow;
 const cropperWindowBuffer = 4;
