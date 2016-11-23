@@ -40,6 +40,8 @@ select {
   transition: all .3s ease;
 }
 
+.content { background-color: transparent; }
+
 
 /* Kap Header */
 .kap-header {
