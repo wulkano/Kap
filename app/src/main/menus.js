@@ -28,8 +28,8 @@ const cogMenu = [
   {
     label: 'Preferences',
     accelerator: 'Cmd+,',
-    click(i, focusedWindow) {
-      focusedWindow.webContents.send('open-preferences-window');
+    click() {
+      app.kap.openPrefsWindow();
     }
   },
   {
@@ -60,6 +60,13 @@ const applicationMenu = [
     submenu: [
       {
         role: 'about'
+      },
+      {
+        label: 'Preferences...',
+        accelerator: 'Cmd+,',
+        click() {
+          app.kap.openPrefsWindow();
+        }
       },
       {
         type: 'separator'

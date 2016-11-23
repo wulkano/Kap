@@ -189,12 +189,27 @@ function resetTrayIcon() {
   mainWindow.setAlwaysOnTop(false);
 }
 
+// Open the Preferences Window
+function openPrefsWindow() {
+  if (prefsWindow) {
+    return prefsWindow.show();
+  }
+
+  prefsWindow = new BrowserWindow({
+    width: 480,
+    height: 480,
+    frame: false,
+    resizable: false
+  });
+
+  prefsWindow.loadURL(`file://${__dirname}/../renderer/views/preferences.html`);
+}
+
 menubar.on('after-create-window', () => {
   let expectedWindowPosition;
   const currentWindowPosition = {};
   mainWindow = menubar.window;
-  app.kap = {};
-  app.kap.mainWindow = mainWindow;
+  app.kap = {mainWindow, openPrefsWindow};
   if (isDev) {
     mainWindow.openDevTools({mode: 'detach'});
   }
@@ -482,24 +497,4 @@ ipcMain.on('set-main-window-visibility', (event, opts) => {
       }
     }, opts.forHowLong);
   }
-});
-
-// Preferences Window
-// ----
-ipcMain.on('open-preferences-window', (event, opts) => {
-  if (prefsWindow) {
-    prefsWindow.show();
-    if (opts.notify === true) {
-      prefsWindow.webContents.send('show-notification');
-    }
-    return;
-  }
-  prefsWindow = new BrowserWindow({
-    width: 480,
-    height: 480,
-    frame: false,
-    resizable: false
-  });
-
-  prefsWindow.loadURL(`file://${__dirname}/../renderer/views/preferences.html`);
 });
