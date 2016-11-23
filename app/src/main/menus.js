@@ -116,7 +116,7 @@ const applicationMenu = [
         label: 'Close',
         accelerator: 'CmdOrCtrl+W',
         click() {
-          app.mainWindow.hide();
+          app.kap.mainWindow.hide();
         }
       }
     ]
