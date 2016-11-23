@@ -106,7 +106,7 @@ const applicationMenu = [
       {
         label: 'New Recording',
         accelerator: 'CmdOrCtrl+N',
-        click(item, focusedWindow) {
+        click: (item, focusedWindow) => {
           focusedWindow.webContents.send('prepare-recording');
         }
       },
@@ -123,7 +123,7 @@ const applicationMenu = [
       {
         label: 'Close',
         accelerator: 'CmdOrCtrl+W',
-        click() {
+        click: () => {
           app.mainWindow.hide();
         }
       }
@@ -164,7 +164,7 @@ const applicationMenu = [
       {
         label: 'Reload',
         accelerator: 'CmdOrCtrl+R',
-        click(item, focusedWindow) {
+        click: (item, focusedWindow) => {
           if (focusedWindow) {
             focusedWindow.reload();
           }
@@ -173,7 +173,7 @@ const applicationMenu = [
       {
         label: 'Toggle Developer Tools',
         accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
-        click(item, focusedWindow) {
+        click: (item, focusedWindow) => {
           if (focusedWindow) {
             if (focusedWindow.isDevToolsOpened()) {
               focusedWindow.closeDevTools();

@@ -5,7 +5,10 @@ const pkg = require('../../package');
 
 const trackingCode = 'UA-84705099-2';
 
-const insight = new Insight({trackingCode, pkg});
+const insight = new Insight({
+  trackingCode: trackingCode,
+  pkg: pkg
+});
 
 function init() {
   if (firstRun()) {

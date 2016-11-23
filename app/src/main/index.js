@@ -104,8 +104,8 @@ ipcMain.on('open-cropper-window', (event, size) => {
       transparent: true,
       resizable: true,
       shadow: false,
-      x,
-      y
+      x: x,
+      y: y
     });
     cropperWindow.loadURL(`file://${__dirname}/../renderer/views/cropper.html`);
     cropperWindow.setIgnoreMouseEvents(false); // TODO this should be false by default
@@ -389,7 +389,7 @@ ipcMain.on('ask-user-to-save-file', (event, data) => {
     dialog.showSaveDialog({
       title: data.fileName,
       defaultPath: `${kapturesDir}/${data.fileName}`,
-      filters
+      filters: filters
     }, fileName => {
       if (fileName) {
         fsRename(data.filePath, fileName);

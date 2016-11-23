@@ -146,8 +146,8 @@ document.addEventListener('DOMContentLoaded', () => {
       filePath: preview.src,
       width: inputWidth.value,
       height: inputHeight.value,
-      fps,
-      loop
+      fps: fps,
+      loop: loop
     });
     ipcRenderer.send('close-post-recording-window');
   };
