@@ -100,7 +100,7 @@ li {
   &.active {
     background: #3B99FC;
     border: 1px solid #2D91FC;
-    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.20);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
     color: white;
 
     &:first-child { border-radius: 3px 0 0 3px; }

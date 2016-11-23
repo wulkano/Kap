@@ -20,7 +20,7 @@ input { -webkit-app-region: no-drag; }
   width: 100%;
   border-radius: 3px;
   background-color: $grey;
-  box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.20), 0px 0px 0px 1px rgba(0,0,0,0.10), inset 0px 1px 0px 0px rgba(255,255,255,0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .2), 0 0 0 1px rgba(0, 0, 0, .1), inset 0 1px rgba(255, 255, 255, .05);
   color: white;
 
   &:after {
@@ -45,7 +45,7 @@ input { -webkit-app-region: no-drag; }
     background-repeat: no-repeat;
     background-size: 1px 100%;
     background-color: #F9F9F9;
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.1), inset 0 1px 0 0 #FFFFFF, inset 0 1px rgba(255, 255, 255, 1);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 0 0 1px rgba(0, 0, 0, .1), inset 0 1px white, inset 0 1px rgba(255, 255, 255, 1);
     select { color: $color-primary; }
   }
 }

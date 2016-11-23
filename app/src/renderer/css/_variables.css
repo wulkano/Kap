@@ -32,8 +32,8 @@ $color-primary:        $grey-lighter;
 $color-secondary:      white;
 $color-dark:           $grey;
 $divider-color:        $grey-dark;
-$box-shadow-inputs:    0px 1px 1px 0px rgba(0,0,0,0.20),
-                       0px 0px 0px 1px rgba(0,0,0,0.10);
+$box-shadow-inputs:    0 1px 1px 0 rgba(0, 0, 0, .2),
+                       0 0 0 1px rgba(0, 0, 0, .1);
 
 /* Borders */
 $window-border-radius: 5px;

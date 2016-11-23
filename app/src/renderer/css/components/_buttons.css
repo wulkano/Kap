@@ -27,7 +27,7 @@ button {
   display: flex;
   justify-content: space-around;
   background-color: #414141;
-  box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.20), 0px 0px 0px 1px rgba(0,0,0,0.10), inset 0px 1px 0px 0px rgba(255,255,255,0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .2), 0 0 0 1px rgba(0, 0, 0, .1), inset 0 1px rgba(255, 255, 255, .5);
 
   button {
     flex: 1 0 50%;
@@ -66,7 +66,7 @@ button {
   height: 2.6rem;
   padding: 0 1.6rem;
   border: 1px solid transparent;
-  box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.20);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .2);
   border-radius: 3px;
   color: white;
   cursor: pointer;
