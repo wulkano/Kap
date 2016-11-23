@@ -15,19 +15,31 @@ button {
   height: 2.4rem;
 }
 
+*[class^="button"] {
+  height: 2.6rem;
+  padding: 0 1.6rem;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .2);
+  border-radius: 3px;
+  color: white;
+  cursor: pointer;
+  text-align: center;
+}
+
 
 /*
   Button Group
 */
 .button-group {
   border: none;
+  padding: 0;
   border-radius: 3px;
   width: 6.4rem;
   height: 2.4rem;
   display: flex;
   justify-content: space-around;
   background-color: #414141;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .2), 0 0 0 1px rgba(0, 0, 0, .1), inset 0 1px rgba(255, 255, 255, .5);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .2), 0 0 0 1px rgba(0, 0, 0, .1), inset 0 1px rgba(255, 255, 255, .05);
 
   button {
     flex: 1 0 50%;
@@ -60,17 +72,6 @@ button {
 
     svg { fill: #8C8C8C; }
   }
-}
-
-*[class^="button"] {
-  height: 2.6rem;
-  padding: 0 1.6rem;
-  border: 1px solid transparent;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .2);
-  border-radius: 3px;
-  color: white;
-  cursor: pointer;
-  text-align: center;
 }
 
 .button--primary {
