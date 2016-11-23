@@ -10,8 +10,13 @@ body {
   color: white;
 }
 
-span { -webkit-user-select: none !important; }
-input { -webkit-app-region: no-drag; }
+span {
+  -webkit-user-select: none !important;
+}
+
+input, .fps, .window-controls, .loop {
+  -webkit-app-region: no-drag;
+}
 
 main.content {
   display: flex;

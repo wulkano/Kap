@@ -3,4 +3,8 @@ node_modules
 dist
 .DS_Store
 
+# IDEA
+.idea/
+*.iml
+
 app/vendor

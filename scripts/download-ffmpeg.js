@@ -1,4 +1,11 @@
 #!/usr/bin/env node
+const os = require('os');
+
+if (os.platform() !== 'darwin') {
+  console.log('Skipping ffmpeg install script');
+  process.exit(0);
+}
+
 const fs = require('fs');
 const path = require('path');
 

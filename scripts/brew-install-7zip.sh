@@ -1,3 +1,7 @@
 #!/usr/bin/env bash
-brew update
-brew install p7zip
+
+if [[ $OSTYPE == darwin* ]]; then
+  # TODO brew update
+  brew update
+  brew install p7zip
+fi

@@ -1,4 +1,5 @@
 import fs from 'fs';
+import {platform as osPlatform} from 'os';
 
 import {ipcRenderer, remote, shell} from 'electron';
 
@@ -13,6 +14,7 @@ import {log} from '../../common/logger';
 // note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 
+const platform = osPlatform();
 const aperture = require('aperture.js')();
 
 function setMainWindowSize() {
@@ -23,6 +25,7 @@ function setMainWindowSize() {
 
 document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
+  const content = document.querySelector('.content');
   const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
   const controlsSection = document.querySelector('section.controls');
   const controlsTitleWrapper = document.querySelector('.controls-toggle');
@@ -43,12 +46,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const size = document.querySelector('.size');
   const swapBtn = document.querySelector('.swap-btn');
   const time = document.querySelector('.time');
+  const trayTriangle = document.querySelector('.tray-arrow');
   const titleBar = document.querySelector('.title-bar');
   const trafficLights = document.querySelector('.title-bar__controls');
-  const trayTriangle = document.querySelector('.tray-arrow');
   const triangle = document.querySelector('.triangle');
   const updateNotification = document.querySelector('.update-notification');
   const windowTitle = document.querySelector('.window__title');
+
+  if (platform === 'darwin') {
+    content.classList.add('darwin');
+    titleBar.style.display = 'block';
+    trayTriangle.style.display = 'block';
+  }
 
   // Initial variables
   let monitoringIntervalId;

@@ -1,10 +1,11 @@
 import {join as joinPath} from 'path';
+import {platform} from 'os';
 
 import execa from 'execa';
 import moment from 'moment';
 import tmp from 'tmp';
 
-const ffmpeg = joinPath(__dirname, '..', '..', 'vendor', 'ffmpeg');
+const ffmpeg = platform() === 'darwin' ? joinPath(__dirname, '..', '..', 'vendor', 'ffmpeg') : 'ffmpeg';
 
 const durationRegex = /Duration: (\d\d:\d\d:\d\d.\d\d)/gm;
 const frameRegex = /frame=\s+(\d+)/gm;
