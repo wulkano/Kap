@@ -15,7 +15,7 @@ import analytics from './analytics';
 import {applicationMenu, cogMenu} from './menus';
 
 const menubar = require('menubar')({
-  index: `file://${__dirname}/../renderer/views/index.html`,
+  index: `file://${__dirname}/../renderer/views/main.html`,
   icon: path.join(__dirname, '..', '..', 'static', 'menubarDefaultTemplate.png'),
   width: 320,
   height: 500,
