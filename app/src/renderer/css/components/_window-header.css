@@ -1,0 +1,80 @@
+@import '../_variables';
+@import '../_helpers';
+
+/*
+  Window Header Component
+  ----
+  - Use for any window header
+  - Can be changed into light version with `.is-light` class
+*/
+
+
+.window-header {
+  @extend .webkit-drag;
+  background: $background-secondary;
+  -webkit-app-region: drag;
+  cursor: -webkit-grab;
+  width: 100%;
+  border-radius: 5px 5px 0 0;
+  box-shadow: 0 1px rgba(0, 0, 0, .2);
+
+  .window__title {
+    color: white;
+    font-size: $font-size-default;
+    line-height: 2.8rem;
+    cursor: -wekit-grab;
+  }
+
+  &.is-light {
+    background-color: $background-light;
+    box-shadow: none;
+
+    .window__title {
+      color: $grey-dark;
+    }
+  }
+}
+
+
+.title-bar {
+  @extend .webkit-drag;
+  width: 100%;
+  height: 2.8rem;
+  text-align: center;
+  position: relative;
+
+  &.has-update-notification {
+    height: 5.6rem;
+    background-color: $green;
+  }
+
+  &.has-update-notification .window__title { color: white; }
+}
+
+.title-bar__controls {
+  position: absolute;
+  left: 8px;
+  transition: all .3s ease;
+  svg {
+    margin-right: 3.5px;
+  }
+  &.invisible {
+    opacity: 0;
+  }
+}
+
+.title-bar__controls .hide-window, .title-bar__controls .minimize-window {
+  &, & * {
+    cursor: default !important; /* there's hrefs on the SVG 😒 */
+  }
+
+  /*&:hover g g, &:hover g path { display: inherit; }*/
+}
+
+.title-bar__controls:hover .hide-window g g, .title-bar__controls:hover .minimize-window g g, .title-bar__controls:hover .hide-window g path, .title-bar__controls:hover .minimize-window g path, {
+  display: inherit;
+}
+
+.hide-window:active g use { fill: #BF4942; }
+
+.minimize-window:active g use { fill: #BF8E22; }

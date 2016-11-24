@@ -1,0 +1,61 @@
+@import '../_variables';
+
+.c-toggle {
+  font-size: 1em;
+}
+
+.c-toggle__input {
+  opacity: 0;
+  height: 0;
+  width: 0;
+  margin: 0;
+
+  &:checked + .c-toggle__label {
+    background-color: $grey-dark;
+
+    &:after {
+      left: calc(100% - 2.2rem);
+      background: $blue;
+    }
+  }
+
+  &[disabled] + .c-toggle__label{
+    border: 1px solid #E4EAF1;
+    background-color: #F2F6F9;
+
+    &:after {
+      border: 1px solid #E4EAF1;
+      background-color: #F2F6F9;
+    }
+  }
+
+  + .c-toggle__label {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    border-radius: 2.625em;
+    height: 2.4rem;
+    width: 4.8rem;
+    transition: .2s ease-in-out;
+    border: 1px solid $grey;
+    background-color: $grey-dark;
+
+    &:after {
+      content: "";
+      position: absolute;
+      display: block;
+      height: 1.6rem;
+      width: 1.6rem;
+      top: 0;
+      left: 0;
+      border-radius: 50%;
+      background: $grey-light;
+      transition: .12s ease-in-out;
+      box-shadow: 0 1px 2px solid rgba(0, 0, 0, .2);
+      margin-top: .3rem;
+      margin-left: .3rem;
+    }
+
+  }
+
+}

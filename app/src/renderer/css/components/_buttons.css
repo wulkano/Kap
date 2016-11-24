@@ -1,0 +1,85 @@
+@import '../_variables';
+
+/*
+  Input Styling Component ✏️
+  ----
+  - Stylesheet Partial, for inclusion where inputs are used
+  - Any extensions to input styling should go in this file
+*/
+
+/* Ensure all buttons have the pointer cursor */
+.btn { cursor: pointer }
+
+/* Button Styling */
+button {
+  height: 2.4rem;
+}
+
+*[class^="button"] {
+  height: 2.6rem;
+  padding: 0 1.6rem;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .2);
+  border-radius: 3px;
+  color: white;
+  cursor: pointer;
+  text-align: center;
+}
+
+
+/*
+  Button Group
+*/
+.button-group {
+  border: none;
+  padding: 0;
+  border-radius: 3px;
+  width: 6.4rem;
+  height: 2.4rem;
+  display: flex;
+  justify-content: space-around;
+  background-color: #414141;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .2), 0 0 0 1px rgba(0, 0, 0, .1), inset 0 1px rgba(255, 255, 255, .05);
+
+  button {
+    flex: 1 0 50%;
+    background: transparent;
+    border: 0;
+    height: 100%;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:not(:last-child) { border-right: 1px solid rgba(0, 0, 0, 0.1); }
+  }
+
+  svg {
+    @extend .btn;
+    height: 2.4rem;
+    width: 2.4rem;
+    fill: #919191;
+    transition: fill 0.12s ease-in-out;
+
+    &:hover:not(:active):not(.active) { fill: #AEAEAE; }
+    &:active, &.active { fill: $blue; }
+    &.disabled { pointer-events: none; }
+  }
+
+  &.is-light {
+    background: #F9F9F9;
+    box-shadow: $box-shadow-inputs, 0 1px rgba(255, 255, 255, 1);
+
+    svg { fill: #8C8C8C; }
+  }
+}
+
+.button--primary {
+  background: #3B99FC;
+  border-color: #2D91FC;
+}
+
+.button--secondary {
+  background: $grey;
+  box-shadow: inset 0 1px rgba(255, 255, 255, .05), 0 1px 2px rgba(0, 0, 0, .2), 0 0 0 1px rgba(0, 0, 0, .1);
+}

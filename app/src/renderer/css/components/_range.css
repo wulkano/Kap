@@ -1,0 +1,31 @@
+@import '../_variables';
+
+.c-range {
+  width: 100%;
+  margin-top: 16px;
+
+  input[type=range] {
+    -webkit-appearance: none;
+    background: $grey-dark;
+    border: 1px solid $grey;
+    width: 100%;
+    height: .8rem;
+    border-radius: 4px;
+    padding: 0;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: 1px solid #000000;
+    height: 1.6rem;
+    width: 1.6rem;
+    border-radius: 50%;
+    background: #ffffff;
+    cursor: pointer;
+  }
+
+  input[type=range]:focus {
+    outline: none;
+  }
+
+}

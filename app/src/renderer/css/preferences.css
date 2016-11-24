@@ -1,0 +1,88 @@
+/*
+  Kap.app preferences styling
+  ----
+*/
+
+/* Imports: */
+@import 'eightpoint/dist/eight.min';
+@import '_variables';
+@import '_helpers';
+@import '_base';
+@import 'components/_window-header';
+@import 'components/_inputs';
+@import 'components/_buttons';
+@import 'components/_toggle';
+@import 'components/_range';
+
+
+
+html, body, .content { height: 100%; }
+
+
+/*
+  Preferences Navigation
+*/
+
+nav.prefs-nav {
+  padding: 0 16px;
+  height: 4.8rem;
+  display: flex;
+  align-items: center;
+
+  a {
+    margin-right: 16px;
+    color: $grey-light;
+    transition: color 0.12s ease-in-out;
+
+    &:hover:not(.is-active) { color: $grey-lighter; }
+    &.is-active { color: $blue; }
+  }
+
+  svg {
+    height: 2.4rem;
+    width: 2.4rem;
+  }
+}
+
+.preference {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__description {
+    font-size: 1.4rem;
+    color: $grey-lighter;
+  }
+
+  &+ .preference {
+    border-top: 1px solid $grey-dark;
+  }
+}
+
+.preference-part {
+  display: flex;
+  width: 100%;
+  padding: 16px 0;
+  align-items: center;
+  flex-wrap: wrap;
+
+  &+ .preference-part {
+    border-top: 1px solid $grey-dark;
+  }
+}
+
+.preference-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 50%;
+}
+
+.preference-input {
+  &.c-range { flex: 1 0 100%; }
+  &.c-toggle {
+    flex: 1 1 25%;
+    margin-left: auto;
+    display: flex;
+    justify-content: flex-end;
+  }
+}

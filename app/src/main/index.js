@@ -15,7 +15,7 @@ import analytics from './analytics';
 import {applicationMenu, cogMenu} from './menus';
 
 const menubar = require('menubar')({
-  index: `file://${__dirname}/../renderer/views/index.html`,
+  index: `file://${__dirname}/../renderer/views/main.html`,
   icon: path.join(__dirname, '..', '..', 'static', 'menubarDefaultTemplate.png'),
   width: 320,
   height: 500,
@@ -50,8 +50,12 @@ let mainWindow;
 let mainWindowIsNew = true;
 let positioner;
 let postRecWindow;
+let prefsWindow;
 let shouldStopWhenTrayIsClicked = false;
 let tray;
+const launchSettings = {
+  openAtLogin: false
+};
 
 let recording = false;
 
@@ -88,6 +92,24 @@ function setCropperWindowOnBlur() {
     }
   });
 }
+
+ipcMain.on('change-save-directory', () => {
+  const location = dialog.showOpenDialog({properties: ['openDirectory']});
+  if (location) {
+    settings.set('kapturesDir', location[0]);
+  }
+});
+
+ipcMain.on('launch-at-startup', () => {
+  if (app.getLoginItemSettings().openAtLogin === true) {
+    launchSettings.openAtLogin = false;
+    settings.setSync('openOnStartup', false);
+  } else {
+    launchSettings.openAtLogin = true;
+    settings.setSync('openOnStartup', true);
+  }
+  app.setLoginItemSettings(launchSettings);
+});
 
 ipcMain.on('open-cropper-window', (event, size) => {
   mainWindow.setAlwaysOnTop(true); // TODO send a PR to `menubar`
@@ -167,11 +189,27 @@ function resetTrayIcon() {
   mainWindow.setAlwaysOnTop(false);
 }
 
+// Open the Preferences Window
+function openPrefsWindow() {
+  if (prefsWindow) {
+    return prefsWindow.show();
+  }
+
+  prefsWindow = new BrowserWindow({
+    width: 480,
+    height: 480,
+    frame: false,
+    resizable: false
+  });
+
+  prefsWindow.loadURL(`file://${__dirname}/../renderer/views/preferences.html`);
+}
+
 menubar.on('after-create-window', () => {
   let expectedWindowPosition;
   const currentWindowPosition = {};
   mainWindow = menubar.window;
-  app.mainWindow = mainWindow;
+  app.kap = {mainWindow, openPrefsWindow};
   if (isDev) {
     mainWindow.openDevTools({mode: 'detach'});
   }

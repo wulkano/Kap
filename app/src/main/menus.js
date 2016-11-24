@@ -1,4 +1,4 @@
-import {app, Menu, shell, dialog} from 'electron';
+import {app, Menu, shell} from 'electron';
 import settings from 'electron-settings';
 
 const signInForUpdates = {
@@ -21,23 +21,19 @@ function startupLaunch() {
   app.setLoginItemSettings(launchSettings);
 }
 
-function changeSaveToDirectory() {
-  const location = dialog.showOpenDialog({properties: ['openDirectory']});
-  if (location) {
-    settings.set('kapturesDir', location[0]);
-  }
-}
-
 const cogMenu = [
   {
     role: 'about'
   },
   {
-    type: 'separator'
+    label: 'Preferences',
+    accelerator: 'Cmd+,',
+    click() {
+      app.kap.openPrefsWindow();
+    }
   },
   {
-    label: 'Save to...',
-    click: () => changeSaveToDirectory()
+    type: 'separator'
   },
   {
     label: 'Open on startup',
@@ -64,6 +60,13 @@ const applicationMenu = [
     submenu: [
       {
         role: 'about'
+      },
+      {
+        label: 'Preferences...',
+        accelerator: 'Cmd+,',
+        click() {
+          app.kap.openPrefsWindow();
+        }
       },
       {
         type: 'separator'
@@ -114,17 +117,13 @@ const applicationMenu = [
         type: 'separator'
       },
       {
-        label: 'Save to...',
-        click: () => changeSaveToDirectory()
-      },
-      {
         type: 'separator'
       },
       {
         label: 'Close',
         accelerator: 'CmdOrCtrl+W',
         click() {
-          app.mainWindow.hide();
+          app.kap.mainWindow.hide();
         }
       }
     ]

@@ -3,8 +3,8 @@ html(lang='en')
   head
     meta(charset="UTF-8")
     title Kap
-    link(href='../css/style.css', rel='stylesheet', type='text/css')
-    script(src="../js/index.js")
+    link(href='../css/main.css', rel='stylesheet', type='text/css')
+    script(src="../js/main.js")
     script(src='../js/disable-zoom.js')
 
   body
@@ -14,20 +14,22 @@ html(lang='en')
     //- App content wrapper
     main.content
 
-      //- Title Bar
-      .title-bar
-        .title-bar__controls.invisible
-          img.hide-window(src='/app/static/traffic-light-close.svg')
-          img.minimize-window(src='/app/static/traffic-light-minimize.svg')
-          img(src='/app/static/traffic-light-disabled.svg')
-        span.window__title.txt Kap
-        .update-notification.hidden
-          span An update is available!
-          ul
-            li
-              img.open-release-notes(src='/app/static/info.svg')
-            li
-              img.restart-and-install-update(src='/app/static/refresh.svg')
+      header.window-header.is-light
+
+        //- Title Bar
+        .title-bar
+          .title-bar__controls.invisible
+            img.hide-window(src='/app/static/traffic-light-close.svg')
+            img.minimize-window(src='/app/static/traffic-light-minimize.svg')
+            img(src='/app/static/traffic-light-disabled.svg')
+          span.window__title.txt Kap
+          .update-notification.hidden
+            span An update is available!
+            ul
+              li
+                img.open-release-notes(src='/app/static/info.svg')
+              li
+                img.restart-and-install-update(src='/app/static/refresh.svg')
 
       //- Progress bar
       section.progress.hidden
