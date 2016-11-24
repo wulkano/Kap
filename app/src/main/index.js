@@ -439,12 +439,9 @@ ipcMain.on('ask-user-to-save-file', (event, data) => {
 
 ipcMain.on('open-post-recording-window', (event, opts) => {
   if (postRecWindow) {
-    postRecWindow.show();
-    if (opts.notify === true) {
-      postRecWindow.webContents.send('show-notification');
-    }
-    return;
+    return postRecWindow.show();
   }
+
   postRecWindow = new BrowserWindow({
     width: 768,
     height: 432,
