@@ -380,12 +380,12 @@ ipcMain.on('will-stop-recording', () => {
   }
 });
 
-ipcMain.on('hide-main-window', () => {
-  mainWindow.hide();
+ipcMain.on('hide-window', event => {
+  BrowserWindow.fromWebContents(event.sender).hide();
 });
 
-ipcMain.on('minimize-main-window', () => {
-  mainWindow.minimize();
+ipcMain.on('minimize-window', event => {
+  BrowserWindow.fromWebContents(event.sender).minimize();
 });
 
 ipcMain.on('move-cropper-window', (event, data) => {

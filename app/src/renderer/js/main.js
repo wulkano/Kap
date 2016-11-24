@@ -369,13 +369,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   hideWindowBtn.onclick = () => {
     if (!trafficLights.classList.contains('invisible')) {
-      ipcRenderer.send('hide-main-window');
+      ipcRenderer.send('hide-window');
     }
   };
 
   minimizeWindowBtn.onclick = () => {
     if (!trafficLights.classList.contains('invisible')) {
-      ipcRenderer.send('minimize-main-window');
+      ipcRenderer.send('minimize-window');
     }
   };
 
