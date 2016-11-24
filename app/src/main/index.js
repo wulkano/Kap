@@ -458,10 +458,10 @@ ipcMain.on('open-post-recording-window', (event, opts) => {
 
   postRecWindow.on('closed', () => {
     postRecWindow = undefined;
-    app.postRecWindow = undefined;
+    app.kap.postRecWindow = undefined;
   });
 
-  app.postRecWindow = postRecWindow;
+  app.kap.postRecWindow = postRecWindow;
   menubar.setOption('hidden', true);
   mainWindow.hide();
   tray.setHighlightMode('never');

@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   function confirmDiscard() {
-    remote.dialog.showMessageBox(remote.app.postRecWindow, {
+    remote.dialog.showMessageBox(remote.app.kap.postRecWindow, {
       type: 'question',
       buttons: ['No', 'Yes'],
       message: 'Are you sure that you want to discard this recording?',

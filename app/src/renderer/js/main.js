@@ -229,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   recordBtn.onclick = function () {
-    if (remote.app.postRecWindow) {
+    if (remote.app.kap.postRecWindow) {
       // we need to keep the window visible to show the shake animation
       // (it'll be auto hidden by `menubar` when the post recording window gain focus)
       ipcRenderer.send('set-main-window-visibility', {
