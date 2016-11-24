@@ -44,16 +44,16 @@ html(lang='en')
                 .preference__title Start automatically
                 .preference__description Launch Kap on system startup
               .preference-input.c-toggle
-                input.c-toggle__input(type="checkbox" name="c-toggle-input" id="startup")
-                label.c-toggle__label(for="startup")
+                input.c-toggle__input(type="checkbox" id="launch-on-startup")
+                label.c-toggle__label(for="launch-on-startup")
           .preference.container
             .preference-part
               .preference-content
                 .preference__title Allow analytics
                 .preference__description Help us improve Kap by sending anonymous usage stats
               .preference-input.c-toggle
-                input.c-toggle__input(type="checkbox" name="c-toggle-input" id="startup")
-                label.c-toggle__label(for="startup")
+                input.c-toggle__input(type="checkbox" id="allow-analytics")
+                label.c-toggle__label(for="allow-analytics")
 
 
 
@@ -65,14 +65,14 @@ html(lang='en')
                 .preference__title Show mouse clicks
                 .preference__description Display the cursor in your recordings
               .preference-input.c-toggle
-                input.c-toggle__input(type="checkbox" name="c-toggle-input" id="c-toggle-input")
-                label.c-toggle__label(for="c-toggle-input")
+                input.c-toggle__input(type="checkbox" id="show-cursor")
+                label.c-toggle__label(for="show-cursor")
             .preference-part
               .preference-content
                 .preference__description Highlight clicks
               .preference-input.c-toggle
-                input.c-toggle__input(type="checkbox" name="c-toggle-input" id="c-toggle-input")
-                label.c-toggle__label(for="c-toggle-input")
+                input.c-toggle__input(type="checkbox" id="highlight-clicks")
+                label.c-toggle__label(for="highlight-clicks")
           .preference.container
             .preference-part
               .preference-content
@@ -86,5 +86,5 @@ html(lang='en')
                 .preference__title Sound
                 .preference__description Enable sound
               .preference-input.c-toggle
-                input.c-toggle__input(type="checkbox" name="c-toggle-input" id="c-toggle-input")
-                label.c-toggle__label(for="c-toggle-input")
+                input.c-toggle__input(type="checkbox" id="enable-sound")
+                label.c-toggle__label(for="enable-sound")
