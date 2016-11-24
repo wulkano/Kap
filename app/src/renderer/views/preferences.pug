@@ -8,10 +8,8 @@ html(lang='en')
     script(src='../js/disable-zoom.js')
 
   body
-
     //- App content wrapper
     main.content.preferences
-
       header.window-header
         //- Title Bar
         .title-bar
@@ -29,7 +27,6 @@ html(lang='en')
           a(href)
             img(src='/app/static/accessibility.svg')
       .js-prefs-sections
-
         section.js-prefs-section.settings
           .preference.container
             .preference-part
@@ -54,8 +51,6 @@ html(lang='en')
               .preference-input.c-toggle
                 input.c-toggle__input(type="checkbox" id="allow-analytics")
                 label.c-toggle__label(for="allow-analytics")
-
-
 
         //- Advanced preferences
         section.js-prefs-section.advanced(style="display: none;")
