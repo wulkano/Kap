@@ -2,7 +2,7 @@ import {homedir} from 'os';
 import path from 'path';
 import {rename as fsRename} from 'fs';
 
-import {app, dialog, BrowserWindow, ipcMain, Menu} from 'electron';
+import {app, dialog, BrowserWindow, ipcMain, Menu, screen} from 'electron';
 import settings from 'electron-settings';
 import isDev from 'electron-is-dev';
 import mkdirp from 'mkdirp';
@@ -459,6 +459,15 @@ ipcMain.on('open-post-recording-window', (event, opts) => {
   postRecWindow.on('closed', () => {
     postRecWindow = undefined;
     app.postRecWindow = undefined;
+  });
+
+  // note : the only working solution I found was to get the screen size and apply
+  // before entering fullscreen. WIP
+
+  const screenSize = screen.getPrimaryDisplay().size;
+  ipcMain.on('enter-fullscreen-post-recording-window', () => {
+    postRecWindow.setSize(screenSize.width, screenSize.height);
+    app.postRecWindow.setFullScreen(true);
   });
 
   app.postRecWindow = postRecWindow;

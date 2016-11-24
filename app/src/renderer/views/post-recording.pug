@@ -8,9 +8,23 @@ html(lang='en')
   body
     main.content
       video#preview(autoplay loop)
-      progress(max='100', value=50)
+      section.video-controls
+        .video-controls-left
+          .video-playback
+            img.video-pause-icon(src='/app/static/video-pause.svg')
+            img.video-play-icon(src='/app/static/video-play.svg')
+          .video-time
+            span.duration
+        progress(max='100', value=50)
+        .video-controls-right
+          .video-volume
+            img.video-volume-up(src='/app/static/video-volume-up.svg')
+            img.video-volume-off(src='/app/static/video-volume-off.svg')
+          .video-fullscreen
+            img.video-fullscreen-enter(src='/app/static/video-fullscreen.svg')
+            img.video-fullscreen-exit(src='/app/static/video-fullscreen-exit.svg')
       section.controls
-        .video-controls
+        .video-options
           .size
             span Size
             input.input-width(type='text')
