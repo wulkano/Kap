@@ -72,7 +72,7 @@
 }
 
 .title-bar__controls:hover .hide-window g g, .title-bar__controls:hover .minimize-window g g, .title-bar__controls:hover .hide-window g path, .title-bar__controls:hover .minimize-window g path, {
-  display: inherit;
+  display: inherit !important;
 }
 
 .hide-window:active g use { fill: #BF4942; }
