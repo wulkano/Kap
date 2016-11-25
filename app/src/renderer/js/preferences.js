@@ -10,7 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Element definitions
   const chooseSaveDirectoryBtn = document.querySelector('.js-choose-save');
+  const header = document.querySelector('header');
+
   const electronWindow = getCurrentWindow();
+
+  electronWindow.setSheetOffset(header.offsetHeight);
 
   chooseSaveDirectoryBtn.onclick = function () {
     const location = dialog.showOpenDialog(electronWindow, {properties: ['openDirectory']});
