@@ -93,13 +93,6 @@ function setCropperWindowOnBlur() {
   });
 }
 
-ipcMain.on('change-save-directory', () => {
-  const location = dialog.showOpenDialog({properties: ['openDirectory']});
-  if (location) {
-    settings.set('kapturesDir', location[0]);
-  }
-});
-
 ipcMain.on('launch-at-startup', () => {
   if (app.getLoginItemSettings().openAtLogin === true) {
     launchSettings.openAtLogin = false;
