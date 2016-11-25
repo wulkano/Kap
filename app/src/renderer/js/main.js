@@ -12,6 +12,7 @@ import {log} from '../../common/logger';
 
 // note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
+import {handleTrafficLightsClicks, isVisible} from '../js/utils';
 
 const aperture = require('aperture.js')();
 
@@ -44,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const swapBtn = document.querySelector('.swap-btn');
   const time = document.querySelector('.time');
   const titleBar = document.querySelector('.title-bar');
-  const trafficLights = document.querySelector('.title-bar__controls');
+  const trafficLightsWrapper = document.querySelector('.title-bar__controls');
   const trayTriangle = document.querySelector('.tray-arrow');
   const triangle = document.querySelector('.triangle');
   const updateNotification = document.querySelector('.update-notification');
@@ -56,6 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastValidInputHeight = 512;
   let aspectRatioBaseValues = [lastValidInputWidth, lastValidInputHeight];
   let hasUpdateNotification = false;
+
+  handleTrafficLightsClicks(trafficLightsWrapper);
 
   function startMonitoringElapsedTimeAndSize(filePath) {
     const startedAt = moment();
@@ -359,25 +362,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ipcRenderer.on('unstick-from-menubar', () => {
     setTrayTriangleVisible(false);
-    trafficLights.classList.remove('invisible');
+    trafficLightsWrapper.classList.remove('invisible');
   });
 
   ipcRenderer.on('stick-to-menubar', () => {
     setTrayTriangleVisible();
-    trafficLights.classList.add('invisible');
+    trafficLightsWrapper.classList.add('invisible');
   });
-
-  hideWindowBtn.onclick = () => {
-    if (!trafficLights.classList.contains('invisible')) {
-      ipcRenderer.send('hide-window');
-    }
-  };
-
-  minimizeWindowBtn.onclick = () => {
-    if (!trafficLights.classList.contains('invisible')) {
-      ipcRenderer.send('minimize-window');
-    }
-  };
 
   ipcRenderer.on('stop-recording', stopRecording);
 
@@ -391,7 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // if the traffic lights are invisible, the triangle should be visible
     // if they are visible, the tray triangle should be invisible
-    setTrayTriangleVisible(trafficLights.classList.contains('invisible')); // to update the color
+    setTrayTriangleVisible(isVisible(trafficLightsWrapper)); // to update the color
 
     setMainWindowSize();
 
