@@ -1,6 +1,9 @@
 import {remote} from 'electron';
 import settings from 'electron-settings';
 
+// note: `./` == `/app/dist/renderer/views`, not `js`
+import {handleTrafficLightsClicks} from '../js/utils';
+
 const {dialog, getCurrentWindow} = remote;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -11,6 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
   const chooseSaveDirectoryBtn = document.querySelector('.js-choose-save');
   const header = document.querySelector('header');
+  const trafficLightsWrapper = document.querySelector('.title-bar__controls');
+
+  handleTrafficLightsClicks(trafficLightsWrapper);
 
   const electronWindow = getCurrentWindow();
 
