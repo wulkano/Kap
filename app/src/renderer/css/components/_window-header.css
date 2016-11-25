@@ -61,6 +61,7 @@
   &.invisible {
     opacity: 0;
   }
+  -webkit-user-select: none !important;
 }
 
 .title-bar__controls .hide-window, .title-bar__controls .minimize-window {
