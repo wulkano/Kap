@@ -93,17 +93,6 @@ function setCropperWindowOnBlur() {
   });
 }
 
-ipcMain.on('launch-at-startup', () => {
-  if (app.getLoginItemSettings().openAtLogin === true) {
-    launchSettings.openAtLogin = false;
-    settings.setSync('openOnStartup', false);
-  } else {
-    launchSettings.openAtLogin = true;
-    settings.setSync('openOnStartup', true);
-  }
-  app.setLoginItemSettings(launchSettings);
-});
-
 ipcMain.on('open-cropper-window', (event, size) => {
   mainWindow.setAlwaysOnTop(true); // TODO send a PR to `menubar`
   menubar.setOption('alwaysOnTop', true);
