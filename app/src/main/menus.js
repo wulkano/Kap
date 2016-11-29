@@ -1,25 +1,9 @@
 import {app, Menu, shell} from 'electron';
-import settings from 'electron-settings';
 
 const signInForUpdates = {
   label: 'Sign up for updates',
   click: () => shell.openExternal('http://eepurl.com/ch90_1')
 };
-
-const launchSettings = {
-  openAtLogin: false
-};
-
-function startupLaunch() {
-  if (app.getLoginItemSettings().openAtLogin === true) {
-    launchSettings.openAtLogin = false;
-    settings.setSync('openOnStartup', false);
-  } else {
-    launchSettings.openAtLogin = true;
-    settings.setSync('openOnStartup', true);
-  }
-  app.setLoginItemSettings(launchSettings);
-}
 
 const cogMenu = [
   {
@@ -34,12 +18,6 @@ const cogMenu = [
   },
   {
     type: 'separator'
-  },
-  {
-    label: 'Open on startup',
-    type: 'checkbox',
-    checked: settings.getSync('openOnStartup'),
-    click: () => startupLaunch()
   },
   {
     type: 'separator'
