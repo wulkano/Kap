@@ -11,10 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const header = document.querySelector('header');
   const trafficLightsWrapper = document.querySelector('.title-bar__controls');
 
-  handleTrafficLightsClicks(trafficLightsWrapper);
-
   const electronWindow = getCurrentWindow();
 
+  handleTrafficLightsClicks(trafficLightsWrapper);
   electronWindow.setSheetOffset(header.offsetHeight);
 
   chooseSaveDirectoryBtn.onclick = function () {
