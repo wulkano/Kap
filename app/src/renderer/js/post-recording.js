@@ -8,6 +8,8 @@ import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 document.addEventListener('DOMContentLoaded', () => {
   const playBtn = document.querySelector('.js-play-video');
   const pauseBtn = document.querySelector('.js-pause-video');
+  const maximizeBtn = document.querySelector('.js-maximize-video');
+  const unmaximizeBtn = document.querySelector('.js-unmaximize-video');
   const previewTime = document.querySelector('.js-video-time');
   const discardBtn = document.querySelector('.discard');
   const inputHeight = document.querySelector('.input-height');
@@ -43,17 +45,29 @@ document.addEventListener('DOMContentLoaded', () => {
     preview.oncanplay = undefined;
   };
 
-  pauseBtn.addEventListener('click', () => {
-    pauseBtn.classList.add('hidden');
+  pauseBtn.onclick = function() {
+    this.classList.add('hidden');
     playBtn.classList.remove('hidden');
     preview.pause();
-  });
+  };
 
-  playBtn.addEventListener('click', () => {
-    playBtn.classList.add('hidden');
+  playBtn.onclick = function() {
+    this.classList.add('hidden');
     pauseBtn.classList.remove('hidden');
     preview.play();
-  });
+  };
+
+  maximizeBtn.onclick = function() {
+    this.classList.add('hidden');
+    unmaximizeBtn.classList.remove('hidden');
+    ipcRenderer.send('toggle-maximize-editor-window');
+  };
+
+  unmaximizeBtn.onclick = function() {
+    this.classList.add('hidden');
+    maximizeBtn.classList.remove('hidden');
+    ipcRenderer.send('toggle-maximize-editor-window');
+  };
 
   function shake(el) {
     el.classList.add('shake');

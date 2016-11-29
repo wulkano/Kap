@@ -33,6 +33,19 @@
       color: $grey-dark;
     }
   }
+
+  &.is-floating {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+  }
+
+  &.is-transparent {
+    background: rgba(34, 34, 34, .2);
+    box-shadow: none;
+  }
 }
 
 

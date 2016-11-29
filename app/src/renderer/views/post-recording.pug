@@ -7,6 +7,14 @@ html(lang='en')
     title Kap
   body
     main.content
+      header.window-header.is-floating.is-transparent
+        //- Title Bar
+        .title-bar
+          .title-bar__controls
+            img.hide-window(src='/app/static/traffic-light-close.svg')
+            img.minimize-window(src='/app/static/traffic-light-minimize.svg')
+            img(src='/app/static/traffic-light-disabled.svg')
+          span.window__title.txt Preferences
       .video-preview
         video#preview(autoplay loop)
         .video-controls
@@ -18,7 +26,9 @@ html(lang='en')
             span.video__time.js-video-time 0:00
           progress(max='100' value=0)
           .video-controls-right
-            a.video__pause-button.js-pause-video
+            a.video__maximize-button.js-maximize-video
+              img(src='/app/static/fullscreen.svg')
+            a.video__unmaximize-button.js-unmaximize-video.hidden
               img(src='/app/static/fullscreen.svg')
       section.output
         .output-settings

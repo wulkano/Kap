@@ -8,6 +8,7 @@
 @import '_variables';
 @import '_helpers';
 @import '_base';
+@import 'components/_window-header';
 @import 'components/_inputs';
 @import 'components/_buttons';
 
@@ -44,6 +45,7 @@ main.content {
   display: flex;
   align-items: center;
   background-image: linear-gradient(-180deg, rgba(0,0,0,0.00) 0%, rgba(0,0,0,0.20) 100%);
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, .1);
 
   &-right, &-left {
     flex: 1 0 128px;
@@ -58,7 +60,7 @@ main.content {
   }
 
   a { display: flex; }
-  svg path { box-shadow: 0 1px 2px 0 rgba(0,0,0,0.10); }
+  svg { filter: drop-shadow( 0px 1px 2px rgba(0, 0, 0, .1) ); }
 }
 
 video {

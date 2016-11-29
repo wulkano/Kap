@@ -488,3 +488,14 @@ ipcMain.on('set-main-window-visibility', (event, opts) => {
     }, opts.forHowLong);
   }
 });
+
+ipcMain.on('toggle-maximize-editor-window', () => {
+  if (!postRecWindow) {
+    return
+  }
+  if (postRecWindow.isMaximized()) {
+    postRecWindow.unmaximize();
+  } else {
+    postRecWindow.maximize();
+  }
+});
