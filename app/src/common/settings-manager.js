@@ -6,6 +6,13 @@ import objectPath from 'object-path';
 const DEFAULTS = {
   kapturesDir: `${homedir()}/Movies/Kaptures`,
   openOnStartup: false,
+  allowAnalytics: true,
+  showCursor: true,
+  highlightClicks: false,
+  fps: 30
+};
+
+const volatiles = {
   cropperWindow: {
     size: {
       width: 512,
@@ -17,8 +24,6 @@ const DEFAULTS = {
     }
   }
 };
-
-const volatiles = {};
 
 function init() {
   settings.defaults(DEFAULTS);
