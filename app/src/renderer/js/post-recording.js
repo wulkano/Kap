@@ -45,25 +45,25 @@ document.addEventListener('DOMContentLoaded', () => {
     preview.oncanplay = undefined;
   };
 
-  pauseBtn.onclick = function() {
+  pauseBtn.onclick = function () {
     this.classList.add('hidden');
     playBtn.classList.remove('hidden');
     preview.pause();
   };
 
-  playBtn.onclick = function() {
+  playBtn.onclick = function () {
     this.classList.add('hidden');
     pauseBtn.classList.remove('hidden');
     preview.play();
   };
 
-  maximizeBtn.onclick = function() {
+  maximizeBtn.onclick = function () {
     this.classList.add('hidden');
     unmaximizeBtn.classList.remove('hidden');
     ipcRenderer.send('toggle-maximize-editor-window');
   };
 
-  unmaximizeBtn.onclick = function() {
+  unmaximizeBtn.onclick = function () {
     this.classList.add('hidden');
     maximizeBtn.classList.remove('hidden');
     ipcRenderer.send('toggle-maximize-editor-window');

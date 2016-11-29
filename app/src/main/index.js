@@ -491,7 +491,7 @@ ipcMain.on('set-main-window-visibility', (event, opts) => {
 
 ipcMain.on('toggle-maximize-editor-window', () => {
   if (!postRecWindow) {
-    return
+    return;
   }
   if (postRecWindow.isMaximized()) {
     postRecWindow.unmaximize();
