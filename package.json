@@ -69,5 +69,7 @@
       "transform-es2015-modules-commonjs"
     ]
   },
-  "dependencies": {}
+  "dependencies": {
+    "moment": "^2.17.0"
+  }
 }

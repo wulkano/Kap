@@ -1,11 +1,14 @@
 import {remote, ipcRenderer} from 'electron';
-
 import aspectRatio from 'aspectratio';
+import moment from 'moment';
 
 // note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 
 document.addEventListener('DOMContentLoaded', () => {
+  const playBtn = document.querySelector('.js-play-video');
+  const pauseBtn = document.querySelector('.js-pause-video');
+  const previewTime = document.querySelector('.js-video-time');
   const discardBtn = document.querySelector('.discard');
   const inputHeight = document.querySelector('.input-height');
   const inputWidth = document.querySelector('.input-width');
@@ -32,12 +35,25 @@ document.addEventListener('DOMContentLoaded', () => {
     progressBar.max = preview.duration;
     setInterval(() => {
       progressBar.value = preview.currentTime;
+      previewTime.innerText = `${moment().startOf('day').seconds(preview.currentTime).format('m:ss')}`;
     }, 1);
 
     // remove the listener since it's called
     // every time the video loops
     preview.oncanplay = undefined;
   };
+
+  pauseBtn.addEventListener('click', () => {
+    pauseBtn.classList.add('hidden');
+    playBtn.classList.remove('hidden');
+    preview.pause();
+  });
+
+  playBtn.addEventListener('click', () => {
+    playBtn.classList.add('hidden');
+    pauseBtn.classList.remove('hidden');
+    preview.play();
+  });
 
   function shake(el) {
     el.classList.add('shake');

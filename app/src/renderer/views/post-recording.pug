@@ -7,10 +7,21 @@ html(lang='en')
     title Kap
   body
     main.content
-      video#preview(autoplay loop)
-      progress(max='100', value=50)
-      section.controls
+      .video-preview
+        video#preview(autoplay loop)
         .video-controls
+          .video-controls-left
+            a.video__play-button.js-play-video.hidden
+              img(src='/app/static/play.svg')
+            a.video__pause-button.js-pause-video
+              img(src='/app/static/pause.svg')
+            span.video__time.js-video-time 0:00
+          progress(max='100' value=0)
+          .video-controls-right
+            a.video__pause-button.js-pause-video
+              img(src='/app/static/fullscreen.svg')
+      section.output
+        .output-settings
           .size
             span Size
             input.input-width(type='text')
