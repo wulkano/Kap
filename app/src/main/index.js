@@ -161,10 +161,12 @@ function openPrefsWindow() {
     width: 480,
     height: 480,
     frame: false,
-    resizable: false
+    resizable: false,
+    show: false
   });
 
   prefsWindow.loadURL(`file://${__dirname}/../renderer/views/preferences.html`);
+  prefsWindow.on('ready-to-show', prefsWindow.show);
 }
 
 menubar.on('after-create-window', () => {
