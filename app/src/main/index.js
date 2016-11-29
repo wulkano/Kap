@@ -1,14 +1,13 @@
-import {homedir} from 'os';
 import path from 'path';
 import {rename as fsRename} from 'fs';
 
 import {app, dialog, BrowserWindow, ipcMain, Menu} from 'electron';
-import settings from 'electron-settings';
 import isDev from 'electron-is-dev';
 import mkdirp from 'mkdirp';
 
 import {init as initErrorReporter} from '../common/reporter';
 import logger from '../common/logger';
+import * as settings from '../common/settings-manager';
 
 import autoUpdater from './auto-updater';
 import analytics from './analytics';
@@ -25,23 +24,6 @@ const menubar = require('menubar')({
   minWidth: 320
 });
 
-settings.defaults({
-  kapturesDir: `${homedir()}/Movies/Kaptures`,
-  openOnStartup: false,
-  cropperWindow: {
-    size: {
-      width: 512,
-      height: 512
-    },
-    position: {
-      x: 'center',
-      y: 'center'
-    }
-  }
-});
-
-settings.applyDefaultsSync();
-
 let appState = 'initial';
 let cropperWindow;
 const cropperWindowBuffer = 4;
@@ -53,11 +35,9 @@ let postRecWindow;
 let prefsWindow;
 let shouldStopWhenTrayIsClicked = false;
 let tray;
-const launchSettings = {
-  openAtLogin: false
-};
-
 let recording = false;
+
+settings.init();
 
 ipcMain.on('set-main-window-size', (event, args) => {
   if (args.width && args.height && mainWindow) {
@@ -99,8 +79,8 @@ ipcMain.on('open-cropper-window', (event, size) => {
   if (cropperWindow) {
     cropperWindow.focus();
   } else {
-    const {width = size.width, height = size.height} = settings.getSync('cropperWindow.size');
-    const {x, y} = settings.getSync('cropperWindow.position');
+    const {width = size.width, height = size.height} = settings.get('cropperWindow.size');
+    const {x, y} = settings.get('cropperWindow.position');
     cropperWindow = new BrowserWindow({
       width: width + cropperWindowBuffer,
       height: height + cropperWindowBuffer,
@@ -132,13 +112,13 @@ ipcMain.on('open-cropper-window', (event, size) => {
       const size = {};
       [size.width, size.height] = cropperWindow.getSize();
       mainWindow.webContents.send('cropper-window-new-size', size);
-      settings.setSync('cropperWindow.size', size);
+      settings.set('cropperWindow.size', size, {volatile: true});
     });
 
     cropperWindow.on('move', () => {
       const position = {};
       [position.x, position.y] = cropperWindow.getPosition();
-      settings.setSync('cropperWindow.position', position);
+      settings.set('cropperWindow.position', position, {volatile: true});
     });
   }
 });
@@ -191,7 +171,7 @@ menubar.on('after-create-window', () => {
   let expectedWindowPosition;
   const currentWindowPosition = {};
   mainWindow = menubar.window;
-  app.kap = {mainWindow, openPrefsWindow};
+  app.kap = {mainWindow, openPrefsWindow, settings};
   if (isDev) {
     mainWindow.openDevTools({mode: 'detach'});
   }
@@ -292,24 +272,6 @@ menubar.on('after-create-window', () => {
     }
   });
 
-  app.on('will-quit', () => {
-    /**
-     * TODO: refactor to reset defaults on `specific` value(s)
-     * Issue opened for `electron-settings`
-     * https://github.com/nathanbuchar/electron-settings/issues/43
-     */
-    settings.setSync('cropperWindow', {
-      size: {
-        width: 512,
-        height: 512
-      },
-      position: {
-        x: 'center',
-        y: 'center'
-      }
-    });
-  });
-
   mainWindow.once('ready-to-show', () => {
     positioner.move('trayCenter', tray.getBounds()); // not sure why the fuck this is needed (ﾉಠдಠ)ﾉ︵┻━┻
     mainWindow.show();
@@ -400,7 +362,7 @@ ipcMain.on('move-cropper-window', (event, data) => {
 });
 
 ipcMain.on('ask-user-to-save-file', (event, data) => {
-  const kapturesDir = settings.getSync('kapturesDir');
+  const kapturesDir = settings.get('kapturesDir');
   const filters = data.type === 'mp4' ? [{name: 'Movies', extensions: ['mp4']}] : [{name: 'Images', extensions: ['gif']}];
   mkdirp(kapturesDir, err => {
     if (err) {
