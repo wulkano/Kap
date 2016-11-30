@@ -30,7 +30,7 @@ html(lang='en')
             .preference-part
               .preference-content
                 .preference__title Save to...
-                .preference__description Change the default directory to where your Kaptures are saved
+                .preference__description.js-save-to-description 
               .preference-input.c-toggle
                 button.button--secondary.js-choose-save Choose
           .preference.container
@@ -39,8 +39,8 @@ html(lang='en')
                 .preference__title Start automatically
                 .preference__description Launch Kap on system startup
               .preference-input.c-toggle
-                input.c-toggle__input(type="checkbox" id="launch-on-startup")
-                label.c-toggle__label(for="launch-on-startup")
+                input.c-toggle__input(type="checkbox" id="open-on-startup")
+                label.c-toggle__label(for="open-on-startup")
           .preference.container
             .preference-part
               .preference-content

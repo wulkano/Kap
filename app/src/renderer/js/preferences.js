@@ -1,25 +1,45 @@
 import {remote} from 'electron';
 
 // note: `./` == `/app/dist/renderer/views`, not `js`
-import {handleTrafficLightsClicks} from '../js/utils';
+import {handleTrafficLightsClicks, $} from '../js/utils';
 
 const {app, dialog, getCurrentWindow} = remote;
 
+const settingsValues = app.kap.settings.getAll();
+
 document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
-  const chooseSaveDirectoryBtn = document.querySelector('.js-choose-save');
-  const header = document.querySelector('header');
-  const trafficLightsWrapper = document.querySelector('.title-bar__controls');
+  const allowAnalyticsCheckbox = $('#allow-analytics');
+  const chooseSaveDirectoryBtn = $('.js-choose-save');
+  const header = $('header');
+  const openOnStartupCheckbox = $('#open-on-startup');
+  const saveToDescription = $('.js-save-to-description');
 
   const electronWindow = getCurrentWindow();
 
-  handleTrafficLightsClicks(trafficLightsWrapper);
   electronWindow.setSheetOffset(header.offsetHeight);
+  handleTrafficLightsClicks($('.title-bar__controls'));
+
+  // init the shown settings
+  saveToDescription.dataset.fullPath = settingsValues.kapturesDir;
+  saveToDescription.innerText = `.../${settingsValues.kapturesDir.split('/').pop()}`;
+  openOnStartupCheckbox.checked = settingsValues.openOnStartup;
+  allowAnalyticsCheckbox.checked = settingsValues.allowAnalytics;
 
   chooseSaveDirectoryBtn.onclick = function () {
-    const location = dialog.showOpenDialog(electronWindow, {properties: ['openDirectory']});
-    if (location) {
-      app.settings.set('kapturesDir', location[0]);
+    const directories = dialog.showOpenDialog(electronWindow, {properties: ['openDirectory']});
+    if (directories) {
+      app.kap.settings.set('kapturesDir', directories[0]);
+      saveToDescription.dataset.fullPath = directories[0];
+      saveToDescription.innerText = `.../${directories[0].split('/').pop()}`;
     }
+  };
+
+  openOnStartupCheckbox.onchange = function () {
+    app.kap.settings.set('openOnStartup', this.checked);
+  };
+
+  allowAnalyticsCheckbox.onchange = function () {
+    app.kap.settings.set('allowAnalytics', this.checked);
   };
 });
