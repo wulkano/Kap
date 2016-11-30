@@ -8,6 +8,7 @@ body {
   letter-spacing: -.010rem;
   border-radius: 5px;
   overflow: hidden;
+  font-size: 1.4rem;
 }
 
 .container {
