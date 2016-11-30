@@ -23,4 +23,8 @@ function handleTrafficLightsClicks(wrapper) {
   });
 }
 
-export {handleTrafficLightsClicks, isVisible};
+function $(selector) {
+  return document.querySelector(selector);
+}
+
+export {handleTrafficLightsClicks, isVisible, $};
