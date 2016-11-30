@@ -80,7 +80,7 @@ nav.prefs-nav {
 .preference-input {
   &.c-range { flex: 1 0 100%; }
   &.c-toggle {
-    flex: 1 1 25%;
+    flex: 1 1 0;
     margin-left: auto;
     display: flex;
     justify-content: flex-end;
