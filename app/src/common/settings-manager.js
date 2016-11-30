@@ -34,6 +34,10 @@ function get(key) {
   return objectPath.get(volatiles, key) || settings.getSync(key);
 }
 
+function getAll() {
+  return Object.assign({}, volatiles, settings.getSync());
+}
+
 function set(key, value, {volatile = false} = {}) {
   if (volatile) {
     return objectPath.set(volatiles, key, value);
@@ -41,4 +45,4 @@ function set(key, value, {volatile = false} = {}) {
   settings.setSync(key, value);
 }
 
-export {init, get, set};
+export {init, get, getAll, set};
