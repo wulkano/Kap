@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // init the shown settings
   saveToDescription.dataset.fullPath = settingsValues.kapturesDir;
+  saveToDescription.setAttribute('title', settingsValues.kapturesDir);
   saveToDescription.innerText = `.../${settingsValues.kapturesDir.split('/').pop()}`;
   openOnStartupCheckbox.checked = settingsValues.openOnStartup;
   allowAnalyticsCheckbox.checked = settingsValues.allowAnalytics;
