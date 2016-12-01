@@ -28,4 +28,18 @@
     outline: none;
   }
 
+  /*
+    Range Labels
+  */
+  &-labels {
+    height: 3.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+  }
+
+  &-label:first-child, &-label:last-child { flex: 1; }
+  &-label:last-child { text-align: right; }
+
 }
