@@ -24,13 +24,13 @@ html(lang='en')
             img(src='/app/static/settings.svg')
           a(href)
             img(src='/app/static/tune.svg')
-      .js-prefs-sections
+      .prefs-sections
         section.js-prefs-section.settings
           .preference.container
             .preference-part
               .preference-content
                 .preference__title Save to...
-                .preference__description.js-save-to-description 
+                .preference__description.js-save-to-description
               .preference-input.c-toggle
                 button.button--secondary.js-choose-save Choose
           .preference.container
@@ -51,7 +51,7 @@ html(lang='en')
                 label.c-toggle__label(for="allow-analytics")
 
         //- Advanced preferences
-        section.js-prefs-section.advanced(style="display: none;")
+        section.js-prefs-section.advanced.hidden
           .preference.container
             .preference-part
               .preference-content
@@ -73,6 +73,11 @@ html(lang='en')
                 .preference__description Capturing at a higher frame rate might impact performance
               .preference-input.c-range
                 input(type="range")
+                .c-range-labels
+                  .c-range-label Low
+                  .c-range-label.is-middle.js-current-fps 30FPS
+                  .c-range-label High
+
           .preference.container
             .preference-part
               .preference-content
@@ -81,3 +86,15 @@ html(lang='en')
               .preference-input.c-toggle
                 input.c-toggle__input(type="checkbox" id="enable-sound")
                 label.c-toggle__label(for="enable-sound")
+            .preference-part.split
+              .row
+                .col.col-4
+                  label Microphone
+                  .select-element
+                    select.aspect-ratio-selector
+                      option(value='default') Default
+                .col.col-4
+                  label System
+                  .select-element
+                    select.aspect-ratio-selector
+                      option(value='default') MM-1

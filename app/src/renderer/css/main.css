@@ -14,18 +14,6 @@
 @import 'components/_inputs';
 @import 'components/_buttons';
 
-select {
-  width: 100%;
-  -webkit-appearance: none;
-  height: 24px;
-  padding-left: 8px;
-  padding-right: 8px;
-  position: relative;
-  background: transparent;
-  border: none;
-  top: -3px;
-}
-
 /* Helper Classes */
 .horizontal-section { display: flex; }
 

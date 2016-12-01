@@ -1,0 +1,14 @@
+@import '../_variables';
+
+/*
+  Label Styling Component ✏️
+  ----
+  - Super small, but styles the labels
+*/
+
+label {
+  font-size: 1.2rem;
+  display: block;
+  color: $grey-lighter;
+  margin-bottom: 8px;
+}
