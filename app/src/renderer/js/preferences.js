@@ -13,11 +13,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const advancedPrefsBtn = $('.show-advanced-prefs');
   const allowAnalyticsCheckbox = $('#allow-analytics');
   const chooseSaveDirectoryBtn = $('.js-choose-save');
+  const enableSoundCheckbox = $('#enable-sound');
+  const fpsLabel = $('.js-current-fps');
+  const fpsSlider = $('.fps-slider');
   const generalPrefs = $('.general-prefs');
   const generalPrefsBtn = $('.show-general-prefs');
   const header = $('header');
+  const highlightClicksCheckbox = $('#highlight-clicks');
   const openOnStartupCheckbox = $('#open-on-startup');
   const saveToDescription = $('.js-save-to-description');
+  const showCursorCheckbox = $('#show-cursor');
+
+  window.fpsSlider = fpsSlider;
 
   const electronWindow = getCurrentWindow();
 
@@ -30,6 +37,11 @@ document.addEventListener('DOMContentLoaded', () => {
   saveToDescription.innerText = `.../${settingsValues.kapturesDir.split('/').pop()}`;
   openOnStartupCheckbox.checked = settingsValues.openOnStartup;
   allowAnalyticsCheckbox.checked = settingsValues.allowAnalytics;
+  showCursorCheckbox.checked = settingsValues.showCursor;
+  highlightClicksCheckbox.checked = settingsValues.highlightClicks;
+  fpsSlider.value = settingsValues.fps;
+  fpsLabel.innerText = `${settingsValues.fps} FPS`;
+  enableSoundCheckbox.checked = settingsValues.sound;
 
   generalPrefsBtn.onclick = function (e) {
     e.preventDefault();
@@ -62,5 +74,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   allowAnalyticsCheckbox.onchange = function () {
     app.kap.settings.set('allowAnalytics', this.checked);
+  };
+
+  showCursorCheckbox.onchange = function () {
+    app.kap.settings.set('showCursor', this.checked);
+  };
+
+  highlightClicksCheckbox.onchange = function () {
+    app.kap.settings.set('highlightClicks', this.checked);
+  };
+
+  fpsSlider.oninput = function () {
+    fpsLabel.innerText = `${this.value} FPS`;
+  };
+
+  fpsSlider.onchange = function () {
+    app.kap.settings.set('fps', this.value);
+  };
+
+  enableSoundCheckbox.onchange = function () {
+    app.kap.settings.set('sound', this.checked);
   };
 });

@@ -73,12 +73,11 @@ html(lang='en')
                 .preference__title Capture frame rate
                 .preference__description Capturing at a higher frame rate might impact performance
               .preference-input.c-range
-                input(type="range")
+                input.fps-slider(type="range" min="1" max="60")
                 .c-range-labels
                   .c-range-label Low
                   .c-range-label.is-middle.js-current-fps 30FPS
                   .c-range-label High
-
           .preference.container
             .preference-part
               .preference-content
