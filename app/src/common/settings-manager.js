@@ -9,7 +9,8 @@ const DEFAULTS = {
   allowAnalytics: true,
   showCursor: true,
   highlightClicks: false,
-  fps: 30
+  fps: 30,
+  sound: false
 };
 
 const volatiles = {
