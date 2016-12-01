@@ -1,5 +1,12 @@
 @import '../_variables';
 
+/*
+  Range Styling Component ✏️
+  ----
+  - Styles the range input in HTML
+  - Includes a custom element to display labels for either end of the range
+*/
+
 .c-range {
   width: 100%;
   margin-top: 16px;
@@ -37,6 +44,7 @@
     justify-content: space-between;
     align-items: center;
     font-size: 1rem;
+    color: $grey-lighter;
   }
 
   &-label:first-child, &-label:last-child { flex: 1; }

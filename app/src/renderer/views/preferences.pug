@@ -24,8 +24,8 @@ html(lang='en')
             img(src='/app/static/settings.svg')
           a(href)
             img(src='/app/static/tune.svg')
-      .js-prefs-sections
-        section.js-prefs-section.settings.hidden
+      .prefs-sections
+        section.js-prefs-section.settings
           .preference.container
             .preference-part
               .preference-content
@@ -51,7 +51,7 @@ html(lang='en')
                 label.c-toggle__label(for="allow-analytics")
 
         //- Advanced preferences
-        section.js-prefs-section.advanced
+        section.js-prefs-section.advanced.hidden
           .preference.container
             .preference-part
               .preference-content
@@ -86,3 +86,15 @@ html(lang='en')
               .preference-input.c-toggle
                 input.c-toggle__input(type="checkbox" id="enable-sound")
                 label.c-toggle__label(for="enable-sound")
+            .preference-part.split
+              .row
+                .col.col-4
+                  label Microphone
+                  .select-element
+                    select.aspect-ratio-selector
+                      option(value='default') Default
+                .col.col-4
+                  label System
+                  .select-element
+                    select.aspect-ratio-selector
+                      option(value='default') MM-1

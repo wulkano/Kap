@@ -37,7 +37,18 @@ input { -webkit-app-region: no-drag; }
     position: absolute;
   }
 
-  select { color: white; }
+  select {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 24px;
+    padding-left: 8px;
+    padding-right: 8px;
+    position: relative;
+    background: transparent;
+    border: none;
+    top: -1px;
+    color: white;
+  }
 
   &.is-light {
     background: white;

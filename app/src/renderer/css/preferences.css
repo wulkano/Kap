@@ -10,6 +10,7 @@
 @import '_base';
 @import 'components/_window-header';
 @import 'components/_inputs';
+@import 'components/_labels';
 @import 'components/_buttons';
 @import 'components/_toggle';
 @import 'components/_range';
@@ -44,6 +45,10 @@ nav.prefs-nav {
   }
 }
 
+.prefs-sections {
+  overflow-y: auto;
+}
+
 .preference {
   display: flex;
   flex-direction: column;
@@ -66,8 +71,13 @@ nav.prefs-nav {
   align-items: center;
   flex-wrap: wrap;
 
-  &+ .preference-part {
-    border-top: 1px solid $grey-dark;
+  &+ .preference-part { border-top: 1px solid $grey-dark; }
+
+  &.split {
+    padding: 0;
+
+    .col:not(:last-child) { border-right: 1px solid $grey-dark; }
+    .col { padding: 16px; }
   }
 }
 

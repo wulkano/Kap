@@ -13,8 +13,18 @@ body {
 
 .container {
   display: flex;
-  padding-left: 1.6rem;
-  padding-right: 1.6rem;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.row {
+  margin-left: -16px;
+  margin-right: -16px;
+}
+
+.col {
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .content {
