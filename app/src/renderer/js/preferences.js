@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const electronWindow = getCurrentWindow();
 
   electronWindow.setSheetOffset(header.offsetHeight);
-  handleTrafficLightsClicks($('.title-bar__controls'));
+  handleTrafficLightsClicks();
 
   // init the shown settings
   saveToDescription.dataset.fullPath = settingsValues.kapturesDir;

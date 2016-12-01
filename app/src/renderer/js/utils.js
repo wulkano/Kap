@@ -6,7 +6,11 @@ function isVisible(el) {
   return !(classList.contains('invisible') || classList.contains('hidden'));
 }
 
-function handleTrafficLightsClicks(wrapper) {
+function $(selector) {
+  return document.querySelector(selector);
+}
+
+function handleTrafficLightsClicks(wrapper = $('.title-bar__controls')) {
   const hideWindowBtn = wrapper.querySelector('.hide-window');
   const minimizeWindowBtn = wrapper.querySelector('.minimize-window');
 
@@ -21,10 +25,6 @@ function handleTrafficLightsClicks(wrapper) {
       ipcRenderer.send('minimize-window');
     }
   });
-}
-
-function $(selector) {
-  return document.querySelector(selector);
 }
 
 export {handleTrafficLightsClicks, isVisible, $};
