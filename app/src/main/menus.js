@@ -100,8 +100,10 @@ const applicationMenu = [
       {
         label: 'Close',
         accelerator: 'CmdOrCtrl+W',
-        click() {
-          app.kap.mainWindow.hide();
+        click(item, focusedWindow) {
+          if (focusedWindow) {
+            focusedWindow.hide();
+          }
         }
       }
     ]
