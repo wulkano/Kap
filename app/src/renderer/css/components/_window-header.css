@@ -17,6 +17,8 @@
   width: 100%;
   border-radius: 5px 5px 0 0;
   box-shadow: 0 1px rgba(0, 0, 0, .2);
+  opacity: 1;
+  transition: opacity .12s ease-in-out;
 
   .window__title {
     color: white;
@@ -44,6 +46,8 @@
     background: rgba(34, 34, 34, .2);
     box-shadow: none;
   }
+
+  &.is-invisible { opacity: 0; }
 }
 
 
