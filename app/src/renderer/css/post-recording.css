@@ -34,6 +34,18 @@ main.content {
   display: flex;
   flex-direction: column;
   position: relative;
+
+  &:hover {
+    .video-controls-right, .video-controls-left { opacity: 1; }
+
+    progress {
+      width: 480px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 4px;
+      bottom: 26px;
+    }
+  }
 }
 
 .video-controls {
@@ -51,6 +63,8 @@ main.content {
     flex: 1 0 128px;
     display: flex;
     align-items: center;
+    opacity: 0;
+    transition: opacity .12s ease-in-out;
   }
 
   &-left > *:not(:last-child) { margin-right: 16px; }
@@ -72,8 +86,12 @@ progress {
   -webkit-appearance: none;
   height: 4px;
   width: 100%;
-  border-radius: 4px;
   overflow: hidden;
+  position: absolute;
+  border-radius: 0;
+  left: 0;
+  bottom: 0;
+  transition: .12s ease-in-out;
 
   &::-webkit-progress-bar { background-color: rgba(255, 255, 255, .4); }
   &::-webkit-progress-value {

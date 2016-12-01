@@ -437,7 +437,7 @@ ipcMain.on('open-post-recording-window', (event, opts) => {
 
   postRecWindow = new BrowserWindow({
     width: 768,
-    height: 432,
+    height: 428,
     frame: false,
     resizable: false
   });
