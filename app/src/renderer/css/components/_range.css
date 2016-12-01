@@ -23,11 +23,11 @@
 
   input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    border: 1px solid #000000;
+    border: 1px solid $blue;
     height: 1.6rem;
     width: 1.6rem;
     border-radius: 50%;
-    background: #ffffff;
+    background: $blue;
     cursor: pointer;
   }
 
