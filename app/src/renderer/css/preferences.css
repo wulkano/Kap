@@ -55,7 +55,7 @@ nav.prefs-nav {
   align-items: center;
 
   &__description {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     color: $grey-lighter;
   }
 
