@@ -20,12 +20,13 @@ html(lang='en')
           span.window__title.txt Preferences
 
         nav.prefs-nav
-          a.is-active(href)
+          a.show-general-prefs.is-active(href)
             img(src='/app/static/settings.svg')
-          a(href)
+          a.show-advanced-prefs(href)
             img(src='/app/static/tune.svg')
       .prefs-sections
         section.js-prefs-section.settings
+        section.general-prefs
           .preference.container
             .preference-part
               .preference-content
@@ -51,7 +52,7 @@ html(lang='en')
                 label.c-toggle__label(for="allow-analytics")
 
         //- Advanced preferences
-        section.js-prefs-section.advanced.hidden
+        section.advanced-prefs.hidden
           .preference.container
             .preference-part
               .preference-content
