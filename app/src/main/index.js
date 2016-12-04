@@ -88,11 +88,13 @@ ipcMain.on('open-cropper-window', (event, size) => {
       transparent: true,
       resizable: true,
       shadow: false,
+      enableLargerThanScreen: true,
       x,
       y
     });
     cropperWindow.loadURL(`file://${__dirname}/../renderer/views/cropper.html`);
     cropperWindow.setIgnoreMouseEvents(false); // TODO this should be false by default
+    cropperWindow.setAlwaysOnTop(true, 'screen-saver');
 
     if (isDev) {
       cropperWindow.openDevTools({mode: 'detach'});
