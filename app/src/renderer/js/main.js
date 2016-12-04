@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let aspectRatioBaseValues = [lastValidInputWidth, lastValidInputHeight];
   let hasUpdateNotification = false;
 
-  handleTrafficLightsClicks();
+  handleTrafficLightsClicks({hide: true});
 
   function startMonitoringElapsedTimeAndSize(filePath) {
     const startedAt = moment();

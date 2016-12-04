@@ -64,7 +64,7 @@
   -webkit-user-select: none !important;
 }
 
-.title-bar__controls .hide-window, .title-bar__controls .minimize-window {
+.title-bar__controls .close-window, .title-bar__controls .hide-window, .title-bar__controls .minimize-window {
   &, & * {
     cursor: default !important; /* there's hrefs on the SVG 😒 */
   }
@@ -72,7 +72,7 @@
   /*&:hover g g, &:hover g path { display: inherit; }*/
 }
 
-.title-bar__controls:hover .hide-window g g, .title-bar__controls:hover .minimize-window g g, .title-bar__controls:hover .hide-window g path, .title-bar__controls:hover .minimize-window g path, {
+.title-bar__controls:hover .hide-window g g, .title-bar__controls:hover .close-window g g, .title-bar__controls:hover .minimize-window g g, .title-bar__controls:hover .hide-window g path, .title-bar__controls:hover .close-window g path, .title-bar__controls:hover .minimize-window g path, {
   display: inherit !important;
 }
 

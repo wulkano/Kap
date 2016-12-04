@@ -10,13 +10,13 @@ function $(selector) {
   return document.querySelector(selector);
 }
 
-function handleTrafficLightsClicks(wrapper = $('.title-bar__controls')) {
-  const hideWindowBtn = wrapper.querySelector('.hide-window');
+function handleTrafficLightsClicks({wrapper = $('.title-bar__controls'), hide = false} = {}) {
+  const hideWindowBtn = hide ? wrapper.querySelector('.hide-window') : wrapper.querySelector('.close-window');
   const minimizeWindowBtn = wrapper.querySelector('.minimize-window');
 
   hideWindowBtn.addEventListener('click', () => {
     if (isVisible(wrapper)) {
-      ipcRenderer.send('hide-window');
+      ipcRenderer.send(hide ? 'hide-window' : 'close-window');
     }
   });
 

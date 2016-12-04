@@ -165,6 +165,10 @@ function openPrefsWindow() {
     show: false
   });
 
+  prefsWindow.on('close', () => {
+    prefsWindow = undefined;
+  });
+
   prefsWindow.loadURL(`file://${__dirname}/../renderer/views/preferences.html`);
   prefsWindow.on('ready-to-show', prefsWindow.show);
   app.dock.show();
@@ -330,9 +334,14 @@ ipcMain.on('will-stop-recording', () => {
 ipcMain.on('hide-window', event => {
   const window = BrowserWindow.fromWebContents(event.sender);
   window.hide();
+});
+
+ipcMain.on('close-window', event => {
+  const window = BrowserWindow.fromWebContents(event.sender);
   if (window === prefsWindow && !mainWindowIsDetached) {
     app.dock.hide();
   }
+  window.close();
 });
 
 ipcMain.on('minimize-window', event => {
