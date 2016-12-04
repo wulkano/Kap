@@ -2,7 +2,7 @@
   <img src="https://getkap.co/images/favicon/kap.svg" height="75">
   <h3 align="center">Kap</h3>
   <p align="center">An open-source screen recorder built with web technology<p>
-  <p align="center"><a href="https://travis-ci.org/wulkano/kap"><img src="https://travis-ci.org/wulkano/kap.svg?branch=master" alt="Build Status"></a> <a href="https://github.com/sindresorhus/xo"><img src="https://img.shields.io/badge/code_style-XO-5ed9c7.svg" alt="XO code style"></a></p>
+  <p align="center"><a href="https://circleci.com/gh/wulkano/kap"><img src="https://circleci.com/gh/wulkano/kap.svg?style=svg" alt="Build Status"></a> <a href="https://github.com/sindresorhus/xo"><img src="https://img.shields.io/badge/code_style-XO-5ed9c7.svg" alt="XO code style"></a></p>
 </p>
 
 ## Download
