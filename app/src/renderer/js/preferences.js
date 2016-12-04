@@ -24,8 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveToDescription = $('.js-save-to-description');
   const showCursorCheckbox = $('#show-cursor');
 
-  window.fpsSlider = fpsSlider;
-
   const electronWindow = getCurrentWindow();
 
   electronWindow.setSheetOffset(header.offsetHeight);
