@@ -1,5 +1,6 @@
 import {homedir} from 'os';
 
+import {app} from 'electron';
 import settings from 'electron-settings';
 import objectPath from 'object-path';
 
@@ -26,16 +27,26 @@ const volatiles = {
   }
 };
 
+// we need to sync every setting that can be modified externally
+// e.g. the `openOnStartup` setting can be modified via
+// macOS' System Preferences.app
+function sync() {
+  settings.setSync('openOnStartup', app.getLoginItemSettings().openAtLogin);
+}
+
 function init() {
   settings.defaults(DEFAULTS);
   settings.applyDefaultsSync();
+  sync();
 }
 
 function get(key) {
+  sync();
   return objectPath.get(volatiles, key) || settings.getSync(key);
 }
 
 function getAll() {
+  sync();
   return Object.assign({}, volatiles, settings.getSync());
 }
 
