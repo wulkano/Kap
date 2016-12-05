@@ -6,7 +6,7 @@ import aspectRatio from 'aspectratio';
 import fileSize from 'file-size';
 import moment from 'moment';
 
-import {convert as convertToGif} from '../../scripts/mp4-to-gif';
+import {convertToGif, convertToWebm} from '../../scripts/convert';
 import {init as initErrorReporter} from '../../common/reporter';
 import {log} from '../../common/logger';
 
@@ -165,15 +165,17 @@ document.addEventListener('DOMContentLoaded', () => {
         windowTitle.innerText = 'Kap';
         time.innerText = '00:00';
         size.innerText = '0 kB';
+        const type = exportAs.value;
 
-        if (exportAs.value === 'mp4') {
+        restoreInputs();
+
+        if (type === 'mp4') {
           const now = moment();
           const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.mp4`;
-
-          restoreInputs();
           askUserToSaveFile({fileName, filePath, type: 'mp4'});
+        } else if (type === 'webm') {
+          exportToType('webm', {filePath});
         } else { // gif
-          restoreInputs();
           ipcRenderer.send('open-post-recording-window', {filePath});
         }
       });
@@ -380,7 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ipcRenderer.on('log', (event, msgs) => console.log(...msgs));
 
-  ipcRenderer.on('export-to-gif', (event, data) => {
+  function exportToType(type, data) {
     header.classList.add('hidden');
     controlsSection.classList.add('hidden');
     progressBarSection.classList.remove('hidden');
@@ -394,15 +396,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     data.progressCallback = progressCallback;
 
-    convertToGif(data).then(gifPath => {
+    const convert = type === 'gif' ? convertToGif : convertToWebm;
+
+    convert(data).then(filePath => {
       const now = moment();
-      const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.gif`;
+      const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.${type}`;
 
       progressBar.value = 100;
 
-      askUserToSaveFile({fileName, filePath: gifPath, type: 'gif'});
+      askUserToSaveFile({fileName, filePath, type});
     });
     // TODO catch
+  }
+
+  ipcRenderer.on('export-to-gif', (event, data) => {
+    exportToType('gif', data);
   });
 
   initErrorReporter();
