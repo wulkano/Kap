@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   openOnStartupCheckbox.onchange = function () {
     app.kap.settings.set('openOnStartup', this.checked);
+    app.setLoginItemSettings({openAtLogin: this.checked});
   };
 
   allowAnalyticsCheckbox.onchange = function () {
