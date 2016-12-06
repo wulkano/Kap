@@ -120,6 +120,13 @@ ipcMain.on('open-cropper-window', (event, size) => {
     cropperWindow.on('move', () => {
       const position = {};
       [position.x, position.y] = cropperWindow.getPosition();
+
+      if (position.x < 0 || position.y < 0) {
+        const x = position.x < 0 ? 0 : position.x;
+        const y = position.y < 0 ? 0 : position.y;
+        cropperWindow.setPosition(x, y, true);
+      }
+
       settings.set('cropperWindow.position', position, {volatile: true});
     });
   }
