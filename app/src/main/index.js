@@ -1,7 +1,7 @@
 import path from 'path';
 import {rename as fsRename} from 'fs';
 
-import {app, dialog, BrowserWindow, ipcMain, Menu} from 'electron';
+import {app, dialog, BrowserWindow, ipcMain, Menu, screen} from 'electron';
 import isDev from 'electron-is-dev';
 import mkdirp from 'mkdirp';
 
@@ -88,11 +88,13 @@ ipcMain.on('open-cropper-window', (event, size) => {
       transparent: true,
       resizable: true,
       shadow: false,
+      enableLargerThanScreen: true,
       x,
       y
     });
     cropperWindow.loadURL(`file://${__dirname}/../renderer/views/cropper.html`);
     cropperWindow.setIgnoreMouseEvents(false); // TODO this should be false by default
+    cropperWindow.setAlwaysOnTop(true, 'screen-saver');
 
     if (isDev) {
       cropperWindow.openDevTools({mode: 'detach'});
@@ -115,10 +117,22 @@ ipcMain.on('open-cropper-window', (event, size) => {
       settings.set('cropperWindow.size', size, {volatile: true});
     });
 
-    cropperWindow.on('move', () => {
-      const position = {};
-      [position.x, position.y] = cropperWindow.getPosition();
-      settings.set('cropperWindow.position', position, {volatile: true});
+    cropperWindow.on('moved', () => {
+      let [x, y] = cropperWindow.getPosition();
+      const [width, height] = cropperWindow.getSize();
+      const {width: screenWidth, height: screenHeight} = screen.getPrimaryDisplay().bounds;
+      const x2 = x + width;
+      const y2 = y + height;
+
+      if (x < 0 || y < 0 || x2 > screenWidth || y2 > screenHeight) {
+        x = x < 0 ? 0 : x;
+        x = x2 > screenWidth ? screenWidth - width : x;
+        y = y < 0 ? 0 : y;
+        y = y2 > screenHeight ? screenHeight - height : y;
+        cropperWindow.setPosition(x, y, true);
+      }
+
+      settings.set('cropperWindow.position', {x, y}, {volatile: true});
     });
   }
 });
