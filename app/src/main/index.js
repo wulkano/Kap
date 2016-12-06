@@ -118,16 +118,15 @@ ipcMain.on('open-cropper-window', (event, size) => {
     });
 
     cropperWindow.on('move', () => {
-      const position = {};
-      [position.x, position.y] = cropperWindow.getPosition();
+      let [x, y] = cropperWindow.getPosition();
 
-      if (position.x < 0 || position.y < 0) {
-        const x = position.x < 0 ? 0 : position.x;
-        const y = position.y < 0 ? 0 : position.y;
+      if (x < 0 || y < 0) {
+        x = x < 0 ? 0 : x;
+        y = y < 0 ? 0 : y;
         cropperWindow.setPosition(x, y, true);
       }
 
-      settings.set('cropperWindow.position', position, {volatile: true});
+      settings.set('cropperWindow.position', {x, y}, {volatile: true});
     });
   }
 });
