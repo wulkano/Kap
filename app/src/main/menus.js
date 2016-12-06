@@ -10,14 +10,14 @@ const cogMenu = [
     role: 'about'
   },
   {
-    label: 'Preferences',
+    type: 'separator'
+  },
+  {
+    label: 'Preferences...',
     accelerator: 'Cmd+,',
     click() {
       app.kap.openPrefsWindow();
     }
-  },
-  {
-    type: 'separator'
   },
   {
     type: 'separator'
@@ -28,7 +28,7 @@ const cogMenu = [
   },
   {
     role: 'quit',
-    id: 'quit'
+    accelerator: 'Cmd+Q'
   }
 ];
 
@@ -38,6 +38,9 @@ const applicationMenu = [
     submenu: [
       {
         role: 'about'
+      },
+      {
+        type: 'separator'
       },
       {
         label: 'Preferences...',
