@@ -1,7 +1,7 @@
 import path from 'path';
 import {rename as fsRename} from 'fs';
 
-import {app, dialog, BrowserWindow, ipcMain, Menu} from 'electron';
+import {app, dialog, BrowserWindow, ipcMain, Menu, screen} from 'electron';
 import isDev from 'electron-is-dev';
 import mkdirp from 'mkdirp';
 
@@ -117,12 +117,18 @@ ipcMain.on('open-cropper-window', (event, size) => {
       settings.set('cropperWindow.size', size, {volatile: true});
     });
 
-    cropperWindow.on('move', () => {
+    cropperWindow.on('moved', () => {
       let [x, y] = cropperWindow.getPosition();
+      const [width, height] = cropperWindow.getSize();
+      const {width: screenWidth, height: screenHeight} = screen.getPrimaryDisplay().bounds;
+      const x2 = x + width;
+      const y2 = y + height;
 
-      if (x < 0 || y < 0) {
+      if (x < 0 || y < 0 || x2 > screenWidth || y2 > screenHeight) {
         x = x < 0 ? 0 : x;
+        x = x2 > screenWidth ? screenWidth - width : x;
         y = y < 0 ? 0 : y;
+        y = y2 > screenHeight ? screenHeight - height : y;
         cropperWindow.setPosition(x, y, true);
       }
 
