@@ -165,18 +165,25 @@ document.addEventListener('DOMContentLoaded', () => {
         windowTitle.innerText = 'Kap';
         time.innerText = '00:00';
         size.innerText = '0 kB';
-        const type = exportAs.value;
 
         restoreInputs();
 
-        if (type === 'mp4') {
-          const now = moment();
-          const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.mp4`;
-          askUserToSaveFile({fileName, filePath, type: 'mp4'});
-        } else if (type === 'webm') {
-          exportToType('webm', {filePath});
-        } else { // gif
-          ipcRenderer.send('open-post-recording-window', {filePath});
+        switch (exportAs.value) {
+          case 'mp4': {
+            const now = moment();
+            const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.mp4`;
+            askUserToSaveFile({fileName, filePath, type: 'mp4'});
+            break;
+          }
+          case 'webm': {
+            exportToType('webm', {filePath});
+            break;
+          }
+          case 'gif': {
+            ipcRenderer.send('open-post-recording-window', {filePath});
+            break;
+          }
+          // no default
         }
       });
   }
