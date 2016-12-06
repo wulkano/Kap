@@ -387,7 +387,17 @@ ipcMain.on('move-cropper-window', (event, data) => {
 
 ipcMain.on('ask-user-to-save-file', (event, data) => {
   const kapturesDir = settings.get('kapturesDir');
-  const filters = data.type === 'mp4' ? [{name: 'Movies', extensions: ['mp4']}] : [{name: 'Images', extensions: ['gif']}];
+  const type = data.type;
+
+  let filters;
+  if (type === 'mp4') {
+    filters = [{name: 'Movies', extensions: ['mp4']}];
+  } else if (type === 'webm') {
+    filters = [{name: 'Movies', extensions: ['webm']}];
+  } else {
+    filters = [{name: 'Images', extensions: ['gif']}];
+  }
+
   mkdirp(kapturesDir, err => {
     if (err) {
       // can be ignored
