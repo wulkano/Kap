@@ -453,9 +453,8 @@ ipcMain.on('open-post-recording-window', (event, opts) => {
 
   const screenSize = screen.getPrimaryDisplay().size;
   ipcMain.on('enter-fullscreen-post-recording-window', () => {
-    // postRecWindow.setSize(screenSize.width, screenSize.height);
-    // app.kap.postRecWindow.setFullScreen(true);
-    console.log(screen);
+    postRecWindow.setSize(screenSize.width, screenSize.height);
+    app.kap.postRecWindow.setFullScreen(true);
   });
 
   app.kap.postRecWindow = postRecWindow;
