@@ -451,6 +451,13 @@ ipcMain.on('open-post-recording-window', (event, opts) => {
     app.kap.postRecWindow = undefined;
   });
 
+  const screenSize = screen.getPrimaryDisplay().size;
+  ipcMain.on('enter-fullscreen-post-recording-window', () => {
+    // postRecWindow.setSize(screenSize.width, screenSize.height);
+    // app.kap.postRecWindow.setFullScreen(true);
+    console.log(screen);
+  });
+
   app.kap.postRecWindow = postRecWindow;
   menubar.setOption('hidden', true);
   mainWindow.hide();

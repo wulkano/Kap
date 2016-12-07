@@ -4,23 +4,24 @@ import moment from 'moment';
 
 // note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
+import {handleTrafficLightsClicks, $} from '../js/utils';
 
 document.addEventListener('DOMContentLoaded', () => {
-  const playBtn = document.querySelector('.js-play-video');
-  const pauseBtn = document.querySelector('.js-pause-video');
-  const maximizeBtn = document.querySelector('.js-maximize-video');
-  const unmaximizeBtn = document.querySelector('.js-unmaximize-video');
-  const previewTime = document.querySelector('.js-video-time');
-  const discardBtn = document.querySelector('.discard');
-  const inputHeight = document.querySelector('.input-height');
-  const inputWidth = document.querySelector('.input-width');
-  const fps15Btn = document.querySelector('#fps-15');
-  const fps30Btn = document.querySelector('#fps-30');
-  const loopOffBtn = document.querySelector('#loop-off');
-  const loopOnBtn = document.querySelector('#loop-on');
-  const preview = document.querySelector('#preview');
-  const progressBar = document.querySelector('progress');
-  const saveBtn = document.querySelector('.save');
+  const playBtn = $('.js-play-video');
+  const pauseBtn = $('.js-pause-video');
+  const maximizeBtn = $('.js-maximize-video');
+  const unmaximizeBtn = $('.js-unmaximize-video');
+  const previewTime = $('.js-video-time');
+  const discardBtn = $('.discard');
+  const inputHeight = $('.input-height');
+  const inputWidth = $('.input-width');
+  const fps15Btn = $('#fps-15');
+  const fps30Btn = $('#fps-30');
+  const loopOffBtn = $('#loop-off');
+  const loopOnBtn = $('#loop-on');
+  const preview = $('#preview');
+  const progressBar = $('progress');
+  const saveBtn = $('.save');
 
   let fps = 30;
   let loop = true;
@@ -28,6 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastValidInputWidth;
   let lastValidInputHeight;
   let aspectRatioBaseValues;
+
+  handleTrafficLightsClicks({hide: true});
 
   preview.oncanplay = function () {
     aspectRatioBaseValues = [this.videoWidth, this.videoHeight];
@@ -60,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
   maximizeBtn.onclick = function () {
     this.classList.add('hidden');
     unmaximizeBtn.classList.remove('hidden');
-    ipcRenderer.send('toggle-maximize-editor-window');
+    ipcRenderer.send('enter-fullscreen-post-recording-window');
   };
 
   unmaximizeBtn.onclick = function () {
