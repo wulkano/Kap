@@ -26,7 +26,7 @@ const menubar = require('menubar')({
 
 let appState = 'initial';
 let cropperWindow;
-const cropperWindowBuffer = 4;
+const cropperWindowBuffer = 2;
 let mainWindowIsDetached = false;
 let mainWindow;
 let mainWindowIsNew = true;
@@ -119,19 +119,26 @@ ipcMain.on('open-cropper-window', (event, size) => {
 
     cropperWindow.on('moved', () => {
       let [x, y] = cropperWindow.getPosition();
-      const [width, height] = cropperWindow.getSize();
-      const {width: screenWidth, height: screenHeight} = screen.getPrimaryDisplay().bounds;
-      const x2 = x + width;
-      const y2 = y + height;
 
-      if (x < 0 || y < 0 || x2 > screenWidth || y2 > screenHeight) {
-        x = x < 0 ? 0 : x;
-        x = x2 > screenWidth ? screenWidth - width : x;
-        y = y < 0 ? 0 : y;
-        y = y2 > screenHeight ? screenHeight - height : y;
-        cropperWindow.setPosition(x, y, true);
+      // TODO: we need to implement some logic to, at the same time, allow the user
+      // to move the window to another display, but don't allow them to move the window
+      // to ouside of a display. it should be tricky to implement – how can we decide if
+      // a movement is valid – that is, the window is being moved to another display
+      // or it's simply being moved to outside of a display?
+      if (screen.getAllDisplays().length === 1) {
+        const [width, height] = cropperWindow.getSize();
+        const {width: screenWidth, height: screenHeight} = screen.getPrimaryDisplay().bounds;
+        const x2 = x + width;
+        const y2 = y + height;
+
+        if (x < 0 || y < 0 || x2 > screenWidth || y2 > screenHeight) {
+          x = x < 0 ? 0 : x;
+          x = x2 > screenWidth ? screenWidth - width : x;
+          y = y < 0 ? 0 : y;
+          y = y2 > screenHeight ? screenHeight - height : y;
+          cropperWindow.setPosition(x, y, true);
+        }
       }
-
       settings.set('cropperWindow.position', {x, y}, {volatile: true});
     });
   }
@@ -196,11 +203,15 @@ function openPrefsWindow() {
   });
 }
 
+function getCropperWindow() {
+  return cropperWindow;
+}
+
 menubar.on('after-create-window', () => {
   let expectedWindowPosition;
   const currentWindowPosition = {};
   mainWindow = menubar.window;
-  app.kap = {mainWindow, openPrefsWindow, settings};
+  app.kap = {mainWindow, getCropperWindow, openPrefsWindow, settings};
   if (isDev) {
     mainWindow.openDevTools({mode: 'detach'});
   }
@@ -312,16 +323,6 @@ menubar.on('after-create-window', () => {
   initErrorReporter();
   logger.init(mainWindow);
   Menu.setApplicationMenu(applicationMenu);
-});
-
-ipcMain.on('get-cropper-bounds', event => {
-  if (cropperWindow) {
-    event.returnValue = cropperWindow.getContentBounds();
-  }
-});
-
-ipcMain.on('is-cropper-active', event => {
-  event.returnValue = Boolean(cropperWindow);
 });
 
 ipcMain.on('will-start-recording', () => {

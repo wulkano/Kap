@@ -16,6 +16,8 @@ import {handleTrafficLightsClicks, isVisible} from '../js/utils';
 
 const aperture = require('aperture.js')();
 
+const {app} = remote;
+
 function setMainWindowSize() {
   const width = document.documentElement.scrollWidth;
   const height = document.documentElement.scrollHeight;
@@ -109,21 +111,38 @@ document.addEventListener('DOMContentLoaded', () => {
     setMainWindowTitle('Getting ready...');
     const past = Date.now();
 
-    let cropperBounds;
-    if (ipcRenderer.sendSync('is-cropper-active')) {
-      cropperBounds = ipcRenderer.sendSync('get-cropper-bounds');
+    const cropperBounds = app.kap.getCropperWindow().getBounds();
+    const display = remote.screen.getDisplayMatching(cropperBounds);
+
+    if (display.id === remote.screen.getPrimaryDisplay().id) {
       // convert the coordinates to cartesian coordinates, which are used by CoreMedia
       cropperBounds.y = screen.height - (cropperBounds.y + cropperBounds.height);
+    } else {
+      // if the cropper window is placed in a display that it's not the main one,
+      // we need to do tome _special_ math to calculate its position
+      const displayBounds = display.bounds;
 
-       // the dashed border is 2px wide
-      cropperBounds.x += 2;
-      cropperBounds.y += 2;
-      cropperBounds.width -= 4;
-      cropperBounds.height -= 4;
+      // when there are more than one display, the bounds that macOS returns for a display
+      // that is not the main one are relative to the main display. consequently, the
+      // bounds of windows in that display are relative to the main display.
+      // we need to make those bounds relative to the display in which the cropper window
+      // is placed in order to aperture.js to work properly
+      cropperBounds.x = Math.abs(displayBounds.x - cropperBounds.x);
+      cropperBounds.y = Math.abs(displayBounds.y - cropperBounds.y);
+
+      // convert the coordinates to cartesian coordinates, which are used by CoreMedia
+      cropperBounds.y = displayBounds.height - (cropperBounds.y + cropperBounds.height);
     }
 
+    // the dashed border is 1px wide
+    cropperBounds.x += 1;
+    cropperBounds.y += 1;
+    cropperBounds.width -= 2;
+    cropperBounds.height -= 2;
+
     aperture.startRecording({
-      cropArea: cropperBounds
+      cropArea: cropperBounds,
+      displayId: display.id
     })
       .then(filePath => {
         recordBtn.attributes['data-state'].value = 'ready-to-stop';
@@ -217,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   recordBtn.onclick = function () {
-    if (remote.app.kap.postRecWindow) {
+    if (app.kap.postRecWindow) {
       // we need to keep the window visible to show the shake animation
       // (it'll be auto hidden by `menubar` when the post recording window gain focus)
       ipcRenderer.send('set-main-window-visibility', {
