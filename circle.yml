@@ -10,6 +10,6 @@ test:
     - npm run dist
 deployment:
   master:
-    branch: master
+    branch: /.*/
     commands:
       - cp dist/mac/*.dmg $CIRCLE_ARTIFACTS
