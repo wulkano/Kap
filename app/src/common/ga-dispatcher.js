@@ -24,11 +24,15 @@ class GADispatcher {
    */
   constructor(trackingId, identifier, options) {
 
-    // Securely assign a session. HTTP is for fools!
-    this.session = ua(trackingId, {
+    // Ensure options exists
+    let options = options ? options : {}
+
+    // Enable https by default
+    let uaOpts = Object.assign(options, {
       https: true
     })
 
+    this.session = ua(uaOpts)
   }
 
   /**
@@ -42,7 +46,7 @@ class GADispatcher {
    * @param {Object} [metadata] - Optional
    */
   public send(eventName, eventType, metadata) {
-
+    this.dispatch();
   }
 
   /**
