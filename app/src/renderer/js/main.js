@@ -134,11 +134,11 @@ document.addEventListener('DOMContentLoaded', () => {
       cropperBounds.y = displayBounds.height - (cropperBounds.y + cropperBounds.height);
     }
 
-    // the dashed border is 2px wide
-    cropperBounds.x += 2;
-    cropperBounds.y += 2;
-    cropperBounds.width -= 4;
-    cropperBounds.height -= 4;
+    // the dashed border is 1px wide
+    cropperBounds.x += 1;
+    cropperBounds.y += 1;
+    cropperBounds.width -= 2;
+    cropperBounds.height -= 2;
 
     aperture.startRecording({
       cropArea: cropperBounds,

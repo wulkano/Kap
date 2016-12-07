@@ -26,7 +26,7 @@ const menubar = require('menubar')({
 
 let appState = 'initial';
 let cropperWindow;
-const cropperWindowBuffer = 4;
+const cropperWindowBuffer = 2;
 let mainWindowIsDetached = false;
 let mainWindow;
 let mainWindowIsNew = true;
