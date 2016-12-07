@@ -69,5 +69,7 @@
       "transform-es2015-modules-commonjs"
     ]
   },
-  "dependencies": {}
+  "dependencies": {
+    "universal-analytics": "^0.4.8"
+  }
 }
