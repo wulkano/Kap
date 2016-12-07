@@ -203,11 +203,15 @@ function openPrefsWindow() {
   });
 }
 
+function getCropperWindow() {
+  return cropperWindow;
+}
+
 menubar.on('after-create-window', () => {
   let expectedWindowPosition;
   const currentWindowPosition = {};
   mainWindow = menubar.window;
-  app.kap = {mainWindow, openPrefsWindow, settings};
+  app.kap = {mainWindow, getCropperWindow, openPrefsWindow, settings};
   if (isDev) {
     mainWindow.openDevTools({mode: 'detach'});
   }
@@ -319,16 +323,6 @@ menubar.on('after-create-window', () => {
   initErrorReporter();
   logger.init(mainWindow);
   Menu.setApplicationMenu(applicationMenu);
-});
-
-ipcMain.on('get-cropper-bounds', event => {
-  if (cropperWindow) {
-    event.returnValue = cropperWindow.getContentBounds();
-  }
-});
-
-ipcMain.on('is-cropper-active', event => {
-  event.returnValue = Boolean(cropperWindow);
 });
 
 ipcMain.on('will-start-recording', () => {
