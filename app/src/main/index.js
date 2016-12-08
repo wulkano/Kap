@@ -32,6 +32,7 @@ let mainWindow;
 let mainWindowIsNew = true;
 let positioner;
 let postRecWindow;
+let postRecWindowPos;
 let prefsWindow;
 let shouldStopWhenTrayIsClicked = false;
 let tray;
@@ -207,11 +208,15 @@ function getCropperWindow() {
   return cropperWindow;
 }
 
+function getEditorWindow() {
+  return postRecWindow;
+}
+
 menubar.on('after-create-window', () => {
   let expectedWindowPosition;
   const currentWindowPosition = {};
   mainWindow = menubar.window;
-  app.kap = {mainWindow, getCropperWindow, openPrefsWindow, settings};
+  app.kap = {mainWindow, getCropperWindow, getEditorWindow, openPrefsWindow, settings};
   if (isDev) {
     mainWindow.openDevTools({mode: 'detach'});
   }
@@ -451,10 +456,17 @@ ipcMain.on('open-post-recording-window', (event, opts) => {
     app.kap.postRecWindow = undefined;
   });
 
-  const screenSize = screen.getPrimaryDisplay().size;
-  ipcMain.on('enter-fullscreen-post-recording-window', () => {
-    postRecWindow.setSize(screenSize.width, screenSize.height);
-    app.kap.postRecWindow.setFullScreen(true);
+  ipcMain.on('toggle-fullscreen-post-recording-window', () => {
+    if (!postRecWindow) {
+      return;
+    }
+    if (!postRecWindow.isFullScreen()) {
+      postRecWindow.setResizable(true);
+      postRecWindow.setFullScreen(true);
+    } else {
+      postRecWindow.setFullScreen(false);
+      postRecWindow.setResizable(false);
+    }
   });
 
   app.kap.postRecWindow = postRecWindow;
@@ -492,16 +504,5 @@ ipcMain.on('set-main-window-visibility', (event, opts) => {
         mainWindow.hide();
       }
     }, opts.forHowLong);
-  }
-});
-
-ipcMain.on('toggle-maximize-editor-window', () => {
-  if (!postRecWindow) {
-    return;
-  }
-  if (postRecWindow.isMaximized()) {
-    postRecWindow.unmaximize();
-  } else {
-    postRecWindow.maximize();
   }
 });

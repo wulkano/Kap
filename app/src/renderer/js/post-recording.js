@@ -63,13 +63,15 @@ document.addEventListener('DOMContentLoaded', () => {
   maximizeBtn.onclick = function () {
     this.classList.add('hidden');
     unmaximizeBtn.classList.remove('hidden');
-    ipcRenderer.send('enter-fullscreen-post-recording-window');
+    ipcRenderer.send('toggle-fullscreen-post-recording-window');
+    $('body').classList.add('fullscreen');
   };
 
   unmaximizeBtn.onclick = function () {
     this.classList.add('hidden');
     maximizeBtn.classList.remove('hidden');
-    ipcRenderer.send('toggle-maximize-editor-window');
+    ipcRenderer.send('toggle-fullscreen-post-recording-window');
+    $('body').classList.remove('fullscreen');
   };
 
   function shake(el) {

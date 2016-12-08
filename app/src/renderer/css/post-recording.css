@@ -21,6 +21,10 @@ body {
   font-weight: 500;
   color: white;
   height: 100%;
+
+  &.fullscreen .window-header {
+    display: none;
+  }
 }
 
 span { -webkit-user-select: none !important; }
@@ -38,6 +42,9 @@ main.content {
   display: flex;
   flex-direction: column;
   position: relative;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 
   &:hover {
     .video-controls {
@@ -86,8 +93,8 @@ main.content {
 }
 
 video {
-  width: 100%;
-  height: 380px;
+  width: 100vw;
+  max-height: 100%;
 }
 
 progress {
