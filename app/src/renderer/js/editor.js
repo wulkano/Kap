@@ -1,21 +1,29 @@
 import {remote, ipcRenderer} from 'electron';
-
 import aspectRatio from 'aspectratio';
+import moment from 'moment';
 
 // note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
+import {handleTrafficLightsClicks, $} from '../js/utils';
 
 document.addEventListener('DOMContentLoaded', () => {
-  const discardBtn = document.querySelector('.discard');
-  const inputHeight = document.querySelector('.input-height');
-  const inputWidth = document.querySelector('.input-width');
-  const fps15Btn = document.querySelector('#fps-15');
-  const fps30Btn = document.querySelector('#fps-30');
-  const loopOffBtn = document.querySelector('#loop-off');
-  const loopOnBtn = document.querySelector('#loop-on');
-  const preview = document.querySelector('#preview');
-  const progressBar = document.querySelector('progress');
-  const saveBtn = document.querySelector('.save');
+  const playBtn = $('.js-play-video');
+  const pauseBtn = $('.js-pause-video');
+  const maximizeBtn = $('.js-maximize-video');
+  const unmaximizeBtn = $('.js-unmaximize-video');
+  const previewTime = $('.js-video-time');
+  const discardBtn = $('.discard');
+  const inputHeight = $('.input-height');
+  const inputWidth = $('.input-width');
+  const fps15Btn = $('#fps-15');
+  const fps30Btn = $('#fps-30');
+  const loopOffBtn = $('#loop-off');
+  const loopOnBtn = $('#loop-on');
+  const preview = $('#preview');
+  const previewContainer = $('.video-preview');
+  const progressBar = $('progress');
+  const saveBtn = $('.save');
+  const windowHeader = $('.window-header');
 
   let fps = 30;
   let loop = true;
@@ -23,6 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastValidInputWidth;
   let lastValidInputHeight;
   let aspectRatioBaseValues;
+
+  handleTrafficLightsClicks({hide: true});
 
   preview.oncanplay = function () {
     aspectRatioBaseValues = [this.videoWidth, this.videoHeight];
@@ -32,11 +42,38 @@ document.addEventListener('DOMContentLoaded', () => {
     progressBar.max = preview.duration;
     setInterval(() => {
       progressBar.value = preview.currentTime;
+      previewTime.innerText = `${moment().startOf('day').seconds(preview.currentTime).format('m:ss')}`;
     }, 1);
 
     // remove the listener since it's called
     // every time the video loops
     preview.oncanplay = undefined;
+  };
+
+  pauseBtn.onclick = function () {
+    this.classList.add('hidden');
+    playBtn.classList.remove('hidden');
+    preview.pause();
+  };
+
+  playBtn.onclick = function () {
+    this.classList.add('hidden');
+    pauseBtn.classList.remove('hidden');
+    preview.play();
+  };
+
+  maximizeBtn.onclick = function () {
+    this.classList.add('hidden');
+    unmaximizeBtn.classList.remove('hidden');
+    ipcRenderer.send('toggle-fullscreen-editor-window');
+    $('body').classList.add('fullscreen');
+  };
+
+  unmaximizeBtn.onclick = function () {
+    this.classList.add('hidden');
+    maximizeBtn.classList.remove('hidden');
+    ipcRenderer.send('toggle-fullscreen-editor-window');
+    $('body').classList.remove('fullscreen');
   };
 
   function shake(el) {
@@ -122,14 +159,14 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   function confirmDiscard() {
-    remote.dialog.showMessageBox(remote.app.kap.postRecWindow, {
+    remote.dialog.showMessageBox(remote.app.kap.editorWindow, {
       type: 'question',
       buttons: ['No', 'Yes'],
       message: 'Are you sure that you want to discard this recording?',
       detail: 'It will not be saved'
     }, response => {
       if (response === 1) { // `Yes`
-        ipcRenderer.send('close-post-recording-window');
+        ipcRenderer.send('close-editor-window');
       }
     });
   }
@@ -149,10 +186,18 @@ document.addEventListener('DOMContentLoaded', () => {
       fps,
       loop
     });
-    ipcRenderer.send('close-post-recording-window');
+    ipcRenderer.send('close-editor-window');
   };
 
   ipcRenderer.on('video-src', (event, src) => {
     preview.src = src;
   });
+
+  previewContainer.onmouseover = function () {
+    windowHeader.classList.toggle('is-hidden');
+  };
+
+  previewContainer.onmouseout = function () {
+    windowHeader.classList.toggle('is-hidden');
+  };
 });
