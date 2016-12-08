@@ -193,11 +193,11 @@ document.addEventListener('DOMContentLoaded', () => {
     preview.src = src;
   });
 
-  previewContainer.onmouseover = function() {
+  previewContainer.onmouseover = function () {
     windowHeader.classList.toggle('is-hidden');
-  }
+  };
 
-  previewContainer.onmouseout = function() {
+  previewContainer.onmouseout = function () {
     windowHeader.classList.toggle('is-hidden');
-  }
+  };
 });
