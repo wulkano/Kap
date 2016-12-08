@@ -17,6 +17,9 @@
   width: 100%;
   border-radius: 5px 5px 0 0;
   box-shadow: 0 1px rgba(0, 0, 0, .2);
+  opacity: 1;
+  transition: transform .12s ease-in-out, opacity .12s ease-in-out;
+  will-change: transform, opacity;
 
   .window__title {
     color: white;
@@ -29,9 +32,25 @@
     background-color: $background-light;
     box-shadow: none;
 
-    .window__title {
-      color: $grey-dark;
-    }
+    .window__title { color: $grey-dark; }
+  }
+
+  &.is-floating {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+  }
+
+  &.is-transparent {
+    background: rgba(34, 34, 34, .2);
+    box-shadow: none;
+  }
+
+  &.is-hidden {
+    opacity: 0;
+    transform: translateY(-100%);
   }
 }
 
@@ -55,13 +74,14 @@
   position: absolute;
   left: 8px;
   transition: all .3s ease;
-  svg {
-    margin-right: 3.5px;
-  }
-  &.invisible {
-    opacity: 0;
-  }
+
+  height: 28px;
+  display: flex;
+  align-items: center;
   -webkit-user-select: none !important;
+
+  svg { margin-right: 8px; }
+  &.invisible { opacity: 0; }
 }
 
 .title-bar__controls .close-window, .title-bar__controls .hide-window, .title-bar__controls .minimize-window {

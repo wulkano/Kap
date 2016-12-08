@@ -31,7 +31,7 @@ let mainWindowIsDetached = false;
 let mainWindow;
 let mainWindowIsNew = true;
 let positioner;
-let postRecWindow;
+let editorWindow;
 let prefsWindow;
 let shouldStopWhenTrayIsClicked = false;
 let tray;
@@ -207,11 +207,15 @@ function getCropperWindow() {
   return cropperWindow;
 }
 
+function getEditorWindow() {
+  return editorWindow;
+}
+
 menubar.on('after-create-window', () => {
   let expectedWindowPosition;
   const currentWindowPosition = {};
   mainWindow = menubar.window;
-  app.kap = {mainWindow, getCropperWindow, openPrefsWindow, settings};
+  app.kap = {mainWindow, getCropperWindow, getEditorWindow, openPrefsWindow, settings};
   if (isDev) {
     mainWindow.openDevTools({mode: 'detach'});
   }
@@ -279,8 +283,8 @@ menubar.on('after-create-window', () => {
   positioner = menubar.positioner;
 
   tray.on('click', () => {
-    if (postRecWindow) {
-      return postRecWindow.show();
+    if (editorWindow) {
+      return editorWindow.show();
     }
     if (mainWindowIsNew) {
       mainWindowIsNew = false;
@@ -307,7 +311,7 @@ menubar.on('after-create-window', () => {
   });
 
   app.on('activate', () => { // == dockIcon.onclick
-    if (!mainWindow.isVisible() && postRecWindow === undefined) {
+    if (!mainWindow.isVisible() && editorWindow === undefined) {
       mainWindow.show();
     }
   });
@@ -430,37 +434,50 @@ ipcMain.on('ask-user-to-save-file', (event, data) => {
   });
 });
 
-ipcMain.on('open-post-recording-window', (event, opts) => {
-  if (postRecWindow) {
-    return postRecWindow.show();
+ipcMain.on('open-editor-window', (event, opts) => {
+  if (editorWindow) {
+    return editorWindow.show();
   }
 
-  postRecWindow = new BrowserWindow({
+  editorWindow = new BrowserWindow({
     width: 768,
-    height: 432,
+    height: 428,
     frame: false,
     resizable: false
   });
 
-  postRecWindow.loadURL(`file://${__dirname}/../renderer/views/post-recording.html`);
+  editorWindow.loadURL(`file://${__dirname}/../renderer/views/editor.html`);
 
-  postRecWindow.webContents.on('did-finish-load', () => postRecWindow.webContents.send('video-src', opts.filePath));
+  editorWindow.webContents.on('did-finish-load', () => editorWindow.webContents.send('video-src', opts.filePath));
 
-  postRecWindow.on('closed', () => {
-    postRecWindow = undefined;
-    app.kap.postRecWindow = undefined;
+  editorWindow.on('closed', () => {
+    editorWindow = undefined;
+    app.kap.editorWindow = undefined;
   });
 
-  app.kap.postRecWindow = postRecWindow;
+  ipcMain.on('toggle-fullscreen-editor-window', () => {
+    if (!editorWindow) {
+      return;
+    }
+    if (editorWindow.isFullScreen()) {
+      editorWindow.setFullScreen(false);
+      editorWindow.setResizable(false);
+    } else {
+      editorWindow.setResizable(true);
+      editorWindow.setFullScreen(true);
+    }
+  });
+
+  app.kap.editorWindow = editorWindow;
   menubar.setOption('hidden', true);
   mainWindow.hide();
   tray.setHighlightMode('never');
   app.dock.show();
 });
 
-ipcMain.on('close-post-recording-window', () => {
-  if (postRecWindow) {
-    postRecWindow.close();
+ipcMain.on('close-editor-window', () => {
+  if (editorWindow) {
+    editorWindow.close();
     menubar.setOption('hidden', false);
     if (mainWindowIsDetached === true) {
       mainWindow.show();
