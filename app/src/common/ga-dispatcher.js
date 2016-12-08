@@ -92,7 +92,7 @@ class GADispatcher {
     } else {
       return Error(
         `Argument limit exceeded for event type ${eventType},
-        (limit is ${methodSignatureLimits[eventType]},
+        (limit is ${currentType},
         got ${dataLength})`
       );
     }
