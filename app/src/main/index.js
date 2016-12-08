@@ -1,7 +1,7 @@
 import path from 'path';
 import {rename as fsRename} from 'fs';
 
-import {app, dialog, BrowserWindow, ipcMain, Menu, screen} from 'electron';
+import {app, dialog, BrowserWindow, ipcMain, Menu, screen, globalShortcut} from 'electron';
 import isDev from 'electron-is-dev';
 import mkdirp from 'mkdirp';
 
@@ -172,6 +172,11 @@ function resetTrayIcon() {
   mainWindow.setAlwaysOnTop(false);
 }
 
+function setTrayStopIcon() {
+  shouldStopWhenTrayIsClicked = true;
+  tray.setImage(path.join(__dirname, '..', '..', 'static', 'menubarStopTemplate.png'));
+}
+
 // Open the Preferences Window
 function openPrefsWindow() {
   if (prefsWindow) {
@@ -206,6 +211,16 @@ function openPrefsWindow() {
 function getCropperWindow() {
   return cropperWindow;
 }
+
+app.on('ready', () => {
+  globalShortcut.register('Cmd+Shift+5', () => {
+    mainWindow.webContents.send('prepare-recording');
+  });
+});
+
+app.on('will-quit', () => {
+  globalShortcut.unregisterAll();
+});
 
 menubar.on('after-create-window', () => {
   let expectedWindowPosition;
@@ -295,8 +310,7 @@ menubar.on('after-create-window', () => {
 
   mainWindow.on('hide', () => {
     if (appState === 'recording') {
-      tray.setImage(path.join(__dirname, '..', '..', 'static', 'menubarStopTemplate.png'));
-      shouldStopWhenTrayIsClicked = true;
+      setTrayStopIcon();
     }
   });
 
@@ -325,6 +339,10 @@ menubar.on('after-create-window', () => {
   Menu.setApplicationMenu(applicationMenu);
 });
 
+ipcMain.on('start-recording', () => {
+  mainWindow.webContents.send('start-recording');
+});
+
 ipcMain.on('will-start-recording', () => {
   recording = true;
   if (cropperWindow) {
@@ -336,6 +354,14 @@ ipcMain.on('will-start-recording', () => {
 
 ipcMain.on('started-recording', () => {
   appState = 'recording';
+  setTrayStopIcon();
+
+  // Only registed `Esc` shortcut after recording has started
+  // Remove immediately after 'stopped-recording' has finished
+  globalShortcut.register('Esc', () => {
+    mainWindow.webContents.send('stop-recording');
+  });
+
   if (!mainWindowIsDetached) {
     mainWindow.hide();
     tray.setHighlightMode('never');
@@ -344,6 +370,7 @@ ipcMain.on('started-recording', () => {
 
 ipcMain.on('stopped-recording', () => {
   resetTrayIcon();
+  globalShortcut.unregister('Esc');
   analytics.track('recording/finished');
 });
 

@@ -346,6 +346,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  ipcRenderer.on('start-recording', () => startRecording());
+
   ipcRenderer.on('prepare-recording', () => prepareRecordButton());
 
   ipcRenderer.on('cropper-window-closed', () => {
