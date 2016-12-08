@@ -139,9 +139,7 @@ section.output {
   & > div + div { margin-left: 15px }
 }
 
-.fps, .loop { display: flex; }
-
-span, .discard, .save { font-size: 1.2rem; }
+.fps, .loop, .size { display: flex; }
 
 input[type=text] {
   width: 5rem;
@@ -155,7 +153,12 @@ input[type=text] {
   &:focus { border-color: #3B99FC; }
 }
 
-.size > span, .fps > span, .loop > span { margin-right: 16px }
+.size > span, .fps > span, .loop > span {
+  margin-right: 16px;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+}
 .size > input + input { margin-left: 6px }
 
 ul {

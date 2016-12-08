@@ -38,17 +38,17 @@ html(lang='en' allowfullscreen)
             input.input-height(type='text')
           .fps
             span FPS
-            ul
-              li#fps-15
+            .button-group
+              button.button--primary#fps-15
                 span 15
-              li#fps-30.active
+              button.button--primary#fps-30.active
                 span 30
           .loop
             span Loop
-            ul
-              li#loop-on.active
+            .button-group
+              button.button--primary#loop-on.active
                 span On
-              li#loop-off
+              button.button--primary#loop-off
                 span Off
         .window-controls
           .button--secondary.discard
