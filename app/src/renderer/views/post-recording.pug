@@ -7,7 +7,7 @@ html(lang='en' allowfullscreen)
     title Kap
   body
     main.content
-      header.window-header.is-floating.is-transparent
+      header.window-header.is-floating.is-transparent.is-hidden
         //- Title Bar
         .title-bar
           .title-bar__controls
@@ -29,7 +29,7 @@ html(lang='en' allowfullscreen)
             a.video__maximize-button.js-maximize-video
               img(src='/app/static/fullscreen.svg')
             a.video__unmaximize-button.js-unmaximize-video.hidden
-              img(src='/app/static/fullscreen.svg')
+              img(src='/app/static/fullscreen-exit.svg')
       section.output
         .output-settings
           .size

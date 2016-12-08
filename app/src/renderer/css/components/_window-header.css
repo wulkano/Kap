@@ -18,7 +18,8 @@
   border-radius: 5px 5px 0 0;
   box-shadow: 0 1px rgba(0, 0, 0, .2);
   opacity: 1;
-  transition: opacity .12s ease-in-out;
+  transition: transform .12s ease-in-out, opacity .12s ease-in-out;
+  will-change: transform, opacity;
 
   .window__title {
     color: white;
@@ -47,7 +48,10 @@
     box-shadow: none;
   }
 
-  &.is-invisible { opacity: 0; }
+  &.is-hidden {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
 }
 
 

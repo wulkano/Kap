@@ -20,8 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const loopOffBtn = $('#loop-off');
   const loopOnBtn = $('#loop-on');
   const preview = $('#preview');
+  const previewContainer = $('.video-preview');
   const progressBar = $('progress');
   const saveBtn = $('.save');
+  const windowHeader = $('.window-header');
 
   let fps = 30;
   let loop = true;
@@ -190,4 +192,12 @@ document.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.on('video-src', (event, src) => {
     preview.src = src;
   });
+
+  previewContainer.onmouseover = function() {
+    windowHeader.classList.toggle('is-hidden');
+  }
+
+  previewContainer.onmouseout = function() {
+    windowHeader.classList.toggle('is-hidden');
+  }
 });
