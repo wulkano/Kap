@@ -1,0 +1,23 @@
+//-
+  Kap Pug Mixins ⚡️
+  ----
+  - Re-usable components in the kap markup
+
+
+//- Window Header Mixin
+    - Re-usable window header
+mixin window-header(title, invisibleControls)
+  header.window-header&attributes(attributes)
+    .title-bar
+      if invisibleControls
+        .title-bar__controls.invisible
+          img.hide-window(src='/app/static/traffic-light-close.svg')
+          img.minimize-window(src='/app/static/traffic-light-minimize.svg')
+          img.maximize-window(src='/app/static/traffic-light-disabled.svg')
+      else
+        .title-bar__controls
+          img.hide-window(src='/app/static/traffic-light-close.svg')
+          img.minimize-window(src='/app/static/traffic-light-minimize.svg')
+          img.maximize-window(src='/app/static/traffic-light-disabled.svg')
+      span.window__title.txt= title
+    block

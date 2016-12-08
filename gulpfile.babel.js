@@ -18,7 +18,9 @@ const DIST_DIR = 'app/dist';
 // Source files
 const JS_GLOB = `${SRC_DIR}/**/*.js`;
 const CSS_GLOB = `${SRC_DIR}/**/*.css`;
+const CSS_PARTIALS_GLOB = `${SRC_DIR}/**/_*.css`;
 const VIEWS_GLOB = `${SRC_DIR}/**/*.pug`;
+const VIEWS_PARTIALS_GLOB = `${SRC_DIR}/**/_*.pug`;
 const SVG_GLOB = `app/static/**/*.svg`;
 
 // Clean DIST directory
@@ -34,14 +36,14 @@ export function scripts() {
 }
 
 export function views() {
-  return src(VIEWS_GLOB, {base: SRC_DIR})
+  return src([VIEWS_GLOB, `!${VIEWS_PARTIALS_GLOB}`], {base: SRC_DIR})
     .pipe(pug())
     .pipe(injectSvg())
     .pipe(dest(DIST_DIR));
 }
 
 export function styles() {
-  return src(CSS_GLOB, {base: SRC_DIR})
+  return src([CSS_GLOB, `!${CSS_PARTIALS_GLOB}`], {base: SRC_DIR})
     .pipe(postcss([atImport, postcsssSimpleVars, postcssExtend, postcssNested, cssnano, reporter()]))
     .pipe(dest(DIST_DIR));
 }
