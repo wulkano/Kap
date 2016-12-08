@@ -1,11 +1,5 @@
 // Git dat analytics
-const ua = require('universal-analytics')
-
-// Require package.json so we can get the current application version
-const pkg = require('../../package.json')
-
-// @TODO We should consider grabbing this from a configuration file.
-// const GA_ID = 'UA-84705099-2'
+const ua = require('universal-analytics');
 
 /**
  * An instance of GADispatcher, which deals with sending
@@ -23,49 +17,81 @@ class GADispatcher {
    * @constructor
    */
   constructor(trackingId, identifier, options) {
+    const currentId = this.getOpt('_id');
+    const opts = options ? options : {};
 
-    // Ensure options exists
-    let options = options ? options : {}
+    // Prevent duplicate instances of GADispatcher from running.
+    if (currentId === trackingId) {
+      return Error(`Instance of GADispatcher already instantiated. Current GA ID: ${currentId}`);
+    }
 
     // Enable https by default
-    let uaOpts = Object.assign(options, {
-      https: true
-    })
+    const uaOpts = Object.assign(opts, {
+      https: true,
+      appVersion: process.env.npm_package_version
+    });
 
-    this.session = ua(uaOpts)
+    // Assign ua to a session variable
+    this.session = ua(uaOpts);
+    console.log('GADispatcher started.', this.session);
+  }
+
+  getOpt(opt) {
+    return this[opt];
+  }
+
+  setOpt(opt, data) {
+    if (opt) {
+      this.opt = data;
+    }
   }
 
   /**
    * Dispatches an event or pageview to Google Analytics.
    *
-   * In the event of a failure, the consumeError method will
-   * attempt to recover the request and resend it later.
-   *
    * @param {string} eventName - The shortname for the event.
-   * @param {string[]} eventType - Kind of event to send. [page, event]
+   * @param {string[]} eventType - Kind of event to send. [pageview, event]
    * @param {Object} [metadata] - Optional
    */
-  public send(eventName, eventType, metadata) {
-    this.dispatch();
+  send(eventName, eventType, metadata) {
+    let dispatchEventType;
+
+    switch (eventType) {
+      case 'pageview' :
+        dispatchEventType = ua.pageview(metadata);
+        break;
+      case 'event' :
+        dispatchEventType = ua.event(metadata);
+        break;
+      default:
+        this.dispatch(dispatchEventType);
+    }
   }
 
   /**
    * Fires the network request.
+   *
+   * In the event of a failure, the consumeError callback will
+   * attempt to recover the request and resend it later.
+   *
+   * @param {Object} method - The method type.
    */
-  private dispatch() {
-    //servicewerkit and promises?
+  dispatch(method) {
+    // servicewerkit and promises?
   }
 
   /**
    * Consumes any errors from GA and assigns them to a queue for retrying.
    * @param {Object} error
    */
-  private consumeError(error) {
-
-  }
-
-  private createWorker() {
-
+  consumeError(error) {
+    // @TODO eat errors properly.
+    const consumable = error;
+    console.log('Error handling currently not implemented.', consumable);
   }
 
 }
+
+module.exports = (...args) => {
+  return new GADispatcher(...args);
+};
