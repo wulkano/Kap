@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
             break;
           }
           case 'gif': {
-            ipcRenderer.send('open-post-recording-window', {filePath});
+            ipcRenderer.send('open-editor-window', {filePath});
             break;
           }
           // no default
@@ -236,16 +236,16 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   recordBtn.onclick = function () {
-    if (app.kap.postRecWindow) {
+    if (app.kap.editorWindow) {
       // we need to keep the window visible to show the shake animation
-      // (it'll be auto hidden by `menubar` when the post recording window gain focus)
+      // (it'll be auto hidden by `menubar` when the editor window gain focus)
       ipcRenderer.send('set-main-window-visibility', {
         alwaysOnTop: true,
         temporary: true,
         forHowLong: 1000
       });
       shake(this);
-      ipcRenderer.send('open-post-recording-window', {notify: true});
+      ipcRenderer.send('open-editor-window', {notify: true});
     } else {
       prepareRecordButton();
     }

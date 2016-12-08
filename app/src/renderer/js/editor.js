@@ -65,14 +65,14 @@ document.addEventListener('DOMContentLoaded', () => {
   maximizeBtn.onclick = function () {
     this.classList.add('hidden');
     unmaximizeBtn.classList.remove('hidden');
-    ipcRenderer.send('toggle-fullscreen-post-recording-window');
+    ipcRenderer.send('toggle-fullscreen-editor-window');
     $('body').classList.add('fullscreen');
   };
 
   unmaximizeBtn.onclick = function () {
     this.classList.add('hidden');
     maximizeBtn.classList.remove('hidden');
-    ipcRenderer.send('toggle-fullscreen-post-recording-window');
+    ipcRenderer.send('toggle-fullscreen-editor-window');
     $('body').classList.remove('fullscreen');
   };
 
@@ -159,14 +159,14 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   function confirmDiscard() {
-    remote.dialog.showMessageBox(remote.app.kap.postRecWindow, {
+    remote.dialog.showMessageBox(remote.app.kap.editorWindow, {
       type: 'question',
       buttons: ['No', 'Yes'],
       message: 'Are you sure that you want to discard this recording?',
       detail: 'It will not be saved'
     }, response => {
       if (response === 1) { // `Yes`
-        ipcRenderer.send('close-post-recording-window');
+        ipcRenderer.send('close-editor-window');
       }
     });
   }
@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fps,
       loop
     });
-    ipcRenderer.send('close-post-recording-window');
+    ipcRenderer.send('close-editor-window');
   };
 
   ipcRenderer.on('video-src', (event, src) => {

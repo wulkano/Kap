@@ -2,9 +2,9 @@ doctype html
 html(lang='en' allowfullscreen)
   head
     meta(charset="UTF-8")
-    link(href='../css/post-recording.css', rel='stylesheet', type='text/css')
-    script(src="../js/post-recording.js")
-    title Kap
+    link(href='../css/editor.css', rel='stylesheet', type='text/css')
+    script(src="../js/editor.js")
+    title Editor
   body
     main.content
       header.window-header.is-floating.is-transparent.is-hidden
@@ -14,7 +14,7 @@ html(lang='en' allowfullscreen)
             img.hide-window(src='/app/static/traffic-light-close.svg')
             img.minimize-window(src='/app/static/traffic-light-minimize.svg')
             img(src='/app/static/traffic-light-disabled.svg')
-          span.window__title.txt Preferences
+          span.window__title.txt Editor
       .video-preview
         video#preview(autoplay loop)
         .video-controls
