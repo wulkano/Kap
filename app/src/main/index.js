@@ -214,7 +214,8 @@ function getCropperWindow() {
 
 app.on('ready', () => {
   globalShortcut.register('Cmd+Shift+5', () => {
-    mainWindow.webContents.send('prepare-recording');
+    const recording = (appState === 'recording');
+    mainWindow.webContents.send((recording) ? 'stop-recording' : 'prepare-recording');
   });
 });
 
@@ -359,13 +360,6 @@ ipcMain.on('will-start-recording', () => {
 ipcMain.on('started-recording', () => {
   appState = 'recording';
   setTrayStopIcon();
-
-  // Only registed `Esc` shortcut after recording has started
-  // Remove immediately after 'stopped-recording' has finished
-  globalShortcut.register('Esc', () => {
-    mainWindow.webContents.send('stop-recording');
-  });
-
   if (!mainWindowIsDetached) {
     mainWindow.hide();
     tray.setHighlightMode('never');
@@ -374,7 +368,6 @@ ipcMain.on('started-recording', () => {
 
 ipcMain.on('stopped-recording', () => {
   resetTrayIcon();
-  globalShortcut.unregister('Esc');
   analytics.track('recording/finished');
 });
 

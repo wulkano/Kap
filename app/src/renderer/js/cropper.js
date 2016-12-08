@@ -9,10 +9,6 @@ const arrows = {
   down: 40
 };
 
-const ESC_KEY_CODE = 27;
-const ENTER_KEY_CODE = 13;
-const SPACE_KEY_CODE = 32;
-
 document.addEventListener('DOMContentLoaded', () => {
   function autoDestroy() {
     ipcRenderer.send('close-cropper-window');
@@ -36,12 +32,18 @@ document.addEventListener('DOMContentLoaded', () => {
       intervalId = undefined;
     }
 
-    if (event.keyCode === ESC_KEY_CODE) {
-      autoDestroy();
-    }
-
-    if (event.keyCode === ENTER_KEY_CODE || SPACE_KEY_CODE) {
-      ipcRenderer.send('start-recording');
+    switch (event.key) {
+      case 'Escape':
+        autoDestroy();
+        break;
+      case 'Enter':
+        ipcRenderer.send('start-recording');
+        break;
+      case ' ':
+        ipcRenderer.send('start-recording');
+        break;
+      default:
+        break;
     }
   }
 
