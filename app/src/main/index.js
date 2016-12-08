@@ -32,7 +32,6 @@ let mainWindow;
 let mainWindowIsNew = true;
 let positioner;
 let postRecWindow;
-let postRecWindowPos;
 let prefsWindow;
 let shouldStopWhenTrayIsClicked = false;
 let tray;
@@ -460,12 +459,12 @@ ipcMain.on('open-post-recording-window', (event, opts) => {
     if (!postRecWindow) {
       return;
     }
-    if (!postRecWindow.isFullScreen()) {
-      postRecWindow.setResizable(true);
-      postRecWindow.setFullScreen(true);
-    } else {
+    if (postRecWindow.isFullScreen()) {
       postRecWindow.setFullScreen(false);
       postRecWindow.setResizable(false);
+    } else {
+      postRecWindow.setResizable(true);
+      postRecWindow.setFullScreen(true);
     }
   });
 
