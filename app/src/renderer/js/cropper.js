@@ -11,6 +11,7 @@ const arrows = {
 
 const ESC_KEY_CODE = 27;
 const ENTER_KEY_CODE = 13;
+const SPACE_KEY_CODE = 32;
 
 document.addEventListener('DOMContentLoaded', () => {
   function autoDestroy() {
@@ -39,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
       autoDestroy();
     }
 
-    if (event.keyCode === ENTER_KEY_CODE) {
+    if (event.keyCode === ENTER_KEY_CODE || SPACE_KEY_CODE) {
       ipcRenderer.send('start-recording');
     }
   }
