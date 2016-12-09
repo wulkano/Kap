@@ -5,7 +5,7 @@ block head
   link(href='../css/editor.css', rel='stylesheet', type='text/css')
   script(src="../js/editor.js")
 block body
-  +window-header('Editor').is-floating.is-transparent.is-hidden
+  +window-header(title="Editor").is-floating.is-transparent.is-hidden
   .video-preview
     video#preview(autoplay loop)
     .video-controls
