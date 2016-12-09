@@ -110,6 +110,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function startRecording() {
+    const gaEvent = {
+      eventCategory: 'User Action',
+      eventAction: 'Started recording'
+    };
+
+    dispatcher.send('Started recording', 'event', gaEvent);
+
     disableInputs();
     ipcRenderer.send('will-start-recording');
     setMainWindowTitle('Getting ready...');

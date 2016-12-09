@@ -18,14 +18,17 @@ class GADispatcher {
    * @constructor
    */
   constructor(trackingId, identifier, options) {
-    const currentId = this.getOpt('_id');
+    const currentId = this.getOpt('cid');
+    // const currentUUID = this.getOpt('uuid');
     const opts = options ? options : {};
 
     // Prevent duplicate instances of GADispatcher from running.
     if (currentId === trackingId) {
-      return Error(`Cannot instantiate GADispatcher with a different GA ID
+      return Error(
+        `Cannot instantiate another GADispatcher instance with a different GA ID
         (was ${trackingId},
-        current GA ID: ${currentId})`);
+        current GA ID: ${currentId})`
+      );
     }
 
     // Enable https by default
@@ -36,6 +39,8 @@ class GADispatcher {
 
     // Assign ua to a session variable
     this.session = ua(uaOpts);
+    this.cid = currentId;
+
     console.log('GADispatcher started.', this.session);
   }
 
@@ -71,49 +76,21 @@ class GADispatcher {
    * @param {Object} [metadata] - Optional
    */
   send(eventName, eventType, metadata) {
-    const methodSignatureLimits = {
-      pageview: 4,
-      event: 6,
-      transaction: 6,
-      item: 7,
-      exception: 3,
-      timing: 5
-    };
-
-    const getObjectLength = obj => {
-      return Object.keys(obj).length;
-    };
-
-    const dataLength = getObjectLength(metadata);
-    const currentType = methodSignatureLimits[eventType];
-
-    if (dataLength <= currentType) {
-      this.dispatch(ua[eventType](metadata, this.consumeError));
-    } else {
-      return Error(
-        `Argument limit exceeded for event type ${eventType},
-        (limit is ${currentType},
-        got ${dataLength})`
-      );
-    }
-  }
-
-  /**
-   * Fires the network request.
-   *
-   * @param {Object} data - The data to dispatch to GA.
-   */
-  dispatch(data) {
-    data.send();
+    const session = this.getOpt('session');
+    session[eventType](metadata, this.callback);
   }
 
   /**
    * Consumes any errors from GA and assigns them to a queue for retrying.
    * @param {Object} error
    */
-  consumeError(error) {
+  callback(error) {
     const consumable = error;
-    console.log('Error handling currently not implemented.', consumable);
+    if (error) {
+      console.log('Error:', consumable);
+    } else {
+      console.log('All quiet on the western front.');
+    }
   }
 
 }
