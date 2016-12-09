@@ -1,6 +1,6 @@
 @import 'eightpoint/dist/eight.min';
 
-html, body {
+html, body, .content {
   width: 100%;
   height: 100%;
   overflow: hidden;

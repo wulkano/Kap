@@ -1,0 +1,90 @@
+//-
+  Kap Pug Mixins ⚡️
+  ----
+  - Re-usable components in the kap markup
+
+
+//- **
+    name: icon
+    description: An easier method for fetching SVGs in markup.
+    @param {string} name - Name of the svg file you're calling
+    example: +icon('crop')
+mixin icon(name)
+  img(src=`/app/static/${name}.svg`)&attributes(attributes)
+
+
+//- **
+    name: window-header
+    description: Re-usable window header for each window.
+    attributes:
+      - {string}  title               - The name of the window
+      - {boolean} [invisibleControls] - Adds a class to the window controls that gives them full transparency
+      - {boolean} [hide]              - Specifies whether the close window button has the `hide-window` or `close-window` class. Used in JS.
+      - {boolean} [updates]           - Displays the available update element (should only be used in the main window)
+    example: +window-header(title='Kap' hide invisibleControls).class-name
+mixin window-header
+  - var a = attributes
+  header.window-header(class!=a.class)
+    .title-bar
+      .title-bar__controls(class=a.invisibleControls ? 'is-invisible' : '')
+        +icon('traffic-light-close')(class=a.hide ? 'hide-window' : 'close-window')
+        +icon('traffic-light-minimize').minimize-window
+        +icon('traffic-light-disabled').maximize-window
+      span.window__title.txt= a.title
+      if a.updates
+        .update-notification.hidden
+          span An update is available!
+          ul
+            li
+              +icon('info').open-release-notes
+            li
+              +icon('refresh').restart-and-install-update
+    block
+
+
+//- **
+    name: toggle
+    description: Creates a toggle component
+    @param {string} name - Applies an id for the input within the toggle
+    example: +toggle('sound-toggle')
+mixin toggle(name)
+  .c-toggle&attributes(attributes)
+    input.c-toggle__input(type='checkbox' id=name)
+    label.c-toggle__label(for=name)
+
+//- **
+    name: range
+    description: Creates a range component with optional labels
+    attributes:
+      - {number}  [min]         - The minimum value of the range
+      - {number}  max           - The maximum value of the range
+      - {boolean} [hasLabels]   - Set to `true` to display the labels element of the range components
+      - {string} [lowLabel]     - The label representing the lowest value of the range
+      - {string} [middleLabel]  - The label representing the middle of the range
+      - {string} [highLabel]    - The label representing the highest value of the range
+    examples: +range(hasLabel)
+mixin range
+  - var a = attributes
+  .c-range(class!=a.class)
+    input(type='range' min=a.min max=a.max)
+    if a.hasLabels
+      .c-range-labels
+        .c-range-label=a.lowLabel
+        .c-range-label.is-middle.js-middle-label=a.middleLabel
+        .c-range-label=a.highLabel
+
+//- **
+    name: stylesheet
+    description: Easier referencing of stylesheets
+    @param {string} name - Name of the stylesheet to fetch
+    example: +stylesheet('cropper')
+mixin stylesheet(name)
+  link(href=`../css/${name}.css` rel='stylesheet')
+
+//- **
+    name: script
+    description: Easier referencing of scripts
+    @param {string} name - Name of the script to fetch
+    example: +script('cropper')
+mixin script(name)
+  script(src=`../js/${name}.js`)

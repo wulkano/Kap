@@ -1,0 +1,15 @@
+include _mixins
+
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    +script('disable-zoom')
+    block head
+      title Kap
+
+  body
+    block aboveWindow
+
+    main.content
+      block body

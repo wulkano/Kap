@@ -1,57 +1,49 @@
-doctype html
-html(lang='en' allowfullscreen)
-  head
-    meta(charset="UTF-8")
-    link(href='../css/editor.css', rel='stylesheet', type='text/css')
-    script(src="../js/editor.js")
-    title Editor
-  body
-    main.content
-      header.window-header.is-floating.is-transparent.is-hidden
-        //- Title Bar
-        .title-bar
-          .title-bar__controls
-            img.hide-window(src='/app/static/traffic-light-close.svg')
-            img.minimize-window(src='/app/static/traffic-light-minimize.svg')
-            img(src='/app/static/traffic-light-disabled.svg')
-          span.window__title.txt Editor
-      .video-preview
-        video#preview(autoplay loop)
-        .video-controls
-          .video-controls-left
-            a.video__play-button.js-play-video.hidden
-              img(src='/app/static/play.svg')
-            a.video__pause-button.js-pause-video
-              img(src='/app/static/pause.svg')
-            span.video__time.js-video-time 0:00
-          progress(max='100' value=0)
-          .video-controls-right
-            a.video__maximize-button.js-maximize-video
-              img(src='/app/static/fullscreen.svg')
-            a.video__unmaximize-button.js-unmaximize-video.hidden
-              img(src='/app/static/fullscreen-exit.svg')
-      section.output
-        .output-settings
-          .size
-            span Size
-            input.input-width(type='text')
-            input.input-height(type='text')
-          .fps
-            span FPS
-            .button-group
-              button.button--primary#fps-15
-                span 15
-              button.button--primary#fps-30.active
-                span 30
-          .loop
-            span Loop
-            .button-group
-              button.button--primary#loop-on.active
-                span On
-              button.button--primary#loop-off
-                span Off
-        .window-controls
-          .button--secondary.discard
-            span Discard
-          .button--primary.save
-            span Save
+extends _extend
+
+block head
+  title Editor
+  +stylesheet('editor')
+  +script('editor')
+
+block body
+  +window-header(title='Editor' hide).is-floating.is-transparent.is-hidden
+  .video-preview
+    video#preview(autoplay loop)
+    .video-controls
+      .video-controls-left
+        a.video__play-button.js-play-video.hidden
+          +icon('play')
+        a.video__pause-button.js-pause-video
+          +icon('pause')
+        span.video__time.js-video-time 0:00
+      progress(max='100' value=0)
+      .video-controls-right
+        a.video__maximize-button.js-maximize-video
+          +icon('fullscreen')
+        a.video__unmaximize-button.js-unmaximize-video.hidden
+          +icon('fullscreen-exit')
+  section.output
+    .output-settings
+      .size
+        span Size
+        input.input-width(type='text')
+        input.input-height(type='text')
+      .fps
+        span FPS
+        .button-group
+          button.button--primary#fps-15
+            span 15
+          button.button--primary#fps-30.active
+            span 30
+      .loop
+        span Loop
+        .button-group
+          button.button--primary#loop-on.active
+            span On
+          button.button--primary#loop-off
+            span Off
+    .window-controls
+      .button--secondary.discard
+        span Discard
+      .button--primary.save
+        span Save

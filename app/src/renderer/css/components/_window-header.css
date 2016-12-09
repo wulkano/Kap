@@ -81,7 +81,7 @@
   -webkit-user-select: none !important;
 
   svg { margin-right: 8px; }
-  &.invisible { opacity: 0; }
+  &.is-invisible { opacity: 0; }
 }
 
 .title-bar__controls .close-window, .title-bar__controls .hide-window, .title-bar__controls .minimize-window {
