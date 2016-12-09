@@ -30,9 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const controlsSection = document.querySelector('section.controls');
   const controlsTitleWrapper = document.querySelector('.controls-toggle');
   const exportAs = document.querySelectorAll('#export-as button');
-  const gif = document.querySelector('.js-export__gif');
-  const webm = document.querySelector('.js-export__webm');
-  const mp4 = document.querySelector('.js-export__mp4');
   const header = document.querySelector('.kap-header');
   const inputWidth = document.querySelector('#aspect-ratio-width');
   const inputHeight = document.querySelector('#aspect-ratio-height');
@@ -414,17 +411,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ipcRenderer.on('log', (event, msgs) => console.log(...msgs));
 
-  let exportButtons = [];
-  let exportButtonsNotClicked = [];
-  exportAs.forEach(function(exportButton, key) {
+  const exportButtons = [];
+  exportAs.forEach((exportButton, key) => {
     exportButtons.push(key);
-    exportButton.onclick = function() {
-      exportButtonsNotClicked = exportButtons.slice();
-      exportButtonsNotClicked.splice(key, 1);
+    exportButton.onclick = function () {
       exportType = this.dataset.exportType;
-      exportButtonsNotClicked.map(function(index) {
-        exportAs[index].classList.remove('active');
-      });
+      for (const siblingIndex in exportButtons) {
+        if (siblingIndex !== key) {
+          exportAs[siblingIndex].classList.remove('active');
+        }
+      }
       this.classList.add('active');
     };
   });
