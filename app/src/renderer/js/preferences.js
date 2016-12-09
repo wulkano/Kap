@@ -95,3 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
     app.kap.settings.set('sound', this.checked);
   };
 });
+
+document.addEventListener('dragover', e => e.preventDefault());
+document.addEventListener('drop', e => e.preventDefault());

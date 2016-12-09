@@ -442,4 +442,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initErrorReporter();
 });
 
+document.addEventListener('dragover', e => e.preventDefault());
+document.addEventListener('drop', e => e.preventDefault());
+
 window.addEventListener('load', setMainWindowSize);
