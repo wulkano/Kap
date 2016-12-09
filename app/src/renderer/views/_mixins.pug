@@ -44,3 +44,9 @@ mixin range
         .c-range-label=a.lowLabel
         .c-range-label.is-middle.js-middle-label=a.middle-label
         .c-range-label=a.highLabel
+
+mixin stylesheet(name)
+  link(href='/app/renderer/css/' + name + '.css' rel='stylesheet' type='text/css')
+
+mixin script(name)
+  script(src='/app/renderer/js/' + name + '.js')

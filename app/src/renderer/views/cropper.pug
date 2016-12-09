@@ -2,9 +2,8 @@ extends _extend
 
 block head
   title Cropper
-  link(href='../css/cropper.css', rel='stylesheet', type='text/css')
-  script(src="../js/cropper.js")
-  script(src='../js/disable-zoom.js')
+  +stylesheet('cropper')
+  +script('cropper')
 
 block body
   body

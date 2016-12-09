@@ -2,9 +2,8 @@ extends _extend
 
 block head
   title Kap
-  link(href='../css/main.css', rel='stylesheet', type='text/css')
-  script(src="../js/main.js")
-  script(src='../js/disable-zoom.js')
+  +stylesheet('main')
+  +script('main')
 
 block aboveWindow
   .tray-arrow

@@ -2,8 +2,9 @@ extends _extend
 
 block head
   title Editor
-  link(href='../css/editor.css', rel='stylesheet', type='text/css')
-  script(src="../js/editor.js")
+  +stylesheet('editor')
+  +script('editor')
+
 block body
   +window-header(title="Editor").is-floating.is-transparent.is-hidden
   .video-preview
