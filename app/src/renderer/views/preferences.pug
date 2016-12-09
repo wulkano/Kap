@@ -1,100 +1,89 @@
-doctype html
-html(lang='en')
-  head
-    meta(charset="UTF-8")
+extends _extend
+
+  block head
     title Preferences
     link(href='../css/preferences.css', rel='stylesheet', type='text/css')
     script(src="../js/preferences.js")
     script(src='../js/disable-zoom.js')
 
-  body
-    //- App content wrapper
-    main.content.preferences
-      header.window-header
-        //- Title Bar
-        .title-bar
-          .title-bar__controls
-            img.close-window(src='/app/static/traffic-light-close.svg')
-            img.minimize-window(src='/app/static/traffic-light-minimize.svg')
-            img(src='/app/static/traffic-light-disabled.svg')
-          span.window__title.txt Preferences
+block body
+  +window-header('Preferences')
+    nav.prefs-nav
+      a.show-general-prefs.is-active(href)
+        img(src='/app/static/settings.svg')
+      a.show-advanced-prefs(href)
+        img(src='/app/static/tune.svg')
+  .prefs-sections
+    section.js-prefs-section.settings
+    section.general-prefs
+      .preference.container
+        .preference-part
+          .preference-content
+            .preference__title Save to...
+            .preference__description.js-save-to-description
+          .preference-input.c-toggle
+            button.button--secondary.js-choose-save Choose
+      .preference.container
+        .preference-part
+          .preference-content
+            .preference__title Start automatically
+            .preference__description Launch Kap on system startup
+          .preference-input.c-toggle
+            input.c-toggle__input(type="checkbox" id="open-on-startup")
+            label.c-toggle__label(for="open-on-startup")
+      .preference.container
+        .preference-part
+          .preference-content
+            .preference__title Allow analytics
+            .preference__description Help us improve Kap by sending anonymous usage stats
+          .preference-input.c-toggle
+            input.c-toggle__input(type="checkbox" id="allow-analytics")
+            label.c-toggle__label(for="allow-analytics")
 
-        nav.prefs-nav
-          a.show-general-prefs.is-active(href)
-            img(src='/app/static/settings.svg')
-          a.show-advanced-prefs(href)
-            img(src='/app/static/tune.svg')
-      .prefs-sections
-        section.js-prefs-section.settings
-        section.general-prefs
-          .preference.container
-            .preference-part
-              .preference-content
-                .preference__title Save to...
-                .preference__description.js-save-to-description
-              .preference-input.c-toggle
-                button.button--secondary.js-choose-save Choose
-          .preference.container
-            .preference-part
-              .preference-content
-                .preference__title Start automatically
-                .preference__description Launch Kap on system startup
-              .preference-input.c-toggle
-                input.c-toggle__input(type="checkbox" id="open-on-startup")
-                label.c-toggle__label(for="open-on-startup")
-          .preference.container
-            .preference-part
-              .preference-content
-                .preference__title Allow analytics
-                .preference__description Help us improve Kap by sending anonymous usage stats
-              .preference-input.c-toggle
-                input.c-toggle__input(type="checkbox" id="allow-analytics")
-                label.c-toggle__label(for="allow-analytics")
-
-        //- Advanced preferences
-        section.advanced-prefs.hidden
-          .preference.container
-            .preference-part
-              .preference-content
-                .preference__title Show mouse cursor
-                .preference__description Display the cursor in your Kaptures
-              .preference-input.c-toggle
-                input.c-toggle__input(type="checkbox" id="show-cursor")
-                label.c-toggle__label(for="show-cursor")
-            .preference-part
-              .preference-content
-                .preference__description Highlight clicks
-              .preference-input.c-toggle
-                input.c-toggle__input(type="checkbox" id="highlight-clicks")
-                label.c-toggle__label(for="highlight-clicks")
-          .preference.container
-            .preference-part
-              .preference-content
-                .preference__title Capture frame rate
-                .preference__description Capturing at a higher frame rate might impact performance
-              .preference-input.c-range
-                input.fps-slider(type="range" min="1" max="60")
-                .c-range-labels
-                  .c-range-label Low
-                  .c-range-label.is-middle.js-current-fps 30FPS
-                  .c-range-label High
-          .preference.container
-            .preference-part
-              .preference-content
-                .preference__title Sound
-                .preference__description Enable sound
-              .preference-input.c-toggle
-                input.c-toggle__input(type="checkbox" id="enable-sound")
-                label.c-toggle__label(for="enable-sound")
-            .preference-part.split
-              .row
-                .col.col-4
-                  label Microphone
-                  .select-element
-                    select.aspect-ratio-selector
-                      option(value='default') Default
-                .col.col-4
-                  label System
-                  .select-element
-                    select.aspect-ratio-selector
-                      option(value='default') MM-1
+    //- Advanced preferences
+    section.advanced-prefs.hidden
+      .preference.container
+        .preference-part
+          .preference-content
+            .preference__title Show mouse cursor
+            .preference__description Display the cursor in your Kaptures
+          .preference-input.c-toggle
+            input.c-toggle__input(type="checkbox" id="show-cursor")
+            label.c-toggle__label(for="show-cursor")
+        .preference-part
+          .preference-content
+            .preference__description Highlight clicks
+          .preference-input.c-toggle
+            input.c-toggle__input(type="checkbox" id="highlight-clicks")
+            label.c-toggle__label(for="highlight-clicks")
+      .preference.container
+        .preference-part
+          .preference-content
+            .preference__title Capture frame rate
+            .preference__description Capturing at a higher frame rate might impact performance
+          .preference-input.c-range
+            input.fps-slider(type="range" min="1" max="60")
+            .c-range-labels
+              .c-range-label Low
+              .c-range-label.is-middle.js-current-fps 30FPS
+              .c-range-label High
+      .preference.container
+        .preference-part
+          .preference-content
+            .preference__title Sound
+            .preference__description Enable sound
+          .preference-input.c-toggle
+            input.c-toggle__input(type="checkbox" id="enable-sound")
+            label.c-toggle__label(for="enable-sound")
+        .preference-part.split
+          .row
+            .col.col-4
+              label Microphone
+              .select-element
+                select.aspect-ratio-selector
+                  option(value='default') Default
+            .col.col-4
+              label System
+              .select-element
+                select.aspect-ratio-selector
+                  option(value='default') MM-1
