@@ -60,8 +60,10 @@ block body
         //- TODO remove this `style`👇
         span.controls-section__title.txt Export as
         .controls-section__row
-          .select-element
-            select#export-as
-              option(value='gif') GIF
-              option(value='mp4') MP4
-              option(value='webm') WebM
+          .button-group.a-width--full#export-as
+            button.button--primary.active(data-export-type="gif")
+              span GIF
+            button.button--primary(data-export-type="webm")
+              span WebM
+            button.button--primary(data-export-type="mp4")
+              span MP4

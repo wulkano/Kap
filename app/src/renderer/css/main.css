@@ -39,7 +39,7 @@
   width: 100%;
   justify-content: center;
   align-items: center;
-  height: 11.8rem;
+  padding: 28px 0 32px;
 
   &__text {
     font-size: 1.2rem;

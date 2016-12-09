@@ -29,7 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
   const controlsSection = document.querySelector('section.controls');
   const controlsTitleWrapper = document.querySelector('.controls-toggle');
-  const exportAs = document.querySelector('#export-as');
+  const exportAs = document.querySelectorAll('#export-as button');
+  const gif = document.querySelector('.js-export__gif');
+  const webm = document.querySelector('.js-export__webm');
+  const mp4 = document.querySelector('.js-export__mp4');
   const header = document.querySelector('.kap-header');
   const inputWidth = document.querySelector('#aspect-ratio-width');
   const inputHeight = document.querySelector('#aspect-ratio-height');
@@ -57,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastValidInputHeight = 512;
   let aspectRatioBaseValues = [lastValidInputWidth, lastValidInputHeight];
   let hasUpdateNotification = false;
+  let exportType = 'gif';
 
   handleTrafficLightsClicks({hide: true});
 
@@ -187,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         restoreInputs();
 
-        switch (exportAs.value) {
+        switch (exportType) {
           case 'mp4': {
             const now = moment();
             const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.mp4`;
@@ -409,6 +413,21 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('log', (event, msgs) => console.log(...msgs));
+
+  let exportButtons = [];
+  let exportButtonsNotClicked = [];
+  exportAs.forEach(function(exportButton, key) {
+    exportButtons.push(key);
+    exportButton.onclick = function() {
+      exportButtonsNotClicked = exportButtons.slice();
+      exportButtonsNotClicked.splice(key, 1);
+      exportType = this.dataset.exportType;
+      exportButtonsNotClicked.map(function(index) {
+        exportAs[index].classList.remove('active');
+      });
+      this.classList.add('active');
+    };
+  });
 
   function exportToType(type, data) {
     header.classList.add('hidden');
