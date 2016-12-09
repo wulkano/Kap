@@ -201,3 +201,6 @@ document.addEventListener('DOMContentLoaded', () => {
     windowHeader.classList.toggle('is-hidden');
   };
 });
+
+document.addEventListener('dragover', e => e.preventDefault());
+document.addEventListener('drop', e => e.preventDefault());
