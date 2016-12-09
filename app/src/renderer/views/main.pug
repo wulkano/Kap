@@ -10,14 +10,7 @@ block aboveWindow
   .tray-arrow
 
 block body
-  +window-header(title="Kap" invisibleControls).is-light
-    .update-notification.hidden
-      span An update is available!
-      ul
-        li
-          img.open-release-notes(src='/app/static/info.svg')
-        li
-          img.restart-and-install-update(src='/app/static/refresh.svg')
+  +window-header(title="Kap" invisible-controls updates hide).is-light
 
   //- Progress bar
   section.progress.hidden
@@ -28,16 +21,16 @@ block body
   header.kap-header
     .kap-header__text.time.txt 00:00
     .record(data-state='initial')
-      img.record__crop(src='/app/static/crop.svg')
-      img.record__stop.hidden(src='/app/static/stop.svg')
+      +icon('crop').record__crop
+      +icon('stop').record__stop.hidden
     .kap-header__text.size.txt 0 kB
 
   //- Kap Controls
   section.controls
     .controls-toggle.container
-      img.triangle(src='/app/static/dropdown-arrow.svg')
+      +icon('dropdown-arrow').triangle
       span.controls-toggle__title.txt Controls
-      img.controls-options(src='/app/static/gear.svg')
+      +icon('gear').controls-options
 
     .controls-content.hidden
       .controls-section.container
@@ -58,9 +51,9 @@ block body
             input#aspect-ratio-width(type='text', value='512')
           .button-group.aspect-ratio__options
             button.button--primary
-              img.swap-btn(src='/app/static/swap.svg')
+              +icon('swap').swap-btn
             button.button--primary
-              img.link-btn(src='/app/static/link.svg')
+              +icon('link').link-btn
           .aspect-ratio__input
             label.txt(for='aspect-ratio-height') Height
             input#aspect-ratio-height(type='text', value='512')

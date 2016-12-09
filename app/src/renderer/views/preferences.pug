@@ -10,9 +10,9 @@ block body
   +window-header(title="Preferences")
     nav.prefs-nav
       a.show-general-prefs.is-active(href)
-        img(src='/app/static/settings.svg')
+        +icon('settings')
       a.show-advanced-prefs(href)
-        img(src='/app/static/tune.svg')
+        +icon('tune')
   .prefs-sections
     section.js-prefs-section.settings
     section.general-prefs
@@ -28,17 +28,13 @@ block body
           .preference-content
             .preference__title Start automatically
             .preference__description Launch Kap on system startup
-          .preference-input.c-toggle
-            input.c-toggle__input(type="checkbox" id="open-on-startup")
-            label.c-toggle__label(for="open-on-startup")
+          +toggle('open-on-startup')
       .preference.container
         .preference-part
           .preference-content
             .preference__title Allow analytics
             .preference__description Help us improve Kap by sending anonymous usage stats
-          .preference-input.c-toggle
-            input.c-toggle__input(type="checkbox" id="allow-analytics")
-            label.c-toggle__label(for="allow-analytics")
+          +toggle('allow-analytics')
 
     //- Advanced preferences
     section.advanced-prefs.hidden
@@ -47,34 +43,23 @@ block body
           .preference-content
             .preference__title Show mouse cursor
             .preference__description Display the cursor in your Kaptures
-          .preference-input.c-toggle
-            input.c-toggle__input(type="checkbox" id="show-cursor")
-            label.c-toggle__label(for="show-cursor")
+          +toggle('show-cursor')
         .preference-part
           .preference-content
             .preference__description Highlight clicks
-          .preference-input.c-toggle
-            input.c-toggle__input(type="checkbox" id="highlight-clicks")
-            label.c-toggle__label(for="highlight-clicks")
+          +toggle('highlight-clicks')
       .preference.container
         .preference-part
           .preference-content
             .preference__title Capture frame rate
             .preference__description Capturing at a higher frame rate might impact performance
-          .preference-input.c-range
-            input.fps-slider(type="range" min="1" max="60")
-            .c-range-labels
-              .c-range-label Low
-              .c-range-label.is-middle.js-current-fps 30FPS
-              .c-range-label High
+          +range(hasLabels=true min="1" max="60" lowLabel="Low" highLabel="High").preference-input.fps-slider
       .preference.container
         .preference-part
           .preference-content
             .preference__title Sound
             .preference__description Enable sound
-          .preference-input.c-toggle
-            input.c-toggle__input(type="checkbox" id="enable-sound")
-            label.c-toggle__label(for="enable-sound")
+          +toggle('enable-sound')
         .preference-part.split
           .row
             .col.col-4

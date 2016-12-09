@@ -11,16 +11,16 @@ block body
     .video-controls
       .video-controls-left
         a.video__play-button.js-play-video.hidden
-          img(src='/app/static/play.svg')
+          +icon('play')
         a.video__pause-button.js-pause-video
-          img(src='/app/static/pause.svg')
+          +icon('pause')
         span.video__time.js-video-time 0:00
       progress(max='100' value=0)
       .video-controls-right
         a.video__maximize-button.js-maximize-video
-          img(src='/app/static/fullscreen.svg')
+          +icon('fullscreen')
         a.video__unmaximize-button.js-unmaximize-video.hidden
-          img(src='/app/static/fullscreen-exit.svg')
+          +icon('fullscreen-exit')
   section.output
     .output-settings
       .size

@@ -366,12 +366,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ipcRenderer.on('unstick-from-menubar', () => {
     setTrayTriangleVisible(false);
-    trafficLightsWrapper.classList.remove('invisible');
+    trafficLightsWrapper.classList.remove('is-invisible');
   });
 
   ipcRenderer.on('stick-to-menubar', () => {
     setTrayTriangleVisible();
-    trafficLightsWrapper.classList.add('invisible');
+    trafficLightsWrapper.classList.add('is-invisible');
   });
 
   ipcRenderer.on('stop-recording', stopRecording);

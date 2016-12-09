@@ -4,15 +4,43 @@
   - Re-usable components in the kap markup
 
 
+//- SVG icon mixin
+    - Re-usable window header
+mixin icon(name)
+  img(src='/app/static/'+name+'.svg')&attributes(attributes)
+
 //- Window Header Mixin
     - Re-usable window header
 mixin window-header
   - var a = attributes
   header.window-header(class!=a.class)
     .title-bar
-      .title-bar__controls(class=a.invisibleControls ? 'invisible' : '')
-        img.hide-window(src='/app/static/traffic-light-close.svg')
-        img.minimize-window(src='/app/static/traffic-light-minimize.svg')
-        img.maximize-window(src='/app/static/traffic-light-disabled.svg')
+      .title-bar__controls(class=a.invisible-controls ? 'is-invisible' : '')
+        +icon('traffic-light-close')(class=a.hide ? 'hide-window' : 'close-window')
+        +icon('traffic-light-minimize').minimize-window
+        +icon('traffic-light-disabled').maximize-window
       span.window__title.txt= a.title
+      if a.updates
+        .update-notification.hidden
+          span An update is available!
+          ul
+            li
+              +icon('info').open-release-notes
+            li
+              +icon('refresh').restart-and-install-update
     block
+
+mixin toggle(name)
+  .c-toggle&attributes(attributes)
+    input.c-toggle__input(type="checkbox" id=name)
+    label.c-toggle__label(for=name)
+
+mixin range
+  - var a = attributes
+  .c-range(class!=a.class)
+    input(type="range" min=a.min max=a.max)
+    if a.hasLabels
+      .c-range-labels
+        .c-range-label=a.lowLabel
+        .c-range-label.is-middle.js-middle-label=a.middle-label
+        .c-range-label=a.highLabel
