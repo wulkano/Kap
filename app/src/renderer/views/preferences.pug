@@ -6,7 +6,7 @@ block head
   +script('preferences')
 
 block body
-  +window-header(title="Preferences")
+  +window-header(title='Preferences')
     nav.prefs-nav
       a.show-general-prefs.is-active(href)
         +icon('settings')
@@ -52,7 +52,7 @@ block body
           .preference-content
             .preference__title Capture frame rate
             .preference__description Capturing at a higher frame rate might impact performance
-          +range(hasLabels=true min="1" max="60" lowLabel="Low" middleLabel="30FPS" highLabel="High").preference-input.fps-slider
+          +range(hasLabels=true min='1' max='60' lowLabel='Low' middleLabel='30FPS' highLabel='High').preference-input.fps-slider
       .preference.container
         .preference-part
           .preference-content
