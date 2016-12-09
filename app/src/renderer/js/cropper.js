@@ -9,8 +9,6 @@ const arrows = {
   down: 40
 };
 
-const ESC_KEY_CODE = 27;
-
 document.addEventListener('DOMContentLoaded', () => {
   function autoDestroy() {
     ipcRenderer.send('close-cropper-window');
@@ -34,8 +32,18 @@ document.addEventListener('DOMContentLoaded', () => {
       intervalId = undefined;
     }
 
-    if (event.keyCode === ESC_KEY_CODE) {
-      autoDestroy();
+    switch (event.key) {
+      case 'Escape':
+        autoDestroy();
+        break;
+      case 'Enter':
+        ipcRenderer.send('start-recording');
+        break;
+      case ' ':
+        ipcRenderer.send('start-recording');
+        break;
+      default:
+        break;
     }
   }
 

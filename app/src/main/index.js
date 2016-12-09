@@ -1,7 +1,7 @@
 import path from 'path';
 import {rename as fsRename} from 'fs';
 
-import {app, dialog, BrowserWindow, ipcMain, Menu, screen} from 'electron';
+import {app, dialog, BrowserWindow, ipcMain, Menu, screen, globalShortcut} from 'electron';
 import isDev from 'electron-is-dev';
 import mkdirp from 'mkdirp';
 
@@ -172,6 +172,11 @@ function resetTrayIcon() {
   mainWindow.setAlwaysOnTop(false);
 }
 
+function setTrayStopIcon() {
+  shouldStopWhenTrayIsClicked = true;
+  tray.setImage(path.join(__dirname, '..', '..', 'static', 'menubarStopTemplate.png'));
+}
+
 // Open the Preferences Window
 function openPrefsWindow() {
   if (prefsWindow) {
@@ -206,6 +211,17 @@ function openPrefsWindow() {
 function getCropperWindow() {
   return cropperWindow;
 }
+
+app.on('ready', () => {
+  globalShortcut.register('Cmd+Shift+5', () => {
+    const recording = (appState === 'recording');
+    mainWindow.webContents.send((recording) ? 'stop-recording' : 'prepare-recording');
+  });
+});
+
+app.on('will-quit', () => {
+  globalShortcut.unregisterAll();
+});
 
 function getEditorWindow() {
   return editorWindow;
@@ -299,8 +315,7 @@ menubar.on('after-create-window', () => {
 
   mainWindow.on('hide', () => {
     if (appState === 'recording') {
-      tray.setImage(path.join(__dirname, '..', '..', 'static', 'menubarStopTemplate.png'));
-      shouldStopWhenTrayIsClicked = true;
+      setTrayStopIcon();
     }
   });
 
@@ -329,6 +344,10 @@ menubar.on('after-create-window', () => {
   Menu.setApplicationMenu(applicationMenu);
 });
 
+ipcMain.on('start-recording', () => {
+  mainWindow.webContents.send('start-recording');
+});
+
 ipcMain.on('will-start-recording', () => {
   recording = true;
   if (cropperWindow) {
@@ -340,6 +359,7 @@ ipcMain.on('will-start-recording', () => {
 
 ipcMain.on('started-recording', () => {
   appState = 'recording';
+  setTrayStopIcon();
   if (!mainWindowIsDetached) {
     mainWindow.hide();
     tray.setHighlightMode('never');
