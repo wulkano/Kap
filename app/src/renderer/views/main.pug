@@ -9,7 +9,7 @@ block aboveWindow
   .tray-arrow
 
 block body
-  +window-header(title="Kap" invisible-controls updates hide).is-light
+  +window-header(title="Kap" invisibleControls updates hide).is-light
 
   //- Progress bar
   section.progress.hidden
@@ -42,12 +42,12 @@ block body
               option(value='1280x768') 5:3 (1280x768)
               option(value='1024x768') 4:3 (1024x768)
               option(value='480x320') 3:2 (480x320)
-              option(value='512x512', selected='selected') 1:1 (512x512)
+              option(value='512x512' selected='selected') 1:1 (512x512)
               option(data-aspect-ratio='custom') Custom
         .controls-section__row.aspect-ratio
           .aspect-ratio__input
             label.txt(for='aspect-ratio-width') Width
-            input#aspect-ratio-width(type='text', value='512')
+            input#aspect-ratio-width(type='text' value='512')
           .button-group.aspect-ratio__options
             button.button--primary
               +icon('swap').swap-btn
@@ -55,7 +55,7 @@ block body
               +icon('link').link-btn
           .aspect-ratio__input
             label.txt(for='aspect-ratio-height') Height
-            input#aspect-ratio-height(type='text', value='512')
+            input#aspect-ratio-height(type='text' value='512')
       .controls-section.container
         //- TODO remove this `style`👇
         span.controls-section__title.txt Export as
