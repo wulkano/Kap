@@ -1,5 +1,21 @@
 import {app, Menu, shell} from 'electron';
 
+import {checkForUpdates} from './auto-updater';
+
+const checkForUpdatesItem = {
+  label: 'Check for updates',
+  click(item) {
+    item.enabled = false;
+    checkForUpdates(() => {
+      // this will be called if no update is available
+      app.kap.mainWindow.webContents.send('show-notification', {
+        title: 'No updates available!',
+        body: 'You will automatically receive updates as soon as they are available 🤗'
+      });
+    });
+  }
+};
+
 const cogMenu = [
   {
     role: 'about'
@@ -14,6 +30,10 @@ const cogMenu = [
       app.kap.openPrefsWindow();
     }
   },
+  {
+    type: 'separator'
+  },
+  checkForUpdatesItem,
   {
     type: 'separator'
   },
@@ -40,6 +60,7 @@ const applicationMenu = [
           app.kap.openPrefsWindow();
         }
       },
+      checkForUpdatesItem,
       {
         type: 'separator'
       },
