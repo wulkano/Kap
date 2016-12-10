@@ -125,18 +125,20 @@ section.output {
 
 .output-settings {
   display: flex;
-  justify-content: space-between;
   width: 48.5rem;
   margin-left: 16px;
   align-items: center;
+
+  & > div:not(:last-child) { margin-right: 16px; }
 }
 
 .window-controls {
   display: flex;
   align-items: center;
   margin-right: 16px;
+  margin-left: auto;
 
-  & > div + div { margin-left: 15px }
+  & > div + div { margin-left: 8px }
 }
 
 .fps, .loop, .size { display: flex; }
@@ -154,7 +156,7 @@ input[type=text] {
 }
 
 .size > span, .fps > span, .loop > span {
-  margin-right: 16px;
+  margin-right: 8px;
   font-size: 1.2rem;
   display: flex;
   align-items: center;

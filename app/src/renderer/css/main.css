@@ -219,7 +219,7 @@
 
 section.progress {
   @extend .webkit-drag;
-  background-color: $background-primary;
+  background-color: $background-light;
   width: 100%;
   align-items: center;
   display: flex;
