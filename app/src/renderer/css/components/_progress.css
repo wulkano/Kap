@@ -1,0 +1,24 @@
+@import '../_variables';
+
+/*
+  Progress Styling Component ✏️
+  ----
+*/
+
+.c-progress {
+  -webkit-appearance: none;
+  height: 4px;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 4px;
+  transition: .12s ease-in-out;
+
+  &::-webkit-progress-bar { background-color: $grey-lighter; }
+  &::-webkit-progress-value {
+    background-image: linear-gradient(90deg, #9300FF 0%, #5272E2 49%, #05E6B5 98%);
+    box-shadow: inset 0 0 0 .5px rgba(255, 255, 255, .1);
+    border-radius: 4px;
+  }
+
+  &__transparent::-webkit-progress-bar { background-color: rgba(255, 255, 255, .2); }
+}

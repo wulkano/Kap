@@ -13,6 +13,7 @@
 @import 'components/_window-header';
 @import 'components/_inputs';
 @import 'components/_buttons';
+@import 'components/_progress';
 
 /* Helper Classes */
 .horizontal-section { display: flex; }
@@ -221,21 +222,22 @@ section.progress {
   @extend .webkit-drag;
   background-color: $background-light;
   width: 100%;
-  align-items: center;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
   height: 12.6rem;
   padding-bottom: 2.8rem; /* to compensate the tittle bar */
 }
 
-.progress-bar-label {
-  position: absolute;
-  font-size: $font-size-default;
-  bottom: 4.75rem;
+.progress-bar {
+  width: 206px;
 }
 
-.progress-bar {
-  height: 2rem; /* (ﾉಠдಠ)ﾉ︵┻━┻ */
+.progress-bar-label {
+  font-size: 1.2rem;
+  color: $grey;
+  margin-bottom: 16px;
 }
 
 .update-notification {
