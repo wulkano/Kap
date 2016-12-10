@@ -23,8 +23,9 @@ body {
   color: white;
   height: 100%;
 
-  &.fullscreen .window-header {
-    display: none;
+  &.fullscreen {
+    .window-header { display: none; }
+    .output { display: none; }
   }
 }
 
@@ -54,7 +55,7 @@ main.content {
     .video-controls-right, .video-controls-left { opacity: 1; }
 
     .c-progress.editor-progress {
-      width: 480px;
+      width: 60%;
       left: 50%;
       transform: translateX(-50%);
       bottom: 26px;
