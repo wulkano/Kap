@@ -1,10 +1,5 @@
 import {app, Menu, shell} from 'electron';
 
-const signInForUpdates = {
-  label: 'Sign up for updates',
-  click: () => shell.openExternal('http://eepurl.com/ch90_1')
-};
-
 const cogMenu = [
   {
     role: 'about'
@@ -19,10 +14,6 @@ const cogMenu = [
       app.kap.openPrefsWindow();
     }
   },
-  {
-    type: 'separator'
-  },
-  signInForUpdates,
   {
     type: 'separator'
   },
@@ -52,7 +43,6 @@ const applicationMenu = [
       {
         type: 'separator'
       },
-      signInForUpdates,
       {
         label: 'Contribute',
         click: () => shell.openExternal('https://github.com/wulkano/kap')
