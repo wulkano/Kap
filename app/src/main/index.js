@@ -465,9 +465,10 @@ ipcMain.on('open-editor-window', (event, opts) => {
 
   editorWindow = new BrowserWindow({
     width: 768,
+    minWidth: 768,
     height: 428,
-    frame: false,
-    resizable: false
+    minHeight: 428,
+    frame: false
   });
 
   editorWindow.loadURL(`file://${__dirname}/../renderer/views/editor.html`);
@@ -485,9 +486,7 @@ ipcMain.on('open-editor-window', (event, opts) => {
     }
     if (editorWindow.isFullScreen()) {
       editorWindow.setFullScreen(false);
-      editorWindow.setResizable(false);
     } else {
-      editorWindow.setResizable(true);
       editorWindow.setFullScreen(true);
     }
   });

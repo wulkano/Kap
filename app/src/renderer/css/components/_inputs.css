@@ -63,6 +63,21 @@ input { -webkit-app-region: no-drag; }
 
 
 /*
+  Input Group
+  - For joined together input styling
+*/
+.input-group {
+  input {
+    margin-right: 0;
+
+    &:not(:last-child) { border-right: 0; }
+    &:first-child:not(:only-child) { border-radius: 3px 0 0 3px; }
+    &:last-child:not(:only-child) { border-radius: 0 3px 3px 0; }
+  }
+}
+
+
+/*
   Custom input styling
 */
 input, .input {
