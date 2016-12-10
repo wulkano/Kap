@@ -62,13 +62,19 @@ ipcMain.on('show-options-menu', (event, coordinates) => {
   }
 });
 
+function closeCropperWindow() {
+  cropperWindow.close();
+  mainWindow.setAlwaysOnTop(false); // TODO send a PR to `menubar`
+  menubar.setOption('alwaysOnTop', false);
+}
+
 function setCropperWindowOnBlur() {
   cropperWindow.on('blur', () => {
     if (!mainWindow.isFocused() &&
         !cropperWindow.webContents.isDevToolsFocused() &&
         !mainWindow.webContents.isDevToolsFocused() &&
         !recording) {
-      cropperWindow.close();
+      closeCropperWindow();
     }
   });
 }
@@ -146,9 +152,7 @@ ipcMain.on('open-cropper-window', (event, size) => {
 
 ipcMain.on('close-cropper-window', () => {
   if (cropperWindow && !recording) {
-    mainWindow.setAlwaysOnTop(false); // TODO send a PR to `menubar`
-    menubar.setOption('alwaysOnTop', false);
-    cropperWindow.close(); // TODO: cropperWindow.hide()
+    closeCropperWindow();
   }
 });
 
@@ -248,7 +252,7 @@ menubar.on('after-create-window', () => {
     if (cropperWindow && !cropperWindow.isFocused() && !recording) {
       // close the cropper window if the main window loses focus and the cropper window
       // is not focused
-      cropperWindow.close();
+      closeCropperWindow();
     }
 
     recomputeExpectedWindowPosition();
@@ -374,7 +378,7 @@ ipcMain.on('stopped-recording', () => {
 ipcMain.on('will-stop-recording', () => {
   recording = false;
   if (cropperWindow) {
-    cropperWindow.close();
+    closeCropperWindow();
   }
 });
 
