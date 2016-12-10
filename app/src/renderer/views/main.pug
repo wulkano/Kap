@@ -18,11 +18,16 @@ block body
 
   //- Main App area/header (record button container)
   header.kap-header
-    .kap-header__text.time.txt 00:00
+    //- TODO: Implement mouse clicks control
+    .kap-header__text.hidden
+      +icon('mouse')
     .record(data-state='initial')
       +icon('crop').record__crop
       +icon('stop').record__stop.hidden
-    .kap-header__text.size.txt 0 kB
+    //- TODO: Implement mic control
+    .kap-header__text.hidden
+      +icon('mic').is-mic-on
+      +icon('mic-off').is-mic-off.hidden
 
   //- Kap Controls
   section.controls
@@ -46,7 +51,7 @@ block body
               option(data-aspect-ratio='custom') Custom
         .controls-section__row.aspect-ratio
           .aspect-ratio__input
-            label.txt(for='aspect-ratio-width') Width
+            label.c-label.txt(for='aspect-ratio-width') Width
             input#aspect-ratio-width(type='text' value='512')
           .button-group.aspect-ratio__options
             button.button--primary
@@ -54,7 +59,7 @@ block body
             button.button--primary
               +icon('link').link-btn
           .aspect-ratio__input
-            label.txt(for='aspect-ratio-height') Height
+            label.c-label.txt(for='aspect-ratio-height') Height
             input#aspect-ratio-height(type='text' value='512')
       .controls-section.container
         //- TODO remove this `style`👇

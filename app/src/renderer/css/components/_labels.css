@@ -6,7 +6,7 @@
   - Super small, but styles the labels
 */
 
-label {
+label.c-label {
   font-size: 1.2rem;
   display: block;
   color: $grey-lighter;

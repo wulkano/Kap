@@ -45,6 +45,9 @@
   &__text {
     font-size: 1.2rem;
     cursor: -webkit-grab;
+    color: $grey-light;
+
+    &:hover { color: $grey; }
 
     &:first-child {
       text-align: right;
@@ -55,6 +58,8 @@
       text-align: left;
       flex: 1;
     }
+
+    &.is-active { color: $blue; }
   }
 }
 
@@ -65,7 +70,7 @@
   border: 2px solid $red;
   width: 6.4rem;
   height: 6.4rem;
-  margin: 0 2rem;
+  margin: 0 42px;
   justify-content: center;
   align-items: center;
   transition: background-color .12s ease-in-out;
