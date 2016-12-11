@@ -56,4 +56,8 @@ function set(key, value, {volatile = false} = {}) {
   settings.setSync(key, value);
 }
 
-export {init, get, getAll, set};
+function observe(keyPath, handler) {
+  return settings.observe(keyPath, handler);
+}
+
+export {init, get, getAll, set, observe};
