@@ -12,6 +12,8 @@
   cursor: -webkit-grab;
 }
 
+.a-width--full { width: 100%; }
+
 /* Hide element */
 .hidden { display: none !important; }
 

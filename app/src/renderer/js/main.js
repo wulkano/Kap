@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
   const controlsSection = document.querySelector('section.controls');
   const controlsTitleWrapper = document.querySelector('.controls-toggle');
-  const exportAs = document.querySelector('#export-as');
+  const exportAs = document.querySelectorAll('#export-as button');
   const header = document.querySelector('.kap-header');
   const inputWidth = document.querySelector('#aspect-ratio-width');
   const inputHeight = document.querySelector('#aspect-ratio-height');
@@ -57,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastValidInputHeight = 512;
   let aspectRatioBaseValues = [lastValidInputWidth, lastValidInputHeight];
   let hasUpdateNotification = false;
+  let exportType = 'gif';
 
   handleTrafficLightsClicks({hide: true});
 
@@ -187,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         restoreInputs();
 
-        switch (exportAs.value) {
+        switch (exportType) {
           case 'mp4': {
             const now = moment();
             const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.mp4`;
@@ -409,6 +410,20 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('log', (event, msgs) => console.log(...msgs));
+
+  const exportButtons = [];
+  exportAs.forEach((exportButton, key) => {
+    exportButtons.push(key);
+    exportButton.onclick = function () {
+      exportType = this.dataset.exportType;
+      for (const siblingIndex in exportButtons) {
+        if (siblingIndex !== key) {
+          exportAs[siblingIndex].classList.remove('active');
+        }
+      }
+      this.classList.add('active');
+    };
+  });
 
   function exportToType(type, data) {
     header.classList.add('hidden');

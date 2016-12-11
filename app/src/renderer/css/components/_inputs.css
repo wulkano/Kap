@@ -63,6 +63,27 @@ input { -webkit-app-region: no-drag; }
 
 
 /*
+  Input Group
+  - For joined together input styling
+*/
+.input-group {
+  input, input[type=text] {
+    margin-right: 0;
+    border-radius: 0;
+
+    &:not(:last-child) { border-right-color: transparent; }
+    &:first-child:not(:only-child) { border-radius: 3px 0 0 3px; }
+    &:last-child:not(:only-child) { border-radius: 0 3px 3px 0; }
+
+    &:focus {
+      border-color: #3B99FC;
+      & + input { border-left-color: transparent; }
+    }
+  }
+}
+
+
+/*
   Custom input styling
 */
 input, .input {
