@@ -46,10 +46,13 @@ mixin window-header
     name: toggle
     description: Creates a toggle component
     @param {string} name - Applies an id for the input within the toggle
-    example: +toggle('sound-toggle')
+    @attribute {boolean} disabled - Sets toggle to disabled styling
+    examples:
+      +toggle('sound-toggle')
+      +toggle('sound-toggle')(disabled)
 mixin toggle(name)
-  .c-toggle&attributes(attributes)
-    input.c-toggle__input(type='checkbox' id=name)
+  .c-toggle(class!=attributes.class)
+    input.c-toggle__input(type='checkbox' id=name disabled=attributes.disabled)
     label.c-toggle__label(for=name)
 
 //- **
