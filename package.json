@@ -63,7 +63,8 @@
       "**/*",
       "!src",
       "!main.js"
-    ]
+    ],
+    "electronDist": "node_modules/electron/dist"
   },
   "babel": {
     "plugins": [
