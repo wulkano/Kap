@@ -14,11 +14,6 @@ import {log} from '../../common/logger';
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 import {handleTrafficLightsClicks, isVisible} from '../js/utils';
 
-import GADispatcher from '../../common/ga-dispatcher';
-
-const GA_ID = 'UA-84705099-2';
-const dispatcher = GADispatcher(GA_ID);
-
 const aperture = require('aperture.js')();
 
 function setMainWindowSize() {
@@ -28,7 +23,6 @@ function setMainWindowSize() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-
   // Element definitions
   const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
   const controlsSection = document.querySelector('section.controls');
@@ -110,12 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function startRecording() {
-    const gaEvent = {
-      eventCategory: 'User Action',
-      eventAction: 'Started recording'
-    };
-
-    dispatcher.send('Started recording', 'event', gaEvent);
 
     disableInputs();
     ipcRenderer.send('will-start-recording');

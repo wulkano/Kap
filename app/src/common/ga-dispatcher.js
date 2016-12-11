@@ -18,17 +18,11 @@ class GADispatcher {
    * @constructor
    */
   constructor(trackingId, identifier, options) {
-    const currentId = this.getOpt('cid');
-    // const currentUUID = this.getOpt('uuid');
     const opts = options ? options : {};
 
-    // Prevent duplicate instances of GADispatcher from running.
-    if (currentId === trackingId) {
-      return Error(
-        `Cannot instantiate another GADispatcher instance with a different GA ID
-        (was ${trackingId},
-        current GA ID: ${currentId})`
-      );
+    // Check for old UUID and assign it
+    if (localStorage.kapUUID) {
+      opts.uuid = localStorage.kapUUID;
     }
 
     // Enable https by default
@@ -37,10 +31,18 @@ class GADispatcher {
       appVersion: process.env.npm_package_version
     });
 
-    // Assign ua to a session variable
+    // Assign ua to an internal session variable
     this.session = ua(uaOpts);
-    this.cid = currentId;
+    this.queue = [];
+    this.networkStatus = navigator.onLine;
 
+    // Store the current user's UUID in localStorage if
+    // the ua object was assigned properly.
+    if (this.session.cid) {
+      this.session.cid = localStorage.kapUUID;
+    }
+
+    // this._registerNetworkListener();
     console.log('GADispatcher started.', this.session);
   }
 
@@ -60,6 +62,7 @@ class GADispatcher {
    * @param {Object} data - The data to set
    */
   setOpt(opt, data) {
+    console.log(opt, data);
     if (opt) {
       this[opt] = data;
     }
@@ -71,11 +74,11 @@ class GADispatcher {
    * In the event of a failure, the consumeError callback will
    * attempt to recover the request and resend it later.
    *
-   * @param {string} eventName - The shortname for the event.
    * @param {string[]} eventType - Kind of event to send. [pageview, event]
    * @param {Object} [metadata] - Optional
    */
-  send(eventName, eventType, metadata) {
+  send(eventType, metadata) {
+    console.log('Attempting to send request:', eventType, metadata);
     const session = this.getOpt('session');
     session[eventType](metadata, this.callback);
   }
@@ -85,12 +88,49 @@ class GADispatcher {
    * @param {Object} error
    */
   callback(error) {
-    const consumable = error;
-    if (error) {
-      console.log('Error:', consumable);
+    if (error && error !== null) {
+      switch (error.code) {
+        case 'ENOTFOUND': {
+          console.error('Could not contact the server.');
+          break;
+        }
+        case 'ETIMEDOUT': {
+          console.error('Request timed out.');
+          break;
+        }
+        default: {
+          const queue = this.getOpt('queue');
+          queue.push(error);
+        }
+      }
     } else {
-      console.log('All quiet on the western front.');
+      console.log('Request sent.');
     }
+  }
+
+  /**
+   * Instantiates a listener for NetworkInformation events.
+   */
+  _registerNetworkListener() {
+    window.addEventListener('offline online', function () {
+      this.setOpt('networkStatus', navigator.onLine);
+      if (navigator.onLine) {
+        console.log('Network offline. Queueing all further requests for dispatch.');
+      } else {
+        console.log('Network online. Will redispatch queued requests when possible.');
+      }
+    });
+
+    console.log('Listening for network events.');
+  }
+
+  /**
+   * Determines if we can dispatch any queued requests yet.
+   * Returns true if we can safely dispatch.
+   * @return {Boolean}
+   */
+  _canDispatch() {
+    return this.getOpt('networkStatus');
   }
 
 }
