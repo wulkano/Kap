@@ -441,6 +441,8 @@ document.addEventListener('DOMContentLoaded', () => {
     exportToType('gif', data);
   });
 
+  ipcRenderer.on('show-notification', (event, {title, body}) => new Notification(title, {body}));
+
   initErrorReporter();
 });
 

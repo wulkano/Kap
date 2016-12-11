@@ -15,6 +15,8 @@ function createInterval() {
   }, ms('30m'));
 }
 
+let manualCheckTimeout;
+
 function init(window) {
   if (isDev) {
     return;
@@ -30,6 +32,7 @@ function init(window) {
   let intervalId = createInterval();
 
   autoUpdater.on('update-available', () => {
+    clearTimeout(manualCheckTimeout);
     clearInterval(intervalId);
     intervalId = undefined;
     log('update available, starting download');
@@ -54,4 +57,12 @@ function init(window) {
   });
 }
 
+// the `callback` will be called if no update is available at the moment
+function checkForUpdates(callback) {
+  manualCheckTimeout = setTimeout(() => {
+    callback();
+  }, ms('10s'));
+}
+
 exports.init = init;
+exports.checkForUpdates = checkForUpdates;
