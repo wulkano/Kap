@@ -98,6 +98,13 @@ document.addEventListener('DOMContentLoaded', () => {
   fpsSlider.onchange = function () {
     app.kap.settings.set('fps', this.value);
   };
+
+  // the `showCursor` setting can be changed via the
+  // mouse btn in the main window
+  app.kap.settings.observe('showCursor', event => {
+    showCursorCheckbox.checked = event.newValue;
+    showCursorCheckbox.onchange();
+  });
 });
 
 document.addEventListener('dragover', e => e.preventDefault());

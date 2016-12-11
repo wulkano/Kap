@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const recordBtn = document.querySelector('.record');
   const restartAndInstallUpdateBtn = document.querySelector('.restart-and-install-update');
   const size = document.querySelector('.size');
+  const toggleShowCursorBtn = document.querySelector('.js-toggle-show-cursor');
   const swapBtn = document.querySelector('.swap-btn');
   const time = document.querySelector('.time');
   const titleBar = document.querySelector('.title-bar');
@@ -50,6 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const triangle = document.querySelector('.triangle');
   const updateNotification = document.querySelector('.update-notification');
   const windowTitle = document.querySelector('.window__title');
+
+  // init dynamic elements
+  if (app.kap.settings.get('showCursor')) {
+    toggleShowCursorBtn.parentNode.classList.add('is-active');
+  }
 
   // Initial variables
   let monitoringIntervalId;
@@ -346,6 +352,18 @@ document.addEventListener('DOMContentLoaded', () => {
       setCropperWindowSize(...values);
     }
   };
+
+  toggleShowCursorBtn.onclick = function () {
+    const classList = this.parentNode.classList;
+    classList.toggle('is-active');
+    const isActive = classList.contains('is-active');
+    app.kap.settings.set('showCursor', isActive);
+  };
+
+  app.kap.settings.observe('showCursor', event => {
+    const method = event.newValue ? 'add' : 'remove';
+    toggleShowCursorBtn.parentNode.classList[method]('is-active');
+  });
 
   ipcRenderer.on('start-recording', () => startRecording());
 
