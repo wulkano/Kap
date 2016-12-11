@@ -56,18 +56,9 @@ block body
       .preference.container
         .preference-part
           .preference-content
-            .preference__title Sound
-            .preference__description Enable sound
-          +toggle('enable-sound')
-        .preference-part.split
-          .row
-            .col.col-4
-              label.c-label Microphone
-              .select-element
-                select.aspect-ratio-selector
-                  option(value='default') Default
-            .col.col-4
-              label.c-label System
-              .select-element
-                select.aspect-ratio-selector
-                  option(value='default') MM-1
+            .preference__title Record audio
+            .preference__description Select input device
+          .select-element(style="width: 17.8rem")
+            select.aspect-ratio-selector
+              option(value='default') Default
+  

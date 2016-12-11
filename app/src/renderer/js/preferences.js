@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const advancedPrefsBtn = $('.show-advanced-prefs');
   const allowAnalyticsCheckbox = $('#allow-analytics');
   const chooseSaveDirectoryBtn = $('.js-choose-save');
-  const enableSoundCheckbox = $('#enable-sound');
   const fpsLabel = $('.fps-slider .js-middle-label');
   const fpsSlider = $('.fps-slider input');
   const generalPrefs = $('.general-prefs');
@@ -39,7 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
   highlightClicksCheckbox.checked = settingsValues.highlightClicks;
   fpsSlider.value = settingsValues.fps;
   fpsLabel.innerText = `${settingsValues.fps} FPS`;
-  enableSoundCheckbox.checked = settingsValues.sound;
 
   generalPrefsBtn.onclick = function (e) {
     e.preventDefault();
@@ -89,10 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   fpsSlider.onchange = function () {
     app.kap.settings.set('fps', this.value);
-  };
-
-  enableSoundCheckbox.onchange = function () {
-    app.kap.settings.set('sound', this.checked);
   };
 });
 
