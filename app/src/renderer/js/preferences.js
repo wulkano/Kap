@@ -35,6 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
   openOnStartupCheckbox.checked = settingsValues.openOnStartup;
   allowAnalyticsCheckbox.checked = settingsValues.allowAnalytics;
   showCursorCheckbox.checked = settingsValues.showCursor;
+  if (settingsValues.showCursor === false) {
+    highlightClicksCheckbox.disabled = true;
+  }
   highlightClicksCheckbox.checked = settingsValues.highlightClicks;
   fpsSlider.value = settingsValues.fps;
   fpsLabel.innerText = `${settingsValues.fps} FPS`;
@@ -75,6 +78,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   showCursorCheckbox.onchange = function () {
     app.kap.settings.set('showCursor', this.checked);
+    if (this.checked) {
+      highlightClicksCheckbox.disabled = false;
+    } else {
+      highlightClicksCheckbox.disabled = true;
+      highlightClicksCheckbox.checked = false;
+      app.kap.settings.set('highlightClicks', false);
+    }
   };
 
   highlightClicksCheckbox.onchange = function () {
