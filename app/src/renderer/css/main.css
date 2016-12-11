@@ -108,7 +108,7 @@
 
     /* Text inside the toggle */
     &__title {
-      cursor: pointer;
+      cursor: pointer !important;
       margin-left: 1rem;
     }
 
