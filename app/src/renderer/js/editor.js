@@ -200,11 +200,13 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   previewContainer.onmouseover = function () {
-    windowHeader.classList.toggle('is-hidden');
+    windowHeader.classList.remove('is-hidden');
   };
 
-  previewContainer.onmouseout = function () {
-    windowHeader.classList.toggle('is-hidden');
+  previewContainer.onmouseout = function (event) {
+    if (!Array.from(windowHeader.querySelectorAll('*')).includes(event.relatedTarget)) {
+      windowHeader.classList.add('is-hidden');
+    }
   };
 });
 
