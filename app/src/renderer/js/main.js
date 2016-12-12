@@ -158,10 +158,28 @@ document.addEventListener('DOMContentLoaded', () => {
     cropperBounds.width -= 2;
     cropperBounds.height -= 2;
 
-    aperture.startRecording({
+    // we need the most recent settings
+    const {
+      fps,
+      showCursor,
+      highlightClicks,
+      recordAudio,
+      audioInputDeviceId
+    } = app.kap.settings.getAll();
+
+    const apertureOpts = {
+      fps,
       cropArea: cropperBounds,
+      showCursor,
+      highlightClicks,
       displayId: display.id
-    })
+    };
+
+    if (recordAudio === true) {
+      apertureOpts.audioSourceId = audioInputDeviceId;
+    }
+
+    aperture.startRecording(apertureOpts)
       .then(filePath => {
         recordBtn.attributes['data-state'].value = 'ready-to-stop';
         recordBtn.children[0].classList.add('hidden'); // crop btn
