@@ -180,7 +180,12 @@ document.addEventListener('DOMContentLoaded', () => {
   discardBtn.onclick = confirmDiscard;
   window.onkeyup = event => {
     if (event.keyCode === 27) { // esc
-      confirmDiscard();
+      if (maximizeBtn.classList.contains('hidden')) {
+        // exit fullscreen
+        unmaximizeBtn.onclick();
+      } else {
+        confirmDiscard();
+      }
     }
   };
 
