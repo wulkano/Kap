@@ -6,6 +6,8 @@ import moment from 'moment';
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 import {handleTrafficLightsClicks, $} from '../js/utils';
 
+const {app} = remote;
+
 document.addEventListener('DOMContentLoaded', () => {
   const playBtn = $('.js-play-video');
   const pauseBtn = $('.js-pause-video');
@@ -16,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const inputHeight = $('.input-height');
   const inputWidth = $('.input-width');
   const fps15Btn = $('#fps-15');
-  const fps30Btn = $('#fps-30');
+  const fpsMaxBtn = $('#fps-max');
   const loopOffBtn = $('#loop-off');
   const loopOnBtn = $('#loop-on');
   const preview = $('#preview');
@@ -25,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveBtn = $('.save');
   const windowHeader = $('.window-header');
 
+  let maxFps = app.kap.settings.get('fps');
+  maxFps = maxFps > 30 ? 30 : maxFps;
   let fps = 15;
   let loop = true;
 
@@ -33,6 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let aspectRatioBaseValues;
 
   handleTrafficLightsClicks({hide: true});
+
+  fpsMaxBtn.children[0].innerText = maxFps;
 
   preview.oncanplay = function () {
     aspectRatioBaseValues = [this.videoWidth, this.videoHeight];
@@ -136,14 +142,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   fps15Btn.onclick = function () {
     this.classList.add('active');
-    fps30Btn.classList.remove('active');
+    fpsMaxBtn.classList.remove('active');
     fps = 15;
   };
 
-  fps30Btn.onclick = function () {
+  fpsMaxBtn.onclick = function () {
     this.classList.add('active');
     fps15Btn.classList.remove('active');
-    fps = 30;
+    fps = maxFps;
   };
 
   loopOffBtn.onclick = function () {
