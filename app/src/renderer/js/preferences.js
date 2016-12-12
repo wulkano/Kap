@@ -43,8 +43,9 @@ document.addEventListener('DOMContentLoaded', () => {
   showCursorCheckbox.checked = settingsValues.showCursor;
   if (settingsValues.showCursor === false) {
     highlightClicksCheckbox.disabled = true;
+  } else {
+    highlightClicksCheckbox.checked = settingsValues.highlightClicks;
   }
-  highlightClicksCheckbox.checked = settingsValues.highlightClicks;
   fpsSlider.value = settingsValues.fps;
   fpsLabel.innerText = `${settingsValues.fps} FPS`;
   aperture.getAudioSources().then(devices => {
@@ -97,10 +98,10 @@ document.addEventListener('DOMContentLoaded', () => {
     app.kap.settings.set('showCursor', this.checked);
     if (this.checked) {
       highlightClicksCheckbox.disabled = false;
+      highlightClicksCheckbox.checked = app.kap.settings.get('highlightClicks');
     } else {
       highlightClicksCheckbox.disabled = true;
       highlightClicksCheckbox.checked = false;
-      app.kap.settings.set('highlightClicks', false);
     }
   };
 
