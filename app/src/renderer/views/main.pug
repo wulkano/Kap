@@ -26,9 +26,9 @@ block body
       +icon('crop').record__crop
       +icon('stop').record__stop.hidden
     //- TODO: Implement mic control
-    .kap-header__text
-      +icon('mic').is-mic-on
-      +icon('mic-off').is-mic-off.hidden
+    .kap-header__text.js-toggle-audio-record
+        +icon('mic').is-mic-on.hidden
+        +icon('mic-off').is-mic-off
     .kap-header__text.size.txt.hidden 0 kB
 
   //- Kap Controls
