@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveBtn = $('.save');
   const windowHeader = $('.window-header');
 
-  let fps = 30;
+  let fps = 15;
   let loop = true;
 
   let lastValidInputWidth;
