@@ -27,4 +27,10 @@ function handleTrafficLightsClicks({wrapper = $('.title-bar__controls'), hide = 
   });
 }
 
-export {handleTrafficLightsClicks, isVisible, $};
+function disposeObservers(observers) {
+  for (const observer of observers) {
+    observer.dispose();
+  }
+}
+
+export {handleTrafficLightsClicks, isVisible, $, disposeObservers};

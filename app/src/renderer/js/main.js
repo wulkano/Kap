@@ -12,11 +12,14 @@ import {log} from '../../common/logger';
 
 // note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
-import {handleTrafficLightsClicks, isVisible} from '../js/utils';
+import {handleTrafficLightsClicks, isVisible, disposeObservers} from '../js/utils';
 
 const aperture = require('aperture.js')();
 
 const {app} = remote;
+
+// observers that should be disposed when the window unloads
+const observersToDispose = [];
 
 function setMainWindowSize() {
   const width = document.documentElement.scrollWidth;
@@ -360,10 +363,10 @@ document.addEventListener('DOMContentLoaded', () => {
     app.kap.settings.set('showCursor', isActive);
   };
 
-  app.kap.settings.observe('showCursor', event => {
+  observersToDispose.push(app.kap.settings.observe('showCursor', event => {
     const method = event.newValue ? 'add' : 'remove';
     toggleShowCursorBtn.parentNode.classList[method]('is-active');
-  });
+  }));
 
   ipcRenderer.on('start-recording', () => startRecording());
 
@@ -483,3 +486,6 @@ document.addEventListener('dragover', e => e.preventDefault());
 document.addEventListener('drop', e => e.preventDefault());
 
 window.addEventListener('load', setMainWindowSize);
+window.addEventListener('beforeunload', () => {
+  disposeObservers(observersToDispose);
+});

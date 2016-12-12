@@ -1,11 +1,14 @@
 import {remote} from 'electron';
 
 // note: `./` == `/app/dist/renderer/views`, not `js`
-import {handleTrafficLightsClicks, $} from '../js/utils';
+import {handleTrafficLightsClicks, $, disposeObservers} from '../js/utils';
 
 const {app, dialog, getCurrentWindow} = remote;
 
 const settingsValues = app.kap.settings.getAll();
+
+// observers that should be disposed when the window unloads
+const observersToDispose = [];
 
 document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
@@ -101,11 +104,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // the `showCursor` setting can be changed via the
   // mouse btn in the main window
-  app.kap.settings.observe('showCursor', event => {
+  observersToDispose.push(app.kap.settings.observe('showCursor', event => {
     showCursorCheckbox.checked = event.newValue;
     showCursorCheckbox.onchange();
-  });
+  }));
 });
 
 document.addEventListener('dragover', e => e.preventDefault());
 document.addEventListener('drop', e => e.preventDefault());
+
+window.addEventListener('beforeunload', () => {
+  disposeObservers(observersToDispose);
+});
