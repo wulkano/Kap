@@ -85,7 +85,9 @@ ipcMain.on('open-cropper-window', (event, size) => {
   if (cropperWindow) {
     cropperWindow.focus();
   } else {
-    const {width = size.width, height = size.height} = settings.get('cropperWindow.size');
+    let {width = 512, height = 512} = settings.get('cropperWindow.size');
+    width = size.width || width;
+    height = size.height || height;
     const {x, y} = settings.get('cropperWindow.position');
     cropperWindow = new BrowserWindow({
       width: width + cropperWindowBuffer,
