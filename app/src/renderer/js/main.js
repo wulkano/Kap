@@ -112,6 +112,10 @@ document.addEventListener('DOMContentLoaded', () => {
     linkBtn.classList.add('disabled');
     swapBtn.classList.add('disabled');
     exportAs.disabled = true;
+    toggleAudioRecordBtn.classList.add('hidden');
+    toggleShowCursorBtn.classList.add('hidden');
+    time.classList.remove('hidden');
+    size.classList.remove('hidden');
   }
 
   function enableInputs() {
@@ -121,6 +125,10 @@ document.addEventListener('DOMContentLoaded', () => {
     linkBtn.classList.remove('disabled');
     swapBtn.classList.remove('disabled');
     exportAs.disabled = false;
+    toggleAudioRecordBtn.classList.remove('hidden');
+    toggleShowCursorBtn.classList.remove('hidden');
+    time.classList.add('hidden');
+    size.classList.add('hidden');
   }
 
   function startRecording() {
