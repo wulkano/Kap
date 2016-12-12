@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const recordBtn = document.querySelector('.record');
   const restartAndInstallUpdateBtn = document.querySelector('.restart-and-install-update');
   const size = document.querySelector('.size');
+  const toggleAudioRecordBtn = document.querySelector('.js-toggle-audio-record');
   const toggleShowCursorBtn = document.querySelector('.js-toggle-show-cursor');
   const swapBtn = document.querySelector('.swap-btn');
   const time = document.querySelector('.time');
@@ -55,9 +56,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const updateNotification = document.querySelector('.update-notification');
   const windowTitle = document.querySelector('.window__title');
 
+  const [micOnIcon, micOffIcon] = toggleAudioRecordBtn.children;
+
   // init dynamic elements
   if (app.kap.settings.get('showCursor')) {
     toggleShowCursorBtn.parentNode.classList.add('is-active');
+  }
+  if (app.kap.settings.get('recordAudio') === true) {
+    toggleAudioRecordBtn.classList.add('is-active');
+    micOnIcon.classList.remove('hidden');
+    micOffIcon.classList.add('hidden');
   }
 
   // Initial variables
@@ -363,9 +371,29 @@ document.addEventListener('DOMContentLoaded', () => {
     app.kap.settings.set('showCursor', isActive);
   };
 
+  toggleAudioRecordBtn.onclick = function () {
+    micOnIcon.classList.toggle('hidden');
+    micOffIcon.classList.toggle('hidden');
+    this.classList.toggle('is-active');
+
+    app.kap.settings.set('recordAudio', isVisible(micOnIcon));
+  };
+
   observersToDispose.push(app.kap.settings.observe('showCursor', event => {
     const method = event.newValue ? 'add' : 'remove';
     toggleShowCursorBtn.parentNode.classList[method]('is-active');
+  }));
+
+  observersToDispose.push(app.kap.settings.observe('recordAudio', event => {
+    const method = event.newValue ? 'add' : 'remove';
+    toggleAudioRecordBtn.classList[method]('is-active');
+    if (event.newValue === true) {
+      micOnIcon.classList.remove('hidden');
+      micOffIcon.classList.add('hidden');
+    } else {
+      micOnIcon.classList.add('hidden');
+      micOffIcon.classList.remove('hidden');
+    }
   }));
 
   ipcRenderer.on('start-recording', () => startRecording());

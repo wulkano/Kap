@@ -129,6 +129,16 @@ document.addEventListener('DOMContentLoaded', () => {
     showCursorCheckbox.checked = event.newValue;
     showCursorCheckbox.onchange();
   }));
+
+  // the `recordAudio` setting can be changed via the
+  // mic btn in the main window
+  observersToDispose.push(app.kap.settings.observe('recordAudio', event => {
+    if (event.newValue === true) {
+      audioInputDeviceSelector.value = app.kap.settings.get('audioInputDeviceId');
+    } else {
+      audioInputDeviceSelector.value = 'none';
+    }
+  }));
 });
 
 document.addEventListener('dragover', e => e.preventDefault());
