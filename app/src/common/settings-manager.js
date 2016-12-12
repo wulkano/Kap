@@ -13,7 +13,8 @@ const DEFAULTS = {
   showCursor: true,
   highlightClicks: false,
   fps: 30,
-  recordAudio: false
+  recordAudio: false,
+  exportAs: 'gif'
 };
 
 const volatiles = {

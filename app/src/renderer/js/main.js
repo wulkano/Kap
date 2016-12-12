@@ -58,6 +58,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const [micOnIcon, micOffIcon] = toggleAudioRecordBtn.children;
 
+  // Initial variables
+  let monitoringIntervalId;
+  let lastValidInputWidth = 512;
+  let lastValidInputHeight = 512;
+  let aspectRatioBaseValues = [lastValidInputWidth, lastValidInputHeight];
+  let hasUpdateNotification = false;
+  let exportType = app.kap.settings.get('exportAs');
+
   // init dynamic elements
   if (app.kap.settings.get('showCursor')) {
     toggleShowCursorBtn.parentNode.classList.add('is-active');
@@ -67,14 +75,9 @@ document.addEventListener('DOMContentLoaded', () => {
     micOnIcon.classList.remove('hidden');
     micOffIcon.classList.add('hidden');
   }
-
-  // Initial variables
-  let monitoringIntervalId;
-  let lastValidInputWidth = 512;
-  let lastValidInputHeight = 512;
-  let aspectRatioBaseValues = [lastValidInputWidth, lastValidInputHeight];
-  let hasUpdateNotification = false;
-  let exportType = 'gif';
+  Array.from(exportAs)
+    .find(el => el.dataset.exportType === exportType)
+    .classList.add('active');
 
   handleTrafficLightsClicks({hide: true});
 
@@ -491,6 +494,7 @@ document.addEventListener('DOMContentLoaded', () => {
     exportButtons.push(key);
     exportButton.onclick = function () {
       exportType = this.dataset.exportType;
+      app.kap.settings.set('exportAs', exportType);
       for (const siblingIndex in exportButtons) {
         if (siblingIndex !== key) {
           exportAs[siblingIndex].classList.remove('active');
