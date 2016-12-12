@@ -1,19 +1,24 @@
 import {remote} from 'electron';
 
 // note: `./` == `/app/dist/renderer/views`, not `js`
-import {handleTrafficLightsClicks, $} from '../js/utils';
+import {handleTrafficLightsClicks, $, disposeObservers} from '../js/utils';
 
 const {app, dialog, getCurrentWindow} = remote;
 
+const aperture = require('aperture.js')();
+
 const settingsValues = app.kap.settings.getAll();
+
+// observers that should be disposed when the window unloads
+const observersToDispose = [];
 
 document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
   const advancedPrefs = $('.advanced-prefs');
   const advancedPrefsBtn = $('.show-advanced-prefs');
   const allowAnalyticsCheckbox = $('#allow-analytics');
+  const audioInputDeviceSelector = $('.js-audio-input-device-selector');
   const chooseSaveDirectoryBtn = $('.js-choose-save');
-  const enableSoundCheckbox = $('#enable-sound');
   const fpsLabel = $('.fps-slider .js-middle-label');
   const fpsSlider = $('.fps-slider input');
   const generalPrefs = $('.general-prefs');
@@ -36,10 +41,24 @@ document.addEventListener('DOMContentLoaded', () => {
   openOnStartupCheckbox.checked = settingsValues.openOnStartup;
   allowAnalyticsCheckbox.checked = settingsValues.allowAnalytics;
   showCursorCheckbox.checked = settingsValues.showCursor;
-  highlightClicksCheckbox.checked = settingsValues.highlightClicks;
+  if (settingsValues.showCursor === false) {
+    highlightClicksCheckbox.disabled = true;
+  } else {
+    highlightClicksCheckbox.checked = settingsValues.highlightClicks;
+  }
   fpsSlider.value = settingsValues.fps;
   fpsLabel.innerText = `${settingsValues.fps} FPS`;
-  enableSoundCheckbox.checked = settingsValues.sound;
+  aperture.getAudioSources().then(devices => {
+    for (const device of devices) {
+      const option = document.createElement('option');
+      option.value = device.id;
+      option.text = device.name;
+      audioInputDeviceSelector.add(option);
+    }
+    if (settingsValues.recordAudio === true) {
+      audioInputDeviceSelector.value = settingsValues.audioInputDeviceId;
+    }
+  });
 
   generalPrefsBtn.onclick = function (e) {
     e.preventDefault();
@@ -77,6 +96,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   showCursorCheckbox.onchange = function () {
     app.kap.settings.set('showCursor', this.checked);
+    if (this.checked) {
+      highlightClicksCheckbox.disabled = false;
+      highlightClicksCheckbox.checked = app.kap.settings.get('highlightClicks');
+    } else {
+      highlightClicksCheckbox.disabled = true;
+      highlightClicksCheckbox.checked = false;
+    }
   };
 
   highlightClicksCheckbox.onchange = function () {
@@ -91,10 +117,34 @@ document.addEventListener('DOMContentLoaded', () => {
     app.kap.settings.set('fps', this.value);
   };
 
-  enableSoundCheckbox.onchange = function () {
-    app.kap.settings.set('sound', this.checked);
+  audioInputDeviceSelector.onchange = function () {
+    app.kap.settings.set('recordAudio', this.value !== 'none');
+    if (this.value !== 'none') {
+      app.kap.settings.set('audioInputDeviceId', this.value);
+    }
   };
+
+  // the `showCursor` setting can be changed via the
+  // mouse btn in the main window
+  observersToDispose.push(app.kap.settings.observe('showCursor', event => {
+    showCursorCheckbox.checked = event.newValue;
+    showCursorCheckbox.onchange();
+  }));
+
+  // the `recordAudio` setting can be changed via the
+  // mic btn in the main window
+  observersToDispose.push(app.kap.settings.observe('recordAudio', event => {
+    if (event.newValue === true) {
+      audioInputDeviceSelector.value = app.kap.settings.get('audioInputDeviceId');
+    } else {
+      audioInputDeviceSelector.value = 'none';
+    }
+  }));
 });
 
 document.addEventListener('dragover', e => e.preventDefault());
 document.addEventListener('drop', e => e.preventDefault());
+
+window.addEventListener('beforeunload', () => {
+  disposeObservers(observersToDispose);
+});

@@ -20,13 +20,9 @@
   }
 
   &[disabled] + .c-toggle__label{
-    border: 1px solid #E4EAF1;
-    background-color: #F2F6F9;
+    background-color: $grey-darker;
 
-    &:after {
-      border: 1px solid #E4EAF1;
-      background-color: #F2F6F9;
-    }
+    &:after { background-color: $grey; }
   }
 
   + .c-toggle__label {

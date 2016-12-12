@@ -12,11 +12,14 @@ import {log} from '../../common/logger';
 
 // note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
-import {handleTrafficLightsClicks, isVisible} from '../js/utils';
+import {handleTrafficLightsClicks, isVisible, disposeObservers} from '../js/utils';
 
 const aperture = require('aperture.js')();
 
 const {app} = remote;
+
+// observers that should be disposed when the window unloads
+const observersToDispose = [];
 
 function setMainWindowSize() {
   const width = document.documentElement.scrollWidth;
@@ -42,6 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const recordBtn = document.querySelector('.record');
   const restartAndInstallUpdateBtn = document.querySelector('.restart-and-install-update');
   const size = document.querySelector('.size');
+  const toggleAudioRecordBtn = document.querySelector('.js-toggle-audio-record');
+  const toggleShowCursorBtn = document.querySelector('.js-toggle-show-cursor');
   const swapBtn = document.querySelector('.swap-btn');
   const time = document.querySelector('.time');
   const titleBar = document.querySelector('.title-bar');
@@ -51,13 +56,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const updateNotification = document.querySelector('.update-notification');
   const windowTitle = document.querySelector('.window__title');
 
+  const [micOnIcon, micOffIcon] = toggleAudioRecordBtn.children;
+
   // Initial variables
   let monitoringIntervalId;
   let lastValidInputWidth = 512;
   let lastValidInputHeight = 512;
   let aspectRatioBaseValues = [lastValidInputWidth, lastValidInputHeight];
   let hasUpdateNotification = false;
-  let exportType = 'gif';
+  let exportType = app.kap.settings.get('exportAs');
+
+  // init dynamic elements
+  if (app.kap.settings.get('showCursor')) {
+    toggleShowCursorBtn.parentNode.classList.add('is-active');
+  }
+  if (app.kap.settings.get('recordAudio') === true) {
+    toggleAudioRecordBtn.classList.add('is-active');
+    micOnIcon.classList.remove('hidden');
+    micOffIcon.classList.add('hidden');
+  }
+  Array.from(exportAs)
+    .find(el => el.dataset.exportType === exportType)
+    .classList.add('active');
 
   handleTrafficLightsClicks({hide: true});
 
@@ -95,6 +115,10 @@ document.addEventListener('DOMContentLoaded', () => {
     linkBtn.classList.add('disabled');
     swapBtn.classList.add('disabled');
     exportAs.disabled = true;
+    toggleAudioRecordBtn.classList.add('hidden');
+    toggleShowCursorBtn.classList.add('hidden');
+    time.classList.remove('hidden');
+    size.classList.remove('hidden');
   }
 
   function enableInputs() {
@@ -104,6 +128,10 @@ document.addEventListener('DOMContentLoaded', () => {
     linkBtn.classList.remove('disabled');
     swapBtn.classList.remove('disabled');
     exportAs.disabled = false;
+    toggleAudioRecordBtn.classList.remove('hidden');
+    toggleShowCursorBtn.classList.remove('hidden');
+    time.classList.add('hidden');
+    size.classList.add('hidden');
   }
 
   function startRecording() {
@@ -141,10 +169,28 @@ document.addEventListener('DOMContentLoaded', () => {
     cropperBounds.width -= 2;
     cropperBounds.height -= 2;
 
-    aperture.startRecording({
+    // we need the most recent settings
+    const {
+      fps,
+      showCursor,
+      highlightClicks,
+      recordAudio,
+      audioInputDeviceId
+    } = app.kap.settings.getAll();
+
+    const apertureOpts = {
+      fps,
       cropArea: cropperBounds,
+      showCursor,
+      highlightClicks,
       displayId: display.id
-    })
+    };
+
+    if (recordAudio === true) {
+      apertureOpts.audioSourceId = audioInputDeviceId;
+    }
+
+    aperture.startRecording(apertureOpts)
       .then(filePath => {
         recordBtn.attributes['data-state'].value = 'ready-to-stop';
         recordBtn.children[0].classList.add('hidden'); // crop btn
@@ -347,6 +393,38 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  toggleShowCursorBtn.onclick = function () {
+    const classList = this.parentNode.classList;
+    classList.toggle('is-active');
+    const isActive = classList.contains('is-active');
+    app.kap.settings.set('showCursor', isActive);
+  };
+
+  toggleAudioRecordBtn.onclick = function () {
+    micOnIcon.classList.toggle('hidden');
+    micOffIcon.classList.toggle('hidden');
+    this.classList.toggle('is-active');
+
+    app.kap.settings.set('recordAudio', isVisible(micOnIcon));
+  };
+
+  observersToDispose.push(app.kap.settings.observe('showCursor', event => {
+    const method = event.newValue ? 'add' : 'remove';
+    toggleShowCursorBtn.parentNode.classList[method]('is-active');
+  }));
+
+  observersToDispose.push(app.kap.settings.observe('recordAudio', event => {
+    const method = event.newValue ? 'add' : 'remove';
+    toggleAudioRecordBtn.classList[method]('is-active');
+    if (event.newValue === true) {
+      micOnIcon.classList.remove('hidden');
+      micOffIcon.classList.add('hidden');
+    } else {
+      micOnIcon.classList.add('hidden');
+      micOffIcon.classList.remove('hidden');
+    }
+  }));
+
   ipcRenderer.on('start-recording', () => startRecording());
 
   ipcRenderer.on('prepare-recording', () => prepareRecordButton());
@@ -416,6 +494,7 @@ document.addEventListener('DOMContentLoaded', () => {
     exportButtons.push(key);
     exportButton.onclick = function () {
       exportType = this.dataset.exportType;
+      app.kap.settings.set('exportAs', exportType);
       for (const siblingIndex in exportButtons) {
         if (siblingIndex !== key) {
           exportAs[siblingIndex].classList.remove('active');
@@ -465,3 +544,6 @@ document.addEventListener('dragover', e => e.preventDefault());
 document.addEventListener('drop', e => e.preventDefault());
 
 window.addEventListener('load', setMainWindowSize);
+window.addEventListener('beforeunload', () => {
+  disposeObservers(observersToDispose);
+});

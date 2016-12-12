@@ -1,6 +1,8 @@
 import firstRun from 'first-run';
 import Insight from 'insight';
 
+import {get as getSetting} from '../common/settings-manager';
+
 const pkg = require('../../package');
 
 const trackingCode = 'UA-84705099-2';
@@ -18,7 +20,11 @@ function init() {
 }
 
 function track(...paths) {
-  insight.track(...paths);
+  console.log(getSetting('allowAnalytics'));
+  if (getSetting('allowAnalytics') === true) {
+    console.log('tracking');
+    insight.track(...paths);
+  }
 }
 
 exports.init = init;

@@ -21,14 +21,14 @@ block body
     .kap-header__text.time.txt.hidden 00:00
     //- TODO: Implement mouse clicks control
     .kap-header__text
-      +icon('mouse')
+      +icon('mouse').js-toggle-show-cursor
     .record(data-state='initial')
       +icon('crop').record__crop
       +icon('stop').record__stop.hidden
     //- TODO: Implement mic control
-    .kap-header__text
-      +icon('mic').is-mic-on
-      +icon('mic-off').is-mic-off.hidden
+    .kap-header__text.js-toggle-audio-record
+        +icon('mic').is-mic-on.hidden
+        +icon('mic-off').is-mic-off
     .kap-header__text.size.txt.hidden 0 kB
 
   //- Kap Controls
@@ -68,7 +68,7 @@ block body
         span.controls-section__title.txt Export as
         .controls-section__row
           .button-group.a-width--full#export-as
-            button.button--primary.active(data-export-type="gif")
+            button.button--primary(data-export-type="gif")
               span GIF
             button.button--primary(data-export-type="webm")
               span WebM
