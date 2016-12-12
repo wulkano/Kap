@@ -2,7 +2,7 @@
   "name": "Kap",
   "main": "dist/main/index.js",
   "private": true,
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "The best way to record your screen",
   "repository": "wulkano/kap",
   "author": "Wulkano AS <team@wulka.no> (https://wulka.no/)",
