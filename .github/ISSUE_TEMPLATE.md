@@ -10,8 +10,8 @@ Expected behaviour : how the software should behave
 Workaround: workaround the issue if there is any (this will help users having the same issue)
 -->
 
-### Platform
-### Kap Version
+**Platform:**
+**Kap Version:**
 ### Steps to reproduce
 ### Current behaviour
 ### Expected behaviour
