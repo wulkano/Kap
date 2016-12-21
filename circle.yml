@@ -4,7 +4,7 @@ machine:
     XCODE_SCHEME: symbolicator
     XCODE_WORKSPACE: symbolicator
   xcode:
-    version: 7.3
+    version: 8.2
 test:
   override:
     - npm run dist
