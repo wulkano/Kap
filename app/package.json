@@ -12,7 +12,7 @@
   },
   "homepage": "https://getkap.co",
   "dependencies": {
-    "aperture.js": "git://github.com/wulkano/aperture.js.git",
+    "aperture": "latest",
     "aspectratio": "^2.2.2",
     "eightpoint": "0.0.1",
     "electron-is-dev": "^0.1.2",

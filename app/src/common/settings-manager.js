@@ -4,7 +4,7 @@ import {app} from 'electron';
 import settings from 'electron-settings';
 import objectPath from 'object-path';
 
-const aperture = require('aperture.js')();
+const aperture = require('aperture')();
 
 const DEFAULTS = {
   kapturesDir: `${homedir()}/Movies/Kaptures`,

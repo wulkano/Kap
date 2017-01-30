@@ -14,7 +14,7 @@ import {log} from '../../common/logger';
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 import {handleTrafficLightsClicks, isVisible, disposeObservers} from '../js/utils';
 
-const aperture = require('aperture.js')();
+const aperture = require('aperture')();
 
 const {app} = remote;
 
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // that is not the main one are relative to the main display. consequently, the
       // bounds of windows in that display are relative to the main display.
       // we need to make those bounds relative to the display in which the cropper window
-      // is placed in order to aperture.js to work properly
+      // is placed in order to aperture to work properly
       cropperBounds.x = Math.abs(displayBounds.x - cropperBounds.x);
       cropperBounds.y = Math.abs(displayBounds.y - cropperBounds.y);
 

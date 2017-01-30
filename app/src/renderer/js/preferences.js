@@ -5,7 +5,7 @@ import {handleTrafficLightsClicks, $, disposeObservers} from '../js/utils';
 
 const {app, dialog, getCurrentWindow} = remote;
 
-const aperture = require('aperture.js')();
+const aperture = require('aperture')();
 
 const settingsValues = app.kap.settings.getAll();
 
