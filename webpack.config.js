@@ -12,7 +12,8 @@ const SRC_RENDERER = joinPath(__dirname, 'app', 'src', 'renderer');
 const SRC_RENDERER_JS = joinPath(SRC_RENDERER, 'js');
 
 module.exports = {
-  // devtool: 'cheap-eval-source-map',
+  // devtool: TODO(matheuss): For some reason, any option here makes electron
+  // throw some weird error. We should investigate this ASAP
   node: {
     __dirname: false
   },
