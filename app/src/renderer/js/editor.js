@@ -6,6 +6,12 @@ import moment from 'moment';
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 import {handleTrafficLightsClicks, $, handleActiveButtonGroup} from '../js/utils';
 
+// webpack stuff
+/* eslint-disable import/no-unassigned-import */
+require('../css/editor.css');
+require('./disable-zoom.js');
+/* eslint-enable import/no-unassigned-import */
+
 const {app} = remote;
 
 document.addEventListener('DOMContentLoaded', () => {

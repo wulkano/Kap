@@ -16,6 +16,12 @@ import {handleTrafficLightsClicks, isVisible, disposeObservers, handleActiveButt
 
 const aperture = require('aperture')();
 
+// webpack stuff
+/* eslint-disable import/no-unassigned-import */
+require('../css/main.css');
+require('./disable-zoom.js');
+/* eslint-enable import/no-unassigned-import */
+
 const {app} = remote;
 
 // observers that should be disposed when the window unloads

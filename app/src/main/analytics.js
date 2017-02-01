@@ -10,7 +10,7 @@ const trackingCode = 'UA-84705099-2';
 const insight = new Insight({trackingCode, pkg});
 
 function init() {
-  if (firstRun()) {
+  if (firstRun({name: 'Kap'})) {
     insight.track('install');
   }
 
