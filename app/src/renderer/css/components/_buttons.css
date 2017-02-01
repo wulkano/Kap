@@ -29,6 +29,7 @@
   Button Group
 */
 .button-group {
+  position: relative;
   border: none;
   padding: 0;
   border-radius: 3px;
@@ -37,6 +38,15 @@
   justify-content: space-around;
   background-color: #414141;
   box-shadow: 0 1px 2px rgba(0, 0, 0, .2), 0 0 0 1px rgba(0, 0, 0, .1), inset 0 1px rgba(255, 255, 255, .05);
+
+  .active-shim {
+     position: absolute;
+     background: $blue;
+     z-index: 0;
+     left: 0;
+     transition: .3s ease;
+     transition-property: transform, border-radius;
+  }
 
   *[class^="button"] {
     flex: 1 1 1%;
@@ -57,11 +67,7 @@
     span {
       padding: 0 1.6rem;
       min-width: 4.8rem;
-    }
-
-    &.active, &.is-active {
-       background: $blue;
-       color: white;
+      z-index: 1;
     }
   }
 

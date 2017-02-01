@@ -12,7 +12,7 @@ import {log} from '../../common/logger';
 
 // note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
-import {handleTrafficLightsClicks, isVisible, disposeObservers} from '../js/utils';
+import {handleTrafficLightsClicks, isVisible, disposeObservers, handleActiveButtonGroup} from '../js/utils';
 
 const aperture = require('aperture')();
 
@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let aspectRatioBaseValues = [lastValidInputWidth, lastValidInputHeight];
   let hasUpdateNotification = false;
   let exportType = app.kap.settings.get('exportAs');
+  let initializedActiveShim = false;
 
   // init dynamic elements
   if (app.kap.settings.get('showCursor')) {
@@ -304,6 +305,12 @@ document.addEventListener('DOMContentLoaded', () => {
     triangle.classList.toggle('up');
 
     controls.classList.toggle('hidden');
+
+    if (!initializedActiveShim && !controls.classList.contains('hidden')) {
+      handleActiveButtonGroup({buttonGroup: exportAs[0].parentNode});
+      initializedActiveShim = true;
+    }
+
     setMainWindowSize();
   };
 

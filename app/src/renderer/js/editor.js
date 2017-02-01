@@ -4,7 +4,7 @@ import moment from 'moment';
 
 // note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
-import {handleTrafficLightsClicks, $} from '../js/utils';
+import {handleTrafficLightsClicks, $, handleActiveButtonGroup} from '../js/utils';
 
 const {app} = remote;
 
@@ -37,6 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let aspectRatioBaseValues;
 
   handleTrafficLightsClicks({hide: true});
+  handleActiveButtonGroup({buttonGroup: fps15Btn.parentNode});
+  handleActiveButtonGroup({buttonGroup: loopOffBtn.parentNode});
 
   fpsMaxBtn.children[0].innerText = maxFps;
 
