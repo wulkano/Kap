@@ -2,6 +2,7 @@ const {join: pathJoin, resolve: resolvePath} = require('path');
 
 const Copy = require('copy-webpack-plugin');
 const Shell = require('webpack-shell-plugin');
+const LiveReload = require('webpack-livereload-plugin');
 
 function joinPath(...paths) {
   return pathJoin(...paths);
@@ -68,6 +69,7 @@ module.exports = {
     ]),
     new Shell({
       onBuildEnd: ['chmod +x ./app/dist/ffmpeg']
-    })
+    }),
+    new LiveReload()
   ]
 };

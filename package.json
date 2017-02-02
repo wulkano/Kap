@@ -42,6 +42,7 @@
     "postcss-simple-vars": "3.0.0",
     "style-loader": "^0.13.1",
     "webpack": "2.2.0",
+    "webpack-livereload-plugin": "^0.10.0",
     "webpack-shell-plugin": "^0.5.0",
     "xo": "0.17.0"
   },
