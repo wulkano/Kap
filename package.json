@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "app-root-path": "^2.0.1",
+    "babel-core": "^6.22.1",
     "babel-loader": "^6.2.10",
     "babel-plugin-transform-es2015-modules-commonjs": "6.16.0",
     "babel-preset-react": "^6.22.0",
