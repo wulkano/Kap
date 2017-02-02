@@ -29,6 +29,8 @@
     "eightpoint": "0.0.1",
     "electron": "1.4.8",
     "electron-builder": "7.11.4",
+    "eslint-config-xo-react": "^0.10.0",
+    "eslint-plugin-react": "^6.9.0",
     "execa": "0.5.0",
     "got": "6.5.0",
     "html-webpack-plugin": "^2.28.0",
@@ -61,7 +63,8 @@
     },
     "ignores": [
       "app/dist/**"
-    ]
+    ],
+    "extends": "xo-react"
   },
   "postcss": {
     "plugins": {
