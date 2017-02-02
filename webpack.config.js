@@ -24,7 +24,7 @@ module.exports = {
   target: 'electron',
   entry: {
     main: joinPath(SRC_MAIN, 'index.js'),
-    'main-renderer': joinPath(SRC_RENDERER_JS, 'main.js'),
+    'main-window': joinPath(SRC_RENDERER, 'js', 'main.js'),
     cropper: joinPath(SRC_RENDERER_JS, 'cropper.js'),
     editor: joinPath(SRC_RENDERER_JS, 'editor.js'),
     preferences: joinPath(SRC_RENDERER_JS, 'preferences.js')
@@ -57,9 +57,14 @@ module.exports = {
   plugins: [
     new Copy([
       {
-        from: 'app/src/**/*.html',
-        // no clue on how the files are going
-        // to app/dist without the `to` prop here
+        // this one is for the old views
+        from: 'app/src/renderer/old/views/*.html',
+        ignore: '**/main.html',
+        flatten: true
+      },
+      {
+        // this one is for the new views
+        from: 'app/src/renderer/views/*.html',
         flatten: true
       },
       {
