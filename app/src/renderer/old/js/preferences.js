@@ -9,7 +9,7 @@ const aperture = require('aperture')();
 
 // webpack stuff
 /* eslint-disable import/no-unassigned-import */
-require('../css/preferences.css');
+require('../../css/preferences.css');
 require('./disable-zoom.js');
 /* eslint-enable import/no-unassigned-import */
 

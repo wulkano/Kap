@@ -6,9 +6,9 @@ import aspectRatio from 'aspectratio';
 import fileSize from 'file-size';
 import moment from 'moment';
 
-import {convertToGif, convertToWebm} from '../../scripts/convert';
-import {init as initErrorReporter} from '../../common/reporter';
-import {log} from '../../common/logger';
+import {convertToGif, convertToWebm} from '../../../scripts/convert';
+import {init as initErrorReporter} from '../../../common/reporter';
+import {log} from '../../../common/logger';
 
 // note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
@@ -18,7 +18,7 @@ const aperture = require('aperture')();
 
 // webpack stuff
 /* eslint-disable import/no-unassigned-import */
-require('../css/main.css');
+require('../../css/main.css');
 require('./disable-zoom.js');
 /* eslint-enable import/no-unassigned-import */
 

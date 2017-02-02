@@ -8,7 +8,7 @@ import {handleTrafficLightsClicks, $, handleActiveButtonGroup} from '../js/utils
 
 // webpack stuff
 /* eslint-disable import/no-unassigned-import */
-require('../css/editor.css');
+require('../../css/editor.css');
 require('./disable-zoom.js');
 /* eslint-enable import/no-unassigned-import */
 

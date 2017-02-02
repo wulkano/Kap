@@ -1,10 +1,10 @@
 import {ipcRenderer} from 'electron';
 
-import {init as initErrorReporter} from '../../common/reporter';
+import {init as initErrorReporter} from '../../../common/reporter';
 
 // webpack stuff
 /* eslint-disable import/no-unassigned-import */
-require('../css/cropper.css');
+require('../../css/cropper.css');
 require('./disable-zoom.js');
 /* eslint-enable import/no-unassigned-import */
 
