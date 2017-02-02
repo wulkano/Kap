@@ -78,7 +78,7 @@
     "files": [
       "**/*",
       "!src",
-      "!main.js"
+      "!vendor/**"
     ],
     "electronDist": "node_modules/electron/dist"
   },
