@@ -7,11 +7,31 @@ import TrayArrow from './TrayArrow'
 require('../../css/main.css')
 /* eslint-enable import/no-unassigned-import */
 
-export default class MainWindow extends React.Component {
+let css
+
+export default class MainWindow extends Component {
+  constructor() {
+    super()
+    css = this.css
+  }
+
   render() {
     return (
-      <div style={{width: '100%', height: '100%', background: 'slateblue'}}>
-        <h2>Kap + React = ❤️</h2>
+      <div>
+        <div style={{width: '100%', height: '100%', background: css.blue}}>
+          <h2>Kap + React = ❤️</h2>
+        </div>
+        <style jsx global>{`
+          body {
+            color: ${css.colorSecondary};
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue";
+            overflow: hidden;
+            letter-spacing: -.010rem;
+            border-radius: 5px;
+            overflow: hidden;
+            font-size: 1.4rem;
+          }
+        `}</style>
       </div>
     )
   }
