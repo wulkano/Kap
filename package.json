@@ -90,10 +90,13 @@
   "babel": {
     "plugins": [
       "transform-es2015-modules-commonjs"
+      "styled-jsx/babel"
     ],
     "presets": [
       "react"
     ]
   },
-  "dependencies": {}
+  "dependencies": {
+    "styled-jsx": "^0.5.3"
+  }
 }
