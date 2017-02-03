@@ -22,6 +22,7 @@ export default class MainWindow extends Component {
   render() {
     return (
       <div>
+        <TrayArrow/>
         <div style={{width: '100%', height: '100%', background: css.blue}}>
           <h2>Kap + React = ❤️</h2>
         </div>
