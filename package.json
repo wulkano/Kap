@@ -42,6 +42,7 @@
     "postcss-nested": "1.0.0",
     "postcss-reporter": "2.0.0",
     "postcss-simple-vars": "3.0.0",
+    "raw-loader": "^0.5.1",
     "react": "^15.4.2",
     "webpack": "2.2.0",
     "webpack-livereload-plugin": "^0.10.0",
