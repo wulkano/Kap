@@ -1,20 +1,20 @@
-import {app, Menu, shell} from 'electron';
+import {app, Menu, shell} from 'electron'
 
-import {checkForUpdates} from './auto-updater';
+import {checkForUpdates} from './auto-updater'
 
 const checkForUpdatesItem = {
   label: 'Check for updates',
   click(item) {
-    item.enabled = false;
+    item.enabled = false
     checkForUpdates(() => {
       // this will be called if no update is available
       app.kap.mainWindow.webContents.send('show-notification', {
         title: 'No updates available!',
         body: 'You will automatically receive updates as soon as they are available 🤗'
-      });
-    });
+      })
+    })
   }
-};
+}
 
 const cogMenu = [
   {
@@ -27,7 +27,7 @@ const cogMenu = [
     label: 'Preferences...',
     accelerator: 'Cmd+,',
     click() {
-      app.kap.openPrefsWindow();
+      app.kap.openPrefsWindow()
     }
   },
   {
@@ -41,7 +41,7 @@ const cogMenu = [
     role: 'quit',
     accelerator: 'Cmd+Q'
   }
-];
+]
 
 const applicationMenu = [
   {
@@ -57,7 +57,7 @@ const applicationMenu = [
         label: 'Preferences...',
         accelerator: 'Cmd+,',
         click() {
-          app.kap.openPrefsWindow();
+          app.kap.openPrefsWindow()
         }
       },
       checkForUpdatesItem,
@@ -102,7 +102,7 @@ const applicationMenu = [
         label: 'New Recording',
         accelerator: 'CmdOrCtrl+N',
         click(item, focusedWindow) {
-          focusedWindow.webContents.send('prepare-recording');
+          focusedWindow.webContents.send('prepare-recording')
         }
       },
       {
@@ -116,7 +116,7 @@ const applicationMenu = [
         accelerator: 'CmdOrCtrl+W',
         click(item, focusedWindow) {
           if (focusedWindow) {
-            focusedWindow.hide();
+            focusedWindow.hide()
           }
         }
       }
@@ -159,7 +159,7 @@ const applicationMenu = [
         accelerator: 'CmdOrCtrl+R',
         click(item, focusedWindow) {
           if (focusedWindow) {
-            focusedWindow.reload();
+            focusedWindow.reload()
           }
         }
       },
@@ -169,9 +169,9 @@ const applicationMenu = [
         click(item, focusedWindow) {
           if (focusedWindow) {
             if (focusedWindow.isDevToolsOpened()) {
-              focusedWindow.closeDevTools();
+              focusedWindow.closeDevTools()
             } else {
-              focusedWindow.openDevTools({mode: 'detach'});
+              focusedWindow.openDevTools({mode: 'detach'})
             }
           }
         }
@@ -199,7 +199,7 @@ const applicationMenu = [
       }
     ]
   }
-];
+]
 
-exports.applicationMenu = Menu.buildFromTemplate(applicationMenu);
-exports.cogMenu = Menu.buildFromTemplate(cogMenu);
+exports.applicationMenu = Menu.buildFromTemplate(applicationMenu)
+exports.cogMenu = Menu.buildFromTemplate(cogMenu)

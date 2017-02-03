@@ -1,1 +1,1 @@
-require('electron').webFrame.setZoomLevelLimits(1, 1);
+require('electron').webFrame.setZoomLevelLimits(1, 1)

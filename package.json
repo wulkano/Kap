@@ -50,6 +50,7 @@
   },
   "xo": {
     "space": 2,
+    "semicolon": false,
     "esnext": true,
     "envs": [
       "node",
@@ -89,7 +90,7 @@
   },
   "babel": {
     "plugins": [
-      "transform-es2015-modules-commonjs"
+      "transform-es2015-modules-commonjs",
       "styled-jsx/babel"
     ],
     "presets": [

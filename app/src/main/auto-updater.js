@@ -1,68 +1,68 @@
-import {autoUpdater, ipcMain} from 'electron';
-import isDev from 'electron-is-dev';
-import ms from 'ms';
+import {autoUpdater, ipcMain} from 'electron'
+import isDev from 'electron-is-dev'
+import ms from 'ms'
 
-import {version} from '../../package';
+import {version} from '../../package'
 
-import {log} from '../common/logger';
-import reporter from '../common/reporter';
+import {log} from '../common/logger'
+import reporter from '../common/reporter'
 
-const FEED_URL = `https://kap-updates.now.sh/update/osx/${version}`;
+const FEED_URL = `https://kap-updates.now.sh/update/osx/${version}`
 
 function createInterval() {
   return setInterval(() => {
-    autoUpdater.checkForUpdates();
-  }, ms('30m'));
+    autoUpdater.checkForUpdates()
+  }, ms('30m'))
 }
 
-let manualCheckTimeout;
+let manualCheckTimeout
 
 function init(window) {
   if (isDev) {
-    return;
+    return
   }
 
-  autoUpdater.setFeedURL(FEED_URL);
+  autoUpdater.setFeedURL(FEED_URL)
 
   setTimeout(() => {
-    log('checking');
-    autoUpdater.checkForUpdates();
-  }, ms('5s')); // at this point the app is fully started and ready for everything
+    log('checking')
+    autoUpdater.checkForUpdates()
+  }, ms('5s')) // at this point the app is fully started and ready for everything
 
-  let intervalId = createInterval();
+  let intervalId = createInterval()
 
   autoUpdater.on('update-available', () => {
-    clearTimeout(manualCheckTimeout);
-    clearInterval(intervalId);
-    intervalId = undefined;
-    log('update available, starting download');
-  });
+    clearTimeout(manualCheckTimeout)
+    clearInterval(intervalId)
+    intervalId = undefined
+    log('update available, starting download')
+  })
 
   autoUpdater.on('update-downloaded', () => {
-    log('update downloaded, will notify the user');
-    window.webContents.send('update-downloaded');
-  });
+    log('update downloaded, will notify the user')
+    window.webContents.send('update-downloaded')
+  })
 
   ipcMain.on('install-update', () => {
-    autoUpdater.quitAndInstall();
-  });
+    autoUpdater.quitAndInstall()
+  })
 
   autoUpdater.on('error', err => {
     if (intervalId === undefined) { // if the error occurred during the download
-      intervalId = createInterval();
+      intervalId = createInterval()
     }
 
-    log('Error fetching updates', err);
-    reporter.report(err);
-  });
+    log('Error fetching updates', err)
+    reporter.report(err)
+  })
 }
 
 // the `callback` will be called if no update is available at the moment
 function checkForUpdates(callback) {
   manualCheckTimeout = setTimeout(() => {
-    callback();
-  }, ms('10s'));
+    callback()
+  }, ms('10s'))
 }
 
-exports.init = init;
-exports.checkForUpdates = checkForUpdates;
+exports.init = init
+exports.checkForUpdates = checkForUpdates

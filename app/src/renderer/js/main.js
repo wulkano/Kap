@@ -1,9 +1,9 @@
-import React from 'react';
-import {render} from 'react-dom';
+import React from 'react'
+import {render} from 'react-dom'
 
-import MainWindow from './components/MainWindow';
+import MainWindow from './components/MainWindow'
 
 render(
   <MainWindow/>,
   document.getElementById('mount')
-);
+)

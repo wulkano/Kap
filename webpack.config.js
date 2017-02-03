@@ -1,16 +1,16 @@
-const {join: pathJoin, resolve: resolvePath} = require('path');
+const {join: pathJoin, resolve: resolvePath} = require('path')
 
-const Copy = require('copy-webpack-plugin');
-const Shell = require('webpack-shell-plugin');
-const LiveReload = require('webpack-livereload-plugin');
+const Copy = require('copy-webpack-plugin')
+const Shell = require('webpack-shell-plugin')
+const LiveReload = require('webpack-livereload-plugin')
 
 function joinPath(...paths) {
-  return pathJoin(...paths);
+  return pathJoin(...paths)
 }
 
-const SRC_MAIN = joinPath(__dirname, 'app', 'src', 'main');
-const SRC_RENDERER = joinPath(__dirname, 'app', 'src', 'renderer');
-const SRC_RENDERER_JS = joinPath(SRC_RENDERER, 'old', 'js');
+const SRC_MAIN = joinPath(__dirname, 'app', 'src', 'main')
+const SRC_RENDERER = joinPath(__dirname, 'app', 'src', 'renderer')
+const SRC_RENDERER_JS = joinPath(SRC_RENDERER, 'old', 'js')
 
 module.exports = {
   // devtool: TODO(matheuss): For some reason, any option here makes electron
@@ -77,4 +77,4 @@ module.exports = {
     }),
     new LiveReload()
   ]
-};
+}

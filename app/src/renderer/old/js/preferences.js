@@ -1,156 +1,156 @@
-import {remote} from 'electron';
+import {remote} from 'electron'
 
 // note: `./` == `/app/dist/renderer/views`, not `js`
-import {handleTrafficLightsClicks, $, disposeObservers} from '../js/utils';
+import {handleTrafficLightsClicks, $, disposeObservers} from '../js/utils'
 
-const {app, dialog, getCurrentWindow} = remote;
+const {app, dialog, getCurrentWindow} = remote
 
-const aperture = require('aperture')();
+const aperture = require('aperture')()
 
 // webpack stuff
 /* eslint-disable import/no-unassigned-import */
-require('../../css/preferences.css');
-require('./disable-zoom.js');
+require('../../css/preferences.css')
+require('./disable-zoom.js')
 /* eslint-enable import/no-unassigned-import */
 
-const settingsValues = app.kap.settings.getAll();
+const settingsValues = app.kap.settings.getAll()
 
 // observers that should be disposed when the window unloads
-const observersToDispose = [];
+const observersToDispose = []
 
 document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
-  const advancedPrefs = $('.advanced-prefs');
-  const advancedPrefsBtn = $('.show-advanced-prefs');
-  const allowAnalyticsCheckbox = $('#allow-analytics');
-  const audioInputDeviceSelector = $('.js-audio-input-device-selector');
-  const chooseSaveDirectoryBtn = $('.js-choose-save');
-  const fpsLabel = $('.fps-slider .js-middle-label');
-  const fpsSlider = $('.fps-slider input');
-  const generalPrefs = $('.general-prefs');
-  const generalPrefsBtn = $('.show-general-prefs');
-  const header = $('header');
-  const highlightClicksCheckbox = $('#highlight-clicks');
-  const openOnStartupCheckbox = $('#open-on-startup');
-  const saveToDescription = $('.js-save-to-description');
-  const showCursorCheckbox = $('#show-cursor');
+  const advancedPrefs = $('.advanced-prefs')
+  const advancedPrefsBtn = $('.show-advanced-prefs')
+  const allowAnalyticsCheckbox = $('#allow-analytics')
+  const audioInputDeviceSelector = $('.js-audio-input-device-selector')
+  const chooseSaveDirectoryBtn = $('.js-choose-save')
+  const fpsLabel = $('.fps-slider .js-middle-label')
+  const fpsSlider = $('.fps-slider input')
+  const generalPrefs = $('.general-prefs')
+  const generalPrefsBtn = $('.show-general-prefs')
+  const header = $('header')
+  const highlightClicksCheckbox = $('#highlight-clicks')
+  const openOnStartupCheckbox = $('#open-on-startup')
+  const saveToDescription = $('.js-save-to-description')
+  const showCursorCheckbox = $('#show-cursor')
 
-  const electronWindow = getCurrentWindow();
+  const electronWindow = getCurrentWindow()
 
-  electronWindow.setSheetOffset(header.offsetHeight);
-  handleTrafficLightsClicks();
+  electronWindow.setSheetOffset(header.offsetHeight)
+  handleTrafficLightsClicks()
 
   // init the shown settings
-  saveToDescription.dataset.fullPath = settingsValues.kapturesDir;
-  saveToDescription.setAttribute('title', settingsValues.kapturesDir);
-  saveToDescription.innerText = `.../${settingsValues.kapturesDir.split('/').pop()}`;
-  openOnStartupCheckbox.checked = settingsValues.openOnStartup;
-  allowAnalyticsCheckbox.checked = settingsValues.allowAnalytics;
-  showCursorCheckbox.checked = settingsValues.showCursor;
+  saveToDescription.dataset.fullPath = settingsValues.kapturesDir
+  saveToDescription.setAttribute('title', settingsValues.kapturesDir)
+  saveToDescription.innerText = `.../${settingsValues.kapturesDir.split('/').pop()}`
+  openOnStartupCheckbox.checked = settingsValues.openOnStartup
+  allowAnalyticsCheckbox.checked = settingsValues.allowAnalytics
+  showCursorCheckbox.checked = settingsValues.showCursor
   if (settingsValues.showCursor === false) {
-    highlightClicksCheckbox.disabled = true;
+    highlightClicksCheckbox.disabled = true
   } else {
-    highlightClicksCheckbox.checked = settingsValues.highlightClicks;
+    highlightClicksCheckbox.checked = settingsValues.highlightClicks
   }
-  fpsSlider.value = settingsValues.fps;
-  fpsLabel.innerText = `${settingsValues.fps} FPS`;
+  fpsSlider.value = settingsValues.fps
+  fpsLabel.innerText = `${settingsValues.fps} FPS`
   aperture.getAudioSources().then(devices => {
     for (const device of devices) {
-      const option = document.createElement('option');
-      option.value = device.id;
-      option.text = device.name;
-      audioInputDeviceSelector.add(option);
+      const option = document.createElement('option')
+      option.value = device.id
+      option.text = device.name
+      audioInputDeviceSelector.add(option)
     }
     if (settingsValues.recordAudio === true) {
-      audioInputDeviceSelector.value = settingsValues.audioInputDeviceId;
+      audioInputDeviceSelector.value = settingsValues.audioInputDeviceId
     }
-  });
+  })
 
   generalPrefsBtn.onclick = function (e) {
-    e.preventDefault();
-    this.classList.add('is-active');
-    advancedPrefsBtn.classList.remove('is-active');
-    generalPrefs.classList.remove('hidden');
-    advancedPrefs.classList.add('hidden');
-  };
+    e.preventDefault()
+    this.classList.add('is-active')
+    advancedPrefsBtn.classList.remove('is-active')
+    generalPrefs.classList.remove('hidden')
+    advancedPrefs.classList.add('hidden')
+  }
 
   advancedPrefsBtn.onclick = function (e) {
-    e.preventDefault();
-    this.classList.add('is-active');
-    generalPrefsBtn.classList.remove('is-active');
-    advancedPrefs.classList.remove('hidden');
-    generalPrefs.classList.add('hidden');
-  };
+    e.preventDefault()
+    this.classList.add('is-active')
+    generalPrefsBtn.classList.remove('is-active')
+    advancedPrefs.classList.remove('hidden')
+    generalPrefs.classList.add('hidden')
+  }
 
   chooseSaveDirectoryBtn.onclick = function () {
-    const directories = dialog.showOpenDialog(electronWindow, {properties: ['openDirectory']});
+    const directories = dialog.showOpenDialog(electronWindow, {properties: ['openDirectory']})
     if (directories) {
-      app.kap.settings.set('kapturesDir', directories[0]);
-      saveToDescription.dataset.fullPath = directories[0];
-      saveToDescription.innerText = `.../${directories[0].split('/').pop()}`;
+      app.kap.settings.set('kapturesDir', directories[0])
+      saveToDescription.dataset.fullPath = directories[0]
+      saveToDescription.innerText = `.../${directories[0].split('/').pop()}`
     }
-  };
+  }
 
   openOnStartupCheckbox.onchange = function () {
-    app.kap.settings.set('openOnStartup', this.checked);
-    app.setLoginItemSettings({openAtLogin: this.checked});
-  };
+    app.kap.settings.set('openOnStartup', this.checked)
+    app.setLoginItemSettings({openAtLogin: this.checked})
+  }
 
   allowAnalyticsCheckbox.onchange = function () {
-    app.kap.settings.set('allowAnalytics', this.checked);
-  };
+    app.kap.settings.set('allowAnalytics', this.checked)
+  }
 
   showCursorCheckbox.onchange = function () {
-    app.kap.settings.set('showCursor', this.checked);
+    app.kap.settings.set('showCursor', this.checked)
     if (this.checked) {
-      highlightClicksCheckbox.disabled = false;
-      highlightClicksCheckbox.checked = app.kap.settings.get('highlightClicks');
+      highlightClicksCheckbox.disabled = false
+      highlightClicksCheckbox.checked = app.kap.settings.get('highlightClicks')
     } else {
-      highlightClicksCheckbox.disabled = true;
-      highlightClicksCheckbox.checked = false;
+      highlightClicksCheckbox.disabled = true
+      highlightClicksCheckbox.checked = false
     }
-  };
+  }
 
   highlightClicksCheckbox.onchange = function () {
-    app.kap.settings.set('highlightClicks', this.checked);
-  };
+    app.kap.settings.set('highlightClicks', this.checked)
+  }
 
   fpsSlider.oninput = function () {
-    fpsLabel.innerText = `${this.value} FPS`;
-  };
+    fpsLabel.innerText = `${this.value} FPS`
+  }
 
   fpsSlider.onchange = function () {
-    app.kap.settings.set('fps', this.value);
-  };
+    app.kap.settings.set('fps', this.value)
+  }
 
   audioInputDeviceSelector.onchange = function () {
-    app.kap.settings.set('recordAudio', this.value !== 'none');
+    app.kap.settings.set('recordAudio', this.value !== 'none')
     if (this.value !== 'none') {
-      app.kap.settings.set('audioInputDeviceId', this.value);
+      app.kap.settings.set('audioInputDeviceId', this.value)
     }
-  };
+  }
 
   // the `showCursor` setting can be changed via the
   // mouse btn in the main window
   observersToDispose.push(app.kap.settings.observe('showCursor', event => {
-    showCursorCheckbox.checked = event.newValue;
-    showCursorCheckbox.onchange();
-  }));
+    showCursorCheckbox.checked = event.newValue
+    showCursorCheckbox.onchange()
+  }))
 
   // the `recordAudio` setting can be changed via the
   // mic btn in the main window
   observersToDispose.push(app.kap.settings.observe('recordAudio', event => {
     if (event.newValue === true) {
-      audioInputDeviceSelector.value = app.kap.settings.get('audioInputDeviceId');
+      audioInputDeviceSelector.value = app.kap.settings.get('audioInputDeviceId')
     } else {
-      audioInputDeviceSelector.value = 'none';
+      audioInputDeviceSelector.value = 'none'
     }
-  }));
-});
+  }))
+})
 
-document.addEventListener('dragover', e => e.preventDefault());
-document.addEventListener('drop', e => e.preventDefault());
+document.addEventListener('dragover', e => e.preventDefault())
+document.addEventListener('drop', e => e.preventDefault())
 
 window.addEventListener('beforeunload', () => {
-  disposeObservers(observersToDispose);
-});
+  disposeObservers(observersToDispose)
+})

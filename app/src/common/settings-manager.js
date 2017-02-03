@@ -1,10 +1,10 @@
-import {homedir} from 'os';
+import {homedir} from 'os'
 
-import {app} from 'electron';
-import settings from 'electron-settings';
-import objectPath from 'object-path';
+import {app} from 'electron'
+import settings from 'electron-settings'
+import objectPath from 'object-path'
 
-const aperture = require('aperture')();
+const aperture = require('aperture')()
 
 const DEFAULTS = {
   kapturesDir: `${homedir()}/Movies/Kaptures`,
@@ -15,7 +15,7 @@ const DEFAULTS = {
   fps: 30,
   recordAudio: false,
   exportAs: 'gif'
-};
+}
 
 const volatiles = {
   cropperWindow: {
@@ -28,13 +28,13 @@ const volatiles = {
       y: 'center'
     }
   }
-};
+}
 
 // we need to sync every setting that can be modified externally
 // e.g. the `openOnStartup` setting can be modified via
 // macOS' System Preferences.app
 function sync() {
-  settings.setSync('openOnStartup', app.getLoginItemSettings().openAtLogin);
+  settings.setSync('openOnStartup', app.getLoginItemSettings().openAtLogin)
 }
 
 function init() {
@@ -45,32 +45,32 @@ function init() {
   // to tell the user
   // TODO: rewrite this comment (it's 4AM and i'm fucking tired)
   aperture.getAudioSources().then(devices => {
-    DEFAULTS.audioInputDeviceId = (devices && devices[0] && devices[0].id) || 'none';
-    settings.defaults(DEFAULTS);
-    settings.applyDefaultsSync();
-    sync();
-  });
+    DEFAULTS.audioInputDeviceId = (devices && devices[0] && devices[0].id) || 'none'
+    settings.defaults(DEFAULTS)
+    settings.applyDefaultsSync()
+    sync()
+  })
 }
 
 function get(key) {
-  sync();
-  return objectPath.get(volatiles, key) || settings.getSync(key);
+  sync()
+  return objectPath.get(volatiles, key) || settings.getSync(key)
 }
 
 function getAll() {
-  sync();
-  return Object.assign({}, volatiles, settings.getSync());
+  sync()
+  return Object.assign({}, volatiles, settings.getSync())
 }
 
 function set(key, value, {volatile = false} = {}) {
   if (volatile) {
-    return objectPath.set(volatiles, key, value);
+    return objectPath.set(volatiles, key, value)
   }
-  settings.setSync(key, value);
+  settings.setSync(key, value)
 }
 
 function observe(keyPath, handler) {
-  return settings.observe(keyPath, handler);
+  return settings.observe(keyPath, handler)
 }
 
-export {init, get, getAll, set, observe};
+export {init, get, getAll, set, observe}

@@ -1,32 +1,32 @@
-let window;
-let windowIsReady = false;
-let pendingMessages = [];
+let window
+let windowIsReady = false
+let pendingMessages = []
 
 function init(mainWindow) {
-  window = mainWindow;
+  window = mainWindow
 
   window.on('show', () => {
     if (windowIsReady === false) {
-      windowIsReady = true;
+      windowIsReady = true
       for (const chunk of pendingMessages) {
-        window.webContents.send('log', chunk);
+        window.webContents.send('log', chunk)
       }
-      pendingMessages = [];
+      pendingMessages = []
     }
-  });
+  })
 }
 
 function log(...msgs) {
   if (process.type === 'browser') { // main process
     if (window && windowIsReady) {
-      window.webContents.send('log', msgs);
+      window.webContents.send('log', msgs)
     } else {
-      pendingMessages.push(msgs);
+      pendingMessages.push(msgs)
     }
   } else {
-    console.log(...msgs);
+    console.log(...msgs)
   }
 }
 
-exports.init = init;
-exports.log = log;
+exports.init = init
+exports.log = log
