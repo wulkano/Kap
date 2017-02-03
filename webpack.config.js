@@ -47,7 +47,6 @@ module.exports = {
         test: /\.css$/,
         include: SRC_RENDERER,
         use: [
-          'style-loader',
           'css-loader',
           'postcss-loader'
         ]
