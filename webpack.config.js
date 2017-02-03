@@ -38,10 +38,37 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
+        include: [
+          SRC_MAIN
+        ],
         exclude: [
           resolvePath('node_modules'),
           resolvePath('app', 'node_modules')
-        ]
+        ],
+        options: {
+          plugins: [
+            'transform-es2015-modules-commonjs'
+          ]
+        }
+      },
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        include: [
+          SRC_RENDERER
+        ],
+        exclude: [
+          resolvePath('node_modules'),
+          resolvePath('app', 'node_modules')
+        ],
+        options: {
+          plugins: [
+            'styled-jsx/babel'
+          ],
+          presets: [
+            'react'
+          ]
+        }
       },
       {
         test: /\.css$/,
