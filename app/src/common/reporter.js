@@ -2,7 +2,7 @@ import isDev from 'electron-is-dev'
 
 let ravenClient
 
-function init() {
+export function init() {
   if (!isDev) {
     const raven = require('raven')
 
@@ -11,11 +11,8 @@ function init() {
   }
 }
 
-function report(err) {
+export function report(err) {
   if (!isDev && err) {
     ravenClient.captureException(err)
   }
 }
-
-exports.init = init
-exports.report = report
