@@ -1,4 +1,8 @@
 import React from 'react'
+
+// eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
+import eightpoint from 'raw-loader!eightpoint/dist/eight.min.css'
+
 import Component from './Component'
 import TrayArrow from './TrayArrow'
 
@@ -22,6 +26,7 @@ export default class MainWindow extends Component {
           <h2>Kap + React = ❤️</h2>
         </div>
         <style jsx global>{`
+          ${eightpoint}
           body {
             color: ${css.colorSecondary};
             font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue";
