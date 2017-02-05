@@ -62,7 +62,8 @@
       "import/named": 0,
       "import/default": 0,
       "unicorn/filename-case": 0,
-      "import/no-unresolved": 0
+      "import/no-unresolved": 0,
+      "new-cap": 0
     },
     "ignores": [
       "app/dist/**"
