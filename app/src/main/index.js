@@ -233,7 +233,7 @@ function getEditorWindow() {
   return editorWindow
 }
 
-menubar.on('after-create-window', () => {
+menubar.on('after-create-window', () => installDevExtensions(isDev).then(() => {
   let expectedWindowPosition
   const currentWindowPosition = {}
   mainWindow = menubar.window
@@ -348,7 +348,9 @@ menubar.on('after-create-window', () => {
   initErrorReporter()
   logger.init(mainWindow)
   Menu.setApplicationMenu(applicationMenu)
-})
+}).catch(err => {
+  console.error('Error while loading devtools extensions', err)
+}))
 
 ipcMain.on('start-recording', () => {
   mainWindow.webContents.send('start-recording')
@@ -530,3 +532,19 @@ ipcMain.on('set-main-window-visibility', (event, opts) => {
     }, opts.forHowLong)
   }
 })
+
+function installDevExtensions(isDev) {
+  if (!isDev) {
+    return Promise.resolve()
+  }
+
+  const installer = require('electron-devtools-installer')
+
+  const extensions = [
+    'REACT_DEVELOPER_TOOLS',
+    'REDUX_DEVTOOLS'
+  ]
+  const forceDownload = Boolean(process.env.UPGRADE_EXTENSIONS)
+
+  return Promise.all(extensions.map(name => installer.default(installer[name], forceDownload)))
+}
