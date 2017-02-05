@@ -7,7 +7,7 @@ import fileSize from 'file-size';
 import moment from 'moment';
 
 import {convertToGif, convertToWebm} from '../../scripts/convert';
-import {init as initErrorReporter} from '../../common/reporter';
+import {init as initErrorReporter, report as reportError} from '../../common/reporter';
 import {log} from '../../common/logger';
 
 // note: `./` == `/app/dist/renderer/views`, not `js`
@@ -204,6 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(err => {
         ipcRenderer.send('will-stop-recording');
         log(err);
+        reportError(err);
         remote.dialog.showErrorBox('Recording error', err.message);
       });
   }
