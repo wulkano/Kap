@@ -9,7 +9,7 @@ import MainWindow from './components/MainWindow'
 const initialState = {
   windows: {
     main: {
-      stuck: false
+      stuck: true
     }
   }
 }

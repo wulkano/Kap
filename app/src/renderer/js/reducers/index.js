@@ -13,6 +13,19 @@ export default function mainReducer(state, action) {
       }
     }
 
+    case 'MAIN_WINDOW_UNSTICK_FROM_MENUBAR': {
+      return {
+        ...state,
+        windows: {
+          ...state.windows,
+          main: {
+            ...state.windows.main,
+            stuck: false
+          }
+        }
+      }
+    }
+
     default: {
       return state
     }

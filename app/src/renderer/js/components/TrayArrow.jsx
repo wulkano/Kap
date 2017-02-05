@@ -4,15 +4,16 @@ import Component from './Component'
 
 let css
 
-export default class TrayArrow extends Component {
+class TrayArrow extends Component {
   constructor() {
     super()
     css = this.css
   }
+
   render() {
     return (
       <div>
-        <div className="tray-arrow"/>
+        <div className={`tray-arrow ${!this.props.visible && 'invisible'}`}/>
         <style jsx>{`
           .tray-arrow {
             margin: auto;
@@ -23,8 +24,17 @@ export default class TrayArrow extends Component {
             border-left: 1rem solid transparent;
             transition: all .3s ease;
           }
+          .invisible {
+            border-bottom: 1rem solid transparent
+          }
         `}</style>
       </div>
     )
   }
 }
+
+TrayArrow.propTypes = {
+  visible: React.PropTypes.bool.isRequired
+}
+
+export default TrayArrow
