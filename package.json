@@ -61,7 +61,8 @@
       "import/no-extraneous-dependencies": 0,
       "import/named": 0,
       "import/default": 0,
-      "unicorn/filename-case": 0
+      "unicorn/filename-case": 0,
+      "import/no-unresolved": 0
     },
     "ignores": [
       "app/dist/**"
