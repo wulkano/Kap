@@ -48,4 +48,4 @@ MainWindow.propTypes = {
   windows: React.PropTypes.object.isRequired
 }
 
-export default Kap(MainWindow)
+export default Kap(MainWindow, 'mainWindow')

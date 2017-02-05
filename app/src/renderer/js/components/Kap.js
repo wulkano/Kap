@@ -1,16 +1,18 @@
 import {bindActionCreators} from 'redux'
 import {connect as reduxConnect} from 'react-redux'
 
-import * as windowActions from '../actions/windows'
+import * as actionCreators from '../actions'
 
 function mapStateToProps(state) {
   return state
 }
 
-function mapDispatchToprops(dispatch) {
-  return bindActionCreators(windowActions, dispatch)
+function mapDispatchToprops(containerName) {
+  const creators = actionCreators[containerName]
+
+  return dispatch => bindActionCreators(creators, dispatch)
 }
 
-export default function connect(Class) {
-  return reduxConnect(mapStateToProps, mapDispatchToprops)(Class)
+export default function connect(Class, name) {
+  return reduxConnect(mapStateToProps, mapDispatchToprops(name))(Class, name)
 }
