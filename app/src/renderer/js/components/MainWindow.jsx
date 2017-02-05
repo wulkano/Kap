@@ -4,6 +4,7 @@ import React from 'react'
 import eightpoint from 'raw-loader!eightpoint/dist/eight.min.css'
 
 import Component from './Component'
+import Kap from './Kap'
 import TrayArrow from './TrayArrow'
 
 // webpack stuff
@@ -13,7 +14,7 @@ require('../../css/main.css')
 
 let css
 
-export default class MainWindow extends Component {
+class MainWindow extends Component {
   constructor() {
     super()
     css = this.css
@@ -42,3 +43,5 @@ export default class MainWindow extends Component {
     )
   }
 }
+
+export default Kap(MainWindow)
