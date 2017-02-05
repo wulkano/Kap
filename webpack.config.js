@@ -101,6 +101,11 @@ module.exports = {
       {
         from: 'app/vendor/*',
         flatten: true
+      },
+      {
+        from: 'app/static/*',
+        to: 'static',
+        flatten: true
       }
     ]),
     new Shell({
