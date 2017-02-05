@@ -50,7 +50,8 @@ module.exports = {
         ],
         options: {
           plugins: [
-            'transform-es2015-modules-commonjs'
+            'transform-es2015-modules-commonjs',
+            'transform-object-rest-spread'
           ]
         }
       },
@@ -66,7 +67,8 @@ module.exports = {
         ],
         options: {
           plugins: [
-            'styled-jsx/babel'
+            'styled-jsx/babel',
+            'transform-object-rest-spread'
           ],
           presets: [
             'react'

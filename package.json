@@ -92,6 +92,7 @@
     "electronDist": "node_modules/electron/dist"
   },
   "dependencies": {
+    "babel-plugin-transform-object-rest-spread": "^6.22.0",
     "styled-jsx": "^0.5.3"
   }
 }
