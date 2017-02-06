@@ -51,7 +51,8 @@ module.exports = {
         options: {
           plugins: [
             'transform-es2015-modules-commonjs',
-            'transform-object-rest-spread'
+            'transform-object-rest-spread',
+            'babel-plugin-transform-async-to-generator'
           ]
         }
       },
@@ -68,7 +69,8 @@ module.exports = {
         options: {
           plugins: [
             'styled-jsx/babel',
-            'transform-object-rest-spread'
+            'transform-object-rest-spread',
+            'babel-plugin-transform-async-to-generator'
           ],
           presets: [
             'react'
