@@ -12,7 +12,7 @@ const colors = {
 }
 
 const stuff = {
-  fontSizDefault: '1.4rem',
+  fontSizeDefault: '1.4rem',
 
   backgroundPrimary: colors.greyDarker,
   backgroundSecondary: colors.greyDark,
