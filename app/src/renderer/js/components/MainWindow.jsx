@@ -6,6 +6,7 @@ import eightpoint from 'raw-loader!eightpoint/dist/eight.min.css'
 import Component from './Component'
 import Kap from './Kap'
 import TrayArrow from './TrayArrow'
+import WindowHeader from './WindowHeader'
 
 // webpack stuff
 /* eslint-disable import/no-unassigned-import */
@@ -21,12 +22,13 @@ class MainWindow extends Component {
   }
 
   render() {
+    const {stuck: isStuck} = this.props.windows.main
     return (
       <div>
-        <TrayArrow visible={this.props.windows.main.stuck}/>
-        <div style={{width: '100%', height: '100%', background: css.blue}}>
-          <h2>Kap + React = ❤️</h2>
-        </div>
+        <TrayArrow visible={isStuck}/>
+        <main>
+          <WindowHeader showTrafficLights={!isStuck}/>
+        </main>
         <style jsx global>{`
           ${eightpoint}
           body {
@@ -37,6 +39,21 @@ class MainWindow extends Component {
             border-radius: 5px;
             overflow: hidden;
             font-size: 1.4rem;
+          }
+
+          .webkit-drag {
+            -webkit-app-region: drag;
+            cursor: -webkit-grab;
+          }
+
+          .hidden {
+            opacity: 0 !important;
+            pointer-events: none !important;
+          }
+
+          .no-select {
+            -webkit-user-select: none !important;
+            cursor: default !important;
           }
         `}</style>
       </div>
