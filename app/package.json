@@ -14,6 +14,7 @@
   "dependencies": {
     "aperture": "latest",
     "aspectratio": "^2.2.2",
+    "classnames": "^2.2.5",
     "eightpoint": "0.0.1",
     "electron-is-dev": "^0.1.2",
     "electron-settings": "^2.2.1",
