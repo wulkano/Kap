@@ -325,7 +325,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (!initializedActiveShim && !controls.classList.contains('hidden')) {
-      console.log(controls);
       handleActiveButtonGroup({buttonGroup: exportAs[0].parentNode});
       initializedActiveShim = true;
       setMainWindowSize();
