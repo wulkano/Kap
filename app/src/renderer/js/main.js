@@ -27,8 +27,10 @@ function setMainWindowSize() {
   ipcRenderer.send('set-main-window-size', {width, height});
 }
 
-function setStrictWindowSize(width, height) {
-  ipcRenderer.send('set-main-window-size', {width, height});
+function setStrictWindowSize(width, height, callback) {
+  if (ipcRenderer.sendSync('set-main-window-size', {width, height})) {
+    callback();
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -316,12 +318,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const w = document.documentElement.scrollWidth;
       const h = document.documentElement.scrollHeight - controls.scrollHeight - 1;
 
-      setStrictWindowSize(w, h);
-
-      setTimeout(() => {
+      setStrictWindowSize(w, h, () => {
         controls.classList.add('hidden');
-        setMainWindowSize();
-      }, 500);
+      });
     }
 
     if (!initializedActiveShim && !controls.classList.contains('hidden')) {

@@ -43,6 +43,7 @@ ipcMain.on('set-main-window-size', (event, args) => {
   if (args.width && args.height && mainWindow) {
     [args.width, args.height] = [parseInt(args.width, 10), parseInt(args.height, 10)];
     mainWindow.setSize(args.width, args.height, true); // true == animate
+    event.returnValue = true; // Give true to sendSync caller
   }
 });
 
