@@ -10,10 +10,9 @@
     "start": "npm run app",
     "dist": "npm run build && build",
     "pack": "npm run build && build --dir",
-    "postinstall": "install-app-deps && npm run ffmpeg && npm run electron",
+    "postinstall": "install-app-deps && npm run ffmpeg",
     "prepush": "npm run test",
-    "ffmpeg": "node scripts/download-ffmpeg.js",
-    "electron": "node scripts/download-electron.js"
+    "ffmpeg": "node scripts/download-ffmpeg.js"
   },
   "devDependencies": {
     "babel-plugin-transform-es2015-modules-commonjs": "6.16.0",
@@ -21,7 +20,7 @@
     "cssnano": "3.7.7",
     "del": "2.2.2",
     "eightpoint": "0.0.1",
-    "electron": "1.4.8",
+    "electron": "1.5.1",
     "electron-builder": "7.11.4",
     "execa": "0.5.0",
     "got": "6.5.0",
@@ -63,8 +62,7 @@
       "**/*",
       "!src",
       "!main.js"
-    ],
-    "electronDist": "node_modules/electron/dist"
+    ]
   },
   "babel": {
     "plugins": [

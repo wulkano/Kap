@@ -80,7 +80,7 @@ function setCropperWindowOnBlur() {
 }
 
 ipcMain.on('open-cropper-window', (event, size) => {
-  mainWindow.setAlwaysOnTop(true, 'above-screen-saver'); // TODO send a PR to `menubar`
+  mainWindow.setAlwaysOnTop(true, 'screen-saver', 1); // TODO send a PR to `menubar`
   menubar.setOption('alwaysOnTop', true);
   if (cropperWindow) {
     cropperWindow.focus();
