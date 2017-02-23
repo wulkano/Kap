@@ -139,6 +139,10 @@ section.output {
 
 .fps, .loop, .size { display: flex; }
 
+.fps button, .loop button {
+  width: 4.9rem;
+}
+
 input[type=text] {
   width: 5rem;
   height: 2.5rem;
