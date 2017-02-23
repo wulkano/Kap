@@ -27,6 +27,12 @@ function setMainWindowSize() {
   ipcRenderer.send('set-main-window-size', {width, height});
 }
 
+function setStrictWindowSize(width, height, callback) {
+  if (ipcRenderer.sendSync('set-main-window-size', {width, height})) {
+    callback();
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
   const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
@@ -305,14 +311,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     triangle.classList.toggle('up');
 
-    controls.classList.toggle('hidden');
+    if (controls.classList.contains('hidden')) {
+      controls.classList.remove('hidden');
+      setMainWindowSize();
+    } else {
+      const w = document.documentElement.scrollWidth;
+      const h = document.documentElement.scrollHeight - controls.scrollHeight - 1;
+
+      setStrictWindowSize(w, h, () => {
+        controls.classList.add('hidden');
+      });
+    }
 
     if (!initializedActiveShim && !controls.classList.contains('hidden')) {
       handleActiveButtonGroup({buttonGroup: exportAs[0].parentNode});
       initializedActiveShim = true;
+      setMainWindowSize();
     }
-
-    setMainWindowSize();
   };
 
   options.onclick = event => {
