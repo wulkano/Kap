@@ -15,7 +15,7 @@ class WindowHeader extends Component {
     return (
       <header className="webkit-drag bg-light">
         <TrafficLights show={props.showTrafficLights}/>
-
+        <span className="title">{props.title}</span>
         <style jsx>{`
           header {
             position: relative;
@@ -70,6 +70,10 @@ class WindowHeader extends Component {
       </header>
     )
   }
+}
+
+WindowHeader.propTypes = {
+  title: React.PropTypes.string
 }
 
 export default WindowHeader

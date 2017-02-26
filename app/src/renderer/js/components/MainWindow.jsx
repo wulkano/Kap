@@ -26,8 +26,8 @@ class MainWindow extends Component {
     return (
       <div>
         <TrayArrow visible={isStuck}/>
+        <WindowHeader showTrafficLights={!isStuck} title="Kap"/>
         <main>
-          <WindowHeader showTrafficLights={!isStuck}/>
         </main>
         <style jsx global>{`
           ${eightpoint}
