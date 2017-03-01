@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   chooseSaveDirectoryBtn.onclick = function () {
-    const directories = dialog.showOpenDialog(electronWindow, {properties: ['openDirectory']});
+    const directories = dialog.showOpenDialog(electronWindow, {properties: ['openDirectory', 'createDirectory']});
     if (directories) {
       app.kap.settings.set('kapturesDir', directories[0]);
       saveToDescription.dataset.fullPath = directories[0];
