@@ -11,11 +11,15 @@ class WindowHeader extends Component {
     css = this.css
   }
   render() {
-    const {props} = this
+    const {title, hide, minimize, showTrafficLights} = this.props
     return (
       <header className="webkit-drag bg-light">
-        <TrafficLights show={props.showTrafficLights}/>
-        <span className="title">{props.title}</span>
+        <TrafficLights
+          show={showTrafficLights}
+          hide={hide}
+          minimize={minimize}
+          />
+        <span className="title">{title}</span>
         <style jsx>{`
           header {
             position: relative;

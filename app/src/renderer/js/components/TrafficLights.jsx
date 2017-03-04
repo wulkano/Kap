@@ -9,6 +9,9 @@ class TrafficLights extends Component {
   constructor() {
     super()
     this.state = {svgs: {}, a: []}
+
+    this.handleCloseClick = this.handleCloseClick.bind(this)
+    this.handleMinimizeClick = this.handleMinimizeClick.bind(this)
   }
 
   async componentDidMount() {
@@ -25,14 +28,37 @@ class TrafficLights extends Component {
     }
   }
 
+  handleCloseClick() {
+    if (this.props.close) {
+      this.props.close()
+    } else if (this.props.hide) {
+      this.props.hide()
+    }
+  }
+
+  handleMinimizeClick() {
+    this.props.minimize()
+  }
+
   render() {
     const {svgs} = this.state
     const className = classNames('svg', 'no-select', {hidden: !this.props.show})
     return (
       <div className="root">
-        <div className={className} dangerouslySetInnerHTML={{__html: svgs.close || null}}/>
-        <div className={className} dangerouslySetInnerHTML={{__html: svgs.minimize || null}}/>
-        <div className={className} dangerouslySetInnerHTML={{__html: svgs.disabled || null}}/>
+        <div
+          className={className}
+          dangerouslySetInnerHTML={{__html: svgs.close || null}}
+          onClick={this.handleCloseClick}
+          />
+        <div
+          className={className}
+          dangerouslySetInnerHTML={{__html: svgs.minimize || null}}
+          onClick={this.handleMinimizeClick}
+          />
+        <div
+          className={className}
+          dangerouslySetInnerHTML={{__html: svgs.disabled || null}}
+          />
         <style jsx>{`
           .root {
             position: absolute;

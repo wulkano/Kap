@@ -1,3 +1,5 @@
+import {ipcRenderer} from 'electron'
+
 import * as constants from '../constants'
 
 function stickToMenubar() {
@@ -12,9 +14,33 @@ function unStickFromMenubar() {
   }
 }
 
+function close() {
+  ipcRenderer.send('close-window')
+  return {
+    type: constants.MAIN_WINDOW_CLOSE
+  }
+}
+
+function hide() {
+  ipcRenderer.send('hide-window')
+  return {
+    type: constants.MAIN_WINDOW_HIDE
+  }
+}
+
+function minimize() {
+  ipcRenderer.send('minimize-window')
+  return {
+    type: constants.MAIN_WINDOW_MINIMIZE
+  }
+}
+
 const mainWindow = {
   stickToMenubar,
-  unStickFromMenubar
+  unStickFromMenubar,
+  close,
+  hide,
+  minimize
 }
 
 // eslint-disable-next-line import/prefer-default-export

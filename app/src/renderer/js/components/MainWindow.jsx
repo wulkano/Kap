@@ -23,10 +23,16 @@ class MainWindow extends Component {
 
   render() {
     const {stuck: isStuck} = this.props.windows.main
+    const {hide, minimize} = this.props
     return (
       <div>
         <TrayArrow visible={isStuck}/>
-        <WindowHeader showTrafficLights={!isStuck} title="Kap"/>
+        <WindowHeader
+          showTrafficLights={!isStuck}
+          hide={hide}
+          minimize={minimize}
+          title="Kap"
+          />
         <main>
         </main>
         <style jsx global>{`
