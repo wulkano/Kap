@@ -33,8 +33,4 @@ class TrayArrow extends Component {
   }
 }
 
-TrayArrow.propTypes = {
-  visible: React.PropTypes.bool.isRequired
-}
-
 export default TrayArrow

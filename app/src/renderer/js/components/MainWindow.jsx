@@ -67,8 +67,4 @@ class MainWindow extends Component {
   }
 }
 
-MainWindow.propTypes = {
-  windows: React.PropTypes.object.isRequired
-}
-
 export default Kap(MainWindow, 'mainWindow')

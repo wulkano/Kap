@@ -76,8 +76,4 @@ class WindowHeader extends Component {
   }
 }
 
-WindowHeader.propTypes = {
-  title: React.PropTypes.string
-}
-
 export default WindowHeader

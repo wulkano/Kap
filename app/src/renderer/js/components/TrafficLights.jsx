@@ -91,8 +91,4 @@ class TrafficLights extends Component {
   }
 }
 
-TrafficLights.propTypes = {
-  show: React.PropTypes.bool.isRequired
-}
-
 export default TrafficLights
