@@ -1,4 +1,4 @@
-import React from 'React'
+import React from 'react'
 
 // eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
 import eightpoint from 'raw-loader!eightpoint/dist/eight.min.css'
