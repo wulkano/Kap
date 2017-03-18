@@ -1535,9 +1535,9 @@ electron-osx-sign-tf@^1.0.0:
     plist "^2.0.1"
     tempfile "^1.1.1"
 
-electron@1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-1.5.0.tgz#d783d5ca8c89fd781b04c6ca75652c55bbdb80d5"
+electron@1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-1.6.2.tgz#b0ccd7703f86d09c4d2a7273455c3f993f158994"
   dependencies:
     electron-download "^3.0.1"
     extract-zip "^1.0.3"
