@@ -57,7 +57,7 @@ module.exports = {
         }
       },
       {
-        test: /\.jsx?$/,
+        test: /\.js?$/,
         loader: 'babel-loader',
         include: [
           SRC_RENDERER
