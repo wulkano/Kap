@@ -24,10 +24,10 @@ module.exports = {
   target: 'electron',
   entry: {
     main: joinPath(SRC_MAIN, 'index.js'),
-    'main-window': joinPath(SRC_RENDERER, 'js', 'main.js'),
-    cropper: joinPath(SRC_RENDERER_JS, 'cropper.js'),
-    editor: joinPath(SRC_RENDERER_JS, 'editor.js'),
-    preferences: joinPath(SRC_RENDERER_JS, 'preferences.js')
+    'main-window': joinPath(SRC_RENDERER, 'js', 'main.js')
+    // cropper: joinPath(SRC_RENDERER_JS, 'cropper.js'),
+    // editor: joinPath(SRC_RENDERER_JS, 'editor.js'),
+    // preferences: joinPath(SRC_RENDERER_JS, 'preferences.js')
   },
   output: {
     path: joinPath('app', 'dist'),
