@@ -1,5 +1,7 @@
+import classNames from 'classnames'
 import React from 'react'
 
+import loadSvg from '../util'
 import Component from './Component'
 
 let css
@@ -8,24 +10,38 @@ class TrayArrow extends Component {
   constructor() {
     super()
     css = this.css
+
+    this.state = {svg: null}
+  }
+
+  async componentDidMount() {
+    try {
+      const data = await loadSvg('tray-arrow')
+
+      this.setState({svg: data})
+    } catch (err) {
+      throw new Error(`Couldn't load SVGs`, err)
+    }
   }
 
   render() {
+    const className = classNames('svg', 'no-select', {hidden: !this.props.visible})
     return (
-      <div>
-        <div className={`tray-arrow ${!this.props.visible && 'invisible'}`}/>
+      <div className="root">
+        <div
+          className={className}
+          dangerouslySetInnerHTML={{__html: this.state.svg}}
+          onClick={this.handleCloseClick}
+          />
         <style jsx>{`
-          .tray-arrow {
-            margin: auto;
-            width: 0;
-            height: 0;
-            border-right: 1rem solid transparent;
-            border-bottom: 1rem solid ${css.backgroundLight};
-            border-left: 1rem solid transparent;
-            transition: all .3s ease;
+          .root {
+            display: flex;
+            line-height: 0;
           }
-          .invisible {
-            border-bottom: 1rem solid transparent
+          .svg {
+            margin: auto;
+            color: ${css.backgroundLight};
+            height: 12px;
           }
         `}</style>
       </div>
