@@ -44,7 +44,7 @@
      background: $blue;
      z-index: 0;
      left: 0;
-     transition: .3s ease;
+     transition: .4s cubic-bezier(.37,1.12,.18,1);
      transition-property: transform, border-radius;
   }
 
