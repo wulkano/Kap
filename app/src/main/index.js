@@ -17,7 +17,7 @@ const menubar = require('menubar')({
   index: `file://${__dirname}/main.html`,
   icon: path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'),
   width: 320,
-  height: 500,
+  height: 240,
   preloadWindow: true,
   transparent: true,
   resizable: false,
