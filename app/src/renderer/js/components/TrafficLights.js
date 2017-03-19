@@ -8,7 +8,7 @@ import Component from './Component'
 class TrafficLights extends Component {
   constructor() {
     super()
-    this.state = {svgs: {}, a: []}
+    this.state = {svgs: {}}
 
     this.handleCloseClick = this.handleCloseClick.bind(this)
     this.handleMinimizeClick = this.handleMinimizeClick.bind(this)
@@ -22,7 +22,7 @@ class TrafficLights extends Component {
       data.minimize = await loadSvg('traffic-light-minimize')
       data.disabled = await loadSvg('traffic-light-disabled')
 
-      this.setState({svgs: data, a: [1, 2, 3]})
+      this.setState({svgs: data})
     } catch (err) {
       throw new Error(`Couldn't load SVGs`, err)
     }
