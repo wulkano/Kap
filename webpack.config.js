@@ -10,7 +10,7 @@ function joinPath(...paths) {
 
 const SRC_MAIN = joinPath(__dirname, 'app', 'src', 'main')
 const SRC_RENDERER = joinPath(__dirname, 'app', 'src', 'renderer')
-const SRC_RENDERER_JS = joinPath(SRC_RENDERER, 'old', 'js')
+// const SRC_RENDERER_JS = joinPath(SRC_RENDERER, 'old', 'js')
 
 module.exports = {
   // devtool: TODO(matheuss): For some reason, any option here makes electron
