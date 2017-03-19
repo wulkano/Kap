@@ -2,6 +2,7 @@ import React from 'react'
 
 import Component from './Component'
 import TrafficLights from './TrafficLights'
+import TrayArrow from './TrayArrow'
 
 let css
 
@@ -11,24 +12,23 @@ class WindowHeader extends Component {
     css = this.css
   }
   render() {
-    const {title, hide, minimize, showTrafficLights} = this.props
+    const {arrow, title, hide, minimize, showTrafficLights, bgColor} = this.props
     return (
-      <header className="webkit-drag bg-light">
+      <header className="webkit-drag" style={{backgroundColor: bgColor}}>
         <TrafficLights
           show={showTrafficLights}
           hide={hide}
           minimize={minimize}
           />
-        <span className="title">{title}</span>
+        {title && <span className="title">{title}</span>}
+        {arrow && <TrayArrow/>}
         <style jsx>{`
           header {
             position: relative;
-            background-color: ${css.backgroundSecondary};
             width: 100%;
-            height: 2.8rem;
+            height: 1.2rem;
             text-align: center;
             border-radius: 5px 5px 0 0;
-            box-shadow: 0 1px rgba(0, 0, 0, .2);
             opacity: 1;
             transition: transform .12s ease-in-out, opacity .12s ease-in-out;
             will-change: tansform, opacity;

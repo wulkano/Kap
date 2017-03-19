@@ -25,7 +25,7 @@ class TrayArrow extends Component {
   }
 
   render() {
-    const className = classNames('svg', 'no-select', {hidden: !this.props.visible})
+    const className = classNames('svg', 'no-select')
     return (
       <div className="root">
         <div

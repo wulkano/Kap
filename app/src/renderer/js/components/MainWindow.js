@@ -3,7 +3,6 @@ import React from 'react'
 
 import Component from './Component'
 import Kap from './Kap'
-import TrayArrow from './TrayArrow'
 import WindowHeader from './WindowHeader'
 import GlobalContainer from './GlobalContainer'
 import Button from './Button'
@@ -13,16 +12,17 @@ class MainWindow extends Component {
   render() {
     const {stuck: isStuck} = this.props.windows.main
     const {hide, minimize} = this.props
+    const mainClassName = classNames('webkit-drag', {'rounded-top': isStuck})
     return (
       <div>
-        <TrayArrow visible={isStuck}/>
         <WindowHeader
+          arrow
           showTrafficLights={!isStuck}
+          bgColor={isStuck ? 'transparent' : 'white'}
           hide={hide}
           minimize={minimize}
-          title="Kap"
           />
-        <main>
+        <main className={mainClassName}>
           <Button
             bgColor="#007AFF"
             borderColor="#007AFF"
@@ -36,6 +36,11 @@ class MainWindow extends Component {
           main {
             background-color: white;
             padding: 1.6rem;
+            border-radius: 0 0 5px 5px;
+          }
+
+          .rounded-top {
+            border-radius: 5px;
           }
         `}</style>
       </div>
