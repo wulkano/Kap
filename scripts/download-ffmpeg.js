@@ -9,7 +9,7 @@ const ora = require('ora');
 
 let spinner = ora({text: 'Installing 7zip', stream: process.stdout}).start();
 
-const FFMPEG_URL = 'http://evermeet.cx/ffmpeg/ffmpeg-83544-g965f35b.7z';
+const FFMPEG_URL = 'https://evermeet.cx/pub/ffmpeg/snapshots/ffmpeg-83840-gce01065.7z';
 const VENDOR_PATH = ['..', 'app', 'vendor'];
 
 const joinPath = (...str) => path.join(__dirname, ...str);

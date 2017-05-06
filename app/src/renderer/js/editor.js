@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const previewContainer = $('.video-preview');
   const progressBar = $('progress');
   const saveBtn = $('.save');
+  const uploadBtn = $('.upload');
   const windowHeader = $('.window-header');
 
   let maxFps = app.kap.settings.get('fps');
@@ -193,6 +194,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   saveBtn.onclick = () => {
     ipcRenderer.send('export-to-gif', {
+      filePath: preview.src,
+      width: inputWidth.value,
+      height: inputHeight.value,
+      fps,
+      loop
+    });
+    ipcRenderer.send('close-editor-window');
+  };
+
+  uploadBtn.onclick = () => {
+    ipcRenderer.send('upload-gif', {
       filePath: preview.src,
       width: inputWidth.value,
       height: inputHeight.value,

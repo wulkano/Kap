@@ -29,6 +29,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveToDescription = $('.js-save-to-description');
   const showCursorCheckbox = $('#show-cursor');
 
+  const s3bucketInput = $('input[name="bucket"]');
+  const s3keyInput = $('input[name="key"]');
+  const s3secretInput = $('input[name="secret"]');
+
+  const uploadPrefs = $('.upload-prefs');
+  const uploadPrefsBtn = $('.show-upload-prefs');
+
   const electronWindow = getCurrentWindow();
 
   electronWindow.setSheetOffset(header.offsetHeight);
@@ -59,21 +66,48 @@ document.addEventListener('DOMContentLoaded', () => {
       audioInputDeviceSelector.value = settingsValues.audioInputDeviceId;
     }
   });
+  s3bucketInput.value = settingsValues.s3bucket || '';
+  s3keyInput.value = settingsValues.s3key || '';
+  s3secretInput.value = settingsValues.s3secret || '';
+
+  s3bucketInput.oninput = function () {
+    app.kap.settings.set('s3bucket', this.value);
+  };
+  s3keyInput.oninput = function () {
+    app.kap.settings.set('s3key', this.value);
+  };
+  s3secretInput.oninput = function () {
+    app.kap.settings.set('s3secret', this.value);
+  };
 
   generalPrefsBtn.onclick = function (e) {
     e.preventDefault();
     this.classList.add('is-active');
     advancedPrefsBtn.classList.remove('is-active');
+    uploadPrefsBtn.classList.remove('is-active');
     generalPrefs.classList.remove('hidden');
     advancedPrefs.classList.add('hidden');
+    uploadPrefs.classList.add('hidden');
   };
 
   advancedPrefsBtn.onclick = function (e) {
     e.preventDefault();
     this.classList.add('is-active');
     generalPrefsBtn.classList.remove('is-active');
+    uploadPrefsBtn.classList.remove('is-active');
     advancedPrefs.classList.remove('hidden');
     generalPrefs.classList.add('hidden');
+    uploadPrefs.classList.add('hidden');
+  };
+
+  uploadPrefsBtn.onclick = function (e) {
+    e.preventDefault();
+    this.classList.add('is-active');
+    generalPrefsBtn.classList.remove('is-active');
+    advancedPrefsBtn.classList.remove('is-active');
+    uploadPrefs.classList.remove('hidden');
+    generalPrefs.classList.add('hidden');
+    advancedPrefs.classList.add('hidden');
   };
 
   chooseSaveDirectoryBtn.onclick = function () {

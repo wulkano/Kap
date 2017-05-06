@@ -12,6 +12,8 @@ block body
         +icon('settings')
       a.show-advanced-prefs(href)
         +icon('tune')
+      a.show-upload-prefs(href)
+        +icon('gear')
   .prefs-sections
     section.js-prefs-section.settings
     section.general-prefs
@@ -61,3 +63,14 @@ block body
           .select-element(style="width: 17.8rem")
             select.js-audio-input-device-selector
               option(value='none') None
+
+    //- Upload preferences
+    section.upload-prefs.hidden
+      .preference.container
+        .preference-part
+          .preference-content
+            .preference__title S3 Credentials
+            .preference__description AWS key and secret.
+            input#bucket.form-control(type='text', placeholder='S3 Bucket' name='bucket')
+            input#bucket.form-control(type='text', placeholder='AWS Key' name='key')
+            input#bucket.form-control(type='text', placeholder='AWS Secret' name='secret')
