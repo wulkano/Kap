@@ -2,7 +2,7 @@
   "name": "Kap",
   "main": "dist/main/index.js",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.2-beta",
   "description": "The best way to record your screen",
   "repository": "wulkano/kap",
   "author": "Wulkano AS <team@wulka.no> (https://wulka.no/)",
@@ -14,6 +14,7 @@
   "dependencies": {
     "aperture": "2.1.0",
     "aspectratio": "^2.2.2",
+    "aws-sdk": "^2.49.0",
     "eightpoint": "0.0.1",
     "electron-is-dev": "^0.1.2",
     "electron-settings": "^2.2.1",
@@ -26,6 +27,7 @@
     "moment": "^2.14.1",
     "ms": "^0.7.1",
     "object-path": "^0.11.3",
+    "randomstring": "^1.1.5",
     "raven": "^0.12.1",
     "tmp": "0.0.29"
   },
