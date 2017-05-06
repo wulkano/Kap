@@ -590,7 +590,7 @@ document.addEventListener('DOMContentLoaded', () => {
           ACL: 'public-read',
           Body: data,
           ContentType: 'image/gif', // TODO: Make this determined by the file.
-          CacheControl: 'public, max-age=31536000' // Cache for an entire year.
+          CacheControl: 'public, max-age=31536000', // Cache for an entire year.
           Bucket: settingsValues.s3bucket
         };
         if (error) {
