@@ -1,26 +1,12 @@
-import fs from 'fs';
-import {remote, ipcRenderer, clipboard} from 'electron';
+import {remote, ipcRenderer} from 'electron';
 import aspectRatio from 'aspectratio';
 import moment from 'moment';
-import AWS from 'aws-sdk';
-import path from 'path';
-import randomstring from 'randomstring'
 
 // note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 import {handleTrafficLightsClicks, $, handleActiveButtonGroup} from '../js/utils';
 
 const {app} = remote;
-const settingsValues = app.kap.settings.getAll();
-const s3bucket = new AWS.S3({
-  credentials: {
-    accessKeyId: settingsValues.s3key,
-    secretAccessKey: settingsValues.s3secret
-  },
-  params: {
-    Bucket: settingsValues.s3bucket
-  }
-});
 
 document.addEventListener('DOMContentLoaded', () => {
   const playBtn = $('.js-play-video');
@@ -226,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
       loop
     });
     ipcRenderer.send('close-editor-window');
-  }
+  };
 
   ipcRenderer.on('video-src', (event, src) => {
     preview.src = src;

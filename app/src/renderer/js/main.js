@@ -1,12 +1,12 @@
 import fs from 'fs';
+import path from 'path';
 import {ipcRenderer, remote, shell, clipboard} from 'electron';
 
 import aspectRatio from 'aspectratio';
 import fileSize from 'file-size';
 import moment from 'moment';
 import AWS from 'aws-sdk';
-import path from 'path';
-import randomstring from 'randomstring'
+import randomstring from 'randomstring';
 
 import {convertToGif, convertToWebm} from '../../scripts/convert';
 import {init as initErrorReporter, report as reportError} from '../../common/reporter';
@@ -566,26 +566,26 @@ document.addEventListener('DOMContentLoaded', () => {
     // TODO catch
   }
 
-  const handleAWSerror = (error) => {
-    let humanizeError = 'An unknown error has occured'
+  const handleAWSerror = error => {
+    let humanizeError = 'An unknown error has occured';
     if (error.code === 'InvalidAccessKeyId') {
-      humanizeError = 'Your S3 credentials are not valid. Please verify them in preferences.'
+      humanizeError = 'Your S3 credentials are not valid. Please verify them in preferences.';
     }
     remote.dialog.showMessageBox({
       type: 'error',
       message: 'Failed to upload.',
       detail: humanizeError
     });
-  }
+  };
 
-  const uploadFile = (filepath) => {
-    const extension = path.extname(filepath)
-    fs.readFile(filepath, function(error, data) {
+  const uploadFile = filepath => {
+    const extension = path.extname(filepath);
+    fs.readFile(filepath, (error, data) => {
       if (error) {
         throw error; // Something went really wrong!
-      };
-      s3bucket.createBucket(function(error, config) {
-        var params = {
+      }
+      s3bucket.createBucket(error => {
+        const params = {
           Key: randomstring.generate(24) + extension,
           ACL: 'public-read',
           Body: data,
@@ -593,18 +593,18 @@ document.addEventListener('DOMContentLoaded', () => {
           Bucket: settingsValues.s3bucket
         };
         if (error) {
-          handleAWSerror(error)
+          handleAWSerror(error);
         } else {
-          s3bucket.upload(params, function(error, obj) {
+          s3bucket.upload(params, (error, obj) => {
             if (error) {
-              handleAWSerror(error)
+              handleAWSerror(error);
             } else {
-              clipboard.writeText(obj.Location)
+              clipboard.writeText(obj.Location);
               remote.dialog.showMessageBox({
                 type: 'info',
                 message: 'Upload compelete.',
                 detail: 'The URL is copied to your clipboard.',
-                buttons: ['Ok'],
+                buttons: ['Ok']
               }, () => {
                 progressBarSection.classList.add('hidden');
                 header.classList.remove('hidden');
@@ -613,12 +613,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 progressBarLabel.innerText = 'Analyzing...';
                 setMainWindowSize();
               });
-            };
+            }
           });
-        };
+        }
       });
     });
-  }
+  };
 
   function uploadType(type, data) {
     header.classList.add('hidden');
@@ -637,7 +637,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const convert = type === 'gif' ? convertToGif : convertToWebm;
 
     convert(data).then(filePath => {
-      uploadFile(filePath)
+      uploadFile(filePath);
       progressBar.value = 100;
     });
   }

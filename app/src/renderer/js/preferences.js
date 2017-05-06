@@ -11,7 +11,6 @@ const settingsValues = app.kap.settings.getAll();
 
 // observers that should be disposed when the window unloads
 const observersToDispose = [];
-console.log($)
 
 document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
@@ -67,18 +66,18 @@ document.addEventListener('DOMContentLoaded', () => {
       audioInputDeviceSelector.value = settingsValues.audioInputDeviceId;
     }
   });
-  s3bucketInput.value = settingsValues.s3bucket || "";
-  s3keyInput.value = settingsValues.s3key || "";
-  s3secretInput.value = settingsValues.s3secret || "";
+  s3bucketInput.value = settingsValues.s3bucket || '';
+  s3keyInput.value = settingsValues.s3key || '';
+  s3secretInput.value = settingsValues.s3secret || '';
 
   s3bucketInput.oninput = function () {
-    app.kap.settings.set('s3bucket', this.value)
+    app.kap.settings.set('s3bucket', this.value);
   };
   s3keyInput.oninput = function () {
-    app.kap.settings.set('s3key', this.value)
+    app.kap.settings.set('s3key', this.value);
   };
   s3secretInput.oninput = function () {
-    app.kap.settings.set('s3secret', this.value)
+    app.kap.settings.set('s3secret', this.value);
   };
 
   generalPrefsBtn.onclick = function (e) {

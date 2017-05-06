@@ -519,7 +519,6 @@ ipcMain.on('export-to-gif', (event, data) => {
 });
 
 ipcMain.on('upload-gif', (event, data) => {
-  console.log(event, data)
   mainWindow.webContents.send('upload-gif', data);
   mainWindow.show();
 });
