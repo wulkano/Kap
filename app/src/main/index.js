@@ -518,6 +518,12 @@ ipcMain.on('export-to-gif', (event, data) => {
   mainWindow.show();
 });
 
+ipcMain.on('upload-gif', (event, data) => {
+  console.log(event, data)
+  mainWindow.webContents.send('upload-gif', data);
+  mainWindow.show();
+});
+
 ipcMain.on('set-main-window-visibility', (event, opts) => {
   if (opts.alwaysOnTop === true && opts.temporary === true && opts.forHowLong) {
     menubar.setOption('alwaysOnTop', true);

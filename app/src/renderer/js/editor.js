@@ -1,12 +1,26 @@
-import {remote, ipcRenderer} from 'electron';
+import fs from 'fs';
+import {remote, ipcRenderer, clipboard} from 'electron';
 import aspectRatio from 'aspectratio';
 import moment from 'moment';
+import AWS from 'aws-sdk';
+import path from 'path';
+import randomstring from 'randomstring'
 
 // note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 import {handleTrafficLightsClicks, $, handleActiveButtonGroup} from '../js/utils';
 
 const {app} = remote;
+const settingsValues = app.kap.settings.getAll();
+const s3bucket = new AWS.S3({
+  credentials: {
+    accessKeyId: settingsValues.s3key,
+    secretAccessKey: settingsValues.s3secret
+  },
+  params: {
+    Bucket: settingsValues.s3bucket
+  }
+});
 
 document.addEventListener('DOMContentLoaded', () => {
   const playBtn = $('.js-play-video');
@@ -25,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const previewContainer = $('.video-preview');
   const progressBar = $('progress');
   const saveBtn = $('.save');
+  const uploadBtn = $('.upload');
   const windowHeader = $('.window-header');
 
   let maxFps = app.kap.settings.get('fps');
@@ -201,6 +216,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     ipcRenderer.send('close-editor-window');
   };
+
+  uploadBtn.onclick = () => {
+    ipcRenderer.send('upload-gif', {
+      filePath: preview.src,
+      width: inputWidth.value,
+      height: inputHeight.value,
+      fps,
+      loop
+    });
+    ipcRenderer.send('close-editor-window');
+  }
 
   ipcRenderer.on('video-src', (event, src) => {
     preview.src = src;

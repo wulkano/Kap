@@ -1,10 +1,12 @@
 import fs from 'fs';
-
-import {ipcRenderer, remote, shell} from 'electron';
+import {ipcRenderer, remote, shell, clipboard} from 'electron';
 
 import aspectRatio from 'aspectratio';
 import fileSize from 'file-size';
 import moment from 'moment';
+import AWS from 'aws-sdk';
+import path from 'path';
+import randomstring from 'randomstring'
 
 import {convertToGif, convertToWebm} from '../../scripts/convert';
 import {init as initErrorReporter, report as reportError} from '../../common/reporter';
@@ -17,6 +19,16 @@ import {handleTrafficLightsClicks, isVisible, disposeObservers, handleActiveButt
 const aperture = require('aperture')();
 
 const {app} = remote;
+const settingsValues = app.kap.settings.getAll();
+const s3bucket = new AWS.S3({
+  credentials: {
+    accessKeyId: settingsValues.s3key,
+    secretAccessKey: settingsValues.s3secret
+  },
+  params: {
+    Bucket: settingsValues.s3bucket
+  }
+});
 
 // observers that should be disposed when the window unloads
 const observersToDispose = [];
@@ -554,8 +566,88 @@ document.addEventListener('DOMContentLoaded', () => {
     // TODO catch
   }
 
+  const handleAWSerror = (error) => {
+    let humanizeError = 'An unknown error has occured'
+    if (error.code === 'InvalidAccessKeyId') {
+      humanizeError = 'Your S3 credentials are not valid. Please verify them in preferences.'
+    }
+    remote.dialog.showMessageBox({
+      type: 'error',
+      message: 'Failed to upload.',
+      detail: humanizeError
+    });
+  }
+
+  const uploadFile = (filepath) => {
+    const extension = path.extname(filepath)
+    fs.readFile(filepath, function(error, data) {
+      if (error) {
+        throw error; // Something went really wrong!
+      };
+      s3bucket.createBucket(function(error, config) {
+        var params = {
+          Key: randomstring.generate(24) + extension,
+          ACL: 'public-read',
+          Body: data,
+          ContentType: 'image/gif', // TODO: Make this determined by the file.
+          Bucket: settingsValues.s3bucket
+        };
+        if (error) {
+          handleAWSerror(error)
+        } else {
+          s3bucket.upload(params, function(error, obj) {
+            if (error) {
+              handleAWSerror(error)
+            } else {
+              clipboard.writeText(obj.Location)
+              remote.dialog.showMessageBox({
+                type: 'info',
+                message: 'Upload compelete.',
+                detail: 'The URL is copied to your clipboard.',
+                buttons: ['Ok'],
+              }, () => {
+                progressBarSection.classList.add('hidden');
+                header.classList.remove('hidden');
+                controlsSection.classList.remove('hidden');
+                delete progressBar.value;
+                progressBarLabel.innerText = 'Analyzing...';
+                setMainWindowSize();
+              });
+            };
+          });
+        };
+      });
+    });
+  }
+
+  function uploadType(type, data) {
+    header.classList.add('hidden');
+    controlsSection.classList.add('hidden');
+    progressBarSection.classList.remove('hidden');
+    setMainWindowSize();
+
+    function progressCallback(percentage) {
+      // eslint-disable-line no-inner-declarations
+      progressBarLabel.innerText = 'Processing...';
+      progressBar.value = percentage;
+    }
+
+    data.progressCallback = progressCallback;
+
+    const convert = type === 'gif' ? convertToGif : convertToWebm;
+
+    convert(data).then(filePath => {
+      uploadFile(filePath)
+      progressBar.value = 100;
+    });
+  }
+
   ipcRenderer.on('export-to-gif', (event, data) => {
     exportToType('gif', data);
+  });
+
+  ipcRenderer.on('upload-gif', (event, data) => {
+    uploadType('gif', data);
   });
 
   ipcRenderer.on('show-notification', (event, {title, body}) => new Notification(title, {body}));

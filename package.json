@@ -69,5 +69,8 @@
       "transform-es2015-modules-commonjs"
     ]
   },
-  "dependencies": {}
+  "dependencies": {
+    "aws-sdk": "^2.49.0",
+    "randomstring": "^1.1.5"
+  }
 }
