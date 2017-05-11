@@ -42,7 +42,7 @@ settings.init();
 ipcMain.on('set-main-window-size', (event, args) => {
   if (args.width && args.height && mainWindow) {
     [args.width, args.height] = [parseInt(args.width, 10), parseInt(args.height, 10)];
-    mainWindow.setSize(args.width, args.height, true); // true == animate
+    mainWindow.setSize(args.width, args.height, true); // True == animate
     event.returnValue = true; // Give true to sendSync caller
   }
 });
@@ -50,7 +50,7 @@ ipcMain.on('set-main-window-size', (event, args) => {
 ipcMain.on('set-cropper-window-size', (event, args) => {
   if (args.width && args.height && cropperWindow) {
     [args.width, args.height] = [parseInt(args.width, 10), parseInt(args.height, 10)];
-    cropperWindow.setSize(args.width + cropperWindowBuffer, args.height + cropperWindowBuffer, true); // true == animate
+    cropperWindow.setSize(args.width + cropperWindowBuffer, args.height + cropperWindowBuffer, true); // True == animate
   }
 });
 
@@ -172,7 +172,7 @@ function resetMainWindowShadow() {
 }
 
 function resetTrayIcon() {
-  appState = 'initial'; // if the icon is being reseted, we are not recording anymore
+  appState = 'initial'; // If the icon is being reseted, we are not recording anymore
   shouldStopWhenTrayIsClicked = false;
   tray.setImage(path.join(__dirname, '..', '..', 'static', 'menubarDefaultTemplate.png'));
   menubar.setOption('alwaysOnTop', false);
@@ -206,7 +206,7 @@ function openPrefsWindow() {
   prefsWindow.on('ready-to-show', prefsWindow.show);
 
   prefsWindow.on('blur', () => {
-    // because of issues on our codebase and on the `menubar` module,
+    // Because of issues on our codebase and on the `menubar` module,
     // for now we'll have this ugly workaround: if the main window is attached
     // to the menubar, we'll just close the prefs window when it loses focus
     if (!mainWindowIsDetached && !prefsWindow.webContents.isDevToolsFocused()) {
@@ -253,24 +253,24 @@ menubar.on('after-create-window', () => {
 
   mainWindow.on('blur', () => {
     if (cropperWindow && !cropperWindow.isFocused() && !recording) {
-      // close the cropper window if the main window loses focus and the cropper window
+      // Close the cropper window if the main window loses focus and the cropper window
       // is not focused
       closeCropperWindow();
     }
 
     recomputeExpectedWindowPosition();
     recomputeCurrentWindowPosition();
-    if (expectedWindowPosition.x !== currentWindowPosition.x || expectedWindowPosition.y !== currentWindowPosition.y) { // this line is too long
+    if (expectedWindowPosition.x !== currentWindowPosition.x || expectedWindowPosition.y !== currentWindowPosition.y) { // This line is too long
       menubar.setOption('x', currentWindowPosition.x);
       menubar.setOption('y', currentWindowPosition.y);
-    } else { // reset the position if the window is back at it's original position
+    } else { // Reset the position if the window is back at it's original position
       menubar.setOption('x', undefined);
       menubar.setOption('y', undefined);
     }
   });
 
   let wasStuck = true;
-  mainWindow.on('move', () => { // unfortunately this is just an alias for 'moved'
+  mainWindow.on('move', () => { // Unfortunately this is just an alias for 'moved'
     recomputeExpectedWindowPosition();
     recomputeCurrentWindowPosition();
     const diff = {
@@ -286,7 +286,7 @@ menubar.on('after-create-window', () => {
         wasStuck = true;
         mainWindowIsDetached = false;
       }
-      // the `move` event is called when the user reselases the mouse button
+      // The `move` event is called when the user reselases the mouse button
       // because of that, we need to move the window to it's expected position, since the
       // user will never release the mouse in the *right* position (diff.[x, y] === 0)
       tray.setHighlightMode('always');
@@ -311,7 +311,7 @@ menubar.on('after-create-window', () => {
     }
     if (mainWindowIsNew) {
       mainWindowIsNew = false;
-      positioner.move('trayCenter', tray.getBounds()); // not sure why the fuck this is needed (ﾉಠдಠ)ﾉ︵┻━┻
+      positioner.move('trayCenter', tray.getBounds()); // Not sure why the fuck this is needed (ﾉಠдಠ)ﾉ︵┻━┻
     }
     if (appState === 'recording' && shouldStopWhenTrayIsClicked) {
       mainWindow.webContents.send('stop-recording');
@@ -339,7 +339,7 @@ menubar.on('after-create-window', () => {
   });
 
   mainWindow.once('ready-to-show', () => {
-    positioner.move('trayCenter', tray.getBounds()); // not sure why the fuck this is needed (ﾉಠдಠ)ﾉ︵┻━┻
+    positioner.move('trayCenter', tray.getBounds()); // Not sure why the fuck this is needed (ﾉಠдಠ)ﾉ︵┻━┻
     mainWindow.show();
   });
 
@@ -446,7 +446,7 @@ ipcMain.on('ask-user-to-save-file', (event, data) => {
 
   mkdirp(kapturesDir, err => {
     if (err) {
-      // can be ignored
+      // Can be ignored
     }
     dialog.showSaveDialog({
       title: data.fileName,

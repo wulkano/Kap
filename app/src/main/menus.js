@@ -7,7 +7,7 @@ const checkForUpdatesItem = {
   click(item) {
     item.enabled = false;
     checkForUpdates(() => {
-      // this will be called if no update is available
+      // This will be called if no update is available
       app.kap.mainWindow.webContents.send('show-notification', {
         title: 'No updates available!',
         body: 'You will automatically receive updates as soon as they are available 🤗'

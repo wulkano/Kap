@@ -10,7 +10,7 @@ import {convertToGif, convertToWebm} from '../../scripts/convert';
 import {init as initErrorReporter, report as reportError} from '../../common/reporter';
 import {log} from '../../common/logger';
 
-// note: `./` == `/app/dist/renderer/views`, not `js`
+// Note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 import {handleTrafficLightsClicks, isVisible, disposeObservers, handleActiveButtonGroup} from '../js/utils';
 
@@ -18,7 +18,7 @@ const aperture = require('aperture')();
 
 const {app} = remote;
 
-// observers that should be disposed when the window unloads
+// Observers that should be disposed when the window unloads
 const observersToDispose = [];
 
 function setMainWindowSize() {
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let exportType = app.kap.settings.get('exportAs');
   let initializedActiveShim = false;
 
-  // init dynamic elements
+  // Init dynamic elements
   if (app.kap.settings.get('showCursor')) {
     toggleShowCursorBtn.parentNode.classList.add('is-active');
   }
@@ -151,14 +151,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const display = remote.screen.getDisplayMatching(cropperBounds);
 
     if (display.id === remote.screen.getPrimaryDisplay().id) {
-      // convert the coordinates to cartesian coordinates, which are used by CoreMedia
+      // Convert the coordinates to cartesian coordinates, which are used by CoreMedia
       cropperBounds.y = screen.height - (cropperBounds.y + cropperBounds.height);
     } else {
-      // if the cropper window is placed in a display that it's not the main one,
+      // If the cropper window is placed in a display that it's not the main one,
       // we need to do tome _special_ math to calculate its position
       const displayBounds = display.bounds;
 
-      // when there are more than one display, the bounds that macOS returns for a display
+      // When there are more than one display, the bounds that macOS returns for a display
       // that is not the main one are relative to the main display. consequently, the
       // bounds of windows in that display are relative to the main display.
       // we need to make those bounds relative to the display in which the cropper window
@@ -166,17 +166,17 @@ document.addEventListener('DOMContentLoaded', () => {
       cropperBounds.x = Math.abs(displayBounds.x - cropperBounds.x);
       cropperBounds.y = Math.abs(displayBounds.y - cropperBounds.y);
 
-      // convert the coordinates to cartesian coordinates, which are used by CoreMedia
+      // Convert the coordinates to cartesian coordinates, which are used by CoreMedia
       cropperBounds.y = displayBounds.height - (cropperBounds.y + cropperBounds.height);
     }
 
-    // the dashed border is 1px wide
+    // The dashed border is 1px wide
     cropperBounds.x += 1;
     cropperBounds.y += 1;
     cropperBounds.width -= 2;
     cropperBounds.height -= 2;
 
-    // we need the most recent settings
+    // We need the most recent settings
     const {
       fps,
       showCursor,
@@ -200,8 +200,8 @@ document.addEventListener('DOMContentLoaded', () => {
     aperture.startRecording(apertureOpts)
       .then(filePath => {
         recordBtn.attributes['data-state'].value = 'ready-to-stop';
-        recordBtn.children[0].classList.add('hidden'); // crop btn
-        recordBtn.children[1].classList.remove('hidden'); // stop btn
+        recordBtn.children[0].classList.add('hidden'); // Crop btn
+        recordBtn.children[1].classList.remove('hidden'); // Stop btn
         startMonitoringElapsedTimeAndSize(filePath);
         setMainWindowTitle('Recording');
         ipcRenderer.send('started-recording');
@@ -225,8 +225,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function restoreInputs() {
     recordBtn.attributes['data-state'].value = 'initial';
-    recordBtn.children[0].classList.remove('hidden'); // crop btn
-    recordBtn.children[1].classList.add('hidden'); // stop btn
+    recordBtn.children[0].classList.remove('hidden'); // Crop btn
+    recordBtn.children[1].classList.add('hidden'); // Stop btn
     enableInputs();
   }
 
@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ipcRenderer.send('open-editor-window', {filePath});
             break;
           }
-          // no default
+          // No default
         }
       });
   }
@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   recordBtn.onclick = function () {
     if (app.kap.editorWindow) {
-      // we need to keep the window visible to show the shake animation
+      // We need to keep the window visible to show the shake animation
       // (it'll be auto hidden by `menubar` when the editor window gain focus)
       ipcRenderer.send('set-main-window-visibility', {
         alwaysOnTop: true,
@@ -367,14 +367,14 @@ document.addEventListener('DOMContentLoaded', () => {
   inputWidth.onkeydown = handleKeyDown;
 
   inputWidth.onblur = function () {
-    this.value = this.value || (shake(this) && 512); // prevent the input from staying empty
+    this.value = this.value || (shake(this) && 512); // Prevent the input from staying empty
   };
 
   inputHeight.oninput = function () {
     this.value = validateNumericInput(this, {
       lastValidValue: lastValidInputHeight,
       empty: true,
-      max: screen.height - screen.availTop, // currently we can't draw over the menubar,
+      max: screen.height - screen.availTop, // Currently we can't draw over the menubar
       min: 1,
       onInvalid: shake
     });
@@ -394,7 +394,7 @@ document.addEventListener('DOMContentLoaded', () => {
   inputHeight.onkeydown = handleKeyDown;
 
   inputHeight.onblur = function () {
-    this.value = this.value || (shake(this) && 512); // prevent the input from staying empty
+    this.value = this.value || (shake(this) && 512); // Prevent the input from staying empty
   };
 
   swapBtn.onclick = () => {
@@ -488,9 +488,9 @@ document.addEventListener('DOMContentLoaded', () => {
     titleBar.classList.add('has-update-notification');
     updateNotification.classList.remove('hidden');
 
-    // if the traffic lights are invisible, the triangle should be visible
+    // If the traffic lights are invisible, the triangle should be visible
     // if they are visible, the tray triangle should be invisible
-    setTrayTriangleVisible(isVisible(trafficLightsWrapper)); // to update the color
+    setTrayTriangleVisible(isVisible(trafficLightsWrapper)); // To update the color
 
     setMainWindowSize();
 
@@ -533,11 +533,10 @@ document.addEventListener('DOMContentLoaded', () => {
     progressBarSection.classList.remove('hidden');
     setMainWindowSize();
 
-    function progressCallback(percentage) {
-      // eslint-disable-line no-inner-declarations
+    const progressCallback = percentage => {
       progressBarLabel.innerText = 'Processing...';
       progressBar.value = percentage;
-    }
+    };
 
     data.progressCallback = progressCallback;
 

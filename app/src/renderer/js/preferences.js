@@ -1,6 +1,6 @@
 import {remote} from 'electron';
 
-// note: `./` == `/app/dist/renderer/views`, not `js`
+// Note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleTrafficLightsClicks, $, disposeObservers} from '../js/utils';
 
 const {app, dialog, getCurrentWindow} = remote;
@@ -9,7 +9,7 @@ const aperture = require('aperture')();
 
 const settingsValues = app.kap.settings.getAll();
 
-// observers that should be disposed when the window unloads
+// Observers that should be disposed when the window unloads
 const observersToDispose = [];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
   electronWindow.setSheetOffset(header.offsetHeight);
   handleTrafficLightsClicks();
 
-  // init the shown settings
+  // Init the shown settings
   saveToDescription.dataset.fullPath = settingsValues.kapturesDir;
   saveToDescription.setAttribute('title', settingsValues.kapturesDir);
   saveToDescription.innerText = `.../${settingsValues.kapturesDir.split('/').pop()}`;
@@ -124,14 +124,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // the `showCursor` setting can be changed via the
+  // The `showCursor` setting can be changed via the
   // mouse btn in the main window
   observersToDispose.push(app.kap.settings.observe('showCursor', event => {
     showCursorCheckbox.checked = event.newValue;
     showCursorCheckbox.onchange();
   }));
 
-  // the `recordAudio` setting can be changed via the
+  // The `recordAudio` setting can be changed via the
   // mic btn in the main window
   observersToDispose.push(app.kap.settings.observe('recordAudio', event => {
     if (event.newValue === true) {

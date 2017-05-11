@@ -2,7 +2,7 @@ import {remote, ipcRenderer} from 'electron';
 import aspectRatio from 'aspectratio';
 import moment from 'moment';
 
-// note: `./` == `/app/dist/renderer/views`, not `js`
+// Note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 import {handleTrafficLightsClicks, $, handleActiveButtonGroup} from '../js/utils';
 
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
       previewTime.innerText = `${moment().startOf('day').seconds(preview.currentTime).format('m:ss')}`;
     }, 1);
 
-    // remove the listener since it's called
+    // Remove the listener since it's called
     // every time the video loops
     preview.oncanplay = undefined;
   };
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
   inputWidth.onkeydown = handleKeyDown;
 
   inputWidth.onblur = function () {
-    this.value = this.value || (shake(this) && lastValidInputWidth); // prevent the input from staying empty
+    this.value = this.value || (shake(this) && lastValidInputWidth); // Prevent the input from staying empty
   };
 
   inputHeight.oninput = function () {
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
   inputHeight.onkeydown = handleKeyDown;
 
   inputHeight.onblur = function () {
-    this.value = this.value || (shake(this) && lastValidInputHeight); // prevent the input from staying empty
+    this.value = this.value || (shake(this) && lastValidInputHeight); // Prevent the input from staying empty
   };
 
   fps15Btn.onclick = function () {
@@ -181,9 +181,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   discardBtn.onclick = confirmDiscard;
   window.onkeyup = event => {
-    if (event.keyCode === 27) { // esc
+    if (event.keyCode === 27) { // Esc
       if (maximizeBtn.classList.contains('hidden')) {
-        // exit fullscreen
+        // Exit fullscreen
         unmaximizeBtn.onclick();
       } else {
         confirmDiscard();

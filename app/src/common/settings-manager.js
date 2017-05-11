@@ -30,7 +30,7 @@ const volatiles = {
   }
 };
 
-// we need to sync every setting that can be modified externally
+// We need to sync every setting that can be modified externally
 // e.g. the `openOnStartup` setting can be modified via
 // macOS' System Preferences.app
 function sync() {
@@ -38,7 +38,7 @@ function sync() {
 }
 
 function init() {
-  // we need to fetch a input device because if the user opens the app for the first time
+  // We need to fetch a input device because if the user opens the app for the first time
   // and toggle the mic in the main window to record audio, we will not record any audio
   // if we do not have a input id stored.
   // TODO: if no input device is available (could happen in an iMac, for example), we need

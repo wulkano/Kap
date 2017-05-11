@@ -38,8 +38,8 @@ function convert(outputPath, opts, args) {
   });
 }
 
-// time ffmpeg -i original.mp4 -vf fps=30,scale=480:-1::flags=lanczos,palettegen palette.png
-// time ffmpeg -i original.mp4 -i palette.png -filter_complex 'fps=30,scale=-1:-1:flags=lanczos[x]; [x][1:v]paletteuse' palette.gif
+// `time ffmpeg -i original.mp4 -vf fps=30,scale=480:-1::flags=lanczos,palettegen palette.png`
+// `time ffmpeg -i original.mp4 -i palette.png -filter_complex 'fps=30,scale=-1:-1:flags=lanczos[x]; [x][1:v]paletteuse' palette.gif`
 function convertToGif(opts) {
   return Promise.resolve().then(() => {
     const palettePath = tmp.tmpNameSync({postfix: '.png'});
@@ -70,10 +70,10 @@ function convertToWebm(opts) {
       // https://trac.ffmpeg.org/wiki/Encode/VP9
       '-threads', Math.max(os.cpus().length - 1, 1),
       '-deadline', 'good', // `best` is twice as slow and only slighty better
-      '-b:v', '1M', // bitrate (same as the MP4)
+      '-b:v', '1M', // Bitrate (same as the MP4)
       '-codec:v', 'vp9',
       '-codec:a', 'vorbis',
-      '-strict', '-2', // needed because `vorbis` is experimental
+      '-strict', '-2', // Needed because `vorbis` is experimental
       outputPath
     ]);
   });

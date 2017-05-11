@@ -27,7 +27,7 @@ function init(window) {
   setTimeout(() => {
     log('checking');
     autoUpdater.checkForUpdates();
-  }, ms('5s')); // at this point the app is fully started and ready for everything
+  }, ms('5s')); // At this point the app is fully started and ready for everything
 
   let intervalId = createInterval();
 
@@ -48,7 +48,7 @@ function init(window) {
   });
 
   autoUpdater.on('error', err => {
-    if (intervalId === undefined) { // if the error occurred during the download
+    if (intervalId === undefined) { // If the error occurred during the download
       intervalId = createInterval();
     }
 
@@ -57,7 +57,7 @@ function init(window) {
   });
 }
 
-// the `callback` will be called if no update is available at the moment
+// The `callback` will be called if no update is available at the moment
 function checkForUpdates(callback) {
   manualCheckTimeout = setTimeout(() => {
     callback();

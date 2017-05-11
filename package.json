@@ -36,11 +36,10 @@
     "postcss-nested": "1.0.0",
     "postcss-reporter": "2.0.0",
     "postcss-simple-vars": "3.0.0",
-    "xo": "0.17.0"
+    "xo": "0.18.2"
   },
   "xo": {
     "space": 2,
-    "esnext": true,
     "envs": [
       "node",
       "browser"
@@ -68,6 +67,5 @@
     "plugins": [
       "transform-es2015-modules-commonjs"
     ]
-  },
-  "dependencies": {}
+  }
 }

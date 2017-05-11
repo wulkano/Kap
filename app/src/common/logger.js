@@ -17,7 +17,7 @@ function init(mainWindow) {
 }
 
 function log(...msgs) {
-  if (process.type === 'browser') { // main process
+  if (process.type === 'browser') { // Main process
     if (window && windowIsReady) {
       window.webContents.send('log', msgs);
     } else {
