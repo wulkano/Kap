@@ -72,6 +72,8 @@ function handleActiveButtonGroup({buttonGroup}) {
 
   const activeButton = buttons.find(el => el.classList.contains('active'));
   moveShimToButton({shim, button: activeButton});
+  // At this point we don't need this class anymore
+  activeButton.classList.remove('active');
   setShimBorderRadius({
     shim,
     buttonGroupArray: buttons,
