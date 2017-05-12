@@ -71,6 +71,7 @@ function handleActiveButtonGroup({buttonGroup}) {
   shim.style.height = `${buttonDimensions.height}px`;
 
   const activeButton = buttons.find(el => el.classList.contains('active'));
+  moveShimToButton({shim, button: activeButton});
   setShimBorderRadius({
     shim,
     buttonGroupArray: buttons,
