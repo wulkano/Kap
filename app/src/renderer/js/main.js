@@ -82,9 +82,14 @@ document.addEventListener('DOMContentLoaded', () => {
     micOnIcon.classList.remove('hidden');
     micOffIcon.classList.add('hidden');
   }
-  Array.from(exportAs)
-    .find(el => el.dataset.exportType === exportType)
-    .classList.add('active');
+
+  let activeExportAsButton = Array.from(exportAs)
+    .find(el => el.dataset.exportType === exportType);
+  if (!activeExportAsButton) {
+    // For some unknown reason, sometimes `exportType` will be fasly
+    activeExportAsButton = Array.from(exportAs)[0];
+  }
+  activeExportAsButton.classList.add('active');
 
   handleTrafficLightsClicks({hide: true});
 
