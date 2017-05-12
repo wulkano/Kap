@@ -518,12 +518,6 @@ document.addEventListener('DOMContentLoaded', () => {
     exportButton.onclick = function () {
       exportType = this.dataset.exportType;
       app.kap.settings.set('exportAs', exportType);
-      for (const siblingIndex in exportButtons) {
-        if (siblingIndex !== key) {
-          exportAs[siblingIndex].classList.remove('active');
-        }
-      }
-      this.classList.add('active');
     };
   });
 
