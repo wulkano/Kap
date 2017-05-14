@@ -56,13 +56,28 @@
   "build": {
     "asar": false,
     "appId": "com.wulkano.kap",
-    "mac": {
-      "category": "public.app-category.productivity"
-    },
     "files": [
       "**/*",
       "!src"
-    ]
+    ],
+    "mac": {
+      "category": "public.app-category.productivity"
+    },
+    "dmg": {
+      "iconSize": 160,
+      "contents": [
+        {
+          "x": 180,
+          "y": 170
+        },
+        {
+          "x": 480,
+          "y": 170,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    }
   },
   "babel": {
     "plugins": [
