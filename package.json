@@ -21,7 +21,7 @@
     "del": "2.2.2",
     "eightpoint": "0.0.1",
     "electron": "1.5.1",
-    "electron-builder": "7.11.4",
+    "electron-builder": "17.5.0",
     "execa": "0.5.0",
     "got": "6.5.0",
     "gulp": "gulpjs/gulp#4.0",
@@ -56,11 +56,12 @@
   "build": {
     "asar": false,
     "appId": "com.wulkano.kap",
-    "category": "public.app-category.productivity",
+    "mac": {
+      "category": "public.app-category.productivity"
+    },
     "files": [
       "**/*",
-      "!src",
-      "!main.js"
+      "!src"
     ]
   },
   "babel": {
