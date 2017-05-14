@@ -12,4 +12,4 @@ deployment:
   master:
     branch: /.*/
     commands:
-      - cp dist/mac/*.dmg $CIRCLE_ARTIFACTS
+      - cp dist/*.dmg $CIRCLE_ARTIFACTS
