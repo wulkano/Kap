@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const maximizeBtn = $('.js-maximize-video');
   const unmaximizeBtn = $('.js-unmaximize-video');
   const previewTime = $('.js-video-time');
-  const discardBtn = $('.discard');
   const inputHeight = $('.input-height');
   const inputWidth = $('.input-width');
   const fps15Btn = $('#fps-15');
@@ -24,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const preview = $('#preview');
   const previewContainer = $('.video-preview');
   const progressBar = $('progress');
-  const saveBtn = $('.save');
+  const formatBtns = document.querySelectorAll('.output-format button');
   const windowHeader = $('.window-header');
 
   let maxFps = app.kap.settings.get('fps');
@@ -166,6 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loop = true;
   };
 
+  // TODO: Make this trigger on the traffick light red button instead
   function confirmDiscard() {
     remote.dialog.showMessageBox(remote.app.kap.editorWindow, {
       type: 'question',
@@ -179,7 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  discardBtn.onclick = confirmDiscard;
   window.onkeyup = event => {
     if (event.keyCode === 27) { // Esc
       if (maximizeBtn.classList.contains('hidden')) {
@@ -191,16 +190,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  saveBtn.onclick = () => {
-    ipcRenderer.send('export-to-gif', {
-      filePath: preview.src,
-      width: inputWidth.value,
-      height: inputHeight.value,
-      fps,
-      loop
-    });
-    ipcRenderer.send('close-editor-window');
-  };
+  for (const btn of formatBtns) {
+    btn.onclick = () => { // eslint-disable-line no-loop-func
+      ipcRenderer.send('export', {
+        type: btn.dataset.exportType,
+        filePath: preview.src,
+        width: inputWidth.value,
+        height: inputHeight.value,
+        fps,
+        loop
+      });
+    };
+  }
 
   ipcRenderer.on('video-src', (event, src) => {
     preview.src = src;
