@@ -31,6 +31,12 @@ $ npm run pack
 
 After that, you'll see the binary in the `./dist` folder :smile:
 
+## Dev builds
+
+Help us test the bleeding edge of Kap: [`master`](https://kap-artifacts.now.sh/master)<br>
+Note that this version is unsupported and may have issues.<br>
+We also have builds for other branches: `https://kap-artifacts.now.sh/<branch>`
+
 ## Related Repositories
 
 - [Website](https://github.com/wulkano/kap-website)
