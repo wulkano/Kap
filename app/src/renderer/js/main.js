@@ -512,13 +512,15 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
+      app.kap.editorWindow.send('toggle-format-buttons', {enabled: false});
       app.kap.mainWindow.show();
+
       const input = Object.assign({}, data, {outputPath});
 
-      // TODO: Disable the export buttons while an export is in progress
       return convert(input).then(() => {
         progressBar.value = 100;
         saveDialogClosed();
+        app.kap.editorWindow.send('toggle-format-buttons', {enabled: true});
         app.kap.mainWindow.hide();
       });
     }).catch(console.error);

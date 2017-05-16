@@ -176,6 +176,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  ipcRenderer.on('toggle-format-buttons', (event, data) => {
+    for (const btn of formatBtns) {
+      btn.disabled = !data.enabled;
+    }
+  });
+
   for (const btn of formatBtns) {
     btn.onclick = () => { // eslint-disable-line no-loop-func
       ipcRenderer.send('export', {
