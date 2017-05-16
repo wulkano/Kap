@@ -121,9 +121,8 @@ section.output {
 
 .output-settings {
   display: flex;
-  width: 48.5rem;
-  margin-left: 16px;
   align-items: center;
+  margin-left: 16px;
 
   & > div:not(:last-child) { margin-right: 16px; }
 }
@@ -134,7 +133,7 @@ section.output {
   margin-right: 16px;
   margin-left: auto;
 
-  & > div + div { margin-left: 8px }
+  & > button:not(:last-child) { margin-right: 5px; }
 }
 
 .fps, .loop, .size { display: flex; }
