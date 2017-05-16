@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs';
 
 import {app, BrowserWindow, ipcMain, Menu, screen, globalShortcut, dialog} from 'electron';
 import isDev from 'electron-is-dev';
@@ -446,6 +447,10 @@ ipcMain.on('open-editor-window', (event, opts) => {
 
   editorWindow.webContents.on('did-finish-load', () => editorWindow.webContents.send('video-src', opts.filePath));
 
+  editorWindow.kap = {
+    videoFilePath: opts.filePath
+  };
+
   editorWindow.on('closed', () => {
     editorWindow = undefined;
     app.kap.editorWindow = undefined;
@@ -482,6 +487,9 @@ ipcMain.on('close-editor-window', () => {
     detail: 'It will not be saved'
   }, buttonIndex => {
     if (buttonIndex === 1) {
+      // Discard the source video
+      fs.unlink(editorWindow.kap.videoFilePath, () => {});
+
       // For some reason it doesn't close when called in the same tick
       setImmediate(() => {
         editorWindow.close();

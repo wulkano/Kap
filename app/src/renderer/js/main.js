@@ -507,8 +507,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const saveFile = remote.require('./save-file');
 
-    // TODO: Clean up the original MP4 file on app exit
-
     saveFile(type, defaultFileName).then(outputPath => {
       if (!outputPath) {
         return;
