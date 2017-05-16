@@ -20,7 +20,7 @@
     "cssnano": "3.7.7",
     "del": "2.2.2",
     "eightpoint": "0.0.1",
-    "electron": "1.5.1",
+    "electron": "1.6.9",
     "electron-builder": "17.5.0",
     "execa": "0.5.0",
     "got": "6.5.0",
