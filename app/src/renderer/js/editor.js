@@ -165,27 +165,13 @@ document.addEventListener('DOMContentLoaded', () => {
     loop = true;
   };
 
-  // TODO: Make this trigger on the traffick light red button instead
-  function confirmDiscard() {
-    remote.dialog.showMessageBox(remote.app.kap.editorWindow, {
-      type: 'question',
-      buttons: ['No', 'Yes'],
-      message: 'Are you sure that you want to discard this recording?',
-      detail: 'It will not be saved'
-    }, response => {
-      if (response === 1) { // `Yes`
-        ipcRenderer.send('close-editor-window');
-      }
-    });
-  }
-
   window.onkeyup = event => {
     if (event.keyCode === 27) { // Esc
       if (maximizeBtn.classList.contains('hidden')) {
         // Exit fullscreen
         unmaximizeBtn.onclick();
       } else {
-        confirmDiscard();
+        ipcRenderer.send('close-editor-window');
       }
     }
   };

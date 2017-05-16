@@ -1,4 +1,4 @@
-const {ipcRenderer} = require('electron');
+const {ipcRenderer, remote} = require('electron');
 
 function isVisible(el) {
   const classList = el.classList;
@@ -16,6 +16,11 @@ function handleTrafficLightsClicks({wrapper = $('.title-bar__controls'), hide = 
 
   hideWindowBtn.addEventListener('click', () => {
     if (isVisible(wrapper)) {
+      if (remote.getCurrentWindow() === remote.app.kap.editorWindow) {
+        ipcRenderer.send('close-editor-window');
+        return;
+      }
+
       ipcRenderer.send(hide ? 'hide-window' : 'close-window');
     }
   });

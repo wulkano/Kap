@@ -1,6 +1,6 @@
 import path from 'path';
 
-import {app, BrowserWindow, ipcMain, Menu, screen, globalShortcut} from 'electron';
+import {app, BrowserWindow, ipcMain, Menu, screen, globalShortcut, dialog} from 'electron';
 import isDev from 'electron-is-dev';
 
 import {init as initErrorReporter} from '../common/reporter';
@@ -470,15 +470,31 @@ ipcMain.on('open-editor-window', (event, opts) => {
 });
 
 ipcMain.on('close-editor-window', () => {
-  if (editorWindow) {
-    editorWindow.close();
-    menubar.setOption('hidden', false);
-    if (mainWindowIsDetached === true) {
-      mainWindow.show();
-    } else {
-      app.dock.hide();
-    }
+  if (!editorWindow) {
+    return;
   }
+
+  dialog.showMessageBox(editorWindow, {
+    type: 'question',
+    buttons: ['Cancel', 'Discard'],
+    defaultId: 0,
+    message: 'Are you sure that you want to discard this recording?',
+    detail: 'It will not be saved'
+  }, buttonIndex => {
+    if (buttonIndex === 1) {
+      // For some reason it doesn't close when called in the same tick
+      setImmediate(() => {
+        editorWindow.close();
+      });
+
+      menubar.setOption('hidden', false);
+      if (mainWindowIsDetached === true) {
+        mainWindow.show();
+      } else {
+        app.dock.hide();
+      }
+    }
+  });
 });
 
 ipcMain.on('export', (event, data) => {
