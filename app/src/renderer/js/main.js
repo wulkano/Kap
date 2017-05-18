@@ -202,7 +202,6 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .catch(err => {
         ipcRenderer.send('will-stop-recording');
-        log(err);
         reportError(err);
         remote.dialog.showErrorBox('Recording error', err.message);
       });

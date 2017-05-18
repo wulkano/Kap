@@ -1,4 +1,5 @@
 import isDev from 'electron-is-dev';
+import unhandled from 'electron-unhandled';
 
 let ravenClient;
 
@@ -12,10 +13,16 @@ function init() {
 }
 
 function report(err) {
-  if (!isDev && err) {
+  console.error(err);
+
+  if (!isDev && ravenClient && err) {
     ravenClient.captureException(err);
   }
 }
+
+unhandled({
+  logger: report
+});
 
 exports.init = init;
 exports.report = report;
