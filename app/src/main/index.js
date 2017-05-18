@@ -1,9 +1,8 @@
 import path from 'path';
-import {rename as fsRename} from 'fs';
+import fs from 'fs';
 
-import {app, dialog, BrowserWindow, ipcMain, Menu, screen, globalShortcut} from 'electron';
+import {app, BrowserWindow, ipcMain, Menu, screen, globalShortcut, dialog} from 'electron';
 import isDev from 'electron-is-dev';
-import mkdirp from 'mkdirp';
 
 import {init as initErrorReporter} from '../common/reporter';
 import logger from '../common/logger';
@@ -431,36 +430,6 @@ ipcMain.on('move-cropper-window', (event, data) => {
   cropperWindow.setPosition(...position);
 });
 
-ipcMain.on('ask-user-to-save-file', (event, data) => {
-  const kapturesDir = settings.get('kapturesDir');
-  const type = data.type;
-
-  let filters;
-  if (type === 'mp4') {
-    filters = [{name: 'Movies', extensions: ['mp4']}];
-  } else if (type === 'webm') {
-    filters = [{name: 'Movies', extensions: ['webm']}];
-  } else {
-    filters = [{name: 'Images', extensions: ['gif']}];
-  }
-
-  mkdirp(kapturesDir, err => {
-    if (err) {
-      // Can be ignored
-    }
-    dialog.showSaveDialog({
-      title: data.fileName,
-      defaultPath: `${kapturesDir}/${data.fileName}`,
-      filters
-    }, fileName => {
-      if (fileName) {
-        fsRename(data.filePath, fileName);
-      }
-      mainWindow.webContents.send('save-dialog-closed');
-    });
-  });
-});
-
 ipcMain.on('open-editor-window', (event, opts) => {
   if (editorWindow) {
     return editorWindow.show();
@@ -477,6 +446,10 @@ ipcMain.on('open-editor-window', (event, opts) => {
   editorWindow.loadURL(`file://${__dirname}/../renderer/views/editor.html`);
 
   editorWindow.webContents.on('did-finish-load', () => editorWindow.webContents.send('video-src', opts.filePath));
+
+  editorWindow.kap = {
+    videoFilePath: opts.filePath
+  };
 
   editorWindow.on('closed', () => {
     editorWindow = undefined;
@@ -502,20 +475,38 @@ ipcMain.on('open-editor-window', (event, opts) => {
 });
 
 ipcMain.on('close-editor-window', () => {
-  if (editorWindow) {
-    editorWindow.close();
-    menubar.setOption('hidden', false);
-    if (mainWindowIsDetached === true) {
-      mainWindow.show();
-    } else {
-      app.dock.hide();
-    }
+  if (!editorWindow) {
+    return;
   }
+
+  dialog.showMessageBox(editorWindow, {
+    type: 'question',
+    buttons: ['Cancel', 'Discard'],
+    defaultId: 0,
+    message: 'Are you sure that you want to discard this recording?',
+    detail: 'It will not be saved'
+  }, buttonIndex => {
+    if (buttonIndex === 1) {
+      // Discard the source video
+      fs.unlink(editorWindow.kap.videoFilePath, () => {});
+
+      // For some reason it doesn't close when called in the same tick
+      setImmediate(() => {
+        editorWindow.close();
+      });
+
+      menubar.setOption('hidden', false);
+      if (mainWindowIsDetached === true) {
+        mainWindow.show();
+      } else {
+        app.dock.hide();
+      }
+    }
+  });
 });
 
-ipcMain.on('export-to-gif', (event, data) => {
-  mainWindow.webContents.send('export-to-gif', data);
-  mainWindow.show();
+ipcMain.on('export', (event, data) => {
+  mainWindow.webContents.send('export', data);
 });
 
 ipcMain.on('set-main-window-visibility', (event, opts) => {

@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const maximizeBtn = $('.js-maximize-video');
   const unmaximizeBtn = $('.js-unmaximize-video');
   const previewTime = $('.js-video-time');
-  const discardBtn = $('.discard');
   const inputHeight = $('.input-height');
   const inputWidth = $('.input-width');
   const fps15Btn = $('#fps-15');
@@ -24,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const preview = $('#preview');
   const previewContainer = $('.video-preview');
   const progressBar = $('progress');
-  const saveBtn = $('.save');
+  const formatBtns = document.querySelectorAll('.output-format button');
   const windowHeader = $('.window-header');
 
   let maxFps = app.kap.settings.get('fps');
@@ -166,41 +165,35 @@ document.addEventListener('DOMContentLoaded', () => {
     loop = true;
   };
 
-  function confirmDiscard() {
-    remote.dialog.showMessageBox(remote.app.kap.editorWindow, {
-      type: 'question',
-      buttons: ['No', 'Yes'],
-      message: 'Are you sure that you want to discard this recording?',
-      detail: 'It will not be saved'
-    }, response => {
-      if (response === 1) { // `Yes`
-        ipcRenderer.send('close-editor-window');
-      }
-    });
-  }
-
-  discardBtn.onclick = confirmDiscard;
   window.onkeyup = event => {
     if (event.keyCode === 27) { // Esc
       if (maximizeBtn.classList.contains('hidden')) {
         // Exit fullscreen
         unmaximizeBtn.onclick();
       } else {
-        confirmDiscard();
+        ipcRenderer.send('close-editor-window');
       }
     }
   };
 
-  saveBtn.onclick = () => {
-    ipcRenderer.send('export-to-gif', {
-      filePath: preview.src,
-      width: inputWidth.value,
-      height: inputHeight.value,
-      fps,
-      loop
-    });
-    ipcRenderer.send('close-editor-window');
-  };
+  ipcRenderer.on('toggle-format-buttons', (event, data) => {
+    for (const btn of formatBtns) {
+      btn.disabled = !data.enabled;
+    }
+  });
+
+  for (const btn of formatBtns) {
+    btn.onclick = () => { // eslint-disable-line no-loop-func
+      ipcRenderer.send('export', {
+        type: btn.dataset.exportType,
+        filePath: preview.src,
+        width: inputWidth.value,
+        height: inputHeight.value,
+        fps,
+        loop
+      });
+    };
+  }
 
   ipcRenderer.on('video-src', (event, src) => {
     preview.src = src;

@@ -45,8 +45,11 @@ block body
             span On
           button.button--primary#loop-off
             span Off
-    .window-controls
-      .button--secondary.discard
-        span Discard
-      .button--primary.save
-        span Save
+    .output-format
+      span Export as
+      button.button--primary(data-export-type="gif")
+        span GIF
+      button.button--primary(data-export-type="mp4")
+        span MP4
+      button.button--primary(data-export-type="webm")
+        span WebM

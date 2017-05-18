@@ -1,4 +1,4 @@
-import {app, Menu, shell} from 'electron';
+import {app, Menu, shell, ipcMain} from 'electron';
 
 import {checkForUpdates} from './auto-updater';
 
@@ -116,6 +116,11 @@ const applicationMenu = [
         accelerator: 'CmdOrCtrl+W',
         click(item, focusedWindow) {
           if (focusedWindow) {
+            if (focusedWindow === app.kap.editorWindow) {
+              ipcMain.emit('close-editor-window');
+              return;
+            }
+
             focusedWindow.hide();
           }
         }

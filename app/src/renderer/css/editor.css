@@ -121,20 +121,19 @@ section.output {
 
 .output-settings {
   display: flex;
-  width: 48.5rem;
-  margin-left: 16px;
   align-items: center;
+  margin-left: 16px;
 
   & > div:not(:last-child) { margin-right: 16px; }
 }
 
-.window-controls {
+.output-format {
   display: flex;
   align-items: center;
   margin-right: 16px;
   margin-left: auto;
 
-  & > div + div { margin-left: 8px }
+  & > button:not(:last-child) { margin-right: 5px; }
 }
 
 .fps, .loop, .size { display: flex; }
@@ -155,7 +154,7 @@ input[type=text] {
   &:focus { border-color: #3B99FC; }
 }
 
-.size > span, .fps > span, .loop > span {
+.size > span, .fps > span, .loop > span, .output-format > span {
   margin-right: 8px;
   font-size: 1.2rem;
   display: flex;

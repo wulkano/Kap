@@ -6,13 +6,13 @@ import aspectRatio from 'aspectratio';
 import fileSize from 'file-size';
 import moment from 'moment';
 
-import {convertToGif, convertToWebm} from '../../scripts/convert';
+import {convertToGif, convertToMp4, convertToWebm} from '../../scripts/convert';
 import {init as initErrorReporter, report as reportError} from '../../common/reporter';
 import {log} from '../../common/logger';
 
 // Note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
-import {handleTrafficLightsClicks, isVisible, disposeObservers, handleActiveButtonGroup} from '../js/utils';
+import {handleTrafficLightsClicks, isVisible, disposeObservers} from '../js/utils';
 
 const aperture = require('aperture')();
 
@@ -38,7 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
   const controlsSection = document.querySelector('section.controls');
   const controlsTitleWrapper = document.querySelector('.controls-toggle');
-  const exportAs = document.querySelectorAll('#export-as button');
   const header = document.querySelector('.kap-header');
   const inputWidth = document.querySelector('#aspect-ratio-width');
   const inputHeight = document.querySelector('#aspect-ratio-height');
@@ -70,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastValidInputHeight = 512;
   let aspectRatioBaseValues = [lastValidInputWidth, lastValidInputHeight];
   let hasUpdateNotification = false;
-  let exportType = app.kap.settings.get('exportAs');
   let initializedActiveShim = false;
 
   // Init dynamic elements
@@ -82,14 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
     micOnIcon.classList.remove('hidden');
     micOffIcon.classList.add('hidden');
   }
-
-  let activeExportAsButton = Array.from(exportAs)
-    .find(el => el.dataset.exportType === exportType);
-  if (!activeExportAsButton) {
-    // For some unknown reason, sometimes `exportType` will be fasly
-    activeExportAsButton = Array.from(exportAs)[0];
-  }
-  activeExportAsButton.classList.add('active');
 
   handleTrafficLightsClicks({hide: true});
 
@@ -126,7 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
     inputHeight.disabled = true;
     linkBtn.classList.add('disabled');
     swapBtn.classList.add('disabled');
-    exportAs.disabled = true;
     toggleAudioRecordBtn.classList.add('hidden');
     toggleShowCursorBtn.classList.add('hidden');
     time.classList.remove('hidden');
@@ -139,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
     inputHeight.disabled = false;
     linkBtn.classList.remove('disabled');
     swapBtn.classList.remove('disabled');
-    exportAs.disabled = false;
     toggleAudioRecordBtn.classList.remove('hidden');
     toggleShowCursorBtn.classList.remove('hidden');
     time.classList.add('hidden');
@@ -220,14 +208,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 
-  function askUserToSaveFile(opts) {
-    if (!opts.filePath || !opts.fileName) {
-      throw new Error('askUserToSaveFile must be called with {filePath, fileName}');
-    }
-
-    ipcRenderer.send('ask-user-to-save-file', opts);
-  }
-
   function restoreInputs() {
     recordBtn.attributes['data-state'].value = 'initial';
     recordBtn.children[0].classList.remove('hidden'); // Crop btn
@@ -244,26 +224,8 @@ document.addEventListener('DOMContentLoaded', () => {
         windowTitle.innerText = 'Kap';
         time.innerText = '00:00';
         size.innerText = '0 kB';
-
         restoreInputs();
-
-        switch (exportType) {
-          case 'mp4': {
-            const now = moment();
-            const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.mp4`;
-            askUserToSaveFile({fileName, filePath, type: 'mp4'});
-            break;
-          }
-          case 'webm': {
-            exportToType('webm', {filePath});
-            break;
-          }
-          case 'gif': {
-            ipcRenderer.send('open-editor-window', {filePath});
-            break;
-          }
-          // No default
-        }
+        ipcRenderer.send('open-editor-window', {filePath});
       });
   }
 
@@ -329,7 +291,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (!initializedActiveShim && !controls.classList.contains('hidden')) {
-      handleActiveButtonGroup({buttonGroup: exportAs[0].parentNode});
       initializedActiveShim = true;
       setMainWindowSize();
     }
@@ -506,27 +467,18 @@ document.addEventListener('DOMContentLoaded', () => {
     notification.onclick = () => ipcRenderer.send('install-update');
   });
 
-  ipcRenderer.on('save-dialog-closed', () => {
+  function saveDialogClosed() {
     progressBarSection.classList.add('hidden');
     header.classList.remove('hidden');
     controlsSection.classList.remove('hidden');
     delete progressBar.value;
     progressBarLabel.innerText = 'Analyzing...';
     setMainWindowSize();
-  });
+  }
 
   ipcRenderer.on('log', (event, msgs) => console.log(...msgs));
 
-  const exportButtons = [];
-  exportAs.forEach((exportButton, key) => {
-    exportButtons.push(key);
-    exportButton.onclick = function () {
-      exportType = this.dataset.exportType;
-      app.kap.settings.set('exportAs', exportType);
-    };
-  });
-
-  function exportToType(type, data) {
+  ipcRenderer.on('export', (event, data) => {
     header.classList.add('hidden');
     controlsSection.classList.add('hidden');
     progressBarSection.classList.remove('hidden');
@@ -539,21 +491,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
     data.progressCallback = progressCallback;
 
-    const convert = type === 'gif' ? convertToGif : convertToWebm;
+    const type = data.type;
 
-    convert(data).then(filePath => {
-      const now = moment();
-      const fileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.${type}`;
+    let convert;
+    if (type === 'gif') {
+      convert = convertToGif;
+    } else if (type === 'mp4') {
+      convert = convertToMp4;
+    } else if (type === 'webm') {
+      convert = convertToWebm;
+    }
 
-      progressBar.value = 100;
+    const now = moment();
+    const defaultFileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.${type}`;
 
-      askUserToSaveFile({fileName, filePath, type});
-    });
-    // TODO catch
-  }
+    const saveFile = remote.require('./save-file');
 
-  ipcRenderer.on('export-to-gif', (event, data) => {
-    exportToType('gif', data);
+    saveFile(type, defaultFileName).then(outputPath => {
+      if (!outputPath) {
+        return;
+      }
+
+      app.kap.editorWindow.send('toggle-format-buttons', {enabled: false});
+      app.kap.mainWindow.show();
+
+      const input = Object.assign({}, data, {outputPath});
+
+      return convert(input).then(() => {
+        progressBar.value = 100;
+        saveDialogClosed();
+        app.kap.editorWindow.send('toggle-format-buttons', {enabled: true});
+        app.kap.mainWindow.hide();
+      });
+    }).catch(console.error);
   });
 
   ipcRenderer.on('show-notification', (event, {title, body}) => new Notification(title, {body}));

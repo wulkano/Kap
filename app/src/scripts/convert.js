@@ -43,28 +43,31 @@ function convert(outputPath, opts, args) {
 function convertToGif(opts) {
   return Promise.resolve().then(() => {
     const palettePath = tmp.tmpNameSync({postfix: '.png'});
-    const outputPath = tmp.tmpNameSync({postfix: '.gif'});
 
     return execa(ffmpeg, [
       '-i', opts.filePath,
       '-vf', `fps=${opts.fps},scale=${opts.width}:${opts.height}:flags=lanczos,palettegen`,
       palettePath
     ])
-      .then(() => convert(outputPath, opts, [
+      .then(() => convert(opts.outputPath, opts, [
         '-i', opts.filePath,
         '-i', palettePath,
         '-filter_complex', `fps=${opts.fps},scale=${opts.width}:${opts.height}:flags=lanczos[x]; [x][1:v]paletteuse`,
         `-loop`, opts.loop === true ? '0' : '-1', // 0 == forever; -1 == no loop
-        outputPath
+        opts.outputPath
       ]));
   });
 }
 
+function convertToMp4(opts) {
+  // TODO: Instead of fixing the `file://` prefix here, just store it in a better place in the editor
+  opts.progressCallback(0);
+  return execa('cp', [opts.filePath.replace(/^file:\/\//, ''), opts.outputPath]);
+}
+
 function convertToWebm(opts) {
   return Promise.resolve().then(() => {
-    const outputPath = tmp.tmpNameSync({postfix: '.webm'});
-
-    return convert(outputPath, opts, [
+    return convert(opts.outputPath, opts, [
       '-i', opts.filePath,
       // http://wiki.webmproject.org/ffmpeg
       // https://trac.ffmpeg.org/wiki/Encode/VP9
@@ -74,10 +77,11 @@ function convertToWebm(opts) {
       '-codec:v', 'vp9',
       '-codec:a', 'vorbis',
       '-strict', '-2', // Needed because `vorbis` is experimental
-      outputPath
+      opts.outputPath
     ]);
   });
 }
 
 exports.convertToGif = convertToGif;
+exports.convertToMp4 = convertToMp4;
 exports.convertToWebm = convertToWebm;
