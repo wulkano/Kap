@@ -503,7 +503,6 @@ document.addEventListener('DOMContentLoaded', () => {
       convert = convertToApng;
     }
 
-
     const now = moment();
     const defaultFileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.${type}`;
 
