@@ -9,8 +9,10 @@ module.exports = (type, defaultFileName) => {
     filters = [{name: 'Movies', extensions: ['mp4']}];
   } else if (type === 'webm') {
     filters = [{name: 'Movies', extensions: ['webm']}];
-  } else {
+  } else if (type === 'gif') {
     filters = [{name: 'Images', extensions: ['gif']}];
+  } else {
+    filters = [{name: 'Images', extensions: ['apng']}];
   }
 
   return makeDir(kapturesDir).then(() => {

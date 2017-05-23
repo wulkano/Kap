@@ -82,6 +82,27 @@ function convertToWebm(opts) {
   });
 }
 
+// should be similiar to the Gif generation
+function convertToApng(opts) {
+    return Promise.resolve().then(() => {
+    const palettePath = tmp.tmpNameSync({postfix: '.png'});
+
+    return execa(ffmpeg, [
+      '-i', opts.filePath,
+      '-vf', `fps=${opts.fps},scale=${opts.width}:${opts.height}:flags=lanczos,palettegen`,
+      palettePath
+    ])
+      .then(() => convert(opts.outputPath, opts, [
+        '-i', opts.filePath,
+        '-i', palettePath,
+        '-filter_complex', `fps=${opts.fps},scale=${opts.width}:${opts.height}:flags=lanczos[x]; [x][1:v]paletteuse`,
+        `-loop`, opts.loop === true ? '0' : '-1', // 0 == forever; -1 == no loop
+        opts.outputPath
+      ]));
+  });
+}
+
 exports.convertToGif = convertToGif;
 exports.convertToMp4 = convertToMp4;
 exports.convertToWebm = convertToWebm;
+exports.convertToApng = convertToApng;
