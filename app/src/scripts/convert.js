@@ -85,20 +85,12 @@ function convertToWebm(opts) {
 // Should be similiar to the Gif generation
 function convertToApng(opts) {
   return Promise.resolve().then(() => {
-    const palettePath = tmp.tmpNameSync({postfix: '.png'});
-
-    return execa(ffmpeg, [
+    return convert(opts.outputPath, opts, [
       '-i', opts.filePath,
-      '-vf', `fps=${opts.fps},scale=${opts.width}:${opts.height}:flags=lanczos`,
-      palettePath
-    ])
-      .then(() => convert(opts.outputPath, opts, [
-        '-i', opts.filePath,
-        '-i', palettePath,
-        '-filter_complex', `fps=${opts.fps},scale=${opts.width}:${opts.height}:flags=lanczos[x]; [x][1:v]`,
-        `-loop`, opts.loop === true ? '0' : '-1', // 0 == forever; -1 == no loop
-        opts.outputPath
-      ]));
+      // Strange for apng instaed of -loop it uses -plays see: https://stackoverflow.com/questions/43795518/using-ffmpeg-to-create-looping-apng
+      `-plays`, opts.loop === true ? '0' : '-1', // 0 == forever; -1 == no loop
+      opts.outputPath
+    ]);
   });
 }
 
