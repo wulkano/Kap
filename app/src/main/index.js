@@ -443,6 +443,8 @@ ipcMain.on('open-editor-window', (event, opts) => {
     frame: false
   });
 
+  app.kap.editorWindow = editorWindow;
+
   editorWindow.loadURL(`file://${__dirname}/../renderer/views/editor.html`);
 
   editorWindow.webContents.on('did-finish-load', () => editorWindow.webContents.send('video-src', opts.filePath));
@@ -467,7 +469,6 @@ ipcMain.on('open-editor-window', (event, opts) => {
     }
   });
 
-  app.kap.editorWindow = editorWindow;
   menubar.setOption('hidden', true);
   mainWindow.hide();
   tray.setHighlightMode('never');
