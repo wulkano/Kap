@@ -436,10 +436,10 @@ ipcMain.on('open-editor-window', (event, opts) => {
   }
 
   editorWindow = new BrowserWindow({
-    width: 768,
-    minWidth: 768,
-    height: 428,
-    minHeight: 428,
+    width: 800,
+    minWidth: 800,
+    height: 430,
+    minHeight: 430,
     frame: false
   });
 
