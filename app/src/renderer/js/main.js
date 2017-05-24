@@ -512,8 +512,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!outputPath) {
         return;
       }
-
-      app.kap.editorWindow.send('toggle-format-buttons', {enabled: false});
+      // Initially an exception is triggered that editorWindow is undefined
+      // Using getter here should make it 'safer'
+      app.kap.getEditorWindow().send('toggle-format-buttons', {enabled: false});
       app.kap.mainWindow.show();
 
       const input = Object.assign({}, data, {outputPath});
