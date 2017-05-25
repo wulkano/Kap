@@ -237,6 +237,7 @@ section.progress {
 
 .progress-bar {
   width: 206px;
+  margin-bottom: 16px;
 }
 
 .progress-bar-label {

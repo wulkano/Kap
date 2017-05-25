@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const progressBar = document.querySelector('#progress-bar');
   const progressBarLabel = document.querySelector('.progress-bar-label');
   const progressBarSection = document.querySelector('section.progress');
+  const progressBarCancelBtn = document.querySelector('.progress-bar-cancel-btn');
   const recordBtn = document.querySelector('.record');
   const restartAndInstallUpdateBtn = document.querySelector('.restart-and-install-update');
   const size = document.querySelector('.size');
@@ -369,6 +370,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   linkBtn.onclick = function () {
     this.classList.toggle('active');
+  };
+
+  progressBarCancelBtn.onclick = function () {
   };
 
   aspectRatioSelector.onchange = function () {
