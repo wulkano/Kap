@@ -95,7 +95,7 @@ ipcMain.on('open-cropper-window', (event, size) => {
       frame: false,
       transparent: true,
       resizable: true,
-      shadow: false,
+      hasShadow: false,
       enableLargerThanScreen: true,
       x,
       y
