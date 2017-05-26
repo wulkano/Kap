@@ -1,4 +1,6 @@
 import {remote} from 'electron';
+import _ from 'lodash';
+import $j from 'jquery/dist/jquery.slim';
 
 // Note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleTrafficLightsClicks, $, disposeObservers} from '../js/utils';
@@ -7,6 +9,8 @@ const {app, dialog, getCurrentWindow} = remote;
 
 const aperture = require('aperture')();
 
+const plugins = remote.require('../main/plugins').default;
+
 const settingsValues = app.kap.settings.getAll();
 
 // Observers that should be disposed when the window unloads
@@ -14,15 +18,11 @@ const observersToDispose = [];
 
 document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
-  const advancedPrefs = $('.advanced-prefs');
-  const advancedPrefsBtn = $('.show-advanced-prefs');
   const allowAnalyticsCheckbox = $('#allow-analytics');
   const audioInputDeviceSelector = $('.js-audio-input-device-selector');
   const chooseSaveDirectoryBtn = $('.js-choose-save');
   const fpsLabel = $('.fps-slider .js-middle-label');
   const fpsSlider = $('.fps-slider input');
-  const generalPrefs = $('.general-prefs');
-  const generalPrefsBtn = $('.show-general-prefs');
   const header = $('header');
   const highlightClicksCheckbox = $('#highlight-clicks');
   const openOnStartupCheckbox = $('#open-on-startup');
@@ -60,21 +60,86 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  generalPrefsBtn.onclick = function (e) {
-    e.preventDefault();
-    this.classList.add('is-active');
-    advancedPrefsBtn.classList.remove('is-active');
-    generalPrefs.classList.remove('hidden');
-    advancedPrefs.classList.add('hidden');
-  };
+  const tabs = $j('.prefs-nav > a');
+  tabs.on('click', function (event) {
+    event.preventDefault();
+    tabs.removeClass('is-active');
+    $j(this).addClass('is-active');
 
-  advancedPrefsBtn.onclick = function (e) {
-    e.preventDefault();
-    this.classList.add('is-active');
-    generalPrefsBtn.classList.remove('is-active');
-    advancedPrefs.classList.remove('hidden');
-    generalPrefs.classList.add('hidden');
-  };
+    const panes = $j('.prefs-sections > section');
+    const paneName = $j(this).data('pane');
+    panes.addClass('hidden');
+    panes.filter(`[data-pane="${paneName}"]`).removeClass('hidden');
+  });
+
+  // TODO: DRY up the plugin list code when it's more mature
+  function loadInstalledPlugins() {
+    const template = `
+      <ul>
+        <% _.forEach(plugins, plugin => { %>
+          <li>
+            <h4><%- plugin.prettyName %> <span><i><%- plugin.version %><i></span></h4>
+            <p><%- plugin.description %></p>
+            <button class="uninstall" data-name="<%- plugin.name %>">Uninstall</button>
+          </li>
+        <% }); %>
+      </ul>
+    `;
+
+    const compiled = _.template(template);
+    const html = compiled({
+      plugins: plugins.all()
+    });
+
+    $j('#plugins-installed').html(html);
+  }
+
+  async function loadAvailablePlugins() {
+    const template = `
+      <ul>
+        <% _.forEach(plugins, plugin => { %>
+          <li>
+            <h4><%- plugin.prettyName %> <span><i><%- plugin.version %><i></span></h4>
+            <p><%- plugin.description %></p>
+            <button class="install" data-name="<%- plugin.name %>">Install</button>
+          </li>
+        <% }); %>
+      </ul>
+    `;
+
+    const compiled = _.template(template);
+    const html = compiled({
+      plugins: await plugins.getFromNpm()
+    });
+
+    $j('#plugins-available').html(html);
+  }
+
+  $j('#plugins-installed').on('click', '.uninstall', function () {
+    $j(this).prop('disabled', true);
+    const name = $j(this).data('name');
+
+    (async () => {
+      await plugins.uninstall(name);
+      await loadAvailablePlugins();
+      loadInstalledPlugins();
+    })().catch(console.error);
+  });
+
+  $j('#plugins-available').on('click', '.install', function () {
+    $j(this).prop('disabled', true);
+    const name = $j(this).data('name');
+
+    (async () => {
+      await plugins.install(name);
+      $j(this).parents('li').remove(); // We don't want to wait on `loadAvailablePlugins`
+      loadInstalledPlugins();
+      await loadAvailablePlugins();
+    })().catch(console.error);
+  });
+
+  loadInstalledPlugins();
+  loadAvailablePlugins();
 
   chooseSaveDirectoryBtn.onclick = function () {
     const directories = dialog.showOpenDialog(electronWindow, {properties: ['openDirectory', 'createDirectory']});

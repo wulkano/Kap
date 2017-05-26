@@ -6,7 +6,6 @@ import aspectRatio from 'aspectratio';
 import fileSize from 'file-size';
 import moment from 'moment';
 
-import {convertToGif, convertToMp4, convertToWebm, convertToApng} from '../../scripts/convert';
 import {init as initErrorReporter, report as reportError} from '../../common/reporter';
 import {log} from '../../common/logger';
 
@@ -466,65 +465,49 @@ document.addEventListener('DOMContentLoaded', () => {
     notification.onclick = () => ipcRenderer.send('install-update');
   });
 
-  function saveDialogClosed() {
+  ipcRenderer.on('log', (event, msgs) => console.log(...msgs));
+
+  function showExportWindow() {
+    header.classList.add('hidden');
+    controlsSection.classList.add('hidden');
+    progressBarSection.classList.remove('hidden');
+    setMainWindowSize();
+    app.kap.mainWindow.show();
+  }
+
+  function hideExportWindow() {
+    app.kap.mainWindow.hide();
+    setMainWindowSize();
     progressBarSection.classList.add('hidden');
     header.classList.remove('hidden');
     controlsSection.classList.remove('hidden');
     delete progressBar.value;
     progressBarLabel.innerText = 'Analyzing...';
-    setMainWindowSize();
   }
 
-  ipcRenderer.on('log', (event, msgs) => console.log(...msgs));
+  ipcRenderer.on('start-export', () => {
+    showExportWindow();
+  });
 
-  ipcRenderer.on('export', (event, data) => {
-    header.classList.add('hidden');
-    controlsSection.classList.add('hidden');
-    progressBarSection.classList.remove('hidden');
-    setMainWindowSize();
+  ipcRenderer.on('export-progress', (event, data) => {
+    progressBarLabel.innerText = data.label;
 
-    const progressCallback = percentage => {
-      progressBarLabel.innerText = 'Processing...';
-      progressBar.value = percentage;
-    };
-
-    data.progressCallback = progressCallback;
-
-    const type = data.type;
-
-    let convert;
-    if (type === 'gif') {
-      convert = convertToGif;
-    } else if (type === 'mp4') {
-      convert = convertToMp4;
-    } else if (type === 'webm') {
-      convert = convertToWebm;
-    } else if (type === 'apng') {
-      convert = convertToApng;
+    if (data.percentage) {
+      progressBar.value = data.percentage;
+    } else {
+      // TODO: How do I get the indeterminate progress bar?
+      progressBar.value = 0;
     }
+  });
 
-    const now = moment();
-    const defaultFileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.${type}`;
+  ipcRenderer.on('hide-export-window', () => {
+    hideExportWindow();
+  });
 
-    const saveFile = remote.require('./save-file');
-
-    saveFile(type, defaultFileName).then(outputPath => {
-      if (!outputPath) {
-        return;
-      }
-
-      app.kap.editorWindow.send('toggle-format-buttons', {enabled: false});
-      app.kap.mainWindow.show();
-
-      const input = Object.assign({}, data, {outputPath});
-
-      return convert(input).then(() => {
-        progressBar.value = 100;
-        saveDialogClosed();
-        app.kap.editorWindow.send('toggle-format-buttons', {enabled: true});
-        app.kap.mainWindow.hide();
-      });
-    }).catch(console.error);
+  ipcRenderer.on('end-export', () => {
+    progressBarLabel.innerText = 'Success 🎉'; // TODO: What should it say here?
+    progressBar.value = 100;
+    setTimeout(hideExportWindow, 1000);
   });
 
   ipcRenderer.on('show-notification', (event, {title, body}) => new Notification(title, {body}));

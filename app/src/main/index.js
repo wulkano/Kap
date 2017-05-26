@@ -11,6 +11,7 @@ import * as settings from '../common/settings-manager';
 import autoUpdater from './auto-updater';
 import analytics from './analytics';
 import {applicationMenu, cogMenu} from './menus';
+import plugins from './plugins';
 
 const menubar = require('menubar')({
   index: `file://${__dirname}/../renderer/views/main.html`,
@@ -219,6 +220,9 @@ function getCropperWindow() {
 }
 
 app.on('ready', () => {
+  // Ensure all plugins are up to date
+  plugins.upgrade().catch(() => {});
+
   globalShortcut.register('Cmd+Shift+5', () => {
     const recording = (appState === 'recording');
     mainWindow.webContents.send((recording) ? 'stop-recording' : 'prepare-recording');

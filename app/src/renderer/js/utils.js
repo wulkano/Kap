@@ -6,6 +6,7 @@ function isVisible(el) {
   return !(classList.contains('invisible') || classList.contains('hidden'));
 }
 
+// TODO: Get rid of all usage of this so we can use `$` for jQuery
 function $(selector) {
   return document.querySelector(selector);
 }
