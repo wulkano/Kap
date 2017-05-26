@@ -9,7 +9,7 @@ import saveFileService from './save-file-service';
 
 class Plugins {
   constructor() {
-    this.npmBin = path.join(__dirname, '../../node_modules/.bin/npm');
+    this.npmBin = path.join(__dirname, '../../node_modules/npm/bin/npm-cli.js');
     this.cwd = this._makePluginsDir();
   }
 
@@ -35,7 +35,12 @@ class Plugins {
   }
 
   async upgrade() {
-    await execa(this.npmBin, ['install'], {cwd: this.cwd});
+    await execa(process.execPath, [this.npmBin, 'install'], {
+      cwd: this.cwd,
+      env: {
+        ELECTRON_RUN_AS_NODE: 1
+      }
+    });
   }
 
   async install(name) {
@@ -55,7 +60,12 @@ class Plugins {
   }
 
   async uninstall(name) {
-    await execa(this.npmBin, ['uninstall', '--save', name], {cwd: this.cwd});
+    await execa(process.execPath, [this.npmBin, 'uninstall', '--save', name], {
+      cwd: this.cwd,
+      env: {
+        ELECTRON_RUN_AS_NODE: 1
+      }
+    });
   }
 
   all() {
