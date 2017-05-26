@@ -436,12 +436,14 @@ ipcMain.on('open-editor-window', (event, opts) => {
   }
 
   editorWindow = new BrowserWindow({
-    width: 768,
-    minWidth: 768,
-    height: 428,
-    minHeight: 428,
+    width: 800,
+    minWidth: 800,
+    height: 430,
+    minHeight: 430,
     frame: false
   });
+
+  app.kap.editorWindow = editorWindow;
 
   editorWindow.loadURL(`file://${__dirname}/../renderer/views/editor.html`);
 
@@ -467,7 +469,6 @@ ipcMain.on('open-editor-window', (event, opts) => {
     }
   });
 
-  app.kap.editorWindow = editorWindow;
   menubar.setOption('hidden', true);
   mainWindow.hide();
   tray.setHighlightMode('never');

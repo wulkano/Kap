@@ -82,6 +82,20 @@ function convertToWebm(opts) {
   });
 }
 
+// Should be similiar to the Gif generation
+function convertToApng(opts) {
+  return Promise.resolve().then(() => {
+    return convert(opts.outputPath, opts, [
+      '-i', opts.filePath,
+      '-vf', `fps=${opts.fps},scale=${opts.width}:${opts.height}:flags=lanczos[x]`,
+      // Strange for APNG instead of -loop it uses -plays see: https://stackoverflow.com/questions/43795518/using-ffmpeg-to-create-looping-apng
+      `-plays`, opts.loop === true ? '0' : '-1', // 0 == forever; -1 == no loop
+      opts.outputPath
+    ]);
+  });
+}
+
 exports.convertToGif = convertToGif;
 exports.convertToMp4 = convertToMp4;
 exports.convertToWebm = convertToWebm;
+exports.convertToApng = convertToApng;

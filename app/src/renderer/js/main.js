@@ -6,7 +6,7 @@ import aspectRatio from 'aspectratio';
 import fileSize from 'file-size';
 import moment from 'moment';
 
-import {convertToGif, convertToMp4, convertToWebm} from '../../scripts/convert';
+import {convertToGif, convertToMp4, convertToWebm, convertToApng} from '../../scripts/convert';
 import {init as initErrorReporter, report as reportError} from '../../common/reporter';
 import {log} from '../../common/logger';
 
@@ -499,6 +499,8 @@ document.addEventListener('DOMContentLoaded', () => {
       convert = convertToMp4;
     } else if (type === 'webm') {
       convert = convertToWebm;
+    } else if (type === 'apng') {
+      convert = convertToApng;
     }
 
     const now = moment();
