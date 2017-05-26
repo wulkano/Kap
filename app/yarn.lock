@@ -14,11 +14,12 @@ ansi-styles@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-2.2.1.tgz#b432dd3358b634cf75e1e4664368240533c1ddbe"
 
-aperture@2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/aperture/-/aperture-2.1.0.tgz#abe691e250768b97109ce308262319e2dc7315e4"
+aperture@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/aperture/-/aperture-2.1.1.tgz#ac973d1aa40be0795019b9e1bda7854788d7eb85"
   dependencies:
     execa "^0.6.0"
+    macos-version "^4.0.0"
     tmp "0.0.31"
 
 asn1@~0.2.3:
@@ -622,6 +623,12 @@ lsmod@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/lsmod/-/lsmod-1.0.0.tgz#9a00f76dca36eb23fa05350afe1b585d4299e64b"
 
+macos-version@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/macos-version/-/macos-version-4.0.0.tgz#5a1b8b55230529541ff714bc48e9b82225e265ec"
+  dependencies:
+    semver "^5.3.0"
+
 make-dir@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/make-dir/-/make-dir-1.0.0.tgz#97a011751e91dd87cfadef58832ebb04936de978"
@@ -885,7 +892,7 @@ rx-lite@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/rx-lite/-/rx-lite-3.1.2.tgz#19ce502ca572665f3b647b10939f97fd1615f102"
 
-"semver@2 || 3 || 4 || 5", semver@^5.0.1:
+"semver@2 || 3 || 4 || 5", semver@^5.0.1, semver@^5.3.0:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.3.0.tgz#9b2ce5d3de02d17c6012ad326aa6b4d0cf54f94f"
 
