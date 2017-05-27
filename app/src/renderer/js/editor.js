@@ -5,8 +5,12 @@ import moment from 'moment';
 // Note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 import {handleTrafficLightsClicks, $, handleActiveButtonGroup} from '../js/utils';
+import {init as initErrorReporter} from '../../common/reporter';
 
 const {app} = remote;
+const {getShareServices} = remote.require('./plugins').default;
+
+initErrorReporter();
 
 document.addEventListener('DOMContentLoaded', () => {
   const playBtn = $('.js-play-video');
@@ -23,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const preview = $('#preview');
   const previewContainer = $('.video-preview');
   const progressBar = $('progress');
-  const formatBtns = document.querySelectorAll('.output-format button');
   const windowHeader = $('.window-header');
 
   let maxFps = app.kap.settings.get('fps');
@@ -176,24 +179,53 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  ipcRenderer.on('toggle-format-buttons', (event, data) => {
-    for (const btn of formatBtns) {
-      btn.disabled = !data.enabled;
-    }
-  });
+  function registerExportButtons() {
+    const exportButtons = document.querySelectorAll('.output-format button');
+    const shareServices = getShareServices();
+    console.log('Share services', shareServices);
 
-  for (const btn of formatBtns) {
-    btn.onclick = () => { // eslint-disable-line no-loop-func
-      ipcRenderer.send('export', {
-        type: btn.dataset.exportType,
-        filePath: preview.src,
-        width: inputWidth.value,
-        height: inputHeight.value,
-        fps,
-        loop
-      });
-    };
+    ipcRenderer.on('toggle-format-buttons', (event, data) => {
+      for (const btn of exportButtons) {
+        btn.disabled = !data.enabled;
+      }
+    });
+
+    for (const btn of exportButtons) {
+      const format = btn.dataset.exportType;
+      const dropdown = document.createElement('select');
+
+      let i = 0;
+      for (const service of shareServices) {
+        if (service.formats.includes(format)) {
+          const option = document.createElement('option');
+          option.text = service.title;
+          option.value = i++;
+          dropdown.appendChild(option);
+        }
+      }
+
+      btn.appendChild(dropdown);
+
+      // Prevent the dropdown from triggering the button
+      dropdown.onclick = event => {
+        event.stopPropagation();
+      };
+
+      btn.onclick = () => { // eslint-disable-line no-loop-func
+        const service = shareServices[dropdown.value];
+        service.run({
+          format,
+          filePath: preview.src,
+          width: inputWidth.value,
+          height: inputHeight.value,
+          fps,
+          loop
+        });
+      };
+    }
   }
+
+  registerExportButtons();
 
   ipcRenderer.on('video-src', (event, src) => {
     preview.src = src;
