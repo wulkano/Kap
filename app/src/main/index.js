@@ -272,36 +272,55 @@ menubar.on('after-create-window', () => {
     }
   });
 
-  let wasStuck = true;
-  mainWindow.on('move', () => { // Unfortunately this is just an alias for 'moved'
+  let isAttached = true;
+  let offsetX;
+  let offsetY;
+
+  ipcMain.on('start-move-window', (e, {initialX, initialY}) => {
+    offsetX = initialX;
+    offsetY = initialY;
+  });
+
+  ipcMain.on('move-window', () => { // Unfortunately this is just an alias for 'moved'
     recomputeExpectedWindowPosition();
-    recomputeCurrentWindowPosition();
+
+    const {x, y} = screen.getCursorScreenPoint();
+
+    const currentWindowPosition = {
+      x: x - offsetX,
+      y: y - offsetY
+    };
+
     const diff = {
       x: Math.abs(expectedWindowPosition.x - currentWindowPosition.x),
       y: Math.abs(expectedWindowPosition.y - currentWindowPosition.y)
     };
 
-    if (diff.y < 50 && diff.x < 50) {
-      if (!wasStuck) {
+    if (diff.x < 50 && diff.y < 50) {
+      if (!isAttached) {
         mainWindow.webContents.send('stick-to-menubar');
-        app.dock.hide();
         resetMainWindowShadow();
-        wasStuck = true;
+        isAttached = true;
         mainWindowIsDetached = false;
       }
-      // The `move` event is called when the user reselases the mouse button
-      // because of that, we need to move the window to it's expected position, since the
-      // user will never release the mouse in the *right* position (diff.[x, y] === 0)
+    } else if (isAttached) {
+      mainWindow.webContents.send('unstick-from-menubar');
+      resetMainWindowShadow();
+      isAttached = false;
+      mainWindowIsDetached = true;
+    }
+  });
+
+  ipcMain.on('stop-move-window', () => {
+    if (isAttached) {
+      app.dock.hide();
       tray.setHighlightMode('always');
       positioner.move('trayCenter', tray.getBounds());
-    } else if (wasStuck) {
-      mainWindow.webContents.send('unstick-from-menubar');
+    } else {
       app.dock.show();
       setTimeout(() => mainWindow.show(), 250);
       setTimeout(() => resetMainWindowShadow(), 100);
       tray.setHighlightMode('never');
-      wasStuck = false;
-      mainWindowIsDetached = true;
     }
   });
 
