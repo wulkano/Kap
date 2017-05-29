@@ -271,34 +271,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  controlsTitleWrapper.onclick = function () {
-    const controls = document.querySelector('.controls-content');
-
-    triangle.classList.toggle('up');
-
-    if (controls.classList.contains('hidden')) {
-      controls.classList.remove('hidden');
-      setMainWindowSize();
-    } else {
-      const w = document.documentElement.scrollWidth;
-      const h = document.documentElement.scrollHeight - controls.scrollHeight - 1;
-
-      setStrictWindowSize(w, h, () => {
-        controls.classList.add('hidden');
-      });
-    }
-
-    if (!initializedActiveShim && !controls.classList.contains('hidden')) {
-      initializedActiveShim = true;
-      setMainWindowSize();
-    }
-  };
-
-  options.onclick = event => {
-    const {bottom, left} = options.getBoundingClientRect();
-    ipcRenderer.send('show-options-menu', {x: left, y: bottom});
-    event.stopPropagation();
-  };
+  // controlsTitleWrapper.onclick = function () {
+  //   const controls = document.querySelector('.controls-content');
+  //
+  //   triangle.classList.toggle('up');
+  //
+  //   if (controls.classList.contains('hidden')) {
+  //     controls.classList.remove('hidden');
+  //     setMainWindowSize();
+  //   } else {
+  //     const w = document.documentElement.scrollWidth;
+  //     const h = document.documentElement.scrollHeight - controls.scrollHeight - 1;
+  //
+  //     setStrictWindowSize(w, h, () => {
+  //       controls.classList.add('hidden');
+  //     });
+  //   }
+  //
+  //   if (!initializedActiveShim && !controls.classList.contains('hidden')) {
+  //     initializedActiveShim = true;
+  //     setMainWindowSize();
+  //   }
+  // };
+  //
+  // options.onclick = event => {
+  //   const {bottom, left} = options.getBoundingClientRect();
+  //   ipcRenderer.send('show-options-menu', {x: left, y: bottom});
+  //   event.stopPropagation();
+  // };
 
   function setCropperWindowSize(width, height) {
     ipcRenderer.send('set-cropper-window-size', {

@@ -131,7 +131,6 @@ body.is-tray-arrow-hidden {
     padding: .25em;
     width: 2.2rem;
     height: 2.2rem;
-    fill: #8C8C8C;
     cursor: pointer;
 
     &:hover { fill: #4D4D4D; }
@@ -152,7 +151,7 @@ body.is-tray-arrow-hidden {
     display: flex;
     flex-direction: column;
     width: 100%;
-    background: #222222;
+    background: white;
 
     /* Add a border-top to each following element of the same class */
     & + .controls-section { border-top: 1px solid #1B1B1B; }
@@ -170,7 +169,7 @@ body.is-tray-arrow-hidden {
       display: flex;
       width: 100%;
 
-      & + .controls-section__row { margin-top: 8px; }
+      & + .controls-section__row { margin-top: 16px; }
     }
   }
 }
@@ -203,7 +202,6 @@ body.is-tray-arrow-hidden {
 .aspect-ratio__options {
   border-radius: 3px;
   width: 64px;
-  height: 2.4rem;
   align-items: flex-start;
 }
 

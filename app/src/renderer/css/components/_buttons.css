@@ -12,13 +12,13 @@
 
 /* Button */
 *[class^="button"] {
-  height: 2.4rem;
-  line-height: 2.4rem;
+  height: 3.2rem;
+  line-height: 3.2rem;
   padding: 0 1.6rem;
   border: 1px solid transparent;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .2);
-  border-radius: 3px;
-  color: white;
+  border-radius: 4px;
+  color: #111111;
+  border: 1px solid #DDDDDD;
   cursor: pointer;
   text-align: center;
   font-size: 1.2rem;
@@ -30,14 +30,12 @@
 */
 .button-group {
   position: relative;
-  border: none;
   padding: 0;
-  border-radius: 3px;
-  height: 2.4rem;
+  border-radius: 4px;
+  height: 3.2rem;
   display: flex;
   justify-content: space-around;
-  background-color: #414141;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .2), 0 0 0 1px rgba(0, 0, 0, .1), inset 0 1px rgba(255, 255, 255, .05);
+  background-color: white;
 
   .active-shim {
      position: absolute;
@@ -60,9 +58,9 @@
     box-shadow: none;
     border-radius: 0;
 
-    &:first-child { border-radius: 3px 0 0 3px; }
-    &:last-child { border-radius: 0 3px 3px 0; }
-    &:not(:last-child) { border-right: 1px solid rgba(0, 0, 0, .1); }
+    &:first-child { border-radius: 4px 0 0 4px; }
+    &:last-child { border-radius: 0 4px 4px 0; }
+    &:not(:last-child) { border-right: 1px solid #DDD; }
 
     span {
       padding: 0 1.6rem;

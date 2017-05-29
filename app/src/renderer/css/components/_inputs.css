@@ -16,12 +16,12 @@ input { -webkit-app-region: no-drag; }
 */
 .select-element {
   position: relative;
-  height: 24px;
+  height: 3.2rem;
   width: 100%;
   border-radius: 3px;
-  background-color: $grey;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .2), 0 0 0 1px rgba(0, 0, 0, .1), inset 0 1px rgba(255, 255, 255, .05);
-  color: white;
+  background-color: white;
+  border: 1px solid #DDDDDD;
+  color: #111111;
 
   &:after {
     display: block;
@@ -31,7 +31,7 @@ input { -webkit-app-region: no-drag; }
     pointer-events: none;
     color: $grey-light;
     width: 16px;
-    height: 24px;
+    height: 3.2rem;
     top: 0;
     right: 4px;
     position: absolute;
@@ -40,14 +40,14 @@ input { -webkit-app-region: no-drag; }
   select {
     width: 100%;
     -webkit-appearance: none;
-    height: 24px;
-    padding-left: 8px;
-    padding-right: 8px;
+    height: 3.2rem;
+    padding-left: 12px;
+    padding-right: 12px;
     position: relative;
     background: transparent;
     border: none;
     top: -1px;
-    color: white;
+    color: #111111;
   }
 
   &.is-light {
@@ -90,11 +90,11 @@ input, .input {
   border-radius: 3px;
   background: white;
   border: 0;
-  height: 2.4rem;
+  height: 3.2rem;
   padding: 0 0.8rem;
-  background-color: #2D2D2D;
-  color: white;
-  border: 1px solid #545454;
+  background-color: white;
+  color: #111111;
+  border: 1px solid #DDDDDD;
 
   &:focus { border-color: #3B99FC; }
 }
