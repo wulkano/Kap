@@ -429,7 +429,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function setTrayTriangleVisible(visible = true) {
     const color = hasUpdateNotification ? '#28CA42' : 'white';
-    trayTriangle.style.borderBottom = `1rem solid ${visible ? color : 'transparent'}`;
+    trayTriangle.style.borderBottomWidth = visible ? '1rem' : '0';
+    trayTriangle.style.borderBottomColor = visible ? color : 'white';
+
+    const bodyClasses = document.body.classList;
+    if (visible) {
+      bodyClasses.remove('is-tray-arrow-hidden');
+    } else {
+      bodyClasses.add('is-tray-arrow-hidden');
+    }
   }
 
   ipcRenderer.on('unstick-from-menubar', () => {
