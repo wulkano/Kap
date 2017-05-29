@@ -199,9 +199,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (service.formats.includes(format)) {
           const option = document.createElement('option');
           option.text = service.title;
-          option.value = i++;
+          option.value = i;
           dropdown.appendChild(option);
         }
+
+        i++;
       }
 
       btn.appendChild(dropdown);
