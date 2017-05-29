@@ -15,6 +15,15 @@
 @import 'components/_buttons';
 @import 'components/_progress';
 
+/* Body */
+body {
+  transition: all .2s ease;
+}
+
+body.is-tray-arrow-hidden {
+  padding-top: 10px;
+}
+
 /* Helper Classes */
 .horizontal-section { display: flex; }
 
@@ -26,7 +35,7 @@
   border-right: 1rem solid transparent;
   border-bottom: 1rem solid $background-light;
   border-left: 1rem solid transparent;
-  transition: all .3s ease;
+  transition: border-bottom-width .2s ease, border-bottom-color .3s ease;
 }
 
 .content { background-color: transparent; }
