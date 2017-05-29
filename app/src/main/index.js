@@ -193,8 +193,10 @@ function openPrefsWindow() {
   prefsWindow = new BrowserWindow({
     width: 480,
     height: 480,
-    frame: false,
     resizable: false,
+    minimizable: false,
+    maximizable: false,
+    titleBarStyle: 'hidden',
     show: false
   });
 
