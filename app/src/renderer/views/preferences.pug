@@ -36,6 +36,12 @@ block body
             .preference__title Allow analytics
             .preference__description Help us improve Kap by sending anonymous usage stats
           +toggle('allow-analytics')
+      .preference.container
+        .preference-part
+          .preference-content
+            .preference__title After recording
+            .preference__description Select action
+          .select-element(id='default-share-service', style="width: 17.8rem")
 
     //- Advanced preferences
     section.hidden(data-pane='advanced')

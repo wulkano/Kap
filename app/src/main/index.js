@@ -437,6 +437,23 @@ ipcMain.on('move-cropper-window', (event, data) => {
 });
 
 ipcMain.on('open-editor-window', (event, opts) => {
+  const defaultShare = app.kap.settings.get('defaultShare');
+  if (defaultShare && defaultShare.pluginName && defaultShare.format) {
+    const shareServices = plugins.getShareServices();
+    const service = shareServices.find(service => service.pluginName === defaultShare.pluginName);
+    if (service) {
+      service.run({
+        format: defaultShare.format,
+        filePath: opts.filePath,
+        width: opts.apertureOpts.cropArea.width,
+        height: opts.apertureOpts.cropArea.height,
+        fps: opts.apertureOpts.fps,
+        loop: true
+      });
+
+      return;
+    }
+  }
   if (editorWindow) {
     return editorWindow.show();
   }
