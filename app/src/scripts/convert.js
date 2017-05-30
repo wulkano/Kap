@@ -23,7 +23,7 @@ function convert(outputPath, opts, args) {
         amountOfFrames = Math.ceil(moment.duration(matchesDuration[1]).asSeconds() * 30);
       } else if (matchesFrame) {
         const currentFrame = matchesFrame[1];
-        opts.progressCallback(Math.ceil(currentFrame / amountOfFrames * 100));
+        opts.progressCallback(currentFrame / amountOfFrames);
       }
     });
     converter.on('error', reject);
