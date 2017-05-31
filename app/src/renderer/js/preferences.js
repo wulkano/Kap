@@ -183,7 +183,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   loadInstalledPlugins();
-  loadInstalledPlugins();
   loadDefaultShareService();
   loadAvailablePlugins();
 
