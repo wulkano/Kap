@@ -488,12 +488,12 @@ ipcMain.on('close-editor-window', () => {
 
   dialog.showMessageBox(editorWindow, {
     type: 'question',
-    buttons: ['Cancel', 'Discard'],
-    defaultId: 0,
+    buttons: ['Discard', 'Cancel'],
+    defaultId: 1,
     message: 'Are you sure that you want to discard this recording?',
     detail: 'It will not be saved'
   }, buttonIndex => {
-    if (buttonIndex === 1) {
+    if (buttonIndex === 0) {
       // Discard the source video
       fs.unlink(editorWindow.kap.videoFilePath, () => {});
 
