@@ -82,7 +82,7 @@ The `action` function is where you implement the behavior of your service. The f
 - `.format`: The file format the user chose in the editor window. Can be: `gif`, `mp4`, `webm`, `apng`
 - `.defaultFileName`: Default file name for the recording. For example: `Kapture 2017-05-30 at 1.03.49.gif`
 - `.filePath()`: Convert the screen recording to the user chosen format and return a Promise for the file path.
-- `.config`: Get and set config for you plugin. It’s an instance of [`electron-config`](https://github.com/sindresorhus/electron-config#instance).
+- `.config`: Get and set config for you plugin. It’s an instance of [`electron-store`](https://github.com/sindresorhus/electron-store#instance).
 - `.request()`: Do a network request, like uploading. It’s a wrapper around [`got`](https://github.com/sindresorhus/got).
 - `.copyToClipboard(text)`: Copy text to the clipboard. If you for example copy a link to the uploaded recording to the clipboard, don’t forget to `.notify()` the user about it.
 - `.notify(text)`: Show a notification.

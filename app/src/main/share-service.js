@@ -1,5 +1,5 @@
 import electron from 'electron';
-import Config from 'electron-config';
+import Store from 'electron-store';
 import Ajv from 'ajv';
 import delay from 'delay';
 import ShareServiceContext from './share-service-context';
@@ -64,8 +64,9 @@ export default class ShareService {
     const defaults = {};
     this.validateConfig(defaults); // Adds defaults from schema
 
-    this.config = new Config({
+    this.config = new Store({
       name: this.pluginName,
+      cwd: 'plugins',
       defaults
     });
   }
