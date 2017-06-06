@@ -498,10 +498,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('export-progress', (event, data) => {
-    progressBarLabel.innerText = data.label;
+    progressBarLabel.innerText = data.text;
 
     if (data.percentage) {
-      progressBar.value = data.percentage;
+      progressBar.value = data.percentage * 100;
     } else {
       // TODO: How do I get the indeterminate progress bar?
       progressBar.value = 0;

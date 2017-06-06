@@ -45,6 +45,21 @@ nav.prefs-nav {
   }
 }
 
+/* `window-header` override */
+.window-header .window__title {
+  font-size: 1.3rem !important;
+  line-height: initial !important;
+}
+
+.title-bar {
+  height: 2.4rem !important;
+}
+
+.title-bar__controls {
+  display: none !important;
+}
+/* / `window-header` override */
+
 .prefs-sections {
   overflow-y: auto;
 }

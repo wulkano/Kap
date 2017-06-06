@@ -29,13 +29,13 @@ export default async function (exportOptions) {
     loop: exportOptions.loop,
     progressCallback: percentage => {
       app.kap.mainWindow.send('export-progress', {
-        label: 'Converting…',
+        text: 'Converting…',
         percentage
       });
     }
   });
 
-  app.kap.mainWindow.send('export-progress', {label: ''});
+  app.kap.mainWindow.send('export-progress', {text: ''});
 
   return outputPath;
 }

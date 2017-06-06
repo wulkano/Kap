@@ -39,8 +39,8 @@ export default class ShareServiceContext {
     });
   }
 
-  setProgress(label, percentage) {
-    electron.app.kap.mainWindow.send('export-progress', {label, percentage});
+  setProgress(text, percentage) {
+    electron.app.kap.mainWindow.send('export-progress', {text, percentage});
   }
 
   openConfigFile() {
