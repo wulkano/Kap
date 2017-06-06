@@ -283,7 +283,7 @@ menubar.on('after-create-window', () => {
     offsetY = initialY;
   });
 
-  ipcMain.on('move-window', () => { // Unfortunately this is just an alias for 'moved'
+  ipcMain.on('move-window', () => {
     recomputeExpectedWindowPosition();
 
     const {x, y} = screen.getCursorScreenPoint();
