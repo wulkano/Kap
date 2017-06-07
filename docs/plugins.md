@@ -9,7 +9,7 @@ You can discover plugins or view installed ones by clicking the `Kap` menu, `Pre
 
 A Kap plugin is an npm package that exports one or more share services. The plugin runs in the main Electron process (Node.js). That means you can use any npm package in your plugin. Kap plugins are published to npm, like any other npm package.
 
-Take a look at existing plugins to see how they work: [`kap-giphy`](https://github.com/wulkano/kap-giphy/blob/master/index.js)
+Take a look at existing plugins to see how they work: [`kap-giphy`](https://github.com/wulkano/kap-giphy/blob/master/index.js), [`kap-s3`](https://github.com/SamVerschueren/kap-s3), [`kap-imgur`](https://github.com/kevva/kap-imgur), [`kap-streamable`](https://github.com/kevva/kap-streamable)
 
 Tip: You can use modern JavaScript features like async/await in your plugin.
 
@@ -20,6 +20,7 @@ Tip: You can use modern JavaScript features like async/await in your plugin.
 - The `"description"` in package.json should succinctly describe what you can do with it. For example: `Share GIFs on GIPHY`. Not something like this: `Kap plugin that uploads GIFs to GIPHY`.
 - Use `context.setProgress()` whenever possible to keep the user updated on what's happening.
 - The readme should follow the style of [`kap-giphy`](https://github.com/wulkano/kap-giphy).
+- Your plugin must be tested, preferably using [`kap-plugin-test`](https://github.com/SamVerschueren/kap-plugin-test). [Example](https://github.com/wulkano/kap-giphy/blob/master/test/test.js).
 
 ## Development
 
