@@ -518,8 +518,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(hideExportWindow, 1000);
   });
 
-  ipcRenderer.on('show-notification', (event, {title, body}) => new Notification(title, {body}));
-
   initErrorReporter();
 });
 
