@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function startRecording() {
     disableInputs();
     ipcRenderer.send('will-start-recording');
-    setMainWindowTitle('Getting ready...');
+    setMainWindowTitle('Getting ready…');
     const past = Date.now();
 
     const cropperBounds = app.kap.getCropperWindow().getBounds();
@@ -490,7 +490,7 @@ document.addEventListener('DOMContentLoaded', () => {
     header.classList.remove('hidden');
     controlsSection.classList.remove('hidden');
     delete progressBar.value;
-    progressBarLabel.innerText = 'Analyzing...';
+    progressBarLabel.innerText = 'Analyzing…';
   }
 
   ipcRenderer.on('start-export', () => {

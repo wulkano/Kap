@@ -24,7 +24,7 @@ const cogMenu = [
     type: 'separator'
   },
   {
-    label: 'Preferences...',
+    label: 'Preferences…',
     accelerator: 'Cmd+,',
     click() {
       app.kap.openPrefsWindow();
@@ -54,7 +54,7 @@ const applicationMenu = [
         type: 'separator'
       },
       {
-        label: 'Preferences...',
+        label: 'Preferences…',
         accelerator: 'Cmd+,',
         click() {
           app.kap.openPrefsWindow();
