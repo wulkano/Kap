@@ -1,7 +1,4 @@
 {
-  "repository": "wulkano/kap",
-  "author": "Wulkano AS <team@wulka.no> (https://wulka.no/)",
-  "license": "MIT",
   "scripts": {
     "test": "xo",
     "build": "npm run test && gulp build",
@@ -20,8 +17,8 @@
     "cssnano": "3.10.0",
     "del": "2.2.2",
     "electron": "1.7.2",
-    "execa": "0.6.3",
     "electron-builder": "17.5.0",
+    "execa": "0.6.3",
     "got": "7.0.0",
     "gulp": "gulpjs/gulp#4.0",
     "gulp-babel": "6.1.2",
