@@ -1,6 +1,4 @@
 node_modules
-*.log
-dist
-.DS_Store
-
-app/vendor
+/app/dist
+/app/vendor
+/dist

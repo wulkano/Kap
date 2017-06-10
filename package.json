@@ -1,7 +1,4 @@
 {
-  "repository": "wulkano/kap",
-  "author": "Wulkano AS <team@wulka.no> (https://wulka.no/)",
-  "license": "MIT",
   "scripts": {
     "test": "xo",
     "build": "npm run test && gulp build",
