@@ -79,9 +79,12 @@ export default class ShareService {
     const valid = this.validateConfig(this.config.store);
     if (!valid) {
       const err = this.validateConfig.errors[0];
-      // TODO: Use the `Notification API` instead of console.log
-      console.log(`${this.pluginName}: Config \`${err.dataPath.slice(1)}\` ${err.message}`);
-      electron.dialog.showError(this.pluginName, `Config \`${err.dataPath.slice(1)}\` ${err.message}`);
+
+      (new electron.Notification({
+        title: this.pluginName,
+        body: `Config \`${err.dataPath.slice(1)}\` ${err.message}`
+      })).show();
+
       electron.shell.openItem(this.config.path);
       return;
     }
