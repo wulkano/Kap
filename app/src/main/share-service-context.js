@@ -29,18 +29,14 @@ export default class ShareServiceContext {
   }
 
   notify(text) {
-    // TODO: Add Kap icon as `icon` option
-    // TODO: Waiting for: https://github.com/electron/electron/pull/9269
-    // (new electron.Notification({title, body})).show();
-
-    electron.app.kap.mainWindow.send('show-notification', {
+    (new electron.Notification({
       title: this._pluginName,
       body: text
-    });
+    })).show();
   }
 
-  setProgress(label, percentage) {
-    electron.app.kap.mainWindow.send('export-progress', {label, percentage});
+  setProgress(text, percentage) {
+    electron.app.kap.mainWindow.send('export-progress', {text, percentage});
   }
 
   openConfigFile() {

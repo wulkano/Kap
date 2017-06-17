@@ -9,7 +9,7 @@ You can discover plugins or view installed ones by clicking the `Kap` menu, `Pre
 
 A Kap plugin is an npm package that exports one or more share services. The plugin runs in the main Electron process (Node.js). That means you can use any npm package in your plugin. Kap plugins are published to npm, like any other npm package.
 
-Take a look at existing plugins to see how they work: [`kap-giphy`](https://github.com/wulkano/kap-giphy/blob/master/index.js)
+Take a look at existing plugins to see how they work: [`kap-giphy`](https://github.com/wulkano/kap-giphy/blob/master/index.js), [`kap-s3`](https://github.com/SamVerschueren/kap-s3), [`kap-imgur`](https://github.com/kevva/kap-imgur), [`kap-streamable`](https://github.com/kevva/kap-streamable)
 
 Tip: You can use modern JavaScript features like async/await in your plugin.
 
@@ -20,6 +20,7 @@ Tip: You can use modern JavaScript features like async/await in your plugin.
 - The `"description"` in package.json should succinctly describe what you can do with it. For example: `Share GIFs on GIPHY`. Not something like this: `Kap plugin that uploads GIFs to GIPHY`.
 - Use `context.setProgress()` whenever possible to keep the user updated on what's happening.
 - The readme should follow the style of [`kap-giphy`](https://github.com/wulkano/kap-giphy).
+- Your plugin must be tested, preferably using [`kap-plugin-test`](https://github.com/SamVerschueren/kap-plugin-test). [Example](https://github.com/wulkano/kap-giphy/blob/master/test/test.js).
 
 ## Development
 
@@ -82,7 +83,7 @@ The `action` function is where you implement the behavior of your service. The f
 - `.format`: The file format the user chose in the editor window. Can be: `gif`, `mp4`, `webm`, `apng`
 - `.defaultFileName`: Default file name for the recording. For example: `Kapture 2017-05-30 at 1.03.49.gif`
 - `.filePath()`: Convert the screen recording to the user chosen format and return a Promise for the file path.
-- `.config`: Get and set config for you plugin. It’s an instance of [`electron-config`](https://github.com/sindresorhus/electron-config#instance).
+- `.config`: Get and set config for you plugin. It’s an instance of [`electron-store`](https://github.com/sindresorhus/electron-store#instance).
 - `.request()`: Do a network request, like uploading. It’s a wrapper around [`got`](https://github.com/sindresorhus/got).
 - `.copyToClipboard(text)`: Copy text to the clipboard. If you for example copy a link to the uploaded recording to the clipboard, don’t forget to `.notify()` the user about it.
 - `.notify(text)`: Show a notification.

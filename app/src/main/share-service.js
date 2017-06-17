@@ -1,5 +1,5 @@
 import electron from 'electron';
-import Config from 'electron-config';
+import Store from 'electron-store';
 import Ajv from 'ajv';
 import delay from 'delay';
 import ShareServiceContext from './share-service-context';
@@ -64,8 +64,9 @@ export default class ShareService {
     const defaults = {};
     this.validateConfig(defaults); // Adds defaults from schema
 
-    this.config = new Config({
+    this.config = new Store({
       name: this.pluginName,
+      cwd: 'plugins',
       defaults
     });
   }
@@ -78,9 +79,12 @@ export default class ShareService {
     const valid = this.validateConfig(this.config.store);
     if (!valid) {
       const err = this.validateConfig.errors[0];
-      // TODO: Use the `Notification API` instead of console.log
-      console.log(`${this.pluginName}: Config \`${err.dataPath.slice(1)}\` ${err.message}`);
-      electron.dialog.showError(this.pluginName, `Config \`${err.dataPath.slice(1)}\` ${err.message}`);
+
+      (new electron.Notification({
+        title: this.pluginName,
+        body: `Config \`${err.dataPath.slice(1)}\` ${err.message}`
+      })).show();
+
       electron.shell.openItem(this.config.path);
       return;
     }

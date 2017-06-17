@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function startRecording() {
     disableInputs();
     ipcRenderer.send('will-start-recording');
-    setMainWindowTitle('Getting ready...');
+    setMainWindowTitle('Getting ready…');
     const past = Date.now();
 
     const cropperBounds = app.kap.getCropperWindow().getBounds();
@@ -493,7 +493,7 @@ document.addEventListener('DOMContentLoaded', () => {
     header.classList.remove('hidden');
     controlsSection.classList.remove('hidden');
     delete progressBar.value;
-    progressBarLabel.innerText = 'Analyzing...';
+    progressBarLabel.innerText = 'Analyzing…';
   }
 
   ipcRenderer.on('start-export', () => {
@@ -501,10 +501,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('export-progress', (event, data) => {
-    progressBarLabel.innerText = data.label;
+    progressBarLabel.innerText = data.text;
 
     if (data.percentage) {
-      progressBar.value = data.percentage;
+      progressBar.value = data.percentage * 100;
     } else {
       // TODO: How do I get the indeterminate progress bar?
       progressBar.value = 0;
@@ -520,8 +520,6 @@ document.addEventListener('DOMContentLoaded', () => {
     progressBar.value = 100;
     setTimeout(hideExportWindow, 1000);
   });
-
-  ipcRenderer.on('show-notification', (event, {title, body}) => new Notification(title, {body}));
 
   initErrorReporter();
 });

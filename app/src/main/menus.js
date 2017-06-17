@@ -1,4 +1,4 @@
-import {app, Menu, shell, ipcMain} from 'electron';
+import {app, Menu, shell, ipcMain, Notification} from 'electron';
 
 import {checkForUpdates} from './auto-updater';
 
@@ -8,10 +8,10 @@ const checkForUpdatesItem = {
     item.enabled = false;
     checkForUpdates(() => {
       // This will be called if no update is available
-      app.kap.mainWindow.webContents.send('show-notification', {
+      (new Notification({
         title: 'No updates available!',
         body: 'You will automatically receive updates as soon as they are available 🤗'
-      });
+      })).show();
     });
   }
 };
@@ -24,7 +24,7 @@ const cogMenu = [
     type: 'separator'
   },
   {
-    label: 'Preferences...',
+    label: 'Preferences…',
     accelerator: 'Cmd+,',
     click() {
       app.kap.openPrefsWindow();
@@ -54,7 +54,7 @@ const applicationMenu = [
         type: 'separator'
       },
       {
-        label: 'Preferences...',
+        label: 'Preferences…',
         accelerator: 'Cmd+,',
         click() {
           app.kap.openPrefsWindow();
