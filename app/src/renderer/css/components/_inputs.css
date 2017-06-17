@@ -59,6 +59,10 @@ input { -webkit-app-region: no-drag; }
     box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 0 0 1px rgba(0, 0, 0, .1), inset 0 1px white, inset 0 1px rgba(255, 255, 255, 1);
     select { color: $color-primary; }
   }
+
+  &.select-element--narrow {
+    width: 17.8rem;
+  }
 }
 
 

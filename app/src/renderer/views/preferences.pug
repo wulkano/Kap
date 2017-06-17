@@ -41,7 +41,7 @@ block body
           .preference-content
             .preference__title After recording
             .preference__description Select action
-          .select-element(id='default-share-service', style="width: 17.8rem")
+          .select-element.select-element--narrow(id='default-share-service')
 
     //- Advanced preferences
     section.hidden(data-pane='advanced')
@@ -66,7 +66,7 @@ block body
           .preference-content
             .preference__title Record audio
             .preference__description Select input device
-          .select-element(style="width: 17.8rem")
+          .select-element.select-element--narrow
             select.js-audio-input-device-selector
               option(value='none') None
 
