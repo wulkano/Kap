@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
   const controlsSection = document.querySelector('section.controls');
   const controlsTitleWrapper = document.querySelector('.controls-toggle');
-  const header = document.querySelector('.kap-header');
+  const startBar = document.querySelector('.start-bar');
   const inputWidth = document.querySelector('#aspect-ratio-width');
   const inputHeight = document.querySelector('#aspect-ratio-height');
   const linkBtn = document.querySelector('.link-btn');
@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const triangle = document.querySelector('.triangle');
   const updateNotification = document.querySelector('.update-notification');
   const windowTitle = document.querySelector('.window__title');
+  const windowHeader = document.querySelector('.window-header');
 
   const [micOnIcon, micOffIcon] = toggleAudioRecordBtn.children;
 
@@ -192,8 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
     aperture.startRecording(apertureOpts)
       .then(filePath => {
         recordBtn.attributes['data-state'].value = 'ready-to-stop';
-        recordBtn.children[0].classList.add('hidden'); // Crop btn
-        recordBtn.children[1].classList.remove('hidden'); // Stop btn
+        recordBtn.classList.add('is-recording'); // Stop btn
         startMonitoringElapsedTimeAndSize(filePath);
         setMainWindowTitle('Recording');
         ipcRenderer.send('started-recording');
@@ -208,8 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function restoreInputs() {
     recordBtn.attributes['data-state'].value = 'initial';
-    recordBtn.children[0].classList.remove('hidden'); // Crop btn
-    recordBtn.children[1].classList.add('hidden'); // Stop btn
+    recordBtn.classList.remove('is-recording'); // Crop btn
     enableInputs();
   }
 
@@ -246,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
         width: parseInt(inputWidth.value, 10),
         height: parseInt(inputHeight.value, 10)
       });
-      recordBtn.classList.add('filled');
+      recordBtn.classList.add('is-cropping');
       recordBtn.attributes['data-state'].value = 'ready-to-record';
     } else if (state === 'ready-to-record') {
       startRecording();
@@ -368,7 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   linkBtn.onclick = function () {
-    this.classList.toggle('active');
+    this.classList.toggle('is-active');
   };
 
   aspectRatioSelector.onchange = function () {
@@ -417,7 +416,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.on('prepare-recording', () => prepareRecordButton());
 
   ipcRenderer.on('cropper-window-closed', () => {
-    recordBtn.classList.remove('filled');
+    recordBtn.classList.remove('is-cropping');
     recordBtn.attributes['data-state'].value = 'initial';
   });
 
@@ -443,11 +442,15 @@ document.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.on('unstick-from-menubar', () => {
     setTrayTriangleVisible(false);
     trafficLightsWrapper.classList.remove('is-invisible');
+    windowHeader.classList.remove('is-hidden');
+    setMainWindowSize();
   });
 
   ipcRenderer.on('stick-to-menubar', () => {
     setTrayTriangleVisible();
     trafficLightsWrapper.classList.add('is-invisible');
+    windowHeader.classList.add('is-hidden');
+    setMainWindowSize();
   });
 
   ipcRenderer.on('stop-recording', stopRecording);
@@ -476,7 +479,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.on('log', (event, msgs) => console.log(...msgs));
 
   function showExportWindow() {
-    header.classList.add('hidden');
+    startBar.classList.add('hidden');
     controlsSection.classList.add('hidden');
     progressBarSection.classList.remove('hidden');
     setMainWindowSize();
@@ -487,7 +490,7 @@ document.addEventListener('DOMContentLoaded', () => {
     app.kap.mainWindow.hide();
     setMainWindowSize();
     progressBarSection.classList.add('hidden');
-    header.classList.remove('hidden');
+    startBar.classList.remove('hidden');
     controlsSection.classList.remove('hidden');
     delete progressBar.value;
     progressBarLabel.innerText = 'Analyzing…';

@@ -10,17 +10,21 @@
 
 .window-header {
   @extend .webkit-drag;
-  background: $background-primary;
+  background-image: linear-gradient(-180deg, #F9F9F9 0%, #F1F1F1 100%);
+  background: #F9F9F9;
+  box-shadow: 0 1px 0 0 #DDDDDD, inset 0 1px 0 0 #FFFFFF;
   -webkit-app-region: drag;
   cursor: -webkit-grab;
   width: 100%;
-  border-radius: 5px 5px 0 0;
+  border-radius: 4px 4px 0 0;
   opacity: 1;
-  transition: transform .12s ease-in-out, opacity .12s ease-in-out;
-  will-change: transform, opacity;
+  transition: transform .12s ease-in-out, opacity .12s ease-in-out, height 0.12s ease-in-out;
+  will-change: transform, opacity, height;
+  max-height: 100%;
+
 
   .window__title {
-    color: white;
+    color: #111;
     font-size: $font-size-default;
     line-height: 3.6rem;
     cursor: -wekit-grab;
@@ -48,6 +52,7 @@
   }
 
   &.is-hidden {
+    max-height: 0px;
     opacity: 0;
     transform: translateY(-100%);
   }

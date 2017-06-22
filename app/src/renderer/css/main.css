@@ -38,11 +38,14 @@ body.is-tray-arrow-hidden {
   transition: border-bottom-width .2s ease, border-bottom-color .3s ease;
 }
 
-.content { background-color: transparent; }
+.content {
+  background-color: white;
+  border-radius: 4px;
+}
 
 
-/* Kap Header */
-.kap-header {
+/* Kap start bar */
+.start-bar {
   @extend .webkit-drag;
   display: flex;
   background-color: $background-primary;
@@ -76,15 +79,35 @@ body.is-tray-arrow-hidden {
   @extend .btn;
   @extend .circle;
   display: flex;
-  border: 2px solid $red;
-  width: 6.4rem;
-  height: 6.4rem;
+  background: $red;
+  width: 64px;
+  height: 64px;
   margin: 0 42px;
   justify-content: center;
   align-items: center;
   transition: background-color .12s ease-in-out;
 
   &.filled { background-color: $red; }
+
+  /*
+    Recording state icon
+    Default state: not recording, but ready to record
+  */
+  &__state {
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    border: 2px solid white;
+    border-radius: 50%;
+    transition: border-radius 0.12s ease-in-out, background 0.12s ease-in-out;
+  }
+
+  &.is-cropping .record__state { background: white; }
+
+  &.is-recording .record__state {
+    border-radius: 4px;
+    background: white;
+  }
 
   svg {
     width: 2.4rem;
@@ -181,14 +204,6 @@ body.is-tray-arrow-hidden {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-}
-
-.aspect-ratio__input label {
-  font-size: 1rem;
-  line-height: normal;
-  display: block;
-  margin-bottom: 0.5em;
-  color: #D7D7D7;
 }
 
 .aspect-ratio__input input {

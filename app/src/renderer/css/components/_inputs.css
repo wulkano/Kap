@@ -14,7 +14,7 @@ input { -webkit-app-region: no-drag; }
   Custom select element styling
   - Use `select` tag wrapped within div with the class of `.select-element`.
 */
-.select-element {
+.c-select {
   position: relative;
   height: 3.2rem;
   width: 100%;
@@ -23,18 +23,25 @@ input { -webkit-app-region: no-drag; }
   border: 1px solid $gray-lighter;
   color: $gray-darker;
 
-  &:after {
-    display: block;
-    content: '\25be';
-    text-align: center;
-    font-size: 1.2rem;
-    pointer-events: none;
-    color: $grey-light;
-    width: 16px;
-    height: 3.2rem;
-    top: 0;
-    right: 4px;
+  &__toggle-icon {
     position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    fill: $gray-dark;
+  }
+
+  &.has-icon {
+    select { padding-left: 30px; }
+    svg:not(.c-select__toggle-icon) {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      fill: $gray-dark;
+    }
   }
 
   select {
@@ -48,6 +55,7 @@ input { -webkit-app-region: no-drag; }
     border: none;
     top: -1px;
     color: $gray-darker;
+    font-size: 1.4rem;
   }
 
   &.is-light {
@@ -94,7 +102,16 @@ input, .input {
   padding: 0 0.8rem;
   background-color: white;
   color: $gray-darker;
+  font-size: 1.4rem;
   border: 1px solid $gray-light;
 
   &:focus { border-color: $blue; }
+
+   /*TODO: do we want icons in inputs? */
+  /*&.has-icon {
+    padding-left: 30px;
+    svg {
+      position: absolute;
+    }
+  }*/
 }
