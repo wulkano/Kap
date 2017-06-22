@@ -32,10 +32,10 @@ nav.prefs-nav {
 
   a {
     margin-right: 16px;
-    color: $grey-light;
+    color: $gray-dark;
     transition: color 0.12s ease-in-out;
 
-    &:hover:not(.is-active) { color: $grey-lighter; }
+    &:hover:not(.is-active) { color: $gray-lighter; }
     &.is-active { color: $blue; }
   }
 
@@ -71,11 +71,11 @@ nav.prefs-nav {
 
   &__description {
     font-size: 1.2rem;
-    color: $grey-lighter;
+    color: $gray-lighter;
   }
 
   &+ .preference {
-    border-top: 1px solid $grey-dark;
+    border-top: 1px solid $gray-darker;
   }
 }
 
@@ -86,12 +86,12 @@ nav.prefs-nav {
   align-items: center;
   flex-wrap: wrap;
 
-  &+ .preference-part { border-top: 1px solid $grey-dark; }
+  &+ .preference-part { border-top: 1px solid $gray-darker; }
 
   &.split {
     padding: 0;
 
-    .col:not(:last-child) { border-right: 1px solid $grey-dark; }
+    .col:not(:last-child) { border-right: 1px solid $gray-darker; }
     .col { padding: 16px; }
   }
 }

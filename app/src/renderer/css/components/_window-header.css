@@ -31,8 +31,7 @@
     background: #F9F9F9;
     box-shadow: 0 1px 0 0 #DDDDDD, inset 0 1px 0 0 #FFFFFF;
 
-    .window__title { color: $grey-dark; }
-    &--large { }
+    .window__title { color: $gray-darker; }
   }
 
   &.is-floating {

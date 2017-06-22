@@ -20,8 +20,8 @@ input { -webkit-app-region: no-drag; }
   width: 100%;
   border-radius: 3px;
   background-color: white;
-  border: 1px solid #DDDDDD;
-  color: #111111;
+  border: 1px solid $gray-lighter;
+  color: $gray-darker;
 
   &:after {
     display: block;
@@ -47,7 +47,7 @@ input { -webkit-app-region: no-drag; }
     background: transparent;
     border: none;
     top: -1px;
-    color: #111111;
+    color: $gray-darker;
   }
 
   &.is-light {
@@ -76,7 +76,7 @@ input { -webkit-app-region: no-drag; }
     &:last-child:not(:only-child) { border-radius: 0 3px 3px 0; }
 
     &:focus {
-      border-color: #3B99FC;
+      border-color: $blue;
       & + input { border-left-color: transparent; }
     }
   }
@@ -93,8 +93,8 @@ input, .input {
   height: 3.2rem;
   padding: 0 0.8rem;
   background-color: white;
-  color: #111111;
-  border: 1px solid #DDDDDD;
+  color: $gray-darker;
+  border: 1px solid $gray-light;
 
-  &:focus { border-color: #3B99FC; }
+  &:focus { border-color: $blue; }
 }

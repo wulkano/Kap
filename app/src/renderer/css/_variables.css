@@ -5,33 +5,36 @@
   - If a window needs to overwrite variables, it should be done in that window's stylesheet
 */
 
-/* Colors */
-$blue: #3B99FC;
-$blue-dark: #2D91FC;
-
-$grey-lighter: #D7D7D7;
-$grey-light: #919191;
-$grey: #414141;
-$grey-dark: #2D2D2D;
-$grey-darker: #222222;
-
-$red: #FF6159;
-
-$green: #28CA42;
+/*
+  Colors
+*/
+/* Blue*/
+$blue:                 #007AFF;
+$blue-dark:            #004BA4;
+/* Gray */
+$gray-lightest:        #F9F9F9;
+$gray-lighter:         #F1F1F1;
+$gray-light:           #D7D7D7;
+$gray-dark:            #919191;
+$gray-darker:          #414141;
+$gray-darkest:         #111111;
+/* Red */
+$red:                  #FF6059;
+/* Green */
+$green:                #28CA42;
 
 /* Typography */
 $font-size-default:    1.4rem;
 
 /* Backgrounds */
-$background-primary:   $grey-darker;
-$background-secondary: $grey-dark;
-$background-light:     white;
+$background-primary: white;
+$background-secondary: $gray-darker;
 
 /* Typography */
-$color-primary:        $grey-lighter;
+$color-primary:        $gray-lighter;
 $color-secondary:      white;
-$color-dark:           $grey;
-$divider-color:        $grey-dark;
+$color-dark:           $gray-darker;
+$divider-color:        $gray-lighter;
 $box-shadow-inputs:    0 1px 1px 0 rgba(0, 0, 0, .2),
                        0 0 0 1px rgba(0, 0, 0, .1);
 

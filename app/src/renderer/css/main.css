@@ -33,7 +33,7 @@ body.is-tray-arrow-hidden {
   width: 0;
   height: 0;
   border-right: 1rem solid transparent;
-  border-bottom: 1rem solid $background-light;
+  border-bottom: 1rem solid $background-primary;
   border-left: 1rem solid transparent;
   transition: border-bottom-width .2s ease, border-bottom-color .3s ease;
 }
@@ -45,7 +45,7 @@ body.is-tray-arrow-hidden {
 .kap-header {
   @extend .webkit-drag;
   display: flex;
-  background-color: $background-light;
+  background-color: $background-primary;
   width: 100%;
   justify-content: center;
   align-items: center;
@@ -54,9 +54,9 @@ body.is-tray-arrow-hidden {
   &__text {
     font-size: 1.2rem;
     cursor: -webkit-grab;
-    color: $grey-light;
+    color: $gray-dark;
 
-    &:hover { color: $grey; }
+    &:hover { color: $gray-darker; }
 
     &:first-child {
       text-align: right;
@@ -139,7 +139,6 @@ body.is-tray-arrow-hidden {
 
   /* Container for all controls after toggle has been clicked */
   &-content {
-    border-top: 1px solid #1B1B1B;
     display: flex;
     flex-direction: column;
   }
@@ -152,9 +151,6 @@ body.is-tray-arrow-hidden {
     flex-direction: column;
     width: 100%;
     background: white;
-
-    /* Add a border-top to each following element of the same class */
-    & + .controls-section { border-top: 1px solid #1B1B1B; }
 
     &__title {
       color: $color-primary;
@@ -232,7 +228,7 @@ body.is-tray-arrow-hidden {
 
 section.progress {
   @extend .webkit-drag;
-  background-color: $background-light;
+  background-color: $background-primary;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -248,14 +244,14 @@ section.progress {
 
 .progress-bar-label {
   font-size: 1.2rem;
-  color: $grey;
+  color: $gray-darker;
   margin-bottom: 16px;
 }
 
 .update-notification {
   @extend .webkit-drag;
   display: flex;
-  background-color: #28ca42;
+  background-color: $green;
   width: 100%;
   height: 2.75rem;
   color: #fff!important;
