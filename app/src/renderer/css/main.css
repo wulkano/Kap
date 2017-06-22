@@ -48,7 +48,8 @@ body.is-tray-arrow-hidden {
 .start-bar {
   @extend .webkit-drag;
   display: flex;
-  background-color: $background-primary;
+  background-color: $gray-lightest;
+  border-top: 1px solid $gray-light;
   width: 100%;
   justify-content: center;
   align-items: center;
@@ -57,9 +58,9 @@ body.is-tray-arrow-hidden {
   &__text {
     font-size: 1.2rem;
     cursor: -webkit-grab;
-    color: $gray-dark;
+    color: $color-primary;
 
-    &:hover { color: $gray-darker; }
+    &:hover { color: $color-primary; }
 
     &:first-child {
       text-align: right;
@@ -259,7 +260,7 @@ section.progress {
 
 .progress-bar-label {
   font-size: 1.2rem;
-  color: $gray-darker;
+  color: $color-primary;
   margin-bottom: 16px;
 }
 

@@ -14,10 +14,12 @@ $blue-dark:            #004BA4;
 /* Gray */
 $gray-lightest:        #F9F9F9;
 $gray-lighter:         #F1F1F1;
-$gray-light:           #D7D7D7;
-$gray-dark:            #919191;
-$gray-darker:          #414141;
-$gray-darkest:         #111111;
+$gray-light:           #DDDDDD;
+$gray-dark:            #CCCCCC;
+$gray-darker:          #404040;
+$gray-darkest:         #808080;
+$black:                #111111;
+
 /* Red */
 $red:                  #FF6059;
 /* Green */
@@ -31,9 +33,8 @@ $background-primary: white;
 $background-secondary: $gray-darker;
 
 /* Typography */
-$color-primary:        $gray-lighter;
-$color-secondary:      white;
-$color-dark:           $gray-darker;
+$color-primary:        $black;
+$color-light:          white;
 $divider-color:        $gray-lighter;
 $box-shadow-inputs:    0 1px 1px 0 rgba(0, 0, 0, .2),
                        0 0 0 1px rgba(0, 0, 0, .1);

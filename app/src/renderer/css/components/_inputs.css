@@ -21,7 +21,7 @@ input { -webkit-app-region: no-drag; }
   border-radius: 3px;
   background-color: white;
   border: 1px solid $gray-lighter;
-  color: $gray-darker;
+  color: $color-primary;
 
   &__toggle-icon {
     position: absolute;
@@ -54,7 +54,7 @@ input { -webkit-app-region: no-drag; }
     background: transparent;
     border: none;
     top: -1px;
-    color: $gray-darker;
+    color: $color-primary;
     font-size: 1.4rem;
   }
 
@@ -63,7 +63,7 @@ input { -webkit-app-region: no-drag; }
     background-position: 0 0, 100% 0;
     background-repeat: no-repeat;
     background-size: 1px 100%;
-    background-color: #F9F9F9;
+    background-color: $gray-lightest;
     box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 0 0 1px rgba(0, 0, 0, .1), inset 0 1px white, inset 0 1px rgba(255, 255, 255, 1);
     select { color: $color-primary; }
   }
@@ -101,7 +101,7 @@ input, .input {
   height: 3.2rem;
   padding: 0 0.8rem;
   background-color: white;
-  color: $gray-darker;
+  color: $color-primary;
   font-size: 1.4rem;
   border: 1px solid $gray-light;
 

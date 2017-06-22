@@ -17,7 +17,7 @@
   padding: 0 1.6rem;
   border: 1px solid transparent;
   border-radius: 4px;
-  color: #111111;
+  color: $color-primary;
   border: 1px solid #DDDDDD;
   cursor: pointer;
   text-align: center;
