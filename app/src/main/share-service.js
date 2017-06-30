@@ -85,7 +85,7 @@ export default class ShareService {
         body: `Config \`${err.dataPath.slice(1)}\` ${err.message}`
       })).show();
 
-      electron.shell.openItem(this.config.path);
+      this.config.openInEditor();
       return;
     }
 
