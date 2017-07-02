@@ -521,9 +521,9 @@ electron-settings@^2.2.1:
     fs-extra "^0.30.0"
     key-path-helpers "^0.4.0"
 
-electron-store@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/electron-store/-/electron-store-1.1.0.tgz#3a06fbdc8c64ca14163dea054470f7561a7906aa"
+electron-store@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/electron-store/-/electron-store-1.2.0.tgz#96f708f0188c7708907e9f9b7cba790bed6b989f"
   dependencies:
     conf "^1.0.0"
 

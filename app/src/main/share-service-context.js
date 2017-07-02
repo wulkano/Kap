@@ -40,6 +40,6 @@ export default class ShareServiceContext {
   }
 
   openConfigFile() {
-    electron.shell.openItem(this.config.path);
+    this.config.openInEditor();
   }
 }

@@ -20,7 +20,7 @@
     "eightpoint": "0.0.1",
     "electron-is-dev": "^0.1.2",
     "electron-settings": "^2.2.1",
-    "electron-store": "^1.1.0",
+    "electron-store": "^1.2.0",
     "electron-unhandled": "^0.2.0",
     "execa": "^0.6.3",
     "file-size": "^1.0.0",
