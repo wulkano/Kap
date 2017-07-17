@@ -297,8 +297,8 @@ menubar.on('after-create-window', () => {
       // because of that, we need to move the window to it's expected position, since the
       // user will never release the mouse in the *right* position (diff.[x, y] === 0)
       if (!wasOpenedAtLogin(app)) {
-        // Seems like electorn fires the `move` event right aftet the app boots,
-        // and we don't highlight the tray icon if the compiuter just
+        // Seems like Electron fires the `move` event right after the app boots,
+        // and we don't highlight the tray icon if the computer just
         // booted given that we don't show the window in this case
         tray.setHighlightMode('always');
       }
