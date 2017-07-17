@@ -39,6 +39,8 @@ let recording = false;
 
 settings.init();
 
+const wasOpenedAtLogin = app => app.getLoginItemSettings().wasOpenedAtLogin;
+
 ipcMain.on('set-main-window-size', (event, args) => {
   if (args.width && args.height && mainWindow) {
     [args.width, args.height] = [parseInt(args.width, 10), parseInt(args.height, 10)];
@@ -294,7 +296,12 @@ menubar.on('after-create-window', () => {
       // The `move` event is called when the user reselases the mouse button
       // because of that, we need to move the window to it's expected position, since the
       // user will never release the mouse in the *right* position (diff.[x, y] === 0)
-      tray.setHighlightMode('always');
+      if (!wasOpenedAtLogin(app)) {
+        // Seems like Electron fires the `move` event right after the app boots,
+        // and we don't highlight the tray icon if the computer just
+        // booted given that we don't show the window in this case
+        tray.setHighlightMode('always');
+      }
       positioner.move('trayCenter', tray.getBounds());
     } else if (wasStuck) {
       mainWindow.webContents.send('unstick-from-menubar');
@@ -345,7 +352,11 @@ menubar.on('after-create-window', () => {
 
   mainWindow.once('ready-to-show', () => {
     positioner.move('trayCenter', tray.getBounds()); // Not sure why the fuck this is needed (ﾉಠдಠ)ﾉ︵┻━┻
-    mainWindow.show();
+    if (!wasOpenedAtLogin(app)) {
+      // We only want to show the window if the Kap wasn't oepened automatically
+      // after the used logged in
+      mainWindow.show();
+    }
   });
 
   mainWindowIsNew = true;
