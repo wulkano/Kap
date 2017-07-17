@@ -39,9 +39,7 @@ let recording = false;
 
 settings.init();
 
-const wasOpenedAtLogin = app => {
-  return app.getLoginItemSettings().wasOpenedAtLogin;
-};
+const wasOpenedAtLogin = app => app.getLoginItemSettings().wasOpenedAtLogin;
 
 ipcMain.on('set-main-window-size', (event, args) => {
   if (args.width && args.height && mainWindow) {
