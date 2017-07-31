@@ -48,11 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const progressBarSection = document.querySelector('section.progress');
   const recordBtn = document.querySelector('.record');
   const restartAndInstallUpdateBtn = document.querySelector('.restart-and-install-update');
-  const size = document.querySelector('.size');
+  // const size = document.querySelector('.size');
   const toggleAudioRecordBtn = document.querySelector('.js-toggle-audio-record');
-  const toggleShowCursorBtn = document.querySelector('.js-toggle-show-cursor');
   const swapBtn = document.querySelector('.swap-btn');
-  const time = document.querySelector('.time');
+  // const time = document.querySelector('.time');
   const titleBar = document.querySelector('.title-bar');
   const trafficLightsWrapper = document.querySelector('.title-bar__controls');
   const trayTriangle = document.querySelector('.tray-arrow');
@@ -72,9 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let initializedActiveShim = false;
 
   // Init dynamic elements
-  if (app.kap.settings.get('showCursor')) {
-    toggleShowCursorBtn.parentNode.classList.add('is-active');
-  }
   if (app.kap.settings.get('recordAudio') === true) {
     toggleAudioRecordBtn.classList.add('is-active');
     micOnIcon.classList.remove('hidden');
@@ -92,11 +88,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const now = moment();
 
       const elapsed = moment.utc(now.diff(startedAt)).format('mm:ss');
-      time.innerText = elapsed;
+      // time.innerText = elapsed;
 
       fs.stat(filePath, (err, stats) => {
         if (!err) {
-          size.innerText = fileSize(stats.size).human('si');
+          // size.innerText = fileSize(stats.size).human('si');
         } // TODO: track this error
       });
     }, 500);
@@ -116,10 +112,9 @@ document.addEventListener('DOMContentLoaded', () => {
     inputHeight.disabled = true;
     linkBtn.classList.add('disabled');
     swapBtn.classList.add('disabled');
-    toggleAudioRecordBtn.classList.add('hidden');
-    toggleShowCursorBtn.classList.add('hidden');
-    time.classList.remove('hidden');
-    size.classList.remove('hidden');
+    // toggleAudioRecordBtn.classList.add('hidden');
+    // time.classList.remove('hidden');
+    // size.classList.remove('hidden');
   }
 
   function enableInputs() {
@@ -128,10 +123,9 @@ document.addEventListener('DOMContentLoaded', () => {
     inputHeight.disabled = false;
     linkBtn.classList.remove('disabled');
     swapBtn.classList.remove('disabled');
-    toggleAudioRecordBtn.classList.remove('hidden');
-    toggleShowCursorBtn.classList.remove('hidden');
-    time.classList.add('hidden');
-    size.classList.add('hidden');
+    // toggleAudioRecordBtn.classList.remove('hidden');
+    // time.classList.add('hidden');
+    // size.classList.add('hidden');
   }
 
   function startRecording() {
@@ -219,8 +213,8 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(filePath => {
         ipcRenderer.send('stopped-recording');
         windowTitle.innerText = 'Kap';
-        time.innerText = '00:00';
-        size.innerText = '0 kB';
+        // time.innerText = '00:00';
+        // size.innerText = '0 kB';
         restoreInputs();
         ipcRenderer.send('open-editor-window', {filePath});
       });
@@ -293,11 +287,11 @@ document.addEventListener('DOMContentLoaded', () => {
   //   }
   // };
   //
-  // options.onclick = event => {
-  //   const {bottom, left} = options.getBoundingClientRect();
-  //   ipcRenderer.send('show-options-menu', {x: left, y: bottom});
-  //   event.stopPropagation();
-  // };
+  options.onclick = event => {
+    const {bottom, left} = options.getBoundingClientRect();
+    ipcRenderer.send('show-options-menu', {x: left, y: bottom});
+    event.stopPropagation();
+  };
 
   function setCropperWindowSize(width, height) {
     ipcRenderer.send('set-cropper-window-size', {
@@ -379,13 +373,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  toggleShowCursorBtn.onclick = function () {
-    const classList = this.parentNode.classList;
-    classList.toggle('is-active');
-    const isActive = classList.contains('is-active');
-    app.kap.settings.set('showCursor', isActive);
-  };
-
   toggleAudioRecordBtn.onclick = function () {
     micOnIcon.classList.toggle('hidden');
     micOffIcon.classList.toggle('hidden');
@@ -393,11 +380,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     app.kap.settings.set('recordAudio', isVisible(micOnIcon));
   };
-
-  observersToDispose.push(app.kap.settings.observe('showCursor', event => {
-    const method = event.newValue ? 'add' : 'remove';
-    toggleShowCursorBtn.parentNode.classList[method]('is-active');
-  }));
 
   observersToDispose.push(app.kap.settings.observe('recordAudio', event => {
     const method = event.newValue ? 'add' : 'remove';
