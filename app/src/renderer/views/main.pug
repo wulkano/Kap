@@ -20,7 +20,7 @@ block body
     .controls-section.container
       .controls-section__row
         +select-custom.has-icon
-          +icon('dropdown-arrow')
+          +icon('ic_crop_free_24px').o-icon--small
           select.aspect-ratio-selector
             option(value='1600x900') 16:9 (1600x900)
             option(value='1280x1024') 5:4 (1280x1024)
@@ -41,23 +41,20 @@ block body
           input#aspect-ratio-height(type='text' value='512')
 
   //- Main App area/header (record button container)
-  header.start-bar
-    .start-bar__text.time.txt.hidden 00:00
-    //- TODO: Implement mouse clicks control
-    .start-bar__text
-      +icon('mouse').js-toggle-show-cursor
+  section.start-bar
+    
     .record(data-state='initial')
       .record__state
-      //- +icon('crop').record__crop
-      //- +icon('stop').record__stop.hidden
-    .start-bar__text.js-toggle-audio-record
+    
+    .start-bar__content
+      .start-bar__text.js-toggle-audio-record
         +icon('mic').is-mic-on.hidden
         +icon('mic-off').is-mic-off
-    .start-bar__text.size.txt.hidden 0 kB
-
-  //- Kap Controls
-  //- section.controls
-    .controls-toggle.container
-      +icon('dropdown-arrow').triangle
-      span.controls-toggle__title.txt Controls
-      +icon('gear').controls-options
+        
+      //- Fill in the space that the record button would take in this bar but can't because of its positioning outside of it
+      //- Using a filler instead of some clever padding because it's more future-proof
+      .record-filler
+        
+      //- Settings link
+      .start-bar__text
+        +icon('ic_settings_24px').controls-options
