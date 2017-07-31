@@ -20,12 +20,16 @@ input { -webkit-app-region: no-drag; }
   width: 100%;
   border-radius: 3px;
   background-color: white;
-  border: 1px solid $gray-lighter;
+  border: 1px solid $gray-light;
   color: $color-primary;
+  transition: border .12s ease-in-out;
+
+  &:focus { border-color: $blue; }
+  &:hover:not(:focus) { border-color: $gray-dark; }
 
   &__toggle-icon {
     position: absolute;
-    right: 12px;
+    right: 8px;
     top: 50%;
     transform: translateY(-50%);
     pointer-events: none;
@@ -33,14 +37,14 @@ input { -webkit-app-region: no-drag; }
   }
 
   &.has-icon {
-    select { padding-left: 30px; }
+    select { padding-left: 32px; }
     svg:not(.c-select__toggle-icon) {
       position: absolute;
-      left: 12px;
+      left: 8px;
       top: 50%;
       transform: translateY(-50%);
       pointer-events: none;
-      fill: $gray-dark;
+      fill: $gray-darker;
     }
   }
 
@@ -48,6 +52,7 @@ input { -webkit-app-region: no-drag; }
     width: 100%;
     -webkit-appearance: none;
     height: 3.2rem;
+    line-height: 3.2rem;
     padding-left: 12px;
     padding-right: 12px;
     position: relative;
@@ -83,7 +88,7 @@ input { -webkit-app-region: no-drag; }
     &:first-child:not(:only-child) { border-radius: 3px 0 0 3px; }
     &:last-child:not(:only-child) { border-radius: 0 3px 3px 0; }
 
-    &:focus {
+    &:focus:not {
       border-color: $blue;
       & + input { border-left-color: transparent; }
     }
@@ -104,14 +109,8 @@ input, .input {
   color: $color-primary;
   font-size: 1.4rem;
   border: 1px solid $gray-light;
+  transition: border .12s ease-in-out;
 
   &:focus { border-color: $blue; }
-
-   /*TODO: do we want icons in inputs? */
-  /*&.has-icon {
-    padding-left: 30px;
-    svg {
-      position: absolute;
-    }
-  }*/
+  &:hover:not(:focus) { border-color: $gray-dark; }
 }

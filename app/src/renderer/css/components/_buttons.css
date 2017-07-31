@@ -57,6 +57,7 @@
     justify-content: center;
     box-shadow: none;
     border-radius: 0;
+    transition: background .12s ease-in-out;
 
     &.is-active {
       background: #F9F9F9;
@@ -68,7 +69,12 @@
     &:last-child { border-radius: 0 4px 4px 0; }
     &:not(:last-child) { border-right: 1px solid #DDD; }
     &.disabled { pointer-events: none; }
-    &:hover:not(:active):not(.active) svg { fill: #AEAEAE; }
+    &:hover {
+      background: white;
+      &:not(:active):not(.is-active) {
+        svg { fill: #AEAEAE; }
+      }
+    }
 
     span {
       padding: 0 1.6rem;
@@ -82,7 +88,7 @@
     height: 2.4rem;
     width: 2.4rem;
     fill: #919191;
-    transition: fill 0.12s ease-in-out;
+    transition: fill .12s ease-in-out;
   }
 
   &.is-light {
