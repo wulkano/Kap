@@ -3,7 +3,7 @@ import fs from 'fs';
 import {ipcRenderer, remote, shell} from 'electron';
 
 import aspectRatio from 'aspectratio';
-import fileSize from 'file-size';
+// import fileSize from 'file-size';
 import moment from 'moment';
 
 import {init as initErrorReporter, report as reportError} from '../../common/reporter';
@@ -26,17 +26,17 @@ function setMainWindowSize() {
   ipcRenderer.send('set-main-window-size', {width, height});
 }
 
-function setStrictWindowSize(width, height, callback) {
-  if (ipcRenderer.sendSync('set-main-window-size', {width, height})) {
-    callback();
-  }
-}
+// function setStrictWindowSize(width, height, callback) {
+//   if (ipcRenderer.sendSync('set-main-window-size', {width, height})) {
+//     callback();
+//   }
+// }
 
 document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
   const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
   const controlsSection = document.querySelector('section.controls');
-  const controlsTitleWrapper = document.querySelector('.controls-toggle');
+  // const controlsTitleWrapper = document.querySelector('.controls-toggle');
   const startBar = document.querySelector('.start-bar');
   const inputWidth = document.querySelector('#aspect-ratio-width');
   const inputHeight = document.querySelector('#aspect-ratio-height');
