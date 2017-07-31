@@ -10,9 +10,6 @@
 
 .window-header {
   @extend .webkit-drag;
-  background-image: linear-gradient(-180deg, #F9F9F9 0%, #F1F1F1 100%);
-  background: #F9F9F9;
-  box-shadow: 0 1px 0 0 #DDDDDD, inset 0 1px 0 0 #FFFFFF;
   -webkit-app-region: drag;
   cursor: -webkit-grab;
   width: 100%;
@@ -21,7 +18,26 @@
   transition: transform .12s ease-in-out, opacity .12s ease-in-out, height 0.12s ease-in-out;
   will-change: transform, opacity, height;
   max-height: 100%;
+  position: relative;
 
+  &:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background-image: linear-gradient(-180deg, #F9F9F9 0%, #F1F1F1 100%);
+    background: #F9F9F9;
+    box-shadow: 0 1px 0 0 #DDDDDD, inset 0 1px 0 0 #FFFFFF;
+    opacity: 1;
+    transition: top .12s ease-in-out, opacity .12s ease-in-out;
+  }
+
+  &.has-hidden-background:before {
+    top: -100%;
+    opacity: 0;
+  }
 
   .window__title {
     color: $color-primary;
