@@ -11,6 +11,7 @@
 @import '_helpers';
 @import '_base';
 @import 'components/_window-header';
+@import 'components/_icons';
 @import 'components/_inputs';
 @import 'components/_buttons';
 @import 'components/_progress';
@@ -47,16 +48,25 @@ body.is-tray-arrow-hidden {
 /* Kap start bar */
 .start-bar {
   @extend .webkit-drag;
-  display: flex;
-  background-color: $gray-lightest;
-  border-top: 1px solid $gray-light;
   width: 100%;
-  justify-content: center;
-  align-items: center;
-  padding: 28px 0 32px;
+  position: relative;
+  padding-top: 24px;
+
+  /* Contains all content of the start bar excluding the record button */
+  &__content {
+    display: flex;
+    background-color: $gray-lightest;
+    border-top: 1px solid $gray-light;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    height: 48px;
+    position: relative;
+  }
 
   &__text {
     font-size: 1.2rem;
+    height: 2.4rem;
     cursor: -webkit-grab;
     color: $color-primary;
 
@@ -72,7 +82,17 @@ body.is-tray-arrow-hidden {
       flex: 1;
     }
 
-    &.is-active { color: $blue; }
+    &.is-active {
+      color: $blue;
+      svg { fill: currentColor; }
+    }
+  }
+
+  svg {
+    fill: $gray-darker;
+    transition: fill .12s ease-in-out;
+
+    &:hover { fill: $blue; }
   }
 }
 
@@ -83,10 +103,14 @@ body.is-tray-arrow-hidden {
   background: $red;
   width: 64px;
   height: 64px;
-  margin: 0 42px;
   justify-content: center;
   align-items: center;
   transition: background-color .12s ease-in-out;
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
 
   &.filled { background-color: $red; }
 
@@ -115,6 +139,12 @@ body.is-tray-arrow-hidden {
     height: 2.4rem;
     transition: background .12s ease-in-out;
   }
+}
+
+.record-filler {
+  width: 64px;
+  height: 64px;
+  margin: 0 48px;
 }
 
 /*
@@ -147,17 +177,6 @@ body.is-tray-arrow-hidden {
 
     /* Directional transform of arrow in toggle */
     .triangle.up { transform: rotate(-180deg); }
-  }
-
-  /* App options menu, to the right of the toggle */
-  &-options {
-    margin-left: auto;
-    padding: .25em;
-    width: 2.2rem;
-    height: 2.2rem;
-    cursor: pointer;
-
-    &:hover { fill: #4D4D4D; }
   }
 
 
