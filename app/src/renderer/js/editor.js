@@ -28,6 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const previewContainer = $('.video-preview');
   const progressBar = $('progress');
   const windowHeader = $('.window-header');
+  const trimmerIn = $('#trimmer-in');
+  const trimmerOut = $('#trimmer-out');
 
   let maxFps = app.kap.settings.get('fps');
   maxFps = maxFps > 30 ? 30 : maxFps;
@@ -242,6 +244,24 @@ document.addEventListener('DOMContentLoaded', () => {
       windowHeader.classList.add('is-hidden');
     }
   };
+
+  trimmerIn.oninput = () => {handleTrimmerInput(trimmerIn.id)}
+  trimmerOut.oninput = () => {handleTrimmerInput(trimmerOut.id)}
+
+  function handleTrimmerInput(inputId) {
+    var inValue = parseInt(trimmerIn.value);
+    var outValue = parseInt(trimmerOut.value);
+    if (inValue >= outValue) {
+      switch (inputId) {
+        case trimmerIn.id:
+        trimmerOut.value = String(inValue + 1);
+        case trimmerOut.id:
+        trimmerIn.value = String(outValue - 1);
+        default:
+        break;
+      }
+    }
+  }
 });
 
 document.addEventListener('dragover', e => e.preventDefault());
