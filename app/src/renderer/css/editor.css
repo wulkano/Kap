@@ -12,6 +12,7 @@
 @import 'components/_inputs';
 @import 'components/_buttons';
 @import 'components/_progress';
+@import 'components/_slider';
 
 html { height: 100%; }
 
@@ -52,14 +53,18 @@ main.content {
     .video-controls {
       background-image: linear-gradient(-180deg, rgba(0,0,0,0.00) 0%, rgba(0,0,0,0.20) 100%);
     }
-    .video-controls-right, .video-controls-left { opacity: 1; }
+    .video-controls-right, .video-controls-left, .timeline-markers { opacity: 1; }
 
-    .c-progress.editor-progress {
+    .c-progress {
+      height: 100%;
       width: 60%;
       left: 50%;
       transform: translateX(-50%);
-      bottom: 26px;
       border-radius: 4px;
+
+      .editor-progress {
+        padding: 0 7px;
+      }
     }
   }
 }
@@ -92,6 +97,12 @@ main.content {
 
   a { display: flex; }
   svg { filter: drop-shadow( 0px 1px 2px rgba(0, 0, 0, .1) ); }
+
+  .timeline-markers {
+    position: relative;
+    bottom: 20px;
+    opacity: 0;
+  }
 }
 
 video {
@@ -99,7 +110,7 @@ video {
   max-height: 100%;
 }
 
-.c-progress.editor-progress {
+.c-progress {
   -webkit-appearance: none;
   width: 100%;
   position: absolute;
