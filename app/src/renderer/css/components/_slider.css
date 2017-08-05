@@ -8,20 +8,11 @@
   padding: 0;
   margin: 0;
 
-  &#in {
-    left: 0;
-    &::-webkit-slider-thumb {
-      background: green;
-    }
+  &#trimmer-in::-webkit-slider-thumb {
+    background: green;
   }
-  &#out {
-    left: 0;
-    /*transform: translateY(100%);*/
-
-    &::-webkit-slider-thumb {
-      /*transform: translateY(-100%);*/
-      background: red;
-    }
+  &#trimmer-out::-webkit-slider-thumb {
+    background: red;
   }
 
   &:focus {
