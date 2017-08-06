@@ -94,7 +94,9 @@ export default class ShareService {
     context.config = this.config;
 
     const kap = electron.app.kap;
-    kap.editorWindow.send('toggle-format-buttons', {enabled: false});
+    if (kap.editorWindow) {
+      kap.editorWindow.send('toggle-format-buttons', {enabled: false});
+    }
 
     // We delay it a tiny bit so it doesn't flash if the `_action` was canceled
     delay(50).then(() => {
@@ -116,7 +118,9 @@ export default class ShareService {
       this.showError(err);
     }
 
-    kap.editorWindow.send('toggle-format-buttons', {enabled: true});
+    if (kap.editorWindow) {
+      kap.editorWindow.send('toggle-format-buttons', {enabled: true});
+    }
 
     return context;
   }

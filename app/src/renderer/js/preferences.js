@@ -94,6 +94,50 @@ document.addEventListener('DOMContentLoaded', () => {
     $j('#plugins-installed').html(html);
   }
 
+  function loadDefaultShareService() {
+    const shareServices = plugins.getShareServices();
+    const template = `
+      <select>
+        <option>Show editor [default]</option>
+        <% _.forEach(options, option => { %>
+            <option <%- option.selected ? 'selected' : '' %> value='<%- option.value %>'>
+              <%- option.title %> [<%- option.format %>]
+            </option>
+        <% }); %>
+      </select>
+    `;
+
+    const compiled = _.template(template);
+    const current = app.kap.settings.get('defaultShare');
+
+    const options = shareServices.reduce((all, service) => {
+      const {options: {formats, pluginName, title}} = service;
+      const serviceOptions = formats.map(format => ({
+        format,
+        pluginName,
+        title,
+        value: `${pluginName}|${format}`,
+        selected: current.pluginName === pluginName && current.format === format
+      }));
+      return [...all, ...serviceOptions];
+    }, []);
+
+    const html = compiled({
+      options
+    });
+
+    $j('#default-share-service').html(html);
+    $j('#default-share-service select').on('change', event => {
+      const {value} = event.target;
+      if (value) {
+        const [pluginName, format] = value.split('|');
+        app.kap.settings.set('defaultShare', {pluginName, format});
+      } else {
+        app.kap.settings.set('defaultShare', {});
+      }
+    });
+  }
+
   async function loadAvailablePlugins() {
     const template = `
       <ul>
@@ -139,6 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   loadInstalledPlugins();
+  loadDefaultShareService();
   loadAvailablePlugins();
 
   chooseSaveDirectoryBtn.onclick = function () {

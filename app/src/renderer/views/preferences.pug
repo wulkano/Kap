@@ -36,6 +36,12 @@ block body
             .preference__title Allow analytics
             .preference__description Help us improve Kap by sending anonymous usage stats
           +toggle('allow-analytics')
+      .preference.container
+        .preference-part
+          .preference-content
+            .preference__title After recording
+            .preference__description Select action
+          .select-element.select-element--narrow(id='default-share-service')
 
     //- Advanced preferences
     section.hidden(data-pane='advanced')
@@ -60,7 +66,7 @@ block body
           .preference-content
             .preference__title Record audio
             .preference__description Select input device
-          .select-element(style="width: 17.8rem")
+          .select-element.select-element--narrow
             select.js-audio-input-device-selector
               option(value='none') None
 

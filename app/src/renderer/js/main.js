@@ -133,6 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
     size.classList.add('hidden');
   }
 
+  let _apertureOpts;
   function startRecording() {
     disableInputs();
     ipcRenderer.send('will-start-recording');
@@ -185,6 +186,8 @@ document.addEventListener('DOMContentLoaded', () => {
       displayId: display.id
     };
 
+    _apertureOpts = apertureOpts;
+
     if (recordAudio === true) {
       apertureOpts.audioSourceId = audioInputDeviceId;
     }
@@ -223,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
         time.innerText = '00:00';
         size.innerText = '0 kB';
         restoreInputs();
-        ipcRenderer.send('open-editor-window', {filePath});
+        ipcRenderer.send('open-editor-window', {filePath, apertureOpts: _apertureOpts});
       });
   }
 
