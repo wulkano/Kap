@@ -53,26 +53,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
     progressBar.max = preview.duration;
     setInterval(() => {
+      var inValue = getTrimmerValue(trimmerIn),
+          outValue = getTrimmerValue(trimmerOut);
+      if (preview.currentTime < inValue || preview.currentTime > outValue) {
+        preview.currentTime = getTrimmerValue(trimmerIn);
+      }
       progressBar.value = preview.currentTime;
       previewTime.innerText = `${moment().startOf('day').seconds(preview.currentTime).format('m:ss')}`;
     }, 1);
 
+    initializeTrimmers();
     // Remove the listener since it's called
     // every time the video loops
     preview.oncanplay = undefined;
   };
 
-  pauseBtn.onclick = function () {
-    this.classList.add('hidden');
+  pauseBtn.onclick = pause;
+
+  playBtn.onclick = play;
+
+  function pause () {
+    pauseBtn.classList.add('hidden');
     playBtn.classList.remove('hidden');
     preview.pause();
-  };
+  }
 
-  playBtn.onclick = function () {
-    this.classList.add('hidden');
+  function play () {
+    playBtn.classList.add('hidden');
     pauseBtn.classList.remove('hidden');
     preview.play();
-  };
+  }
 
   maximizeBtn.onclick = function () {
     this.classList.add('hidden');
@@ -245,22 +255,40 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  trimmerIn.oninput = () => {handleTrimmerInput(trimmerIn.id)}
-  trimmerOut.oninput = () => {handleTrimmerInput(trimmerOut.id)}
+  function initializeTrimmers() {
+    trimmerIn.max = trimmerOut.max = trimmerOut.value = String(preview.duration);
+    setTrimmerValue(trimmerIn, 0);
+
+    trimmerIn.oninput = () => {handleTrimmerInput(trimmerIn.id)}
+    trimmerOut.oninput = () => {handleTrimmerInput(trimmerOut.id)}
+    trimmerIn.onchange = trimmerOut.onchange = play;
+  }
+
+  function getTrimmerValue(trimmerEl) {
+    return parseFloat(trimmerEl.value);
+  }
+
+  function setTrimmerValue(trimmerEl, value) {
+    trimmerEl.value = String(value);
+  }
 
   function handleTrimmerInput(inputId) {
-    var inValue = parseInt(trimmerIn.value);
-    var outValue = parseInt(trimmerOut.value);
+    pause();
+    var inValue = getTrimmerValue(trimmerIn);
+    var outValue = getTrimmerValue(trimmerOut);
+    var currentFrame = inValue;
+    if (inputId === trimmerOut.id) currentFrame = outValue;
     if (inValue >= outValue) {
       switch (inputId) {
         case trimmerIn.id:
-        trimmerOut.value = String(inValue + 1);
+        setTrimmerValue(trimmerOut, inValue + 1);
         case trimmerOut.id:
-        trimmerIn.value = String(outValue - 1);
+        setTrimmerValue(trimmerIn, outValue - 1);
         default:
         break;
       }
     }
+    preview.currentTime = currentFrame;
   }
 });
 
