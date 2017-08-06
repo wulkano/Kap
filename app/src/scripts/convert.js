@@ -54,6 +54,8 @@ function convertToGif(opts) {
         '-i', palettePath,
         '-filter_complex', `fps=${opts.fps},scale=${opts.width}:${opts.height}:flags=lanczos[x]; [x][1:v]paletteuse`,
         `-loop`, opts.loop === true ? '0' : '-1', // 0 == forever; -1 == no loop
+        '-ss', opts.startTime,
+        '-to', opts.endTime,
         opts.outputPath
       ]));
   });
@@ -62,7 +64,12 @@ function convertToGif(opts) {
 function convertToMp4(opts) {
   // TODO: Instead of fixing the `file://` prefix here, just store it in a better place in the editor
   opts.progressCallback(0);
-  return execa('cp', [opts.filePath.replace(/^file:\/\//, ''), opts.outputPath]);
+  return convert(opts.outputPath, opts, [
+    '-i', opts.filePath,
+    '-ss', opts.startTime,
+    '-to', opts.endTime,
+    opts.outputPath
+  ])
 }
 
 function convertToWebm(opts) {
@@ -77,6 +84,8 @@ function convertToWebm(opts) {
       '-codec:v', 'vp9',
       '-codec:a', 'vorbis',
       '-strict', '-2', // Needed because `vorbis` is experimental
+      '-ss', opts.startTime,
+      '-to', opts.endTime,
       opts.outputPath
     ]);
   });
@@ -90,6 +99,8 @@ function convertToApng(opts) {
       '-vf', `fps=${opts.fps},scale=${opts.width}:${opts.height}:flags=lanczos[x]`,
       // Strange for APNG instead of -loop it uses -plays see: https://stackoverflow.com/questions/43795518/using-ffmpeg-to-create-looping-apng
       `-plays`, opts.loop === true ? '0' : '-1', // 0 == forever; -1 == no loop
+      '-ss', opts.startTime,
+      '-to', opts.endTime,
       opts.outputPath
     ]);
   });

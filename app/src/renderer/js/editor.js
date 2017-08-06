@@ -233,7 +233,9 @@ document.addEventListener('DOMContentLoaded', () => {
           width: inputWidth.value,
           height: inputHeight.value,
           fps,
-          loop
+          loop,
+          startTime: getTrimmerValue(trimmerIn),
+          endTime: getTrimmerValue(trimmerOut)
         });
       };
     }

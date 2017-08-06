@@ -27,6 +27,8 @@ export default async function (exportOptions) {
     height: exportOptions.height,
     fps: exportOptions.fps,
     loop: exportOptions.loop,
+    startTime: exportOptions.startTime,
+    endTime: exportOptions.endTime,
     progressCallback: percentage => {
       app.kap.mainWindow.send('export-progress', {
         text: 'Converting…',
