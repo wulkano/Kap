@@ -9,6 +9,7 @@ import {init as initErrorReporter} from '../../common/reporter';
 
 const {app} = remote;
 const {getShareServices} = remote.require('./plugins').default;
+const TRIMMER_STEP = 0.00001;
 
 initErrorReporter();
 
@@ -292,10 +293,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (inValue >= outValue) {
       switch (inputId) {
         case trimmerIn.id:
-          setTrimmerValue(trimmerOut, inValue + 1);
+          setTrimmerValue(trimmerOut, inValue + TRIMMER_STEP);
           break;
         case trimmerOut.id:
-          setTrimmerValue(trimmerIn, outValue - 1);
+          setTrimmerValue(trimmerIn, outValue - TRIMMER_STEP);
           break;
         default:
           break;
