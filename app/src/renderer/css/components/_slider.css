@@ -1,3 +1,9 @@
+/*
+  Slider Styling Component ✏️
+  ----
+  - Used for the trimmer in the editor window
+*/
+
 .slider {
   -webkit-appearance: none;
   background: transparent;
