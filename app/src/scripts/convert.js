@@ -69,7 +69,7 @@ function convertToMp4(opts) {
     '-ss', opts.startTime,
     '-to', opts.endTime,
     opts.outputPath
-  ])
+  ]);
 }
 
 function convertToWebm(opts) {

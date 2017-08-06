@@ -53,8 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     progressBar.max = preview.duration;
     setInterval(() => {
-      var inValue = getTrimmerValue(trimmerIn),
-          outValue = getTrimmerValue(trimmerOut);
+      const inValue = getTrimmerValue(trimmerIn);
+      const outValue = getTrimmerValue(trimmerOut);
       if (preview.currentTime < inValue || preview.currentTime > outValue) {
         preview.currentTime = getTrimmerValue(trimmerIn);
       }
@@ -72,13 +72,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   playBtn.onclick = play;
 
-  function pause () {
+  function pause() {
     pauseBtn.classList.add('hidden');
     playBtn.classList.remove('hidden');
     preview.pause();
   }
 
-  function play () {
+  function play() {
     playBtn.classList.add('hidden');
     pauseBtn.classList.remove('hidden');
     preview.play();
@@ -258,12 +258,19 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   function initializeTrimmers() {
-    trimmerIn.max = trimmerOut.max = trimmerOut.value = String(preview.duration);
+    trimmerIn.max = String(preview.duration);
+    trimmerOut.max = String(preview.duration);
+    trimmerOut.value = String(preview.duration);
     setTrimmerValue(trimmerIn, 0);
 
-    trimmerIn.oninput = () => {handleTrimmerInput(trimmerIn.id)}
-    trimmerOut.oninput = () => {handleTrimmerInput(trimmerOut.id)}
-    trimmerIn.onchange = trimmerOut.onchange = play;
+    trimmerIn.oninput = () => {
+      handleTrimmerInput(trimmerIn.id);
+    };
+    trimmerOut.oninput = () => {
+      handleTrimmerInput(trimmerOut.id);
+    };
+    trimmerIn.onchange = play;
+    trimmerOut.onchange = play;
   }
 
   function getTrimmerValue(trimmerEl) {
@@ -276,18 +283,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function handleTrimmerInput(inputId) {
     pause();
-    var inValue = getTrimmerValue(trimmerIn);
-    var outValue = getTrimmerValue(trimmerOut);
-    var currentFrame = inValue;
-    if (inputId === trimmerOut.id) currentFrame = outValue;
+    const inValue = getTrimmerValue(trimmerIn);
+    const outValue = getTrimmerValue(trimmerOut);
+    let currentFrame = inValue;
+    if (inputId === trimmerOut.id) {
+      currentFrame = outValue;
+    }
     if (inValue >= outValue) {
       switch (inputId) {
         case trimmerIn.id:
-        setTrimmerValue(trimmerOut, inValue + 1);
+          setTrimmerValue(trimmerOut, inValue + 1);
+          break;
         case trimmerOut.id:
-        setTrimmerValue(trimmerIn, outValue - 1);
+          setTrimmerValue(trimmerIn, outValue - 1);
+          break;
         default:
-        break;
+          break;
       }
     }
     preview.currentTime = currentFrame;
