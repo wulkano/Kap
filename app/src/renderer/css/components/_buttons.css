@@ -111,4 +111,9 @@
 .button--secondary {
   background: white;
   border: 1px solid $gray-light;
+  transition: border .12s ease-in-out;
+
+  &:hover {
+    border-color: $blue;
+  }
 }
