@@ -32,6 +32,7 @@
     box-shadow: 0 1px 0 0 #DDDDDD, inset 0 1px 0 0 #FFFFFF;
     opacity: 1;
     transition: top .12s ease-in-out, opacity .12s ease-in-out;
+    z-index: -1;
   }
 
   &.has-hidden-background:before {
@@ -40,15 +41,14 @@
   }
 
   .window__title {
+    cursor: -webkit-drag;
     color: $color-primary;
     font-size: $font-size-default;
     line-height: 3.6rem;
-    cursor: -wekit-grab;
   }
-
-  &.is-large {
+  /* Toolbar: */
+  &.is-large:before {
     background-image: linear-gradient(-180deg, #F9F9F9 0%, #F1F1F1 100%);
-    background: #F9F9F9;
     box-shadow: 0 1px 0 0 #DDDDDD, inset 0 1px 0 0 #FFFFFF;
 
     .window__title { color: $color-primary; }

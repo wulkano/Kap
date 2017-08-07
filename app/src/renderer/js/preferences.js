@@ -1,4 +1,4 @@
-import {remote} from 'electron';
+import {remote, shell} from 'electron';
 import _ from 'lodash';
 import $j from 'jquery/dist/jquery.slim';
 
@@ -96,17 +96,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function loadAvailablePlugins() {
     const template = `
-      <ul>
+      <div>
         <% _.forEach(plugins, plugin => { %>
-          <li>
-            <h4><%- plugin.prettyName %> <span><i><%- plugin.version %><i></span></h4>
-            <p><%- plugin.description %></p>
-            <button class="install" data-name="<%- plugin.name %>">Install</button>
-          </li>
+          <div class="preference container">
+            <% console.log(plugin); %>
+            <div class="preference-part">
+              <div class="preference-content">
+                <div class="preference__title">
+                  <a class="preference__url" href data-url="<%- plugin.links.homepage %>"><%- plugin.prettyName %></a>
+                  <span>
+                    <i><%- plugin.version %></i>
+                  </span>
+                </div>
+                <p class="preference__description"><%- plugin.description %></p>
+              </div>
+              <div class="preference-input">
+                <button class="button button--secondary install" data-name="<%- plugin.name %>">Install</button>
+              </div>
+            </div>
+          </div>
         <% }); %>
-      </ul>
+      </div>
     `;
-
     const compiled = _.template(template);
     const html = compiled({
       plugins: await plugins.getFromNpm()
@@ -138,8 +149,20 @@ document.addEventListener('DOMContentLoaded', () => {
     })().catch(console.error);
   });
 
+  console.log($j('.preference__url'));
+
+  $j('.preference__url').on('click', function() {
+    event.preventDefault();
+    event.stopPropagation();
+    const url = $j(this).data('url');
+    console.log(url, shell);
+    // shell.openExternal(url);
+  });
+
   loadInstalledPlugins();
   loadAvailablePlugins();
+
+
 
   chooseSaveDirectoryBtn.onclick = function () {
     const directories = dialog.showOpenDialog(electronWindow, {properties: ['openDirectory', 'createDirectory']});

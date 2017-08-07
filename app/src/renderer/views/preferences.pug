@@ -6,14 +6,14 @@ block head
   +script('preferences')
 
 block body
-  +window-header(title='Preferences')
+  +window-header(title='Preferences').is-large
     nav.prefs-nav
       a.is-active(href data-pane='general')
         +icon('settings')
       a(href data-pane='advanced')
         +icon('tune')
       a(href data-pane='plugins')
-        +icon('tune')
+        +icon('ic_add_box_24px')
   .prefs-sections
     section.js-prefs-section.settings
     section(data-pane='general')
@@ -22,7 +22,7 @@ block body
           .preference-content
             .preference__title Save to…
             .preference__description.js-save-to-description
-          .preference-input.c-toggle
+          .preference-input
             button.button--secondary.js-choose-save Choose
       .preference.container
         .preference-part
@@ -60,16 +60,14 @@ block body
           .preference-content
             .preference__title Record audio
             .preference__description Select input device
-          .select-element(style="width: 17.8rem")
-            select.js-audio-input-device-selector
-              option(value='none') None
+          .preference-input
+            +select-custom
+              select.js-audio-input-device-selector
+                option(value='none') None
 
     //- Plugins preferences
     section.plugins-prefs.hidden(data-pane='plugins')
-      .preference.container
-        h2 Installed
-        .preference-part
-          .preference-content(id='plugins-installed')
-        h2 Discover
-        .preference-part
-          .preference-content(id='plugins-available')
+      h2 Installed
+      .preference.container(id='plugins-installed')
+      h2 Discover
+      nav.plugins-list(id='plugins-available')

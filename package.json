@@ -2,7 +2,7 @@
   "scripts": {
     "test": "xo",
     "build": "npm run test && gulp build",
-    "dev": "gulp dev",
+    "dev": "gulp dev --continue",
     "app": "electron app",
     "start": "npm run app",
     "dist": "npm run build && build",
