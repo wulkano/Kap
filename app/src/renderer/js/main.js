@@ -3,7 +3,6 @@ import fs from 'fs';
 import {ipcRenderer, remote, shell} from 'electron';
 
 import aspectRatio from 'aspectratio';
-// import fileSize from 'file-size';
 import moment from 'moment';
 
 import {init as initErrorReporter, report as reportError} from '../../common/reporter';
@@ -26,34 +25,28 @@ function setMainWindowSize() {
   ipcRenderer.send('set-main-window-size', {width, height});
 }
 
-// function setStrictWindowSize(width, height, callback) {
-//   if (ipcRenderer.sendSync('set-main-window-size', {width, height})) {
-//     callback();
-//   }
-// }
-
 document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
+  const mainBody = document.querySelector('body');
   const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
   const startBar = document.querySelector('.start-bar');
+  const startBarOptions = document.querySelector('.start-bar__content');
   const controls = document.querySelector('.controls-content');
   const inputWidth = document.querySelector('#aspect-ratio-width');
   const inputHeight = document.querySelector('#aspect-ratio-height');
   const linkBtn = document.querySelector('.link-btn');
   const openReleaseNotesBtn = document.querySelector('.open-release-notes');
+  const options = document.querySelector('.controls-options');
   const progressBar = document.querySelector('#progress-bar');
   const progressBarLabel = document.querySelector('.progress-bar-label');
   const progressBarSection = document.querySelector('section.progress');
   const recordBtn = document.querySelector('.record');
   const restartAndInstallUpdateBtn = document.querySelector('.restart-and-install-update');
-  // const size = document.querySelector('.size');
   const toggleAudioRecordBtn = document.querySelector('.js-toggle-audio-record');
   const swapBtn = document.querySelector('.swap-btn');
-  // const time = document.querySelector('.time');
   const titleBar = document.querySelector('.title-bar');
   const trafficLightsWrapper = document.querySelector('.title-bar__controls');
   const trayTriangle = document.querySelector('.tray-arrow');
-  const triangle = document.querySelector('.triangle');
   const updateNotification = document.querySelector('.update-notification');
   const windowTitle = document.querySelector('.window__title');
   const windowHeader = document.querySelector('.window-header');
@@ -66,7 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastValidInputHeight = 512;
   let aspectRatioBaseValues = [lastValidInputWidth, lastValidInputHeight];
   let hasUpdateNotification = false;
-  let initializedActiveShim = false;
 
   // Init dynamic elements
   if (app.kap.settings.get('recordAudio') === true) {
@@ -77,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   handleTrafficLightsClicks({hide: true});
 
-  function startMonitoringElapsedTimeAndSize(filePath) {
+  function startMonitoringElapsedTimeAndSize() {
     const startedAt = moment();
 
     monitoringIntervalId = setInterval(() => {
@@ -86,13 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const now = moment();
 
       const elapsed = moment.utc(now.diff(startedAt)).format('mm:ss');
-      // time.innerText = elapsed;
-
-      fs.stat(filePath, (err, stats) => {
-        if (!err) {
-          // size.innerText = fileSize(stats.size).human('si');
-        } // TODO: track this error
-      });
+      windowTitle.innerText = elapsed;
     }, 500);
   }
 
@@ -110,9 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
     inputHeight.disabled = true;
     linkBtn.classList.add('disabled');
     swapBtn.classList.add('disabled');
-    // toggleAudioRecordBtn.classList.add('hidden');
-    // time.classList.remove('hidden');
-    // size.classList.remove('hidden');
   }
 
   function enableInputs() {
@@ -121,9 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
     inputHeight.disabled = false;
     linkBtn.classList.remove('disabled');
     swapBtn.classList.remove('disabled');
-    // toggleAudioRecordBtn.classList.remove('hidden');
-    // time.classList.add('hidden');
-    // size.classList.add('hidden');
   }
 
   function startRecording() {
@@ -185,6 +165,11 @@ document.addEventListener('DOMContentLoaded', () => {
     aperture.startRecording(apertureOpts)
       .then(filePath => {
         recordBtn.attributes['data-state'].value = 'ready-to-stop';
+        windowHeader.classList.add('has-hidden-background');
+        controls.classList.add('hidden');
+        startBarOptions.classList.add('hidden');
+        mainBody.classList.add('is-recording');
+        setMainWindowSize();
         recordBtn.classList.add('is-recording'); // Stop btn
         startMonitoringElapsedTimeAndSize(filePath);
         setMainWindowTitle('Recording');
@@ -211,10 +196,13 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(filePath => {
         ipcRenderer.send('stopped-recording');
         windowTitle.innerText = 'Kap';
-        // time.innerText = '00:00';
-        // size.innerText = '0 kB';
-        restoreInputs();
         ipcRenderer.send('open-editor-window', {filePath});
+        windowHeader.classList.remove('has-hidden-background');
+        mainBody.classList.remove('is-recording');
+        controls.classList.remove('hidden');
+        startBarOptions.classList.remove('hidden');
+        setMainWindowSize();
+        restoreInputs();
       });
   }
 
@@ -321,6 +309,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   inputHeight.onblur = function () {
     this.value = this.value || (shake(this) && 512); // Prevent the input from staying empty
+  };
+
+  options.onclick = event => {
+    const {bottom, left} = options.getBoundingClientRect();
+    ipcRenderer.send('show-options-menu', {x: left, y: bottom});
+    event.stopPropagation();
   };
 
   swapBtn.onclick = () => {

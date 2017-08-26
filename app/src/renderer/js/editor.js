@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let maxFps = app.kap.settings.get('fps');
   maxFps = maxFps > 30 ? 30 : maxFps;
   let fps = 15;
-  let loop = true;
 
   let lastValidInputWidth;
   let lastValidInputHeight;
@@ -199,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
         event.stopPropagation();
       };
 
-      dropdown.onchange = event => { // eslint-disable-line no-loop-func
+      dropdown.onchange = () => { // eslint-disable-line no-loop-func
         const service = shareServices[dropdown.value];
 
         service.run({
@@ -208,10 +207,10 @@ document.addEventListener('DOMContentLoaded', () => {
           width: inputWidth.value,
           height: inputHeight.value,
           fps
-        })
+        });
 
-        dropdown.value = "-1";
-      }
+        dropdown.value = '-1';
+      };
     }
   }
 
