@@ -81,8 +81,7 @@ mixin range
     description: Creates a custom select element wrapper so we don't have to call the icons each time
     examples: +range(hasLabel)
 mixin select-custom
-  - var a = attributes
-  .c-select(class!=a.class)
+  .c-select&attributes(attributes)
     +icon('dropdown-arrow').c-select__toggle-icon
     block
 

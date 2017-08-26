@@ -62,9 +62,16 @@
     z-index: 1000;
   }
 
-  &.is-translucent {
+  &.is-translucent:before {
     background: rgba(34, 34, 34, .2);
     box-shadow: none;
+    /* TODO: Add backdrop-filter back in when it doesn't make the window flash */
+    /*backdrop-filter: blur(10px);*/
+  }
+
+  &.is-translucent.is-dark {
+    &:before { background: rgba(0, 0, 0, .4); }
+    .window__title { color: white; }
   }
 
   &.is-hidden {

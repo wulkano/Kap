@@ -12,8 +12,8 @@
 
 /* Button */
 *[class^="button"] {
-  height: 3.2rem;
-  line-height: 3.2rem;
+  height: 2.4rem;
+  line-height: 2.4rem;
   padding: 0 1.6rem;
   border: 1px solid transparent;
   border-radius: 4px;
@@ -32,17 +32,24 @@
   position: relative;
   padding: 0;
   border-radius: 4px;
-  height: 3.2rem;
+  height: 2.4rem;
   display: flex;
   justify-content: space-around;
   background-color: white;
+  overflow: hidden;
+
+  &--large {
+    height: 3.2rem;
+
+    *[class^="button"] { height: 3.2rem; }
+  }
 
   .active-shim {
      position: absolute;
      background: $blue;
      z-index: 0;
      left: 0;
-     transition: .4s cubic-bezier(.37,1.12,.18,1);
+     transition: .2s cubic-bezier(.37,1.12,.18,1);
      transition-property: transform, border-radius;
   }
 
@@ -72,7 +79,7 @@
     &:hover {
       background: white;
       &:not(:active):not(.is-active) {
-        svg { fill: #AEAEAE; }
+        svg { fill: $blue; }
       }
     }
 
@@ -97,6 +104,23 @@
 
     svg { fill: #8C8C8C; }
   }
+
+  &.is-transparent {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, .1);
+
+    .active-shim { background: rgba(255, 255, 255, .1); }
+
+    *[class^="button"] {
+      color: white;
+      border-color: transparent;
+
+      &:hover { background: transparent; }
+      &:hover:not(:focus) {
+        background: rgba(255, 255, 255, .2);
+      }
+    }
+  }
 }
 
 .button--primary {
@@ -116,4 +140,9 @@
   &:hover {
     border-color: $blue;
   }
+}
+
+/* Large Button */
+.button--large {
+  height: 3.2rem;
 }

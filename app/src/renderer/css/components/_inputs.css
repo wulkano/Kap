@@ -16,16 +16,41 @@ input { -webkit-app-region: no-drag; }
 */
 .c-select {
   position: relative;
-  height: 3.2rem;
+  height:  2.4rem;
+  padding-right: 32px;
   width: 100%;
-  border-radius: 3px;
+  border-radius: 4px;
   background-color: white;
   border: 1px solid $gray-light;
   color: $color-primary;
-  transition: border .12s ease-in-out;
+  transition: border .12s ease-in-out, background .12s ease-in-out;
 
   &:focus { border-color: $blue; }
   &:hover:not(:focus) { border-color: $gray-dark; }
+
+  select {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 2.4rem;
+    line-height: 2.4rem;
+    padding-left: 12px;
+    padding-right: 12px;
+    position: relative;
+    background: transparent;
+    border: none;
+    top: -1px;
+    color: $color-primary;
+    font-size: 1.4rem;
+  }
+
+  &--large {
+    height: 3.2rem;
+
+    select {
+      height: 3.2rem;
+      line-height: 3.2rem;
+    }
+  }
 
   &__toggle-icon {
     position: absolute;
@@ -48,19 +73,18 @@ input { -webkit-app-region: no-drag; }
     }
   }
 
-  select {
-    width: 100%;
-    -webkit-appearance: none;
-    height: 3.2rem;
-    line-height: 3.2rem;
-    padding-left: 12px;
-    padding-right: 12px;
-    position: relative;
-    background: transparent;
-    border: none;
-    top: -1px;
-    color: $color-primary;
-    font-size: 1.4rem;
+  &.has-custom-label {
+    padding-left: 8px;
+    font-size: 1.2rem;
+    select {
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+      width: 100%;
+    }
   }
 
   &.is-light {
@@ -72,6 +96,26 @@ input { -webkit-app-region: no-drag; }
     box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 0 0 1px rgba(0, 0, 0, .1), inset 0 1px white, inset 0 1px rgba(255, 255, 255, 1);
     select { color: $color-primary; }
   }
+
+  &.is-transparent {
+    color: white;
+    background: rgba(255, 255, 255, .1);
+    border-color: transparent;
+    select { color: white; }
+
+    .c-select__toggle-icon {
+      fill: white;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, .2);
+      border-color: transparent;
+
+      .c-select__toggle-icon {
+        fill: $blue;
+      }
+    }
+  }
 }
 
 
@@ -80,17 +124,36 @@ input { -webkit-app-region: no-drag; }
   - For joined together input styling
 */
 .input-group {
+  display: flex;
+
   input, input[type=text] {
     margin-right: 0;
     border-radius: 0;
 
     &:not(:last-child) { border-right-color: transparent; }
-    &:first-child:not(:only-child) { border-radius: 3px 0 0 3px; }
-    &:last-child:not(:only-child) { border-radius: 0 3px 3px 0; }
+    &:first-child:not(:only-child) { border-radius: 4px 0 0 4px; }
+    &:last-child:not(:only-child) { border-radius: 0 4px 4px 0; }
 
-    &:focus:not {
+    &:focus {
       border-color: $blue;
       & + input { border-left-color: transparent; }
+    }
+  }
+
+  &.is-transparent {
+    input {
+      background: rgba(255, 255, 255, .1);
+      border-color: transparent;
+      color: white;
+
+      &:not(:last-of-type) {
+        border-right: 1px solid rgba(0, 0, 0, .2);
+      }
+
+      &:hover, &:focus {
+        border-color: transparent;
+        background: rgba(255, 255, 255, .2);
+      }
     }
   }
 }
@@ -99,18 +162,31 @@ input { -webkit-app-region: no-drag; }
 /*
   Custom input styling
 */
-input, .input {
-  border-radius: 3px;
+input, .c-input {
+  border-radius: 4px;
   background: white;
   border: 0;
-  height: 3.2rem;
+  height: 2.4rem;
   padding: 0 0.8rem;
   background-color: white;
   color: $color-primary;
   font-size: 1.4rem;
   border: 1px solid $gray-light;
-  transition: border .12s ease-in-out;
+  transition: border .12s ease-in-out, background .12s ease-in-out;
 
   &:focus { border-color: $blue; }
   &:hover:not(:focus) { border-color: $gray-dark; }
+
+  &.is-transparent {
+    background: rgba(255, 255, 255, .1);
+    border-color: transparent;
+    color: white;
+
+    &:hover {
+      border-color: transparent;
+      background: rgba(255, 255, 255, .2);
+    }
+  }
+
+  &--large { height: 3.2rem; }
 }
