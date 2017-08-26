@@ -11,13 +11,6 @@ body {
   font-size: 1.4rem;
 }
 
-a {
-  color: $blue;
-  transition: color .12s ease-in-out;
-
-  &:hover { color: $blue-dark; }
-}
-
 .container {
   display: flex;
   padding-left: 16px;
