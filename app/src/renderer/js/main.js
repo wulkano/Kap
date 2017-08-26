@@ -35,14 +35,12 @@ function setMainWindowSize() {
 document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
   const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
-  const controlsSection = document.querySelector('section.controls');
-  // const controlsTitleWrapper = document.querySelector('.controls-toggle');
   const startBar = document.querySelector('.start-bar');
+  const controls = document.querySelector('.controls-content');
   const inputWidth = document.querySelector('#aspect-ratio-width');
   const inputHeight = document.querySelector('#aspect-ratio-height');
   const linkBtn = document.querySelector('.link-btn');
   const openReleaseNotesBtn = document.querySelector('.open-release-notes');
-  const options = document.querySelector('.controls-options');
   const progressBar = document.querySelector('#progress-bar');
   const progressBarLabel = document.querySelector('.progress-bar-label');
   const progressBarSection = document.querySelector('section.progress');
@@ -264,35 +262,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // controlsTitleWrapper.onclick = function () {
-  //   const controls = document.querySelector('.controls-content');
-  //
-  //   triangle.classList.toggle('up');
-  //
-  //   if (controls.classList.contains('hidden')) {
-  //     controls.classList.remove('hidden');
-  //     setMainWindowSize();
-  //   } else {
-  //     const w = document.documentElement.scrollWidth;
-  //     const h = document.documentElement.scrollHeight - controls.scrollHeight - 1;
-  //
-  //     setStrictWindowSize(w, h, () => {
-  //       controls.classList.add('hidden');
-  //     });
-  //   }
-  //
-  //   if (!initializedActiveShim && !controls.classList.contains('hidden')) {
-  //     initializedActiveShim = true;
-  //     setMainWindowSize();
-  //   }
-  // };
-  //
-  options.onclick = event => {
-    const {bottom, left} = options.getBoundingClientRect();
-    ipcRenderer.send('show-options-menu', {x: left, y: bottom});
-    event.stopPropagation();
-  };
-
   function setCropperWindowSize(width, height) {
     ipcRenderer.send('set-cropper-window-size', {
       width: width || lastValidInputWidth,
@@ -462,7 +431,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function showExportWindow() {
     startBar.classList.add('hidden');
-    controlsSection.classList.add('hidden');
+    controls.classList.add('hidden');
     progressBarSection.classList.remove('hidden');
     setMainWindowSize();
     app.kap.mainWindow.show();
@@ -473,9 +442,10 @@ document.addEventListener('DOMContentLoaded', () => {
     setMainWindowSize();
     progressBarSection.classList.add('hidden');
     startBar.classList.remove('hidden');
-    controlsSection.classList.remove('hidden');
+    controls.classList.remove('hidden');
     delete progressBar.value;
     progressBarLabel.innerText = 'Analyzing…';
+    setMainWindowSize();
   }
 
   ipcRenderer.on('start-export', () => {
