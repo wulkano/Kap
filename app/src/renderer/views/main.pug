@@ -19,7 +19,7 @@ block body
   section.controls-content
     .controls-section.container
       .controls-section__row
-        +select-custom.has-icon
+        +select-custom.has-icon.c-select--large
           +icon('ic_crop_free_24px').o-icon--small
           select.aspect-ratio-selector
             option(value='1600x900') 16:9 (1600x900)
@@ -31,14 +31,14 @@ block body
             option(data-aspect-ratio='custom') Custom
       .controls-section__row.aspect-ratio
         .aspect-ratio__input
-          input#aspect-ratio-width(type='text' value='512')
-        .button-group.aspect-ratio__options
+          input#aspect-ratio-width.c-input--large(type='text' value='512')
+        .button-group.button-group--large.aspect-ratio__options
           button.button--primary.swap-btn
             +icon('swap')
           button.button--primary.link-btn
             +icon('link')
         .aspect-ratio__input
-          input#aspect-ratio-height(type='text' value='512')
+          input#aspect-ratio-height.c-input--large(type='text' value='512')
 
   //- Main App area/header (record button container)
   section.start-bar
