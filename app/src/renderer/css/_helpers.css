@@ -25,3 +25,52 @@
   -webkit-user-select: none !important;
   cursor: default !important;
 }
+
+.u-border-bottom--lighter {
+  border-bottom: 1px solid $gray-lighter;
+}
+
+/* Flexbox helpers */
+.u-flex { display: flex; }
+.u-flex--column { flex-direction: column; }
+.u-flex--push-right { margin-left: auto; }
+.u-flex--align-center { align-items: center; }
+.u-flex--justify-center { justify-content: center; }
+.u-flex--center {
+  align-items: center;
+  justify-content: center;
+}
+.u-flex--center-item { margin: 0 auto; }
+
+/* Margins */
+.u-margin--none { margin: 0; }
+
+@each $direction in (top, right, bottom, left) {
+  .u-margin-$(direction) {
+    margin-$(direction): 16px;
+
+    &--small { margin-$(direction): 8px; }
+    &--medium { margin-$(direction): 32px; }
+    &--large { margin-$(direction): 64px; }
+    &--extra-large { margin-$(direction): 124px; }
+    &--none { margin-$(direction): 0; }
+  }
+}
+
+/* Paddings */
+@each $direction in (top, right, bottom, left) {
+  .u-padding-$(direction) {
+    padding-$(direction): 16px;
+
+    &--small { padding-$(direction): 8px; }
+    &--medium { padding-$(direction): 32px; }
+    &--large { padding-$(direction): 64px; }
+    &--extra-large { padding-$(direction): 124px; }
+  }
+}
+
+.o-link {
+  color: $blue;
+  transition: color .12s ease-in-out;
+  &:hover { text-decoration: underline; }
+}
