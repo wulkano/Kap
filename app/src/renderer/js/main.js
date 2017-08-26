@@ -1,5 +1,3 @@
-import fs from 'fs';
-
 import {ipcRenderer, remote, shell} from 'electron';
 
 import aspectRatio from 'aspectratio';

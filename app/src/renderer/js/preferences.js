@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Open plugin homepage
-  $j('.plugins-prefs').on('click', '.preference__url', function () {
+  $j('.plugins-prefs').on('click', '.preference__url', function (event) {
     event.preventDefault();
     const url = $j(this).data('url');
     shell.openExternal(url);
