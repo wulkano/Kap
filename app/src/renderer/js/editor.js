@@ -206,7 +206,8 @@ document.addEventListener('DOMContentLoaded', () => {
           filePath: preview.src,
           width: inputWidth.value,
           height: inputHeight.value,
-          fps
+          fps,
+          loop: true
         });
 
         dropdown.value = '-1';
