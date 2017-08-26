@@ -75,15 +75,22 @@ document.addEventListener('DOMContentLoaded', () => {
   // TODO: DRY up the plugin list code when it's more mature
   function loadInstalledPlugins() {
     const template = `
-      <ul>
-        <% _.forEach(plugins, plugin => { %>
-          <li>
-            <h4><%- plugin.prettyName %> <span><i><%- plugin.version %><i></span></h4>
-            <p><%- plugin.description %></p>
-            <button class="uninstall" data-name="<%- plugin.name %>">Uninstall</button>
-          </li>
-        <% }); %>
-      </ul>
+      <% _.forEach(plugins, plugin => { %>
+        <div class="preference container">
+          <div class="preference-part">
+            <div class="preference-content">
+              <div class="preference__title">
+                <a class="preference__url o-link" href data-url="<%- plugin.homepage %>"><%- plugin.prettyName %></a>
+                <span class="preference__note"><%- plugin.version %></span>
+              </div>
+              <p class="preference__description"><%- plugin.description %></p>
+            </div>
+            <div class="preference-input">
+              <button class="button button--secondary uninstall" data-name="<%- plugin.name %>">Uninstall</button>
+            </div>
+          </div>
+        </div>
+      <% }); %>
     `;
 
     const compiled = _.template(template);
@@ -96,27 +103,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function loadAvailablePlugins() {
     const template = `
-      <div>
-        <% _.forEach(plugins, plugin => { %>
-          <div class="preference container">
-            <% console.log(plugin); %>
-            <div class="preference-part">
-              <div class="preference-content">
-                <div class="preference__title">
-                  <a class="preference__url" href data-url="<%- plugin.links.homepage %>"><%- plugin.prettyName %></a>
-                  <span>
-                    <i><%- plugin.version %></i>
-                  </span>
-                </div>
-                <p class="preference__description"><%- plugin.description %></p>
+      <% _.forEach(plugins, plugin => { %>
+        <div class="preference container">
+          <div class="preference-part">
+            <div class="preference-content">
+              <div class="preference__title">
+                <a class="preference__url o-link" href data-url="<%- plugin.links.homepage %>"><%- plugin.prettyName %></a>
+                <span class="preference__note"><%- plugin.version %></span>
               </div>
-              <div class="preference-input">
-                <button class="button button--secondary install" data-name="<%- plugin.name %>">Install</button>
-              </div>
+              <p class="preference__description"><%- plugin.description %></p>
+            </div>
+            <div class="preference-input">
+              <button class="button button--secondary install" data-name="<%- plugin.name %>">Install</button>
             </div>
           </div>
-        <% }); %>
-      </div>
+        </div>
+      <% }); %>
     `;
     const compiled = _.template(template);
     const html = compiled({
@@ -149,20 +151,15 @@ document.addEventListener('DOMContentLoaded', () => {
     })().catch(console.error);
   });
 
-  console.log($j('.preference__url'));
-
-  $j('.preference__url').on('click', function() {
+  // Open plugin homepage
+  $j('.plugins-prefs').on('click', '.preference__url', function () {
     event.preventDefault();
-    event.stopPropagation();
     const url = $j(this).data('url');
-    console.log(url, shell);
-    // shell.openExternal(url);
+    shell.openExternal(url);
   });
 
   loadInstalledPlugins();
   loadAvailablePlugins();
-
-
 
   chooseSaveDirectoryBtn.onclick = function () {
     const directories = dialog.showOpenDialog(electronWindow, {properties: ['openDirectory', 'createDirectory']});
