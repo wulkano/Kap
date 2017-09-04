@@ -8,11 +8,11 @@ block head
 block body
   +window-header(title='Preferences').is-large
     nav.prefs-nav
-      a.is-active(href data-pane='general')
+      a.is-active(href data-pane='general' title='General')
         +icon('settings')
-      a(href data-pane='advanced')
+      a(href data-pane='advanced' title='Advanced')
         +icon('tune')
-      a(href data-pane='plugins')
+      a(href data-pane='plugins' title='Plugins')
         +icon('ic_add_box_24px')
   .prefs-sections
     section.js-prefs-section.settings
