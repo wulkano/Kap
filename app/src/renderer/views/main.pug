@@ -33,9 +33,9 @@ block body
         .aspect-ratio__input
           input#aspect-ratio-width.c-input--large(type='text' value='512')
         .button-group.button-group--large.aspect-ratio__options
-          button.button--primary.swap-btn
+          button.button--primary.swap-btn(title='Flip dimensions')
             +icon('swap')
-          button.button--primary.link-btn
+          button.button--primary.link-btn(title='Lock aspect ratio')
             +icon('link')
         .aspect-ratio__input
           input#aspect-ratio-height.c-input--large(type='text' value='512')
@@ -47,7 +47,7 @@ block body
       .record__state
     
     .start-bar__content
-      .start-bar__text.js-toggle-audio-record
+      .start-bar__text.js-toggle-audio-record(title='Toggle audio')
         +icon('mic').is-mic-on.hidden
         +icon('mic-off').is-mic-off
         
@@ -56,5 +56,5 @@ block body
       .record-filler
         
       //- Settings link
-      .start-bar__text
+      .start-bar__text(title='Options')
         +icon('ic_settings_24px').controls-options
