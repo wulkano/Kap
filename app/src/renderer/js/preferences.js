@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const openOnStartupCheckbox = $('#open-on-startup');
   const saveToDescription = $('.js-save-to-description');
   const showCursorCheckbox = $('#show-cursor');
+  const openPluginsFolder = $('.js-open-plugins');
 
   const electronWindow = getCurrentWindow();
 
@@ -168,6 +169,11 @@ document.addEventListener('DOMContentLoaded', () => {
       saveToDescription.dataset.fullPath = directories[0];
       saveToDescription.innerText = `.../${directories[0].split('/').pop()}`;
     }
+  };
+
+  openPluginsFolder.onclick = function (event) {
+    event.preventDefault();
+    shell.openItem(plugins.cwd);
   };
 
   openOnStartupCheckbox.onchange = function () {
