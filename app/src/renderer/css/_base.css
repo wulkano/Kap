@@ -2,7 +2,7 @@
 
 /* Set base colour and font stack */
 body {
-  color: $color-secondary;
+  color: $color-primary;
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue";
   overflow: hidden;
   letter-spacing: -.010rem;

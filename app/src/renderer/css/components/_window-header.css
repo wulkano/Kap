@@ -8,31 +8,50 @@
   - Can be changed into light version with `.is-light` class
 */
 
-
 .window-header {
   @extend .webkit-drag;
-  background: $background-secondary;
   -webkit-app-region: drag;
   cursor: -webkit-grab;
   width: 100%;
-  border-radius: 5px 5px 0 0;
-  box-shadow: 0 1px rgba(0, 0, 0, .2);
+  border-radius: 4px 4px 0 0;
   opacity: 1;
-  transition: transform .12s ease-in-out, opacity .12s ease-in-out;
-  will-change: transform, opacity;
+  transition: transform .12s ease-in-out, opacity .12s ease-in-out, height 0.12s ease-in-out;
+  will-change: transform, opacity, height;
+  max-height: 100%;
+  position: relative;
 
-  .window__title {
-    color: white;
-    font-size: $font-size-default;
-    line-height: 2.8rem;
-    cursor: -wekit-grab;
+  &:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background-image: linear-gradient(-180deg, #F9F9F9 0%, #F1F1F1 100%);
+    background: #F9F9F9;
+    box-shadow: 0 1px 0 0 #DDDDDD, inset 0 1px 0 0 #FFFFFF;
+    opacity: 1;
+    transition: top .12s ease-in-out, opacity .12s ease-in-out;
+    z-index: -1;
   }
 
-  &.is-light {
-    background-color: $background-light;
-    box-shadow: none;
+  &.has-hidden-background:before {
+    top: -100%;
+    opacity: 0;
+  }
 
-    .window__title { color: $grey-dark; }
+  .window__title {
+    cursor: -webkit-drag;
+    color: $color-primary;
+    font-size: $font-size-default;
+    line-height: 3.6rem;
+  }
+  /* Toolbar: */
+  &.is-large:before {
+    background-image: linear-gradient(-180deg, #F9F9F9 0%, #F1F1F1 100%);
+    box-shadow: 0 1px 0 0 #DDDDDD, inset 0 1px 0 0 #FFFFFF;
+
+    .window__title { color: $color-primary; }
   }
 
   &.is-floating {
@@ -43,12 +62,20 @@
     z-index: 1000;
   }
 
-  &.is-transparent {
+  &.is-translucent:before {
     background: rgba(34, 34, 34, .2);
     box-shadow: none;
+    /* TODO: Add backdrop-filter back in when it doesn't make the window flash */
+    /*backdrop-filter: blur(10px);*/
+  }
+
+  &.is-translucent.is-dark {
+    &:before { background: rgba(0, 0, 0, .4); }
+    .window__title { color: white; }
   }
 
   &.is-hidden {
+    max-height: 0px;
     opacity: 0;
     transform: translateY(-100%);
   }
@@ -58,7 +85,7 @@
 .title-bar {
   @extend .webkit-drag;
   width: 100%;
-  height: 2.8rem;
+  height: 3.6rem;
   text-align: center;
   position: relative;
 
@@ -72,10 +99,10 @@
 
 .title-bar__controls {
   position: absolute;
-  left: 8px;
+  left: 12px;
   transition: all .3s ease;
 
-  height: 28px;
+  height: 3.6rem;
   display: flex;
   align-items: center;
   -webkit-user-select: none !important;

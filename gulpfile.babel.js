@@ -7,6 +7,7 @@ import postcss from 'gulp-postcss';
 import postcssExtend from 'postcss-extend';
 import postcssNested from 'postcss-nested';
 import postcsssSimpleVars from 'postcss-simple-vars';
+import postcssEach from 'postcss-each';
 import atImport from 'postcss-import';
 import reporter from 'postcss-reporter';
 import pug from 'gulp-pug';
@@ -44,7 +45,7 @@ export function views() {
 
 export function styles() {
   return src([CSS_GLOB, `!${CSS_PARTIALS_GLOB}`], {base: SRC_DIR})
-    .pipe(postcss([atImport, postcsssSimpleVars, postcssExtend, postcssNested, cssnano, reporter()]))
+    .pipe(postcss([atImport, postcssEach, postcsssSimpleVars, postcssExtend, postcssNested, cssnano, reporter()]))
     .pipe(dest(DIST_DIR));
 }
 

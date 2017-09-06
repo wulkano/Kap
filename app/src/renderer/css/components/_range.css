@@ -13,10 +13,10 @@
 
   input[type=range] {
     -webkit-appearance: none;
-    background: $grey-dark;
-    border: 1px solid $grey;
+    background: $gray-light;
+    border: none;
     width: 100%;
-    height: .8rem;
+    height: .4rem;
     border-radius: 4px;
     padding: 0;
   }
@@ -44,7 +44,7 @@
     justify-content: space-between;
     align-items: center;
     font-size: 1rem;
-    color: $grey-lighter;
+    color: $gray-darker;
   }
 
   &-label:first-child, &-label:last-child { flex: 1; }

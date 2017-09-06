@@ -17,7 +17,10 @@
 
 
 
-html, body, .content { height: 100%; }
+html, body, .content {
+  height: 100%;
+  user-select: none;
+}
 
 
 /*
@@ -32,10 +35,15 @@ nav.prefs-nav {
 
   a {
     margin-right: 16px;
-    color: $grey-light;
-    transition: color 0.12s ease-in-out;
+    color: $gray-darker;
+    transition: color .12s ease-in-out;
+    display: flex;
+    svg {
+      fill: currentColor;
+      transition: fill .12s ease-in-out;
+    }
 
-    &:hover:not(.is-active) { color: $grey-lighter; }
+    &:hover:not(.is-active) { color: $blue; }
     &.is-active { color: $blue; }
   }
 
@@ -71,12 +79,13 @@ nav.prefs-nav {
 
   &__description {
     font-size: 1.2rem;
-    color: $grey-lighter;
+    color: $gray-darker;
   }
 
-  &+ .preference {
-    border-top: 1px solid $grey-dark;
-  }
+  &__note { color: $gray-darker; }
+
+  &+ .preference { border-top: 1px solid $gray-lighter; }
+  &:last-of-type { border-bottom: 1px solid $gray-lighter; }
 }
 
 .preference-part {
@@ -86,12 +95,12 @@ nav.prefs-nav {
   align-items: center;
   flex-wrap: wrap;
 
-  &+ .preference-part { border-top: 1px solid $grey-dark; }
+  &+ .preference-part { border-top: 1px solid $gray-lighter; }
 
   &.split {
     padding: 0;
 
-    .col:not(:last-child) { border-right: 1px solid $grey-dark; }
+    .col:not(:last-child) { border-right: 1px solid $gray-darker; }
     .col { padding: 16px; }
   }
 }

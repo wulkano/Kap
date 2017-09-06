@@ -1,9 +1,6 @@
-import fs from 'fs';
-
 import {ipcRenderer, remote, shell} from 'electron';
 
 import aspectRatio from 'aspectratio';
-import fileSize from 'file-size';
 import moment from 'moment';
 
 import {init as initErrorReporter, report as reportError} from '../../common/reporter';
@@ -26,18 +23,13 @@ function setMainWindowSize() {
   ipcRenderer.send('set-main-window-size', {width, height});
 }
 
-function setStrictWindowSize(width, height, callback) {
-  if (ipcRenderer.sendSync('set-main-window-size', {width, height})) {
-    callback();
-  }
-}
-
 document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
+  const mainBody = document.querySelector('body');
   const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
-  const controlsSection = document.querySelector('section.controls');
-  const controlsTitleWrapper = document.querySelector('.controls-toggle');
-  const header = document.querySelector('.kap-header');
+  const startBar = document.querySelector('.start-bar');
+  const startBarOptions = document.querySelector('.start-bar__content');
+  const controls = document.querySelector('.controls-content');
   const inputWidth = document.querySelector('#aspect-ratio-width');
   const inputHeight = document.querySelector('#aspect-ratio-height');
   const linkBtn = document.querySelector('.link-btn');
@@ -48,17 +40,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const progressBarSection = document.querySelector('section.progress');
   const recordBtn = document.querySelector('.record');
   const restartAndInstallUpdateBtn = document.querySelector('.restart-and-install-update');
-  const size = document.querySelector('.size');
   const toggleAudioRecordBtn = document.querySelector('.js-toggle-audio-record');
-  const toggleShowCursorBtn = document.querySelector('.js-toggle-show-cursor');
   const swapBtn = document.querySelector('.swap-btn');
-  const time = document.querySelector('.time');
   const titleBar = document.querySelector('.title-bar');
   const trafficLightsWrapper = document.querySelector('.title-bar__controls');
   const trayTriangle = document.querySelector('.tray-arrow');
-  const triangle = document.querySelector('.triangle');
   const updateNotification = document.querySelector('.update-notification');
   const windowTitle = document.querySelector('.window__title');
+  const windowHeader = document.querySelector('.window-header');
 
   const [micOnIcon, micOffIcon] = toggleAudioRecordBtn.children;
 
@@ -68,12 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastValidInputHeight = 512;
   let aspectRatioBaseValues = [lastValidInputWidth, lastValidInputHeight];
   let hasUpdateNotification = false;
-  let initializedActiveShim = false;
 
   // Init dynamic elements
-  if (app.kap.settings.get('showCursor')) {
-    toggleShowCursorBtn.parentNode.classList.add('is-active');
-  }
   if (app.kap.settings.get('recordAudio') === true) {
     toggleAudioRecordBtn.classList.add('is-active');
     micOnIcon.classList.remove('hidden');
@@ -82,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   handleTrafficLightsClicks({hide: true});
 
-  function startMonitoringElapsedTimeAndSize(filePath) {
+  function startMonitoringElapsedTimeAndSize() {
     const startedAt = moment();
 
     monitoringIntervalId = setInterval(() => {
@@ -91,13 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const now = moment();
 
       const elapsed = moment.utc(now.diff(startedAt)).format('mm:ss');
-      time.innerText = elapsed;
-
-      fs.stat(filePath, (err, stats) => {
-        if (!err) {
-          size.innerText = fileSize(stats.size).human('si');
-        } // TODO: track this error
-      });
+      windowTitle.innerText = elapsed;
     }, 500);
   }
 
@@ -115,10 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
     inputHeight.disabled = true;
     linkBtn.classList.add('disabled');
     swapBtn.classList.add('disabled');
-    toggleAudioRecordBtn.classList.add('hidden');
-    toggleShowCursorBtn.classList.add('hidden');
-    time.classList.remove('hidden');
-    size.classList.remove('hidden');
   }
 
   function enableInputs() {
@@ -127,10 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
     inputHeight.disabled = false;
     linkBtn.classList.remove('disabled');
     swapBtn.classList.remove('disabled');
-    toggleAudioRecordBtn.classList.remove('hidden');
-    toggleShowCursorBtn.classList.remove('hidden');
-    time.classList.add('hidden');
-    size.classList.add('hidden');
   }
 
   function startRecording() {
@@ -192,8 +163,12 @@ document.addEventListener('DOMContentLoaded', () => {
     aperture.startRecording(apertureOpts)
       .then(filePath => {
         recordBtn.attributes['data-state'].value = 'ready-to-stop';
-        recordBtn.children[0].classList.add('hidden'); // Crop btn
-        recordBtn.children[1].classList.remove('hidden'); // Stop btn
+        windowHeader.classList.add('has-hidden-background');
+        controls.classList.add('hidden');
+        startBarOptions.classList.add('hidden');
+        mainBody.classList.add('is-recording');
+        setMainWindowSize();
+        recordBtn.classList.add('is-recording'); // Stop btn
         startMonitoringElapsedTimeAndSize(filePath);
         setMainWindowTitle('Recording');
         ipcRenderer.send('started-recording');
@@ -208,8 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function restoreInputs() {
     recordBtn.attributes['data-state'].value = 'initial';
-    recordBtn.children[0].classList.remove('hidden'); // Crop btn
-    recordBtn.children[1].classList.add('hidden'); // Stop btn
+    recordBtn.classList.remove('is-recording'); // Crop btn
     enableInputs();
   }
 
@@ -220,10 +194,13 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(filePath => {
         ipcRenderer.send('stopped-recording');
         windowTitle.innerText = 'Kap';
-        time.innerText = '00:00';
-        size.innerText = '0 kB';
-        restoreInputs();
         ipcRenderer.send('open-editor-window', {filePath});
+        windowHeader.classList.remove('has-hidden-background');
+        mainBody.classList.remove('is-recording');
+        controls.classList.remove('hidden');
+        startBarOptions.classList.remove('hidden');
+        setMainWindowSize();
+        restoreInputs();
       });
   }
 
@@ -246,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
         width: parseInt(inputWidth.value, 10),
         height: parseInt(inputHeight.value, 10)
       });
-      recordBtn.classList.add('filled');
+      recordBtn.classList.add('is-cropping');
       recordBtn.attributes['data-state'].value = 'ready-to-record';
     } else if (state === 'ready-to-record') {
       startRecording();
@@ -269,35 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       prepareRecordButton();
     }
-  };
-
-  controlsTitleWrapper.onclick = function () {
-    const controls = document.querySelector('.controls-content');
-
-    triangle.classList.toggle('up');
-
-    if (controls.classList.contains('hidden')) {
-      controls.classList.remove('hidden');
-      setMainWindowSize();
-    } else {
-      const w = document.documentElement.scrollWidth;
-      const h = document.documentElement.scrollHeight - controls.scrollHeight - 1;
-
-      setStrictWindowSize(w, h, () => {
-        controls.classList.add('hidden');
-      });
-    }
-
-    if (!initializedActiveShim && !controls.classList.contains('hidden')) {
-      initializedActiveShim = true;
-      setMainWindowSize();
-    }
-  };
-
-  options.onclick = event => {
-    const {bottom, left} = options.getBoundingClientRect();
-    ipcRenderer.send('show-options-menu', {x: left, y: bottom});
-    event.stopPropagation();
   };
 
   function setCropperWindowSize(width, height) {
@@ -361,6 +309,12 @@ document.addEventListener('DOMContentLoaded', () => {
     this.value = this.value || (shake(this) && 512); // Prevent the input from staying empty
   };
 
+  options.onclick = event => {
+    const {bottom, left} = options.getBoundingClientRect();
+    ipcRenderer.send('show-options-menu', {x: left, y: bottom});
+    event.stopPropagation();
+  };
+
   swapBtn.onclick = () => {
     [inputWidth.value, inputHeight.value] = [inputHeight.value, inputWidth.value];
     inputWidth.oninput();
@@ -368,7 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   linkBtn.onclick = function () {
-    this.classList.toggle('active');
+    this.classList.toggle('is-active');
   };
 
   aspectRatioSelector.onchange = function () {
@@ -380,13 +334,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  toggleShowCursorBtn.onclick = function () {
-    const classList = this.parentNode.classList;
-    classList.toggle('is-active');
-    const isActive = classList.contains('is-active');
-    app.kap.settings.set('showCursor', isActive);
-  };
-
   toggleAudioRecordBtn.onclick = function () {
     micOnIcon.classList.toggle('hidden');
     micOffIcon.classList.toggle('hidden');
@@ -394,11 +341,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     app.kap.settings.set('recordAudio', isVisible(micOnIcon));
   };
-
-  observersToDispose.push(app.kap.settings.observe('showCursor', event => {
-    const method = event.newValue ? 'add' : 'remove';
-    toggleShowCursorBtn.parentNode.classList[method]('is-active');
-  }));
 
   observersToDispose.push(app.kap.settings.observe('recordAudio', event => {
     const method = event.newValue ? 'add' : 'remove';
@@ -417,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.on('prepare-recording', () => prepareRecordButton());
 
   ipcRenderer.on('cropper-window-closed', () => {
-    recordBtn.classList.remove('filled');
+    recordBtn.classList.remove('is-cropping');
     recordBtn.attributes['data-state'].value = 'initial';
   });
 
@@ -443,11 +385,15 @@ document.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.on('unstick-from-menubar', () => {
     setTrayTriangleVisible(false);
     trafficLightsWrapper.classList.remove('is-invisible');
+    windowHeader.classList.remove('is-hidden');
+    setMainWindowSize();
   });
 
   ipcRenderer.on('stick-to-menubar', () => {
     setTrayTriangleVisible();
     trafficLightsWrapper.classList.add('is-invisible');
+    windowHeader.classList.add('is-hidden');
+    setMainWindowSize();
   });
 
   ipcRenderer.on('stop-recording', stopRecording);
@@ -476,8 +422,8 @@ document.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.on('log', (event, msgs) => console.log(...msgs));
 
   function showExportWindow() {
-    header.classList.add('hidden');
-    controlsSection.classList.add('hidden');
+    startBar.classList.add('hidden');
+    controls.classList.add('hidden');
     progressBarSection.classList.remove('hidden');
     setMainWindowSize();
     app.kap.mainWindow.show();
@@ -487,10 +433,11 @@ document.addEventListener('DOMContentLoaded', () => {
     app.kap.mainWindow.hide();
     setMainWindowSize();
     progressBarSection.classList.add('hidden');
-    header.classList.remove('hidden');
-    controlsSection.classList.remove('hidden');
+    startBar.classList.remove('hidden');
+    controls.classList.remove('hidden');
     delete progressBar.value;
     progressBarLabel.innerText = 'Analyzing…';
+    setMainWindowSize();
   }
 
   ipcRenderer.on('start-export', () => {

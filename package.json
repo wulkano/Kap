@@ -2,7 +2,7 @@
   "scripts": {
     "test": "xo",
     "build": "npm run test && gulp build",
-    "dev": "gulp dev",
+    "dev": "gulp dev --continue",
     "app": "electron app",
     "start": "npm run app",
     "dist": "npm run build && build",
@@ -27,6 +27,7 @@
     "gulp-pug": "3.3.0",
     "husky": "0.13.4",
     "ora": "1.2.0",
+    "postcss-each": "0.10.0",
     "postcss-extend": "1.0.5",
     "postcss-import": "10.0.0",
     "postcss-nested": "2.0.2",
