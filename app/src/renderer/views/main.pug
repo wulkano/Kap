@@ -21,7 +21,7 @@ block body
       .controls-section__row
         +select-custom.has-icon.c-select--large
           +icon('ic_crop_free_24px').o-icon--small
-          select.aspect-ratio-selector
+          select.aspect-ratio-selector(tabindex="1")
             option(value='1600x900') 16:9 (1600x900)
             option(value='1280x1024') 5:4 (1280x1024)
             option(value='1280x768') 5:3 (1280x768)
@@ -31,14 +31,14 @@ block body
             option(data-aspect-ratio='custom') Custom
       .controls-section__row.aspect-ratio
         .aspect-ratio__input
-          input#aspect-ratio-width.c-input--large(type='text' value='512')
+          input#aspect-ratio-width.c-input--large(type='text' value='512' tabindex="1")
         .button-group.button-group--large.aspect-ratio__options
           button.button--primary.swap-btn(title='Flip dimensions')
             +icon('swap')
           button.button--primary.link-btn(title='Lock aspect ratio')
             +icon('link')
         .aspect-ratio__input
-          input#aspect-ratio-height.c-input--large(type='text' value='512')
+          input#aspect-ratio-height.c-input--large(type='text' value='512' tabindex="1")
 
   //- Main App area/header (record button container)
   section.start-bar
