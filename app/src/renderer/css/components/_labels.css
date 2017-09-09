@@ -9,6 +9,6 @@
 label.c-label {
   font-size: 1.2rem;
   display: block;
-  color: $grey-lighter;
+  color: $gray-lighter;
   margin-bottom: 8px;
 }

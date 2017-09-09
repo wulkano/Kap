@@ -6,7 +6,7 @@ block head
   +script('editor')
 
 block body
-  +window-header(title='Editor' hide).is-floating.is-transparent.is-hidden
+  +window-header(title='Editor' hide).is-floating.is-translucent.is-dark.is-hidden
   .video-preview
     video#preview(autoplay loop)
     .video-controls
@@ -30,32 +30,32 @@ block body
     .output-settings
       .size
         span Size
-        .input-group
-          input.input-width(type='text' placeholder="Width")
-          input.input-height(type='text' placeholder="Height")
+        .input-group.is-transparent
+          input.input-width(type='text' placeholder="Width" size="5")
+          input.input-height(type='text' placeholder="Height" size="5")
       .fps
         span FPS
-        .button-group
+        .button-group.is-transparent
           .active-shim
           button.button--primary#fps-15.active
             span 15
           button.button--primary#fps-max
             span 30
-      .loop
-        span Loop
-        .button-group
-          .active-shim
-          button.button--primary#loop-on.active
-            span On
-          button.button--primary#loop-off
-            span Off
     .output-format
       span Export
-      button.button--primary(data-export-type="gif")
-        span GIF
-      button.button--primary(data-export-type="mp4")
-        span MP4
-      button.button--primary(data-export-type="webm")
-        span WebM
-      button.button--primary(data-export-type="apng")
-        span APNG
+      +select-custom(data-export-type="gif").is-transparent.has-custom-label
+        .c-select__label GIF
+        select
+          option(selected disabled value="-1") Export destinations
+      +select-custom(data-export-type="mp4").is-transparent.has-custom-label.u-margin-left--small
+        .c-select__label MP4
+        select
+          option(selected disabled value="-1") Export destinations
+      +select-custom(data-export-type="webm").is-transparent.has-custom-label.u-margin-left--small
+        .c-select__label WebM
+        select
+          option(selected disabled value="-1") Export destinations
+      +select-custom(data-export-type="apng").is-transparent.has-custom-label.u-margin-left--small
+        .c-select__label APNG
+        select
+          option(selected disabled value="-1") Export Options

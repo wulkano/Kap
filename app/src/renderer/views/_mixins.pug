@@ -75,6 +75,15 @@ mixin range
         .c-range-label=a.lowLabel
         .c-range-label.is-middle.js-middle-label=a.middleLabel
         .c-range-label=a.highLabel
+        
+//- **
+    name: range
+    description: Creates a custom select element wrapper so we don't have to call the icons each time
+    examples: +range(hasLabel)
+mixin select-custom
+  .c-select&attributes(attributes)
+    +icon('dropdown-arrow').c-select__toggle-icon
+    block
 
 //- **
     name: stylesheet

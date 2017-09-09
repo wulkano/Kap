@@ -43,7 +43,7 @@ function getRelativeLeft({element, parent}) {
   const {left: parentLeft} = parent.getBoundingClientRect();
   const {left: elementLeft} = element.getBoundingClientRect();
 
-  return elementLeft - parentLeft;
+  return elementLeft - parentLeft - 1;
 }
 
 function moveShimToButton({shim, button}) {
@@ -57,9 +57,9 @@ function moveShimToButton({shim, button}) {
 function setShimBorderRadius({shim, activeButton, buttonGroupArray}) {
   const index = buttonGroupArray.indexOf(activeButton);
   if (index === 0) {
-    shim.style.borderRadius = '3px 0 0 3px';
+    shim.style.borderRadius = '4px 0 0 4px';
   } else if (index === buttonGroupArray.length - 1) {
-    shim.style.borderRadius = '0 3px 3px 0';
+    shim.style.borderRadius = '0 4px 4px 0';
   } else {
     shim.style.borderRadius = '';
   }

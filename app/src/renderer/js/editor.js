@@ -23,8 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const inputWidth = $('.input-width');
   const fps15Btn = $('#fps-15');
   const fpsMaxBtn = $('#fps-max');
-  const loopOffBtn = $('#loop-off');
-  const loopOnBtn = $('#loop-on');
   const preview = $('#preview');
   const previewContainer = $('.video-preview');
   const progressBar = $('progress');
@@ -35,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let maxFps = app.kap.settings.get('fps');
   maxFps = maxFps > 30 ? 30 : maxFps;
   let fps = 15;
-  let loop = true;
 
   let lastValidInputWidth;
   let lastValidInputHeight;
@@ -43,7 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   handleTrafficLightsClicks({hide: true});
   handleActiveButtonGroup({buttonGroup: fps15Btn.parentNode});
-  handleActiveButtonGroup({buttonGroup: loopOffBtn.parentNode});
 
   fpsMaxBtn.children[0].innerText = maxFps;
 
@@ -169,18 +165,6 @@ document.addEventListener('DOMContentLoaded', () => {
     fps = maxFps;
   };
 
-  loopOffBtn.onclick = function () {
-    this.classList.add('active');
-    loopOnBtn.classList.remove('active');
-    loop = false;
-  };
-
-  loopOnBtn.onclick = function () {
-    this.classList.add('active');
-    loopOffBtn.classList.remove('active');
-    loop = true;
-  };
-
   window.onkeyup = event => {
     if (event.keyCode === 27) { // Esc
       if (maximizeBtn.classList.contains('hidden')) {
@@ -192,20 +176,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  function registerExportButtons() {
-    const exportButtons = document.querySelectorAll('.output-format button');
+  function registerExportOptions() {
+    const exportFormats = document.querySelectorAll('.output-format .c-select');
     const shareServices = getShareServices();
     console.log('Share services', shareServices);
+    console.log(exportFormats);
 
     ipcRenderer.on('toggle-format-buttons', (event, data) => {
-      for (const btn of exportButtons) {
+      for (const btn of exportFormats) {
         btn.disabled = !data.enabled;
       }
     });
 
-    for (const btn of exportButtons) {
-      const format = btn.dataset.exportType;
-      const dropdown = document.createElement('select');
+    for (const formatElement of exportFormats) {
+      const format = formatElement.dataset.exportType;
+      const dropdown = formatElement.querySelector('select');
 
       let i = 0;
       for (const service of shareServices) {
@@ -219,30 +204,33 @@ document.addEventListener('DOMContentLoaded', () => {
         i++;
       }
 
-      btn.appendChild(dropdown);
+      formatElement.appendChild(dropdown);
 
       // Prevent the dropdown from triggering the button
       dropdown.onclick = event => {
         event.stopPropagation();
       };
 
-      btn.onclick = () => { // eslint-disable-line no-loop-func
+      dropdown.onchange = () => { // eslint-disable-line no-loop-func
         const service = shareServices[dropdown.value];
+
         service.run({
           format,
           filePath: preview.src,
           width: inputWidth.value,
           height: inputHeight.value,
           fps,
-          loop,
+          loop: true,
           startTime: getTrimmerValue(trimmerIn),
           endTime: getTrimmerValue(trimmerOut)
         });
+
+        dropdown.value = '-1';
       };
     }
   }
 
-  registerExportButtons();
+  registerExportOptions();
 
   ipcRenderer.on('video-src', (event, src) => {
     preview.src = src;

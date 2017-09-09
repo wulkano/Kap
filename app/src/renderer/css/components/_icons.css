@@ -1,0 +1,24 @@
+@import '../_variables';
+
+/*
+  Icon Control Component ✏️
+  ----
+  - Ensures a consistency for all icons to be the sizes intended in designs
+  - Adds the ability for production icons to be larger or smaller than their original size
+
+  Note: Creating icon as an object (o namespace) because it can be used on any icon and is not necessarily a component
+*/
+
+/* Main object
+   default size: 24px x 24px
+*/
+.o-icon {
+  width: 24px;
+  height: 24px;
+  fill-rule: evenodd;
+
+  &--small {
+    width: 18px;
+    height: 18px;
+  }
+}
