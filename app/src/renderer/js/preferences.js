@@ -173,7 +173,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   openPluginsFolder.onclick = function (event) {
     event.preventDefault();
-    shell.openItem(plugins.cwd);
+    // The `shell.openItem(plugins.cwd);` method doesn't focus Finder
+    // See: https://github.com/electron/electron/issues/10477
+    // We work around it with:
+    shell.openExternal(encodeURI(`file://${plugins.cwd}`));
   };
 
   openOnStartupCheckbox.onchange = function () {
