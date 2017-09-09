@@ -9,6 +9,7 @@ import {init as initErrorReporter} from '../../common/reporter';
 
 const {app} = remote;
 const {getShareServices} = remote.require('./plugins').default;
+const TRIMMER_STEP = 0.00001;
 
 initErrorReporter();
 
@@ -26,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const previewContainer = $('.video-preview');
   const progressBar = $('progress');
   const windowHeader = $('.window-header');
+  const trimmerIn = $('#trimmer-in');
+  const trimmerOut = $('#trimmer-out');
 
   let maxFps = app.kap.settings.get('fps');
   maxFps = maxFps > 30 ? 30 : maxFps;
@@ -47,26 +50,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
     progressBar.max = preview.duration;
     setInterval(() => {
+      const inValue = getTrimmerValue(trimmerIn);
+      const outValue = getTrimmerValue(trimmerOut);
+      if (preview.currentTime < inValue || preview.currentTime > outValue) {
+        preview.currentTime = getTrimmerValue(trimmerIn);
+      }
       progressBar.value = preview.currentTime;
       previewTime.innerText = `${moment().startOf('day').seconds(preview.currentTime).format('m:ss')}`;
     }, 1);
 
+    initializeTrimmers();
     // Remove the listener since it's called
     // every time the video loops
     preview.oncanplay = undefined;
   };
 
-  pauseBtn.onclick = function () {
-    this.classList.add('hidden');
+  pauseBtn.onclick = pause;
+
+  playBtn.onclick = play;
+
+  function pause() {
+    pauseBtn.classList.add('hidden');
     playBtn.classList.remove('hidden');
     preview.pause();
-  };
+  }
 
-  playBtn.onclick = function () {
-    this.classList.add('hidden');
+  function play() {
+    playBtn.classList.add('hidden');
     pauseBtn.classList.remove('hidden');
     preview.play();
-  };
+  }
 
   maximizeBtn.onclick = function () {
     this.classList.add('hidden');
@@ -207,7 +220,9 @@ document.addEventListener('DOMContentLoaded', () => {
           width: inputWidth.value,
           height: inputHeight.value,
           fps,
-          loop: true
+          loop: true,
+          startTime: getTrimmerValue(trimmerIn),
+          endTime: getTrimmerValue(trimmerOut)
         });
 
         dropdown.value = '-1';
@@ -230,6 +245,53 @@ document.addEventListener('DOMContentLoaded', () => {
       windowHeader.classList.add('is-hidden');
     }
   };
+
+  function initializeTrimmers() {
+    trimmerIn.max = String(preview.duration);
+    trimmerOut.max = String(preview.duration);
+    trimmerOut.value = String(preview.duration);
+    setTrimmerValue(trimmerIn, 0);
+
+    trimmerIn.oninput = () => {
+      handleTrimmerInput(trimmerIn.id);
+    };
+    trimmerOut.oninput = () => {
+      handleTrimmerInput(trimmerOut.id);
+    };
+    trimmerIn.onchange = play;
+    trimmerOut.onchange = play;
+  }
+
+  function getTrimmerValue(trimmerEl) {
+    return parseFloat(trimmerEl.value);
+  }
+
+  function setTrimmerValue(trimmerEl, value) {
+    trimmerEl.value = String(value);
+  }
+
+  function handleTrimmerInput(inputId) {
+    pause();
+    const inValue = getTrimmerValue(trimmerIn);
+    const outValue = getTrimmerValue(trimmerOut);
+    let currentFrame = inValue;
+    if (inputId === trimmerOut.id) {
+      currentFrame = outValue;
+    }
+    if (inValue >= outValue) {
+      switch (inputId) {
+        case trimmerIn.id:
+          setTrimmerValue(trimmerOut, inValue + TRIMMER_STEP);
+          break;
+        case trimmerOut.id:
+          setTrimmerValue(trimmerIn, outValue - TRIMMER_STEP);
+          break;
+        default:
+          break;
+      }
+    }
+    preview.currentTime = currentFrame;
+  }
 });
 
 document.addEventListener('dragover', e => e.preventDefault());
