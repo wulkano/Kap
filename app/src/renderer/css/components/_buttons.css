@@ -75,7 +75,7 @@
     &:first-child { border-radius: 4px 0 0 4px; }
     &:last-child { border-radius: 0 4px 4px 0; }
     &:not(:last-child) { border-right: 1px solid #DDD; }
-    &.disabled { pointer-events: none; }
+
     &:hover {
       background: white;
       &:not(:active):not(.is-active) {
@@ -123,13 +123,17 @@
   }
 }
 
+button {
+  &:disabled,
+  &.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+}
+
 .button--primary {
   background: #3B99FC;
   border-color: #2D91FC;
-}
-
-.button--primary:disabled {
-  opacity: 0.5;
 }
 
 .button--secondary {
@@ -139,6 +143,10 @@
 
   &:hover {
     border-color: $blue;
+  }
+
+  &:disabled {
+    border-color: $gray-light;
   }
 }
 
