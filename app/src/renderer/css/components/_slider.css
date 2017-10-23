@@ -41,12 +41,18 @@
     pointer-events: auto;
     transform: translateY(8px);
     width: 8px;
-    height: 24px;
+    height: 16px;
     border-radius: 8px;
-    transition: width .35s cubic-bezier(0,.74,0,1.12);
+    transition: all .2s ease;
+
+    &:hover {
+      cursor: -webkit-grab;
+      height: 24px;
+    }
 
     &:active {
-      width: 12px;
+      cursor: -webkit-grabbing;
+      height: 32px;
     }
   }
 }
