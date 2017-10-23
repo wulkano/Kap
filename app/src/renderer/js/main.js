@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // This delay is due to internal framework delays in aperture native code
         if (err.message.includes('stopRecording')) {
           log(`Recording not yet started, can't stop recording before it actually started`);
-          return
+          return;
         }
         ipcRenderer.send('will-stop-recording');
         reportError(err);
