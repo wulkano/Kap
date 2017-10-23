@@ -175,6 +175,10 @@ document.addEventListener('DOMContentLoaded', () => {
         log(`Started recording after ${(Date.now() - past) / 1000}s`);
       })
       .catch(err => {
+        // This prevents the button from being reset, since the recording has not yet started
+        if (err.message.includes('stopRecording')) {
+          return
+        }
         ipcRenderer.send('will-stop-recording');
         reportError(err);
         remote.dialog.showErrorBox('Recording error', err.message);
