@@ -176,7 +176,9 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .catch(err => {
         // This prevents the button from being reset, since the recording has not yet started
+        // This delay is due to internal framework delays in aperture native code
         if (err.message.includes('stopRecording')) {
+          log(`Recording not yet started, can't stop recording before it actually started`);
           return
         }
         ipcRenderer.send('will-stop-recording');
