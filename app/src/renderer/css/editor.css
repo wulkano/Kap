@@ -119,6 +119,32 @@ video {
   }
 }
 
+
+.progress-bar-time-tip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin-top: -22px;
+  pointer-events: none;
+  background: black;
+  color: white;
+  transform: translate(-50%, -30px);
+  opacity: 0;
+  padding: 4px 10px;
+  border-radius: 13px;
+  transition: 100ms ease-in-out transform;
+}
+
+.timeline-container {
+  cursor: pointer;
+}
+.timeline-container:hover .progress-bar-time-tip {
+  opacity: 1;
+  transform: translate(-50%, 10px);
+  transition: 200ms ease-out transform;
+}
+
+
 .timeline-markers {
   opacity: 0;
   transition: opacity .12s ease-in-out;

@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const maximizeBtn = $('.js-maximize-video');
   const unmaximizeBtn = $('.js-unmaximize-video');
   const previewTime = $('.js-video-time');
+  const previewTimeTip = $('.js-video-time-tip');
   const inputHeight = $('.input-height');
   const inputWidth = $('.input-width');
   const fps15Btn = $('#fps-15');
@@ -56,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (preview.currentTime < inValue || preview.currentTime > outValue) {
         preview.currentTime = getTrimmerValue(trimmerIn);
       }
+      // ProgressBar.value = preview.currentTime;
       progressBar.value = preview.currentTime;
       previewTime.innerText = `${moment().startOf('day').seconds(preview.currentTime).format('m:ss')}`;
     }, 1);
@@ -71,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
   playBtn.onclick = play;
 
   trimline.onclick = skip;
+  trimline.onmousemove = hover;
 
   function pause() {
     pauseBtn.classList.add('hidden');
@@ -82,6 +85,14 @@ document.addEventListener('DOMContentLoaded', () => {
     playBtn.classList.add('hidden');
     pauseBtn.classList.remove('hidden');
     preview.play();
+  }
+
+  function hover(event) {
+    const rect = event.target.getBoundingClientRect();
+    const x = event.pageX - rect.left; // X position within the trimmer
+    const skipTime = preview.duration * (x / rect.width); // Calculated time in seconds where the click happened
+    previewTimeTip.style.left = `${event.pageX}px`;
+    previewTimeTip.innerText = `${moment().startOf('day').seconds(skipTime).format('m:ss')}`;
   }
 
   function skip(event) {
