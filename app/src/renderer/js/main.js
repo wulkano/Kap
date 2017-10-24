@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const progressBar = document.querySelector('#progress-bar');
   const progressBarLabel = document.querySelector('.progress-bar-label');
   const progressBarSection = document.querySelector('section.progress');
+  const progressBarCancelBtn = document.querySelector('.progress-bar-cancel-btn');
   const recordBtn = document.querySelector('.record');
   const restartAndInstallUpdateBtn = document.querySelector('.restart-and-install-update');
   const toggleAudioRecordBtn = document.querySelector('.js-toggle-audio-record');
@@ -329,6 +330,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   linkBtn.onclick = function () {
     this.classList.toggle('is-active');
+  };
+
+  progressBarCancelBtn.onclick = function () {
+    ipcRenderer.send('cancel-processing');
   };
 
   aspectRatioSelector.onchange = function () {

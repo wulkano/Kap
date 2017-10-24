@@ -4,7 +4,7 @@ import os from 'os';
 import execa from 'execa';
 import moment from 'moment';
 import tmp from 'tmp';
-import pCancelable from 'p-cancelable';
+import PCancelable from 'p-cancelable';
 
 const ffmpeg = joinPath(__dirname, '..', '..', 'vendor', 'ffmpeg');
 const durationRegex = /Duration: (\d\d:\d\d:\d\d.\d\d)/gm;

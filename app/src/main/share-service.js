@@ -113,7 +113,10 @@ export default class ShareService {
       }
     } catch (err) {
       kap.mainWindow.send('hide-export-window');
-      this.showError(err);
+
+      if (err.name !== 'CancelError') {
+        this.showError(err);
+      }
     }
 
     kap.editorWindow.send('toggle-format-buttons', {enabled: true});
