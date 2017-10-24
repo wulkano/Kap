@@ -87,10 +87,14 @@ document.addEventListener('DOMContentLoaded', () => {
   function skip(event) {
     const rect = event.target.getBoundingClientRect();
     const x = event.pageX - rect.left; // X position within the trimmer
-    const skipTime =  preview.duration * (x / rect.width); // Calculated time in seconds where the click happened
+    const skipTime = preview.duration * (x / rect.width); // Calculated time in seconds where the click happened
 
-    if (skipTime < getTrimmerValue(trimmerIn)) return; // Clicked before the first trimmer
-    if (skipTime > getTrimmerValue(trimmerOut)) return; // Clicked after the last trimmer
+    if (skipTime < getTrimmerValue(trimmerIn)) {
+      return;
+    } // Clicked before the first trimmer
+    if (skipTime > getTrimmerValue(trimmerOut)) {
+      return;
+    } // Clicked after the last trimmer
 
     preview.currentTime = skipTime;
   }
