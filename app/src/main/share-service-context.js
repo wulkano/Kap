@@ -12,12 +12,12 @@ export default class ShareServiceContext {
 
     this.filePath = () => convert(Object.assign({}, exportOptions, {
       defaultFileName: this.defaultFileName
-    })).catch(error => {
-      if (error.canceled) {
-        this.cancel()
+    })).catch(err => {
+      if (err.canceled) {
+        this.cancel();
       }
 
-      throw error
+      throw err;
     });
   }
 

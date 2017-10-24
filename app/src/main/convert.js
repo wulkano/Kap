@@ -1,5 +1,5 @@
 import path from 'path';
-import {app,ipcMain} from 'electron';
+import {app, ipcMain} from 'electron';
 import tempy from 'tempy';
 import {convertToGif, convertToMp4, convertToWebm, convertToApng} from '../scripts/convert';
 
@@ -40,19 +40,18 @@ export default async function (exportOptions) {
   ipcMain.once('cancel-processing', () => {
     converter.cancel();
     app.kap.mainWindow.send('export-progress', {text: ''});
-  })
-
+  });
 
   try {
-    await converter
-  } catch (error) {
+    await converter;
+  } catch (err) {
     if (converter.canceled) {
       app.kap.mainWindow.send('export-progress', {text: ''});
-      error.canceled = true
-      throw error
+      err.canceled = true;
+      throw err;
     }
 
-    throw error
+    throw err;
   }
 
   app.kap.mainWindow.send('export-progress', {text: ''});
