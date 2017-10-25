@@ -87,12 +87,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function hover(event) {
-    if (!preview.duration) {
-      return;
+    if (preview.duration) {
+      const timeAtEvent = getTimestampAtEvent(event, preview.duration);
+      previewTimeTip.style.left = `${event.pageX}px`;
+      previewTimeTip.innerText = `${moment().startOf('day').milliseconds(timeAtEvent * 1000).format('m:ss.SS')}`;
     }
-    const timeAtEvent = getTimestampAtEvent(event, preview.duration);
-    previewTimeTip.style.left = `${event.pageX}px`;
-    previewTimeTip.innerText = `${moment().startOf('day').milliseconds(timeAtEvent * 1000).format('m:ss.SS')}`;
   }
 
   function skip(event) {
