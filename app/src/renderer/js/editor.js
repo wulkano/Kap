@@ -4,7 +4,7 @@ import moment from 'moment';
 
 // Note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
-import {handleTrafficLightsClicks, $, handleActiveButtonGroup} from '../js/utils';
+import {handleTrafficLightsClicks, $, handleActiveButtonGroup, getTimestampAtEvent} from '../js/utils';
 import {init as initErrorReporter} from '../../common/reporter';
 
 const {app} = remote;
@@ -57,7 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (preview.currentTime < inValue || preview.currentTime > outValue) {
         preview.currentTime = getTrimmerValue(trimmerIn);
       }
-      // ProgressBar.value = preview.currentTime;
       progressBar.value = preview.currentTime;
       previewTime.innerText = `${moment().startOf('day').seconds(preview.currentTime).format('m:ss')}`;
     }, 1);
@@ -88,26 +87,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function hover(event) {
-    const rect = event.target.getBoundingClientRect();
-    const x = event.pageX - rect.left; // X position within the trimmer
-    const skipTime = preview.duration * (x / rect.width); // Calculated time in seconds where the click happened
+    const timeAtEvent = getTimestampAtEvent(event, preview.duration);
     previewTimeTip.style.left = `${event.pageX}px`;
-    previewTimeTip.innerText = `${moment().startOf('day').seconds(skipTime).format('m:ss')}`;
+    previewTimeTip.innerText = `${moment().startOf('day').seconds(timeAtEvent).format('m:ss')}`;
   }
 
   function skip(event) {
-    const rect = event.target.getBoundingClientRect();
-    const x = event.pageX - rect.left; // X position within the trimmer
-    const skipTime = preview.duration * (x / rect.width); // Calculated time in seconds where the click happened
+    const timeAtEvent = getTimestampAtEvent(event, preview.duration);
 
-    if (skipTime < getTrimmerValue(trimmerIn)) {
-      return;
-    } // Clicked before the first trimmer
-    if (skipTime > getTrimmerValue(trimmerOut)) {
-      return;
-    } // Clicked after the last trimmer
-
-    preview.currentTime = skipTime;
+    // Check that the time is between the trimmed timeline
+    if (getTrimmerValue(trimmerIn) < timeAtEvent && timeAtEvent < getTrimmerValue(trimmerOut)) {
+      preview.currentTime = timeAtEvent;
+    }
   }
 
   maximizeBtn.onclick = function () {
