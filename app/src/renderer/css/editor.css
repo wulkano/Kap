@@ -121,29 +121,35 @@ video {
 
 
 .progress-bar-time-tip {
-  position: absolute;
-  left: 0;
-  top: 0;
-  margin-top: -22px;
   pointer-events: none;
-  background: black;
+  position: absolute;
+  top: 0;
+  left: -50%;
+  margin-top: -24px;
+  transform: translate(-50%, 0);
+
+  background: rgba(0,0,0,.6);
   color: white;
-  transform: translate(-50%, -30px);
+  padding: 0px 8px;
+  height: 24px;
+  line-height: 24px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+
   opacity: 0;
-  padding: 4px 10px;
-  border-radius: 13px;
   transition: 100ms ease-in-out transform;
+}
+
+.timeline-container:hover .progress-bar-time-tip {
+  transform: translate(-50%, 10px);
+  opacity: 1;
+  transition: 200ms ease-out transform;
 }
 
 .timeline-container {
   cursor: pointer;
 }
-.timeline-container:hover .progress-bar-time-tip {
-  opacity: 1;
-  transform: translate(-50%, 10px);
-  transition: 200ms ease-out transform;
-}
-
 
 .timeline-markers {
   opacity: 0;
