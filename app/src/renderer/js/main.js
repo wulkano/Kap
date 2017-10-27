@@ -49,10 +49,12 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastValidInputWidth = 512;
   let lastValidInputHeight = 512;
   let hasUpdateNotification = false;
-  let height = 512;
-  let width = 512;
-  let selectedRatio = '1:1';
-  let lockedRatio = false;
+  const dimensions = {
+    height: 512,
+    width: 512,
+    ratio: '1:1',
+    ratioLocked: false
+  };
 
   // Init dynamic elements
   if (app.kap.settings.get('recordAudio') === true) {
@@ -187,13 +189,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function setSelectedRatio(width, height) {
-    selectedRatio = getSimplestRatio(width, height);
+    dimensions.ratio = getSimplestRatio(width, height);
 
     const ratios = document.querySelectorAll('.aspect-ratio-selector option');
     let hadMatch = false;
     for (const ratio of ratios) {
-      if (ratio.value === selectedRatio) {
-        aspectRatioSelector.value = selectedRatio;
+      if (ratio.value === dimensions.ratio) {
+        aspectRatioSelector.value = dimensions.ratio;
         hadMatch = true;
         break;
       }
@@ -201,8 +203,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!hadMatch) {
       const customRatio = document.querySelector('#custom-ratio-option');
-      customRatio.value = selectedRatio;
-      customRatio.textContent = `Custom (${selectedRatio})`;
+      customRatio.value = dimensions.ratio;
+      customRatio.textContent = `Custom (${dimensions.ratio})`;
       customRatio.selected = true;
     }
   }
@@ -243,15 +245,15 @@ document.addEventListener('DOMContentLoaded', () => {
       onInvalid: shake
     });
 
-    width = this.value;
+    dimensions.width = this.value;
 
-    if (lockedRatio) {
-      height = (selectedRatio.split(':')[1] / selectedRatio.split(':')[0]) * this.value;
-      inputHeight.value = Math.round(height);
+    if (dimensions.ratioLocked) {
+      dimensions.height = (dimensions.ratio.split(':')[1] / dimensions.ratio.split(':')[0]) * this.value;
+      inputHeight.value = Math.round(dimensions.height);
       return;
     }
 
-    setSelectedRatio(width, height);
+    setSelectedRatio(dimensions.width, dimensions.height);
 
     lastValidInputWidth = this.value || lastValidInputWidth;
     setCropperWindowSize();
@@ -272,15 +274,15 @@ document.addEventListener('DOMContentLoaded', () => {
       onInvalid: shake
     });
 
-    height = this.value;
+    dimensions.height = this.value;
 
-    if (lockedRatio) {
-      width = (selectedRatio.split(':')[0] / selectedRatio.split(':')[1]) * this.value;
-      inputWidth.value = Math.round(width);
+    if (dimensions.ratioLocked) {
+      dimensions.width = (dimensions.ratio.split(':')[0] / dimensions.ratio.split(':')[1]) * this.value;
+      inputWidth.value = Math.round(dimensions.width);
       return;
     }
 
-    setSelectedRatio(width, height);
+    setSelectedRatio(dimensions.width, dimensions.height);
 
     lastValidInputHeight = this.value || lastValidInputHeight;
     setCropperWindowSize();
@@ -306,18 +308,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   linkBtn.onclick = function () {
     this.classList.toggle('is-active');
-    lockedRatio = !lockedRatio;
+    dimensions.ratioLocked = !dimensions.ratioLocked;
   };
 
   const handleSizeChange = function () {
-    selectedRatio = this.value;
+    dimensions.ratio = this.value;
 
-    lockedRatio = true;
+    dimensions.ratioLocked = true;
     linkBtn.classList.add('is-active');
 
-    if (lockedRatio) {
-      height = (selectedRatio.split(':')[1] / selectedRatio.split(':')[0]) * width;
-      inputHeight.value = Math.round(height);
+    if (dimensions.ratioLocked) {
+      dimensions.height = (dimensions.ratio.split(':')[1] / dimensions.ratio.split(':')[0]) * dimensions.width;
+      inputHeight.value = Math.round(dimensions.height);
     }
   };
 
