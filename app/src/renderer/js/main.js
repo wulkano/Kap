@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (!hadMatch) {
-      const customRatio = document.getElementById('custom-ratio-option');
+      const customRatio = document.querySelector('#custom-ratio-option');
       customRatio.value = selectedRatio;
       customRatio.innerHTML = `Custom (${selectedRatio})`;
       customRatio.selected = true;
