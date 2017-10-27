@@ -50,8 +50,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial variables
   let lastValidInputWidth = 512;
   let lastValidInputHeight = 512;
-  let aspectRatioBaseValues = [lastValidInputWidth, lastValidInputHeight];
   let hasUpdateNotification = false;
+  let height = 512;
+  let width = 512;
+  let selectedRatio = '1:1';
+  let lockedRatio = false;
 
   // Init dynamic elements
   if (app.kap.settings.get('recordAudio') === true) {
@@ -173,6 +176,39 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Helper function for retrieving the simplest ratio, via the largest common divisor of two numbers (thanks @doot0)
+  function getLargestCommonDivisor(first, second) {
+    return (second === 0) ? first : getLargestCommonDivisor(second, first % second);
+  }
+
+  function getSimplestRatio(width, height) {
+    const lcd = getLargestCommonDivisor(width, height);
+    const denominator = width / lcd;
+    const numerator = height / lcd;
+    return `${denominator}:${numerator}`;
+  }
+
+  function setSelectedRatio(width, height) {
+    selectedRatio = getSimplestRatio(width, height);
+
+    const ratios = document.querySelectorAll('.aspect-ratio-selector option');
+    let hadMatch = false;
+    for (const ratio of ratios) {
+      if (ratio.value === selectedRatio) {
+        aspectRatioSelector.value = selectedRatio;
+        hadMatch = true;
+        break;
+      }
+    }
+
+    if (!hadMatch) {
+      const customRatio = document.getElementById('custom-ratio-option');
+      customRatio.value = selectedRatio;
+      customRatio.innerHTML = `Custom (${selectedRatio})`;
+      customRatio.selected = true;
+    }
+  }
+
   const handleRecord = function () {
     if (app.kap.editorWindow) {
       // We need to keep the window visible to show the shake animation
@@ -209,13 +245,15 @@ document.addEventListener('DOMContentLoaded', () => {
       onInvalid: shake
     });
 
-    if (linkBtn.classList.contains('active')) {
-      const tmp = aspectRatio.resize(...aspectRatioBaseValues, this.value);
-      if (tmp[1]) {
-        lastValidInputHeight = tmp[1];
-        inputHeight.value = tmp[1];
-      }
+    width = this.value;
+
+    if (lockedRatio) {
+      height = (selectedRatio.split(':')[1] / selectedRatio.split(':')[0]) * this.value;
+      inputHeight.value = Math.round(height);
+      return;
     }
+
+    setSelectedRatio(width, height);
 
     lastValidInputWidth = this.value || lastValidInputWidth;
     setCropperWindowSize();
@@ -236,13 +274,15 @@ document.addEventListener('DOMContentLoaded', () => {
       onInvalid: shake
     });
 
-    if (linkBtn.classList.contains('active')) {
-      const tmp = aspectRatio.resize(...aspectRatioBaseValues, undefined, this.value);
-      if (tmp[0]) {
-        lastValidInputWidth = tmp[0];
-        inputWidth.value = tmp[0];
-      }
+    height = this.value;
+
+    if (lockedRatio) {
+      width = (selectedRatio.split(':')[0] / selectedRatio.split(':')[1]) * this.value;
+      inputWidth.value = Math.round(width);
+      return;
     }
+
+    setSelectedRatio(width, height);
 
     lastValidInputHeight = this.value || lastValidInputHeight;
     setCropperWindowSize();
@@ -268,14 +308,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   linkBtn.onclick = function () {
     this.classList.toggle('is-active');
+    lockedRatio = !lockedRatio;
   };
 
   const handleSizeChange = function () {
-    const values = this.value.split('x');
-    if (values.length === 2) {
-      [inputWidth.value, inputHeight.value] = values;
-      aspectRatioBaseValues = values;
-      setCropperWindowSize(...values);
+    selectedRatio = this.value;
+
+    lockedRatio = true;
+    linkBtn.classList.add('is-active');
+
+    if (lockedRatio) {
+      height = (selectedRatio.split(':')[1] / selectedRatio.split(':')[0]) * width;
+      inputHeight.value = Math.round(height);
     }
   };
 
