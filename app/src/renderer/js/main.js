@@ -1,7 +1,5 @@
 import {ipcRenderer, remote, shell} from 'electron';
 
-import aspectRatio from 'aspectratio';
-
 import {init as initErrorReporter, report as reportError} from '../../common/reporter';
 import {log} from '../../common/logger';
 
