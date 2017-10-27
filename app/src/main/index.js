@@ -346,10 +346,11 @@ menubar.on('after-create-window', () => {
   });
 
   mainWindow.once('ready-to-show', () => {
+    // If Kap was launched at login, don't show the window
     if (wasOpenedAtLogin) {
-      //  If Kap was opened at login, don't show the window.
       return;
     }
+    
     positioner.move('trayCenter', tray.getBounds()); // Not sure why the fuck this is needed (ﾉಠдಠ)ﾉ︵┻━┻
     mainWindow.show();
   });
