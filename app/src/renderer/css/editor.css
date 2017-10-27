@@ -166,7 +166,11 @@ section.output {
   display: flex;
   align-items: center;
 }
-.size > input + input { margin-left: 6px }
+
+.size input {
+  font-size: 1.2rem;
+  text-align: center;
+}
 
 ul {
   display: flex;
