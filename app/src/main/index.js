@@ -350,7 +350,7 @@ menubar.on('after-create-window', () => {
     if (wasOpenedAtLogin) {
       return;
     }
-    
+
     positioner.move('trayCenter', tray.getBounds()); // Not sure why the fuck this is needed (ﾉಠдಠ)ﾉ︵┻━┻
     mainWindow.show();
   });
