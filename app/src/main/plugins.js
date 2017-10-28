@@ -77,19 +77,18 @@ class Plugins {
     });
   }
 
-  // TODO: Figure out why making this an async function didn't work
-  getFromNpm() {
+  async getFromNpm() {
     const url = 'https://api.npms.io/v2/search?q=keywords:kap-plugin';
-    return got(url, {json: true}).then(response => {
-      return response.body.results
-        .map(x => x.package)
-        .filter(x => x.name.startsWith('kap-'))
-        .filter(x => !this._pluginNames().includes(x.name)) // Filter out installed plugins
-        .map(x => {
-          this._addPrettyName(x);
-          return x;
-        });
-    });
+    const response = await got(url, {json: true});
+
+    return response.body.results
+      .map(x => x.package)
+      .filter(x => x.name.startsWith('kap-'))
+      .filter(x => !this._pluginNames().includes(x.name)) // Filter out installed plugins
+      .map(x => {
+        this._addPrettyName(x);
+        return x;
+      });
   }
 
   load() {

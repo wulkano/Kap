@@ -15,10 +15,12 @@
   margin: 0;
 
   &#trimmer-in::-webkit-slider-thumb {
-    background: green;
+    background: white;
+    margin-left: 4px;
   }
   &#trimmer-out::-webkit-slider-thumb {
-    background: red;
+    background: white;
+    margin-right: 4px;
   }
 
   &:focus {
@@ -37,12 +39,20 @@
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
     pointer-events: auto;
-    width: 15px;
-    height: 15px;
-    border-radius: 100%;
+    transform: translateY(8px);
+    width: 8px;
+    height: 16px;
+    border-radius: 8px;
+    transition: all .2s ease;
+
+    &:hover {
+      cursor: -webkit-grab;
+      height: 24px;
+    }
 
     &:active {
-      opacity: 0.5;
+      cursor: -webkit-grabbing;
+      height: 32px;
     }
   }
 }

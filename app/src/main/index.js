@@ -13,6 +13,8 @@ import analytics from './analytics';
 import {applicationMenu, cogMenu} from './menus';
 import plugins from './plugins';
 
+const {wasOpenedAtLogin} = app.getLoginItemSettings();
+
 const menubar = require('menubar')({
   index: `file://${__dirname}/../renderer/views/main.html`,
   icon: path.join(__dirname, '..', '..', 'static', 'menubarDefaultTemplate.png'),
@@ -344,6 +346,11 @@ menubar.on('after-create-window', () => {
   });
 
   mainWindow.once('ready-to-show', () => {
+    // If Kap was launched at login, don't show the window
+    if (wasOpenedAtLogin) {
+      return;
+    }
+
     positioner.move('trayCenter', tray.getBounds()); // Not sure why the fuck this is needed (ﾉಠдಠ)ﾉ︵┻━┻
     mainWindow.show();
   });

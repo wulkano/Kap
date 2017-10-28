@@ -17,10 +17,10 @@ block body
           +icon('pause')
         span.video__time.js-video-time 0:00
       .timeline-container
+        progress.c-progress.c-progress__transparent.editor-progress(max='100' value=0)
         .timeline-markers
           input.slider#trimmer-in(type="range", step="0.00001")
           input.slider#trimmer-out(type="range", step="0.00001")
-        progress.c-progress.c-progress__transparent.editor-progress(max='100' value=0)
       .video-controls-right
         a.video__maximize-button.js-maximize-video
           +icon('fullscreen')
