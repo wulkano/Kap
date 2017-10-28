@@ -14,7 +14,8 @@ const DEFAULTS = {
   highlightClicks: false,
   fps: 30,
   recordAudio: false,
-  audioInputDeviceId: 'none'
+  audioInputDeviceId: 'none',
+  videoCodec: aperture.videoCodecs.has('hevc') ? 'hevc' : 'h264'
 };
 
 const volatiles = {

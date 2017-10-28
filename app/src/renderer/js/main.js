@@ -145,7 +145,8 @@ document.addEventListener('DOMContentLoaded', () => {
       showCursor,
       highlightClicks,
       recordAudio,
-      audioInputDeviceId
+      audioInputDeviceId,
+      videoCodec
     } = app.kap.settings.getAll();
 
     const apertureOpts = {
@@ -156,7 +157,8 @@ document.addEventListener('DOMContentLoaded', () => {
       cropArea: cropperBounds,
       showCursor,
       highlightClicks,
-      displayId: String(display.id)
+      displayId: String(display.id),
+      videoCodec
     };
 
     if (recordAudio === true) {
