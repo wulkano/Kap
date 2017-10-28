@@ -196,6 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       highlightClicksCheckbox.disabled = true;
       highlightClicksCheckbox.checked = false;
+      app.kap.settings.set('highlightClicks', highlightClicksCheckbox.checked);
     }
   };
 
