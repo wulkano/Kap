@@ -197,9 +197,35 @@ function resetTrayIcon() {
   mainWindow.setAlwaysOnTop(false);
 }
 
+const animateIcon = () => new Promise(resolve => {
+  const interval = 20;
+  let i = 0;
+
+  const next = () => {
+    setTimeout(() => {
+      const number = String(i++).padStart(5, '0');
+      const filename = `loading_${number}Template.png`;
+
+      try {
+        tray.setImage(path.join(__dirname, '..', '..', 'static', 'menubar-loading', filename));
+
+        // This is needed as there some race condition in the existing
+        // code that activates this even when it's not recording…
+        if (appState === 'recording') {
+          next();
+        }
+      } catch (err) {
+        resolve();
+      }
+    }, interval);
+  };
+
+  next();
+});
+
 function setTrayStopIcon() {
   shouldStopWhenTrayIsClicked = true;
-  tray.setImage(path.join(__dirname, '..', '..', 'static', 'menubarStopTemplate.png'));
+  animateIcon();
 }
 
 // Open the Preferences Window
