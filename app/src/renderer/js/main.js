@@ -238,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  recordBtn.onclick = function () {
+  const handleRecord = function () {
     if (app.kap.editorWindow) {
       // We need to keep the window visible to show the shake animation
       // (it'll be auto hidden by `menubar` when the editor window gain focus)
@@ -253,6 +253,10 @@ document.addEventListener('DOMContentLoaded', () => {
       prepareRecordButton();
     }
   };
+
+  recordBtn.onclick = handleRecord;
+  ipcRenderer.on('record', handleRecord);
+  ipcRenderer.on('crop', handleRecord);
 
   function setCropperWindowSize(width, height) {
     ipcRenderer.send('set-cropper-window-size', {
@@ -331,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
     this.classList.toggle('is-active');
   };
 
-  aspectRatioSelector.onchange = function () {
+  const handleSizeChange = function () {
     const values = this.value.split('x');
     if (values.length === 2) {
       [inputWidth.value, inputHeight.value] = values;
@@ -339,6 +343,13 @@ document.addEventListener('DOMContentLoaded', () => {
       setCropperWindowSize(...values);
     }
   };
+
+  aspectRatioSelector.onchange = handleSizeChange;
+
+  ipcRenderer.on('change-size', (e, size) => {
+    aspectRatioSelector.value = size;
+    handleSizeChange.call(aspectRatioSelector);
+  });
 
   toggleAudioRecordBtn.onclick = function () {
     micOnIcon.classList.toggle('hidden');
