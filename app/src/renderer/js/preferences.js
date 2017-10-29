@@ -7,7 +7,7 @@ import {handleTrafficLightsClicks, $, disposeObservers} from '../js/utils';
 
 const {app, dialog, getCurrentWindow} = remote;
 
-const aperture = require('aperture')();
+const aperture = require('aperture');
 
 const plugins = remote.require('../main/plugins').default;
 
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   fpsSlider.value = settingsValues.fps;
   fpsLabel.innerText = `${settingsValues.fps} FPS`;
 
-  for (const device of await aperture.getAudioSources()) {
+  for (const device of await aperture.audioDevices()) {
     const option = document.createElement('option');
     option.value = device.id;
     option.text = device.name;
@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   fpsSlider.onchange = function () {
-    app.kap.settings.set('fps', this.value);
+    app.kap.settings.set('fps', Number(this.value));
   };
 
   audioInputDeviceSelector.onchange = function () {

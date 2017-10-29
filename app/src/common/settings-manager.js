@@ -4,7 +4,7 @@ import {app} from 'electron';
 import settings from 'electron-settings';
 import objectPath from 'object-path';
 
-const aperture = require('aperture')();
+const aperture = require('aperture');
 
 const DEFAULTS = {
   kapturesDir: `${homedir()}/Movies/Kaptures`,
@@ -47,7 +47,7 @@ async function init() {
   // if we do not have a input id stored.
   // TODO: if no input device is available (could happen in an iMac, for example), we need
   // to tell the user
-  const devices = await aperture.getAudioSources();
+  const devices = await aperture.audioDevices();
   if (devices.length > 0) {
     settings.setSync('audioInputDeviceId', devices[0].id);
   }
