@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const windowHeader = $('.window-header');
   const trimmerIn = $('#trimmer-in');
   const trimmerOut = $('#trimmer-out');
+  const trimline = $('.timeline-markers');
 
   let maxFps = app.kap.settings.get('fps');
   maxFps = maxFps > 30 ? 30 : maxFps;
@@ -69,6 +70,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   playBtn.onclick = play;
 
+  trimline.onclick = skip;
+
   function pause() {
     pauseBtn.classList.add('hidden');
     playBtn.classList.remove('hidden');
@@ -79,6 +82,21 @@ document.addEventListener('DOMContentLoaded', () => {
     playBtn.classList.add('hidden');
     pauseBtn.classList.remove('hidden');
     preview.play();
+  }
+
+  function skip(event) {
+    const rect = event.target.getBoundingClientRect();
+    const x = event.pageX - rect.left; // X position within the trimmer
+    const skipTime = preview.duration * (x / rect.width); // Calculated time in seconds where the click happened
+
+    if (skipTime < getTrimmerValue(trimmerIn)) {
+      return;
+    } // Clicked before the first trimmer
+    if (skipTime > getTrimmerValue(trimmerOut)) {
+      return;
+    } // Clicked after the last trimmer
+
+    preview.currentTime = skipTime;
   }
 
   maximizeBtn.onclick = function () {
