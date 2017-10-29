@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (preview.duration) {
       const timeAtEvent = getTimestampAtEvent(event, preview.duration);
       previewTimeTip.style.left = `${event.pageX}px`;
-      previewTimeTip.innerText = `${moment().startOf('day').milliseconds(timeAtEvent * 1000).format('m:ss.SS')}`;
+      previewTimeTip.textContent = `${moment().startOf('day').milliseconds(timeAtEvent * 1000).format('m:ss.SS')}`;
     }
   }
 
