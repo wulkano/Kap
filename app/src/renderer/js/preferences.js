@@ -7,7 +7,7 @@ import {handleTrafficLightsClicks, $, disposeObservers} from '../js/utils';
 
 const {app, dialog, getCurrentWindow} = remote;
 
-const aperture = require('aperture')();
+const aperture = require('aperture');
 
 const plugins = remote.require('../main/plugins').default;
 
@@ -16,7 +16,7 @@ const settingsValues = app.kap.settings.getAll();
 // Observers that should be disposed when the window unloads
 const observersToDispose = [];
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   // Element definitions
   const allowAnalyticsCheckbox = $('#allow-analytics');
   const audioInputDeviceSelector = $('.js-audio-input-device-selector');
@@ -49,17 +49,16 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   fpsSlider.value = settingsValues.fps;
   fpsLabel.innerText = `${settingsValues.fps} FPS`;
-  aperture.getAudioSources().then(devices => {
-    for (const device of devices) {
-      const option = document.createElement('option');
-      option.value = device.id;
-      option.text = device.name;
-      audioInputDeviceSelector.add(option);
-    }
-    if (settingsValues.recordAudio === true) {
-      audioInputDeviceSelector.value = settingsValues.audioInputDeviceId;
-    }
-  });
+
+  for (const device of await aperture.audioDevices()) {
+    const option = document.createElement('option');
+    option.value = device.id;
+    option.text = device.name;
+    audioInputDeviceSelector.add(option);
+  }
+  if (settingsValues.recordAudio === true) {
+    audioInputDeviceSelector.value = settingsValues.audioInputDeviceId;
+  }
 
   const tabs = $j('.prefs-nav > a');
   tabs.on('click', function (event) {
@@ -209,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   fpsSlider.onchange = function () {
-    app.kap.settings.set('fps', this.value);
+    app.kap.settings.set('fps', Number(this.value));
   };
 
   audioInputDeviceSelector.onchange = function () {

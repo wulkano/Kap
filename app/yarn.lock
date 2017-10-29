@@ -65,13 +65,14 @@ ansistyles@~0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/ansistyles/-/ansistyles-0.1.3.tgz#5de60415bda071bb37127854c864f41b23254539"
 
-aperture@2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/aperture/-/aperture-2.1.1.tgz#ac973d1aa40be0795019b9e1bda7854788d7eb85"
+aperture@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/aperture/-/aperture-3.0.0.tgz#9232b3f995253ad51b991de0315dd307512aee50"
   dependencies:
-    execa "^0.6.0"
-    macos-version "^4.0.0"
-    tmp "0.0.31"
+    execa "^0.8.0"
+    file-url "^2.0.2"
+    macos-version "^4.0.1"
+    tempy "^0.2.1"
 
 aproba@^1.0.3, aproba@^1.1.1, aproba@~1.1.1:
   version "1.1.2"
@@ -546,7 +547,7 @@ escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
 
-execa@^0.6.0, execa@^0.6.3:
+execa@^0.6.3:
   version "0.6.3"
   resolved "https://registry.yarnpkg.com/execa/-/execa-0.6.3.tgz#57b69a594f081759c69e5370f0d17b9cb11658fe"
   dependencies:
@@ -561,6 +562,18 @@ execa@^0.6.0, execa@^0.6.3:
 execa@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/execa/-/execa-0.7.0.tgz#944becd34cc41ee32a63a9faf27ad5a65fc59777"
+  dependencies:
+    cross-spawn "^5.0.1"
+    get-stream "^3.0.0"
+    is-stream "^1.1.0"
+    npm-run-path "^2.0.0"
+    p-finally "^1.0.0"
+    signal-exit "^3.0.0"
+    strip-eof "^1.0.0"
+
+execa@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/execa/-/execa-0.8.0.tgz#d8d76bbc1b55217ed190fd6dd49d3c774ecfc8da"
   dependencies:
     cross-spawn "^5.0.1"
     get-stream "^3.0.0"
@@ -604,6 +617,10 @@ file-exists@^2.0.0:
 file-size@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/file-size/-/file-size-1.0.0.tgz#3338267d5d206bbf60f4df60c19d7ed3813a4657"
+
+file-url@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/file-url/-/file-url-2.0.2.tgz#e951784d79095127d3713029ab063f40818ca2ae"
 
 find-up@^1.0.0:
   version "1.1.2"
@@ -1159,7 +1176,7 @@ lsmod@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/lsmod/-/lsmod-1.0.0.tgz#9a00f76dca36eb23fa05350afe1b585d4299e64b"
 
-macos-version@^4.0.0:
+macos-version@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/macos-version/-/macos-version-4.0.1.tgz#ede40927e40ee0610cdb0f40bd94392d052e4fe5"
   dependencies:
@@ -2088,6 +2105,13 @@ tempy@^0.1.0:
     temp-dir "^1.0.0"
     unique-string "^1.0.0"
 
+tempy@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/tempy/-/tempy-0.2.1.tgz#9038e4dbd1c201b74472214179bc2c6f7776e54c"
+  dependencies:
+    temp-dir "^1.0.0"
+    unique-string "^1.0.0"
+
 term-size@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/term-size/-/term-size-1.2.0.tgz#458b83887f288fc56d6fffbfad262e26638efa69"
@@ -2116,12 +2140,6 @@ timed-out@^4.0.0:
 tmp@0.0.29:
   version "0.0.29"
   resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.0.29.tgz#f25125ff0dd9da3ccb0c2dd371ee1288bb9128c0"
-  dependencies:
-    os-tmpdir "~1.0.1"
-
-tmp@0.0.31:
-  version "0.0.31"
-  resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.0.31.tgz#8f38ab9438e17315e5dbd8b3657e8bfb277ae4a7"
   dependencies:
     os-tmpdir "~1.0.1"
 
