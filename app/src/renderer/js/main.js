@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
     swapBtn.classList.remove('disabled');
   }
 
-  function startRecording() {
+  async function startRecording() {
     disableInputs();
     ipcRenderer.send('will-start-recording');
     setMainWindowTitle('Getting ready…');
@@ -149,36 +149,45 @@ document.addEventListener('DOMContentLoaded', () => {
     } = app.kap.settings.getAll();
 
     const apertureOpts = {
-      fps,
+      // We have to convert this to a number as there was a bug
+      // previously that set FPS to string in the preferences
+      fps: Number(fps),
+
       cropArea: cropperBounds,
       showCursor,
       highlightClicks,
-      displayId: display.id
+      displayId: String(display.id)
     };
 
     if (recordAudio === true) {
-      apertureOpts.audioSourceId = audioInputDeviceId;
+      apertureOpts.audioDeviceId = audioInputDeviceId;
     }
 
-    aperture.startRecording(apertureOpts)
-      .then(filePath => {
-        recordBtn.attributes['data-state'].value = 'ready-to-stop';
-        windowHeader.classList.add('has-hidden-background');
-        controls.classList.add('hidden');
-        startBarOptions.classList.add('hidden');
-        mainBody.classList.add('is-recording');
-        setMainWindowSize();
-        recordBtn.classList.add('is-recording'); // Stop btn
-        startMonitoringElapsedTimeAndSize(filePath);
-        setMainWindowTitle('Recording');
-        ipcRenderer.send('started-recording');
-        log(`Started recording after ${(Date.now() - past) / 1000}s`);
-      })
-      .catch(err => {
-        ipcRenderer.send('will-stop-recording');
-        reportError(err);
-        remote.dialog.showErrorBox('Recording error', err.message);
-      });
+    try {
+      const filePath = await aperture.startRecording(apertureOpts);
+      recordBtn.attributes['data-state'].value = 'ready-to-stop';
+      windowHeader.classList.add('has-hidden-background');
+      controls.classList.add('hidden');
+      startBarOptions.classList.add('hidden');
+      mainBody.classList.add('is-recording');
+      setMainWindowSize();
+      recordBtn.classList.add('is-recording'); // Stop btn
+      startMonitoringElapsedTimeAndSize(filePath);
+      setMainWindowTitle('Recording');
+      ipcRenderer.send('started-recording');
+      log(`Started recording after ${(Date.now() - past) / 1000}s`);
+    } catch (err) {
+      // This prevents the button from being reset, since the recording has not yet started
+      // This delay is due to internal framework delays in aperture native code
+      if (err.message.includes('stopRecording')) {
+        log(`Recording not yet started, can't stop recording before it actually started`);
+        return;
+      }
+
+      ipcRenderer.send('will-stop-recording');
+      reportError(err);
+      remote.dialog.showErrorBox('Recording error', err.message);
+    }
   }
 
   function restoreInputs() {
@@ -187,21 +196,20 @@ document.addEventListener('DOMContentLoaded', () => {
     enableInputs();
   }
 
-  function stopRecording() {
+  async function stopRecording() {
     ipcRenderer.send('will-stop-recording');
     stopMonitoring();
-    aperture.stopRecording()
-      .then(filePath => {
-        ipcRenderer.send('stopped-recording');
-        windowTitle.innerText = 'Kap';
-        ipcRenderer.send('open-editor-window', {filePath});
-        windowHeader.classList.remove('has-hidden-background');
-        mainBody.classList.remove('is-recording');
-        controls.classList.remove('hidden');
-        startBarOptions.classList.remove('hidden');
-        setMainWindowSize();
-        restoreInputs();
-      });
+
+    const filePath = await aperture.stopRecording();
+    ipcRenderer.send('stopped-recording');
+    windowTitle.innerText = 'Kap';
+    ipcRenderer.send('open-editor-window', {filePath});
+    windowHeader.classList.remove('has-hidden-background');
+    mainBody.classList.remove('is-recording');
+    controls.classList.remove('hidden');
+    startBarOptions.classList.remove('hidden');
+    setMainWindowSize();
+    restoreInputs();
   }
 
   function shake(el) {
