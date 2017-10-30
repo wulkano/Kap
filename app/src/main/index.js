@@ -498,7 +498,10 @@ ipcMain.on('open-editor-window', (event, opts) => {
     height: 480,
     minHeight: 480,
     frame: false,
-    vibrancy: 'dark'
+    vibrancy: 'ultra-dark',
+    // The below is: `rgba(0, 0, 0, 0.8)`
+    // Convert tool: https://kilianvalkhof.com/2016/css-html/css-hexadecimal-colors-with-transparency-a-conversion-tool/
+    backgroundColor: '#000000CC'
   });
 
   app.kap.editorWindow = editorWindow;
