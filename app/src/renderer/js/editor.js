@@ -198,10 +198,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  const shareServices = getShareServices();
+  console.log('Share services', shareServices);
+
   function registerExportOptions() {
     const exportFormats = document.querySelectorAll('.output-format .c-select');
-    const shareServices = getShareServices();
-    console.log('Share services', shareServices);
     console.log(exportFormats);
 
     ipcRenderer.on('toggle-format-buttons', (event, data) => {
@@ -253,6 +254,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   registerExportOptions();
+
+  ipcRenderer.on('run-plugin', (e, pluginName, format) => {
+    const service = shareServices.find(service => service.pluginName === pluginName);
+
+    service.run({
+      format,
+      filePath: preview.src,
+      width: inputWidth.value,
+      height: inputHeight.value,
+      fps,
+      loop: true,
+      startTime: getTrimmerValue(trimmerIn),
+      endTime: getTrimmerValue(trimmerOut)
+    });
+  });
 
   ipcRenderer.on('video-src', (event, src) => {
     preview.src = src;
