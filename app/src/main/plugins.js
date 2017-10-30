@@ -140,12 +140,14 @@ class Plugins {
   }
 
   prettifyFormat(format) {
-    const ret = format.toUpperCase();
     const formats = new Map([
-      ['WEBM', 'WebM']
+      ['apng', 'APNG'],
+      ['gif', 'GIF'],
+      ['mp4', 'MP4'],
+      ['webm', 'WebM']
     ]);
 
-    return formats.has(ret) ? ret.replace(ret, formats.get(ret)) : ret;
+    return formats.get(format);
   }
 }
 

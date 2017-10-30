@@ -14,7 +14,7 @@ const aspectRatioToSize = new Map([
 ]);
 
 const createAspectRatioPopover = ({onChange}) => {
-  const buttons = Array.from(aspectRatioToSize.keys()).map(aspectRatio => {
+  const buttons = [...aspectRatioToSize.keys()].map(aspectRatio => {
     return new TouchBarButton({
       label: aspectRatio,
       click: () => onChange(aspectRatioToSize.get(aspectRatio))
@@ -28,7 +28,7 @@ const createAspectRatioPopover = ({onChange}) => {
 };
 
 const createSizePopover = ({onChange}) => {
-  const sizeButtons = Array.from(aspectRatioToSize.values()).map(size => {
+  const sizeButtons = [...aspectRatioToSize.values()].map(size => {
     return new TouchBarButton({
       label: size,
       click: () => onChange(size)
