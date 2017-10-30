@@ -104,7 +104,7 @@ export const createEditorTouchbar = ({onDiscard, onSelectPlugin}) => {
 
   return new TouchBar([
     ...formatPopovers,
-    new TouchBarSpacer({size: 'small'}),
+    new TouchBarSpacer({size: 'large'}),
     discardButton
   ]);
 };
