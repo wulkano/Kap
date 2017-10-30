@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const windowHeader = $('.window-header');
   const trimmerIn = $('#trimmer-in');
   const trimmerOut = $('#trimmer-out');
-  const trimline = $('.timeline-markers');
+  const trimLine = $('.timeline-markers');
 
   let maxFps = app.kap.settings.get('fps');
   maxFps = maxFps > 30 ? 30 : maxFps;
@@ -71,8 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   playBtn.onclick = play;
 
-  trimline.onclick = skip;
-  trimline.onmousemove = hover;
+  trimLine.addEventListener('click', skip);
+  trimLine.addEventListener('mousemove', hover);
 
   function pause() {
     pauseBtn.classList.add('hidden');
