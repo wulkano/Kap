@@ -51,6 +51,7 @@ const cropTouchbar = createCropTouchbar({
 });
 
 const editorTouchbar = createEditorTouchbar({
+  onDiscard: () => discardVideo(),
   onSelectPlugin: (pluginName, format) => editorWindow.webContents.send('run-plugin', pluginName, format)
 });
 
@@ -532,6 +533,23 @@ ipcMain.on('open-editor-window', (event, opts) => {
   app.dock.show();
 });
 
+function discardVideo() {
+  // Discard the source video
+  fs.unlink(editorWindow.kap.videoFilePath, () => {});
+
+  // For some reason it doesn't close when called in the same tick
+  setImmediate(() => {
+    editorWindow.close();
+  });
+
+  menubar.setOption('hidden', false);
+  if (mainWindowIsDetached === true) {
+    mainWindow.show();
+  } else {
+    app.dock.hide();
+  }
+}
+
 ipcMain.on('close-editor-window', () => {
   if (!editorWindow) {
     return;
@@ -545,20 +563,7 @@ ipcMain.on('close-editor-window', () => {
     detail: 'It will not be saved'
   }, buttonIndex => {
     if (buttonIndex === 0) {
-      // Discard the source video
-      fs.unlink(editorWindow.kap.videoFilePath, () => {});
-
-      // For some reason it doesn't close when called in the same tick
-      setImmediate(() => {
-        editorWindow.close();
-      });
-
-      menubar.setOption('hidden', false);
-      if (mainWindowIsDetached === true) {
-        mainWindow.show();
-      } else {
-        app.dock.hide();
-      }
+      discardVideo();
     }
   });
 });

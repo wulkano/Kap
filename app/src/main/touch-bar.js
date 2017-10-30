@@ -87,8 +87,13 @@ const createFormatPopover = ({format, services, onSelectPlugin}) => {
   });
 };
 
-export const createEditorTouchbar = ({onSelectPlugin}) => {
+export const createEditorTouchbar = ({onDiscard, onSelectPlugin}) => {
   const shareServices = plugins.getShareServicesPerFormat();
+  const discardButton = new TouchBarButton({
+    label: 'Discard',
+    backgroundColor: '#ff5050',
+    click: onDiscard
+  });
   const formatPopovers = Object.keys(shareServices).map(format => {
     return createFormatPopover({
       format,
@@ -97,5 +102,8 @@ export const createEditorTouchbar = ({onSelectPlugin}) => {
     });
   });
 
-  return new TouchBar(formatPopovers);
+  return new TouchBar([
+    ...formatPopovers,
+    discardButton
+  ]);
 };
