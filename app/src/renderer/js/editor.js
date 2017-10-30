@@ -201,6 +201,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const shareServices = getShareServices();
   console.log('Share services', shareServices);
 
+  function handleFile(service, format) {
+    service.run({
+      format,
+      filePath: preview.src,
+      width: inputWidth.value,
+      height: inputHeight.value,
+      fps,
+      loop: true,
+      startTime: getTrimmerValue(trimmerIn),
+      endTime: getTrimmerValue(trimmerOut)
+    });
+  }
+
   function registerExportOptions() {
     const exportFormats = document.querySelectorAll('.output-format .c-select');
     console.log(exportFormats);
@@ -236,18 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       dropdown.onchange = () => { // eslint-disable-line no-loop-func
         const service = shareServices[dropdown.value];
-
-        service.run({
-          format,
-          filePath: preview.src,
-          width: inputWidth.value,
-          height: inputHeight.value,
-          fps,
-          loop: true,
-          startTime: getTrimmerValue(trimmerIn),
-          endTime: getTrimmerValue(trimmerOut)
-        });
-
+        handleFile(service, format);
         dropdown.value = '-1';
       };
     }
@@ -257,17 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ipcRenderer.on('run-plugin', (e, pluginName, format) => {
     const service = shareServices.find(service => service.pluginName === pluginName);
-
-    service.run({
-      format,
-      filePath: preview.src,
-      width: inputWidth.value,
-      height: inputHeight.value,
-      fps,
-      loop: true,
-      startTime: getTrimmerValue(trimmerIn),
-      endTime: getTrimmerValue(trimmerOut)
-    });
+    handleFile(service, format);
   });
 
   ipcRenderer.on('video-src', (event, src) => {

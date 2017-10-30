@@ -8,7 +8,7 @@ import {init as initErrorReporter} from '../common/reporter';
 import logger from '../common/logger';
 import * as settings from '../common/settings-manager';
 
-import {createMainTouchbar, createCropTouchbar, createEditorTouchbar} from './touchbar';
+import {createMainTouchbar, createCropTouchbar, createEditorTouchbar} from './touch-bar';
 import autoUpdater from './auto-updater';
 import analytics from './analytics';
 import {applicationMenu, cogMenu} from './menus';
@@ -51,6 +51,7 @@ const cropTouchbar = createCropTouchbar({
 });
 
 const editorTouchbar = createEditorTouchbar({
+  onDiscard: () => discardVideo(),
   onSelectPlugin: (pluginName, format) => editorWindow.webContents.send('run-plugin', pluginName, format)
 });
 
@@ -418,9 +419,7 @@ ipcMain.on('will-start-recording', () => {
     cropperWindow.setIgnoreMouseEvents(true);
     cropperWindow.setAlwaysOnTop(true);
   }
-});
 
-ipcMain.on('started-recording', () => {
   appState = 'recording';
   setTrayStopIcon();
   if (!mainWindowIsDetached) {
@@ -537,6 +536,23 @@ ipcMain.on('open-editor-window', (event, opts) => {
   app.dock.show();
 });
 
+function discardVideo() {
+  // Discard the source video
+  fs.unlink(editorWindow.kap.videoFilePath, () => {});
+
+  // For some reason it doesn't close when called in the same tick
+  setImmediate(() => {
+    editorWindow.close();
+  });
+
+  menubar.setOption('hidden', false);
+  if (mainWindowIsDetached === true) {
+    mainWindow.show();
+  } else {
+    app.dock.hide();
+  }
+}
+
 ipcMain.on('close-editor-window', () => {
   if (!editorWindow) {
     return;
@@ -550,20 +566,7 @@ ipcMain.on('close-editor-window', () => {
     detail: 'It will not be saved'
   }, buttonIndex => {
     if (buttonIndex === 0) {
-      // Discard the source video
-      fs.unlink(editorWindow.kap.videoFilePath, () => {});
-
-      // For some reason it doesn't close when called in the same tick
-      setImmediate(() => {
-        editorWindow.close();
-      });
-
-      menubar.setOption('hidden', false);
-      if (mainWindowIsDetached === true) {
-        mainWindow.show();
-      } else {
-        app.dock.hide();
-      }
+      discardVideo();
     }
   });
 });
