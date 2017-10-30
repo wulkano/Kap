@@ -12,7 +12,13 @@ export default class ShareServiceContext {
 
     this.filePath = () => convert(Object.assign({}, exportOptions, {
       defaultFileName: this.defaultFileName
-    }));
+    })).catch(err => {
+      if (err.canceled) {
+        this.cancel();
+      }
+
+      throw err;
+    });
   }
 
   // TODO: Implement progress reporting

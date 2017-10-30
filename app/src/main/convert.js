@@ -1,5 +1,5 @@
 import path from 'path';
-import {app} from 'electron';
+import {app, ipcMain} from 'electron';
 import tempy from 'tempy';
 import {convertToGif, convertToMp4, convertToWebm, convertToApng} from '../scripts/convert';
 
@@ -20,7 +20,7 @@ export default async function (exportOptions) {
 
   const outputPath = path.join(tempy.directory(), exportOptions.defaultFileName);
 
-  await convert({
+  const converter = convert({
     filePath: exportOptions.filePath, // TODO: Rename `filePath` to `inputPath`
     outputPath,
     width: exportOptions.width,
@@ -36,6 +36,23 @@ export default async function (exportOptions) {
       });
     }
   });
+
+  ipcMain.once('cancel-processing', () => {
+    converter.cancel();
+    app.kap.mainWindow.send('export-progress', {text: ''});
+  });
+
+  try {
+    await converter;
+  } catch (err) {
+    if (converter.canceled) {
+      app.kap.mainWindow.send('export-progress', {text: ''});
+      err.canceled = true;
+      throw err;
+    }
+
+    throw err;
+  }
 
   app.kap.mainWindow.send('export-progress', {text: ''});
 

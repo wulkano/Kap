@@ -4,15 +4,20 @@ import os from 'os';
 import execa from 'execa';
 import moment from 'moment';
 import tmp from 'tmp';
+import PCancelable from 'p-cancelable';
 
 const ffmpeg = joinPath(__dirname, '..', '..', 'vendor', 'ffmpeg');
 const durationRegex = /Duration: (\d\d:\d\d:\d\d.\d\d)/gm;
 const frameRegex = /frame=\s+(\d+)/gm;
 
 function convert(outputPath, opts, args) {
-  return new Promise((resolve, reject) => {
+  return new PCancelable((onCancel, resolve, reject) => {
     const converter = execa(ffmpeg, args);
     let amountOfFrames;
+
+    onCancel(() => {
+      converter.kill();
+    });
 
     converter.stderr.on('data', data => {
       data = data.toString().trim();
