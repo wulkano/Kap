@@ -8,6 +8,7 @@ import {init as initErrorReporter} from '../common/reporter';
 import logger from '../common/logger';
 import * as settings from '../common/settings-manager';
 
+import {createMainTouchbar, createCropTouchbar, createEditorTouchbar} from './touchbar';
 import autoUpdater from './auto-updater';
 import analytics from './analytics';
 import {applicationMenu, cogMenu} from './menus';
@@ -38,6 +39,20 @@ let prefsWindow;
 let shouldStopWhenTrayIsClicked = false;
 let tray;
 let recording = false;
+
+const mainTouchbar = createMainTouchbar({
+  onSizeChange: size => mainWindow.webContents.send('change-size', size),
+  onCrop: () => mainWindow.webContents.send('crop')
+});
+
+const cropTouchbar = createCropTouchbar({
+  onSizeChange: size => mainWindow.webContents.send('change-size', size),
+  onRecord: () => mainWindow.webContents.send('record')
+});
+
+const editorTouchbar = createEditorTouchbar({
+  onSelectPlugin: (pluginName, format) => editorWindow.webContents.send('run-plugin', pluginName, format)
+});
 
 settings.init();
 
@@ -106,6 +121,7 @@ ipcMain.on('open-cropper-window', (event, size) => {
     cropperWindow.loadURL(`file://${__dirname}/../renderer/views/cropper.html`);
     cropperWindow.setIgnoreMouseEvents(false); // TODO this should be false by default
     cropperWindow.setAlwaysOnTop(true, 'screen-saver');
+    cropperWindow.setTouchBar(cropTouchbar);
 
     if (isDev) {
       cropperWindow.openDevTools({mode: 'detach'});
@@ -245,6 +261,8 @@ menubar.on('after-create-window', () => {
   let expectedWindowPosition;
   const currentWindowPosition = {};
   mainWindow = menubar.window;
+  mainWindow.setTouchBar(mainTouchbar);
+
   app.kap = {mainWindow, getCropperWindow, getEditorWindow, openPrefsWindow, settings};
   if (isDev) {
     mainWindow.openDevTools({mode: 'detach'});
@@ -460,6 +478,7 @@ ipcMain.on('open-editor-window', (event, opts) => {
   app.kap.editorWindow = editorWindow;
 
   editorWindow.loadURL(`file://${__dirname}/../renderer/views/editor.html`);
+  editorWindow.setTouchBar(editorTouchbar);
 
   editorWindow.webContents.on('did-finish-load', () => editorWindow.webContents.send('video-src', opts.filePath));
 
