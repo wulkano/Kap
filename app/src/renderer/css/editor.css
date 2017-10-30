@@ -158,6 +158,7 @@ video {
   height: 100%;
   transform: translateX(-50%);
   top: 6px;
+  -webkit-app-region: no-drag;
 }
 
 section.output {
