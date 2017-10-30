@@ -196,6 +196,14 @@ document.addEventListener('DOMContentLoaded', () => {
         ipcRenderer.send('close-editor-window');
       }
     }
+
+    if (event.keyCode === 32) { // Space
+      if (playBtn.classList.contains('hidden')) {
+        pause();
+      } else {
+        play();
+      }
+    }
   };
 
   const shareServices = getShareServices();
