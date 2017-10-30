@@ -4,7 +4,7 @@ import moment from 'moment';
 
 // Note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
-import {handleTrafficLightsClicks, $, handleActiveButtonGroup} from '../js/utils';
+import {handleTrafficLightsClicks, $, handleActiveButtonGroup, getTimestampAtEvent} from '../js/utils';
 import {init as initErrorReporter} from '../../common/reporter';
 
 const {app} = remote;
@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const maximizeBtn = $('.js-maximize-video');
   const unmaximizeBtn = $('.js-unmaximize-video');
   const previewTime = $('.js-video-time');
+  const previewTimeTip = $('.js-video-time-tip');
   const inputHeight = $('.input-height');
   const inputWidth = $('.input-width');
   const fps15Btn = $('#fps-15');
@@ -29,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const windowHeader = $('.window-header');
   const trimmerIn = $('#trimmer-in');
   const trimmerOut = $('#trimmer-out');
+  const trimLine = $('.timeline-markers');
 
   let maxFps = app.kap.settings.get('fps');
   maxFps = maxFps > 30 ? 30 : maxFps;
@@ -69,6 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   playBtn.onclick = play;
 
+  trimLine.addEventListener('click', skip);
+  trimLine.addEventListener('mousemove', hover);
+
   function pause() {
     pauseBtn.classList.add('hidden');
     playBtn.classList.remove('hidden');
@@ -79,6 +84,23 @@ document.addEventListener('DOMContentLoaded', () => {
     playBtn.classList.add('hidden');
     pauseBtn.classList.remove('hidden');
     preview.play();
+  }
+
+  function hover(event) {
+    if (preview.duration) {
+      const timeAtEvent = getTimestampAtEvent(event, preview.duration);
+      previewTimeTip.style.left = `${event.pageX}px`;
+      previewTimeTip.textContent = `${moment().startOf('day').milliseconds(timeAtEvent * 1000).format('m:ss.SS')}`;
+    }
+  }
+
+  function skip(event) {
+    const timeAtEvent = getTimestampAtEvent(event, preview.duration);
+
+    // Check that the time is between the trimmed timeline
+    if (getTrimmerValue(trimmerIn) < timeAtEvent && timeAtEvent < getTrimmerValue(trimmerOut)) {
+      preview.currentTime = timeAtEvent;
+    }
   }
 
   maximizeBtn.onclick = function () {

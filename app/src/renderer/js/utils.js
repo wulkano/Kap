@@ -100,4 +100,10 @@ function handleActiveButtonGroup({buttonGroup}) {
   });
 }
 
-export {handleTrafficLightsClicks, isVisible, $, disposeObservers, handleActiveButtonGroup};
+function getTimestampAtEvent(event, videoDuration) {
+  const rect = event.target.getBoundingClientRect();
+  const xPositionInTrimmer = event.pageX - rect.left;
+  return videoDuration * (xPositionInTrimmer / rect.width); // Calculated time in seconds where the click happened
+}
+
+export {handleTrafficLightsClicks, isVisible, $, disposeObservers, handleActiveButtonGroup, getTimestampAtEvent};

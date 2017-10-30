@@ -15,7 +15,7 @@ block body
   section.progress.hidden
     label.progress-bar-label.txt(for='progress-bar') This might take a moment…
     progress.c-progress#progress-bar.progress-bar(max='100')
-      
+
   section.controls-content
     .controls-section.container
       .controls-section__row
@@ -42,19 +42,19 @@ block body
 
   //- Main App area/header (record button container)
   section.start-bar
-    
+
     .record(data-state='initial' title='New recording')
       .record__state
-    
+
     .start-bar__content
       .start-bar__text.js-toggle-audio-record(title='Toggle audio')
         +icon('mic').is-mic-on.hidden
         +icon('mic-off').is-mic-off
-        
+
       //- Fill in the space that the record button would take in this bar but can't because of its positioning outside of it
       //- Using a filler instead of some clever padding because it's more future-proof
       .record-filler
-        
+
       //- Settings link
       .start-bar__text(title='Options')
         +icon('ic_settings_24px').controls-options

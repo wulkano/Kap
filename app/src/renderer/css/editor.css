@@ -19,7 +19,6 @@ html { height: 100%; }
 body {
   background-color: rgba(0, 0, 0, .6);
   -webkit-app-region: drag;
-  /*cursor: -webkit-grab;*/
   color: white;
   height: 100%;
 
@@ -117,6 +116,38 @@ video {
   &::-webkit-progress-value {
     border-radius: 0 4px 4px 0;
   }
+}
+
+
+.progress-bar-time-tip {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: -50%;
+  margin-top: -24px;
+  transform: translate(-50%, 0);
+
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 0px 8px;
+  height: 24px;
+  line-height: 24px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+
+  opacity: 0;
+  transition: 100ms ease-in-out transform;
+}
+
+.timeline-container:hover .progress-bar-time-tip {
+  transform: translate(-50%, 10px);
+  opacity: 1;
+  transition: 200ms ease-out transform;
+}
+
+.timeline-container {
+  cursor: pointer;
 }
 
 .timeline-markers {
