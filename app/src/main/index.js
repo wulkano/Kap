@@ -418,9 +418,7 @@ ipcMain.on('will-start-recording', () => {
     cropperWindow.setIgnoreMouseEvents(true);
     cropperWindow.setAlwaysOnTop(true);
   }
-});
 
-ipcMain.on('started-recording', () => {
   appState = 'recording';
   setTrayStopIcon();
   if (!mainWindowIsDetached) {

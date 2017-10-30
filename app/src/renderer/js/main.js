@@ -1,7 +1,6 @@
 import {ipcRenderer, remote, shell} from 'electron';
 
 import aspectRatio from 'aspectratio';
-import moment from 'moment';
 
 import {init as initErrorReporter, report as reportError} from '../../common/reporter';
 import {log} from '../../common/logger';
@@ -25,10 +24,8 @@ function setMainWindowSize() {
 
 document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
-  const mainBody = document.querySelector('body');
   const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
   const startBar = document.querySelector('.start-bar');
-  const startBarOptions = document.querySelector('.start-bar__content');
   const controls = document.querySelector('.controls-content');
   const inputWidth = document.querySelector('#aspect-ratio-width');
   const inputHeight = document.querySelector('#aspect-ratio-height');
@@ -46,13 +43,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const trafficLightsWrapper = document.querySelector('.title-bar__controls');
   const trayTriangle = document.querySelector('.tray-arrow');
   const updateNotification = document.querySelector('.update-notification');
-  const windowTitle = document.querySelector('.window__title');
   const windowHeader = document.querySelector('.window-header');
 
   const [micOnIcon, micOffIcon] = toggleAudioRecordBtn.children;
 
   // Initial variables
-  let monitoringIntervalId;
   let lastValidInputWidth = 512;
   let lastValidInputHeight = 512;
   let aspectRatioBaseValues = [lastValidInputWidth, lastValidInputHeight];
@@ -67,49 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   handleTrafficLightsClicks({hide: true});
 
-  function startMonitoringElapsedTimeAndSize() {
-    const startedAt = moment();
-
-    monitoringIntervalId = setInterval(() => {
-      // TODO: split this into two intervals: one for time (1000ms)
-      // and one for size (500ms)
-      const now = moment();
-
-      const elapsed = moment.utc(now.diff(startedAt)).format('mm:ss');
-      windowTitle.innerText = elapsed;
-    }, 500);
-  }
-
-  function stopMonitoring() {
-    clearInterval(monitoringIntervalId);
-  }
-
-  function setMainWindowTitle(title) {
-    windowTitle.innerText = title;
-  }
-
-  function disableInputs() {
-    aspectRatioSelector.disabled = true;
-    inputWidth.disabled = true;
-    inputHeight.disabled = true;
-    linkBtn.classList.add('disabled');
-    swapBtn.classList.add('disabled');
-  }
-
-  function enableInputs() {
-    aspectRatioSelector.disabled = false;
-    inputWidth.disabled = false;
-    inputHeight.disabled = false;
-    linkBtn.classList.remove('disabled');
-    swapBtn.classList.remove('disabled');
-  }
-
   async function startRecording() {
-    disableInputs();
     ipcRenderer.send('will-start-recording');
-    setMainWindowTitle('Getting ready…');
-    const past = Date.now();
 
+    const past = Date.now();
     const cropperBounds = app.kap.getCropperWindow().getBounds();
     const display = remote.screen.getDisplayMatching(cropperBounds);
 
@@ -164,17 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-      const filePath = await aperture.startRecording(apertureOpts);
-      recordBtn.attributes['data-state'].value = 'ready-to-stop';
-      windowHeader.classList.add('has-hidden-background');
-      controls.classList.add('hidden');
-      startBarOptions.classList.add('hidden');
-      mainBody.classList.add('is-recording');
-      setMainWindowSize();
-      recordBtn.classList.add('is-recording'); // Stop btn
-      startMonitoringElapsedTimeAndSize(filePath);
-      setMainWindowTitle('Recording');
-      ipcRenderer.send('started-recording');
+      await aperture.startRecording(apertureOpts);
       log(`Started recording after ${(Date.now() - past) / 1000}s`);
     } catch (err) {
       // This prevents the button from being reset, since the recording has not yet started
@@ -190,26 +136,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function restoreInputs() {
-    recordBtn.attributes['data-state'].value = 'initial';
-    recordBtn.classList.remove('is-recording'); // Crop btn
-    enableInputs();
-  }
-
   async function stopRecording() {
     ipcRenderer.send('will-stop-recording');
-    stopMonitoring();
 
     const filePath = await aperture.stopRecording();
     ipcRenderer.send('stopped-recording');
-    windowTitle.innerText = 'Kap';
     ipcRenderer.send('open-editor-window', {filePath});
-    windowHeader.classList.remove('has-hidden-background');
-    mainBody.classList.remove('is-recording');
-    controls.classList.remove('hidden');
-    startBarOptions.classList.remove('hidden');
     setMainWindowSize();
-    restoreInputs();
   }
 
   function shake(el) {
