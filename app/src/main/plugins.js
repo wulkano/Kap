@@ -125,6 +125,30 @@ class Plugins {
 
     return ret;
   }
+
+  getShareServicesPerFormat() {
+    const ret = {};
+
+    for (const service of this.getShareServices()) {
+      for (const format of service.formats) {
+        ret[format] = ret[format] || [];
+        ret[format].push(service);
+      }
+    }
+
+    return ret;
+  }
+
+  prettifyFormat(format) {
+    const formats = new Map([
+      ['apng', 'APNG'],
+      ['gif', 'GIF'],
+      ['mp4', 'MP4'],
+      ['webm', 'WebM']
+    ]);
+
+    return formats.get(format);
+  }
 }
 
 const plugins = new Plugins();

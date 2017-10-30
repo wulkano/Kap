@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  recordBtn.onclick = handleRecord;
+  recordBtn.addEventListener('click', handleRecord);
   ipcRenderer.on('record', handleRecord);
   ipcRenderer.on('crop', handleRecord);
 
@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  aspectRatioSelector.onchange = handleSizeChange;
+  aspectRatioSelector.addEventListener('change', handleSizeChange);
 
   ipcRenderer.on('change-size', (e, size) => {
     aspectRatioSelector.value = size;

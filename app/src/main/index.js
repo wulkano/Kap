@@ -8,7 +8,7 @@ import {init as initErrorReporter} from '../common/reporter';
 import logger from '../common/logger';
 import * as settings from '../common/settings-manager';
 
-import {createMainTouchbar, createCropTouchbar, createEditorTouchbar} from './touchbar';
+import {createMainTouchbar, createCropTouchbar, createEditorTouchbar} from './touch-bar';
 import autoUpdater from './auto-updater';
 import analytics from './analytics';
 import {applicationMenu, cogMenu} from './menus';
