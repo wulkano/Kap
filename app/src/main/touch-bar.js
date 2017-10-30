@@ -1,7 +1,7 @@
 import {TouchBar} from 'electron';
 import plugins from './plugins';
 
-const {TouchBarButton, TouchBarPopover} = TouchBar;
+const {TouchBarButton, TouchBarPopover, TouchBarSpacer} = TouchBar;
 
 const aspectRatioToSize = new Map([
   ['16:9', '1600x900'],
@@ -87,8 +87,13 @@ const createFormatPopover = ({format, services, onSelectPlugin}) => {
   });
 };
 
-export const createEditorTouchbar = ({onSelectPlugin}) => {
+export const createEditorTouchbar = ({onDiscard, onSelectPlugin}) => {
   const shareServices = plugins.getShareServicesPerFormat();
+  const discardButton = new TouchBarButton({
+    label: 'Discard',
+    backgroundColor: '#ff5050',
+    click: onDiscard
+  });
   const formatPopovers = Object.keys(shareServices).map(format => {
     return createFormatPopover({
       format,
@@ -97,5 +102,9 @@ export const createEditorTouchbar = ({onSelectPlugin}) => {
     });
   });
 
-  return new TouchBar(formatPopovers);
+  return new TouchBar([
+    ...formatPopovers,
+    new TouchBarSpacer({size: 'flexible'}),
+    discardButton
+  ]);
 };
