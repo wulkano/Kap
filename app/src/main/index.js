@@ -582,3 +582,22 @@ ipcMain.on('set-main-window-visibility', (event, opts) => {
     }, opts.forHowLong);
   }
 });
+
+const loadPlugins = async () => {
+  if (prefsWindow) {
+    prefsWindow.webContents.send('load-plugins', {
+      available: await plugins.getFromNpm(),
+      installed: plugins.all()
+    });
+  }
+};
+
+ipcMain.on('install-plugin', async (event, name) => {
+  await plugins.install(name);
+  loadPlugins();
+});
+
+ipcMain.on('uninstall-plugin', async (event, name) => {
+  await plugins.uninstall(name);
+  loadPlugins();
+});

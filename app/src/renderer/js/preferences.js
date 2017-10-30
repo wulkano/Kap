@@ -1,4 +1,4 @@
-import {remote, shell} from 'electron';
+import {ipcRenderer, remote, shell} from 'electron';
 import _ from 'lodash';
 import $j from 'jquery/dist/jquery.slim';
 
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   // TODO: DRY up the plugin list code when it's more mature
-  function loadInstalledPlugins() {
+  function loadInstalledPlugins(installedPlugins) {
     const template = `
       <% _.forEach(plugins, plugin => { %>
         <div class="preference container">
@@ -95,13 +95,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const compiled = _.template(template);
     const html = compiled({
-      plugins: plugins.all()
+      plugins: installedPlugins
     });
 
     $j('#plugins-installed').html(html);
   }
 
-  async function loadAvailablePlugins() {
+  function loadAvailablePlugins(availablePlugins) {
     const template = `
       <% _.forEach(plugins, plugin => { %>
         <div class="preference container">
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     `;
     const compiled = _.template(template);
     const html = compiled({
-      plugins: await plugins.getFromNpm()
+      plugins: availablePlugins
     });
 
     $j('#plugins-available').html(html);
@@ -131,24 +131,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   $j('#plugins-installed').on('click', '.uninstall', function () {
     $j(this).prop('disabled', true).text('Uninstalling…');
     const name = $j(this).data('name');
-
-    (async () => {
-      await plugins.uninstall(name);
-      await loadAvailablePlugins();
-      loadInstalledPlugins();
-    })().catch(console.error);
+    ipcRenderer.send('uninstall-plugin', name);
   });
 
   $j('#plugins-available').on('click', '.install', function () {
     $j(this).prop('disabled', true).text('Installing…');
     const name = $j(this).data('name');
+    ipcRenderer.send('install-plugin', name);
+    $j(this).parents('li').remove(); // We don't want to wait on `loadAvailablePlugins`
+  });
 
-    (async () => {
-      await plugins.install(name);
-      $j(this).parents('li').remove(); // We don't want to wait on `loadAvailablePlugins`
-      loadInstalledPlugins();
-      await loadAvailablePlugins();
-    })().catch(console.error);
+  ipcRenderer.on('load-plugins', (event, {available, installed}) => {
+    loadAvailablePlugins(available);
+    loadInstalledPlugins(installed);
   });
 
   // Open plugin homepage
@@ -158,8 +153,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     shell.openExternal(url);
   });
 
-  loadInstalledPlugins();
-  loadAvailablePlugins();
+  loadInstalledPlugins(plugins.all());
+  loadAvailablePlugins(await plugins.getFromNpm());
 
   chooseSaveDirectoryBtn.onclick = function () {
     const directories = dialog.showOpenDialog(electronWindow, {properties: ['openDirectory', 'createDirectory']});
