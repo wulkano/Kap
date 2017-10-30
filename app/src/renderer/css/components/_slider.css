@@ -39,7 +39,7 @@
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
     pointer-events: auto;
-    transform: translateY(8px);
+    transform: translateY(10px);
     width: 8px;
     height: 16px;
     border-radius: 8px;
