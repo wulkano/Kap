@@ -1,7 +1,7 @@
 import {TouchBar} from 'electron';
 import plugins from './plugins';
 
-const {TouchBarButton, TouchBarPopover} = TouchBar;
+const {TouchBarButton, TouchBarPopover, TouchBarSpacer} = TouchBar;
 
 const aspectRatioToSize = new Map([
   ['16:9', '1600x900'],
@@ -104,6 +104,7 @@ export const createEditorTouchbar = ({onDiscard, onSelectPlugin}) => {
 
   return new TouchBar([
     ...formatPopovers,
+    new TouchBarSpacer({size: 'small'}),
     discardButton
   ]);
 };
