@@ -125,6 +125,28 @@ class Plugins {
 
     return ret;
   }
+
+  getShareServicesPerFormat() {
+    const ret = {};
+
+    for (const service of this.getShareServices()) {
+      for (const format of service.formats) {
+        ret[format] = ret[format] || [];
+        ret[format].push(service);
+      }
+    }
+
+    return ret;
+  }
+
+  prettifyFormat(format) {
+    const ret = format.toUpperCase();
+    const formats = new Map([
+      ['WEBM', 'WebM']
+    ]);
+
+    return formats.has(ret) ? ret.replace(ret, formats.get(ret)) : ret;
+  }
 }
 
 const plugins = new Plugins();

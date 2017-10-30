@@ -3,29 +3,21 @@ import plugins from './plugins';
 
 const {TouchBarButton, TouchBarPopover} = TouchBar;
 
-const aspectRatioToSize = {
-  '16:9': '1600x900',
-  '5:4': '1280x1024',
-  '5:3': '1280x768',
-  '4:3': '1024x768',
-  '3:2': '480x320',
-  '1:1': '512x512',
-  Custom: 'Custom'
-};
+const aspectRatioToSize = new Map([
+  ['16:9', '1600x900'],
+  ['5:4', '1280x1024'],
+  ['5:3', '1280x768'],
+  ['4:3', '1024x768'],
+  ['3:2', '480x320'],
+  ['1:1', '512x512'],
+  ['Custom', 'Custom']
+]);
 
 const createAspectRatioPopover = ({onChange}) => {
-  const buttons = [
-    '16:9',
-    '5:4',
-    '5:3',
-    '4:3',
-    '3:2',
-    '1:1',
-    'Custom'
-  ].map(aspectRatio => {
+  const buttons = Array.from(aspectRatioToSize.keys()).map(aspectRatio => {
     return new TouchBarButton({
       label: aspectRatio,
-      click: () => onChange(aspectRatioToSize(aspectRatio))
+      click: () => onChange(aspectRatioToSize.get(aspectRatio))
     });
   });
 
@@ -36,15 +28,7 @@ const createAspectRatioPopover = ({onChange}) => {
 };
 
 const createSizePopover = ({onChange}) => {
-  const sizeButtons = [
-    '1600x900',
-    '1280x1024',
-    '1280x768',
-    '1024x768',
-    '480x320',
-    '512x512',
-    'Custom'
-  ].map(size => {
+  const sizeButtons = Array.from(aspectRatioToSize.values()).map(size => {
     return new TouchBarButton({
       label: size,
       click: () => onChange(size)
@@ -89,15 +73,6 @@ export const createCropTouchbar = ({onSizeChange, onRecord}) => {
   ]);
 };
 
-const shareServices = {};
-
-plugins.getShareServices().forEach(service => {
-  service.formats.forEach(format => {
-    shareServices[format] = shareServices[format] || [];
-    shareServices[format].push(service);
-  });
-});
-
 const createFormatPopover = ({format, services, onSelectPlugin}) => {
   const serviceButtons = services.map(service => {
     return new TouchBarButton({
@@ -107,12 +82,13 @@ const createFormatPopover = ({format, services, onSelectPlugin}) => {
   });
 
   return new TouchBarPopover({
-    label: format.toUpperCase(),
+    label: plugins.prettifyFormat(format),
     items: new TouchBar(serviceButtons)
   });
 };
 
 export const createEditorTouchbar = ({onSelectPlugin}) => {
+  const shareServices = plugins.getShareServicesPerFormat();
   const formatPopovers = Object.keys(shareServices).map(format => {
     return createFormatPopover({
       format,
