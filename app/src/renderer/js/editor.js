@@ -198,6 +198,14 @@ document.addEventListener('DOMContentLoaded', () => {
         ipcRenderer.send('close-editor-window');
       }
     }
+
+    if (event.key === ' ') {
+      if (playBtn.classList.contains('hidden')) {
+        pause();
+      } else {
+        play();
+      }
+    }
   };
 
   const shareServices = getShareServices();
