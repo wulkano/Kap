@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const inValue = getTrimmerValue(trimmerIn);
       const outValue = getTrimmerValue(trimmerOut);
       if (preview.currentTime < inValue || preview.currentTime > outValue) {
-        preview.currentTime = getTrimmerValue(trimmerIn);
+        preview.currentTime = inValue;
       }
       progressBar.value = preview.currentTime;
       previewTime.innerText = `${moment().startOf('day').seconds(preview.currentTime).format('m:ss')}`;
