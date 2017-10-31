@@ -10,22 +10,13 @@
   position: absolute;
   pointer-events: none;
   border: none;
+  height: 1.6rem;
   width: 100%;
   padding: 0;
   margin: 0;
+  padding-right: 1px;
 
-  &#trimmer-in::-webkit-slider-thumb {
-    background: white;
-    margin-left: 4px;
-  }
-  &#trimmer-out::-webkit-slider-thumb {
-    background: white;
-    margin-right: 4px;
-  }
-
-  &:focus {
-    outline: none;
-  }
+  &:focus { outline: none; }
 
   &::-ms-track {
     width: 100%;
@@ -39,20 +30,18 @@
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
     pointer-events: auto;
-    transform: translateY(8px);
-    width: 8px;
-    height: 16px;
+    width: 2px;
+    height: 8px;
     border-radius: 8px;
-    transition: all .2s ease;
+    transition: all .12s ease;
+    background: white;
 
     &:hover {
       cursor: -webkit-grab;
-      height: 24px;
     }
 
     &:active {
       cursor: -webkit-grabbing;
-      height: 32px;
     }
   }
 }

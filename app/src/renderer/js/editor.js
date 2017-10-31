@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastValidInputWidth;
   let lastValidInputHeight;
   let aspectRatioBaseValues;
+  let currentPreviewDuration;
 
   handleTrafficLightsClicks({hide: true});
   handleActiveButtonGroup({buttonGroup: fps15Btn.parentNode});
@@ -50,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     [inputWidth.value, inputHeight.value] = aspectRatioBaseValues;
     [lastValidInputWidth, lastValidInputHeight] = aspectRatioBaseValues;
 
+    currentPreviewDuration = preview.duration;
     progressBar.max = preview.duration;
     setInterval(() => {
       const inValue = getTrimmerValue(trimmerIn);
@@ -92,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (preview.duration) {
       const timeAtEvent = getTimestampAtEvent(event, preview.duration);
       previewTimeTip.style.left = `${event.pageX}px`;
-      previewTimeTip.textContent = `${moment().startOf('day').milliseconds(timeAtEvent * 1000).format('m:ss.SS')}`;
+      previewTimeTip.textContent = `${moment().startOf('day').milliseconds(timeAtEvent * 1000).format('m:ss.SS')} (${moment().startOf('day').milliseconds(currentPreviewDuration * 1000).format('m:ss.SS')})`;
     }
   }
 
@@ -103,6 +105,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (getTrimmerValue(trimmerIn) < timeAtEvent && timeAtEvent < getTrimmerValue(trimmerOut)) {
       preview.currentTime = timeAtEvent;
     }
+  }
+
+  function getTrimmedVideoDuration() {
+    const inValue = getTrimmerValue(trimmerIn);
+    const outValue = getTrimmerValue(trimmerOut);
+    currentPreviewDuration = outValue - inValue;
+    return currentPreviewDuration;
   }
 
   maximizeBtn.onclick = function () {
@@ -303,9 +312,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     trimmerIn.oninput = () => {
       handleTrimmerInput(trimmerIn.id);
+      getTrimmedVideoDuration();
     };
     trimmerOut.oninput = () => {
       handleTrimmerInput(trimmerOut.id);
+      getTrimmedVideoDuration();
     };
     trimmerIn.onchange = play;
     trimmerOut.onchange = play;
