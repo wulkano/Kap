@@ -3,11 +3,10 @@
 /* Set base colour and font stack */
 body {
   color: $color-primary;
-  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue";
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue';
   overflow: hidden;
-  letter-spacing: -.010rem;
+  letter-spacing: -0.01rem;
   border-radius: 5px;
-  overflow: hidden;
   font-size: 1.4rem;
 }
 

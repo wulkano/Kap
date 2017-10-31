@@ -2,8 +2,6 @@
   Kap.app editor styling
   ----
 */
-
-/* Imports: */
 @import 'eightpoint/dist/eight.min';
 @import '_variables';
 @import '_helpers';
@@ -14,20 +12,29 @@
 @import 'components/_progress';
 @import 'components/_slider';
 
-html { height: 100%; }
+html {
+  height: 100%;
+}
 
 body {
   -webkit-app-region: drag;
-  color: white;
+  color: #FFF;
   height: 100%;
 
   &.fullscreen {
-    .window-header { display: none; }
-    .output { display: none; }
+    .window-header {
+      display: none;
+    }
+
+    .output {
+      display: none;
+    }
   }
 }
 
-span { -webkit-user-select: none !important; }
+span {
+  -webkit-user-select: none !important;
+}
 
 main.content {
   display: flex;
@@ -51,9 +58,12 @@ main.content {
 
   &:hover {
     .video-controls {
-      background-image: linear-gradient(-180deg, rgba(0,0,0,0.00) 0%, rgba(0,0,0,0.30) 100%);
+      background-image: linear-gradient(-180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.3) 100%);
     }
-    .video-controls-right, .video-controls-left, .timeline-markers {
+
+    .video-controls-right,
+    .video-controls-left,
+    .timeline-markers {
       opacity: 1;
     }
 
@@ -83,28 +93,40 @@ main.content {
   padding: 16px;
   display: flex;
   align-items: center;
-  background-image: linear-gradient(-180deg, rgba(0,0,0,0.00) 100%, rgba(0,0,0,0.20) 100%);
-  text-shadow: 0px 1px 2px rgba(0, 0, 0, .1);
-  transition: background .12s ease-in-out;
-  color: white;
+  background-image: linear-gradient(-180deg, rgba(0, 0, 0, 0) 100%, rgba(0, 0, 0, 0.2) 100%);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: background 0.12s ease-in-out;
+  color: #FFF;
 
-  &-right, &-left {
+  &-right,
+  &-left {
     flex: 1 0 128px;
     display: flex;
     align-items: center;
     opacity: 0;
-    transition: opacity .12s ease-in-out;
-    color: white;
+    transition: opacity 0.12s ease-in-out;
+    color: #FFF;
   }
 
-  &-left > *:not(:last-child) { margin-right: 16px; }
+  &-left > *:not(:last-child) {
+    margin-right: 16px;
+  }
+
   &-right {
     justify-content: flex-end;
-    & > *:not(:first-child) { margin-left: 16px; }
+
+    & > *:not(:first-child) {
+      margin-left: 16px;
+    }
   }
 
-  a { display: flex; }
-  svg { filter: drop-shadow( 0px 1px 2px rgba(0, 0, 0, .1) ); }
+  a {
+    display: flex;
+  }
+
+  svg {
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+  }
 }
 
 video {
@@ -119,7 +141,8 @@ video {
   border-radius: 0;
   left: 0;
   bottom: 0;
-  transition: .12s ease-in-out;
+  transition: 0.12s ease-in-out;
+
   &::-webkit-progress-value {
     border-radius: 0 4px 4px 0;
   }
@@ -133,16 +156,14 @@ video {
   left: -50%;
   margin-top: -24px;
   transform: translate(-50%, 0);
-
   background: rgba(0, 0, 0, 0.6);
-  color: white;
-  padding: 0px 8px;
+  color: #FFF;
+  padding: 0 8px;
   height: 24px;
   line-height: 24px;
   border-radius: 12px;
   font-size: 12px;
   font-weight: 600;
-
   opacity: 0;
   transition: 100ms ease-in-out transform;
 }
@@ -153,7 +174,9 @@ video {
   transition: 200ms ease-out transform;
 }
 
-.timeline-container { cursor: pointer; }
+.timeline-container {
+  cursor: pointer;
+}
 
 .timeline-container:hover .timeline-markers .slider::-webkit-slider-thumb {
   width: 4px;
@@ -162,14 +185,13 @@ video {
 
 .timeline-markers {
   opacity: 0;
-  transition: opacity .12s ease-in-out;
   width: 100%;
   height: 100%;
   position: absolute;
   left: 0;
   bottom: 0;
   -webkit-app-region: no-drag;
-  transition: .12s ease-in-out;
+  transition: 0.12s ease-in-out;
 }
 
 section.output {
@@ -185,7 +207,9 @@ section.output {
   align-items: center;
   margin-left: 16px;
 
-  & > div:not(:last-child) { margin-right: 16px; }
+  & > div:not(:last-child) {
+    margin-right: 16px;
+  }
 }
 
 .output-format {
@@ -194,16 +218,23 @@ section.output {
   margin-right: 16px;
   margin-left: auto;
 
-  & > button:not(:last-child) { margin-right: 5px; }
+  & > button:not(:last-child) {
+    margin-right: 5px;
+  }
 }
 
-.fps, .size { display: flex; }
+.fps,
+.size {
+  display: flex;
+}
 
 .fps button {
   width: 4.9rem;
 }
 
-.size > span, .fps > span, .output-format > span {
+.size > span,
+.fps > span,
+.output-format > span {
   margin-right: 8px;
   font-size: 1.2rem;
   display: flex;
@@ -223,30 +254,34 @@ ul {
   text-align: center;
   background: #414141;
   border-radius: 3px;
-  box-shadow: inset 0 1px rgba(255, 255, 255, .05), 0 1px 2px rgba(0, 0, 0, .2), 0 0 0 1px rgba(0, 0, 0, .1);
-  border-radius: 3px;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.05), 0 1px 2px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.1);
 }
 
 @keyframes shake {
-  10%, 90% {
+  10%,
+  90% {
     transform: translate3d(-1px, 0, 0);
   }
 
-  20%, 80% {
+  20%,
+  80% {
     transform: translate3d(2px, 0, 0);
   }
 
-  30%, 50%, 70% {
+  30%,
+  50%,
+  70% {
     transform: translate3d(-4px, 0, 0);
   }
 
-  40%, 60% {
+  40%,
+  60% {
     transform: translate3d(4px, 0, 0);
   }
 }
 
 .shake {
-  animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   perspective: 1000px;

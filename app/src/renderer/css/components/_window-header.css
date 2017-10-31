@@ -28,8 +28,8 @@
     height: 100%;
     width: 100%;
     background-image: linear-gradient(-180deg, #F9F9F9 0%, #F1F1F1 100%);
-    background: #F9F9F9;
-    box-shadow: 0 1px 0 0 #DDDDDD, inset 0 1px 0 0 #FFFFFF;
+    background-color: #F9F9F9;
+    box-shadow: 0 1px 0 0 #DDD, inset 0 1px 0 0 #FFF;
     opacity: 1;
     transition: top .12s ease-in-out, opacity .12s ease-in-out;
     z-index: -1;
@@ -49,7 +49,7 @@
   /* Toolbar: */
   &.is-large:before {
     background-image: linear-gradient(-180deg, #F9F9F9 0%, #F1F1F1 100%);
-    box-shadow: 0 1px 0 0 #DDDDDD, inset 0 1px 0 0 #FFFFFF;
+    box-shadow: 0 1px 0 0 #DDD, inset 0 1px 0 0 #FFF;
 
     .window__title { color: $color-primary; }
   }
@@ -75,7 +75,7 @@
   }
 
   &.is-hidden {
-    max-height: 0px;
+    max-height: 0;
     opacity: 0;
     transform: translateY(-100%);
   }
@@ -101,7 +101,6 @@
   position: absolute;
   left: 12px;
   transition: all .3s ease;
-
   height: 3.6rem;
   display: flex;
   align-items: center;

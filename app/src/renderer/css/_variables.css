@@ -8,17 +8,17 @@
 /*
   Colors
 */
-/* Blue*/
+/* Blue */
 $blue:                 #007AFF;
 $blue-dark:            #004BA4;
 /* Gray */
 $gray-lightest:        #F9F9F9;
 $gray-lighter:         #F1F1F1;
-$gray-light:           #DDDDDD;
-$gray-dark:            #CCCCCC;
+$gray-light:           #DDD;
+$gray-dark:            #CCC;
 $gray-darker:          #808080;
 $gray-darkest:         #404040;
-$black:                #111111;
+$black:                #111;
 
 /* Red */
 $red:                  #FF6059;
@@ -29,15 +29,15 @@ $green:                #28CA42;
 $font-size-default:    1.4rem;
 
 /* Backgrounds */
-$background-primary: white;
+$background-primary: #FFF;
 $background-secondary: $gray-darker;
 
 /* Typography */
 $color-primary:        $black;
-$color-light:          white;
+$color-light:          #FFF;
 $divider-color:        $gray-lighter;
-$box-shadow-inputs:    0 1px 1px 0 rgba(0, 0, 0, .2),
-                       0 0 0 1px rgba(0, 0, 0, .1);
+$box-shadow-inputs:    0 1px 1px 0 rgba(0, 0, 0, 0.2),
+  0 0 0 1px rgba(0, 0, 0, 0.1);
 
 /* Borders */
 $window-border-radius: 5px;

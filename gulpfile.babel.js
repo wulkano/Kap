@@ -11,6 +11,7 @@ import postcssEach from 'postcss-each';
 import atImport from 'postcss-import';
 import reporter from 'postcss-reporter';
 import pug from 'gulp-pug';
+import stylelint from 'gulp-stylelint';
 
 // Directories
 const SRC_DIR = 'app/src';
@@ -45,7 +46,23 @@ export function views() {
 
 export function styles() {
   return src([CSS_GLOB, `!${CSS_PARTIALS_GLOB}`], {base: SRC_DIR})
-    .pipe(postcss([atImport, postcssEach, postcsssSimpleVars, postcssExtend, postcssNested, cssnano, reporter()]))
+    .pipe(stylelint({
+      reporters: [
+        {
+          formatter: 'string',
+          console: true
+        }
+      ]
+    }))
+    .pipe(postcss([
+      atImport,
+      postcssEach,
+      postcsssSimpleVars,
+      postcssExtend,
+      postcssNested,
+      cssnano,
+      reporter({clearReportedMessages: true})
+    ]))
     .pipe(dest(DIST_DIR));
 }
 

@@ -165,7 +165,6 @@ input { -webkit-app-region: no-drag; }
 input, .c-input {
   border-radius: 4px;
   background: white;
-  border: 0;
   height: 2.4rem;
   padding: 0 0.8rem;
   background-color: white;
@@ -187,6 +186,8 @@ input, .c-input {
       background: rgba(255, 255, 255, .2);
     }
   }
+}
 
-  &--large { height: 3.2rem; }
+.c-input--large {
+  height: 3.2rem;
 }

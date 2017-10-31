@@ -15,10 +15,9 @@
   height: 2.4rem;
   line-height: 2.4rem;
   padding: 0 1.6rem;
-  border: 1px solid transparent;
   border-radius: 4px;
   color: $color-primary;
-  border: 1px solid #DDDDDD;
+  border: 1px solid #DDD;
   cursor: pointer;
   text-align: center;
   font-size: 1.2rem;
