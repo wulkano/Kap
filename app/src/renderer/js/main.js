@@ -302,8 +302,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   swapBtn.onclick = () => {
     [inputWidth.value, inputHeight.value] = [inputHeight.value, inputWidth.value];
+    dimensions.ratio = `${dimensions.ratio.split(':')[1]}: ${dimensions.ratio.split(':')[0]}`;
     inputWidth.oninput();
     inputHeight.oninput();
+    setSelectedRatio(dimensions.width, dimensions.height);
   };
 
   linkBtn.onclick = function () {
