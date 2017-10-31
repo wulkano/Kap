@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    if (event.keyCode === 32) { // Space
+    if (event.key === ' ') {
       if (playBtn.classList.contains('hidden')) {
         pause();
       } else {
