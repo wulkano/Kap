@@ -78,12 +78,14 @@ document.addEventListener('DOMContentLoaded', () => {
     pauseBtn.classList.add('hidden');
     playBtn.classList.remove('hidden');
     preview.pause();
+    ipcRenderer.send('toggle-play', false);
   }
 
   function play() {
     playBtn.classList.add('hidden');
     pauseBtn.classList.remove('hidden');
     preview.play();
+    ipcRenderer.send('toggle-play', true);
   }
 
   function hover(event) {
@@ -272,6 +274,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ipcRenderer.on('video-src', (event, src) => {
     preview.src = src;
+  });
+
+  ipcRenderer.on('toggle-play', (event, status) => {
+    if (status) {
+      play();
+      return;
+    }
+
+    pause();
   });
 
   previewContainer.onmouseover = function () {

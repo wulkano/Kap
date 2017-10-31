@@ -87,8 +87,20 @@ const createFormatPopover = ({format, services, onSelectPlugin}) => {
   });
 };
 
-export const createEditorTouchbar = ({onDiscard, onSelectPlugin}) => {
+export const createEditorTouchbar = ({isPlaying, onDiscard, onSelectPlugin, onTogglePlay}) => {
   const shareServices = plugins.getShareServicesPerFormat();
+  const controlButton = new TouchBarButton({
+    // TODO: When we're on Electron 1.8, we can use `nativeImage.createFromNamedImage`
+    // to get the native icon for play and pause.
+    // https://developer.apple.com/documentation/appkit/nsimagenametouchbarplaytemplate
+    // https://developer.apple.com/documentation/appkit/nsimagenametouchbarpausetemplate
+    // And for record:
+    // https://developer.apple.com/documentation/appkit/nsimagenametouchbarrecordstarttemplate
+    // We could also consider using the remove template for `Discard` depending on how it looks:
+    // https://developer.apple.com/documentation/appkit/nsimagenametouchbarremovetemplate
+    label: isPlaying ? 'Pause' : 'Play',
+    click: () => onTogglePlay(!isPlaying)
+  });
   const discardButton = new TouchBarButton({
     label: 'Discard',
     backgroundColor: '#ff5050',
@@ -103,6 +115,8 @@ export const createEditorTouchbar = ({onDiscard, onSelectPlugin}) => {
   });
 
   return new TouchBar([
+    controlButton,
+    new TouchBarSpacer({size: 'small'}),
     ...formatPopovers,
     new TouchBarSpacer({size: 'flexible'}),
     discardButton
