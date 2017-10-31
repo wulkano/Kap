@@ -1,11 +1,9 @@
 /*
   Kap.app main styling
   ----
-  Uses eightpoint (github.com/wulkano/eightpoint as a reset).
+  Uses eightpoint (github.com/wulkano/eightpoint as a reset)
   ( ͡° ͜ʖ ͡°)
 */
-
-/* Imports: */
 @import 'eightpoint/dist/eight.min';
 @import '_variables';
 @import '_helpers';
@@ -18,11 +16,16 @@
 
 /* Body */
 body {
-  transition: all .2s ease;
+  transition: all 0.2s ease;
 
   &.is-recording {
-    .content { height: 152px; }
-    .record { top: 85%; }
+    .content {
+      height: 152px;
+    }
+
+    .record {
+      top: 85%;
+    }
   }
 }
 
@@ -31,7 +34,9 @@ body.is-tray-arrow-hidden {
 }
 
 /* Helper Classes */
-.horizontal-section { display: flex; }
+.horizontal-section {
+  display: flex;
+}
 
 /* Tray Arrow */
 .tray-arrow {
@@ -41,11 +46,11 @@ body.is-tray-arrow-hidden {
   border-right: 1rem solid transparent;
   border-bottom: 1rem solid $background-primary;
   border-left: 1rem solid transparent;
-  transition: border-bottom-width .2s ease, border-bottom-color .3s ease;
+  transition: border-bottom-width 0.2s ease, border-bottom-color 0.3s ease;
 }
 
 .content {
-  background-color: white;
+  background-color: #FFF;
   border-radius: 4px;
 }
 
@@ -75,7 +80,9 @@ body.is-tray-arrow-hidden {
     cursor: -webkit-grab;
     color: $color-primary;
 
-    &:hover { color: $color-primary; }
+    &:hover {
+      color: $color-primary;
+    }
 
     &:first-child {
       text-align: right;
@@ -89,15 +96,20 @@ body.is-tray-arrow-hidden {
 
     &.is-active {
       color: $blue;
-      svg { fill: currentColor; }
+
+      svg {
+        fill: currentColor;
+      }
     }
   }
 
   svg {
     fill: $gray-darker;
-    transition: fill .12s ease-in-out;
+    transition: fill 0.12s ease-in-out;
 
-    &:hover { fill: $blue; }
+    &:hover {
+      fill: $blue;
+    }
   }
 }
 
@@ -110,14 +122,16 @@ body.is-tray-arrow-hidden {
   height: 64px;
   justify-content: center;
   align-items: center;
-  transition: background-color .12s ease-in-out;
+  transition: background-color 0.12s ease-in-out;
   position: absolute;
   bottom: 4px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
 
-  &.filled { background-color: $red; }
+  &.filled {
+    background-color: $red;
+  }
 
   /*
     Recording state icon
@@ -127,22 +141,24 @@ body.is-tray-arrow-hidden {
     cursor: pointer;
     width: 24px;
     height: 24px;
-    border: 2px solid white;
+    border: 2px solid #FFF;
     border-radius: 50%;
     transition: border-radius 0.12s ease-in-out, background 0.12s ease-in-out;
   }
 
-  &.is-cropping .record__state { background: white; }
+  &.is-cropping .record__state {
+    background: #FFF;
+  }
 
   &.is-recording .record__state {
     border-radius: 4px;
-    background: white;
+    background: #FFF;
   }
 
   svg {
     width: 2.4rem;
     height: 2.4rem;
-    transition: background .12s ease-in-out;
+    transition: background 0.12s ease-in-out;
   }
 }
 
@@ -161,7 +177,7 @@ body.is-tray-arrow-hidden {
 */
 .controls {
   width: 100%;
-  color: white;
+  color: #FFF;
 
   /* Toggle of controls section */
   &-toggle {
@@ -172,7 +188,7 @@ body.is-tray-arrow-hidden {
     font-size: 1.4rem;
     cursor: pointer;
     background: #2D2D2D;
-    color: white;
+    color: #FFF;
 
     /* Text inside the toggle */
     &__title {
@@ -181,7 +197,9 @@ body.is-tray-arrow-hidden {
     }
 
     /* Directional transform of arrow in toggle */
-    .triangle.up { transform: rotate(-180deg); }
+    .triangle.up {
+      transform: rotate(-180deg);
+    }
   }
 
 
@@ -198,22 +216,23 @@ body.is-tray-arrow-hidden {
     display: flex;
     flex-direction: column;
     width: 100%;
-    background: white;
+    background: #FFF;
 
     &__title {
-      color: $color-primary;
       font-size: 1.4rem;
-      letter-spacing: -.010rem;
+      letter-spacing: -0.01rem;
       line-height: normal;
       margin-bottom: 14px;
-      color: white;
+      color: #FFF;
     }
 
     &__row {
       display: flex;
       width: 100%;
 
-      & + .controls-section__row { margin-top: 16px; }
+      & + .controls-section__row {
+        margin-top: 16px;
+      }
     }
   }
 }
@@ -242,25 +261,30 @@ body.is-tray-arrow-hidden {
 }
 
 @keyframes shake {
-  10%, 90% {
+  10%,
+  90% {
     transform: translate3d(-1px, 0, 0);
   }
 
-  20%, 80% {
+  20%,
+  80% {
     transform: translate3d(2px, 0, 0);
   }
 
-  30%, 50%, 70% {
+  30%,
+  50%,
+  70% {
     transform: translate3d(-4px, 0, 0);
   }
 
-  40%, 60% {
+  40%,
+  60% {
     transform: translate3d(4px, 0, 0);
   }
 }
 
 .shake {
-  animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   perspective: 1000px;
@@ -294,7 +318,7 @@ section.progress {
   background-color: $green;
   width: 100%;
   height: 2.75rem;
-  color: #fff!important;
+  color: #FFF !important;
   flex-direction: column;
 
   & span {
@@ -304,11 +328,11 @@ section.progress {
   & ul {
     display: flex;
     position: absolute;
-    right: .5rem;
+    right: 0.5rem;
     margin-left: auto;
 
     & li svg {
-      padding: .25em;
+      padding: 0.25em;
       width: 2.4rem;
       height: 2.4rem;
     }

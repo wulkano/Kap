@@ -16,8 +16,9 @@
 @import 'components/_range';
 
 
-
-html, body, .content {
+html,
+body,
+.content {
   height: 100%;
   user-select: none;
 }
@@ -26,7 +27,6 @@ html, body, .content {
 /*
   Preferences Navigation
 */
-
 nav.prefs-nav {
   padding: 0 16px;
   height: 4.8rem;
@@ -36,15 +36,21 @@ nav.prefs-nav {
   a {
     margin-right: 16px;
     color: $gray-darker;
-    transition: color .12s ease-in-out;
+    transition: color 0.12s ease-in-out;
     display: flex;
+
     svg {
       fill: currentColor;
-      transition: fill .12s ease-in-out;
+      transition: fill 0.12s ease-in-out;
     }
 
-    &:hover:not(.is-active) { color: $blue; }
-    &.is-active { color: $blue; }
+    &:hover:not(.is-active) {
+      color: $blue;
+    }
+
+    &.is-active {
+      color: $blue;
+    }
   }
 
   svg {
@@ -82,10 +88,17 @@ nav.prefs-nav {
     color: $gray-darker;
   }
 
-  &__note { color: $gray-darker; }
+  &__note {
+    color: $gray-darker;
+  }
 
-  &+ .preference { border-top: 1px solid $gray-lighter; }
-  &:last-of-type { border-bottom: 1px solid $gray-lighter; }
+  & + .preference {
+    border-top: 1px solid $gray-lighter;
+  }
+
+  &:last-of-type {
+    border-bottom: 1px solid $gray-lighter;
+  }
 }
 
 .preference-part {
@@ -95,13 +108,20 @@ nav.prefs-nav {
   align-items: center;
   flex-wrap: wrap;
 
-  &+ .preference-part { border-top: 1px solid $gray-lighter; }
+  & + .preference-part {
+    border-top: 1px solid $gray-lighter;
+  }
 
   &.split {
     padding: 0;
 
-    .col:not(:last-child) { border-right: 1px solid $gray-darker; }
-    .col { padding: 16px; }
+    .col:not(:last-child) {
+      border-right: 1px solid $gray-darker;
+    }
+
+    .col {
+      padding: 16px;
+    }
   }
 }
 
@@ -112,7 +132,10 @@ nav.prefs-nav {
 }
 
 .preference-input {
-  &.c-range { flex: 1 0 100%; }
+  &.c-range {
+    flex: 1 0 100%;
+  }
+
   &.c-toggle {
     flex: 1 1 0;
     margin-left: auto;

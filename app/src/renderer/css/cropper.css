@@ -1,6 +1,8 @@
 @import 'eightpoint/dist/eight.min';
 
-html, body, .content {
+html,
+body,
+.content {
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -15,23 +17,24 @@ svg {
 .window-dragger {
   cursor: -webkit-grab;
   -webkit-app-region: drag;
+
   &:active {
     cursor: -webkit-grabbing;
     /*
      * TODO: this doesn't work because of `-webkit-app-region`; implement a workaround
-     * with ipc
+     * with IPC
      */
   }
 }
 
 rect.stroke-black {
-  stroke: black;
+  stroke: #000;
   fill: none;
   stroke-width: 2px;
 }
 
 rect.stroke-white {
-  stroke: white;
+  stroke: #FFF;
   fill: none;
   stroke-dasharray: 4;
   stroke-width: 2px;
