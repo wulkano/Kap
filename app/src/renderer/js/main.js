@@ -129,6 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const {startedAt} = await aperture.startRecording(apertureOpts);
       stripFirstMs = startedAt - clickedAt;
 
+      ipcRenderer.send('started-recording');
+
       log(`Started recording after ${(Date.now() - past) / 1000}s`);
     } catch (err) {
       // This prevents the button from being reset, since the recording has not yet started
