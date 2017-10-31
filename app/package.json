@@ -1,7 +1,7 @@
 {
-  "name": "kap",
-  "productName": "Kap",
-  "version": "1.0.1",
+  "name": "kap-beta",
+  "productName": "Kap Beta",
+  "version": "2.0.0-beta.6",
   "description": "The best way to record your screen",
   "license": "MIT",
   "repository": "wulkano/kap",
