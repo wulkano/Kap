@@ -4,8 +4,8 @@ function validateNumericInput(input, opts) {
     return value;
   }
 
-  if (!value || !opts || !opts.lastValidValue) {
-    return undefined;
+  if (!value) {
+    return opts.lastValidValue || null;
   }
 
   value = parseInt(value, 10);

@@ -244,19 +244,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  inputWidth.oninput = function () {
+  function handleWidthInput(event, validate) {
+    const [first, second] = dimensions.ratio.split(':');
+
     this.value = validateNumericInput(this, {
       lastValidValue: lastValidInputWidth,
-      empty: true,
+      empty: !validate,
       max: screen.width,
-      min: 1,
+      min: (validate && dimensions.ratioLocked) ? first : 1,
       onInvalid: shake
     });
 
     dimensions.width = this.value;
 
     if (dimensions.ratioLocked) {
-      dimensions.height = (dimensions.ratio.split(':')[1] / dimensions.ratio.split(':')[0]) * this.value;
+      dimensions.height = (second / first) * this.value;
       inputHeight.value = Math.round(dimensions.height);
       return;
     }
@@ -265,27 +267,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     lastValidInputWidth = this.value || lastValidInputWidth;
     setCropperWindowSize();
-  };
+  }
 
-  inputWidth.onkeydown = handleKeyDown;
+  function handleHeightInput(event, validate) {
+    const [first, second] = dimensions.ratio.split(':');
 
-  inputWidth.onblur = function () {
-    this.value = this.value || (shake(this) && 512); // Prevent the input from staying empty
-  };
-
-  inputHeight.oninput = function () {
     this.value = validateNumericInput(this, {
       lastValidValue: lastValidInputHeight,
-      empty: true,
+      empty: !validate,
       max: screen.height - screen.availTop, // Currently we can't draw over the menubar
-      min: 1,
+      min: (validate && dimensions.ratioLocked) ? second : 1,
       onInvalid: shake
     });
 
     dimensions.height = this.value;
 
     if (dimensions.ratioLocked) {
-      dimensions.width = (dimensions.ratio.split(':')[0] / dimensions.ratio.split(':')[1]) * this.value;
+      dimensions.width = (first / second) * this.value;
       inputWidth.value = Math.round(dimensions.width);
       return;
     }
@@ -294,12 +292,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     lastValidInputHeight = this.value || lastValidInputHeight;
     setCropperWindowSize();
+  }
+
+  inputWidth.oninput = handleWidthInput;
+  inputWidth.onchange = handleWidthInput.bind(inputWidth, null, true);
+  inputWidth.onkeydown = handleKeyDown;
+  inputWidth.onblur = function () {
+    this.value = this.value || (shake(this) && lastValidInputWidth); // Prevent the input from staying empty
   };
 
+  inputHeight.oninput = handleHeightInput;
+  inputHeight.onchange = handleHeightInput.bind(inputHeight, null, true);
   inputHeight.onkeydown = handleKeyDown;
-
   inputHeight.onblur = function () {
-    this.value = this.value || (shake(this) && 512); // Prevent the input from staying empty
+    this.value = this.value || (shake(this) && lastValidInputHeight); // Prevent the input from staying empty
   };
 
   options.onclick = event => {
