@@ -3,21 +3,21 @@ import plugins from './plugins';
 
 const {TouchBarButton, TouchBarPopover, TouchBarSpacer} = TouchBar;
 
-const aspectRatioToSize = new Map([
-  ['16:9', '1600x900'],
-  ['5:4', '1280x1024'],
-  ['5:3', '1280x768'],
-  ['4:3', '1024x768'],
-  ['3:2', '480x320'],
-  ['1:1', '512x512'],
-  ['Custom', 'Custom']
-]);
+const aspectRatios = [
+  '16:9',
+  '5:4',
+  '5:3',
+  '4:3',
+  '3:2',
+  '1:1',
+  'Custom'
+];
 
 const createAspectRatioPopover = ({onChange}) => {
-  const buttons = [...aspectRatioToSize.keys()].map(aspectRatio => {
+  const buttons = aspectRatios.map(aspectRatio => {
     return new TouchBarButton({
       label: aspectRatio,
-      click: () => onChange(aspectRatioToSize.get(aspectRatio))
+      click: () => onChange(aspectRatio)
     });
   });
 
@@ -27,23 +27,8 @@ const createAspectRatioPopover = ({onChange}) => {
   });
 };
 
-const createSizePopover = ({onChange}) => {
-  const sizeButtons = [...aspectRatioToSize.values()].map(size => {
-    return new TouchBarButton({
-      label: size,
-      click: () => onChange(size)
-    });
-  });
-
-  return new TouchBarPopover({
-    label: 'Size',
-    items: new TouchBar(sizeButtons)
-  });
-};
-
-export const createMainTouchbar = ({onSizeChange, onCrop}) => {
-  const aspectRatioPopover = createAspectRatioPopover({onChange: onSizeChange});
-  const sizePopover = createSizePopover({onChange: onSizeChange});
+export const createMainTouchbar = ({onAspectRatioChange, onCrop}) => {
+  const aspectRatioPopover = createAspectRatioPopover({onChange: onAspectRatioChange});
   const cropButton = new TouchBarButton({
     label: 'Crop',
     backgroundColor: '#7e51e5',
@@ -52,14 +37,12 @@ export const createMainTouchbar = ({onSizeChange, onCrop}) => {
 
   return new TouchBar([
     aspectRatioPopover,
-    sizePopover,
     cropButton
   ]);
 };
 
-export const createCropTouchbar = ({onSizeChange, onRecord}) => {
-  const aspectRatioPopover = createAspectRatioPopover({onChange: onSizeChange});
-  const sizePopover = createSizePopover({onChange: onSizeChange});
+export const createCropTouchbar = ({onAspectRatioChange, onRecord}) => {
+  const aspectRatioPopover = createAspectRatioPopover({onChange: onAspectRatioChange});
   const recordButton = new TouchBarButton({
     label: 'Record',
     backgroundColor: '#ff5050',
@@ -68,7 +51,6 @@ export const createCropTouchbar = ({onSizeChange, onRecord}) => {
 
   return new TouchBar([
     aspectRatioPopover,
-    sizePopover,
     recordButton
   ]);
 };
