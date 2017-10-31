@@ -244,14 +244,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  function handleWidthInput(event, validateMin) {
+  function handleWidthInput(event, validate) {
     const [first, second] = dimensions.ratio.split(':');
 
     this.value = validateNumericInput(this, {
       lastValidValue: lastValidInputWidth,
-      empty: true,
+      empty: !validate,
       max: screen.width,
-      min: (validateMin && dimensions.ratioLocked) ? first : 1,
+      min: (validate && dimensions.ratioLocked) ? first : 1,
       onInvalid: shake
     });
 
@@ -269,14 +269,14 @@ document.addEventListener('DOMContentLoaded', () => {
     setCropperWindowSize();
   }
 
-  function handleHeightInput(event, validateMin) {
+  function handleHeightInput(event, validate) {
     const [first, second] = dimensions.ratio.split(':');
 
     this.value = validateNumericInput(this, {
       lastValidValue: lastValidInputHeight,
-      empty: true,
+      empty: !validate,
       max: screen.height - screen.availTop, // Currently we can't draw over the menubar
-      min: (validateMin && dimensions.ratioLocked) ? second : 1,
+      min: (validate && dimensions.ratioLocked) ? second : 1,
       onInvalid: shake
     });
 
@@ -298,14 +298,14 @@ document.addEventListener('DOMContentLoaded', () => {
   inputWidth.onchange = handleWidthInput.bind(inputWidth, null, true);
   inputWidth.onkeydown = handleKeyDown;
   inputWidth.onblur = function () {
-    this.value = this.value || (shake(this) && 512); // Prevent the input from staying empty
+    this.value = this.value || (shake(this) && lastValidInputWidth); // Prevent the input from staying empty
   };
 
   inputHeight.oninput = handleHeightInput;
   inputHeight.onchange = handleHeightInput.bind(inputHeight, null, true);
   inputHeight.onkeydown = handleKeyDown;
   inputHeight.onblur = function () {
-    this.value = this.value || (shake(this) && 512); // Prevent the input from staying empty
+    this.value = this.value || (shake(this) && lastValidInputHeight); // Prevent the input from staying empty
   };
 
   options.onclick = event => {
