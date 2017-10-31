@@ -178,7 +178,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Helper function for retrieving the simplest ratio, via the largest common divisor of two numbers (thanks @doot0)
   function getLargestCommonDivisor(first, second) {
-    return (second === 0) ? first : getLargestCommonDivisor(second, first % second);
+    if (!first) {
+      return 1;
+    }
+
+    if (!second) {
+      return first;
+    }
+
+    return getLargestCommonDivisor(second, first % second);
   }
 
   function getSimplestRatio(width, height) {
