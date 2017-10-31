@@ -1,13 +1,10 @@
-import {autoUpdater, ipcMain} from 'electron';
+import {app, autoUpdater, ipcMain} from 'electron';
 import isDev from 'electron-is-dev';
 import ms from 'ms';
-
-import {version} from '../../package';
-
 import {log} from '../common/logger';
 import reporter from '../common/reporter';
 
-const FEED_URL = `https://kap-updates.now.sh/update/osx/${version}`;
+const FEED_URL = `https://kap-updates.now.sh/update/osx/${app.getVersion()}`;
 
 function createInterval() {
   return setInterval(() => {

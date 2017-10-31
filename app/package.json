@@ -1,5 +1,6 @@
 {
-  "name": "Kap",
+  "name": "kap",
+  "productName": "Kap",
   "version": "1.0.1",
   "description": "The best way to record your screen",
   "license": "MIT",
