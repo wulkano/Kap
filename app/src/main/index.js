@@ -209,10 +209,15 @@ const animateIcon = () => new Promise(resolve => {
     setTimeout(() => {
       // If still waiting for recording to start, keep looping the bouncy animation
       if (i === 54 && appState !== 'recording') {
-        i = 0
+        i = 0;
       }
 
-      const number = String(i++).padStart(5, '0')
+      // If recording started and bouncy animation is still going on, skip it
+      if (appState === 'recording' && i < 54) {
+        i = 54;
+      }
+
+      const number = String(i++).padStart(5, '0');
       const filename = `loading_${number}Template.png`;
 
       tray.setImage(path.join(__dirname, '..', '..', 'static', 'menubar-loading', filename));
@@ -232,8 +237,8 @@ const animateIcon = () => new Promise(resolve => {
 
         next();
       }
-    }, interval)
-  }
+    }, interval);
+  };
 
   next();
 });
