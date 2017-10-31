@@ -87,8 +87,12 @@ const createFormatPopover = ({format, services, onSelectPlugin}) => {
   });
 };
 
-export const createEditorTouchbar = ({onDiscard, onSelectPlugin}) => {
+export const createEditorTouchbar = ({isPlaying, onDiscard, onSelectPlugin, onTogglePlay}) => {
   const shareServices = plugins.getShareServicesPerFormat();
+  const controlButton = new TouchBarButton({
+    label: isPlaying ? 'Pause' : 'Play',
+    click: () => onTogglePlay(!isPlaying)
+  });
   const discardButton = new TouchBarButton({
     label: 'Discard',
     backgroundColor: '#ff5050',
@@ -103,6 +107,8 @@ export const createEditorTouchbar = ({onDiscard, onSelectPlugin}) => {
   });
 
   return new TouchBar([
+    controlButton,
+    new TouchBarSpacer({size: 'small'}),
     ...formatPopovers,
     new TouchBarSpacer({size: 'flexible'}),
     discardButton
