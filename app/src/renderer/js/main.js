@@ -341,8 +341,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   aspectRatioSelector.addEventListener('change', handleSizeChange);
 
-  ipcRenderer.on('change-size', (e, size) => {
-    aspectRatioSelector.value = size;
+  ipcRenderer.on('change-aspect-ratio', (e, aspectRatio) => {
+    aspectRatioSelector.value = aspectRatio;
     handleSizeChange.call(aspectRatioSelector);
   });
 

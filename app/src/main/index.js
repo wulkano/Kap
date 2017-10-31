@@ -41,12 +41,12 @@ let tray;
 let recording = false;
 
 const mainTouchbar = createMainTouchbar({
-  onSizeChange: size => mainWindow.webContents.send('change-size', size),
+  onAspectRatioChange: aspectRatio => mainWindow.webContents.send('change-aspect-ratio', aspectRatio),
   onCrop: () => mainWindow.webContents.send('crop')
 });
 
 const cropTouchbar = createCropTouchbar({
-  onSizeChange: size => mainWindow.webContents.send('change-size', size),
+  onAspectRatioChange: aspectRatio => mainWindow.webContents.send('change-aspect-ratio', aspectRatio),
   onRecord: () => mainWindow.webContents.send('record')
 });
 
