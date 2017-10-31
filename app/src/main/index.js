@@ -50,9 +50,11 @@ const cropTouchbar = createCropTouchbar({
   onRecord: () => mainWindow.webContents.send('record')
 });
 
-const editorTouchbar = createEditorTouchbar({
+const editorTouchbar = playing => createEditorTouchbar({
+  isPlaying: playing,
   onDiscard: () => discardVideo(),
-  onSelectPlugin: (pluginName, format) => editorWindow.webContents.send('run-plugin', pluginName, format)
+  onSelectPlugin: (pluginName, format) => editorWindow.webContents.send('run-plugin', pluginName, format),
+  onTogglePlay: status => editorWindow.webContents.send('toggle-play', status)
 });
 
 settings.init();
@@ -506,7 +508,7 @@ ipcMain.on('open-editor-window', (event, opts) => {
   app.kap.editorWindow = editorWindow;
 
   editorWindow.loadURL(`file://${__dirname}/../renderer/views/editor.html`);
-  editorWindow.setTouchBar(editorTouchbar);
+  editorWindow.setTouchBar(editorTouchbar(true));
 
   editorWindow.webContents.on('did-finish-load', () => editorWindow.webContents.send('video-src', opts.filePath));
 
@@ -606,4 +608,8 @@ ipcMain.on('install-plugin', async (event, name) => {
 ipcMain.on('uninstall-plugin', async (event, name) => {
   await plugins.uninstall(name);
   loadPlugins();
+});
+
+ipcMain.on('toggle-play', (event, status) => {
+  editorWindow.setTouchBar(editorTouchbar(status));
 });
