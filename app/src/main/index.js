@@ -7,6 +7,7 @@ import isDev from 'electron-is-dev';
 import {init as initErrorReporter} from '../common/reporter';
 import logger from '../common/logger';
 import * as settings from '../common/settings-manager';
+import stripVideo from '../scripts/strip';
 
 import {createMainTouchbar, createCropTouchbar, createEditorTouchbar} from './touch-bar';
 import autoUpdater from './auto-updater';
@@ -488,10 +489,12 @@ ipcMain.on('move-cropper-window', (event, data) => {
   cropperWindow.setPosition(...position);
 });
 
-ipcMain.on('open-editor-window', (event, opts) => {
+ipcMain.on('open-editor-window', async (event, opts) => {
   if (editorWindow) {
     return editorWindow.show();
   }
+
+  opts.filePath = await stripVideo(opts.filePath, opts.stripFirstMs);
 
   editorWindow = new BrowserWindow({
     width: 768,
