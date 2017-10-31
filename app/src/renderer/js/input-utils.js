@@ -31,10 +31,10 @@ function validateNumericInput(input, opts) {
 function handleKeyDown(event) {
   const multiplier = event.shiftKey ? 10 : 1;
   const parsedValue = parseInt(this.value, 10);
-  if (event.keyCode === 38) { // Up
+  if (event.key === 'ArrowUp') {
     this.value = parsedValue + (1 * multiplier); // eslint-disable-line no-implicit-coercion
     this.oninput();
-  } else if (event.keyCode === 40) { // Down
+  } else if (event.key === 'ArrowDown') {
     this.value = parsedValue - (1 * multiplier); // eslint-disable-line no-implicit-coercion
     this.oninput();
   }

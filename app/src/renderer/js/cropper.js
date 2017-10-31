@@ -3,10 +3,10 @@ import {ipcRenderer} from 'electron';
 import {init as initErrorReporter} from '../../common/reporter';
 
 const arrows = {
-  left: 37,
-  up: 38,
-  right: 39,
-  down: 40
+  left: 'ArrowLeft',
+  up: 'ArrowUp',
+  right: 'ArrowRight',
+  down: 'ArrowDown'
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function keyDown(event) {
     if (!timeoutId && !intervalId) {
-      const direction = Object.keys(arrows).find(key => arrows[key] === event.keyCode);
+      const direction = Object.keys(arrows).find(key => arrows[key] === event.key);
       const amount = event.shiftKey ? 10 : 1;
       if (direction) {
         move(direction, amount);

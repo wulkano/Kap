@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.onkeyup = event => {
-    if (event.keyCode === 27) { // Esc
+    if (event.key === 'Escape') {
       if (maximizeBtn.classList.contains('hidden')) {
         // Exit fullscreen
         unmaximizeBtn.onclick();
