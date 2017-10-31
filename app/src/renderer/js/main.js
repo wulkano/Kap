@@ -1,7 +1,5 @@
 import {ipcRenderer, remote, shell} from 'electron';
 
-import aspectRatio from 'aspectratio';
-
 import {init as initErrorReporter, report as reportError} from '../../common/reporter';
 import {log} from '../../common/logger';
 
@@ -50,8 +48,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial variables
   let lastValidInputWidth = 512;
   let lastValidInputHeight = 512;
-  let aspectRatioBaseValues = [lastValidInputWidth, lastValidInputHeight];
   let hasUpdateNotification = false;
+  const dimensions = {
+    height: 512,
+    width: 512,
+    ratio: '1:1',
+    ratioLocked: false
+  };
 
   // Init dynamic elements
   if (app.kap.settings.get('recordAudio') === true) {
@@ -173,6 +176,47 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Helper function for retrieving the simplest ratio, via the largest common divisor of two numbers (thanks @doot0)
+  function getLargestCommonDivisor(first, second) {
+    if (!first) {
+      return 1;
+    }
+
+    if (!second) {
+      return first;
+    }
+
+    return getLargestCommonDivisor(second, first % second);
+  }
+
+  function getSimplestRatio(width, height) {
+    const lcd = getLargestCommonDivisor(width, height);
+    const denominator = width / lcd;
+    const numerator = height / lcd;
+    return `${denominator}:${numerator}`;
+  }
+
+  function setSelectedRatio(width, height) {
+    dimensions.ratio = getSimplestRatio(width, height);
+
+    const ratios = document.querySelectorAll('.aspect-ratio-selector option');
+    let hadMatch = false;
+    for (const ratio of ratios) {
+      if (ratio.value === dimensions.ratio) {
+        aspectRatioSelector.value = dimensions.ratio;
+        hadMatch = true;
+        break;
+      }
+    }
+
+    if (!hadMatch) {
+      const customRatio = document.querySelector('#custom-ratio-option');
+      customRatio.value = dimensions.ratio;
+      customRatio.textContent = `Custom (${dimensions.ratio})`;
+      customRatio.selected = true;
+    }
+  }
+
   const handleRecord = function () {
     if (app.kap.editorWindow) {
       // We need to keep the window visible to show the shake animation
@@ -200,58 +244,68 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  inputWidth.oninput = function () {
+  function handleWidthInput(event, validate) {
+    const [first, second] = dimensions.ratio.split(':');
+
     this.value = validateNumericInput(this, {
       lastValidValue: lastValidInputWidth,
-      empty: true,
+      empty: !validate,
       max: screen.width,
-      min: 1,
+      min: (validate && dimensions.ratioLocked) ? first : 1,
       onInvalid: shake
     });
 
-    if (linkBtn.classList.contains('active')) {
-      const tmp = aspectRatio.resize(...aspectRatioBaseValues, this.value);
-      if (tmp[1]) {
-        lastValidInputHeight = tmp[1];
-        inputHeight.value = tmp[1];
-      }
+    dimensions.width = this.value;
+
+    if (dimensions.ratioLocked) {
+      dimensions.height = (second / first) * this.value;
+      inputHeight.value = Math.round(dimensions.height);
+      return;
     }
+
+    setSelectedRatio(dimensions.width, dimensions.height);
 
     lastValidInputWidth = this.value || lastValidInputWidth;
     setCropperWindowSize();
-  };
+  }
 
-  inputWidth.onkeydown = handleKeyDown;
+  function handleHeightInput(event, validate) {
+    const [first, second] = dimensions.ratio.split(':');
 
-  inputWidth.onblur = function () {
-    this.value = this.value || (shake(this) && 512); // Prevent the input from staying empty
-  };
-
-  inputHeight.oninput = function () {
     this.value = validateNumericInput(this, {
       lastValidValue: lastValidInputHeight,
-      empty: true,
+      empty: !validate,
       max: screen.height - screen.availTop, // Currently we can't draw over the menubar
-      min: 1,
+      min: (validate && dimensions.ratioLocked) ? second : 1,
       onInvalid: shake
     });
 
-    if (linkBtn.classList.contains('active')) {
-      const tmp = aspectRatio.resize(...aspectRatioBaseValues, undefined, this.value);
-      if (tmp[0]) {
-        lastValidInputWidth = tmp[0];
-        inputWidth.value = tmp[0];
-      }
+    dimensions.height = this.value;
+
+    if (dimensions.ratioLocked) {
+      dimensions.width = (first / second) * this.value;
+      inputWidth.value = Math.round(dimensions.width);
+      return;
     }
+
+    setSelectedRatio(dimensions.width, dimensions.height);
 
     lastValidInputHeight = this.value || lastValidInputHeight;
     setCropperWindowSize();
+  }
+
+  inputWidth.oninput = handleWidthInput;
+  inputWidth.onchange = handleWidthInput.bind(inputWidth, null, true);
+  inputWidth.onkeydown = handleKeyDown;
+  inputWidth.onblur = function () {
+    this.value = this.value || (shake(this) && lastValidInputWidth); // Prevent the input from staying empty
   };
 
+  inputHeight.oninput = handleHeightInput;
+  inputHeight.onchange = handleHeightInput.bind(inputHeight, null, true);
   inputHeight.onkeydown = handleKeyDown;
-
   inputHeight.onblur = function () {
-    this.value = this.value || (shake(this) && 512); // Prevent the input from staying empty
+    this.value = this.value || (shake(this) && lastValidInputHeight); // Prevent the input from staying empty
   };
 
   options.onclick = event => {
@@ -262,20 +316,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
   swapBtn.onclick = () => {
     [inputWidth.value, inputHeight.value] = [inputHeight.value, inputWidth.value];
+    dimensions.ratio = `${dimensions.ratio.split(':')[1]}: ${dimensions.ratio.split(':')[0]}`;
     inputWidth.oninput();
     inputHeight.oninput();
+    setSelectedRatio(dimensions.width, dimensions.height);
   };
 
   linkBtn.onclick = function () {
     this.classList.toggle('is-active');
+    dimensions.ratioLocked = !dimensions.ratioLocked;
   };
 
   const handleSizeChange = function () {
-    const values = this.value.split('x');
-    if (values.length === 2) {
-      [inputWidth.value, inputHeight.value] = values;
-      aspectRatioBaseValues = values;
-      setCropperWindowSize(...values);
+    dimensions.ratio = this.value;
+
+    dimensions.ratioLocked = true;
+    linkBtn.classList.add('is-active');
+
+    if (dimensions.ratioLocked) {
+      dimensions.height = (dimensions.ratio.split(':')[1] / dimensions.ratio.split(':')[0]) * dimensions.width;
+      inputHeight.value = Math.round(dimensions.height);
     }
   };
 
