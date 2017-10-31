@@ -60,10 +60,17 @@ main.content {
     .c-progress.editor-progress {
       width: 60%;
       left: 50%;
-      padding: 0 7px;
       transform: translateX(-50%);
       bottom: 26px;
       border-radius: 4px;
+    }
+
+    .timeline-markers {
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      bottom: 20px;
+      height: 16px;
     }
   }
 }
@@ -146,19 +153,23 @@ video {
   transition: 200ms ease-out transform;
 }
 
-.timeline-container {
-  cursor: pointer;
+.timeline-container { cursor: pointer; }
+
+.timeline-container:hover .timeline-markers .slider::-webkit-slider-thumb {
+  width: 4px;
+  height: 24px;
 }
 
 .timeline-markers {
   opacity: 0;
   transition: opacity .12s ease-in-out;
-  position: absolute;
-  width: 60%;
+  width: 100%;
   height: 100%;
-  transform: translateX(-50%);
-  top: 6px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
   -webkit-app-region: no-drag;
+  transition: .12s ease-in-out;
 }
 
 section.output {
