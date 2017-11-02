@@ -30,10 +30,10 @@
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
     pointer-events: auto;
-    width: 2px;
-    height: 8px;
+    width: 4px;
+    height: 16px;
     border-radius: 8px;
-    transition: all .12s ease;
+    transition: all .2s ease-in-out;
     background: white;
 
     &:hover {
