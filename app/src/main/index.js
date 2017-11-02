@@ -39,6 +39,7 @@ let prefsWindow;
 let shouldStopWhenTrayIsClicked = false;
 let tray;
 let recording = false;
+let playing = true;
 
 const mainTouchbar = createMainTouchbar({
   onAspectRatioChange: aspectRatio => mainWindow.webContents.send('change-aspect-ratio', aspectRatio),
@@ -50,8 +51,8 @@ const cropTouchbar = createCropTouchbar({
   onRecord: () => mainWindow.webContents.send('record')
 });
 
-const editorTouchbar = playing => createEditorTouchbar({
-  isPlaying: playing,
+const editorTouchbar = isPlaying => createEditorTouchbar({
+  isPlaying,
   onDiscard: () => discardVideo(),
   onSelectPlugin: (pluginName, format) => editorWindow.webContents.send('run-plugin', pluginName, format),
   onTogglePlay: status => editorWindow.webContents.send('toggle-play', status)
@@ -508,7 +509,7 @@ ipcMain.on('open-editor-window', (event, opts) => {
   app.kap.editorWindow = editorWindow;
 
   editorWindow.loadURL(`file://${__dirname}/../renderer/views/editor.html`);
-  editorWindow.setTouchBar(editorTouchbar(true));
+  editorWindow.setTouchBar(editorTouchbar(playing));
 
   editorWindow.webContents.on('did-finish-load', () => editorWindow.webContents.send('video-src', opts.filePath));
 
@@ -611,5 +612,8 @@ ipcMain.on('uninstall-plugin', async (event, name) => {
 });
 
 ipcMain.on('toggle-play', (event, status) => {
-  editorWindow.setTouchBar(editorTouchbar(status));
+  if (playing !== status) {
+    playing = status;
+    editorWindow.setTouchBar(editorTouchbar(status));
+  }
 });
