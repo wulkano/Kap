@@ -2272,6 +2272,14 @@ gulp-cli@^1.0.0:
     wreck "^6.3.0"
     yargs "^3.28.0"
 
+gulp-filter@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/gulp-filter/-/gulp-filter-5.0.1.tgz#5d87f662e317e5839ef7650e620e6c9008ff92d0"
+  dependencies:
+    gulp-util "^3.0.6"
+    multimatch "^2.0.0"
+    streamfilter "^1.0.5"
+
 gulp-inject-svg@0.1.16:
   version "0.1.16"
   resolved "https://registry.yarnpkg.com/gulp-inject-svg/-/gulp-inject-svg-0.1.16.tgz#5c710606a82fd63d5e32482e98c9e60fabbbb81d"
@@ -2323,7 +2331,7 @@ gulp-stylelint@5.0.0:
     stylelint "^8.0.0"
     through2 "^2.0.3"
 
-gulp-util@^3.0.0, gulp-util@^3.0.2, gulp-util@^3.0.7, gulp-util@^3.0.8:
+gulp-util@^3.0.0, gulp-util@^3.0.2, gulp-util@^3.0.6, gulp-util@^3.0.7, gulp-util@^3.0.8:
   version "3.0.8"
   resolved "https://registry.yarnpkg.com/gulp-util/-/gulp-util-3.0.8.tgz#0054e1e744502e27c04c187c3ecc505dd54bbb4f"
   dependencies:
@@ -3494,7 +3502,7 @@ ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
 
-multimatch@^2.1.0:
+multimatch@^2.0.0, multimatch@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/multimatch/-/multimatch-2.1.0.tgz#9c7906a22fb4c02919e2f5f75161b4cdbd4b2a2b"
   dependencies:
@@ -4234,6 +4242,13 @@ postcss-simple-vars@4.1.0, postcss-simple-vars@^4.0.0:
   dependencies:
     postcss "^6.0.9"
 
+postcss-sorting@^3.0.2:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/postcss-sorting/-/postcss-sorting-3.1.0.tgz#af7c90ee73ad12569a57664eaf06735c2e25bec0"
+  dependencies:
+    lodash "^4.17.4"
+    postcss "^6.0.13"
+
 postcss-svgo@^2.1.1:
   version "2.1.6"
   resolved "https://registry.yarnpkg.com/postcss-svgo/-/postcss-svgo-2.1.6.tgz#b6df18aa613b666e133f08adb5219c2684ac108d"
@@ -4277,6 +4292,14 @@ postcss@^6.0.0, postcss@^6.0.1, postcss@^6.0.13, postcss@^6.0.3, postcss@^6.0.6,
   resolved "https://registry.yarnpkg.com/postcss/-/postcss-6.0.13.tgz#b9ecab4ee00c89db3ec931145bd9590bbf3f125f"
   dependencies:
     chalk "^2.1.0"
+    source-map "^0.6.1"
+    supports-color "^4.4.0"
+
+postcss@^6.0.11:
+  version "6.0.14"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-6.0.14.tgz#5534c72114739e75d0afcf017db853099f562885"
+  dependencies:
+    chalk "^2.3.0"
     source-map "^0.6.1"
     supports-color "^4.4.0"
 
@@ -5035,6 +5058,12 @@ stream-shift@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/stream-shift/-/stream-shift-1.0.0.tgz#d5c752825e5367e786f78e18e445ea223a155952"
 
+streamfilter@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/streamfilter/-/streamfilter-1.0.5.tgz#87507111beb8e298451717b511cfed8f002abf53"
+  dependencies:
+    readable-stream "^2.0.2"
+
 strict-uri-encode@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/strict-uri-encode/-/strict-uri-encode-1.1.0.tgz#279b225df1d582b1f54e65addd4352e18faa0713"
@@ -5119,15 +5148,32 @@ style-search@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/style-search/-/style-search-0.1.0.tgz#7958c793e47e32e07d2b5cafe5c0bf8e12e77902"
 
-stylelint-config-xo-space@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/stylelint-config-xo-space/-/stylelint-config-xo-space-0.1.0.tgz#3da3d00d9030b7d7317ccee007368630e0a5b1b7"
+stylelint-config-xo-space@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/stylelint-config-xo-space/-/stylelint-config-xo-space-0.2.0.tgz#fdd4ff6241805841c41218572206e2ce7c57f7e1"
   dependencies:
-    stylelint-config-xo "^0.1.0"
+    stylelint-config-xo "^0.2.0"
 
-stylelint-config-xo@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/stylelint-config-xo/-/stylelint-config-xo-0.1.0.tgz#c8f0a1619f6b544244668730f26bcaff0252caa8"
+stylelint-config-xo@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/stylelint-config-xo/-/stylelint-config-xo-0.2.0.tgz#008ae55a6b34678a8be8aaa9c9501d06de8ed891"
+  dependencies:
+    stylelint-declaration-block-no-ignored-properties "^1.0.1"
+    stylelint-order "^0.7.0"
+
+stylelint-declaration-block-no-ignored-properties@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/stylelint-declaration-block-no-ignored-properties/-/stylelint-declaration-block-no-ignored-properties-1.0.1.tgz#5b8df3d71404ec2c5bf23761f4c48a89ad44e721"
+  dependencies:
+    postcss "^6.0.11"
+
+stylelint-order@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/stylelint-order/-/stylelint-order-0.7.0.tgz#ceab5cbe24aa33fa63590024995395f6edfc9ab7"
+  dependencies:
+    lodash "^4.17.4"
+    postcss "^6.0.11"
+    postcss-sorting "^3.0.2"
 
 stylelint@8.2.0, stylelint@^8.0.0:
   version "8.2.0"

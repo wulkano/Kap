@@ -7,8 +7,8 @@
 */
 
 label.c-label {
-  font-size: 1.2rem;
   display: block;
-  color: $gray-lighter;
   margin-bottom: 8px;
+  color: $gray-lighter;
+  font-size: 1.2rem;
 }

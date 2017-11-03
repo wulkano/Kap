@@ -2,34 +2,34 @@
 
 /* Set base colour and font stack */
 body {
+  overflow: hidden;
+  border-radius: 5px;
   color: $color-primary;
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue';
-  overflow: hidden;
-  letter-spacing: -0.01rem;
-  border-radius: 5px;
   font-size: 1.4rem;
+  letter-spacing: -0.01rem;
 }
 
 .container {
   display: flex;
-  padding-left: 16px;
   padding-right: 16px;
+  padding-left: 16px;
 }
 
 .row {
-  margin-left: -16px;
   margin-right: -16px;
+  margin-left: -16px;
 }
 
 .col {
-  padding-left: 16px;
   padding-right: 16px;
+  padding-left: 16px;
 }
 
 .content {
-  background-color: $background-primary;
   display: flex;
-  flex-direction: column;
   overflow: hidden;
   position: relative;
+  flex-direction: column;
+  background-color: $background-primary;
 }

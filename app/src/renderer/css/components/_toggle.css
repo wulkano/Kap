@@ -5,57 +5,55 @@
 }
 
 .c-toggle__input {
-  opacity: 0;
-  height: 0;
   width: 0;
+  height: 0;
   margin: 0;
+  opacity: 0;
 
   &:checked + .c-toggle__label {
-    background-color: white;
+    background-color: #fff;
 
-    &:after {
+    &::after {
       left: calc(100% - 2.2rem);
       background: $blue;
     }
   }
 
-  &[disabled] + .c-toggle__label{
-    background-color: white;
+  &[disabled] + .c-toggle__label {
+    background-color: #fff;
     cursor: not-allowed;
 
-    &:after {
-      background-color: white;
+    &::after {
       border: 1px solid $gray-dark;
+      background-color: #fff;
     }
   }
 
   + .c-toggle__label {
-    cursor: pointer;
     display: inline-block;
-    position: relative;
-    border-radius: 2.625em;
-    height: 2.4rem;
     width: 4.8rem;
-    transition: .2s ease-in-out;
+    height: 2.4rem;
     border: 1px solid $gray-light;
-    background-color: white;
+    border-radius: 2.625em;
+    position: relative;
+    background-color: #fff;
+    transition: 0.2s ease-in-out;
+    cursor: pointer;
 
-    &:after {
-      content: "";
-      position: absolute;
+    &::after {
       display: block;
-      height: 1.6rem;
       width: 1.6rem;
+      height: 1.6rem;
+      border-radius: 50%;
+      margin-top: 0.3rem;
+      margin-left: 0.3rem;
+      position: absolute;
       top: 0;
       left: 0;
-      border-radius: 50%;
       background: $gray-darker;
-      transition: .12s ease-in-out;
-      box-shadow: 0 1px 2px solid rgba(0, 0, 0, .2);
-      margin-top: .3rem;
-      margin-left: .3rem;
+      box-shadow: 0 1px 2px solid rgba(0, 0, 0, 0.2);
+      transition: 0.12s ease-in-out;
+      content: '';
     }
-
   }
-
 }

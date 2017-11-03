@@ -17,9 +17,9 @@ html {
 }
 
 body {
-  -webkit-app-region: drag;
-  color: #FFF;
   height: 100%;
+  color: #fff;
+  -webkit-app-region: drag;
 
   &.fullscreen {
     .window-header {
@@ -38,10 +38,10 @@ span {
 
 main.content {
   display: flex;
-  flex-direction: column;
   height: 100%;
-  background: transparent;
   border-radius: 5px;
+  flex-direction: column;
+  background: transparent;
 }
 
 /*
@@ -49,11 +49,11 @@ main.content {
 */
 .video-preview {
   display: flex;
-  flex-direction: column;
+  height: 100%;
   position: relative;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
   background: $black;
 
   &:hover {
@@ -69,43 +69,43 @@ main.content {
 
     .c-progress.editor-progress {
       width: 60%;
+      border-radius: 4px;
+      bottom: 26px;
       left: 50%;
       transform: translateX(-50%);
-      bottom: 26px;
-      border-radius: 4px;
     }
 
     .timeline-markers {
+      width: 60%;
+      height: 16px;
+      bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
-      width: 60%;
-      bottom: 20px;
-      height: 16px;
     }
   }
 }
 
 .video-controls {
+  display: flex;
+  padding: 16px;
   position: absolute;
+  right: 0;
   bottom: 0;
   left: 0;
-  right: 0;
-  padding: 16px;
-  display: flex;
   align-items: center;
+  color: #fff;
   background-image: linear-gradient(-180deg, rgba(0, 0, 0, 0) 100%, rgba(0, 0, 0, 0.2) 100%);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   transition: background 0.12s ease-in-out;
-  color: #FFF;
 
   &-right,
   &-left {
-    flex: 1 0 128px;
     display: flex;
+    flex: 1 0 128px;
     align-items: center;
     opacity: 0;
+    color: #fff;
     transition: opacity 0.12s ease-in-out;
-    color: #FFF;
   }
 
   &-left > *:not(:last-child) {
@@ -135,13 +135,13 @@ video {
 }
 
 .c-progress.editor-progress {
-  -webkit-appearance: none;
   width: 100%;
-  position: absolute;
   border-radius: 0;
-  left: 0;
+  position: absolute;
   bottom: 0;
+  left: 0;
   transition: 0.12s ease-in-out;
+  -webkit-appearance: none;
 
   &::-webkit-progress-value {
     border-radius: 0 4px 4px 0;
@@ -150,22 +150,22 @@ video {
 
 
 .progress-bar-time-tip {
-  pointer-events: none;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 12px;
+  margin-top: -24px;
   position: absolute;
   top: 0;
   left: -50%;
-  margin-top: -24px;
   transform: translate(-50%, 0);
+  opacity: 0;
+  color: #fff;
   background: rgba(0, 0, 0, 0.6);
-  color: #FFF;
-  padding: 0 8px;
-  height: 24px;
-  line-height: 24px;
-  border-radius: 12px;
   font-size: 12px;
   font-weight: 600;
-  opacity: 0;
+  line-height: 24px;
   transition: 100ms ease-in-out transform;
+  pointer-events: none;
 }
 
 .timeline-container:hover .progress-bar-time-tip {
@@ -184,28 +184,28 @@ video {
 }
 
 .timeline-markers {
-  opacity: 0;
   width: 100%;
   height: 100%;
   position: absolute;
-  left: 0;
   bottom: 0;
-  -webkit-app-region: no-drag;
+  left: 0;
+  opacity: 0;
   transition: 0.12s ease-in-out;
+  -webkit-app-region: no-drag;
 }
 
 section.output {
+  display: flex;
   height: 4.8rem;
   min-height: 4.8rem;
-  display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
 
 .output-settings {
   display: flex;
-  align-items: center;
   margin-left: 16px;
+  align-items: center;
 
   & > div:not(:last-child) {
     margin-right: 16px;
@@ -214,9 +214,9 @@ section.output {
 
 .output-format {
   display: flex;
-  align-items: center;
   margin-right: 16px;
   margin-left: auto;
+  align-items: center;
 
   & > button:not(:last-child) {
     margin-right: 5px;
@@ -235,10 +235,10 @@ section.output {
 .size > span,
 .fps > span,
 .output-format > span {
-  margin-right: 8px;
-  font-size: 1.2rem;
   display: flex;
+  margin-right: 8px;
   align-items: center;
+  font-size: 1.2rem;
 }
 
 .size input {
@@ -248,13 +248,13 @@ section.output {
 
 ul {
   display: flex;
-  cursor: pointer;
   width: 9.6rem;
   height: 2.4rem;
-  text-align: center;
-  background: #414141;
   border-radius: 3px;
+  background: #414141;
   box-shadow: inset 0 1px rgba(255, 255, 255, 0.05), 0 1px 2px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  cursor: pointer;
 }
 
 @keyframes shake {
@@ -281,8 +281,8 @@ ul {
 }
 
 .shake {
-  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   perspective: 1000px;
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
