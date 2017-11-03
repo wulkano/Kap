@@ -33,6 +33,7 @@
     "make-dir": "^1.0.0",
     "menubar": "github:matheuss/menubar",
     "moment": "^2.14.1",
+    "move-file": "^0.2.0",
     "ms": "^2.0.0",
     "npm": "^4.6.1",
     "object-path": "^0.11.3",

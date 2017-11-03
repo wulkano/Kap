@@ -1,6 +1,6 @@
-import fs from 'fs';
 import {app, dialog} from 'electron';
 import makeDir from 'make-dir';
+import moveFile from 'move-file';
 
 const action = async context => {
   const format = context.format;
@@ -30,7 +30,8 @@ const action = async context => {
     return;
   }
 
-  fs.renameSync(await context.filePath(), filePath);
+  // TODO: Switch to the async version when we target Electron 1.8
+  moveFile.sync(await context.filePath(), filePath);
 };
 
 module.exports = {
