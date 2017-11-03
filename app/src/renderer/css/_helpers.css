@@ -8,8 +8,8 @@
 
 /* Allow element to be held down to drag the current window */
 .webkit-drag {
-  -webkit-app-region: drag;
   cursor: -webkit-grab;
+  -webkit-app-region: drag;
 }
 
 .a-width--full {
@@ -28,8 +28,8 @@
 
 
 .txt {
-  -webkit-user-select: none !important;
   cursor: default !important;
+  -webkit-user-select: none !important;
 }
 
 .u-border-bottom--lighter {

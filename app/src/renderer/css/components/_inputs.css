@@ -8,39 +8,48 @@
 */
 
 /* Ensure focus on inputs doesn't allow app dragging */
-input { -webkit-app-region: no-drag; }
+input {
+  -webkit-app-region: no-drag;
+}
 
 /*
   Custom select element styling
   - Use `select` tag wrapped within div with the class of `.select-element`.
 */
 .c-select {
-  position: relative;
-  height:  2.4rem;
-  padding-right: 32px;
   width: 100%;
-  border-radius: 4px;
-  background-color: white;
+  height: 2.4rem;
+  padding-right: 32px;
   border: 1px solid $gray-light;
+  border-radius: 4px;
+  position: relative;
   color: $color-primary;
-  transition: border .12s ease-in-out, background .12s ease-in-out;
+  background-color: #fff;
+  transition:
+    border 0.12s ease-in-out,
+    background 0.12s ease-in-out;
 
-  &:focus { border-color: $blue; }
-  &:hover:not(:focus) { border-color: $gray-dark; }
+  &:focus {
+    border-color: $blue;
+  }
+
+  &:hover:not(:focus) {
+    border-color: $gray-dark;
+  }
 
   select {
     width: 100%;
-    -webkit-appearance: none;
     height: 2.4rem;
-    line-height: 2.4rem;
-    padding-left: 12px;
     padding-right: 12px;
-    position: relative;
-    background: transparent;
+    padding-left: 12px;
     border: none;
+    position: relative;
     top: -1px;
     color: $color-primary;
+    background: transparent;
     font-size: 1.4rem;
+    line-height: 2.4rem;
+    -webkit-appearance: none;
   }
 
   &--large {
@@ -54,19 +63,22 @@ input { -webkit-app-region: no-drag; }
 
   &__toggle-icon {
     position: absolute;
-    right: 8px;
     top: 50%;
+    right: 8px;
     transform: translateY(-50%);
     pointer-events: none;
     fill: $gray-dark;
   }
 
   &.has-icon {
-    select { padding-left: 32px; }
+    select {
+      padding-left: 32px;
+    }
+
     svg:not(.c-select__toggle-icon) {
       position: absolute;
-      left: 8px;
       top: 50%;
+      left: 8px;
       transform: translateY(-50%);
       pointer-events: none;
       fill: $gray-darker;
@@ -76,40 +88,51 @@ input { -webkit-app-region: no-drag; }
   &.has-custom-label {
     padding-left: 8px;
     font-size: 1.2rem;
+
     select {
-      opacity: 0;
+      width: 100%;
+      height: 100%;
       position: absolute;
       top: 0;
-      left: 0;
       right: 0;
-      height: 100%;
-      width: 100%;
+      left: 0;
+      opacity: 0;
     }
   }
 
   &.is-light {
-    background: white;
-    background-position: 0 0, 100% 0;
-    background-repeat: no-repeat;
-    background-size: 1px 100%;
+    background: #fff;
     background-color: $gray-lightest;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 0 0 1px rgba(0, 0, 0, .1), inset 0 1px white, inset 0 1px rgba(255, 255, 255, 1);
-    select { color: $color-primary; }
+    background-repeat: no-repeat;
+    background-position: 0 0, 100% 0;
+    background-size: 1px 100%;
+    box-shadow:
+      0 1px 1px rgba(0, 0, 0, 0.2),
+      0 0 0 1px rgba(0, 0, 0, 0.1),
+      inset 0 1px #fff,
+      inset 0 1px rgba(255, 255, 255, 1);
+
+    select {
+      color: $color-primary;
+    }
   }
 
   &.is-transparent {
-    color: white;
-    background: rgba(255, 255, 255, .1);
     border-color: transparent;
-    select { color: white; }
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+
+    select {
+      color: #fff;
+    }
 
     .c-select__toggle-icon {
-      fill: white;
+      fill: #fff;
     }
 
     &:hover {
-      background: rgba(255, 255, 255, .2);
       border-color: transparent;
+      background: rgba(255, 255, 255, 0.2);
 
       .c-select__toggle-icon {
         fill: $blue;
@@ -126,33 +149,46 @@ input { -webkit-app-region: no-drag; }
 .input-group {
   display: flex;
 
-  input, input[type=text] {
-    margin-right: 0;
+  input,
+  input[type='text'] {
     border-radius: 0;
+    margin-right: 0;
 
-    &:not(:last-child) { border-right-color: transparent; }
-    &:first-child:not(:only-child) { border-radius: 4px 0 0 4px; }
-    &:last-child:not(:only-child) { border-radius: 0 4px 4px 0; }
+    &:not(:last-child) {
+      border-right-color: transparent;
+    }
+
+    &:first-child:not(:only-child) {
+      border-radius: 4px 0 0 4px;
+    }
+
+    &:last-child:not(:only-child) {
+      border-radius: 0 4px 4px 0;
+    }
 
     &:focus {
       border-color: $blue;
-      & + input { border-left-color: transparent; }
+
+      & + input {
+        border-left-color: transparent;
+      }
     }
   }
 
   &.is-transparent {
     input {
-      background: rgba(255, 255, 255, .1);
       border-color: transparent;
-      color: white;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
 
       &:not(:last-of-type) {
-        border-right: 1px solid rgba(0, 0, 0, .2);
+        border-right: 1px solid rgba(0, 0, 0, 0.2);
       }
 
-      &:hover, &:focus {
+      &:hover,
+      &:focus {
         border-color: transparent;
-        background: rgba(255, 255, 255, .2);
+        background: rgba(255, 255, 255, 0.2);
       }
     }
   }
@@ -162,28 +198,31 @@ input { -webkit-app-region: no-drag; }
 /*
   Custom input styling
 */
-input, .c-input {
-  border-radius: 4px;
-  background: white;
+input,
+.c-input {
   height: 2.4rem;
   padding: 0 0.8rem;
-  background-color: white;
-  color: $color-primary;
-  font-size: 1.4rem;
   border: 1px solid $gray-light;
-  transition: border .12s ease-in-out, background .12s ease-in-out;
+  border-radius: 4px;
+  color: $color-primary;
+  background-color: #fff;
+  font-size: 1.4rem;
+  transition: border 0.12s ease-in-out, background 0.12s ease-in-out;
 
-  &:focus { border-color: $blue; }
-  &:hover:not(:focus) { border-color: $gray-dark; }
+  &:focus {
+    border-color: $blue;
+  }
+
+  &:hover:not(:focus) {
+    border-color: $gray-dark;
+  }
 
   &.is-transparent {
-    background: rgba(255, 255, 255, .1);
-    border-color: transparent;
-    color: white;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
 
     &:hover {
-      border-color: transparent;
-      background: rgba(255, 255, 255, .2);
+      background: rgba(255, 255, 255, 0.2);
     }
   }
 }

@@ -40,18 +40,18 @@ body.is-tray-arrow-hidden {
 
 /* Tray Arrow */
 .tray-arrow {
-  margin: auto;
   width: 0;
   height: 0;
   border-right: 1rem solid transparent;
   border-bottom: 1rem solid $background-primary;
   border-left: 1rem solid transparent;
+  margin: auto;
   transition: border-bottom-width 0.2s ease, border-bottom-color 0.3s ease;
 }
 
 .content {
-  background-color: #FFF;
   border-radius: 4px;
+  background-color: #fff;
 }
 
 
@@ -59,39 +59,39 @@ body.is-tray-arrow-hidden {
 .start-bar {
   @extend .webkit-drag;
   width: 100%;
-  position: relative;
   padding-top: 24px;
+  position: relative;
 
   /* Contains all content of the start bar excluding the record button */
   &__content {
     display: flex;
-    background-color: $gray-lightest;
-    border-top: 1px solid $gray-light;
     width: 100%;
-    justify-content: center;
-    align-items: center;
     height: 48px;
+    border-top: 1px solid $gray-light;
     position: relative;
+    align-items: center;
+    justify-content: center;
+    background-color: $gray-lightest;
   }
 
   &__text {
-    font-size: 1.2rem;
     height: 2.4rem;
-    cursor: -webkit-grab;
     color: $color-primary;
+    font-size: 1.2rem;
+    cursor: -webkit-grab;
 
     &:hover {
       color: $color-primary;
     }
 
     &:first-child {
-      text-align: right;
       flex: 1;
+      text-align: right;
     }
 
     &:last-child {
-      text-align: left;
       flex: 1;
+      text-align: left;
     }
 
     &.is-active {
@@ -104,8 +104,8 @@ body.is-tray-arrow-hidden {
   }
 
   svg {
-    fill: $gray-darker;
     transition: fill 0.12s ease-in-out;
+    fill: $gray-darker;
 
     &:hover {
       fill: $blue;
@@ -117,17 +117,17 @@ body.is-tray-arrow-hidden {
   @extend .btn;
   @extend .circle;
   display: flex;
-  background: $red;
   width: 64px;
   height: 64px;
-  justify-content: center;
-  align-items: center;
-  transition: background-color 0.12s ease-in-out;
   position: absolute;
   bottom: 4px;
   left: 50%;
+  align-items: center;
+  justify-content: center;
   transform: translateX(-50%);
   z-index: 100;
+  background: $red;
+  transition: background-color 0.12s ease-in-out;
 
   &.filled {
     background-color: $red;
@@ -138,21 +138,21 @@ body.is-tray-arrow-hidden {
     Default state: not recording, but ready to record
   */
   &__state {
-    cursor: pointer;
     width: 24px;
     height: 24px;
-    border: 2px solid #FFF;
+    border: 2px solid #fff;
     border-radius: 50%;
     transition: border-radius 0.12s ease-in-out, background 0.12s ease-in-out;
+    cursor: pointer;
   }
 
   &.is-cropping .record__state {
-    background: #FFF;
+    background: #fff;
   }
 
   &.is-recording .record__state {
     border-radius: 4px;
-    background: #FFF;
+    background: #fff;
   }
 
   svg {
@@ -177,23 +177,23 @@ body.is-tray-arrow-hidden {
 */
 .controls {
   width: 100%;
-  color: #FFF;
+  color: #fff;
 
   /* Toggle of controls section */
   &-toggle {
     display: flex;
-    height: 3.2rem;
     width: 100%;
+    height: 3.2rem;
     align-items: center;
+    color: #fff;
+    background: #2d2d2d;
     font-size: 1.4rem;
     cursor: pointer;
-    background: #2D2D2D;
-    color: #FFF;
 
     /* Text inside the toggle */
     &__title {
-      cursor: pointer !important;
       margin-left: 1rem;
+      cursor: pointer !important;
     }
 
     /* Directional transform of arrow in toggle */
@@ -211,19 +211,19 @@ body.is-tray-arrow-hidden {
 
   /* Sections within the control content */
   &-section {
+    display: flex;
+    width: 100%;
     padding-top: 1.6rem;
     padding-bottom: 1.6rem;
-    display: flex;
     flex-direction: column;
-    width: 100%;
-    background: #FFF;
+    background: #fff;
 
     &__title {
-      font-size: 1.4rem;
-      letter-spacing: -0.01rem;
-      line-height: normal;
       margin-bottom: 14px;
-      color: #FFF;
+      color: #fff;
+      font-size: 1.4rem;
+      line-height: normal;
+      letter-spacing: -0.01rem;
     }
 
     &__row {
@@ -240,8 +240,8 @@ body.is-tray-arrow-hidden {
 
 /* Aspect Ratio Controls */
 .aspect-ratio {
-  justify-content: space-between;
   align-items: flex-end;
+  justify-content: space-between;
 }
 
 .aspect-ratio__input {
@@ -255,8 +255,8 @@ body.is-tray-arrow-hidden {
 }
 
 .aspect-ratio__options {
-  border-radius: 3px;
   width: 64px;
+  border-radius: 3px;
   align-items: flex-start;
 }
 
@@ -284,22 +284,22 @@ body.is-tray-arrow-hidden {
 }
 
 .shake {
-  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   perspective: 1000px;
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 
 section.progress {
   @extend .webkit-drag;
-  background-color: $background-primary;
-  width: 100%;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
   height: 12.6rem;
   padding-bottom: 2.8rem; /* to compensate the tittle bar */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: $background-primary;
 }
 
 .progress-bar {
@@ -307,19 +307,19 @@ section.progress {
 }
 
 .progress-bar-label {
-  font-size: 1.2rem;
-  color: $color-primary;
   margin-bottom: 16px;
+  color: $color-primary;
+  font-size: 1.2rem;
 }
 
 .update-notification {
   @extend .webkit-drag;
   display: flex;
-  background-color: $green;
   width: 100%;
   height: 2.75rem;
-  color: #FFF !important;
   flex-direction: column;
+  color: #fff !important;
+  background-color: $green;
 
   & span {
     font-size: 1.2rem;
@@ -327,14 +327,14 @@ section.progress {
 
   & ul {
     display: flex;
+    margin-left: auto;
     position: absolute;
     right: 0.5rem;
-    margin-left: auto;
 
     & li svg {
-      padding: 0.25em;
       width: 2.4rem;
       height: 2.4rem;
+      padding: 0.25em;
     }
   }
 }

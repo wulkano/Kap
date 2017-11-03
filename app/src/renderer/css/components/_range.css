@@ -11,27 +11,27 @@
   width: 100%;
   margin-top: 16px;
 
-  input[type=range] {
-    -webkit-appearance: none;
-    background: $gray-light;
-    border: none;
+  input[type='range'] {
     width: 100%;
-    height: .4rem;
-    border-radius: 4px;
+    height: 0.4rem;
     padding: 0;
+    border: none;
+    border-radius: 4px;
+    background: $gray-light;
+    -webkit-appearance: none;
   }
 
-  input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    border: 1px solid $blue;
-    height: 1.6rem;
+  input[type='range']::-webkit-slider-thumb {
     width: 1.6rem;
+    height: 1.6rem;
+    border: 1px solid $blue;
     border-radius: 50%;
     background: $blue;
     cursor: pointer;
+    -webkit-appearance: none;
   }
 
-  input[type=range]:focus {
+  input[type='range']:focus {
     outline: none;
   }
 
@@ -39,15 +39,20 @@
     Range Labels
   */
   &-labels {
-    height: 3.2rem;
     display: flex;
-    justify-content: space-between;
+    height: 3.2rem;
     align-items: center;
-    font-size: 1rem;
+    justify-content: space-between;
     color: $gray-darker;
+    font-size: 1rem;
   }
 
-  &-label:first-child, &-label:last-child { flex: 1; }
-  &-label:last-child { text-align: right; }
+  &-label:first-child,
+  &-label:last-child {
+    flex: 1;
+  }
 
+  &-label:last-child {
+    text-align: right;
+  }
 }
