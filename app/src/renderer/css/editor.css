@@ -49,6 +49,7 @@ main.content {
 */
 .video-preview {
   display: flex;
+  overflow: visible;
   height: 100%;
   position: relative;
   flex-direction: column;
@@ -58,7 +59,7 @@ main.content {
 
   &:hover {
     .video-controls {
-      background-image: linear-gradient(-180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.3) 100%);
+      background-image: linear-gradient(-180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.2) 100%);
     }
 
     .video-controls-right,
@@ -87,6 +88,7 @@ main.content {
 
 .video-controls {
   display: flex;
+  height: 64px;
   padding: 16px;
   position: absolute;
   right: 0;
