@@ -3,9 +3,9 @@
 html,
 body,
 .content {
+  overflow: hidden;
   width: 100%;
   height: 100%;
-  overflow: hidden;
 }
 
 svg {
@@ -34,7 +34,7 @@ rect.stroke-black {
 }
 
 rect.stroke-white {
-  stroke: #FFF;
+  stroke: #fff;
   fill: none;
   stroke-dasharray: 4;
   stroke-width: 2px;

@@ -8,19 +8,21 @@
 */
 
 /* Ensure all buttons have the pointer cursor */
-.btn { cursor: pointer }
+.btn {
+  cursor: pointer;
+}
 
 /* Button */
-*[class^="button"] {
+*[class^='button'] {
   height: 2.4rem;
-  line-height: 2.4rem;
   padding: 0 1.6rem;
+  border: 1px solid #ddd;
   border-radius: 4px;
   color: $color-primary;
-  border: 1px solid #DDD;
-  cursor: pointer;
-  text-align: center;
   font-size: 1.2rem;
+  text-align: center;
+  line-height: 2.4rem;
+  cursor: pointer;
 }
 
 
@@ -28,95 +30,118 @@
   Button Group
 */
 .button-group {
-  position: relative;
+  display: flex;
+  overflow: hidden;
+  height: 2.4rem;
   padding: 0;
   border-radius: 4px;
-  height: 2.4rem;
-  display: flex;
+  position: relative;
   justify-content: space-around;
-  background-color: white;
-  overflow: hidden;
+  background-color: #fff;
 
   &--large {
     height: 3.2rem;
 
-    *[class^="button"] { height: 3.2rem; }
+    *[class^='button'] {
+      height: 3.2rem;
+    }
   }
 
   .active-shim {
-     position: absolute;
-     background: $blue;
-     z-index: 0;
-     left: 0;
-     transition: .2s cubic-bezier(.37,1.12,.18,1);
-     transition-property: transform, border-radius;
+    position: absolute;
+    left: 0;
+    z-index: 0;
+    background: $blue;
+    transition: 0.2s cubic-bezier(0.37, 1.12, 0.18, 1);
+    transition-property: transform, border-radius;
   }
 
-  *[class^="button"] {
-    flex: 1 1 1%;
-    background: transparent;
-    border: 0;
-    height: 100%;
+  *[class^='button'] {
     display: flex;
+    height: 100%;
     padding: 0;
+    border: 0;
+    border-radius: 0;
+    flex: 1 1 1%;
     align-items: center;
     justify-content: center;
+    background: transparent;
     box-shadow: none;
-    border-radius: 0;
-    transition: background .12s ease-in-out;
+    transition: background 0.12s ease-in-out;
 
     &.is-active {
-      background: #F9F9F9;
+      background: #f9f9f9;
 
-      svg { fill: $blue; }
+      svg {
+        fill: $blue;
+      }
     }
 
-    &:first-child { border-radius: 4px 0 0 4px; }
-    &:last-child { border-radius: 0 4px 4px 0; }
-    &:not(:last-child) { border-right: 1px solid #DDD; }
+    &:first-child {
+      border-radius: 4px 0 0 4px;
+    }
+
+    &:last-child {
+      border-radius: 0 4px 4px 0;
+    }
+
+    &:not(:last-child) {
+      border-right: 1px solid #ddd;
+    }
 
     &:hover {
-      background: white;
+      background: #fff;
+
       &:not(:active):not(.is-active) {
-        svg { fill: $blue; }
+        /* stylelint-disable-next-line max-nesting-depth */
+        svg {
+          fill: $blue;
+        }
       }
     }
 
     span {
-      padding: 0 1.6rem;
       min-width: 4.8rem;
+      padding: 0 1.6rem;
       z-index: 1;
     }
   }
 
   svg {
     @extend .btn;
-    height: 2.4rem;
     width: 2.4rem;
+    height: 2.4rem;
+    transition: fill 0.12s ease-in-out;
     fill: #919191;
-    transition: fill .12s ease-in-out;
   }
 
   &.is-light {
-    background: #F9F9F9;
+    background: #f9f9f9;
     box-shadow: $box-shadow-inputs, 0 1px rgba(255, 255, 255, 1);
 
-    svg { fill: #8C8C8C; }
+    svg {
+      fill: #8c8c8c;
+    }
   }
 
   &.is-transparent {
+    border: 1px solid rgba(255, 255, 255, 0.1);
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, .1);
 
-    .active-shim { background: rgba(255, 255, 255, .1); }
+    .active-shim {
+      background: rgba(255, 255, 255, 0.1);
+    }
 
-    *[class^="button"] {
-      color: white;
+    *[class^='button'] {
       border-color: transparent;
+      color: #fff;
 
-      &:hover { background: transparent; }
+      &:hover {
+        background: transparent;
+      }
+
       &:hover:not(:focus) {
-        background: rgba(255, 255, 255, .2);
+        background: rgba(255, 255, 255, 0.2);
       }
     }
   }
@@ -125,20 +150,20 @@
 button {
   &:disabled,
   &.disabled {
-    pointer-events: none;
     opacity: 0.5;
+    pointer-events: none;
   }
 }
 
 .button--primary {
-  background: #3B99FC;
-  border-color: #2D91FC;
+  border-color: #2d91fc;
+  background: #3b99fc;
 }
 
 .button--secondary {
-  background: white;
   border: 1px solid $gray-light;
-  transition: border .12s ease-in-out;
+  background: #fff;
+  transition: border 0.12s ease-in-out;
 
   &:hover {
     border-color: $blue;

@@ -9,32 +9,32 @@
   Colors
 */
 /* Blue */
-$blue:                 #007AFF;
-$blue-dark:            #004BA4;
+$blue:                 #007aff;
+$blue-dark:            #004ba4;
 /* Gray */
-$gray-lightest:        #F9F9F9;
-$gray-lighter:         #F1F1F1;
-$gray-light:           #DDD;
-$gray-dark:            #CCC;
+$gray-lightest:        #f9f9f9;
+$gray-lighter:         #f1f1f1;
+$gray-light:           #ddd;
+$gray-dark:            #ccc;
 $gray-darker:          #808080;
 $gray-darkest:         #404040;
 $black:                #111;
 
 /* Red */
-$red:                  #FF6059;
+$red:                  #ff6059;
 /* Green */
-$green:                #28CA42;
+$green:                #28ca42;
 
 /* Typography */
 $font-size-default:    1.4rem;
 
 /* Backgrounds */
-$background-primary: #FFF;
+$background-primary: #fff;
 $background-secondary: $gray-darker;
 
 /* Typography */
 $color-primary:        $black;
-$color-light:          #FFF;
+$color-light:          #fff;
 $divider-color:        $gray-lighter;
 $box-shadow-inputs:    0 1px 1px 0 rgba(0, 0, 0, 0.2),
   0 0 0 1px rgba(0, 0, 0, 0.1);

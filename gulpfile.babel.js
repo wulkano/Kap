@@ -12,6 +12,7 @@ import atImport from 'postcss-import';
 import reporter from 'postcss-reporter';
 import pug from 'gulp-pug';
 import stylelint from 'gulp-stylelint';
+import filter from 'gulp-filter';
 
 // Directories
 const SRC_DIR = 'app/src';
@@ -45,7 +46,7 @@ export function views() {
 }
 
 export function styles() {
-  return src([CSS_GLOB, `!${CSS_PARTIALS_GLOB}`], {base: SRC_DIR})
+  return src([CSS_GLOB], {base: SRC_DIR})
     .pipe(stylelint({
       reporters: [
         {
@@ -54,6 +55,7 @@ export function styles() {
         }
       ]
     }))
+    .pipe(filter(['**', `!${CSS_PARTIALS_GLOB}`]))
     .pipe(postcss([
       atImport,
       postcssEach,
