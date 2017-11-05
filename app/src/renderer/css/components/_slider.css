@@ -34,7 +34,7 @@
     height: 16px;
     border-radius: 8px;
     background: #fff;
-    transition: all .16s ease-in-out;
+    transition: all 0.16s ease-in-out;
     pointer-events: auto;
     -webkit-appearance: none;
 
