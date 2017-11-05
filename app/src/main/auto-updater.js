@@ -4,7 +4,8 @@ import ms from 'ms';
 import {log} from '../common/logger';
 import reporter from '../common/reporter';
 
-const FEED_URL = `https://kap-updates.now.sh/update/osx/${app.getVersion()}`;
+const URL_APP_NAME = app.getName() === 'Kap Beta' ? 'kap-beta' : 'kap';
+const FEED_URL = `https://${URL_APP_NAME}-updates.now.sh/update/macos/${app.getVersion()}`;
 
 function createInterval() {
   return setInterval(() => {
