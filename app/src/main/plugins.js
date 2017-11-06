@@ -50,13 +50,7 @@ class Plugins {
     pkg.dependencies[name] = 'latest';
     fs.writeFileSync(pkgPath, JSON.stringify(pkg));
 
-    try {
-      await this.upgrade();
-    } catch (err) {
-      console.error(err);
-      console.error(err.stderr);
-      console.error(err.stdout);
-    }
+    await this.upgrade();
   }
 
   async uninstall(name) {

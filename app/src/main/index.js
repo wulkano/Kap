@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 
-import {app, BrowserWindow, ipcMain, Menu, screen, globalShortcut, dialog} from 'electron';
+import {app, BrowserWindow, ipcMain, Menu, screen, globalShortcut, dialog, Notification} from 'electron';
 import isDev from 'electron-is-dev';
 
 import {init as initErrorReporter} from '../common/reporter';
@@ -601,14 +601,29 @@ const loadPlugins = async () => {
   }
 };
 
+const notify = text => {
+  (new Notification({
+    body: text
+  })).show();
+};
+
 ipcMain.on('install-plugin', async (event, name) => {
-  await plugins.install(name);
-  loadPlugins();
+  try {
+    await plugins.install(name);
+    notify(`Successfully installed plugin ${name}`);
+    loadPlugins();
+  } catch (err) {
+    dialog.showErrorBox(`Failed to install plugin ${name}`, err.stderr || err.stdout || err.stack);
+  }
 });
 
 ipcMain.on('uninstall-plugin', async (event, name) => {
-  await plugins.uninstall(name);
-  loadPlugins();
+  try {
+    await plugins.uninstall(name);
+    loadPlugins();
+  } catch (err) {
+    dialog.showErrorBox(`Failed to uninstall plugin ${name}`, err.stderr || err.stdout || err.stack);
+  }
 });
 
 ipcMain.on('toggle-play', (event, status) => {
