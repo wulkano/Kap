@@ -65,6 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   handleTrafficLightsClicks({hide: true});
 
+  let stripFirstMs;
+
   async function startRecording() {
     ipcRenderer.send('will-start-recording');
 
@@ -123,7 +125,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-      await aperture.startRecording(apertureOpts);
+      const clickedAt = Date.now();
+      const {startedAt} = await aperture.startRecording(apertureOpts);
+      stripFirstMs = startedAt - clickedAt;
+
+      ipcRenderer.send('started-recording');
+
       log(`Started recording after ${(Date.now() - past) / 1000}s`);
     } catch (err) {
       // This prevents the button from being reset, since the recording has not yet started
@@ -144,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const filePath = await aperture.stopRecording();
     ipcRenderer.send('stopped-recording');
-    ipcRenderer.send('open-editor-window', {filePath});
+    ipcRenderer.send('open-editor-window', {filePath, stripFirstMs});
     setMainWindowSize();
   }
 

@@ -65,9 +65,9 @@ ansistyles@~0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/ansistyles/-/ansistyles-0.1.3.tgz#5de60415bda071bb37127854c864f41b23254539"
 
-aperture@^3.0.0:
+"aperture@github:vadimdemedes/aperture#output-start-time":
   version "3.0.0"
-  resolved "https://registry.yarnpkg.com/aperture/-/aperture-3.0.0.tgz#9232b3f995253ad51b991de0315dd307512aee50"
+  resolved "https://codeload.github.com/vadimdemedes/aperture/tar.gz/bb50dc86b6302ee16c8452adeb335ad3c59ebf9e"
   dependencies:
     execa "^0.8.0"
     file-url "^2.0.2"

@@ -7,6 +7,7 @@ import isDev from 'electron-is-dev';
 import {init as initErrorReporter} from '../common/reporter';
 import logger from '../common/logger';
 import * as settings from '../common/settings-manager';
+import stripVideo from '../scripts/strip';
 
 import {createMainTouchbar, createCropTouchbar, createEditorTouchbar} from './touch-bar';
 import autoUpdater from './auto-updater';
@@ -207,19 +208,35 @@ const animateIcon = () => new Promise(resolve => {
 
   const next = () => {
     setTimeout(() => {
+      // If still waiting for recording to start, keep looping the bouncy animation
+      if (i === 54 && appState !== 'recording') {
+        i = 0;
+      }
+
+      // If recording started and bouncy animation is still going on, skip it
+      if (appState === 'recording' && i < 54) {
+        i = 54;
+      }
+
       const number = String(i++).padStart(5, '0');
       const filename = `loading_${number}Template.png`;
 
-      try {
-        tray.setImage(path.join(__dirname, '..', '..', 'static', 'menubar-loading', filename));
+      tray.setImage(path.join(__dirname, '..', '..', 'static', 'menubar-loading', filename));
 
-        // This is needed as there some race condition in the existing
-        // code that activates this even when it's not recording…
-        if (appState === 'recording') {
+      if (appState === 'recording') {
+        // Finish animation if stop icon is fully shown
+        if (i === 64) {
+          resolve();
+        } else {
           next();
         }
-      } catch (err) {
-        resolve();
+      } else {
+        // Waiting for recording and reached the end of animation, loop again
+        if (i === 64) {
+          i = 0;
+        }
+
+        next();
       }
     }, interval);
   };
@@ -375,12 +392,6 @@ menubar.on('after-create-window', () => {
     }
   });
 
-  mainWindow.on('hide', () => {
-    if (appState === 'recording') {
-      setTrayStopIcon();
-    }
-  });
-
   menubar.on('show', () => {
     if (mainWindowIsDetached) {
       tray.setHighlightMode('never');
@@ -423,12 +434,15 @@ ipcMain.on('will-start-recording', () => {
     cropperWindow.setAlwaysOnTop(true);
   }
 
-  appState = 'recording';
   setTrayStopIcon();
   if (!mainWindowIsDetached) {
     mainWindow.hide();
     tray.setHighlightMode('never');
   }
+});
+
+ipcMain.on('started-recording', () => {
+  appState = 'recording';
 });
 
 ipcMain.on('stopped-recording', () => {
@@ -489,10 +503,12 @@ ipcMain.on('move-cropper-window', (event, data) => {
   cropperWindow.setPosition(...position);
 });
 
-ipcMain.on('open-editor-window', (event, opts) => {
+ipcMain.on('open-editor-window', async (event, opts) => {
   if (editorWindow) {
     return editorWindow.show();
   }
+
+  opts.filePath = await stripVideo(opts.filePath, opts.stripFirstMs);
 
   editorWindow = new BrowserWindow({
     width: 768,
