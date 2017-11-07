@@ -34,37 +34,51 @@ class Plugins {
     return Object.keys(JSON.parse(pkg).dependencies);
   }
 
-  async upgrade() {
-    await execa(process.execPath, [this.npmBin, 'install'], {
+  _modifyMainPackageJson(modifier) {
+    const pkgPath = path.join(this.cwd, 'package.json');
+    const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+    modifier(pkg);
+    fs.writeFileSync(pkgPath, JSON.stringify(pkg));
+  }
+
+  _pluginPath(name, subPath = '') {
+    return path.join(this.cwd, 'node_modules', name, subPath);
+  }
+
+  async _runNpm(...commands) {
+    await execa(process.execPath, [this.npmBin, ...commands], {
       cwd: this.cwd,
       env: {
         ELECTRON_RUN_AS_NODE: 1
       }
     });
+  }
+
+  async upgrade() {
+    await this._runNpm('install');
   }
 
   async install(name) {
     // We manually add it to the package.json here so we're able to set the version to `latest`
-    const pkgPath = path.join(this.cwd, 'package.json');
-    const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-    pkg.dependencies[name] = 'latest';
-    fs.writeFileSync(pkgPath, JSON.stringify(pkg));
+    this._modifyMainPackageJson(pkg => {
+      pkg.dependencies[name] = 'latest';
+    });
 
-    await this.upgrade();
+    await this._runNpm('install');
   }
 
   async uninstall(name) {
-    await execa(process.execPath, [this.npmBin, 'uninstall', '--save', name], {
-      cwd: this.cwd,
-      env: {
-        ELECTRON_RUN_AS_NODE: 1
-      }
+    this._modifyMainPackageJson(pkg => {
+      delete pkg.dependencies[name];
     });
+
+    // Intentionally not awaited as it can just finish in the background
+    this._runNpm('prune');
   }
 
   all() {
     return this._pluginNames().map(name => {
-      const pth = path.join(this.cwd, 'node_modules', name, 'package.json');
+      const pth = this._pluginPath(name, 'package.json');
       const json = JSON.parse(fs.readFileSync(pth, 'utf8'));
       this._addPrettyName(json);
       return json;
