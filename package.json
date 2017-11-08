@@ -75,12 +75,14 @@
     }
   },
   "build": {
-    "asar": false,
     "appId": "com.wulkano.kap",
     "files": [
       "**/*",
       "dist",
       "!src"
+    ],
+    "asarUnpack": [
+      "vendor/ffmpeg"
     ],
     "mac": {
       "category": "public.app-category.productivity"
