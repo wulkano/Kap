@@ -95,15 +95,6 @@
   height: 3.6rem;
   position: relative;
   text-align: center;
-
-  &.has-update-notification {
-    height: 5.6rem;
-    background-color: $green;
-  }
-
-  &.has-update-notification .window__title {
-    color: #fff;
-  }
 }
 
 .title-bar__controls {

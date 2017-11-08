@@ -1,4 +1,4 @@
-import {ipcRenderer, remote, shell} from 'electron';
+import {ipcRenderer, remote} from 'electron';
 
 import {init as initErrorReporter, report as reportError} from '../../common/reporter';
 import {log} from '../../common/logger';
@@ -28,19 +28,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const inputWidth = document.querySelector('#aspect-ratio-width');
   const inputHeight = document.querySelector('#aspect-ratio-height');
   const linkBtn = document.querySelector('.link-btn');
-  const openReleaseNotesBtn = document.querySelector('.open-release-notes');
   const options = document.querySelector('.controls-options');
   const progressBar = document.querySelector('#progress-bar');
   const progressBarLabel = document.querySelector('.progress-bar-label');
   const progressBarSection = document.querySelector('section.progress');
   const recordBtn = document.querySelector('.record');
-  const restartAndInstallUpdateBtn = document.querySelector('.restart-and-install-update');
   const toggleAudioRecordBtn = document.querySelector('.js-toggle-audio-record');
   const swapBtn = document.querySelector('.swap-btn');
-  const titleBar = document.querySelector('.title-bar');
   const trafficLightsWrapper = document.querySelector('.title-bar__controls');
   const trayTriangle = document.querySelector('.tray-arrow');
-  const updateNotification = document.querySelector('.update-notification');
   const windowHeader = document.querySelector('.window-header');
 
   const [micOnIcon, micOffIcon] = toggleAudioRecordBtn.children;
@@ -48,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial variables
   let lastValidInputWidth = 512;
   let lastValidInputHeight = 512;
-  let hasUpdateNotification = false;
   const dimensions = {
     height: 512,
     width: 512,
@@ -382,9 +377,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   function setTrayTriangleVisible(visible = true) {
-    const color = hasUpdateNotification ? '#28CA42' : 'white';
     trayTriangle.style.borderBottomWidth = visible ? '1rem' : '0';
-    trayTriangle.style.borderBottomColor = visible ? color : 'white';
+    trayTriangle.style.borderBottomColor = 'white';
 
     const bodyClasses = document.body.classList;
     if (visible) {
@@ -409,27 +403,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('stop-recording', stopRecording);
-
-  ipcRenderer.on('update-downloaded', () => {
-    const title = 'An update is available 🎉';
-    const body = 'Click here to install it 😊';
-
-    hasUpdateNotification = true;
-    titleBar.classList.add('has-update-notification');
-    updateNotification.classList.remove('hidden');
-
-    // If the traffic lights are invisible, the triangle should be visible
-    // if they are visible, the tray triangle should be invisible
-    setTrayTriangleVisible(isVisible(trafficLightsWrapper)); // To update the color
-
-    setMainWindowSize();
-
-    openReleaseNotesBtn.onclick = () => shell.openExternal('https://github.com/wulkano/kap/releases/latest');
-    restartAndInstallUpdateBtn.onclick = () => ipcRenderer.send('install-update');
-
-    const notification = new Notification(title, {body});
-    notification.onclick = () => ipcRenderer.send('install-update');
-  });
 
   ipcRenderer.on('log', (event, msgs) => console.log(...msgs));
 
