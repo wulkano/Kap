@@ -1,17 +1,16 @@
-import {join as joinPath} from 'path';
 import os from 'os';
-
 import execa from 'execa';
 import moment from 'moment';
 import tmp from 'tmp';
+import ffmpeg from '@ffmpeg-installer/ffmpeg';
 
-const ffmpeg = joinPath(__dirname.replace('app.asar', 'app.asar.unpacked'), '..', '..', 'vendor', 'ffmpeg');
+const ffmpegPath = ffmpeg.path.replace('app.asar', 'app.asar.unpacked');
 const durationRegex = /Duration: (\d\d:\d\d:\d\d.\d\d)/gm;
 const frameRegex = /frame=\s+(\d+)/gm;
 
 function convert(outputPath, opts, args) {
   return new Promise((resolve, reject) => {
-    const converter = execa(ffmpeg, args);
+    const converter = execa(ffmpegPath, args);
     let amountOfFrames;
 
     converter.stderr.on('data', data => {
@@ -44,7 +43,7 @@ function convertToGif(opts) {
   return Promise.resolve().then(() => {
     const palettePath = tmp.tmpNameSync({postfix: '.png'});
 
-    return execa(ffmpeg, [
+    return execa(ffmpegPath, [
       '-i', opts.filePath,
       '-vf', `fps=${opts.fps},scale=${opts.width}:${opts.height}:flags=lanczos,palettegen`,
       palettePath
