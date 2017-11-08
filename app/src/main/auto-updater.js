@@ -1,4 +1,4 @@
-import {app, autoUpdater, ipcMain} from 'electron';
+import {app, autoUpdater, Notification} from 'electron';
 import isDev from 'electron-is-dev';
 import ms from 'ms';
 import {log} from '../common/logger';
@@ -15,7 +15,7 @@ function createInterval() {
 
 let manualCheckTimeout;
 
-function init(window) {
+function init() {
   if (isDev) {
     return;
   }
@@ -23,7 +23,7 @@ function init(window) {
   autoUpdater.setFeedURL(FEED_URL);
 
   setTimeout(() => {
-    log('checking');
+    log('Checking for update…');
     autoUpdater.checkForUpdates();
   }, ms('5s')); // At this point the app is fully started and ready for everything
 
@@ -33,16 +33,22 @@ function init(window) {
     clearTimeout(manualCheckTimeout);
     clearInterval(intervalId);
     intervalId = undefined;
-    log('update available, starting download');
+    log('Update available, starting download…');
   });
 
   autoUpdater.on('update-downloaded', () => {
-    log('update downloaded, will notify the user');
-    window.webContents.send('update-downloaded');
-  });
+    log('Update downloaded, will notify the user');
 
-  ipcMain.on('install-update', () => {
-    autoUpdater.quitAndInstall();
+    const notification = new Notification({
+      title: 'An update is available 🎉',
+      body: 'Click here to install it 😊'
+    });
+
+    notification.on('click', () => {
+      autoUpdater.quitAndInstall();
+    });
+
+    notification.show();
   });
 
   autoUpdater.on('error', err => {

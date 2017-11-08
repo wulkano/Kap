@@ -31,14 +31,6 @@ mixin window-header
         +icon('traffic-light-minimize').minimize-window
         +icon('traffic-light-disabled').maximize-window
       span.window__title.txt= a.title
-      if a.updates
-        .update-notification.hidden
-          span An update is available!
-          ul
-            li
-              +icon('info').open-release-notes
-            li
-              +icon('refresh').restart-and-install-update
     block
 
 
@@ -75,7 +67,7 @@ mixin range
         .c-range-label=a.lowLabel
         .c-range-label.is-middle.js-middle-label=a.middleLabel
         .c-range-label=a.highLabel
-        
+
 //- **
     name: range
     description: Creates a custom select element wrapper so we don't have to call the icons each time
