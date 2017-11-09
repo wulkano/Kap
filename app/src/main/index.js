@@ -603,6 +603,9 @@ const loadPlugins = async () => {
 
 const notify = text => {
   (new Notification({
+    // The `title` is required for macOS 10.12
+    // TODO: Remove when macOS 10.13 is the target
+    title: app.getName(),
     body: text
   })).show();
 };
