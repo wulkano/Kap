@@ -3,8 +3,9 @@ import execa from 'execa';
 import moment from 'moment';
 import tmp from 'tmp';
 import ffmpeg from '@ffmpeg-installer/ffmpeg';
+import util from 'electron-util';
 
-const ffmpegPath = ffmpeg.path.replace('app.asar', 'app.asar.unpacked');
+const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
 const durationRegex = /Duration: (\d\d:\d\d:\d\d.\d\d)/gm;
 const frameRegex = /frame=\s+(\d+)/gm;
 
