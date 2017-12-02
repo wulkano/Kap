@@ -5,7 +5,7 @@ body {
   overflow: hidden;
   border-radius: 5px;
   color: $color-primary;
-  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue';
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
   font-size: 1.4rem;
   letter-spacing: -0.01rem;
 }
