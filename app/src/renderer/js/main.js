@@ -40,22 +40,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const windowHeader = document.querySelector('.window-header');
 
   const [micOnIcon, micOffIcon] = toggleAudioRecordBtn.children;
-
+  
+  
   // Initial variables
-  let lastValidInputWidth = 512;
-  let lastValidInputHeight = 512;
-  const dimensions = {
-    height: 512,
-    width: 512,
-    ratio: '1:1',
-    ratioLocked: false
-  };
+  const dimensions = app.kap.settings.get('dimensions');
+  const { width, height, ratioLocked } = dimensions;
+  let lastValidInputWidth = width;
+  let lastValidInputHeight = height;
 
   // Init dynamic elements
   if (app.kap.settings.get('recordAudio') === true) {
     toggleAudioRecordBtn.classList.add('is-active');
     micOnIcon.classList.remove('hidden');
     micOffIcon.classList.add('hidden');
+  }
+    
+  // Set initial values
+  [inputWidth.value, inputHeight.value] = [width, height].map(Math.round);
+  setSelectedRatio(width, height);
+  if (dimensions.ratioLocked === true) {
+    linkBtn.classList.toggle('is-active');
   }
 
   handleTrafficLightsClicks({hide: true});
@@ -192,7 +196,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function setSelectedRatio(width, height) {
-    dimensions.ratio = getSimplestRatio(width, height);
+    dimensions.ratio = getSimplestRatio(Math.round(width), Math.round(height));
+    app.kap.settings.set('dimensions', dimensions);
 
     const ratios = document.querySelectorAll('.aspect-ratio-selector option');
     let hadMatch = false;
@@ -251,9 +256,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     dimensions.width = this.value;
+    app.kap.settings.set('dimensions', dimensions);
 
     if (dimensions.ratioLocked) {
       dimensions.height = (second / first) * this.value;
+      app.kap.settings.set('dimensions', dimensions);
       inputHeight.value = Math.round(dimensions.height);
       return;
     }
@@ -276,9 +283,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     dimensions.height = this.value;
+    app.kap.settings.set('dimensions', dimensions);
 
     if (dimensions.ratioLocked) {
       dimensions.width = (first / second) * this.value;
+      app.kap.settings.set('dimensions', dimensions);
       inputWidth.value = Math.round(dimensions.width);
       return;
     }
@@ -315,11 +324,13 @@ document.addEventListener('DOMContentLoaded', () => {
     inputWidth.oninput();
     inputHeight.oninput();
     setSelectedRatio(dimensions.width, dimensions.height);
+    app.kap.settings.set('dimensions', dimensions);
   };
 
   linkBtn.onclick = function () {
     this.classList.toggle('is-active');
     dimensions.ratioLocked = !dimensions.ratioLocked;
+    app.kap.settings.set('dimensions', dimensions);
   };
 
   const handleSizeChange = function () {
@@ -332,6 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
       dimensions.height = (dimensions.ratio.split(':')[1] / dimensions.ratio.split(':')[0]) * dimensions.width;
       inputHeight.value = Math.round(dimensions.height);
     }
+    app.kap.settings.set('dimensions', dimensions);
   };
 
   aspectRatioSelector.addEventListener('change', handleSizeChange);
