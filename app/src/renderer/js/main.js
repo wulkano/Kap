@@ -40,11 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const windowHeader = document.querySelector('.window-header');
 
   const [micOnIcon, micOffIcon] = toggleAudioRecordBtn.children;
-  
-  
+
   // Initial variables
   const dimensions = app.kap.settings.get('dimensions');
-  const { width, height, ratioLocked } = dimensions;
+  const {width, height, ratioLocked} = dimensions;
   let lastValidInputWidth = width;
   let lastValidInputHeight = height;
 
@@ -54,11 +53,12 @@ document.addEventListener('DOMContentLoaded', () => {
     micOnIcon.classList.remove('hidden');
     micOffIcon.classList.add('hidden');
   }
-    
+
   // Set initial values
-  [inputWidth.value, inputHeight.value] = [width, height].map(Math.round);
+  inputWidth.value = Math.round(width);
+  inputHeight.value = Math.round(height);
   setSelectedRatio(width, height);
-  if (dimensions.ratioLocked === true) {
+  if (ratioLocked === true) {
     linkBtn.classList.toggle('is-active');
   }
 
