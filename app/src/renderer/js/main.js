@@ -192,29 +192,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const lcd = getLargestCommonDivisor(width, height);
     const denominator = width / lcd;
     const numerator = height / lcd;
-    return `${denominator}:${numerator}`;
+    return [denominator, numerator];
   }
 
   function setSelectedRatio(width, height) {
-    dimensions.ratio = getSimplestRatio(Math.round(width), Math.round(height));
-    app.kap.settings.set('dimensions', dimensions);
-
     const ratios = document.querySelectorAll('.aspect-ratio-selector option');
     let hadMatch = false;
+
     for (const ratio of ratios) {
-      if (ratio.value === dimensions.ratio) {
-        aspectRatioSelector.value = dimensions.ratio;
+      const [first, second] = ratio.value.split(':');
+
+      if (width / first === height / second) {
+        aspectRatioSelector.value = ratio.value;
+        dimensions.ratio = [first, second];
         hadMatch = true;
         break;
       }
     }
 
     if (!hadMatch) {
+      dimensions.ratio = getSimplestRatio(Math.round(width), Math.round(height));
+      const stringRatio = dimensions.ratio.join(':');
       const customRatio = document.querySelector('#custom-ratio-option');
-      customRatio.value = dimensions.ratio;
-      customRatio.textContent = `Custom (${dimensions.ratio})`;
+      customRatio.value = stringRatio;
+      customRatio.textContent = `Custom (${stringRatio})`;
       customRatio.selected = true;
     }
+
+    app.kap.settings.set('dimensions', dimensions);
   }
 
   const handleRecord = function () {
@@ -245,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function handleWidthInput(event, validate) {
-    const [first, second] = dimensions.ratio.split(':');
+    const [first, second] = dimensions.ratio;
 
     this.value = validateNumericInput(this, {
       lastValidValue: lastValidInputWidth,
@@ -272,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function handleHeightInput(event, validate) {
-    const [first, second] = dimensions.ratio.split(':');
+    const [first, second] = dimensions.ratio;
 
     this.value = validateNumericInput(this, {
       lastValidValue: lastValidInputHeight,
@@ -320,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   swapBtn.onclick = () => {
     [inputWidth.value, inputHeight.value] = [inputHeight.value, inputWidth.value];
-    dimensions.ratio = `${dimensions.ratio.split(':')[1]}: ${dimensions.ratio.split(':')[0]}`;
+    dimensions.ratio = dimensions.ratio.reverse();
     inputWidth.oninput();
     inputHeight.oninput();
     setSelectedRatio(dimensions.width, dimensions.height);
@@ -334,13 +339,13 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const handleSizeChange = function () {
-    dimensions.ratio = this.value;
+    dimensions.ratio = [parseInt(this.value.split(':')[0], 10), parseInt(this.value.split(':')[1], 10)];
 
     dimensions.ratioLocked = true;
     linkBtn.classList.add('is-active');
 
     if (dimensions.ratioLocked) {
-      dimensions.height = (dimensions.ratio.split(':')[1] / dimensions.ratio.split(':')[0]) * dimensions.width;
+      dimensions.height = (dimensions.ratio[1] / dimensions.ratio[0]) * dimensions.width;
       inputHeight.value = Math.round(dimensions.height);
     }
     app.kap.settings.set('dimensions', dimensions);

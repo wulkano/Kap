@@ -18,7 +18,7 @@ const DEFAULTS = {
   dimensions: {
     height: 512,
     width: 512,
-    ratio: '1:1',
+    ratio: [1, 1],
     ratioLocked: false
   }
 };
