@@ -14,6 +14,9 @@ const {app} = remote;
 // Observers that should be disposed when the window unloads
 const observersToDispose = [];
 
+const cropperWindowBuffer = 2;
+const debounceTimeout = 400;
+
 function setMainWindowSize() {
   const width = document.documentElement.scrollWidth;
   const height = document.documentElement.scrollHeight;
@@ -289,18 +292,28 @@ document.addEventListener('DOMContentLoaded', () => {
     setCropperWindowSize();
   }
 
-  inputWidth.oninput = handleWidthInput;
-  inputWidth.onchange = handleWidthInput.bind(inputWidth, null, true);
+  let widthTimeout;
+  inputWidth.oninput = function () {
+    clearTimeout(widthTimeout);
+    widthTimeout = setTimeout(() => handleWidthInput.apply(this, arguments), debounceTimeout);
+  };
   inputWidth.onkeydown = handleKeyDown;
   inputWidth.onblur = function () {
+    clearTimeout(widthTimeout);
     this.value = this.value || (shake(this) && lastValidInputWidth); // Prevent the input from staying empty
+    handleWidthInput.apply(this, null, true);
   };
 
-  inputHeight.oninput = handleHeightInput;
-  inputHeight.onchange = handleHeightInput.bind(inputHeight, null, true);
+  let heightTimeout;
+  inputHeight.oninput = function () {
+    clearTimeout(heightTimeout);
+    heightTimeout = setTimeout(() => handleHeightInput.apply(this, arguments), debounceTimeout);
+  };
   inputHeight.onkeydown = handleKeyDown;
   inputHeight.onblur = function () {
+    clearTimeout(heightTimeout);
     this.value = this.value || (shake(this) && lastValidInputHeight); // Prevent the input from staying empty
+    handleHeightInput.apply(this, null, true);
   };
 
   options.onclick = event => {
@@ -372,7 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ipcRenderer.on('cropper-window-new-size', (event, size) => {
     if (inputWidth !== document.activeElement && inputHeight !== document.activeElement) {
-      [inputWidth.value, inputHeight.value] = [size.width, size.height];
+      [inputWidth.value, inputHeight.value] = [size.width - cropperWindowBuffer, size.height - cropperWindowBuffer];
     }
   });
 
