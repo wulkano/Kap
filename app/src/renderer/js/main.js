@@ -15,6 +15,8 @@ const {app} = remote;
 // Observers that should be disposed when the window unloads
 const observersToDispose = [];
 
+const cropperWindowBuffer = 2;
+
 function setMainWindowSize() {
   const width = document.documentElement.scrollWidth;
   const height = document.documentElement.scrollHeight;
@@ -62,8 +64,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (app === 'Fullscreen') {
-      const {width, height, x, y} = appData[app];
-      ipcRenderer.send('open-cropper-window', {width, height}, {x, y});
+      let {width, height} = appData[app];
+      // Need to get rid of the buffer because window can't be outside the screen limits
+      width -= cropperWindowBuffer;
+      height -= cropperWindowBuffer;
+      ipcRenderer.send('open-cropper-window', {width, height}, {x: 1, y: 1});
     } else {
       ipcRenderer.send('activate-application', app, appData[app]);
     }
@@ -76,15 +81,31 @@ document.addEventListener('DOMContentLoaded', () => {
   appSelector.append(createOption('Fullscreen'));
   appSelector.addEventListener('change', handleAppChange);
 
-  getWindows().then(windows => {
-    appSelector.querySelector('option[disabled]').text = 'Select...';
-    windows.forEach(window => {
-      if (window.name !== 'Kap') {
-        appData[window.ownerName] = window;
-        appSelector.append(createOption(window.ownerName));
+  function loadApplications() {
+    // Remove existing applications
+    appSelector.querySelectorAll('option:not([disabled])').forEach(option => {
+      if (option.value !== 'Fullscreen') {
+        option.remove();
+        delete appData[option.value];
       }
     });
-  });
+
+    appSelector.querySelector('option[disabled]').text = 'Loading...';
+    appSelector.querySelector('option[disabled]').selected = true;
+
+    // Load applications
+    getWindows().then(windows => {
+      appSelector.querySelector('option[disabled]').text = 'Select...';
+      windows.forEach(window => {
+        if (window.name !== 'Kap') {
+          appData[window.ownerName] = window;
+          appSelector.append(createOption(window.ownerName));
+        }
+      });
+    });
+  }
+
+  loadApplications();
 
   // Initial variables
   let lastValidInputWidth = 512;
@@ -461,6 +482,8 @@ document.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.on('stop-recording', stopRecording);
 
   ipcRenderer.on('log', (event, msgs) => console.log(...msgs));
+
+  ipcRenderer.on('load-applications', loadApplications);
 
   function showExportWindow() {
     startBar.classList.add('hidden');
