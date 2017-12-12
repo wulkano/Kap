@@ -180,6 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function stopRecording() {
+    clearApp();
     ipcRenderer.send('will-stop-recording');
 
     const filePath = await aperture.stopRecording();
