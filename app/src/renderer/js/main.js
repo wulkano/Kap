@@ -45,10 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const [micOnIcon, micOffIcon] = toggleAudioRecordBtn.children;
 
-  const createOption = label => {
+  const createOption = (label, disabled = false) => {
     const option = document.createElement('option');
     option.value = label;
     option.text = label;
+    option.disabled = disabled;
     return option;
   };
 
@@ -79,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   appSelector.append(createOption('Fullscreen'));
+  appSelector.append(createOption('──────────', true));
   appSelector.addEventListener('change', handleAppChange);
 
   function loadApplications() {
