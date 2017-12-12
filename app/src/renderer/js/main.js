@@ -1,4 +1,5 @@
 import {ipcRenderer, remote} from 'electron';
+import {getWindows} from 'mac-windows';
 
 import {init as initErrorReporter, report as reportError} from '../../common/reporter';
 import {log} from '../../common/logger';
@@ -23,6 +24,7 @@ function setMainWindowSize() {
 document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
   const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
+  const appSelector = document.querySelector('.app-selector');
   const startBar = document.querySelector('.start-bar');
   const controls = document.querySelector('.controls-content');
   const inputWidth = document.querySelector('#aspect-ratio-width');
@@ -40,6 +42,49 @@ document.addEventListener('DOMContentLoaded', () => {
   const windowHeader = document.querySelector('.window-header');
 
   const [micOnIcon, micOffIcon] = toggleAudioRecordBtn.children;
+
+  const createOption = label => {
+    const option = document.createElement('option');
+    option.value = label;
+    option.text = label;
+    return option;
+  };
+
+  const appData = {
+    Fullscreen: remote.screen.getPrimaryDisplay().bounds
+  };
+
+  function handleAppChange() {
+    const app = this.value;
+
+    if (!app) {
+      return;
+    }
+
+    if (app === 'Fullscreen') {
+      const {width, height, x, y} = appData[app];
+      ipcRenderer.send('open-cropper-window', {width, height}, {x, y});
+    } else {
+      ipcRenderer.send('activate-application', app, appData[app]);
+    }
+  }
+
+  function clearApp() {
+    appSelector.querySelector('option[disabled]').selected = true;
+  }
+
+  appSelector.append(createOption('Fullscreen'));
+  appSelector.addEventListener('change', handleAppChange);
+
+  getWindows().then(windows => {
+    appSelector.querySelector('option[disabled]').text = 'Select...';
+    windows.forEach(window => {
+      if (window.name !== 'Kap') {
+        appData[window.ownerName] = window;
+        appSelector.append(createOption(window.ownerName));
+      }
+    });
+  });
 
   // Initial variables
   let lastValidInputWidth = 512;
@@ -162,8 +207,6 @@ document.addEventListener('DOMContentLoaded', () => {
         width: parseInt(inputWidth.value, 10),
         height: parseInt(inputHeight.value, 10)
       });
-      recordBtn.classList.add('is-cropping');
-      recordBtn.attributes['data-state'].value = 'ready-to-record';
     } else if (state === 'ready-to-record') {
       startRecording();
     } else if (state === 'ready-to-stop') {
@@ -240,6 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function handleWidthInput(event, validate) {
+    clearApp();
     const [first, second] = dimensions.ratio.split(':');
 
     this.value = validateNumericInput(this, {
@@ -265,6 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function handleHeightInput(event, validate) {
+    clearApp();
     const [first, second] = dimensions.ratio.split(':');
 
     this.value = validateNumericInput(this, {
@@ -323,6 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const handleSizeChange = function () {
+    clearApp();
     dimensions.ratio = this.value;
 
     dimensions.ratioLocked = true;
@@ -370,9 +416,18 @@ document.addEventListener('DOMContentLoaded', () => {
     recordBtn.attributes['data-state'].value = 'initial';
   });
 
+  ipcRenderer.on('cropper-window-opened', (event, bounds) => {
+    recordBtn.classList.add('is-cropping');
+    recordBtn.attributes['data-state'].value = 'ready-to-record';
+
+    [inputWidth.value, inputHeight.value] = [bounds.width, bounds.height];
+    setSelectedRatio(bounds.width, bounds.height);
+  });
+
   ipcRenderer.on('cropper-window-new-size', (event, size) => {
     if (inputWidth !== document.activeElement && inputHeight !== document.activeElement) {
       [inputWidth.value, inputHeight.value] = [size.width, size.height];
+      clearApp();
     }
   });
 

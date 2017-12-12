@@ -239,6 +239,15 @@ body.is-tray-arrow-hidden {
 
 
 /* Aspect Ratio Controls */
+.aspect-ratio-select {
+  flex: 2;
+}
+
+.app-select {
+  margin-left: 10px;
+  flex: 2;
+}
+
 .aspect-ratio {
   align-items: flex-end;
   justify-content: space-between;
