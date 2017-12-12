@@ -240,12 +240,7 @@ body.is-tray-arrow-hidden {
 
 /* Aspect Ratio Controls */
 .aspect-ratio-select {
-  flex: 2;
-}
-
-.app-select {
-  margin-left: 10px;
-  flex: 2;
+  margin-right: 10px;
 }
 
 .aspect-ratio {
