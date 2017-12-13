@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Prepare recording button for recording state
   // - Either opens the crop window or starts recording
   function prepareRecordButton() {
-    const state = recordBtn.attributes['data-state'].value;
+    const state = recordBtn.dataset.state;
     if (state === 'initial') {
       ipcRenderer.send('open-cropper-window', {
         width: parseInt(inputWidth.value, 10),
@@ -438,12 +438,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ipcRenderer.on('cropper-window-closed', () => {
     recordBtn.classList.remove('is-cropping');
-    recordBtn.attributes['data-state'].value = 'initial';
+    recordBtn.dataset.state = 'initial';
   });
 
   ipcRenderer.on('cropper-window-opened', (event, bounds) => {
     recordBtn.classList.add('is-cropping');
-    recordBtn.attributes['data-state'].value = 'ready-to-record';
+    recordBtn.dataset.state = 'ready-to-record';
 
     [inputWidth.value, inputHeight.value] = [bounds.width, bounds.height];
     setSelectedRatio(bounds.width, bounds.height);
