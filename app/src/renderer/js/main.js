@@ -86,12 +86,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function loadApps() {
     // Remove existing applications
-    appSelector.querySelectorAll('option:not([disabled])').forEach(option => {
+    const options = appSelector.querySelectorAll('option:not([disabled])');
+    for (const option of options) {
       if (option.value !== 'Fullscreen') {
         option.remove();
         delete appData[option.value];
       }
-    });
+    }
 
     disabledAppOption.text = 'Loading…';
     disabledAppOption.selected = true;
@@ -99,12 +100,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load applications
     const windows = await getWindows();
     disabledAppOption.text = 'Select…';
-    windows.forEach(window => {
+    for (const window of windows) {
       if (window.name !== 'Kap') {
         appData[window.ownerName] = window;
         appSelector.append(createOption(window.ownerName));
       }
-    });
+    }
   }
 
   loadApps();
