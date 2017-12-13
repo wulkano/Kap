@@ -34,8 +34,8 @@ const action = async context => {
   moveFile.sync(await context.filePath(), filePath);
 
   const notification = new Notification({
-    title: 'File Saved Successfully',
-    body: 'Click to open'
+    title: 'File saved successfully!',
+    body: 'Click to show the file in Finder'
   });
 
   notification.on('click', () => {
