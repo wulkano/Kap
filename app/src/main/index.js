@@ -179,15 +179,14 @@ const openCropperWindow = (size = {}, position = {}) => {
   }
 };
 
-ipcMain.on('activate-application', (event, appName, {width, height, x, y}) => {
+ipcMain.on('activate-application', async (event, appName, {width, height, x, y}) => {
   if (cropperWindow) {
     cropperWindow.close();
   }
 
-  activateWindow(appName).then(() => {
-    mainWindow.show();
-    openCropperWindow({width, height}, {x, y});
-  });
+  await activateWindow(appName);
+  mainWindow.show();
+  openCropperWindow({width, height}, {x, y});
 });
 
 ipcMain.on('open-cropper-window', (event, size, position) => {

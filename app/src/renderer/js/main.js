@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
   const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
   const appSelector = document.querySelector('.app-selector');
+  const disabledAppOption = appSelector.querySelector('option[disabled]');
   const startBar = document.querySelector('.start-bar');
   const controls = document.querySelector('.controls-content');
   const inputWidth = document.querySelector('#aspect-ratio-width');
@@ -76,14 +77,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function clearApp() {
-    appSelector.querySelector('option[disabled]').selected = true;
+    disabledAppOption.selected = true;
   }
 
   appSelector.append(createOption('Fullscreen'));
   appSelector.append(createOption('──────────', true));
   appSelector.addEventListener('change', handleAppChange);
 
-  function loadApplications() {
+  async function loadApplications() {
     // Remove existing applications
     appSelector.querySelectorAll('option:not([disabled])').forEach(option => {
       if (option.value !== 'Fullscreen') {
@@ -92,18 +93,17 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    appSelector.querySelector('option[disabled]').text = 'Loading...';
-    appSelector.querySelector('option[disabled]').selected = true;
+    disabledAppOption.text = 'Loading...';
+    disabledAppOption.selected = true;
 
     // Load applications
-    getWindows().then(windows => {
-      appSelector.querySelector('option[disabled]').text = 'Select...';
-      windows.forEach(window => {
-        if (window.name !== 'Kap') {
-          appData[window.ownerName] = window;
-          appSelector.append(createOption(window.ownerName));
-        }
-      });
+    const windows = await getWindows();
+    disabledAppOption.text = 'Select...';
+    windows.forEach(window => {
+      if (window.name !== 'Kap') {
+        appData[window.ownerName] = window;
+        appSelector.append(createOption(window.ownerName));
+      }
     });
   }
 
