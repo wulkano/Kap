@@ -404,7 +404,7 @@ menubar.on('after-create-window', () => {
   });
 
   mainWindow.on('show', () => {
-    mainWindow.webContents.send('load-applications');
+    mainWindow.webContents.send('load-apps');
   });
 
   menubar.on('show', () => {

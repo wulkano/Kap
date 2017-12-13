@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
   appSelector.append(createOption('──────────', {disabled: true}));
   appSelector.addEventListener('change', handleAppChange);
 
-  async function loadApplications() {
+  async function loadApps() {
     // Remove existing applications
     appSelector.querySelectorAll('option:not([disabled])').forEach(option => {
       if (option.value !== 'Fullscreen') {
@@ -93,12 +93,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    disabledAppOption.text = 'Loading...';
+    disabledAppOption.text = 'Loading…';
     disabledAppOption.selected = true;
 
     // Load applications
     const windows = await getWindows();
-    disabledAppOption.text = 'Select...';
+    disabledAppOption.text = 'Select…';
     windows.forEach(window => {
       if (window.name !== 'Kap') {
         appData[window.ownerName] = window;
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  loadApplications();
+  loadApps();
 
   // Initial variables
   let lastValidInputWidth = 512;
@@ -485,7 +485,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ipcRenderer.on('log', (event, msgs) => console.log(...msgs));
 
-  ipcRenderer.on('load-applications', loadApplications);
+  ipcRenderer.on('load-apps', loadApps);
 
   function showExportWindow() {
     startBar.classList.add('hidden');
