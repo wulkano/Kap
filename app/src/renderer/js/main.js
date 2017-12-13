@@ -54,9 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
     return option;
   };
 
-  const appData = {
-    Fullscreen: remote.screen.getPrimaryDisplay().bounds
-  };
+  const appData = new Map([
+    ['Fullscreen', remote.screen.getPrimaryDisplay().bounds]
+  ]);
 
   function handleAppChange() {
     const app = this.value;
@@ -66,13 +66,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (app === 'Fullscreen') {
-      let {width, height} = appData[app];
+      let {width, height} = appData.get(app);
       // Need to get rid of the buffer because window can't be outside the screen limits
       width -= cropperWindowBuffer;
       height -= cropperWindowBuffer;
       ipcRenderer.send('open-cropper-window', {width, height}, {x: 1, y: 1});
     } else {
-      ipcRenderer.send('activate-application', app, appData[app]);
+      ipcRenderer.send('activate-application', app, appData.get(app));
     }
   }
 
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
     for (const option of options) {
       if (option.value !== 'Fullscreen') {
         option.remove();
-        delete appData[option.value];
+        appData.delete(option.value);
       }
     }
 
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
     disabledAppOption.text = 'Select…';
     for (const window of windows) {
       if (window.name !== 'Kap') {
-        appData[window.ownerName] = window;
+        appData.set(window.ownerName, window);
         appSelector.append(createOption(window.ownerName));
       }
     }
