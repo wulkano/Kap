@@ -16,6 +16,22 @@ const settingsValues = app.kap.settings.getAll();
 // Observers that should be disposed when the window unloads
 const observersToDispose = [];
 
+const initVideoCodecSelector = () => {
+  const videoCodecSelector = $('.js-video-codec-selector');
+
+  for (const [id, name] of aperture.videoCodecs) {
+    const option = document.createElement('option');
+    option.value = id;
+    option.text = name;
+    option.selected = id === app.kap.settings.get('videoCodec');
+    videoCodecSelector.add(option);
+  }
+
+  videoCodecSelector.addEventListener('change', function () {
+    app.kap.settings.set('videoCodec', this.value);
+  });
+};
+
 document.addEventListener('DOMContentLoaded', async () => {
   // Element definitions
   const allowAnalyticsCheckbox = $('#allow-analytics');
@@ -59,6 +75,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (settingsValues.recordAudio === true) {
     audioInputDeviceSelector.value = settingsValues.audioInputDeviceId;
   }
+
+  initVideoCodecSelector();
 
   const tabs = $j('.prefs-nav > a');
   tabs.on('click', function (event) {
