@@ -1,4 +1,4 @@
-import {app, dialog} from 'electron';
+import {app, dialog, Notification, shell} from 'electron';
 import makeDir from 'make-dir';
 import moveFile from 'move-file';
 
@@ -32,6 +32,17 @@ const action = async context => {
 
   // TODO: Switch to the async version when we target Electron 1.8
   moveFile.sync(await context.filePath(), filePath);
+
+  const notification = new Notification({
+    title: 'File saved successfully!',
+    body: 'Click to show the file in Finder'
+  });
+
+  notification.on('click', () => {
+    shell.showItemInFolder(filePath);
+  });
+
+  notification.show();
 };
 
 module.exports = {
