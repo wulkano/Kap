@@ -2,11 +2,11 @@ import os from 'os';
 import isDev from 'electron-is-dev';
 import unhandled from 'electron-unhandled';
 
-let ravenClient;
+let Raven;
 
 function init() {
   if (!isDev) {
-    const Raven = require('raven');
+    Raven = require('raven');
 
     Raven.config('https://2dffdbd619f34418817f4db3309299ce@sentry.io/255536', {
       captureUnhandledRejections: true,
@@ -15,9 +15,9 @@ function init() {
         electron: process.versions.electron,
         chrome: process.versions.chrome,
         platform: os.platform(),
-        platform_release: os.release()
+        platform_release: os.release() // eslint-disable-line camelcase
       }
-     }).install();
+    }).install();
   }
 }
 
