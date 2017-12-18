@@ -6,9 +6,7 @@ let Raven;
 
 function init() {
   if (!isDev) {
-    Raven = process.type === 'renderer'
-      ? require('raven-js')
-      : require('raven');
+    Raven = process.type === 'renderer' ? require('raven-js') : require('raven');
 
     Raven.config('https://2dffdbd619f34418817f4db3309299ce@sentry.io/255536', {
       captureUnhandledRejections: false,
