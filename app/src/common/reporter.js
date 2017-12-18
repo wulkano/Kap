@@ -29,9 +29,14 @@ function report(err) {
   }
 }
 
-unhandled({
-  logger: report
-});
+// Enable `electron-unhandled` only for development
+// Since Raven client also captures unhandled rejections
+// which should be fine in production.
+if (isDev) {
+  unhandled({
+    logger: report
+  });
+}
 
 exports.init = init;
 exports.report = report;
