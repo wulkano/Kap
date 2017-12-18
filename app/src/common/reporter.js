@@ -24,7 +24,7 @@ function init() {
 function report(err) {
   console.error(err);
 
-  if (!isDev && err) {
+  if (!isDev && Raven && err) {
     Raven.captureException(err);
   }
 }
