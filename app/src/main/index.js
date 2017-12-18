@@ -315,7 +315,7 @@ menubar.on('after-create-window', () => {
   mainWindow = menubar.window;
   mainWindow.setTouchBar(mainTouchbar);
 
-  app.kap = {mainWindow, getCropperWindow, getEditorWindow, openPrefsWindow, settings};
+  app.kap = {mainWindow, getCropperWindow, getEditorWindow, openPrefsWindow, settings, cropperWindowBuffer};
   if (isDev) {
     mainWindow.openDevTools({mode: 'detach'});
   }

@@ -15,8 +15,6 @@ const {app} = remote;
 // Observers that should be disposed when the window unloads
 const observersToDispose = [];
 
-const cropperWindowBuffer = 2;
-
 function setMainWindowSize() {
   const width = document.documentElement.scrollWidth;
   const height = document.documentElement.scrollHeight;
@@ -59,20 +57,20 @@ document.addEventListener('DOMContentLoaded', () => {
   ]);
 
   function handleAppChange() {
-    const app = this.value;
+    const appName = this.value;
 
-    if (!app) {
+    if (!appName) {
       return;
     }
 
-    if (app === 'Fullscreen') {
-      let {width, height} = appData.get(app);
+    if (appName === 'Fullscreen') {
+      let {width, height} = appData.get(appName);
       // Need to get rid of the buffer because window can't be outside the screen limits
-      width -= cropperWindowBuffer;
-      height -= cropperWindowBuffer;
+      width -= app.kap.cropperWindowBuffer;
+      height -= app.kap.cropperWindowBuffer;
       ipcRenderer.send('open-cropper-window', {width, height}, {x: 1, y: 1});
     } else {
-      ipcRenderer.send('activate-application', app, appData.get(app));
+      ipcRenderer.send('activate-application', app, appData.get(appName));
     }
   }
 
