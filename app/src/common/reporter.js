@@ -9,7 +9,7 @@ function init() {
     Raven = require('raven');
 
     Raven.config('https://2dffdbd619f34418817f4db3309299ce@sentry.io/255536', {
-      captureUnhandledRejections: true,
+      captureUnhandledRejections: false,
       tags: {
         process: process.type,
         electron: process.versions.electron,
@@ -29,14 +29,9 @@ function report(err) {
   }
 }
 
-// Enable `electron-unhandled` only for development
-// Since Raven client also captures unhandled rejections
-// which should be fine in production.
-if (isDev) {
-  unhandled({
-    logger: report
-  });
-}
+unhandled({
+  logger: report
+});
 
 exports.init = init;
 exports.report = report;
