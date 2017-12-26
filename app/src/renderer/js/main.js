@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
       height -= app.kap.cropperWindowBuffer;
       ipcRenderer.send('open-cropper-window', {width, height}, {x: 1, y: 1});
     } else {
-      ipcRenderer.send('activate-application', app, appData.get(appName));
+      ipcRenderer.send('activate-application', appName, appData.get(appName));
     }
   }
 
