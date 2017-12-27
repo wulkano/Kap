@@ -7,6 +7,7 @@ import {log} from '../../common/logger';
 // Note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 import {handleTrafficLightsClicks, isVisible, disposeObservers} from '../js/utils';
+import {buildSizeMenu} from '../js/size-selector';
 
 const aperture = require('aperture')();
 
@@ -25,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
   const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
   const appSelector = document.querySelector('.app-selector');
+  const customSelect = document.querySelector('.custom-select');
   const disabledAppOption = appSelector.querySelector('option[disabled]');
   const startBar = document.querySelector('.start-bar');
   const controls = document.querySelector('.controls-content');
@@ -41,6 +43,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const trafficLightsWrapper = document.querySelector('.title-bar__controls');
   const trayTriangle = document.querySelector('.tray-arrow');
   const windowHeader = document.querySelector('.window-header');
+
+  buildSizeMenu().then(menu => {
+    customSelect.onclick = event => {
+      menu.popup();
+    }
+  });
 
   const [micOnIcon, micOffIcon] = toggleAudioRecordBtn.children;
 

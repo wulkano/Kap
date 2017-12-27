@@ -38,6 +38,7 @@
     "moment": "^2.14.1",
     "move-file": "^0.2.0",
     "ms": "^2.0.0",
+    "node-mac-app-icon": "^1.0.1",
     "npm": "^4.6.1",
     "object-path": "^0.11.3",
     "raven": "^0.12.1",
