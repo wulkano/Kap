@@ -1,0 +1,62 @@
+import {remote} from 'electron';
+import {getWindows} from 'mac-windows';
+import {getAppIconListByPid} from 'node-mac-app-icon';
+
+const {Menu, nativeImage} = remote;
+
+const RATIOS = [
+  '16:9',
+  '5:4',
+  '5:3',
+  '4:3',
+  '3:2',
+  '1:1',
+  'Custom'
+];
+const DEFAULT_RATIO = '1:1';
+
+async function getWindowList() {
+  const windows = await getWindows();
+  const images = await getAppIconListByPid(windows.map(win => win.pid), 16);
+  return windows
+    .filter(win => win.ownerName !== 'Kap')
+    .map(win => Object.assign({}, win, {
+      icon: nativeImage
+        .createFromDataURL(images.find(img => img.pid === win.pid).icon)
+        .resize({
+          width: 16,
+          height: 16
+        })
+    }));
+}
+
+export async function buildSizeMenu() {
+  const windows = await getWindowList();
+  console.log(windows);
+
+  return Menu.buildFromTemplate([
+    ...RATIOS.map(ratio => ({
+      label: ratio,
+      checked: ratio === DEFAULT_RATIO,
+      type: 'radio'
+    })),
+    {
+      type: 'separator'
+    },
+    {
+      label: 'Windows',
+      submenu: [
+        {
+          label: 'Fullscreen'
+        },
+        {
+          type: 'separator'
+        },
+        ...windows.map(win => ({
+          label: win.ownerName,
+          icon: win.icon
+        }))
+      ]
+    }
+  ]);
+}

@@ -1300,6 +1300,10 @@ lsmod@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/lsmod/-/lsmod-1.0.0.tgz#9a00f76dca36eb23fa05350afe1b585d4299e64b"
 
+mac-windows@^0.5.4:
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/mac-windows/-/mac-windows-0.5.4.tgz#7ee2c5c9e83cf8c79c835b18a6e7008bdff52507"
+
 macos-version@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/macos-version/-/macos-version-4.0.1.tgz#ede40927e40ee0610cdb0f40bd94392d052e4fe5"
@@ -1426,6 +1430,10 @@ node-gyp@~3.6.0:
     semver "~5.3.0"
     tar "^2.0.0"
     which "1"
+
+node-mac-app-icon@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/node-mac-app-icon/-/node-mac-app-icon-1.0.1.tgz#65d5d3edcaf58f8386018c97dac703e895b2a0b3"
 
 "nopt@2 || 3":
   version "3.0.6"
