@@ -34,7 +34,7 @@ function handleClick(menuItem, el) {
   el.innerHTML = menuItem.label;
 }
 
-export async function buildSizeMenu(el) {
+export default async function buildSizeMenu(el) {
   const windows = await getWindowList();
   console.log(windows);
 
@@ -66,7 +66,7 @@ export async function buildSizeMenu(el) {
     }
   ]);
 
-  el.onclick = event => {
+  el.onclick = () => {
     menu.popup();
   };
 }
