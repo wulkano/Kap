@@ -44,11 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const trayTriangle = document.querySelector('.tray-arrow');
   const windowHeader = document.querySelector('.window-header');
 
-  buildSizeMenu().then(menu => {
-    customSelect.onclick = event => {
-      menu.popup();
-    }
-  });
+  buildSizeMenu(customSelect);
 
   const [micOnIcon, micOffIcon] = toggleAudioRecordBtn.children;
 
