@@ -1403,9 +1403,11 @@ node-gyp@~3.6.0:
     tar "^2.0.0"
     which "1"
 
-node-mac-app-icon@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/node-mac-app-icon/-/node-mac-app-icon-1.0.1.tgz#65d5d3edcaf58f8386018c97dac703e895b2a0b3"
+node-mac-app-icon@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/node-mac-app-icon/-/node-mac-app-icon-1.1.0.tgz#521019090175cc7f9d911f9eb2240252f0142d3a"
+  dependencies:
+    execa "^0.8.0"
 
 "nopt@2 || 3":
   version "3.0.6"
