@@ -30,15 +30,20 @@ async function getWindowList() {
     }));
 }
 
-export async function buildSizeMenu() {
+function handleClick(menuItem, el) {
+  el.innerHTML = menuItem.label;
+}
+
+export async function buildSizeMenu(el) {
   const windows = await getWindowList();
   console.log(windows);
 
-  return Menu.buildFromTemplate([
+  const menu = Menu.buildFromTemplate([
     ...RATIOS.map(ratio => ({
       label: ratio,
       checked: ratio === DEFAULT_RATIO,
-      type: 'radio'
+      type: 'radio',
+      click: menuItem => handleClick(menuItem, el)
     })),
     {
       type: 'separator'
@@ -54,9 +59,14 @@ export async function buildSizeMenu() {
         },
         ...windows.map(win => ({
           label: win.ownerName,
-          icon: win.icon
+          icon: win.icon,
+          click: menuItem => handleClick(menuItem, el)
         }))
       ]
     }
   ]);
+
+  el.onclick = event => {
+    menu.popup();
+  };
 }
