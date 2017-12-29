@@ -17,12 +17,15 @@ const DEFAULT_RATIO = '1:1';
 
 async function getWindowList() {
   const windows = await getWindows();
-  const images = await getAppIconListByPid(windows.map(win => win.pid), 16);
+  const images = await getAppIconListByPid(windows.map(win => win.pid), {
+    size: 16,
+    encoding: 'buffer'
+  });
   return windows
     .filter(win => win.ownerName !== 'Kap')
     .map(win => Object.assign({}, win, {
       icon: nativeImage
-        .createFromDataURL(images.find(img => img.pid === win.pid).icon)
+        .createFromBuffer(images.find(img => img.pid === win.pid).icon)
         .resize({
           width: 16,
           height: 16
