@@ -48,7 +48,7 @@ export default async function buildSizeMenu(el, handleRatioChange) {
       type: 'radio',
       click: menuItem => {
         handleRatioChange(menuItem.label);
-        handleClick(menuItem, el)
+        handleClick(menuItem, el);
       }
     })),
     {
