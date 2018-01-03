@@ -44,8 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const trayTriangle = document.querySelector('.tray-arrow');
   const windowHeader = document.querySelector('.window-header');
 
-  buildSizeMenu(customSelect);
-
   const [micOnIcon, micOffIcon] = toggleAudioRecordBtn.children;
 
   const createOption = (label, {disabled = false} = {}) => {
@@ -410,9 +408,9 @@ document.addEventListener('DOMContentLoaded', () => {
     app.kap.settings.set('dimensions', dimensions);
   };
 
-  const handleSizeChange = function () {
+  const handleSizeChange = function (ratio) {
     clearApp();
-    dimensions.ratio = [parseInt(this.value.split(':')[0], 10), parseInt(this.value.split(':')[1], 10)];
+    dimensions.ratio = [parseInt(ratio.split(':')[0], 10), parseInt(ratio.split(':')[1], 10)];
 
     dimensions.ratioLocked = true;
     linkBtn.classList.add('is-active');
@@ -424,12 +422,9 @@ document.addEventListener('DOMContentLoaded', () => {
     app.kap.settings.set('dimensions', dimensions);
   };
 
-  aspectRatioSelector.addEventListener('change', handleSizeChange);
+  buildSizeMenu(customSelect, handleSizeChange);
 
-  ipcRenderer.on('change-aspect-ratio', (e, aspectRatio) => {
-    aspectRatioSelector.value = aspectRatio;
-    handleSizeChange.call(aspectRatioSelector);
-  });
+  ipcRenderer.on('change-aspect-ratio', (e, aspectRatio) => handleSizeChange(aspectRatio));
 
   toggleAudioRecordBtn.onclick = function () {
     micOnIcon.classList.toggle('hidden');
