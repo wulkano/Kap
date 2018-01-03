@@ -10,10 +10,8 @@ const RATIOS = [
   '5:3',
   '4:3',
   '3:2',
-  '1:1',
-  'Custom'
+  '1:1'
 ];
-const DEFAULT_RATIO = '1:1';
 
 async function getWindowList() {
   const windows = await getWindows();
@@ -43,9 +41,8 @@ async function getWindowList() {
   ];
 }
 
-function handleRatioChange(ratio, el, onRatioChange) {
-  onRatioChange(ratio);
-  el.querySelector('.selector-content').innerHTML = ratio;
+function updateContent(el, ratio) {
+  el.querySelector('.selector-content').innerHTML = ratio || 'Custom';
 }
 
 function handleAppChange(app) {
@@ -56,21 +53,35 @@ function handleAppChange(app) {
   }
 }
 
-export default async function buildSizeMenu(el, onRatioChange, emitter) {
-  const [fullscreen, ...windows] = await getWindowList();
-  console.log(windows);
-  console.log(emitter);
-  emitter.on('change', e => {
-    console.log('Change', e);
-  });
+function sizeMatchesRatio(size, ratio) {
+  const [first, second] = ratio.split(':');
+  const {width, height} = size;
+  return (width / first === height / second);
+}
 
-  const menu = Menu.buildFromTemplate([
+function buildMenuItems(options, currentDimensions, windowList) {
+  const {onRatioChange, el} = options;
+  const [fullscreen, ...windows] = windowList;
+
+  const currentRatio = RATIOS.find(ratio => sizeMatchesRatio(currentDimensions, ratio));
+
+  updateContent(el, currentRatio);
+
+  return Menu.buildFromTemplate([
     ...RATIOS.map(ratio => ({
       label: ratio,
-      checked: ratio === DEFAULT_RATIO,
+      checked: ratio === currentRatio,
       type: 'radio',
-      click: () => handleRatioChange(ratio, el, onRatioChange)
+      click: () => {
+        onRatioChange(ratio);
+        updateContent(el, ratio);
+      }
     })),
+    {
+      label: 'Custom',
+      checked: !currentRatio,
+      type: 'radio'
+    },
     {
       type: 'separator'
     },
@@ -92,6 +103,16 @@ export default async function buildSizeMenu(el, onRatioChange, emitter) {
       ]
     }
   ]);
+}
+
+export default async function buildSizeMenu(options) {
+  const {emitter, dimensions, el} = options;
+  const windowList = await getWindowList();
+
+  let menu = buildMenuItems(options, dimensions, windowList);
+  emitter.on('change', newDimensions => {
+    menu = buildMenuItems(options, newDimensions, windowList);
+  });
 
   el.onclick = () => {
     menu.popup();

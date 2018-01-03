@@ -198,7 +198,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function setSelectedRatio(width, height) {
-    console.log('should call');
     ratioChangeEmitter.emit('change', {width, height});
     const ratios = document.querySelectorAll('.aspect-ratio-selector option');
     let hadMatch = false;
@@ -355,7 +354,12 @@ document.addEventListener('DOMContentLoaded', () => {
     app.kap.settings.set('dimensions', dimensions);
   };
 
-  buildSizeMenu(customSelect, handleSizeChange, ratioChangeEmitter);
+  buildSizeMenu({
+    el: customSelect,
+    onRatioChange: handleSizeChange,
+    emitter: ratioChangeEmitter,
+    dimensions
+  });
 
   ipcRenderer.on('change-aspect-ratio', (e, aspectRatio) => handleSizeChange(aspectRatio));
 
