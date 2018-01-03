@@ -19,7 +19,9 @@ block body
   section.controls-content
     .controls-section.container
       .controls-section__row
-        .c-select.custom-select Select...
+        .c-select.custom-select
+          +icon('ic_crop_free_24px').o-icon--small
+          span.selector-content(data-default-text='Select...') Select...
         +select-custom.has-icon.c-select--large.aspect-ratio-select
           +icon('ic_crop_free_24px').o-icon--small
           select.aspect-ratio-selector(tabindex="1")
@@ -30,10 +32,6 @@ block body
             option(value='3:2') 3:2
             option(value='1:1' selected) 1:1
             option(id="custom-ratio-option" data-aspect-ratio='custom') Custom
-        +select-custom.has-icon.c-select--large.app-select
-          +icon('ic_crop_free_24px').o-icon--small
-          select.app-selector(tabindex="1")
-            option(disabled=true selected=true) Loading…
       .controls-section__row.aspect-ratio
         .aspect-ratio__input
           input#aspect-ratio-width.c-input--large(type='number' value='512' tabindex="1")
