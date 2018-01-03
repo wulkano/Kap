@@ -405,10 +405,6 @@ menubar.on('after-create-window', () => {
     }
   });
 
-  mainWindow.on('show', () => {
-    mainWindow.webContents.send('load-apps');
-  });
-
   menubar.on('show', () => {
     if (mainWindowIsDetached) {
       tray.setHighlightMode('never');
