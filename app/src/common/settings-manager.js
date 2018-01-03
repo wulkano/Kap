@@ -14,7 +14,13 @@ const DEFAULTS = {
   highlightClicks: false,
   fps: 30,
   recordAudio: false,
-  audioInputDeviceId: 'none'
+  audioInputDeviceId: 'none',
+  dimensions: {
+    height: 512,
+    width: 512,
+    ratio: [1, 1],
+    ratioLocked: false
+  }
 };
 
 const volatiles = {
