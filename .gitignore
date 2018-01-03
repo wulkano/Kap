@@ -2,3 +2,4 @@ node_modules
 /app/dist
 /app/vendor
 /dist
+yarn*log

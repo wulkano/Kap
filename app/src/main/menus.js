@@ -160,15 +160,6 @@ const applicationMenu = [
     label: 'View',
     submenu: [
       {
-        label: 'Reload',
-        accelerator: 'CmdOrCtrl+R',
-        click(item, focusedWindow) {
-          if (focusedWindow) {
-            focusedWindow.reload();
-          }
-        }
-      },
-      {
         label: 'Toggle Developer Tools',
         accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
         click(item, focusedWindow) {
@@ -199,7 +190,7 @@ const applicationMenu = [
         click: () => shell.openExternal('https://getkap.co')
       },
       {
-        label: 'GitHub repository',
+        label: 'GitHub Repository',
         click: () => shell.openExternal('https://github.com/wulkano/kap')
       }
     ]

@@ -14,6 +14,8 @@ import analytics from './analytics';
 import {applicationMenu, cogMenu} from './menus';
 import plugins from './plugins';
 
+require('electron-debug')();
+
 const {wasOpenedAtLogin} = app.getLoginItemSettings();
 
 const menubar = require('menubar')({
