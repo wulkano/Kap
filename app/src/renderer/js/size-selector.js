@@ -37,7 +37,7 @@ function handleClick(menuItem, el) {
   el.innerHTML = menuItem.label;
 }
 
-export default async function buildSizeMenu(el) {
+export default async function buildSizeMenu(el, handleRatioChange) {
   const windows = await getWindowList();
   console.log(windows);
 
@@ -46,7 +46,10 @@ export default async function buildSizeMenu(el) {
       label: ratio,
       checked: ratio === DEFAULT_RATIO,
       type: 'radio',
-      click: menuItem => handleClick(menuItem, el)
+      click: menuItem => {
+        handleRatioChange(menuItem.label);
+        handleClick(menuItem, el)
+      }
     })),
     {
       type: 'separator'
