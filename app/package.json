@@ -20,6 +20,7 @@
     "aspectratio": "^2.2.2",
     "delay": "^2.0.0",
     "eightpoint": "0.0.1",
+    "electron-debug": "^1.5.0",
     "electron-is-dev": "^0.3.0",
     "electron-settings": "^2.2.1",
     "electron-store": "^1.2.0",
@@ -40,7 +41,8 @@
     "ms": "^2.0.0",
     "npm": "^4.6.1",
     "object-path": "^0.11.3",
-    "raven": "^0.12.1",
+    "raven": "^2.3.0",
+    "raven-js": "^3.21.0",
     "tempy": "^0.2.1",
     "tmp": "0.0.29"
   },
