@@ -1,10 +1,10 @@
 {
   "scripts": {
     "test": "xo",
+    "start": "electron app",
     "build": "npm run test && gulp build",
-    "dev": "gulp dev --continue",
-    "app": "electron app",
-    "start": "npm run app",
+    "watch": "gulp dev --continue",
+    "dev": "gulp build && run-p start watch",
     "dist": "npm run build && build",
     "pack": "npm run build && build --dir",
     "postinstall": "electron-builder install-app-deps",
@@ -27,6 +27,7 @@
     "gulp-pug": "3.3.0",
     "gulp-stylelint": "6.0.0",
     "husky": "0.14.3",
+    "npm-run-all": "^4.1.2",
     "postcss-each": "0.10.0",
     "postcss-extend": "1.0.5",
     "postcss-import": "11.0.0",
