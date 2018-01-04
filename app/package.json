@@ -33,6 +33,7 @@
     "insight": "^0.8.3",
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
+    "mac-windows": "^0.5.4",
     "make-dir": "^1.0.0",
     "menubar": "github:matheuss/menubar",
     "moment": "^2.14.1",

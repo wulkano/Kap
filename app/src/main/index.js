@@ -3,6 +3,7 @@ import fs from 'fs';
 
 import {app, BrowserWindow, ipcMain, Menu, screen, globalShortcut, dialog, Notification} from 'electron';
 import isDev from 'electron-is-dev';
+import {activateWindow} from 'mac-windows';
 
 import {init as initErrorReporter} from '../common/reporter';
 import logger from '../common/logger';
@@ -103,7 +104,7 @@ function setCropperWindowOnBlur() {
   });
 }
 
-ipcMain.on('open-cropper-window', (event, size) => {
+const openCropperWindow = (size = {}, position = {}) => {
   mainWindow.setAlwaysOnTop(true, 'screen-saver', 1); // TODO send a PR to `menubar`
   menubar.setOption('alwaysOnTop', true);
   if (cropperWindow) {
@@ -112,7 +113,9 @@ ipcMain.on('open-cropper-window', (event, size) => {
     let {width = 512, height = 512} = settings.get('cropperWindow.size');
     width = size.width || width;
     height = size.height || height;
-    const {x, y} = settings.get('cropperWindow.position');
+    let {x, y} = settings.get('cropperWindow.position');
+    x = position.x === undefined ? x : position.x;
+    y = position.y === undefined ? y : position.y;
     cropperWindow = new BrowserWindow({
       width: width + cropperWindowBuffer,
       height: height + cropperWindowBuffer,
@@ -121,9 +124,10 @@ ipcMain.on('open-cropper-window', (event, size) => {
       resizable: true,
       hasShadow: false,
       enableLargerThanScreen: true,
-      x,
-      y
+      x: x - (cropperWindowBuffer / 2),
+      y: y - (cropperWindowBuffer / 2)
     });
+    mainWindow.webContents.send('cropper-window-opened', {width, height, x, y});
     cropperWindow.loadURL(`file://${__dirname}/../renderer/views/cropper.html`);
     cropperWindow.setIgnoreMouseEvents(false); // TODO this should be false by default
     cropperWindow.setAlwaysOnTop(true, 'screen-saver');
@@ -175,6 +179,24 @@ ipcMain.on('open-cropper-window', (event, size) => {
       settings.set('cropperWindow.position', {x, y}, {volatile: true});
     });
   }
+};
+
+ipcMain.on('activate-application', async (event, appName, {width, height, x, y}) => {
+  if (cropperWindow) {
+    cropperWindow.close();
+  }
+
+  await activateWindow(appName);
+  mainWindow.show();
+  openCropperWindow({width, height}, {x, y});
+});
+
+ipcMain.on('open-cropper-window', (event, size, position) => {
+  if (cropperWindow) {
+    cropperWindow.close();
+  }
+
+  openCropperWindow(size, position);
 });
 
 ipcMain.on('close-cropper-window', () => {
@@ -295,7 +317,7 @@ menubar.on('after-create-window', () => {
   mainWindow = menubar.window;
   mainWindow.setTouchBar(mainTouchbar);
 
-  app.kap = {mainWindow, getCropperWindow, getEditorWindow, openPrefsWindow, settings};
+  app.kap = {mainWindow, getCropperWindow, getEditorWindow, openPrefsWindow, settings, cropperWindowBuffer};
   if (isDev) {
     mainWindow.openDevTools({mode: 'detach'});
   }
@@ -381,6 +403,10 @@ menubar.on('after-create-window', () => {
     if (appState === 'recording') {
       setTrayStopIcon();
     }
+  });
+
+  mainWindow.on('show', () => {
+    mainWindow.webContents.send('load-apps');
   });
 
   menubar.on('show', () => {
