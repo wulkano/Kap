@@ -25,7 +25,7 @@
     "gulp-inject-svg": "0.1.16",
     "gulp-postcss": "7.0.0",
     "gulp-pug": "3.3.0",
-    "gulp-stylelint": "5.0.0",
+    "gulp-stylelint": "6.0.0",
     "husky": "0.14.3",
     "postcss-each": "0.10.0",
     "postcss-extend": "1.0.5",
@@ -33,7 +33,7 @@
     "postcss-nested": "2.1.2",
     "postcss-reporter": "5.0.0",
     "postcss-simple-vars": "4.1.0",
-    "stylelint": "8.3.1",
+    "stylelint": "8.4.0",
     "stylelint-config-xo-space": "^0.3.0",
     "xo": "0.18.2"
   },
