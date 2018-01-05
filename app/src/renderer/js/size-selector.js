@@ -42,7 +42,7 @@ async function getWindowList() {
 }
 
 function updateContent(el, ratio) {
-  el.querySelector('.selector-content').innerHTML = ratio || 'Custom';
+  el.querySelector('button').innerHTML = ratio || 'Custom';
 }
 
 function handleAppChange(app) {
