@@ -41,8 +41,10 @@ async function getWindowList() {
   ];
 }
 
-function updateContent(el, ratio) {
-  el.querySelector('button').innerHTML = ratio || 'Custom';
+function updateContent(el, currentRatio) {
+  currentRatio = currentRatio.join(':');
+  const knownRatio = RATIOS.find(ratio => ratio === currentRatio);
+  el.querySelector('button').innerHTML = knownRatio || `Custom (${currentRatio})`;
 }
 
 function handleAppChange(app) {
@@ -57,45 +59,30 @@ function buildMenuItems(options, currentDimensions, windowList) {
   const {onRatioChange, el} = options;
   const [fullscreen, ...windows] = windowList;
 
-  const currentRatio = RATIOS.find(ratio => ratio === currentDimensions.ratio);
-
-  updateContent(el, currentRatio);
+  updateContent(el, currentDimensions.ratio);
 
   return Menu.buildFromTemplate([
-    ...RATIOS.map(ratio => ({
-      label: ratio,
-      checked: ratio === currentRatio,
-      type: 'radio',
-      click: () => {
-        onRatioChange(ratio);
-        updateContent(el, ratio);
-      }
-    })),
     {
-      label: 'Custom',
-      checked: !currentRatio,
-      type: 'radio'
+      label: 'Windows',
+      submenu: windows.map(win => ({
+        label: win.ownerName,
+        icon: win.icon,
+        click: () => handleAppChange(win)
+      }))
+    },
+    {
+      label: 'Fullscreen',
+      click: () => handleAppChange(fullscreen, el)
     },
     {
       type: 'separator'
     },
-    {
-      label: 'Windows',
-      submenu: [
-        {
-          label: 'Fullscreen',
-          click: () => handleAppChange(fullscreen, el)
-        },
-        {
-          type: 'separator'
-        },
-        ...windows.map(win => ({
-          label: win.ownerName,
-          icon: win.icon,
-          click: () => handleAppChange(win)
-        }))
-      ]
-    }
+    ...RATIOS.map(ratio => ({
+      label: ratio,
+      checked: ratio === currentDimensions.ratio.join(':'),
+      type: 'radio',
+      click: () => onRatioChange(ratio)
+    }))
   ]);
 }
 
@@ -104,7 +91,8 @@ function sizeMatchesRatio(width, height, ratio) {
   return (width / first === height / second);
 }
 
-// Helper function for retrieving the simplest ratio, via the largest common divisor of two numbers (thanks @doot0)
+// Helper function for retrieving the simplest ratio,
+// via the largest common divisor of two numbers (thanks @doot0)
 function getLargestCommonDivisor(first, second) {
   if (!first) {
     return 1;
@@ -127,7 +115,7 @@ function getSimplestRatio(width, height) {
 export function findRatioForSize(width, height) {
   const ratio = RATIOS.find(ratio => sizeMatchesRatio(width, height, ratio));
   if (ratio) {
-    return ratio;
+    return ratio.split(':').map(part => parseInt(part, 10));
   }
   return getSimplestRatio(width, height);
 }
