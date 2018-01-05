@@ -7,7 +7,7 @@ import {log} from '../../common/logger';
 // Note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 import {handleTrafficLightsClicks, isVisible, disposeObservers} from '../js/utils';
-import buildSizeMenu from '../js/size-selector';
+import buildSizeMenu, { findRatioForSize } from '../js/size-selector';
 
 const aperture = require('aperture')();
 
@@ -24,7 +24,6 @@ function setMainWindowSize() {
 
 document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
-  const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
   const customSelect = document.querySelector('.custom-select');
   const startBar = document.querySelector('.start-bar');
   const controls = document.querySelector('.controls-content');
@@ -47,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial variables
   const dimensions = app.kap.settings.get('dimensions');
   const {width, height, ratioLocked} = dimensions;
-  const ratioChangeEmitter = new EventEmitter();
+  const dimensionsEmitter = new EventEmitter();
   let lastValidInputWidth = width;
   let lastValidInputHeight = height;
 
@@ -177,51 +176,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Helper function for retrieving the simplest ratio, via the largest common divisor of two numbers (thanks @doot0)
-  function getLargestCommonDivisor(first, second) {
-    if (!first) {
-      return 1;
-    }
-
-    if (!second) {
-      return first;
-    }
-
-    return getLargestCommonDivisor(second, first % second);
-  }
-
-  function getSimplestRatio(width, height) {
-    const lcd = getLargestCommonDivisor(width, height);
-    const denominator = width / lcd;
-    const numerator = height / lcd;
-    return [denominator, numerator];
-  }
-
   function setSelectedRatio(width, height) {
-    ratioChangeEmitter.emit('change', {width, height});
-    const ratios = document.querySelectorAll('.aspect-ratio-selector option');
-    let hadMatch = false;
-
-    for (const ratio of ratios) {
-      const [first, second] = ratio.value.split(':');
-
-      if (width / first === height / second) {
-        aspectRatioSelector.value = ratio.value;
-        dimensions.ratio = [first, second];
-        hadMatch = true;
-        break;
-      }
-    }
-
-    if (!hadMatch) {
-      dimensions.ratio = getSimplestRatio(Math.round(width), Math.round(height));
-      const stringRatio = dimensions.ratio.join(':');
-      const customRatio = document.querySelector('#custom-ratio-option');
-      customRatio.value = stringRatio;
-      customRatio.textContent = `Custom (${stringRatio})`;
-      customRatio.selected = true;
-    }
-
+    dimensions.ratio = findRatioForSize(width, height);
+    dimensionsEmitter.emit('change', dimensions);
     app.kap.settings.set('dimensions', dimensions);
   }
 
@@ -357,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildSizeMenu({
     el: customSelect,
     onRatioChange: handleSizeChange,
-    emitter: ratioChangeEmitter,
+    emitter: dimensionsEmitter,
     dimensions
   });
 

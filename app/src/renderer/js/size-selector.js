@@ -53,17 +53,11 @@ function handleAppChange(app) {
   }
 }
 
-function sizeMatchesRatio(size, ratio) {
-  const [first, second] = ratio.split(':');
-  const {width, height} = size;
-  return (width / first === height / second);
-}
-
 function buildMenuItems(options, currentDimensions, windowList) {
   const {onRatioChange, el} = options;
   const [fullscreen, ...windows] = windowList;
 
-  const currentRatio = RATIOS.find(ratio => sizeMatchesRatio(currentDimensions, ratio));
+  const currentRatio = RATIOS.find(ratio => ratio === currentDimensions.ratio);
 
   updateContent(el, currentRatio);
 
@@ -105,11 +99,45 @@ function buildMenuItems(options, currentDimensions, windowList) {
   ]);
 }
 
+function sizeMatchesRatio(width, height, ratio) {
+  const [first, second] = ratio.split(':');
+  return (width / first === height / second);
+}
+
+// Helper function for retrieving the simplest ratio, via the largest common divisor of two numbers (thanks @doot0)
+function getLargestCommonDivisor(first, second) {
+  if (!first) {
+    return 1;
+  }
+
+  if (!second) {
+    return first;
+  }
+
+  return getLargestCommonDivisor(second, first % second);
+}
+
+function getSimplestRatio(width, height) {
+  const lcd = getLargestCommonDivisor(width, height);
+  const denominator = width / lcd;
+  const numerator = height / lcd;
+  return [denominator, numerator];
+}
+
+export function findRatioForSize(width, height) {
+  const ratio = RATIOS.find(ratio => sizeMatchesRatio(width, height, ratio));
+  if (ratio) {
+    return ratio;
+  }
+  return getSimplestRatio(width, height);
+}
+
 export default async function buildSizeMenu(options) {
   const {emitter, dimensions, el} = options;
   const windowList = await getWindowList();
 
   let menu = buildMenuItems(options, dimensions, windowList);
+
   emitter.on('change', newDimensions => {
     menu = buildMenuItems(options, newDimensions, windowList);
   });
