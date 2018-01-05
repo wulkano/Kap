@@ -405,6 +405,10 @@ menubar.on('after-create-window', () => {
     }
   });
 
+  mainWindow.on('show', () => {
+    mainWindow.webContents.send('reload-apps');
+  });
+
   menubar.on('show', () => {
     if (mainWindowIsDetached) {
       tray.setHighlightMode('never');

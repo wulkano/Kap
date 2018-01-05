@@ -131,13 +131,23 @@ export function findRatioForSize(width, height) {
 }
 
 export default async function buildSizeMenu(options) {
-  const {emitter, dimensions, el} = options;
-  const windowList = await getWindowList();
-
+  const {emitter, el} = options;
+  let {dimensions} = options;
+  let windowList = await getWindowList();
   let menu = buildMenuItems(options, dimensions, windowList);
 
+  const rebuild = () => {
+    menu = buildMenuItems(options, dimensions, windowList);
+  };
+
   emitter.on('change', newDimensions => {
-    menu = buildMenuItems(options, newDimensions, windowList);
+    dimensions = newDimensions;
+    rebuild();
+  });
+
+  ipcRenderer.on('reload-apps', async () => {
+    windowList = await getWindowList();
+    rebuild();
   });
 
   el.onclick = () => {
