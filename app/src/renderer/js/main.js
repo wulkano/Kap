@@ -361,6 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.on('cropper-window-new-size', (event, size) => {
     if (inputWidth !== document.activeElement && inputHeight !== document.activeElement) {
       [inputWidth.value, inputHeight.value] = [size.width, size.height];
+      setSelectedRatio(size.width, size.height);
     }
   });
 

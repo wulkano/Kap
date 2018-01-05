@@ -114,6 +114,8 @@ function getLargestCommonDivisor(first, second) {
 }
 
 function getSimplestRatio(width, height) {
+  width = parseInt(width, 10);
+  height = parseInt(height, 10);
   const lcd = getLargestCommonDivisor(width, height);
   const denominator = width / lcd;
   const numerator = height / lcd;
