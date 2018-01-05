@@ -24,7 +24,7 @@ function setMainWindowSize() {
 
 document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
-  const customSelect = document.querySelector('.custom-select');
+  const ratioSelector = document.querySelector('.ratio-selector');
   const startBar = document.querySelector('.start-bar');
   const controls = document.querySelector('.controls-content');
   const inputWidth = document.querySelector('#aspect-ratio-width');
@@ -308,11 +308,12 @@ document.addEventListener('DOMContentLoaded', () => {
       dimensions.height = (dimensions.ratio[1] / dimensions.ratio[0]) * dimensions.width;
       inputHeight.value = Math.round(dimensions.height);
     }
+    dimensionsEmitter.emit('change', dimensions);
     app.kap.settings.set('dimensions', dimensions);
   };
 
   buildSizeMenu({
-    el: customSelect,
+    el: ratioSelector,
     onRatioChange: handleSizeChange,
     emitter: dimensionsEmitter,
     dimensions
