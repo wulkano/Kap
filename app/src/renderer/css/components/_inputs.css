@@ -37,7 +37,12 @@ input {
     border-color: $gray-dark;
   }
 
-  select {
+  button {
+    text-align: left;
+  }
+
+  select,
+  button {
     width: 100%;
     height: 2.4rem;
     padding-right: 12px;
@@ -55,8 +60,12 @@ input {
   &--large {
     height: 3.2rem;
 
-    select {
+    select,
+    button {
       height: 3.2rem;
+    }
+
+    select {
       line-height: 3.2rem;
     }
   }
@@ -71,7 +80,8 @@ input {
   }
 
   &.has-icon {
-    select {
+    select,
+    button {
       padding-left: 32px;
     }
 

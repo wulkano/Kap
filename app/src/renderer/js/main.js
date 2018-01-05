@@ -7,7 +7,7 @@ import {log} from '../../common/logger';
 // Note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 import {handleTrafficLightsClicks, isVisible, disposeObservers} from '../js/utils';
-import buildSizeMenu, { findRatioForSize } from '../js/size-selector';
+import buildSizeMenu, {findRatioForSize} from '../js/size-selector';
 
 const aperture = require('aperture')();
 
