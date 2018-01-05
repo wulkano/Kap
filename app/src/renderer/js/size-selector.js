@@ -41,9 +41,8 @@ async function getWindowList() {
   ];
 }
 
-function updateContent(el, currentRatio) {
+function updateContent(el, knownRatio, currentRatio) {
   currentRatio = currentRatio.join(':');
-  const knownRatio = RATIOS.find(ratio => ratio === currentRatio);
   el.querySelector('button').innerHTML = knownRatio || `Custom (${currentRatio})`;
 }
 
@@ -58,8 +57,9 @@ function handleAppChange(app) {
 function buildMenuItems(options, currentDimensions, windowList) {
   const {onRatioChange, el} = options;
   const [fullscreen, ...windows] = windowList;
+  const knownRatio = RATIOS.find(ratio => ratio === currentDimensions.ratio.join(':'));
 
-  updateContent(el, currentDimensions.ratio);
+  updateContent(el, knownRatio, currentDimensions.ratio);
 
   return Menu.buildFromTemplate([
     {
@@ -79,15 +79,23 @@ function buildMenuItems(options, currentDimensions, windowList) {
     },
     ...RATIOS.map(ratio => ({
       label: ratio,
-      checked: ratio === currentDimensions.ratio.join(':'),
+      checked: ratio === knownRatio,
       type: 'radio',
       click: () => onRatioChange(ratio)
-    }))
+    })),
+    {
+      label: 'Custom',
+      enabled: false,
+      type: 'radio',
+      checked: !knownRatio
+    }
   ]);
 }
 
 function sizeMatchesRatio(width, height, ratio) {
   const [first, second] = ratio.split(':');
+  width = parseInt(width, 10);
+  height = parseInt(height, 10);
   return (width / first === height / second);
 }
 
