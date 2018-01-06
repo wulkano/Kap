@@ -78,7 +78,6 @@ function isAppSelected(dimensions, app) {
   if (!dimensions.app) {
     return false;
   }
-  console.log(dimensions.app.pid, app.pid);
   return dimensions.app.pid === app.pid;
 }
 

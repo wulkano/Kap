@@ -384,8 +384,6 @@ document.addEventListener('DOMContentLoaded', () => {
     recordBtn.classList.add('is-cropping');
     recordBtn.dataset.state = 'ready-to-record';
 
-    console.log('GOT BOUNDS', bounds);
-
     [inputWidth.value, inputHeight.value] = [bounds.width, bounds.height];
     setSelectedRatio(bounds.width, bounds.height);
   });
