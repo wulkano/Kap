@@ -311,6 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const handleSizeChange = function (ratio) {
+    dimensions.app = null;
     dimensions.ratio = [parseInt(ratio.split(':')[0], 10), parseInt(ratio.split(':')[1], 10)];
 
     dimensions.ratioLocked = true;

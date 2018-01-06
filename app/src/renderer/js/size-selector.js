@@ -115,7 +115,7 @@ function buildMenuItems(options, currentDimensions, windowList) {
     ...RATIOS.map(ratio => ({
       label: ratio,
       checked: ratio === knownRatio,
-      type: 'radio',
+      type: 'checkbox',
       click: () => {
         emitter.emit('ratio-selected', ratio);
       }
@@ -123,8 +123,8 @@ function buildMenuItems(options, currentDimensions, windowList) {
     {
       label: 'Custom',
       enabled: false,
-      type: 'radio',
-      checked: !knownRatio
+      type: 'checkbox',
+      checked: !knownRatio && !currentDimensions.app
     }
   ]);
 }
