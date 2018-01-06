@@ -177,6 +177,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function setSelectedRatio(width, height) {
+    width = parseFloat(width);
+    height = parseFloat(height);
     dimensions.ratio = findRatioForSize(width, height);
     dimensionsEmitter.emit('change', dimensions);
     app.kap.settings.set('dimensions', dimensions);
