@@ -3,7 +3,7 @@ import {app, Menu, shell, ipcMain, Notification} from 'electron';
 import {checkForUpdates} from './auto-updater';
 
 const checkForUpdatesItem = {
-  label: 'Check for updates',
+  label: 'Check for Updates…',
   click(item) {
     item.enabled = false;
     checkForUpdates(() => {
