@@ -50,7 +50,7 @@ function handleAppChange(app) {
   if (app.fullscreen) {
     ipcRenderer.send('open-cropper-window', {width: app.width, height: app.height}, {x: 1, y: 1});
   } else {
-    ipcRenderer.send('activate-application', app.ownerName, app);
+    ipcRenderer.send('activate-app', app.ownerName, app);
   }
 }
 

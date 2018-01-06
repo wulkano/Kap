@@ -1,5 +1,5 @@
 import {ipcRenderer, remote} from 'electron';
-import {EventEmitter} from 'events';
+import EventEmitter from 'events';
 
 import {init as initErrorReporter, report as reportError} from '../../common/reporter';
 import {log} from '../../common/logger';
