@@ -62,8 +62,11 @@ function getAppDisplayName(app) {
 function updateContent(el, dimensions, windowList) {
   const content = el.querySelector('button');
   if (dimensions.app) {
-    content.innerHTML = getAppDisplayName(windowList.find(app => app.pid === dimensions.app.pid));
-    return;
+    const app = windowList.find(win => win.pid === dimensions.app.pid);
+    if (app) {
+      content.innerHTML = getAppDisplayName(app);
+      return;
+    }
   }
 
   const stringRatio = dimensions.ratio.join(':');
