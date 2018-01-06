@@ -177,8 +177,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function setSelectedRatio(width, height) {
-    width = parseFloat(width);
-    height = parseFloat(height);
+    // The width and height inputs are not producing whole numbers
+    // sometimes they put out strings, sometimes floats and sometimes ints.
+    // parseInt is used here so the ratio calculation doesn't die.
+    width = parseInt(width, 10);
+    height = parseInt(height, 10);
     dimensions.ratio = findRatioForSize(width, height);
     dimensionsEmitter.emit('change', dimensions);
     app.kap.settings.set('dimensions', dimensions);

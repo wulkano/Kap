@@ -239,6 +239,12 @@ body.is-tray-arrow-hidden {
 
 
 /* Aspect ratio controls */
+.ratio-selector .app-logo {
+  display: inline-block;
+  margin-right: 3px;
+  vertical-align: -3px;
+}
+
 .aspect-ratio {
   align-items: flex-end;
   justify-content: space-between;

@@ -30,14 +30,16 @@ async function getWindowList() {
     },
     ...windows
       .filter(win => win.ownerName !== 'Kap')
-      .map(win => Object.assign({}, win, {
-        icon: nativeImage
-          .createFromBuffer(images.find(img => img.pid === win.pid).icon)
-          .resize({
+      .map(win => {
+        const icon = nativeImage.createFromBuffer(images.find(img => img.pid === win.pid).icon);
+        return Object.assign({}, win, {
+          icon2x: icon,
+          icon: icon.resize({
             width: 16,
             height: 16
           })
-      }))
+        });
+      })
   ];
 }
 
@@ -46,7 +48,23 @@ function updateContent(el, knownRatio, currentRatio) {
   el.querySelector('button').innerHTML = knownRatio || `Custom (${currentRatio})`;
 }
 
-function handleAppChange(app) {
+function handleAppChange(app, el) {
+  const parent = el.querySelector('button');
+  const content = document.createElement('span');
+  parent.appendChild(content);
+
+  // Prepend the logo
+  if (app.icon) {
+    const img = document.createElement('img');
+    img.className = 'app-logo';
+    img.width = 16;
+    img.src = app.icon2x.toDataURL();
+    content.appendChild(img);
+  }
+
+  content.appendChild(document.createTextNode(app.ownerName));
+  parent.innerHTML = content.innerHTML;
+
   if (app.fullscreen) {
     ipcRenderer.send('open-cropper-window', {width: app.width, height: app.height}, {x: 1, y: 1});
   } else {
@@ -67,7 +85,7 @@ function buildMenuItems(options, currentDimensions, windowList) {
       submenu: windows.map(win => ({
         label: win.ownerName,
         icon: win.icon,
-        click: () => handleAppChange(win)
+        click: () => handleAppChange(win, el)
       }))
     },
     {
@@ -94,8 +112,6 @@ function buildMenuItems(options, currentDimensions, windowList) {
 
 function sizeMatchesRatio(width, height, ratio) {
   const [first, second] = ratio.split(':');
-  width = parseInt(width, 10);
-  height = parseInt(height, 10);
   return (width / first === height / second);
 }
 
@@ -114,8 +130,6 @@ function getLargestCommonDivisor(first, second) {
 }
 
 function getSimplestRatio(width, height) {
-  width = parseInt(width, 10);
-  height = parseInt(height, 10);
   const lcd = getLargestCommonDivisor(width, height);
   const denominator = width / lcd;
   const numerator = height / lcd;
@@ -132,6 +146,7 @@ export function findRatioForSize(width, height) {
 
 export default async function buildSizeMenu(options) {
   const {emitter, el} = options;
+  const {left: menuX, top: menuY} = el.getBoundingClientRect();
   let {dimensions} = options;
   let windowList = await getWindowList();
   let menu = buildMenuItems(options, dimensions, windowList);
@@ -151,6 +166,9 @@ export default async function buildSizeMenu(options) {
   });
 
   el.onclick = () => {
-    menu.popup();
+    menu.popup({
+      x: menuX,
+      y: menuY
+    });
   };
 }
