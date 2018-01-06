@@ -183,6 +183,13 @@ document.addEventListener('DOMContentLoaded', () => {
     width = parseInt(width, 10);
     height = parseInt(height, 10);
     dimensions.ratio = findRatioForSize(width, height);
+
+    // Remove pid from dimensions object
+    // since size is being set manually
+    if (dimensions.app && (dimensions.app.width !== width || dimensions.app.height !== height)) {
+      dimensions.app = null;
+    }
+
     dimensionsEmitter.emit('change', dimensions);
     app.kap.settings.set('dimensions', dimensions);
   }
@@ -317,14 +324,32 @@ document.addEventListener('DOMContentLoaded', () => {
     app.kap.settings.set('dimensions', dimensions);
   };
 
+  ipcRenderer.on('change-aspect-ratio', (e, aspectRatio) => handleSizeChange(aspectRatio));
+
+  dimensionsEmitter.on('ratio-selected', ratio => handleSizeChange(ratio));
+
+  dimensionsEmitter.on('app-selected', app => {
+    // Set app information on dimensions so it can be reused later
+    // eg. for showing app name after selection
+    dimensions.app = {
+      pid: app.pid,
+      width: app.width,
+      height: app.height
+    };
+
+    if (app.pid < 0) {
+      // Fullscreen
+      ipcRenderer.send('open-cropper-window', {width: app.width, height: app.height}, {x: 1, y: 1});
+    } else {
+      ipcRenderer.send('activate-app', app.ownerName, app);
+    }
+  });
+
   buildSizeMenu({
     el: ratioSelector,
-    onRatioChange: handleSizeChange,
     emitter: dimensionsEmitter,
     dimensions
   });
-
-  ipcRenderer.on('change-aspect-ratio', (e, aspectRatio) => handleSizeChange(aspectRatio));
 
   toggleAudioRecordBtn.onclick = function () {
     micOnIcon.classList.toggle('hidden');
@@ -358,6 +383,8 @@ document.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.on('cropper-window-opened', (event, bounds) => {
     recordBtn.classList.add('is-cropping');
     recordBtn.dataset.state = 'ready-to-record';
+
+    console.log('GOT BOUNDS', bounds);
 
     [inputWidth.value, inputHeight.value] = [bounds.width, bounds.height];
     setSelectedRatio(bounds.width, bounds.height);

@@ -24,7 +24,7 @@ async function getWindowList() {
   return [
     {
       ownerName: 'Fullscreen',
-      fullscreen: true,
+      pid: -10,
       width,
       height
     },
@@ -43,15 +43,8 @@ async function getWindowList() {
   ];
 }
 
-function updateContent(el, knownRatio, currentRatio) {
-  currentRatio = currentRatio.join(':');
-  el.querySelector('button').innerHTML = knownRatio || `Custom (${currentRatio})`;
-}
-
-function handleAppChange(app, el) {
-  const parent = el.querySelector('button');
+function getAppDisplayName(app) {
   const content = document.createElement('span');
-  parent.appendChild(content);
 
   // Prepend the logo
   if (app.icon) {
@@ -63,21 +56,35 @@ function handleAppChange(app, el) {
   }
 
   content.appendChild(document.createTextNode(app.ownerName));
-  parent.innerHTML = content.innerHTML;
+  return content.innerHTML;
+}
 
-  if (app.fullscreen) {
-    ipcRenderer.send('open-cropper-window', {width: app.width, height: app.height}, {x: 1, y: 1});
-  } else {
-    ipcRenderer.send('activate-app', app.ownerName, app);
+function updateContent(el, dimensions, windowList) {
+  const content = el.querySelector('button');
+  if (dimensions.app) {
+    content.innerHTML = getAppDisplayName(windowList.find(app => app.pid === dimensions.app.pid));
+    return;
   }
+
+  const stringRatio = dimensions.ratio.join(':');
+  const knownRatio = RATIOS.find(ratio => ratio === stringRatio);
+  content.innerHTML = knownRatio || `Custom (${stringRatio})`;
+}
+
+function isAppSelected(dimensions, app) {
+  if (!dimensions.app) {
+    return false;
+  }
+  console.log(dimensions.app.pid, app.pid);
+  return dimensions.app.pid === app.pid;
 }
 
 function buildMenuItems(options, currentDimensions, windowList) {
-  const {onRatioChange, el} = options;
+  const {emitter, el} = options;
   const [fullscreen, ...windows] = windowList;
   const knownRatio = RATIOS.find(ratio => ratio === currentDimensions.ratio.join(':'));
 
-  updateContent(el, knownRatio, currentDimensions.ratio);
+  updateContent(el, currentDimensions, windowList);
 
   return Menu.buildFromTemplate([
     {
@@ -85,12 +92,20 @@ function buildMenuItems(options, currentDimensions, windowList) {
       submenu: windows.map(win => ({
         label: win.ownerName,
         icon: win.icon,
-        click: () => handleAppChange(win, el)
+        type: 'radio',
+        checked: isAppSelected(currentDimensions, win),
+        click: () => {
+          emitter.emit('app-selected', win);
+        }
       }))
     },
     {
       label: 'Fullscreen',
-      click: () => handleAppChange(fullscreen, el)
+      type: 'checkbox',
+      checked: isAppSelected(currentDimensions, fullscreen),
+      click: () => {
+        emitter.emit('app-selected', fullscreen);
+      }
     },
     {
       type: 'separator'
@@ -99,7 +114,9 @@ function buildMenuItems(options, currentDimensions, windowList) {
       label: ratio,
       checked: ratio === knownRatio,
       type: 'radio',
-      click: () => onRatioChange(ratio)
+      click: () => {
+        emitter.emit('ratio-selected', ratio);
+      }
     })),
     {
       label: 'Custom',
