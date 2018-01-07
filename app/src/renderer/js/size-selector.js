@@ -24,7 +24,7 @@ async function getWindowList() {
   return [
     {
       ownerName: 'Fullscreen',
-      fullscreen: true,
+      isFullscreen: true,
       width,
       height
     },
@@ -33,7 +33,7 @@ async function getWindowList() {
       .map(win => {
         const icon = nativeImage.createFromBuffer(images.find(img => img.pid === win.pid).icon);
         return Object.assign({}, win, {
-          fullscreen: false,
+          isFullscreen: false,
           icon2x: icon,
           icon: icon.resize({
             width: 16,
@@ -86,7 +86,7 @@ function isFullscreenSelected(dimensions) {
   if (!dimensions.app) {
     return false;
   }
-  return dimensions.app.fullscreen;
+  return dimensions.app.isFullscreen;
 }
 
 function buildMenuItems(options, currentDimensions, windowList) {

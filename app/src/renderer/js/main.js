@@ -328,12 +328,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // eg. for showing app name after selection
     dimensions.app = {
       pid: app.pid,
-      fullscreen: app.fullscreen,
+      isFullscreen: app.isFullscreen,
       width: app.width,
       height: app.height
     };
 
-    if (app.fullscreen) {
+    if (app.isFullscreen) {
       // Fullscreen
       ipcRenderer.send('open-cropper-window', {width: app.width, height: app.height}, {x: 1, y: 1});
     } else {
