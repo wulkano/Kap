@@ -234,6 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
       dimensions.height = Math.round((second / first) * this.value);
       app.kap.settings.set('dimensions', dimensions);
       inputHeight.value = dimensions.height;
+      lastValidInputHeight = dimensions.height;
     } else {
       setSelectedRatio(dimensions.width, dimensions.height);
     }
@@ -260,6 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
       dimensions.width = Math.round((first / second) * this.value);
       app.kap.settings.set('dimensions', dimensions);
       inputWidth.value = dimensions.width;
+      lastValidInputWidth = dimensions.width;
     } else {
       setSelectedRatio(dimensions.width, dimensions.height);
     }
