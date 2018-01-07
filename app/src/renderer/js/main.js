@@ -328,11 +328,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // eg. for showing app name after selection
     dimensions.app = {
       pid: app.pid,
+      fullscreen: app.fullscreen,
       width: app.width,
       height: app.height
     };
 
-    if (app.pid < 0) {
+    if (app.fullscreen) {
       // Fullscreen
       ipcRenderer.send('open-cropper-window', {width: app.width, height: app.height}, {x: 1, y: 1});
     } else {
@@ -375,9 +376,12 @@ document.addEventListener('DOMContentLoaded', () => {
     recordBtn.dataset.state = 'initial';
   });
 
-  ipcRenderer.on('cropper-window-opened', () => {
+  ipcRenderer.on('cropper-window-opened', (event, bounds) => {
     recordBtn.classList.add('is-cropping');
     recordBtn.dataset.state = 'ready-to-record';
+
+    [inputWidth.value, inputHeight.value] = [bounds.width, bounds.height];
+    setSelectedRatio(bounds.width, bounds.height);
   });
 
   ipcRenderer.on('cropper-window-new-size', (event, size) => {

@@ -24,7 +24,7 @@ async function getWindowList() {
   return [
     {
       ownerName: 'Fullscreen',
-      pid: -10,
+      fullscreen: true,
       width,
       height
     },
@@ -33,6 +33,7 @@ async function getWindowList() {
       .map(win => {
         const icon = nativeImage.createFromBuffer(images.find(img => img.pid === win.pid).icon);
         return Object.assign({}, win, {
+          fullscreen: false,
           icon2x: icon,
           icon: icon.resize({
             width: 16,
@@ -81,6 +82,13 @@ function isAppSelected(dimensions, app) {
   return dimensions.app.pid === app.pid;
 }
 
+function isFullscreenSelected(dimensions) {
+  if (!dimensions.app) {
+    return false;
+  }
+  return dimensions.app.fullscreen;
+}
+
 function buildMenuItems(options, currentDimensions, windowList) {
   const {emitter, el} = options;
   const [fullscreen, ...windows] = windowList;
@@ -104,7 +112,7 @@ function buildMenuItems(options, currentDimensions, windowList) {
     {
       label: 'Fullscreen',
       type: 'checkbox',
-      checked: isAppSelected(currentDimensions, fullscreen),
+      checked: isFullscreenSelected(currentDimensions, fullscreen),
       click: () => {
         emitter.emit('app-selected', fullscreen);
       }
