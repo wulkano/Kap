@@ -27,6 +27,7 @@ const menubar = require('menubar')({
   preloadWindow: true,
   transparent: true,
   resizable: false,
+  movable: false, // Disable detaching the main window
   minWidth: 320
 });
 
