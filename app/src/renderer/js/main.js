@@ -177,11 +177,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function setSelectedRatio(width, height) {
-    // The width and height inputs are not producing whole numbers
-    // sometimes they put out strings, sometimes floats and sometimes ints.
-    // parseInt is used here so the ratio calculation doesn't die.
-    width = parseInt(width, 10);
-    height = parseInt(height, 10);
     dimensions.ratio = findRatioForSize(width, height);
 
     // Remove app from dimensions object
@@ -232,17 +227,16 @@ document.addEventListener('DOMContentLoaded', () => {
       onInvalid: shake
     });
 
-    dimensions.width = this.value;
+    dimensions.width = parseInt(this.value, 10);
     app.kap.settings.set('dimensions', dimensions);
 
     if (dimensions.ratioLocked) {
-      dimensions.height = (second / first) * this.value;
+      dimensions.height = Math.round((second / first) * this.value);
       app.kap.settings.set('dimensions', dimensions);
-      inputHeight.value = Math.round(dimensions.height);
-      return;
+      inputHeight.value = dimensions.height;
+    } else {
+      setSelectedRatio(dimensions.width, dimensions.height);
     }
-
-    setSelectedRatio(dimensions.width, dimensions.height);
 
     lastValidInputWidth = this.value || lastValidInputWidth;
     setCropperWindowSize();
@@ -259,17 +253,16 @@ document.addEventListener('DOMContentLoaded', () => {
       onInvalid: shake
     });
 
-    dimensions.height = this.value;
+    dimensions.height = parseInt(this.value, 10);
     app.kap.settings.set('dimensions', dimensions);
 
     if (dimensions.ratioLocked) {
-      dimensions.width = (first / second) * this.value;
+      dimensions.width = Math.round((first / second) * this.value);
       app.kap.settings.set('dimensions', dimensions);
-      inputWidth.value = Math.round(dimensions.width);
-      return;
+      inputWidth.value = dimensions.width;
+    } else {
+      setSelectedRatio(dimensions.width, dimensions.height);
     }
-
-    setSelectedRatio(dimensions.width, dimensions.height);
 
     lastValidInputHeight = this.value || lastValidInputHeight;
     setCropperWindowSize();
@@ -318,9 +311,10 @@ document.addEventListener('DOMContentLoaded', () => {
     linkBtn.classList.add('is-active');
 
     if (dimensions.ratioLocked) {
-      dimensions.height = (dimensions.ratio[1] / dimensions.ratio[0]) * dimensions.width;
+      dimensions.height = Math.round((dimensions.ratio[1] / dimensions.ratio[0]) * dimensions.width);
       inputHeight.value = Math.round(dimensions.height);
     }
+    setCropperWindowSize(dimensions.width, dimensions.height);
     dimensionsEmitter.emit('change', dimensions);
     app.kap.settings.set('dimensions', dimensions);
   };
@@ -381,12 +375,9 @@ document.addEventListener('DOMContentLoaded', () => {
     recordBtn.dataset.state = 'initial';
   });
 
-  ipcRenderer.on('cropper-window-opened', (event, bounds) => {
+  ipcRenderer.on('cropper-window-opened', () => {
     recordBtn.classList.add('is-cropping');
     recordBtn.dataset.state = 'ready-to-record';
-
-    [inputWidth.value, inputHeight.value] = [bounds.width, bounds.height];
-    setSelectedRatio(bounds.width, bounds.height);
   });
 
   ipcRenderer.on('cropper-window-new-size', (event, size) => {
