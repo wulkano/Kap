@@ -71,7 +71,7 @@ function updateContent(el, dimensions, windowList) {
 
   const stringRatio = dimensions.ratio.join(':');
   const knownRatio = RATIOS.find(ratio => ratio === stringRatio);
-  content.innerHTML = knownRatio || `Custom (${stringRatio})`;
+  content.textContent = knownRatio || `Custom (${stringRatio})`;
 }
 
 function isAppSelected(dimensions, app) {
@@ -131,7 +131,7 @@ function buildMenuItems(options, currentDimensions, windowList) {
 
 function sizeMatchesRatio(width, height, ratio) {
   const [first, second] = ratio.split(':');
-  return (width / first === height / second);
+  return width / first === height / second;
 }
 
 // Helper function for retrieving the simplest ratio,
@@ -165,10 +165,16 @@ export function findRatioForSize(width, height) {
 
 export default async function buildSizeMenu(options) {
   const {emitter, el} = options;
-  const {left: menuX, top: menuY} = el.getBoundingClientRect();
   let {dimensions} = options;
   let windowList = await getWindowList();
   let menu = buildMenuItems(options, dimensions, windowList);
+
+  // Hardcoding 140, because `menu`'s width is not known
+  // and there is no way for electorn menus' to be positioned
+  // from the right
+  const rect = el.getBoundingClientRect();
+  const menuX = rect.left + rect.width - 140;
+  const menuY = rect.top;
 
   const rebuild = () => {
     menu = buildMenuItems(options, dimensions, windowList);

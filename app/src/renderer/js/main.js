@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
     height = parseInt(height, 10);
     dimensions.ratio = findRatioForSize(width, height);
 
-    // Remove pid from dimensions object
+    // Remove app from dimensions object
     // since size is being set manually
     if (dimensions.app && (dimensions.app.width !== width || dimensions.app.height !== height)) {
       dimensions.app = null;
