@@ -9,15 +9,15 @@
 */
 
 .window-header {
-  @extend .webkit-drag;
+  /* @extend .webkit-drag; */
   width: 100%;
   max-height: 100%;
   border-radius: 4px 4px 0 0;
   position: relative;
   opacity: 1;
   transition: transform 0.12s ease-in-out, opacity 0.12s ease-in-out, height 0.12s ease-in-out;
-  cursor: -webkit-grab;
-  -webkit-app-region: drag;
+  /* cursor: -webkit-grab; */
+  /* -webkit-app-region: drag; */
   will-change: transform, opacity, height;
 
   &::before {
@@ -90,7 +90,7 @@
 
 
 .title-bar {
-  @extend .webkit-drag;
+  /* @extend .webkit-drag; */
   width: 100%;
   height: 3.6rem;
   position: relative;
