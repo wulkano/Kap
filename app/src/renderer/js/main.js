@@ -1,4 +1,5 @@
 import {ipcRenderer, remote} from 'electron';
+import EventEmitter from 'events';
 
 import {init as initErrorReporter, report as reportError} from '../../common/reporter';
 import {log} from '../../common/logger';
@@ -6,6 +7,7 @@ import {log} from '../../common/logger';
 // Note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 import {handleTrafficLightsClicks, isVisible, disposeObservers} from '../js/utils';
+import buildSizeMenu, {findRatioForSize} from '../js/size-selector';
 
 const aperture = require('aperture')();
 
@@ -25,7 +27,7 @@ function setMainWindowSize() {
 
 document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
-  const aspectRatioSelector = document.querySelector('.aspect-ratio-selector');
+  const ratioSelector = document.querySelector('.ratio-selector');
   const startBar = document.querySelector('.start-bar');
   const controls = document.querySelector('.controls-content');
   const inputWidth = document.querySelector('#aspect-ratio-width');
@@ -47,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial variables
   const dimensions = app.kap.settings.get('dimensions');
   const {width, height, ratioLocked} = dimensions;
+  const dimensionsEmitter = new EventEmitter();
   let lastValidInputWidth = width;
   let lastValidInputHeight = height;
 
@@ -163,14 +166,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Prepare recording button for recording state
   // - Either opens the crop window or starts recording
   function prepareRecordButton() {
-    const state = recordBtn.attributes['data-state'].value;
+    const state = recordBtn.dataset.state;
     if (state === 'initial') {
       ipcRenderer.send('open-cropper-window', {
         width: parseInt(inputWidth.value, 10),
         height: parseInt(inputHeight.value, 10)
       });
-      recordBtn.classList.add('is-cropping');
-      recordBtn.attributes['data-state'].value = 'ready-to-record';
     } else if (state === 'ready-to-record') {
       startRecording();
     } else if (state === 'ready-to-stop') {
@@ -178,50 +179,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Helper function for retrieving the simplest ratio, via the largest common divisor of two numbers (thanks @doot0)
-  function getLargestCommonDivisor(first, second) {
-    if (!first) {
-      return 1;
-    }
-
-    if (!second) {
-      return first;
-    }
-
-    return getLargestCommonDivisor(second, first % second);
-  }
-
-  function getSimplestRatio(width, height) {
-    const lcd = getLargestCommonDivisor(width, height);
-    const denominator = width / lcd;
-    const numerator = height / lcd;
-    return [denominator, numerator];
-  }
-
   function setSelectedRatio(width, height) {
-    const ratios = document.querySelectorAll('.aspect-ratio-selector option');
-    let hadMatch = false;
+    dimensions.ratio = findRatioForSize(width, height);
 
-    for (const ratio of ratios) {
-      const [first, second] = ratio.value.split(':');
-
-      if (width / first === height / second) {
-        aspectRatioSelector.value = ratio.value;
-        dimensions.ratio = [first, second];
-        hadMatch = true;
-        break;
-      }
+    // Remove app from dimensions object
+    // since size is being set manually
+    if (dimensions.app && (dimensions.app.width !== width || dimensions.app.height !== height)) {
+      dimensions.app = null;
     }
 
-    if (!hadMatch) {
-      dimensions.ratio = getSimplestRatio(Math.round(width), Math.round(height));
-      const stringRatio = dimensions.ratio.join(':');
-      const customRatio = document.querySelector('#custom-ratio-option');
-      customRatio.value = stringRatio;
-      customRatio.textContent = `Custom (${stringRatio})`;
-      customRatio.selected = true;
-    }
-
+    dimensionsEmitter.emit('change', dimensions);
     app.kap.settings.set('dimensions', dimensions);
   }
 
@@ -263,17 +230,17 @@ document.addEventListener('DOMContentLoaded', () => {
       onInvalid: shake
     });
 
-    dimensions.width = this.value;
+    dimensions.width = parseInt(this.value, 10);
     app.kap.settings.set('dimensions', dimensions);
 
     if (dimensions.ratioLocked) {
-      dimensions.height = (second / first) * this.value;
+      dimensions.height = Math.round((second / first) * this.value);
       app.kap.settings.set('dimensions', dimensions);
-      inputHeight.value = Math.round(dimensions.height);
-      return;
+      inputHeight.value = dimensions.height;
+      lastValidInputHeight = dimensions.height;
+    } else {
+      setSelectedRatio(dimensions.width, dimensions.height);
     }
-
-    setSelectedRatio(dimensions.width, dimensions.height);
 
     lastValidInputWidth = this.value || lastValidInputWidth;
     setCropperWindowSize();
@@ -290,17 +257,17 @@ document.addEventListener('DOMContentLoaded', () => {
       onInvalid: shake
     });
 
-    dimensions.height = this.value;
+    dimensions.height = parseInt(this.value, 10);
     app.kap.settings.set('dimensions', dimensions);
 
     if (dimensions.ratioLocked) {
-      dimensions.width = (first / second) * this.value;
+      dimensions.width = Math.round((first / second) * this.value);
       app.kap.settings.set('dimensions', dimensions);
-      inputWidth.value = Math.round(dimensions.width);
-      return;
+      inputWidth.value = dimensions.width;
+      lastValidInputWidth = dimensions.width;
+    } else {
+      setSelectedRatio(dimensions.width, dimensions.height);
     }
-
-    setSelectedRatio(dimensions.width, dimensions.height);
 
     lastValidInputHeight = this.value || lastValidInputHeight;
     setCropperWindowSize();
@@ -351,24 +318,48 @@ document.addEventListener('DOMContentLoaded', () => {
     app.kap.settings.set('dimensions', dimensions);
   };
 
-  const handleSizeChange = function () {
-    dimensions.ratio = [parseInt(this.value.split(':')[0], 10), parseInt(this.value.split(':')[1], 10)];
+  const handleSizeChange = function (ratio) {
+    dimensions.app = null;
+    dimensions.ratio = [parseInt(ratio.split(':')[0], 10), parseInt(ratio.split(':')[1], 10)];
 
     dimensions.ratioLocked = true;
     linkBtn.classList.add('is-active');
 
     if (dimensions.ratioLocked) {
-      dimensions.height = (dimensions.ratio[1] / dimensions.ratio[0]) * dimensions.width;
+      dimensions.height = Math.round((dimensions.ratio[1] / dimensions.ratio[0]) * dimensions.width);
       inputHeight.value = Math.round(dimensions.height);
     }
+    setCropperWindowSize(dimensions.width, dimensions.height);
+    dimensionsEmitter.emit('change', dimensions);
     app.kap.settings.set('dimensions', dimensions);
   };
 
-  aspectRatioSelector.addEventListener('change', handleSizeChange);
+  ipcRenderer.on('change-aspect-ratio', (e, aspectRatio) => handleSizeChange(aspectRatio));
 
-  ipcRenderer.on('change-aspect-ratio', (e, aspectRatio) => {
-    aspectRatioSelector.value = aspectRatio;
-    handleSizeChange.call(aspectRatioSelector);
+  dimensionsEmitter.on('ratio-selected', ratio => handleSizeChange(ratio));
+
+  dimensionsEmitter.on('app-selected', app => {
+    // Set app information on dimensions so it can be reused later
+    // eg. for showing app name after selection
+    dimensions.app = {
+      pid: app.pid,
+      isFullscreen: app.isFullscreen,
+      width: app.width,
+      height: app.height
+    };
+
+    if (app.isFullscreen) {
+      // Fullscreen
+      ipcRenderer.send('open-cropper-window', {width: app.width, height: app.height}, {x: 1, y: 1});
+    } else {
+      ipcRenderer.send('activate-app', app.ownerName, app);
+    }
+  });
+
+  buildSizeMenu({
+    el: ratioSelector,
+    emitter: dimensionsEmitter,
+    dimensions
   });
 
   toggleAudioRecordBtn.onclick = function () {
@@ -397,12 +388,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ipcRenderer.on('cropper-window-closed', () => {
     recordBtn.classList.remove('is-cropping');
-    recordBtn.attributes['data-state'].value = 'initial';
+    recordBtn.dataset.state = 'initial';
+  });
+
+  ipcRenderer.on('cropper-window-opened', (event, bounds) => {
+    recordBtn.classList.add('is-cropping');
+    recordBtn.dataset.state = 'ready-to-record';
+
+    [inputWidth.value, inputHeight.value] = [bounds.width, bounds.height];
+    setSelectedRatio(bounds.width, bounds.height);
   });
 
   ipcRenderer.on('cropper-window-new-size', (event, size) => {
     if (inputWidth !== document.activeElement && inputHeight !== document.activeElement) {
-      [inputWidth.value, inputHeight.value] = [size.width - cropperWindowBuffer, size.height - cropperWindowBuffer];
+      const width = size.width - app.kap.cropperWindowBuffer;
+      const height = size.height - app.kap.cropperWindowBuffer;
+      [inputWidth.value, inputHeight.value] = [width, height];
+      setSelectedRatio(width, height);
     }
   });
 

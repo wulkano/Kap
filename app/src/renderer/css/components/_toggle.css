@@ -41,6 +41,7 @@
     cursor: pointer;
 
     &::after {
+      content: '';
       display: block;
       width: 1.6rem;
       height: 1.6rem;
@@ -53,7 +54,6 @@
       background: $gray-darker;
       box-shadow: 0 1px 2px solid rgba(0, 0, 0, 0.2);
       transition: 0.12s ease-in-out;
-      content: '';
     }
   }
 }

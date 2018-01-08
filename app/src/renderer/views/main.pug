@@ -19,16 +19,9 @@ block body
   section.controls-content
     .controls-section.container
       .controls-section__row
-        +select-custom.has-icon.c-select--large
+        +select-custom.has-icon.c-select--large.ratio-selector
           +icon('ic_crop_free_24px').o-icon--small
-          select.aspect-ratio-selector(tabindex="1")
-            option(value='16:9') 16:9
-            option(value='5:4') 5:4
-            option(value='5:3') 5:3
-            option(value='4:3') 4:3
-            option(value='3:2') 3:2
-            option(value='1:1' selected) 1:1
-            option(id="custom-ratio-option" data-aspect-ratio='custom') Custom
+          button(tabindex="1") Select...
       .controls-section__row.aspect-ratio
         .aspect-ratio__input
           input#aspect-ratio-width.c-input--large(type='number' value='512' tabindex="1")
