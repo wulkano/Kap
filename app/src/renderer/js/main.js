@@ -16,7 +16,6 @@ const {app} = remote;
 // Observers that should be disposed when the window unloads
 const observersToDispose = [];
 
-const cropperWindowBuffer = 2;
 const debounceTimeout = 400;
 
 function setMainWindowSize() {
