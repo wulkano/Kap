@@ -274,9 +274,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   let widthTimeout;
-  inputWidth.oninput = function () {
+  inputWidth.oninput = function (...args) {
     clearTimeout(widthTimeout);
-    widthTimeout = setTimeout(() => handleWidthInput.apply(this, arguments), debounceTimeout);
+    widthTimeout = setTimeout(() => handleWidthInput.apply(this, ...args), debounceTimeout);
   };
   inputWidth.onkeydown = handleKeyDown;
   inputWidth.onblur = function () {
@@ -286,9 +286,9 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   let heightTimeout;
-  inputHeight.oninput = function () {
+  inputHeight.oninput = function (...args) {
     clearTimeout(heightTimeout);
-    heightTimeout = setTimeout(() => handleHeightInput.apply(this, arguments), debounceTimeout);
+    heightTimeout = setTimeout(() => handleHeightInput.apply(this, ...args), debounceTimeout);
   };
   inputHeight.onkeydown = handleKeyDown;
   inputHeight.onblur = function () {
