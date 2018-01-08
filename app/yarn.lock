@@ -611,6 +611,12 @@ electron-util@^0.2.1:
   dependencies:
     electron-is-dev "^0.3.0"
 
+electron-util@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/electron-util/-/electron-util-0.4.1.tgz#9d4e832fc0e0df4f96cece6f06c74f809cf7846c"
+  dependencies:
+    electron-is-dev "^0.3.0"
+
 end-of-stream@^1.0.0, end-of-stream@^1.1.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/end-of-stream/-/end-of-stream-1.4.0.tgz#7a90d833efda6cfa6eac0f4949dbb0fad3a63206"
@@ -1431,10 +1437,11 @@ node-gyp@~3.6.0:
     tar "^2.0.0"
     which "1"
 
-node-mac-app-icon@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/node-mac-app-icon/-/node-mac-app-icon-1.1.0.tgz#521019090175cc7f9d911f9eb2240252f0142d3a"
+node-mac-app-icon@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/node-mac-app-icon/-/node-mac-app-icon-1.2.2.tgz#2331944a3a35fde345b282dc2ab05473caee867f"
   dependencies:
+    electron-util "^0.4.1"
     execa "^0.8.0"
 
 "nopt@2 || 3":
