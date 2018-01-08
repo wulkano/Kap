@@ -239,8 +239,13 @@ body.is-tray-arrow-hidden {
 
 
 /* Aspect ratio controls */
-.aspect-ratio-select {
-  margin-right: 10px;
+.ratio-selector .app-logo {
+  position: absolute;
+  top: 50%;
+  left: 9px;
+  transform: translateY(-50%);
+  background-color: #fff;
+  box-shadow: 0 0 0 3px #fff;
 }
 
 .aspect-ratio {

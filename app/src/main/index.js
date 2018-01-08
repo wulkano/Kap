@@ -182,7 +182,7 @@ const openCropperWindow = (size = {}, position = {}) => {
   }
 };
 
-ipcMain.on('activate-application', async (event, appName, {width, height, x, y}) => {
+ipcMain.on('activate-app', async (event, appName, {width, height, x, y}) => {
   if (cropperWindow) {
     cropperWindow.close();
   }
@@ -407,7 +407,7 @@ menubar.on('after-create-window', () => {
   });
 
   mainWindow.on('show', () => {
-    mainWindow.webContents.send('load-apps');
+    mainWindow.webContents.send('reload-apps');
   });
 
   menubar.on('show', () => {
