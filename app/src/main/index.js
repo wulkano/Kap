@@ -94,18 +94,22 @@ function closeCropperWindow() {
   menubar.setOption('alwaysOnTop', false);
 }
 
-function setCropperWindowOnBlur() {
+function setCropperWindowOnBlur(closeOnBlur = true) {
   cropperWindow.on('blur', () => {
     if (!mainWindow.isFocused() &&
         !cropperWindow.webContents.isDevToolsFocused() &&
         !mainWindow.webContents.isDevToolsFocused() &&
-        !recording) {
+        !recording &&
+        closeOnBlur === true) {
       closeCropperWindow();
     }
   });
 }
 
-const openCropperWindow = (size = {}, position = {}) => {
+const openCropperWindow = (size = {}, position = {}, options = {}) => {
+  options = Object.assign({}, {
+    closeOnBlur: true
+  }, options);
   mainWindow.setAlwaysOnTop(true, 'screen-saver', 1); // TODO send a PR to `menubar`
   menubar.setOption('alwaysOnTop', true);
   if (cropperWindow) {
@@ -137,10 +141,10 @@ const openCropperWindow = (size = {}, position = {}) => {
     if (isDev) {
       cropperWindow.openDevTools({mode: 'detach'});
       cropperWindow.webContents.on('devtools-opened', () => {
-        setCropperWindowOnBlur();
+        setCropperWindowOnBlur(options.closeOnBlur);
       });
     } else {
-      setCropperWindowOnBlur();
+      setCropperWindowOnBlur(options.closeOnBlur);
     }
 
     cropperWindow.on('closed', () => {
@@ -189,7 +193,7 @@ ipcMain.on('activate-app', async (event, appName, {width, height, x, y}) => {
 
   await activateWindow(appName);
   mainWindow.show();
-  openCropperWindow({width, height}, {x, y});
+  openCropperWindow({width, height}, {x, y}, {closeOnBlur: false});
 });
 
 ipcMain.on('open-cropper-window', (event, size, position) => {
