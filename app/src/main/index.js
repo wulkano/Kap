@@ -72,13 +72,6 @@ ipcMain.on('set-main-window-size', (event, args) => {
   }
 });
 
-ipcMain.on('set-cropper-window-size', (event, args) => {
-  if (args.width && args.height && cropperWindow) {
-    [args.width, args.height] = [parseInt(args.width, 10), parseInt(args.height, 10)];
-    cropperWindow.setSize(args.width + cropperWindowBuffer, args.height + cropperWindowBuffer, true); // True == animate
-  }
-});
-
 ipcMain.on('show-options-menu', (event, coordinates) => {
   if (coordinates && coordinates.x && coordinates.y) {
     coordinates.x = parseInt(coordinates.x.toFixed(), 10);
@@ -181,6 +174,18 @@ const openCropperWindow = (size = {}, position = {}) => {
     });
   }
 };
+
+ipcMain.on('set-cropper-window-size', (event, args) => {
+  if (!args.width || !args.height) {
+    return;
+  }
+  [args.width, args.height] = [parseInt(args.width, 10), parseInt(args.height, 10)];
+  if (cropperWindow) {
+    cropperWindow.setSize(args.width + cropperWindowBuffer, args.height + cropperWindowBuffer, true); // True == animate
+  } else {
+    openCropperWindow(args);
+  }
+});
 
 ipcMain.on('activate-app', async (event, appName, {width, height, x, y}) => {
   if (cropperWindow) {
