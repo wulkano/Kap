@@ -13,7 +13,7 @@ const RATIOS = [
   '1:1'
 ];
 
-async function getAppIconListByPid(pidArray) {
+function getAppIconListByPid(pidArray) {
   const opts = {
     size: 16,
     encoding: 'buffer'
