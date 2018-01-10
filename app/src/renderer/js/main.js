@@ -100,6 +100,12 @@ document.addEventListener('DOMContentLoaded', () => {
     cropperBounds.width -= 2;
     cropperBounds.height -= 2;
 
+    // If we're recording fullscreen, set x, y to zero
+    if (dimensions.app && dimensions.app.isFullscreen) {
+      cropperBounds.x = 0;
+      cropperBounds.y = 0;
+    }
+
     // We need the most recent settings
     const {
       fps,
@@ -349,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (app.isFullscreen) {
       // Fullscreen
-      ipcRenderer.send('open-cropper-window', {width: app.width, height: app.height}, {x: 1, y: 1});
+      ipcRenderer.send('open-cropper-window', {width: app.width, height: app.height}, {x: 0, y: 0});
     } else {
       ipcRenderer.send('activate-app', app.ownerName, app);
     }
