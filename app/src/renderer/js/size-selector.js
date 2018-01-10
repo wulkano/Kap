@@ -14,8 +14,7 @@ const RATIOS = [
 ];
 
 async function getWindowList() {
-  let windows = await getWindows();
-  windows = [...windows, {pid: 222, ownerName: 'Test'}];
+  const windows = await getWindows();
   const images = await getAppIconListByPid(windows.map(win => win.pid), {
     size: 16,
     encoding: 'buffer',
