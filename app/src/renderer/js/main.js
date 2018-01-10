@@ -126,8 +126,6 @@ document.addEventListener('DOMContentLoaded', () => {
       displayId: String(display.id)
     };
 
-    console.log(apertureOpts);
-
     if (recordAudio === true) {
       apertureOpts.audioDeviceId = audioInputDeviceId;
     }
