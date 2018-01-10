@@ -1,6 +1,6 @@
 import {remote, ipcRenderer} from 'electron';
 import {getWindows} from 'mac-windows';
-import {getAppIconByPid} from 'node-mac-app-icon';
+import {getAppIconListByPid} from 'node-mac-app-icon';
 
 const {Menu, nativeImage} = remote;
 
@@ -13,27 +13,13 @@ const RATIOS = [
   '1:1'
 ];
 
-function getAppIconListByPid(pidArray) {
-  const opts = {
-    size: 16,
-    encoding: 'buffer'
-  };
-  // If one of the promises fails, we set the icon to null
-  return Promise.all(
-    pidArray.map(pid => getAppIconByPid(pid, opts).catch(() => null))
-  ).then(
-    result => result.map((icon, i) => ({
-      pid: pidArray[i],
-      icon: icon || null
-    }))
-  );
-}
-
 async function getWindowList() {
-  const windows = await getWindows();
+  let windows = await getWindows();
+  windows = [...windows, {pid: 222, ownerName: 'Test'}];
   const images = await getAppIconListByPid(windows.map(win => win.pid), {
     size: 16,
-    encoding: 'buffer'
+    encoding: 'buffer',
+    failOnError: false
   });
   const {width, height} = remote.screen.getPrimaryDisplay().bounds;
 
