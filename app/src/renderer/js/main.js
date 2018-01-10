@@ -100,6 +100,12 @@ document.addEventListener('DOMContentLoaded', () => {
     cropperBounds.width -= 2;
     cropperBounds.height -= 2;
 
+    // if we're recording fullscreen, set x, y to zero
+    if (dimensions.app && dimensions.app.isFullscreen) {
+      cropperBounds.x = 0;
+      cropperBounds.y = 0;
+    }
+
     // We need the most recent settings
     const {
       fps,
@@ -119,6 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
       highlightClicks,
       displayId: String(display.id)
     };
+
+    console.log(apertureOpts);
 
     if (recordAudio === true) {
       apertureOpts.audioDeviceId = audioInputDeviceId;
