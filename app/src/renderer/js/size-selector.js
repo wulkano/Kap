@@ -17,7 +17,6 @@ async function getWindowList() {
   const windows = await getWindows();
   const images = await getAppIconListByPid(windows.map(win => win.pid), {
     size: 16,
-    encoding: 'buffer',
     failOnError: false
   });
   const {width, height} = remote.screen.getPrimaryDisplay().bounds;
