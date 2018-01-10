@@ -135,6 +135,7 @@ const openCropperWindow = (size = {}, position = {}, options = {}) => {
       cropperWindow.openDevTools({mode: 'detach'});
       cropperWindow.webContents.on('devtools-opened', () => {
         setCropperWindowOnBlur(options.closeOnBlur);
+        mainWindow.focus();
       });
     } else {
       setCropperWindowOnBlur(options.closeOnBlur);
@@ -188,6 +189,7 @@ ipcMain.on('set-cropper-window-size', (event, args) => {
     cropperWindow.setSize(args.width + cropperWindowBuffer, args.height + cropperWindowBuffer, true); // True == animate
   } else {
     openCropperWindow(args);
+    mainWindow.focus();
   }
 });
 

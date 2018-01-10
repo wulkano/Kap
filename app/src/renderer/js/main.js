@@ -217,6 +217,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function handleWidthInput(event, validate) {
+    // User is deleting the current value
+    // to enter a new one
+    if (!this.value) {
+      return;
+    }
+
     const [first, second] = dimensions.ratio;
 
     this.value = validateNumericInput(this, {
@@ -244,6 +250,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function handleHeightInput(event, validate) {
+    // User is deleting the current value
+    // to enter a new one
+    if (!this.value) {
+      return;
+    }
+
     const [first, second] = dimensions.ratio;
 
     this.value = validateNumericInput(this, {
