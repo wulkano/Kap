@@ -17,7 +17,8 @@ async function getWindowList() {
   const windows = await getWindows();
   const images = await getAppIconListByPid(windows.map(win => win.pid), {
     size: 16,
-    encoding: 'buffer'
+    encoding: 'buffer',
+    failOnError: false
   });
   const {width, height} = remote.screen.getPrimaryDisplay().bounds;
 
@@ -31,14 +32,12 @@ async function getWindowList() {
     ...windows
       .filter(win => win.ownerName !== 'Kap')
       .map(win => {
-        const icon = nativeImage.createFromBuffer(images.find(img => img.pid === win.pid).icon);
+        const iconImage = images.find(img => img.pid === win.pid);
+        const icon = iconImage.icon ? nativeImage.createFromBuffer(iconImage.icon) : null;
         return Object.assign({}, win, {
           isFullscreen: false,
-          icon2x: icon,
-          icon: icon.resize({
-            width: 16,
-            height: 16
-          })
+          icon2x: icon || null,
+          icon: icon ? icon.resize({width: 16, height: 16}) : null
         });
       })
   ];
