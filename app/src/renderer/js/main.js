@@ -376,6 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.on('cropper-window-closed', () => {
     recordBtn.classList.remove('is-cropping');
     recordBtn.dataset.state = 'initial';
+    dimensions.app = null;
   });
 
   ipcRenderer.on('cropper-window-opened', (event, bounds) => {
