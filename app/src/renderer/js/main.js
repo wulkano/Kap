@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
     cropperBounds.width -= 2;
     cropperBounds.height -= 2;
 
-    // if we're recording fullscreen, set x, y to zero
+    // If we're recording fullscreen, set x, y to zero
     if (dimensions.app && dimensions.app.isFullscreen) {
       cropperBounds.x = 0;
       cropperBounds.y = 0;
