@@ -355,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (app.isFullscreen) {
       // Fullscreen
-      ipcRenderer.send('open-cropper-window', {width: app.width, height: app.height}, {x: 1, y: 1});
+      ipcRenderer.send('open-cropper-window', {width: app.width, height: app.height}, {x: 0, y: 0});
     } else {
       ipcRenderer.send('activate-app', app.ownerName, app);
     }
