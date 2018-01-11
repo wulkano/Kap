@@ -422,11 +422,7 @@ menubar.on('after-create-window', () => {
     }
   });
 
-  mainWindow.on('show', e => {
-    if (preparingToRecord) {
-      e.preventDefault();
-      return;
-    }
+  mainWindow.on('show', () => {
     mainWindow.webContents.send('reload-apps');
   });
 

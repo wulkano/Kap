@@ -149,7 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function stopRecording() {
-    console.log('STOP SHOIULD BE CALLED');
     ipcRenderer.send('will-stop-recording');
 
     const filePath = await aperture.stopRecording();
