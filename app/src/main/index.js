@@ -44,6 +44,7 @@ let shouldStopWhenTrayIsClicked = false;
 let tray;
 let recording = false;
 let playing = true;
+let preparingToRecord = false;
 
 const mainTouchbar = createMainTouchbar({
   onAspectRatioChange: aspectRatio => mainWindow.webContents.send('change-aspect-ratio', aspectRatio),
@@ -397,6 +398,10 @@ menubar.on('after-create-window', () => {
   positioner = menubar.positioner;
 
   tray.on('click', () => {
+    if (preparingToRecord) {
+      tray.setHighlightMode('never');
+      return mainWindow.hide();
+    }
     if (editorWindow) {
       return editorWindow.show();
     }
@@ -417,7 +422,11 @@ menubar.on('after-create-window', () => {
     }
   });
 
-  mainWindow.on('show', () => {
+  mainWindow.on('show', e => {
+    if (preparingToRecord) {
+      e.preventDefault();
+      return;
+    }
     mainWindow.webContents.send('reload-apps');
   });
 
@@ -457,6 +466,7 @@ ipcMain.on('start-recording', () => {
 
 ipcMain.on('will-start-recording', () => {
   recording = true;
+  preparingToRecord = true;
   if (cropperWindow) {
     cropperWindow.setResizable(false);
     cropperWindow.setIgnoreMouseEvents(true);
@@ -471,6 +481,10 @@ ipcMain.on('will-start-recording', () => {
   }
 });
 
+ipcMain.on('did-start-recording', () => {
+  preparingToRecord = false;
+});
+
 ipcMain.on('stopped-recording', () => {
   resetTrayIcon();
   analytics.track('recording/finished');
@@ -478,6 +492,7 @@ ipcMain.on('stopped-recording', () => {
 
 ipcMain.on('will-stop-recording', () => {
   recording = false;
+  preparingToRecord = false;
   if (cropperWindow) {
     closeCropperWindow();
   }

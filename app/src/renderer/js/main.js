@@ -132,6 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       await aperture.startRecording(apertureOpts);
+      ipcRenderer.send('did-start-recording');
       log(`Started recording after ${(Date.now() - past) / 1000}s`);
     } catch (err) {
       // This prevents the button from being reset, since the recording has not yet started
@@ -148,6 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function stopRecording() {
+    console.log('STOP SHOIULD BE CALLED');
     ipcRenderer.send('will-stop-recording');
 
     const filePath = await aperture.stopRecording();
