@@ -627,6 +627,10 @@ ensure-error@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/ensure-error/-/ensure-error-0.1.0.tgz#cf3fd3365bf7fd83244731cbd4f30006d99df259"
 
+ensure-error@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/ensure-error/-/ensure-error-1.0.0.tgz#c54c13329132cad06f847423b52c22fd88099d0d"
+
 env-paths@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/env-paths/-/env-paths-1.0.0.tgz#4168133b42bb05c38a35b1ae4397c8298ab369e0"

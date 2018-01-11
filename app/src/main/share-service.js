@@ -2,6 +2,7 @@ import electron from 'electron';
 import Store from 'electron-store';
 import Ajv from 'ajv';
 import delay from 'delay';
+import ensureError from 'ensure-error';
 import ShareServiceContext from './share-service-context';
 
 const REQUIRED_KEYS = new Set([
@@ -72,7 +73,7 @@ export default class ShareService {
   }
 
   showError(err) {
-    electron.dialog.showErrorBox(`Error in plugin ${this.pluginName}`, err.stack);
+    electron.dialog.showErrorBox(`Error in plugin ${this.pluginName}`, ensureError(err).stack);
   }
 
   async run(exportOptions) { // `exportOptions` => format filePath width height fps loop
