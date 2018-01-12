@@ -6,7 +6,7 @@ block head
   +script('preferences')
 
 block body
-  +window-header(title='Preferences').is-large
+  +window-header(title='Preferences').is-large.is-draggable
     nav.prefs-nav
       a.is-active(href data-pane='general' title='General')
         +icon('settings')
