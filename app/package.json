@@ -26,6 +26,7 @@
     "electron-store": "^1.2.0",
     "electron-unhandled": "^0.2.0",
     "electron-util": "^0.2.1",
+    "ensure-error": "^1.0.0",
     "execa": "^0.8.0",
     "file-size": "^1.0.0",
     "first-run": "^1.2.0",
