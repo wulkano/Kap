@@ -102,6 +102,12 @@ document.addEventListener('DOMContentLoaded', () => {
     cropperBounds.width -= 2;
     cropperBounds.height -= 2;
 
+    // If we're recording fullscreen, set x, y to zero
+    if (dimensions.app && dimensions.app.isFullscreen) {
+      cropperBounds.x = 0;
+      cropperBounds.y = 0;
+    }
+
     // We need the most recent settings
     const {
       fps,
@@ -128,6 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       await aperture.startRecording(apertureOpts);
+      ipcRenderer.send('did-start-recording');
       log(`Started recording after ${(Date.now() - past) / 1000}s`);
     } catch (err) {
       // This prevents the button from being reset, since the recording has not yet started
@@ -219,6 +226,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function handleWidthInput(event, validate) {
+    // User is deleting the current value
+    // to enter a new one
+    if (!this.value) {
+      return;
+    }
+
     const [first, second] = dimensions.ratio;
 
     this.value = validateNumericInput(this, {
@@ -246,6 +259,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function handleHeightInput(event, validate) {
+    // User is deleting the current value
+    // to enter a new one
+    if (!this.value) {
+      return;
+    }
+
     const [first, second] = dimensions.ratio;
 
     this.value = validateNumericInput(this, {
@@ -349,7 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (app.isFullscreen) {
       // Fullscreen
-      ipcRenderer.send('open-cropper-window', {width: app.width, height: app.height}, {x: 1, y: 1});
+      ipcRenderer.send('open-cropper-window', {width: app.width, height: app.height}, {x: 0, y: 0});
     } else {
       ipcRenderer.send('activate-app', app.ownerName, app);
     }
@@ -388,6 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.on('cropper-window-closed', () => {
     recordBtn.classList.remove('is-cropping');
     recordBtn.dataset.state = 'initial';
+    dimensions.app = null;
   });
 
   ipcRenderer.on('cropper-window-opened', (event, bounds) => {

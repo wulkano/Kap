@@ -79,7 +79,10 @@
       "!src"
     ],
     "mac": {
-      "category": "public.app-category.productivity"
+      "category": "public.app-category.productivity",
+      "extendInfo": {
+        "LSMinimumSystemVersion": "10.12.0"
+      }
     },
     "dmg": {
       "iconSize": 160,

@@ -44,6 +44,7 @@ let shouldStopWhenTrayIsClicked = false;
 let tray;
 let recording = false;
 let playing = true;
+let preparingToRecord = false;
 
 const mainTouchbar = createMainTouchbar({
   onAspectRatioChange: aspectRatio => mainWindow.webContents.send('change-aspect-ratio', aspectRatio),
@@ -72,13 +73,6 @@ ipcMain.on('set-main-window-size', (event, args) => {
   }
 });
 
-ipcMain.on('set-cropper-window-size', (event, args) => {
-  if (args.width && args.height && cropperWindow) {
-    [args.width, args.height] = [parseInt(args.width, 10), parseInt(args.height, 10)];
-    cropperWindow.setSize(args.width + cropperWindowBuffer, args.height + cropperWindowBuffer, true); // True == animate
-  }
-});
-
 ipcMain.on('show-options-menu', (event, coordinates) => {
   if (coordinates && coordinates.x && coordinates.y) {
     coordinates.x = parseInt(coordinates.x.toFixed(), 10);
@@ -94,18 +88,22 @@ function closeCropperWindow() {
   menubar.setOption('alwaysOnTop', false);
 }
 
-function setCropperWindowOnBlur() {
+function setCropperWindowOnBlur(closeOnBlur = true) {
   cropperWindow.on('blur', () => {
     if (!mainWindow.isFocused() &&
         !cropperWindow.webContents.isDevToolsFocused() &&
         !mainWindow.webContents.isDevToolsFocused() &&
-        !recording) {
+        !recording &&
+        closeOnBlur === true) {
       closeCropperWindow();
     }
   });
 }
 
-const openCropperWindow = (size = {}, position = {}) => {
+const openCropperWindow = (size = {}, position = {}, options = {}) => {
+  options = Object.assign({}, {
+    closeOnBlur: true
+  }, options);
   mainWindow.setAlwaysOnTop(true, 'screen-saver', 1); // TODO send a PR to `menubar`
   menubar.setOption('alwaysOnTop', true);
   if (cropperWindow) {
@@ -137,10 +135,11 @@ const openCropperWindow = (size = {}, position = {}) => {
     if (isDev) {
       cropperWindow.openDevTools({mode: 'detach'});
       cropperWindow.webContents.on('devtools-opened', () => {
-        setCropperWindowOnBlur();
+        setCropperWindowOnBlur(options.closeOnBlur);
+        mainWindow.focus();
       });
     } else {
-      setCropperWindowOnBlur();
+      setCropperWindowOnBlur(options.closeOnBlur);
     }
 
     cropperWindow.on('closed', () => {
@@ -182,6 +181,19 @@ const openCropperWindow = (size = {}, position = {}) => {
   }
 };
 
+ipcMain.on('set-cropper-window-size', (event, args) => {
+  if (!args.width || !args.height) {
+    return;
+  }
+  [args.width, args.height] = [parseInt(args.width, 10), parseInt(args.height, 10)];
+  if (cropperWindow) {
+    cropperWindow.setSize(args.width + cropperWindowBuffer, args.height + cropperWindowBuffer, true); // True == animate
+  } else {
+    openCropperWindow(args);
+    mainWindow.focus();
+  }
+});
+
 ipcMain.on('activate-app', async (event, appName, {width, height, x, y}) => {
   if (cropperWindow) {
     cropperWindow.close();
@@ -189,7 +201,7 @@ ipcMain.on('activate-app', async (event, appName, {width, height, x, y}) => {
 
   await activateWindow(appName);
   mainWindow.show();
-  openCropperWindow({width, height}, {x, y});
+  openCropperWindow({width, height}, {x, y}, {closeOnBlur: false});
 });
 
 ipcMain.on('open-cropper-window', (event, size, position) => {
@@ -386,6 +398,10 @@ menubar.on('after-create-window', () => {
   positioner = menubar.positioner;
 
   tray.on('click', () => {
+    if (preparingToRecord) {
+      tray.setHighlightMode('never');
+      return mainWindow.hide();
+    }
     if (editorWindow) {
       return editorWindow.show();
     }
@@ -446,6 +462,7 @@ ipcMain.on('start-recording', () => {
 
 ipcMain.on('will-start-recording', () => {
   recording = true;
+  preparingToRecord = true;
   if (cropperWindow) {
     cropperWindow.setResizable(false);
     cropperWindow.setIgnoreMouseEvents(true);
@@ -460,6 +477,10 @@ ipcMain.on('will-start-recording', () => {
   }
 });
 
+ipcMain.on('did-start-recording', () => {
+  preparingToRecord = false;
+});
+
 ipcMain.on('stopped-recording', () => {
   resetTrayIcon();
   analytics.track('recording/finished');
@@ -467,6 +488,7 @@ ipcMain.on('stopped-recording', () => {
 
 ipcMain.on('will-stop-recording', () => {
   recording = false;
+  preparingToRecord = false;
   if (cropperWindow) {
     closeCropperWindow();
   }
