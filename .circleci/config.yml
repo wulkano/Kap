@@ -1,0 +1,13 @@
+version: 2
+jobs:
+  build:
+    macos:
+      xcode: '9.2.0'
+    steps:
+      - checkout
+      - run: yarn
+      - run: yarn test
+      - run: yarn run dist
+      - run: mv dist/*.dmg dist/Kap.dmg
+      - store_artifacts:
+          path: dist/Kap.dmg
