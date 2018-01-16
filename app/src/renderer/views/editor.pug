@@ -23,6 +23,10 @@ block body
           input.slider#trimmer-in(type="range" step="0.00001")
           input.slider#trimmer-out(type="range" step="0.00001")
       .video-controls-right
+        a.video__mute-button.js-mute-video
+          +icon('volume-on')
+        a.video__unmute-button.js-unmute-video.hidden
+          +icon('volume-off')
         a.video__maximize-button.js-maximize-video
           +icon('fullscreen')
         a.video__unmaximize-button.js-unmaximize-video.hidden
