@@ -70,7 +70,9 @@ function updateContent(el, dimensions, windowList) {
 
   const stringRatio = dimensions.ratio.join(':');
   const knownRatio = RATIOS.find(ratio => ratio === stringRatio);
-  content.textContent = knownRatio || `Custom (${stringRatio})`;
+  // TODO: We hide the custom ratio until #279 is fixed
+  // content.textContent = knownRatio || `Custom (${stringRatio})`;
+  content.textContent = knownRatio || `Custom`;
 }
 
 function isAppSelected(dimensions, app) {

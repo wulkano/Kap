@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const pauseBtn = $('.js-pause-video');
   const maximizeBtn = $('.js-maximize-video');
   const unmaximizeBtn = $('.js-unmaximize-video');
+  const muteBtn = $('.js-mute-video');
+  const unmuteBtn = $('.js-unmute-video');
   const previewTime = $('.js-video-time');
   const previewTimeTip = $('.js-video-time-tip');
   const inputHeight = $('.input-height');
@@ -126,6 +128,18 @@ document.addEventListener('DOMContentLoaded', () => {
     maximizeBtn.classList.remove('hidden');
     ipcRenderer.send('toggle-fullscreen-editor-window');
     $('body').classList.remove('fullscreen');
+  };
+
+  muteBtn.onclick = () => {
+    unmuteBtn.classList.remove('hidden');
+    muteBtn.classList.add('hidden');
+    preview.muted = true;
+  };
+
+  unmuteBtn.onclick = () => {
+    unmuteBtn.classList.add('hidden');
+    muteBtn.classList.remove('hidden');
+    preview.muted = false;
   };
 
   function shake(el) {
