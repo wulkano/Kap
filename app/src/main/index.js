@@ -3,6 +3,7 @@ import fs from 'fs';
 
 import {app, BrowserWindow, ipcMain, Menu, screen, globalShortcut, dialog, Notification} from 'electron';
 import isDev from 'electron-is-dev';
+import util from 'electron-util';
 import {activateWindow} from 'mac-windows';
 
 import {init as initErrorReporter} from '../common/reporter';
@@ -307,6 +308,8 @@ function getCropperWindow() {
 }
 
 app.on('ready', () => {
+  util.enforceMacOSAppLocation();
+
   // Ensure all plugins are up to date
   plugins.upgrade().catch(() => {});
 
