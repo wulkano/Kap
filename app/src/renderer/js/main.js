@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const progressBar = document.querySelector('#progress-bar');
   const progressBarLabel = document.querySelector('.progress-bar-label');
   const progressBarSection = document.querySelector('section.progress');
+  const progressCancelBtn = document.querySelector('.progress-bar-cancel-btn');
   const recordBtn = document.querySelector('.record');
   const toggleAudioRecordBtn = document.querySelector('.js-toggle-audio-record');
   const swapBtn = document.querySelector('.swap-btn');
@@ -374,6 +375,10 @@ document.addEventListener('DOMContentLoaded', () => {
     this.classList.toggle('is-active');
 
     app.kap.settings.set('recordAudio', isVisible(micOnIcon));
+  };
+
+  progressCancelBtn.onclick = () => {
+    ipcRenderer.send('cancel-export');
   };
 
   observersToDispose.push(app.kap.settings.observe('recordAudio', event => {
