@@ -109,6 +109,7 @@ export default class ShareService {
 
       if (context.canceled) {
         kap.mainWindow.send('hide-export-window');
+        kap.editorWindow.focus();
       } else {
         kap.mainWindow.send('end-export');
       }
