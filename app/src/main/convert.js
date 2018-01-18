@@ -1,6 +1,7 @@
 import path from 'path';
 import {app, ipcMain} from 'electron';
 import tempy from 'tempy';
+import {CancelError} from 'p-cancelable';
 import {convertToGif, convertToMp4, convertToWebm, convertToApng} from '../scripts/convert';
 
 // `exportOptions` => format filePath width height fps loop, defaultFileName
@@ -47,6 +48,9 @@ export default function (exportOptions) {
       return outputPath;
     })
     .catch(err => {
-      console.log(err);
+      if (err instanceof CancelError) {
+        return;
+      }
+      throw err;
     });
 }
