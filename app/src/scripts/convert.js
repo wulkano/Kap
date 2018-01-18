@@ -16,8 +16,6 @@ function convert(outputPath, opts, args) {
     let amountOfFrames;
 
     onCancel(() => {
-      console.log('The process is going to DIEEEEEEE');
-      // Let's kill te process
       converter.kill();
     });
 
@@ -48,14 +46,19 @@ function convert(outputPath, opts, args) {
 // `time ffmpeg -i original.mp4 -vf fps=30,scale=480:-1::flags=lanczos,palettegen palette.png`
 // `time ffmpeg -i original.mp4 -i palette.png -filter_complex 'fps=30,scale=-1:-1:flags=lanczos[x]; [x][1:v]paletteuse' palette.gif`
 function convertToGif(opts) {
-  return Promise.resolve().then(() => {
+  return new PCancelable(onCancel => {
     const palettePath = tmp.tmpNameSync({postfix: '.png'});
-
-    return execa(ffmpegPath, [
+    const paletteProcessor = execa(ffmpegPath, [
       '-i', opts.filePath,
       '-vf', `fps=${opts.fps},scale=${opts.width}:${opts.height}:flags=lanczos,palettegen`,
       palettePath
-    ])
+    ]);
+
+    onCancel(() => {
+      paletteProcessor.kill();
+    });
+
+    return paletteProcessor
       .then(() => convert(opts.outputPath, opts, [
         '-i', opts.filePath,
         '-i', palettePath,
@@ -64,7 +67,7 @@ function convertToGif(opts) {
         '-ss', opts.startTime,
         '-to', opts.endTime,
         opts.outputPath
-      ]));
+    ]));
   });
 }
 
