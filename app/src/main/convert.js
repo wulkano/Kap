@@ -5,7 +5,7 @@ import {CancelError} from 'p-cancelable';
 import {convertToGif, convertToMp4, convertToWebm, convertToApng} from '../scripts/convert';
 
 // `exportOptions` => format filePath width height fps loop, defaultFileName
-export default function (exportOptions) {
+export default async function (exportOptions) {
   const format = exportOptions.format;
 
   let convert;
@@ -42,15 +42,17 @@ export default function (exportOptions) {
     convertProcess.cancel();
   });
 
-  return convertProcess
-    .then(() => {
-      app.kap.mainWindow.send('export-progress', {text: ''});
-      return outputPath;
-    })
-    .catch(err => {
-      if (err instanceof CancelError) {
-        return;
-      }
-      throw err;
-    });
+  await convertProcess.catch(err => {
+    if (err instanceof CancelError) {
+      return;
+    }
+    throw err;
+  });
+
+  if (convertProcess.canceled) {
+    return;
+  }
+
+  app.kap.mainWindow.send('export-progress', {text: ''});
+  return outputPath;
 }
