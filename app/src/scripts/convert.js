@@ -67,7 +67,7 @@ function convertToGif(opts) {
         '-ss', opts.startTime,
         '-to', opts.endTime,
         opts.outputPath
-    ]));
+      ]));
   });
 }
 
