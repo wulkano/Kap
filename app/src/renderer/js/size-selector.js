@@ -13,22 +13,22 @@ const RATIOS = [
   '1:1'
 ];
 
-const BLACKLIST = [
+const APP_BLACKLIST = [
   'Kap',
   'Kap Beta',
   'Spotlight',
   'Window Server'
 ];
 
-const APPS_MIN_HEIGHT = 50;
-const APPS_MIN_WIDTH = 50;
+const APP_MIN_HEIGHT = 50;
+const APP_MIN_WIDTH = 50;
 
 function isAppValid(app) {
   if (
-    app.width < APPS_MIN_WIDTH ||
-    app.height < APPS_MIN_HEIGHT ||
-    BLACKLIST.includes(app.ownerName) ||
-    BLACKLIST.includes(app.name)
+    app.width < APP_MIN_WIDTH ||
+    app.height < APP_MIN_HEIGHT ||
+    APP_BLACKLIST.includes(app.ownerName) ||
+    APP_BLACKLIST.includes(app.name)
   ) {
     return false;
   }
