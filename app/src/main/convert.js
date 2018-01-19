@@ -42,15 +42,13 @@ export default async function (exportOptions) {
     convertProcess.cancel();
   });
 
-  await convertProcess.catch(err => {
+  try {
+    await convertProcess;
+  } catch (err) {
     if (err instanceof CancelError) {
       return;
     }
     throw err;
-  });
-
-  if (convertProcess.canceled) {
-    return;
   }
 
   app.kap.mainWindow.send('export-progress', {text: ''});
