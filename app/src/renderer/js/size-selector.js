@@ -13,6 +13,28 @@ const RATIOS = [
   '1:1'
 ];
 
+const APP_BLACKLIST = [
+  'Kap',
+  'Kap Beta',
+  'Spotlight',
+  'Window Server'
+];
+
+const APP_MIN_HEIGHT = 50;
+const APP_MIN_WIDTH = 50;
+
+function isAppValid(app) {
+  if (
+    app.width < APP_MIN_WIDTH ||
+    app.height < APP_MIN_HEIGHT ||
+    APP_BLACKLIST.includes(app.ownerName) ||
+    APP_BLACKLIST.includes(app.name)
+  ) {
+    return false;
+  }
+  return true;
+}
+
 async function getWindowList() {
   const windows = await getWindows();
   const images = await getAppIconListByPid(windows.map(win => win.pid), {
@@ -29,7 +51,7 @@ async function getWindowList() {
       height
     },
     ...windows
-      .filter(win => win.ownerName !== 'Kap')
+      .filter(isAppValid)
       .map(win => {
         const iconImage = images.find(img => img.pid === win.pid);
         const icon = iconImage.icon ? nativeImage.createFromBuffer(iconImage.icon) : null;
