@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
       displayId: String(display.id)
     };
 
-    if (recordAudio === true) {
+    if (recordAudio === true && audioInputDeviceId !== 'default') {
       apertureOpts.audioDeviceId = audioInputDeviceId;
     }
 
@@ -375,18 +375,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     app.kap.settings.set('recordAudio', isVisible(micOnIcon));
   };
-
-  observersToDispose.push(app.kap.settings.observe('recordAudio', event => {
-    const method = event.newValue ? 'add' : 'remove';
-    toggleAudioRecordBtn.classList[method]('is-active');
-    if (event.newValue === true) {
-      micOnIcon.classList.remove('hidden');
-      micOffIcon.classList.add('hidden');
-    } else {
-      micOnIcon.classList.add('hidden');
-      micOffIcon.classList.remove('hidden');
-    }
-  }));
 
   ipcRenderer.on('start-recording', () => startRecording());
 

@@ -14,7 +14,7 @@ const DEFAULTS = {
   highlightClicks: false,
   fps: 30,
   recordAudio: false,
-  audioInputDeviceId: 'none',
+  audioInputDeviceId: 'default',
   dimensions: {
     height: 512,
     width: 512,
@@ -47,16 +47,6 @@ async function init() {
   settings.defaults(DEFAULTS);
   settings.applyDefaultsSync();
   sync();
-
-  // We need to fetch a input device because if the user opens the app for the first time
-  // and toggle the mic in the main window to record audio, we will not record any audio
-  // if we do not have a input id stored.
-  // TODO: if no input device is available (could happen in an iMac, for example), we need
-  // to tell the user
-  const devices = await aperture.audioDevices();
-  if (devices.length > 0) {
-    settings.setSync('audioInputDeviceId', devices[0].id);
-  }
 }
 
 function get(key) {
