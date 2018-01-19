@@ -1,5 +1,6 @@
 import {ipcRenderer, remote} from 'electron';
 import EventEmitter from 'events';
+import {default as createAperture, audioDevices} from 'aperture';
 
 import {init as initErrorReporter, report as reportError} from '../../common/reporter';
 import {log} from '../../common/logger';
@@ -9,8 +10,7 @@ import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 import {handleTrafficLightsClicks, isVisible, disposeObservers} from '../js/utils';
 import buildSizeMenu, {findRatioForSize} from '../js/size-selector';
 
-const aperture = require('aperture')();
-
+const aperture = createAperture();
 const {app} = remote;
 
 // Observers that should be disposed when the window unloads
@@ -126,8 +126,14 @@ document.addEventListener('DOMContentLoaded', () => {
       displayId: String(display.id)
     };
 
-    if (recordAudio === true && audioInputDeviceId !== 'default') {
-      apertureOpts.audioDeviceId = audioInputDeviceId;
+    if (recordAudio === true) {
+      if (audioInputDeviceId === 'default') {
+        const [defaultAudioDevice] = await audioDevices();
+        console.log(defaultAudioDevice);
+        apertureOpts.audioDeviceId = defaultAudioDevice.id;
+      } else {
+        apertureOpts.audioDeviceId = audioInputDeviceId;
+      }
     }
 
     try {
