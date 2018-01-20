@@ -11,3 +11,11 @@ jobs:
       - run: mv dist/*.dmg dist/Kap.dmg
       - store_artifacts:
           path: dist/Kap.dmg
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /.*/ # Force CircleCI to build on tags
