@@ -110,7 +110,7 @@ function shortenString(str, length = 10) {
   if (str.length <= length) {
     return str;
   }
-  return `${str.substring(0, length - 1)}...`;
+  return `${str.substring(0, length - 1)}…`;
 }
 
 export {
