@@ -56,9 +56,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     option.text = device.name;
     audioInputDeviceSelector.add(option);
   }
-  if (settingsValues.recordAudio === true) {
-    audioInputDeviceSelector.value = settingsValues.audioInputDeviceId;
-  }
+
+  audioInputDeviceSelector.value = settingsValues.audioInputDeviceId;
 
   const tabs = $j('.prefs-nav > a');
   tabs.on('click', function (event) {
@@ -207,10 +206,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   audioInputDeviceSelector.onchange = function () {
-    app.kap.settings.set('recordAudio', this.value !== 'none');
-    if (this.value !== 'none') {
-      app.kap.settings.set('audioInputDeviceId', this.value);
-    }
+    app.kap.settings.set('audioInputDeviceId', this.value);
   };
 
   // The `showCursor` setting can be changed via the
@@ -218,16 +214,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   observersToDispose.push(app.kap.settings.observe('showCursor', event => {
     showCursorCheckbox.checked = event.newValue;
     showCursorCheckbox.onchange();
-  }));
-
-  // The `recordAudio` setting can be changed via the
-  // mic btn in the main window
-  observersToDispose.push(app.kap.settings.observe('recordAudio', event => {
-    if (event.newValue === true) {
-      audioInputDeviceSelector.value = app.kap.settings.get('audioInputDeviceId');
-    } else {
-      audioInputDeviceSelector.value = 'none';
-    }
   }));
 });
 
