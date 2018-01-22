@@ -54,7 +54,6 @@ async function init() {
   // to tell the user
   const devices = await aperture.audioDevices();
   if (devices.length > 0) {
-    console.log(devices[0].id);
     settings.setSync('audioInputDeviceId', devices[0].id);
   }
 }
