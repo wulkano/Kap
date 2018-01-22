@@ -127,9 +127,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     if (recordAudio === true) {
-      if (audioInputDeviceId === 'default') {
+      // In case for some reason the default audio device is not set
+      // use the first available device for recording
+      if (typeof audioInputDeviceId !== 'string') {
         const [defaultAudioDevice] = await audioDevices();
-        apertureOpts.audioDeviceId = defaultAudioDevice.id;
+        apertureOpts.audioDeviceId = defaultAudioDevice && defaultAudioDevice.id;
       } else {
         apertureOpts.audioDeviceId = audioInputDeviceId;
       }

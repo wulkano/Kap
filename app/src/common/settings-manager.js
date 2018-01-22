@@ -3,6 +3,7 @@ import {homedir} from 'os';
 import {app} from 'electron';
 import settings from 'electron-settings';
 import objectPath from 'object-path';
+import aperture from 'aperture';
 
 const DEFAULTS = {
   kapturesDir: `${homedir()}/Movies/Kaptures`,
@@ -12,7 +13,7 @@ const DEFAULTS = {
   highlightClicks: false,
   fps: 30,
   recordAudio: false,
-  audioInputDeviceId: 'default',
+  audioInputDeviceId: null,
   dimensions: {
     height: 512,
     width: 512,
@@ -45,6 +46,17 @@ async function init() {
   settings.defaults(DEFAULTS);
   settings.applyDefaultsSync();
   sync();
+
+  // We need to fetch a input device because if the user opens the app for the first time
+  // and toggle the mic in the main window to record audio, we will not record any audio
+  // if we do not have a input id stored.
+  // TODO: if no input device is available (could happen in an iMac, for example), we need
+  // to tell the user
+  const devices = await aperture.audioDevices();
+  if (devices.length > 0) {
+    console.log(devices[0].id);
+    settings.setSync('audioInputDeviceId', devices[0].id);
+  }
 }
 
 function get(key) {

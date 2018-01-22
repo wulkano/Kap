@@ -3,7 +3,7 @@ import _ from 'lodash';
 import $j from 'jquery/dist/jquery.slim';
 
 // Note: `./` == `/app/dist/renderer/views`, not `js`
-import {handleTrafficLightsClicks, $, disposeObservers, shortenString} from '../js/utils';
+import {handleTrafficLightsClicks, $, disposeObservers} from '../js/utils';
 
 const {app, dialog, getCurrentWindow} = remote;
 
@@ -50,20 +50,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   fpsSlider.value = settingsValues.fps;
   fpsLabel.innerText = `${settingsValues.fps} FPS`;
 
-  const audioDevices = await aperture.audioDevices();
-  const [defaultAudioDevice] = audioDevices;
-
-  if (defaultAudioDevice) {
-    const defaultAudioDeviceName = shortenString(defaultAudioDevice.name, 15);
-    audioInputDeviceSelector.querySelector('[value="default"]').text = `Default (${defaultAudioDeviceName})`;
-  }
-
-  for (const device of audioDevices) {
+  for (const device of await aperture.audioDevices()) {
     const option = document.createElement('option');
     option.value = device.id;
     option.text = device.name;
     audioInputDeviceSelector.add(option);
   }
+
   audioInputDeviceSelector.value = settingsValues.audioInputDeviceId;
 
   const tabs = $j('.prefs-nav > a');

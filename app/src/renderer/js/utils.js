@@ -106,19 +106,4 @@ function getTimestampAtEvent(event, videoDuration) {
   return videoDuration * (xPositionInTrimmer / rect.width); // Calculated time in seconds where the click happened
 }
 
-function shortenString(str, length = 10) {
-  if (str.length <= length) {
-    return str;
-  }
-  return `${str.substring(0, length - 1)}…`;
-}
-
-export {
-  handleTrafficLightsClicks,
-  isVisible,
-  $,
-  disposeObservers,
-  handleActiveButtonGroup,
-  getTimestampAtEvent,
-  shortenString
-};
+export {handleTrafficLightsClicks, isVisible, $, disposeObservers, handleActiveButtonGroup, getTimestampAtEvent};
