@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function registerExportOptions() {
-    // Use select elements to get intial list of export formats, even if we won't use the select down the line
+    // Use select elements to get initial list of export formats, even if we won't use the select down the line
     const exportFormats = document.querySelectorAll('.output-format .c-select');
 
     ipcRenderer.on('toggle-format-buttons', (event, data) => {
