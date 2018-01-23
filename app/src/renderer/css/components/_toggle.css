@@ -45,7 +45,6 @@
 
   &.loading + .c-toggle__label {
     background-color: #fff;
-    cursor: wait;
 
     &::after {
       border: none;
