@@ -102,7 +102,6 @@
   }
 
   svg {
-    @extend .btn;
     width: 2.4rem;
     height: 2.4rem;
     transition: fill 0.12s ease-in-out;
