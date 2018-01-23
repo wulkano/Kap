@@ -27,7 +27,6 @@
     border: 1px solid $blue;
     border-radius: 50%;
     background: $blue;
-    cursor: pointer;
     -webkit-appearance: none;
   }
 

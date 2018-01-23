@@ -7,11 +7,6 @@
   - Any extensions to input styling should go in this file
 */
 
-/* Ensure all buttons have the pointer cursor */
-.btn {
-  cursor: pointer;
-}
-
 /* Button */
 *[class^='button'] {
   height: 2.4rem;
@@ -22,7 +17,6 @@
   font-size: 1.2rem;
   text-align: center;
   line-height: 2.4rem;
-  cursor: pointer;
 }
 
 

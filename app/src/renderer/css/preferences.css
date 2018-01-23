@@ -38,6 +38,7 @@ nav.prefs-nav {
     margin-right: 16px;
     color: $gray-darker;
     transition: color 0.12s ease-in-out;
+    cursor: default;
 
     svg {
       transition: fill 0.12s ease-in-out;
@@ -98,6 +99,10 @@ nav.prefs-nav {
 
   &:last-of-type {
     border-bottom: 1px solid $gray-lighter;
+  }
+
+  &:hover {
+    cursor: default; /* Prevent text selection cursor */
   }
 }
 

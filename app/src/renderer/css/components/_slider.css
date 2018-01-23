@@ -26,7 +26,6 @@
     border-color: transparent;
     color: transparent;
     background: transparent;
-    cursor: pointer;
   }
 
   &::-webkit-slider-thumb {
@@ -38,13 +37,5 @@
     transition: all 0.16s ease-in-out;
     pointer-events: auto;
     -webkit-appearance: none;
-
-    &:hover {
-      cursor: -webkit-grab;
-    }
-
-    &:active {
-      cursor: -webkit-grabbing;
-    }
   }
 }
