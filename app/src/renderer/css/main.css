@@ -143,7 +143,6 @@ body.is-tray-arrow-hidden {
     border: 2px solid #fff;
     border-radius: 50%;
     transition: border-radius 0.12s ease-in-out, background 0.12s ease-in-out;
-    cursor: pointer;
   }
 
   &.is-cropping .record__state {
@@ -188,12 +187,10 @@ body.is-tray-arrow-hidden {
     color: #fff;
     background: #2d2d2d;
     font-size: 1.4rem;
-    cursor: pointer;
 
     /* Text inside the toggle */
     &__title {
       margin-left: 1rem;
-      cursor: pointer !important;
     }
 
     /* Directional transform of arrow in toggle */

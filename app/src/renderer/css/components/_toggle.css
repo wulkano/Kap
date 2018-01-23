@@ -38,7 +38,6 @@
     position: relative;
     background-color: #fff;
     transition: 0.2s ease-in-out;
-    cursor: pointer;
 
     &::after {
       content: '';

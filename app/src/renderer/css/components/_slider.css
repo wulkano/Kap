@@ -26,7 +26,6 @@
     border-color: transparent;
     color: transparent;
     background: transparent;
-    cursor: pointer;
   }
 
   &::-webkit-slider-thumb {
