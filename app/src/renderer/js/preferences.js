@@ -85,7 +85,11 @@ document.addEventListener('DOMContentLoaded', async () => {
               <p class="preference__description"><%- plugin.description %></p>
             </div>
             <div class="preference-input">
-              <button class="button button--secondary uninstall" data-name="<%- plugin.name %>">Uninstall</button>
+              <div class="c-toggle">
+                <input type="checkbox" class="c-toggle__input" id="plugin-toggle-<%- plugin.name %>" data-name="<%- plugin.name %>" checked>
+                <label class="c-toggle__label" for="plugin-toggle-<%- plugin.name %>"></label>
+              </div>
+              <!--<button class="button button--secondary uninstall" data-name="<%- plugin.name %>">Uninstall</button>-->
             </div>
           </div>
         </div>
@@ -113,7 +117,11 @@ document.addEventListener('DOMContentLoaded', async () => {
               <p class="preference__description"><%- plugin.description %></p>
             </div>
             <div class="preference-input">
-              <button class="button button--secondary install" data-name="<%- plugin.name %>">Install</button>
+              <div class="c-toggle">
+                <input type="checkbox" class="c-toggle__input" id="plugin-toggle-<%- plugin.name %>" data-name="<%- plugin.name %>">
+                <label class="c-toggle__label" for="plugin-toggle-<%- plugin.name %>"></label>
+              </div>
+              <!--<button class="button button--secondary install" data-name="<%- plugin.name %>">Install</button>-->
             </div>
           </div>
         </div>
