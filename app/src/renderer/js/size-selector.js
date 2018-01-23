@@ -1,6 +1,7 @@
 import {remote, ipcRenderer} from 'electron';
 import {getWindows} from 'mac-windows';
 import {getAppIconListByPid} from 'node-mac-app-icon';
+import nearestNormalAspectRatio from 'nearest-normal-aspect-ratio';
 
 const {Menu, nativeImage} = remote;
 
@@ -92,9 +93,7 @@ function updateContent(el, dimensions, windowList) {
 
   const stringRatio = dimensions.ratio.join(':');
   const knownRatio = RATIOS.find(ratio => ratio === stringRatio);
-  // TODO: We hide the custom ratio until #279 is fixed
-  // content.textContent = knownRatio || `Custom (${stringRatio})`;
-  content.textContent = knownRatio || `Custom`;
+  content.textContent = knownRatio || `Custom (${stringRatio})`;
 }
 
 function isAppSelected(dimensions, app) {
@@ -159,11 +158,6 @@ function buildMenuItems(options, currentDimensions, windowList) {
   ]);
 }
 
-function sizeMatchesRatio(width, height, ratio) {
-  const [first, second] = ratio.split(':');
-  return width / first === height / second;
-}
-
 // Helper function for retrieving the simplest ratio,
 // via the largest common divisor of two numbers (thanks @doot0)
 function getLargestCommonDivisor(first, second) {
@@ -186,10 +180,12 @@ function getSimplestRatio(width, height) {
 }
 
 export function findRatioForSize(width, height) {
-  const ratio = RATIOS.find(ratio => sizeMatchesRatio(width, height, ratio));
+  const ratio = nearestNormalAspectRatio(width, height);
+
   if (ratio) {
     return ratio.split(':').map(part => parseInt(part, 10));
   }
+
   return getSimplestRatio(width, height);
 }
 

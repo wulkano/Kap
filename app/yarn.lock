@@ -1417,6 +1417,10 @@ mute-stream@~0.0.4:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
 
+nearest-normal-aspect-ratio@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/nearest-normal-aspect-ratio/-/nearest-normal-aspect-ratio-1.1.0.tgz#4c229d5f01723cd90b0123e6a04d9a9973291a1f"
+
 nested-error-stacks@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/nested-error-stacks/-/nested-error-stacks-2.0.0.tgz#98b2ffaefb4610fa3936f1e71435d30700de2840"
