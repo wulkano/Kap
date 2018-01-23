@@ -41,7 +41,6 @@
     color: $color-primary;
     font-size: $font-size-default;
     line-height: 3.6rem;
-    cursor: -webkit-drag;
   }
   /* Toolbar: */
   &.is-large::before {
@@ -85,7 +84,6 @@
   }
 
   &.is-draggable {
-    cursor: -webkit-grab;
     -webkit-app-region: drag;
   }
 }

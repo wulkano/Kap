@@ -15,16 +15,7 @@ svg {
 }
 
 .window-dragger {
-  cursor: -webkit-grab;
   -webkit-app-region: drag;
-
-  &:active {
-    cursor: -webkit-grabbing;
-    /*
-     * TODO: this doesn't work because of `-webkit-app-region`; implement a workaround
-     * with IPC
-     */
-  }
 }
 
 rect.stroke-black {

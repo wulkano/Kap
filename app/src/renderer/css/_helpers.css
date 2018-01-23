@@ -8,7 +8,6 @@
 
 /* Allow element to be held down to drag the current window */
 .webkit-drag {
-  cursor: -webkit-grab;
   -webkit-app-region: drag;
 }
 

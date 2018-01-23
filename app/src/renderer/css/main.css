@@ -78,7 +78,6 @@ body.is-tray-arrow-hidden {
     height: 2.4rem;
     color: $color-primary;
     font-size: 1.2rem;
-    /* cursor: -webkit-grab; */
 
     &:hover {
       color: $color-primary;
