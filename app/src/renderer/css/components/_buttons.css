@@ -167,6 +167,17 @@ button {
   }
 }
 
+.button--dark {
+  border-color: transparent;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  transition: background 0.12s ease-in-out;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
 /* Large Button */
 .button--large {
   height: 3.2rem;

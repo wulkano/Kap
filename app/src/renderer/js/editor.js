@@ -248,8 +248,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function registerExportOptions() {
+    // Use select elements to get intial list of export formats, even if we won't use the select down the line
     const exportFormats = document.querySelectorAll('.output-format .c-select');
-    console.log(exportFormats);
 
     ipcRenderer.on('toggle-format-buttons', (event, data) => {
       for (const btn of exportFormats) {
@@ -260,6 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
     for (const formatElement of exportFormats) {
       const format = formatElement.dataset.exportType;
       const dropdown = formatElement.querySelector('select');
+      const formatButton = document.querySelector(`.output-format button[data-export-type='${format}']`);
 
       let i = 0;
       for (const service of shareServices) {
@@ -275,16 +276,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
       formatElement.appendChild(dropdown);
 
-      // Prevent the dropdown from triggering the button
-      dropdown.onclick = event => {
-        event.stopPropagation();
-      };
+      // If there are more than the label and default export format, show the select
+      // Else show a button instead of a dropdown that handles only "save to file"
+      if (dropdown.children.length > 2) {
+        // Prevent the dropdown from triggering the button
+        dropdown.onclick = event => {
+          event.stopPropagation();
+        };
 
-      dropdown.onchange = () => { // eslint-disable-line no-loop-func
-        const service = shareServices[dropdown.value];
-        handleFile(service, format);
-        dropdown.value = '-1';
-      };
+        dropdown.onchange = () => { // eslint-disable-line no-loop-func
+          const service = shareServices[dropdown.value];
+          handleFile(service, format);
+          dropdown.value = '-1';
+        };
+      } else {
+        const service = shareServices[0];
+        formatElement.classList.add('hidden');
+        formatButton.classList.remove('hidden');
+
+        formatButton.onclick = () => handleFile(service, format);
+      }
     }
   }
 
