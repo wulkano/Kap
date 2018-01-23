@@ -71,73 +71,59 @@ document.addEventListener('DOMContentLoaded', async () => {
     panes.filter(`[data-pane="${paneName}"]`).removeClass('hidden');
   });
 
-  // TODO: DRY up the plugin list code when it's more mature
-  function loadInstalledPlugins(installedPlugins) {
-    const template = `
-      <% _.forEach(plugins, plugin => { %>
-        <div class="preference container">
-          <div class="preference-part">
-            <div class="preference-content">
-              <div class="preference__title">
-                <a class="preference__url o-link" href data-url="<%- plugin.homepage %>"><%- plugin.prettyName %></a>
-                <span class="preference__note"><%- plugin.version %></span>
-              </div>
-              <p class="preference__description"><%- plugin.description %></p>
+  const pluginListTemplate = _.template(`
+    <% _.forEach(plugins, plugin => { %>
+      <div class="preference container">
+        <div class="preference-part">
+          <div class="preference-content">
+            <div class="preference__title">
+              <a class="preference__url o-link" href data-url="<%- plugin.homepage || plugin.links.homepage %>"><%- plugin.prettyName %></a>
+              <span class="preference__note"><%- plugin.version %></span>
             </div>
-            <div class="preference-input">
-              <button class="button button--secondary uninstall" data-name="<%- plugin.name %>">Uninstall</button>
+            <p class="preference__description"><%- plugin.description %></p>
+          </div>
+          <div class="preference-input">
+            <div class="c-toggle">
+              <input type="checkbox" class="c-toggle__input install-toggle" id="plugin-toggle-<%- plugin.name %>" data-name="<%- plugin.name %>" <%- installed ? 'checked' : '' %>>
+              <label class="c-toggle__label" for="plugin-toggle-<%- plugin.name %>"></label>
             </div>
           </div>
         </div>
-      <% }); %>
-    `;
+      </div>
+    <% }); %>
+  `);
 
-    const compiled = _.template(template);
-    const html = compiled({
-      plugins: installedPlugins
+  function loadInstalledPlugins(installedPlugins) {
+    const html = pluginListTemplate({
+      plugins: installedPlugins,
+      installed: true
     });
 
     $j('#plugins-installed').html(html);
   }
 
   function loadAvailablePlugins(availablePlugins) {
-    const template = `
-      <% _.forEach(plugins, plugin => { %>
-        <div class="preference container">
-          <div class="preference-part">
-            <div class="preference-content">
-              <div class="preference__title">
-                <a class="preference__url o-link" href data-url="<%- plugin.links.homepage %>"><%- plugin.prettyName %></a>
-                <span class="preference__note"><%- plugin.version %></span>
-              </div>
-              <p class="preference__description"><%- plugin.description %></p>
-            </div>
-            <div class="preference-input">
-              <button class="button button--secondary install" data-name="<%- plugin.name %>">Install</button>
-            </div>
-          </div>
-        </div>
-      <% }); %>
-    `;
-    const compiled = _.template(template);
-    const html = compiled({
-      plugins: availablePlugins
+    const html = pluginListTemplate({
+      plugins: availablePlugins,
+      installed: false
     });
 
     $j('#plugins-available').html(html);
   }
 
-  $j('#plugins-installed').on('click', '.uninstall', function () {
-    $j(this).prop('disabled', true).text('Uninstalling…');
-    const name = $j(this).data('name');
-    ipcRenderer.send('uninstall-plugin', name);
-  });
+  $j('.plugins-list').on('change', '.install-toggle', function (e) {
+    const el = e.target;
+    const name = el.dataset.name;
 
-  $j('#plugins-available').on('click', '.install', function () {
-    $j(this).prop('disabled', true).text('Installing…');
-    const name = $j(this).data('name');
-    ipcRenderer.send('install-plugin', name);
-    $j(this).parents('li').remove(); // We don't want to wait on `loadAvailablePlugins`
+    el.disabled = true;
+
+    if (el.checked) {
+      el.classList.add('loading');
+      ipcRenderer.send('install-plugin', name);
+      $j(this).parents('li').remove(); // We don't want to wait on `loadAvailablePlugins`
+    } else {
+      ipcRenderer.send('uninstall-plugin', name);
+    }
   });
 
   ipcRenderer.on('load-plugins', (event, {available, installed}) => {
