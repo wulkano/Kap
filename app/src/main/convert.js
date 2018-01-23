@@ -1,6 +1,7 @@
 import path from 'path';
-import {app} from 'electron';
+import {app, ipcMain} from 'electron';
 import tempy from 'tempy';
+import {CancelError} from 'p-cancelable';
 import {convertToGif, convertToMp4, convertToWebm, convertToApng} from '../scripts/convert';
 
 // `exportOptions` => format filePath width height fps loop, defaultFileName
@@ -20,7 +21,7 @@ export default async function (exportOptions) {
 
   const outputPath = path.join(tempy.directory(), exportOptions.defaultFileName);
 
-  await convert({
+  const convertProcess = convert({
     filePath: exportOptions.filePath, // TODO: Rename `filePath` to `inputPath`
     outputPath,
     width: exportOptions.width,
@@ -37,7 +38,19 @@ export default async function (exportOptions) {
     }
   });
 
-  app.kap.mainWindow.send('export-progress', {text: ''});
+  ipcMain.on('cancel-export', () => {
+    convertProcess.cancel();
+  });
 
+  try {
+    await convertProcess;
+  } catch (err) {
+    if (err instanceof CancelError) {
+      return;
+    }
+    throw err;
+  }
+
+  app.kap.mainWindow.send('export-progress', {text: ''});
   return outputPath;
 }

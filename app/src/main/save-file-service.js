@@ -30,8 +30,16 @@ const action = async context => {
     return;
   }
 
+  const tempFilePath = await context.filePath();
+
+  // Execution has been interrupted
+  if (!tempFilePath) {
+    context.cancel();
+    return;
+  }
+
   // TODO: Switch to the async version when we target Electron 1.8
-  moveFile.sync(await context.filePath(), filePath);
+  moveFile.sync(tempFilePath, filePath);
 
   const notification = new Notification({
     title: 'File saved successfully!',
