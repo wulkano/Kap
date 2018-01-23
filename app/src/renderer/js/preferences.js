@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div class="preference-part">
           <div class="preference-content">
             <div class="preference__title">
-              <a class="preference__url o-link" href data-url="<%- plugin.links.homepage %>"><%- plugin.prettyName %></a>
+              <a class="preference__url o-link" href data-url="<%- plugin.homepage || plugin.links.homepage %>"><%- plugin.prettyName %></a>
               <span class="preference__note"><%- plugin.version %></span>
             </div>
             <p class="preference__description"><%- plugin.description %></p>
@@ -118,6 +118,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     el.disabled = true;
 
     if (el.checked) {
+      el.classList.add('loading');
       ipcRenderer.send('install-plugin', name);
       $j(this).parents('li').remove(); // We don't want to wait on `loadAvailablePlugins`
     } else {
