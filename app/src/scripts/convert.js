@@ -45,31 +45,30 @@ function convert(outputPath, opts, args) {
 
 // `time ffmpeg -i original.mp4 -vf fps=30,scale=480:-1::flags=lanczos,palettegen palette.png`
 // `time ffmpeg -i original.mp4 -i palette.png -filter_complex 'fps=30,scale=-1:-1:flags=lanczos[x]; [x][1:v]paletteuse' palette.gif`
-function convertToGif(opts) {
-  return new PCancelable(onCancel => {
-    const palettePath = tmp.tmpNameSync({postfix: '.png'});
-    const paletteProcessor = execa(ffmpegPath, [
-      '-i', opts.filePath,
-      '-vf', `fps=${opts.fps},scale=${opts.width}:${opts.height}:flags=lanczos,palettegen`,
-      palettePath
-    ]);
+const convertToGif = PCancelable.fn(async (onCancel, opts) => {
+  const palettePath = tmp.tmpNameSync({postfix: '.png'});
+  const paletteProcessor = execa(ffmpegPath, [
+    '-i', opts.filePath,
+    '-vf', `fps=${opts.fps},scale=${opts.width}:${opts.height}:flags=lanczos,palettegen`,
+    palettePath
+  ]);
 
-    onCancel(() => {
-      paletteProcessor.kill();
-    });
-
-    return paletteProcessor
-      .then(() => convert(opts.outputPath, opts, [
-        '-i', opts.filePath,
-        '-i', palettePath,
-        '-filter_complex', `fps=${opts.fps},scale=${opts.width}:${opts.height}:flags=lanczos[x]; [x][1:v]paletteuse`,
-        `-loop`, opts.loop === true ? '0' : '-1', // 0 == forever; -1 == no loop
-        '-ss', opts.startTime,
-        '-to', opts.endTime,
-        opts.outputPath
-      ]));
+  onCancel(() => {
+    paletteProcessor.kill();
   });
-}
+
+  await paletteProcessor;
+
+  return convert(opts.outputPath, opts, [
+    '-i', opts.filePath,
+    '-i', palettePath,
+    '-filter_complex', `fps=${opts.fps},scale=${opts.width}:${opts.height}:flags=lanczos[x]; [x][1:v]paletteuse`,
+    `-loop`, opts.loop === true ? '0' : '-1', // 0 == forever; -1 == no loop
+    '-ss', opts.startTime,
+    '-to', opts.endTime,
+    opts.outputPath
+  ]);
+});
 
 function convertToMp4(opts) {
   // TODO: Instead of fixing the `file://` prefix here, just store it in a better place in the editor
