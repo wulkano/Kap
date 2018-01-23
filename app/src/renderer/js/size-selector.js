@@ -1,6 +1,7 @@
 import {remote, ipcRenderer} from 'electron';
 import {getWindows} from 'mac-windows';
 import {getAppIconListByPid} from 'node-mac-app-icon';
+import nearestNormalAspectRatio from 'nearest-normal-aspect-ratio';
 
 const {Menu, nativeImage} = remote;
 
@@ -12,6 +13,28 @@ const RATIOS = [
   '3:2',
   '1:1'
 ];
+
+const APP_BLACKLIST = [
+  'Kap',
+  'Kap Beta',
+  'Spotlight',
+  'Window Server'
+];
+
+const APP_MIN_HEIGHT = 50;
+const APP_MIN_WIDTH = 50;
+
+function isAppValid(app) {
+  if (
+    app.width < APP_MIN_WIDTH ||
+    app.height < APP_MIN_HEIGHT ||
+    APP_BLACKLIST.includes(app.ownerName) ||
+    APP_BLACKLIST.includes(app.name)
+  ) {
+    return false;
+  }
+  return true;
+}
 
 async function getWindowList() {
   const windows = await getWindows();
@@ -29,7 +52,7 @@ async function getWindowList() {
       height
     },
     ...windows
-      .filter(win => win.ownerName !== 'Kap')
+      .filter(isAppValid)
       .map(win => {
         const iconImage = images.find(img => img.pid === win.pid);
         const icon = iconImage.icon ? nativeImage.createFromBuffer(iconImage.icon) : null;
@@ -70,9 +93,7 @@ function updateContent(el, dimensions, windowList) {
 
   const stringRatio = dimensions.ratio.join(':');
   const knownRatio = RATIOS.find(ratio => ratio === stringRatio);
-  // TODO: We hide the custom ratio until #279 is fixed
-  // content.textContent = knownRatio || `Custom (${stringRatio})`;
-  content.textContent = knownRatio || `Custom`;
+  content.textContent = knownRatio || `Custom (${stringRatio})`;
 }
 
 function isAppSelected(dimensions, app) {
@@ -137,11 +158,6 @@ function buildMenuItems(options, currentDimensions, windowList) {
   ]);
 }
 
-function sizeMatchesRatio(width, height, ratio) {
-  const [first, second] = ratio.split(':');
-  return width / first === height / second;
-}
-
 // Helper function for retrieving the simplest ratio,
 // via the largest common divisor of two numbers (thanks @doot0)
 function getLargestCommonDivisor(first, second) {
@@ -164,10 +180,12 @@ function getSimplestRatio(width, height) {
 }
 
 export function findRatioForSize(width, height) {
-  const ratio = RATIOS.find(ratio => sizeMatchesRatio(width, height, ratio));
+  const ratio = nearestNormalAspectRatio(width, height);
+
   if (ratio) {
     return ratio.split(':').map(part => parseInt(part, 10));
   }
+
   return getSimplestRatio(width, height);
 }
 

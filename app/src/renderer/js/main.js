@@ -1,5 +1,6 @@
 import {ipcRenderer, remote} from 'electron';
 import EventEmitter from 'events';
+import {default as createAperture, audioDevices} from 'aperture';
 
 import {init as initErrorReporter, report as reportError} from '../../common/reporter';
 import {log} from '../../common/logger';
@@ -9,8 +10,7 @@ import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 import {handleTrafficLightsClicks, isVisible, disposeObservers} from '../js/utils';
 import buildSizeMenu, {findRatioForSize} from '../js/size-selector';
 
-const aperture = require('aperture')();
-
+const aperture = createAperture();
 const {app} = remote;
 
 // Observers that should be disposed when the window unloads
@@ -128,7 +128,14 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     if (recordAudio === true) {
-      apertureOpts.audioDeviceId = audioInputDeviceId;
+      // In case for some reason the default audio device is not set
+      // use the first available device for recording
+      if (audioInputDeviceId) {
+        apertureOpts.audioDeviceId = audioInputDeviceId;
+      } else {
+        const [defaultAudioDevice] = await audioDevices();
+        apertureOpts.audioDeviceId = defaultAudioDevice && defaultAudioDevice.id;
+      }
     }
 
     try {
@@ -380,18 +387,6 @@ document.addEventListener('DOMContentLoaded', () => {
   progressCancelBtn.onclick = () => {
     ipcRenderer.send('cancel-export');
   };
-
-  observersToDispose.push(app.kap.settings.observe('recordAudio', event => {
-    const method = event.newValue ? 'add' : 'remove';
-    toggleAudioRecordBtn.classList[method]('is-active');
-    if (event.newValue === true) {
-      micOnIcon.classList.remove('hidden');
-      micOffIcon.classList.add('hidden');
-    } else {
-      micOnIcon.classList.add('hidden');
-      micOffIcon.classList.remove('hidden');
-    }
-  }));
 
   ipcRenderer.on('start-recording', () => startRecording());
 

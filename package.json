@@ -16,7 +16,7 @@
     "cssnano": "3.10.0",
     "del": "3.0.0",
     "devtron": "^1.4.0",
-    "electron": "1.7.10",
+    "electron": "1.7.11",
     "electron-builder": "19.54.0",
     "electron-react-devtools": "^0.5.2",
     "gulp": "^4.0.0",
