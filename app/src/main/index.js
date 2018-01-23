@@ -292,15 +292,6 @@ function openPrefsWindow() {
 
   prefsWindow.loadURL(`file://${__dirname}/../renderer/views/preferences.html`);
   prefsWindow.on('ready-to-show', prefsWindow.show);
-
-  prefsWindow.on('blur', () => {
-    // Because of issues on our codebase and on the `menubar` module,
-    // for now we'll have this ugly workaround: if the main window is attached
-    // to the menubar, we'll just close the prefs window when it loses focus
-    if (!mainWindowIsDetached && !prefsWindow.webContents.isDevToolsFocused()) {
-      prefsWindow.close();
-    }
-  });
 }
 
 function getCropperWindow() {
