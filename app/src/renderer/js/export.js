@@ -1,22 +1,38 @@
-import {ipcRenderer, remote} from 'electron';
+import {ipcRenderer, remote, dialog} from 'electron';
 
 import {handleTrafficLightsClicks} from '../js/utils';
 
-// const {app} = remote;
+let isExportInProgress = false;
+
+window.onbeforeunload = e => {
+  if (isExportInProgress) {
+    const buttonIndex = dialog.showMessageBox(remote.getCurrentWindow(), {
+      type: 'question',
+      buttons: ['Cancel Export', 'Continue'],
+      defaultId: 1,
+      message: 'Are you sure you want to cancel exporting?',
+      detail: 'It will not be saved'
+    });
+    if (buttonIndex === 0) {
+      ipcRenderer.send('cancel-export');
+    } else {
+      e.returnValue = true; // Prevents closing
+    }
+  }
+};
 
 document.addEventListener('DOMContentLoaded', () => {
-  // const trafficLightsWrapper = document.querySelector('.title-bar__controls');
   const progressBar = document.querySelector('#progress-bar');
   const progressCancelBtn = document.querySelector('.progress-bar-cancel-btn');
 
   handleTrafficLightsClicks();
 
   progressCancelBtn.onclick = () => {
-    ipcRenderer.send('cancel-export');
+    window.close();
   };
 
   ipcRenderer.on('start-export', () => {
-    console.log('start export');
+    isExportInProgress = true;
   });
 
   ipcRenderer.on('export-progress', (e, data) => {
@@ -25,15 +41,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (data.percentage) {
       progressBar.value = data.percentage * 100;
     } else {
-      // TODO: How do I get the indeterminate progress bar?
       progressBar.value = 0;
     }
   });
 
   ipcRenderer.on('end-export', () => {
-    console.log('export done');
-    // progressBarLabel.innerText = 'Success 🎉'; // TODO: What should it say here?
-    // progressBar.value = 100;
+    isExportInProgress = false;
   });
 });
 

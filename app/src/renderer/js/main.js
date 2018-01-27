@@ -25,8 +25,6 @@ function setMainWindowSize() {
 document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
   const ratioSelector = document.querySelector('.ratio-selector');
-  const startBar = document.querySelector('.start-bar');
-  const controls = document.querySelector('.controls-content');
   const inputWidth = document.querySelector('#aspect-ratio-width');
   const inputHeight = document.querySelector('#aspect-ratio-height');
   const linkBtn = document.querySelector('.link-btn');

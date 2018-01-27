@@ -1,4 +1,4 @@
-import {app, BrowserWindow, ipcMain, dialog} from 'electron';
+import {BrowserWindow} from 'electron';
 
 let exportWindow;
 
@@ -11,7 +11,9 @@ export function startExport() {
   });
 
   exportWindow.loadURL(`file://${__dirname}/../renderer/views/export.html`);
-  exportWindow.webContents.send('start-export');
+  exportWindow.webContents.on('dom-ready', () => {
+    exportWindow.webContents.send('start-export');
+  });
   exportWindow.on('close', () => {
     exportWindow = null;
   });

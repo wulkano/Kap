@@ -1,5 +1,5 @@
 import path from 'path';
-import {app, ipcMain} from 'electron';
+import {ipcMain} from 'electron';
 import tempy from 'tempy';
 import {CancelError} from 'p-cancelable';
 import {convertToGif, convertToMp4, convertToWebm, convertToApng} from '../scripts/convert';
