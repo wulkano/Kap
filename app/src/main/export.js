@@ -1,30 +1,42 @@
 import {app, BrowserWindow, ipcMain, dialog} from 'electron';
 
+let exportWindow;
+
 export function startExport() {
-  const exportWindow = new BrowserWindow({
+  exportWindow = new BrowserWindow({
     width: 400,
     height: 170,
     resizable: false,
     frame: false
   });
 
-  app.kap.exportWindow = exportWindow;
-
   exportWindow.loadURL(`file://${__dirname}/../renderer/views/export.html`);
   exportWindow.webContents.send('start-export');
+  exportWindow.on('close', () => {
+    exportWindow = null;
+  });
 }
 
 export function exportProgress(payload) {
-  app.kap.exportWindow.send('export-progress', payload);
+  if (!exportWindow) {
+    return;
+  }
+  exportWindow.send('export-progress', payload);
 }
 
 export function hideExportWindow() {
-  app.kap.exportWindow.close();
+  if (!exportWindow) {
+    return;
+  }
+  exportWindow.close();
 }
 
 export function endExport() {
-  app.kap.exportWindow.send('end-export');
+  if (!exportWindow) {
+    return;
+  }
+  exportWindow.send('end-export');
   setTimeout(() => {
-    app.kap.exportWindow.close();
-  });
+    exportWindow.close();
+  }, 1000);
 }
