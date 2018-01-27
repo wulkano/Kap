@@ -3,6 +3,7 @@ import {app, ipcMain} from 'electron';
 import tempy from 'tempy';
 import {CancelError} from 'p-cancelable';
 import {convertToGif, convertToMp4, convertToWebm, convertToApng} from '../scripts/convert';
+import {exportProgress} from './export';
 
 // `exportOptions` => format filePath width height fps loop, defaultFileName
 export default async function (exportOptions) {
@@ -31,7 +32,7 @@ export default async function (exportOptions) {
     startTime: exportOptions.startTime,
     endTime: exportOptions.endTime,
     progressCallback: percentage => {
-      app.kap.mainWindow.send('export-progress', {
+      exportProgress({
         text: 'Converting…',
         percentage
       });
@@ -51,6 +52,6 @@ export default async function (exportOptions) {
     throw err;
   }
 
-  app.kap.mainWindow.send('export-progress', {text: ''});
+  exportProgress({text: ''});
   return outputPath;
 }

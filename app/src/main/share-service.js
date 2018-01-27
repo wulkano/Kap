@@ -4,6 +4,7 @@ import Ajv from 'ajv';
 import delay from 'delay';
 import ensureError from 'ensure-error';
 import ShareServiceContext from './share-service-context';
+import {endExport, startExport, hideExportWindow} from './export';
 
 const REQUIRED_KEYS = new Set([
   'title',
@@ -100,7 +101,7 @@ export default class ShareService {
     // We delay it a tiny bit so it doesn't flash if the `_action` was canceled
     delay(50).then(() => {
       if (!context.canceled) {
-        kap.mainWindow.send('start-export');
+        startExport();
       }
     });
 
@@ -108,13 +109,13 @@ export default class ShareService {
       await this._action(context);
 
       if (context.canceled) {
-        kap.mainWindow.send('hide-export-window');
+        hideExportWindow();
         kap.editorWindow.focus();
       } else {
-        kap.mainWindow.send('end-export');
+        endExport();
       }
     } catch (err) {
-      kap.mainWindow.send('hide-export-window');
+      hideExportWindow();
       this.showError(err);
     }
 
