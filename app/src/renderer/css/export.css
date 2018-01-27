@@ -1,0 +1,44 @@
+/*
+  Kap.app main styling
+  ----
+  Uses eightpoint (github.com/wulkano/eightpoint as a reset)
+  ( ͡° ͜ʖ ͡°)
+*/
+@import 'eightpoint/dist/eight.min';
+@import '_variables';
+@import '_helpers';
+@import '_base';
+@import 'components/_window-header';
+@import 'components/_buttons';
+@import 'components/_progress';
+
+body {
+  background-color: $background-primary;
+}
+
+section.progress-wrapper {
+  padding: 2rem;
+}
+
+section.progress {
+  /* @extend .webkit-drag; */
+  display: flex;
+  padding: 2rem;
+  margin-bottom: 15px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: $gray-lightest;
+  border-radius: $window-border-radius;
+}
+
+.progress-bar-cancel-btn {
+  width: 100%;
+  color: $red;
+
+  &:hover {
+    background-color: $red;
+    border-color: $red;
+    color: $color-light;
+  }
+}
