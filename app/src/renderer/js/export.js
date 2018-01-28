@@ -1,6 +1,7 @@
-import {ipcRenderer, remote, dialog} from 'electron';
-
+import {ipcRenderer, remote} from 'electron';
 import {handleTrafficLightsClicks} from '../js/utils';
+
+const {dialog} = remote;
 
 let isExportInProgress = false;
 
@@ -16,7 +17,9 @@ window.onbeforeunload = e => {
     if (buttonIndex === 0) {
       ipcRenderer.send('cancel-export');
     } else {
-      e.returnValue = true; // Prevents closing
+      // Prevent closing the window
+      e.returnValue = true;
+      e.preventDefault();
     }
   }
 };
@@ -46,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('end-export', () => {
+    progressBar.value = 100;
     isExportInProgress = false;
   });
 });

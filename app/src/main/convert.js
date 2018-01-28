@@ -52,6 +52,5 @@ export default async function (exportOptions) {
     throw err;
   }
 
-  exportProgress({text: ''});
   return outputPath;
 }
