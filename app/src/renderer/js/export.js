@@ -39,8 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('export-progress', (e, data) => {
-    console.log('progress', e, data);
-
     if (data.percentage) {
       progressBar.value = data.percentage * 100;
     } else {
