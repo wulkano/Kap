@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ipcRenderer.on('end-export', () => {
     progressBar.value = 100;
+    progressCancelBtn.disabled = true;
     isExportInProgress = false;
   });
 });
