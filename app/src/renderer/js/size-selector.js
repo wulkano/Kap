@@ -24,6 +24,8 @@ const APP_BLACKLIST = [
 const APP_MIN_HEIGHT = 50;
 const APP_MIN_WIDTH = 50;
 
+const usageHistory = new Map();
+
 function isAppValid(app) {
   if (
     app.width < APP_MIN_WIDTH ||
@@ -63,6 +65,20 @@ async function getWindowList() {
         });
       })
   ];
+}
+
+function setAppLastUsed(app) {
+  const history = usageHistory.has(app.pid) ? usageHistory.get(app.pid) : {
+    count: 0
+  };
+  usageHistory.set(app.pid, {
+    count: history.count + 1,
+    lastUsed: new Date().getTime()
+  });
+}
+
+function getSortedAppList(appList) {
+  return appList;
 }
 
 function getAppDisplayName(app) {
@@ -112,7 +128,7 @@ function isFullscreenSelected(dimensions) {
 
 function buildMenuItems(options, currentDimensions, windowList) {
   const {emitter, el} = options;
-  const [fullscreen, ...windows] = windowList;
+  const [fullscreen, ...appList] = windowList;
   const knownRatio = RATIOS.find(ratio => ratio === currentDimensions.ratio.join(':'));
 
   updateContent(el, currentDimensions, windowList);
@@ -120,12 +136,13 @@ function buildMenuItems(options, currentDimensions, windowList) {
   return Menu.buildFromTemplate([
     {
       label: 'Windows',
-      submenu: windows.map(win => ({
+      submenu: getSortedAppList(appList).map(win => ({
         label: win.ownerName,
         icon: win.icon,
         type: 'radio',
         checked: isAppSelected(currentDimensions, win),
         click: () => {
+          setAppLastUsed(win);
           emitter.emit('app-selected', win);
         }
       }))
