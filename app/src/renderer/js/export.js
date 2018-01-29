@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('start-export', () => {
+    progressBar.value = 0;
     updateTitle('Exporting…');
   });
 
