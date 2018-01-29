@@ -2,6 +2,7 @@ import electron from 'electron';
 import got from 'got';
 import moment from 'moment';
 import convert from './convert';
+import {exportProgress} from './export';
 
 export default class ShareServiceContext {
   constructor(exportOptions) {
@@ -36,7 +37,7 @@ export default class ShareServiceContext {
   }
 
   setProgress(text, percentage) {
-    electron.app.kap.mainWindow.send('export-progress', {text, percentage});
+    exportProgress({text, percentage});
   }
 
   openConfigFile() {
