@@ -1,6 +1,4 @@
-import {ipcRenderer, remote} from 'electron';
-
-const {dialog} = remote;
+import {ipcRenderer} from 'electron';
 
 document.addEventListener('DOMContentLoaded', () => {
   const progressBar = document.querySelector('#progress-bar');

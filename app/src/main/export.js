@@ -1,4 +1,4 @@
-import {BrowserWindow, dialog, ipcMain} from 'electron';
+import {BrowserWindow, dialog} from 'electron';
 
 let exportWindow;
 let isExportInProgress = false;
