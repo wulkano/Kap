@@ -253,7 +253,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     ipcRenderer.on('toggle-format-buttons', (event, data) => {
       for (const btn of exportFormats) {
-        btn.disabled = !data.enabled;
+        const formatButton = document.querySelector(`.output-format button[data-export-type='${btn.dataset.exportType}']`);
+        formatButton.disabled = !data.enabled;
+        btn.classList.toggle('is-disabled', !data.enabled);
       }
     });
 
