@@ -31,6 +31,8 @@ export function startExport() {
         exportWindow.webContents.send('should-cancel-export');
       }
       event.preventDefault();
+    } else {
+      exportWindow = null;
     }
   });
 
