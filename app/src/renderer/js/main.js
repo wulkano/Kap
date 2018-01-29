@@ -25,16 +25,10 @@ function setMainWindowSize() {
 document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
   const ratioSelector = document.querySelector('.ratio-selector');
-  const startBar = document.querySelector('.start-bar');
-  const controls = document.querySelector('.controls-content');
   const inputWidth = document.querySelector('#aspect-ratio-width');
   const inputHeight = document.querySelector('#aspect-ratio-height');
   const linkBtn = document.querySelector('.link-btn');
   const options = document.querySelector('.controls-options');
-  const progressBar = document.querySelector('#progress-bar');
-  const progressBarLabel = document.querySelector('.progress-bar-label');
-  const progressBarSection = document.querySelector('section.progress');
-  const progressCancelBtn = document.querySelector('.progress-bar-cancel-btn');
   const recordBtn = document.querySelector('.record');
   const toggleAudioRecordBtn = document.querySelector('.js-toggle-audio-record');
   const swapBtn = document.querySelector('.swap-btn');
@@ -384,10 +378,6 @@ document.addEventListener('DOMContentLoaded', () => {
     app.kap.settings.set('recordAudio', isVisible(micOnIcon));
   };
 
-  progressCancelBtn.onclick = () => {
-    ipcRenderer.send('cancel-export');
-  };
-
   ipcRenderer.on('start-recording', () => startRecording());
 
   ipcRenderer.on('prepare-recording', () => prepareRecordButton());
@@ -444,50 +434,6 @@ document.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.on('stop-recording', stopRecording);
 
   ipcRenderer.on('log', (event, msgs) => console.log(...msgs));
-
-  function showExportWindow() {
-    startBar.classList.add('hidden');
-    controls.classList.add('hidden');
-    progressBarSection.classList.remove('hidden');
-    setMainWindowSize();
-    app.kap.mainWindow.show();
-  }
-
-  function hideExportWindow() {
-    app.kap.mainWindow.hide();
-    setMainWindowSize();
-    progressBarSection.classList.add('hidden');
-    startBar.classList.remove('hidden');
-    controls.classList.remove('hidden');
-    delete progressBar.value;
-    progressBarLabel.innerText = 'Analyzing…';
-    setMainWindowSize();
-  }
-
-  ipcRenderer.on('start-export', () => {
-    showExportWindow();
-  });
-
-  ipcRenderer.on('export-progress', (event, data) => {
-    progressBarLabel.innerText = data.text;
-
-    if (data.percentage) {
-      progressBar.value = data.percentage * 100;
-    } else {
-      // TODO: How do I get the indeterminate progress bar?
-      progressBar.value = 0;
-    }
-  });
-
-  ipcRenderer.on('hide-export-window', () => {
-    hideExportWindow();
-  });
-
-  ipcRenderer.on('end-export', () => {
-    progressBarLabel.innerText = 'Success 🎉'; // TODO: What should it say here?
-    progressBar.value = 100;
-    setTimeout(hideExportWindow, 1000);
-  });
 
   initErrorReporter();
 });
