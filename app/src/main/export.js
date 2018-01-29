@@ -62,5 +62,5 @@ export function endExport() {
   exportWindow.send('end-export');
   setTimeout(() => {
     exportWindow.close();
-  }, 1000);
+  }, 100);
 }

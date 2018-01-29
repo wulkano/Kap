@@ -21,7 +21,6 @@ section.progress-wrapper {
 }
 
 section.progress {
-  /* @extend .webkit-drag; */
   display: flex;
   padding: 2rem;
   border-radius: $window-border-radius;
