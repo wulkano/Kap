@@ -28,7 +28,7 @@ const APP_MIN_WIDTH = 50;
 const store = new Store({
   name: 'usageHistory'
 });
-let usageHistory = store.get('appUsageHistory', {});
+const usageHistory = store.get('appUsageHistory', {});
 
 function isAppValid(app) {
   if (
@@ -77,7 +77,6 @@ function setAppLastUsed(app) {
     count: (isNaN(count) ? 0 : count) + 1,
     lastUsed: new Date().getTime()
   };
-  console.log('set', usageHistory);
   store.set('appUsageHistory', usageHistory);
 }
 
