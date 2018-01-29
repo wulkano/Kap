@@ -82,16 +82,27 @@ function setAppLastUsed(app) {
 }
 
 function getSortedAppList(appList) {
-  // We need to sort the app list
-  // by their last used time or their count
-  return appList
+  if (appList.length === 0) {
+    return appList;
+  }
+
+  // First get the most recently used app from the list
+  const appListSortedByLastUse = appList
     .map(app => ({
       count: 0,
       lastUsed: 0,
+      ...app,
       ...usageHistory[app.pid]
     }))
-    .sort((a, b) => a.lastUsed - b.lastUsed || a.count - b.count)
-    .reverse();
+    .sort((a, b) => b.lastUsed - a.lastUsed);
+
+  const [mostRecentApp, ...unsortedAppList] = appListSortedByLastUse;
+
+  // Then sort the rest best on usage count
+  return [
+    mostRecentApp,
+    ...unsortedAppList.sort((a, b) => b.count - a.count)
+  ];
 }
 
 function getAppDisplayName(app) {
