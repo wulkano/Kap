@@ -178,6 +178,12 @@ button {
   }
 }
 
+/* Button with small padding */
+.button--small-padding {
+  padding-right: 0.8rem;
+  padding-left: 0.8rem;
+}
+
 /* Large Button */
 .button--large {
   height: 3.2rem;
