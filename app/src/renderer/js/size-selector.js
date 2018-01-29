@@ -2,6 +2,7 @@ import {remote, ipcRenderer} from 'electron';
 import {getWindows} from 'mac-windows';
 import {getAppIconListByPid} from 'node-mac-app-icon';
 import nearestNormalAspectRatio from 'nearest-normal-aspect-ratio';
+import Store from 'electron-store';
 
 const {Menu, nativeImage} = remote;
 
@@ -24,7 +25,10 @@ const APP_BLACKLIST = [
 const APP_MIN_HEIGHT = 50;
 const APP_MIN_WIDTH = 50;
 
-const usageHistory = new Map();
+const store = new Store({
+  name: 'usageHistory'
+});
+let usageHistory = store.get('appUsageHistory', {});
 
 function isAppValid(app) {
   if (
@@ -68,17 +72,22 @@ async function getWindowList() {
 }
 
 function setAppLastUsed(app) {
-  const history = usageHistory.has(app.pid) ? usageHistory.get(app.pid) : {
-    count: 0
-  };
-  usageHistory.set(app.pid, {
-    count: history.count + 1,
+  const {count} = usageHistory[app.pid] || {};
+  usageHistory[app.pid] = {
+    count: (isNaN(count) ? 0 : count) + 1,
     lastUsed: new Date().getTime()
-  });
+  };
+  console.log('set', usageHistory);
+  store.set('appUsageHistory', usageHistory);
 }
 
 function getSortedAppList(appList) {
-  return appList;
+  // We need to sort the app list
+  // by their last used time or their count
+  return appList
+    .map(app => Object.assign({count: 0, lastUsed: 0}, app, usageHistory[app.pid]))
+    .sort((a, b) => a.lastUsed - b.lastUsed || a.count - b.count)
+    .reverse();
 }
 
 function getAppDisplayName(app) {
