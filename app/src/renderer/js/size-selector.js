@@ -62,11 +62,12 @@ async function getWindowList() {
       .map(win => {
         const iconImage = images.find(img => img.pid === win.pid);
         const icon = iconImage.icon ? nativeImage.createFromBuffer(iconImage.icon) : null;
-        return Object.assign({}, win, {
+        return {
+          ...win,
           isFullscreen: false,
           icon2x: icon || null,
           icon: icon ? icon.resize({width: 16, height: 16}) : null
-        });
+        };
       })
   ];
 }
@@ -84,7 +85,11 @@ function getSortedAppList(appList) {
   // We need to sort the app list
   // by their last used time or their count
   return appList
-    .map(app => Object.assign({count: 0, lastUsed: 0}, app, usageHistory[app.pid]))
+    .map(app => ({
+      count: 0,
+      lastUsed: 0,
+      ...usageHistory[app.pid]
+    }))
     .sort((a, b) => a.lastUsed - b.lastUsed || a.count - b.count)
     .reverse();
 }

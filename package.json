@@ -12,7 +12,9 @@
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+    "babel-preset-stage-3": "^6.24.1",
     "cssnano": "^3.10.0",
     "del": "^3.0.0",
     "devtron": "^1.4.0",
@@ -99,8 +101,12 @@
     }
   },
   "babel": {
+    "presets": [
+      "stage-3"
+    ],
     "plugins": [
-      "transform-es2015-modules-commonjs"
+      "transform-es2015-modules-commonjs",
+      ["transform-class-properties", {"spec": true}]
     ]
   }
 }
