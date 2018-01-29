@@ -99,6 +99,12 @@ input {
     padding-left: 8px;
     font-size: 1.2rem;
 
+    .c-select__label {
+      display: flex;
+      height: 100%;
+      align-items: center;
+    }
+
     select {
       width: 100%;
       height: 100%;
@@ -148,6 +154,11 @@ input {
         fill: $blue;
       }
     }
+  }
+
+  &.is-disabled {
+    opacity: 0.5;
+    pointer-events: none;
   }
 }
 

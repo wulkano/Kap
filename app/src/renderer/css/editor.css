@@ -218,8 +218,9 @@ section.output {
   margin-left: auto;
   align-items: center;
 
-  & > button:not(:last-child) {
-    margin-right: 5px;
+  & > button:not(:first-child),
+  & > .c-select:not(:first-child) {
+    margin-right: 8px;
   }
 }
 
