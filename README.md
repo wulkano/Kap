@@ -37,5 +37,4 @@ Download [`master`](https://kap-artifacts.now.sh/master) or builds for any other
 - [▲ ZEIT](https://zeit.co/) for the README formatting and for [hosting our downloads and updates](https://zeit.co/now/).
 - [⬤ CircleCI](https://circleci.com/) for supporting the Open Source community and making our builds fast and reliable.
 - [△ Sentry](https://sentry.io/) for letting us know when Kap isn't behaving and helping us eradicate said behaviour.
-
 - Our [contributors](https://github.com/wulkano/kap/contributors) who help maintain Kap and make screen recording and sharing easy.
