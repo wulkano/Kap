@@ -10,7 +10,7 @@
 /* Button */
 *[class^='button'] {
   height: 2.4rem;
-  padding: 0 1.6rem;
+  padding: 0 0.8rem;
   border: 1px solid #ddd;
   border-radius: 4px;
   color: $color-primary;

@@ -282,7 +282,7 @@ function openPrefsWindow() {
     resizable: false,
     minimizable: false,
     maximizable: false,
-    titleBarStyle: 'hidden',
+    titleBarStyle: 'hiddenInset',
     show: false
   });
 
