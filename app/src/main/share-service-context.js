@@ -18,13 +18,13 @@ export default class ShareServiceContext {
 
   // TODO: Implement progress reporting
   async request(url, options) {
-    const request = got(url, Object.assign({}, options, {useElectronNet: false}));
+    const req = got(url, Object.assign({}, options, {useElectronNet: false}));
 
     ipcMain.on('cancel-export', () => {
-      request.cancel();
+      req.cancel();
     });
 
-    return await request;
+    return req;
   }
 
   cancel() {
