@@ -1,7 +1,6 @@
 import path from 'path';
 import {ipcMain} from 'electron';
 import tempy from 'tempy';
-import {CancelError} from 'p-cancelable';
 import {convertToGif, convertToMp4, convertToWebm, convertToApng} from '../scripts/convert';
 import {exportProgress} from './export';
 
@@ -43,14 +42,7 @@ export default async function (exportOptions) {
     convertProcess.cancel();
   });
 
-  try {
-    await convertProcess;
-  } catch (err) {
-    if (err instanceof CancelError) {
-      return;
-    }
-    throw err;
-  }
+  await convertProcess;
 
   return outputPath;
 }
