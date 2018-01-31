@@ -26,7 +26,7 @@ const APP_MIN_HEIGHT = 50;
 const APP_MIN_WIDTH = 50;
 
 const store = new Store({
-  name: 'usageHistory'
+  name: 'usage-history'
 });
 const usageHistory = store.get('appUsageHistory', {});
 
@@ -75,8 +75,8 @@ async function getWindowList() {
 function setAppLastUsed(app) {
   const {count} = usageHistory[app.pid] || {};
   usageHistory[app.pid] = {
-    count: (isNaN(count) ? 0 : count) + 1,
-    lastUsed: new Date().getTime()
+    count: (Number.isNaN(count) ? 0 : count) + 1,
+    lastUsed: Date.now()
   };
   store.set('appUsageHistory', usageHistory);
 }
