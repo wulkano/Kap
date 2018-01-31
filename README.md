@@ -21,9 +21,7 @@ Read the [contribution guide](contributing.md).
 
 ## Dev builds
 
-Help us test the bleeding edge of Kap: [`master`](https://kap-artifacts.now.sh/master)<br>
-Note that this version is unsupported and may have issues.<br>
-We also have builds for other branches: `https://kap-artifacts.now.sh/<branch>`
+Download [`master`](https://kap-artifacts.now.sh/master) or builds for any other branch using: `https://kap-artifacts.now.sh/<branch>`. Note that these builds are unsupported and may have issues.<br>
 
 ## Related Repositories
 
@@ -36,6 +34,8 @@ We also have builds for other branches: `https://kap-artifacts.now.sh/<branch>`
 
 ## Thanks
 
-- [▲ZEIT](https://github.com/zeit) for the README formatting and for [hosting our downloads and updates](https://zeit.co/now/)
-- [⬤CircleCI](https://circleci.com/) for supporting the Open Source community and making our builds fast and reliable
-- Our contributors who help Kap in its journey to make screen recording and sharing easy
+- [▲ ZEIT](https://zeit.co/) for the README formatting and for [hosting our downloads and updates](https://zeit.co/now/)
+- [⬤ CircleCI](https://circleci.com/) for supporting the Open Source community and making our builds fast and reliable
+- [△ Sentry](https://sentry.io/) for letting us know when Kap isn't behaving and helping us eradicate said behaviour.
+- Our [contributors](https://github.com/wulkano/kap/contributors) who help maintain Kap and make screen recording and sharing easy
+
