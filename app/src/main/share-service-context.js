@@ -1,4 +1,4 @@
-import electron from 'electron';
+import electron, {ipcMain} from 'electron';
 import got from 'got';
 import moment from 'moment';
 import convert from './convert';
@@ -18,7 +18,13 @@ export default class ShareServiceContext {
 
   // TODO: Implement progress reporting
   async request(url, options) {
-    return got(url, Object.assign({}, options, {useElectronNet: false}));
+    const req = got(url, Object.assign({}, options, {useElectronNet: false}));
+
+    ipcMain.on('cancel-export', () => {
+      req.cancel();
+    });
+
+    return req;
   }
 
   cancel() {

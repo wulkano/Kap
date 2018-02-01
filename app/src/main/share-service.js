@@ -3,6 +3,7 @@ import Store from 'electron-store';
 import Ajv from 'ajv';
 import delay from 'delay';
 import ensureError from 'ensure-error';
+import {CancelError} from 'p-cancelable';
 import ShareServiceContext from './share-service-context';
 import {endExport, startExport, hideExportWindow} from './export';
 
@@ -116,7 +117,11 @@ export default class ShareService {
       }
     } catch (err) {
       hideExportWindow();
-      this.showError(err);
+      if (err instanceof CancelError) {
+        kap.editorWindow.focus();
+      } else {
+        this.showError(err);
+      }
     }
 
     kap.editorWindow.send('toggle-format-buttons', {enabled: true});
