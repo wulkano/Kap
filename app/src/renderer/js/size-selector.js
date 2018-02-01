@@ -75,7 +75,7 @@ async function getWindowList() {
 function setAppLastUsed(app) {
   const {count} = usageHistory[app.pid] || {};
   usageHistory[app.pid] = {
-    count: (Number.isNaN(count) ? 0 : count) + 1,
+    count: (typeof count === 'number' ? count : 0) + 1,
     lastUsed: Date.now()
   };
   store.set('appUsageHistory', usageHistory);
