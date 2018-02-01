@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const el = e.target;
     const name = el.dataset.name;
 
-    el.disabled = true;
+    $j('.plugins-list .install-toggle').prop('disabled', true);
 
     if (el.checked) {
       el.classList.add('loading');
