@@ -2,6 +2,7 @@ import {remote, ipcRenderer} from 'electron';
 import {getWindows} from 'mac-windows';
 import {getAppIconListByPid} from 'node-mac-app-icon';
 import nearestNormalAspectRatio from 'nearest-normal-aspect-ratio';
+import Store from 'electron-store';
 
 const {Menu, nativeImage} = remote;
 
@@ -23,6 +24,11 @@ const APP_BLACKLIST = [
 
 const APP_MIN_HEIGHT = 50;
 const APP_MIN_WIDTH = 50;
+
+const store = new Store({
+  name: 'usage-history'
+});
+const usageHistory = store.get('appUsageHistory', {});
 
 function isAppValid(app) {
   if (
@@ -56,12 +62,46 @@ async function getWindowList() {
       .map(win => {
         const iconImage = images.find(img => img.pid === win.pid);
         const icon = iconImage.icon ? nativeImage.createFromBuffer(iconImage.icon) : null;
-        return Object.assign({}, win, {
+        return {
+          ...win,
           isFullscreen: false,
           icon2x: icon || null,
           icon: icon ? icon.resize({width: 16, height: 16}) : null
-        });
+        };
       })
+  ];
+}
+
+function setAppLastUsed(app) {
+  const {count} = usageHistory[app.pid] || {};
+  usageHistory[app.pid] = {
+    count: (typeof count === 'number' ? count : 0) + 1,
+    lastUsed: Date.now()
+  };
+  store.set('appUsageHistory', usageHistory);
+}
+
+function getSortedAppList(appList) {
+  if (appList.length === 0) {
+    return appList;
+  }
+
+  // First get the most recently used app from the list
+  const appListSortedByLastUse = appList
+    .map(app => ({
+      count: 0,
+      lastUsed: 0,
+      ...app,
+      ...usageHistory[app.pid]
+    }))
+    .sort((a, b) => b.lastUsed - a.lastUsed);
+
+  const [mostRecentApp, ...unsortedAppList] = appListSortedByLastUse;
+
+  // Then sort the rest best on usage count
+  return [
+    mostRecentApp,
+    ...unsortedAppList.sort((a, b) => b.count - a.count)
   ];
 }
 
@@ -112,7 +152,7 @@ function isFullscreenSelected(dimensions) {
 
 function buildMenuItems(options, currentDimensions, windowList) {
   const {emitter, el} = options;
-  const [fullscreen, ...windows] = windowList;
+  const [fullscreen, ...appList] = windowList;
   const knownRatio = RATIOS.find(ratio => ratio === currentDimensions.ratio.join(':'));
 
   updateContent(el, currentDimensions, windowList);
@@ -120,12 +160,13 @@ function buildMenuItems(options, currentDimensions, windowList) {
   return Menu.buildFromTemplate([
     {
       label: 'Windows',
-      submenu: windows.map(win => ({
+      submenu: getSortedAppList(appList).map(win => ({
         label: win.ownerName,
         icon: win.icon,
         type: 'radio',
         checked: isAppSelected(currentDimensions, win),
         click: () => {
+          setAppLastUsed(win);
           emitter.emit('app-selected', win);
         }
       }))
