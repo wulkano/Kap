@@ -1,5 +1,6 @@
 import {ipcRenderer, remote} from 'electron';
 import EventEmitter from 'events';
+import _ from 'lodash';
 
 import {init as initErrorReporter, report as reportError} from '../../common/reporter';
 import {log} from '../../common/logger';
@@ -16,7 +17,7 @@ const {app} = remote;
 // Observers that should be disposed when the window unloads
 const observersToDispose = [];
 
-const debounceTimeout = 400;
+const debounceTimeout = 500;
 
 function setMainWindowSize() {
   const width = document.documentElement.scrollWidth;
@@ -291,28 +292,18 @@ document.addEventListener('DOMContentLoaded', () => {
     setCropperWindowSize();
   }
 
-  let widthTimeout;
-  inputWidth.oninput = function (...args) {
-    clearTimeout(widthTimeout);
-    widthTimeout = setTimeout(() => handleWidthInput.apply(this, ...args), debounceTimeout);
-  };
+  inputWidth.oninput = _.debounce(handleWidthInput, debounceTimeout);
   inputWidth.onkeydown = handleKeyDown;
   inputWidth.onblur = function () {
-    clearTimeout(widthTimeout);
+    inputWidth.oninput.flush();
     this.value = this.value || (shake(this) && lastValidInputWidth); // Prevent the input from staying empty
-    handleWidthInput.apply(this, null, true);
   };
 
-  let heightTimeout;
-  inputHeight.oninput = function (...args) {
-    clearTimeout(heightTimeout);
-    heightTimeout = setTimeout(() => handleHeightInput.apply(this, ...args), debounceTimeout);
-  };
+  inputHeight.oninput = _.debounce(handleHeightInput, debounceTimeout);
   inputHeight.onkeydown = handleKeyDown;
   inputHeight.onblur = function () {
-    clearTimeout(heightTimeout);
+    inputHeight.oninput.flush();
     this.value = this.value || (shake(this) && lastValidInputHeight); // Prevent the input from staying empty
-    handleHeightInput.apply(this, null, true);
   };
 
   options.onclick = event => {
