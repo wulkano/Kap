@@ -12,14 +12,15 @@ We strongly recommend installing an [XO editor plugin](https://github.com/sindre
 
 *(You can do all the steps on github.com)*
 
-- Change `version` [here](https://github.com/wulkano/kap/blob/master/app/package.json#L4) to the new version
 - Go to https://github.com/wulkano/kap/releases
 - Click `Draft a new release`
 - Write the new version, prefixed with `v`, in the `Tag version` field (Example: `v2.0.0`)
 - Leave the `Release title` field blank
 - Write release notes
-- Click `Publish release`
+- Click `Save draft`
+- Change `version` [here](https://github.com/wulkano/kap/blob/master/app/package.json#L4) to the new version and use the version number as the commit title (Example: `2.0.0`)
 - CircleCI will now build the app and add the binaries to the release
+- When CircleCI has attached the binaries to the release, click `Edit` on the release, and then click `Publish release`
 
 
 ## Releasing a new beta version
