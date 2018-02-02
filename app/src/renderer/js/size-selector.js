@@ -160,7 +160,8 @@ function buildMenuItems(options, currentDimensions, windowList) {
   return Menu.buildFromTemplate([
     {
       label: 'Windows',
-      submenu: getSortedAppList(appList).map(win => ({
+      enabled: appList.length > 0,
+      submenu: appList.length > 0 ? getSortedAppList(appList).map(win => ({
         label: win.ownerName,
         icon: win.icon,
         type: 'radio',
@@ -169,7 +170,7 @@ function buildMenuItems(options, currentDimensions, windowList) {
           setAppLastUsed(win);
           emitter.emit('app-selected', win);
         }
-      }))
+      })) : null
     },
     {
       label: 'Fullscreen',
