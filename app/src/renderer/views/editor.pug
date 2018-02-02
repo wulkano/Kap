@@ -23,6 +23,10 @@ block body
           input.slider#trimmer-in(type="range" step="0.00001")
           input.slider#trimmer-out(type="range" step="0.00001")
       .video-controls-right
+        a.video__mute-button.js-mute-video
+          +icon('volume-on')
+        a.video__unmute-button.js-unmute-video.hidden
+          +icon('volume-off')
         a.video__maximize-button.js-maximize-video
           +icon('fullscreen')
         a.video__unmaximize-button.js-unmaximize-video.hidden
@@ -44,19 +48,23 @@ block body
             span 30
     .output-format
       span Export
+      button.button.button--dark.button--small-padding.hidden(data-export-type="gif") GIF
       +select-custom(data-export-type="gif").is-transparent.has-custom-label
         .c-select__label GIF
         select
           option(selected disabled value="-1") Export destinations
-      +select-custom(data-export-type="mp4").is-transparent.has-custom-label.u-margin-left--small
+      button.button.button--dark.button--small-padding.hidden(data-export-type="mp4") MP4
+      +select-custom(data-export-type="mp4").is-transparent.has-custom-label
         .c-select__label MP4
         select
           option(selected disabled value="-1") Export destinations
-      +select-custom(data-export-type="webm").is-transparent.has-custom-label.u-margin-left--small
+      button.button.button--dark.button--small-padding.hidden(data-export-type="webm") WebM
+      +select-custom(data-export-type="webm").is-transparent.has-custom-label
         .c-select__label WebM
         select
           option(selected disabled value="-1") Export destinations
-      +select-custom(data-export-type="apng").is-transparent.has-custom-label.u-margin-left--small
+      button.button.button--dark.button--small-padding.hidden(data-export-type="apng") APNG
+      +select-custom(data-export-type="apng").is-transparent.has-custom-label
         .c-select__label APNG
         select
           option(selected disabled value="-1") Export Options

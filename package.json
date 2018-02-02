@@ -11,32 +11,34 @@
     "prepush": "npm run test"
   },
   "devDependencies": {
-    "babel-core": "6.26.0",
-    "babel-plugin-transform-es2015-modules-commonjs": "6.26.0",
-    "cssnano": "3.10.0",
-    "del": "3.0.0",
+    "babel-core": "^6.26.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+    "babel-preset-stage-3": "^6.24.1",
+    "cssnano": "^3.10.0",
+    "del": "^3.0.0",
     "devtron": "^1.4.0",
-    "electron": "1.7.10",
-    "electron-builder": "19.52.1",
+    "electron": "^1.7.11",
+    "electron-builder": "^19.55.2",
     "electron-react-devtools": "^0.5.2",
     "gulp": "^4.0.0",
-    "gulp-babel": "7.0.0",
+    "gulp-babel": "^7.0.0",
     "gulp-filter": "^5.0.1",
-    "gulp-inject-svg": "0.1.16",
+    "gulp-inject-svg": "^0.1.16",
     "gulp-postcss": "^7.0.0",
-    "gulp-pug": "3.3.0",
-    "gulp-stylelint": "6.0.0",
-    "husky": "0.14.3",
+    "gulp-pug": "^3.3.0",
+    "gulp-stylelint": "^6.0.0",
+    "husky": "^0.14.3",
     "npm-run-all": "^4.1.2",
-    "postcss-each": "0.10.0",
-    "postcss-extend": "1.0.5",
-    "postcss-import": "11.0.0",
-    "postcss-nested": "2.1.2",
-    "postcss-reporter": "5.0.0",
-    "postcss-simple-vars": "4.1.0",
-    "stylelint": "8.4.0",
+    "postcss-each": "^0.10.0",
+    "postcss-extend": "^1.0.5",
+    "postcss-import": "^11.0.0",
+    "postcss-nested": "^3.0.0",
+    "postcss-reporter": "^5.0.0",
+    "postcss-simple-vars": "^4.1.0",
+    "stylelint": "^8.4.0",
     "stylelint-config-xo-space": "^0.4.0",
-    "xo": "0.18.2"
+    "xo": "^0.18.2"
   },
   "xo": {
     "space": 2,
@@ -80,9 +82,7 @@
     ],
     "mac": {
       "category": "public.app-category.productivity",
-      "extendInfo": {
-        "LSMinimumSystemVersion": "10.12.0"
-      }
+      "minimumSystemVersion": "10.12.0"
     },
     "dmg": {
       "iconSize": 160,
@@ -101,8 +101,17 @@
     }
   },
   "babel": {
+    "presets": [
+      "stage-3"
+    ],
     "plugins": [
-      "transform-es2015-modules-commonjs"
+      "transform-es2015-modules-commonjs",
+      [
+        "transform-class-properties",
+        {
+          "spec": true
+        }
+      ]
     ]
   }
 }

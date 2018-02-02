@@ -3,8 +3,7 @@ import {homedir} from 'os';
 import {app} from 'electron';
 import settings from 'electron-settings';
 import objectPath from 'object-path';
-
-const aperture = require('aperture');
+import aperture from 'aperture';
 
 const DEFAULTS = {
   kapturesDir: `${homedir()}/Movies/Kaptures`,
@@ -14,7 +13,7 @@ const DEFAULTS = {
   highlightClicks: false,
   fps: 30,
   recordAudio: false,
-  audioInputDeviceId: 'none',
+  audioInputDeviceId: null,
   dimensions: {
     height: 512,
     width: 512,

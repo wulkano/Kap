@@ -6,7 +6,7 @@ block head
   +script('preferences')
 
 block body
-  +window-header(title='Preferences').is-large.is-draggable
+  +window-header(title='Preferences' invisibleControls).is-large.is-draggable
     nav.prefs-nav
       a.is-active(href data-pane='general' title='General')
         +icon('settings')
@@ -63,7 +63,6 @@ block body
           .preference-input
             +select-custom
               select.js-audio-input-device-selector
-                option(value='none') None
 
     //- Plugins preferences
     section.plugins-prefs.hidden(data-pane='plugins')

@@ -1,7 +1,8 @@
-import electron from 'electron';
+import electron, {ipcMain} from 'electron';
 import got from 'got';
 import moment from 'moment';
 import convert from './convert';
+import {exportProgress} from './export';
 
 export default class ShareServiceContext {
   constructor(exportOptions) {
@@ -17,7 +18,13 @@ export default class ShareServiceContext {
 
   // TODO: Implement progress reporting
   async request(url, options) {
-    return got(url, Object.assign({}, options, {useElectronNet: false}));
+    const req = got(url, Object.assign({}, options, {useElectronNet: false}));
+
+    ipcMain.on('cancel-export', () => {
+      req.cancel();
+    });
+
+    return req;
   }
 
   cancel() {
@@ -36,7 +43,7 @@ export default class ShareServiceContext {
   }
 
   setProgress(text, percentage) {
-    electron.app.kap.mainWindow.send('export-progress', {text, percentage});
+    exportProgress({text, percentage});
   }
 
   openConfigFile() {

@@ -1,7 +1,8 @@
 import path from 'path';
-import {app} from 'electron';
+import {ipcMain} from 'electron';
 import tempy from 'tempy';
 import {convertToGif, convertToMp4, convertToWebm, convertToApng} from '../scripts/convert';
+import {exportProgress} from './export';
 
 // `exportOptions` => format filePath width height fps loop, defaultFileName
 export default async function (exportOptions) {
@@ -20,7 +21,7 @@ export default async function (exportOptions) {
 
   const outputPath = path.join(tempy.directory(), exportOptions.defaultFileName);
 
-  await convert({
+  const convertProcess = convert({
     filePath: exportOptions.filePath, // TODO: Rename `filePath` to `inputPath`
     outputPath,
     width: exportOptions.width,
@@ -30,14 +31,18 @@ export default async function (exportOptions) {
     startTime: exportOptions.startTime,
     endTime: exportOptions.endTime,
     progressCallback: percentage => {
-      app.kap.mainWindow.send('export-progress', {
+      exportProgress({
         text: 'Converting…',
         percentage
       });
     }
   });
 
-  app.kap.mainWindow.send('export-progress', {text: ''});
+  ipcMain.on('cancel-export', () => {
+    convertProcess.cancel();
+  });
+
+  await convertProcess;
 
   return outputPath;
 }

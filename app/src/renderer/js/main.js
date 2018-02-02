@@ -1,5 +1,6 @@
 import {ipcRenderer, remote} from 'electron';
 import EventEmitter from 'events';
+import {default as createAperture, audioDevices} from 'aperture';
 import _ from 'lodash';
 
 import {init as initErrorReporter, report as reportError} from '../../common/reporter';
@@ -10,8 +11,7 @@ import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 import {handleTrafficLightsClicks, isVisible, disposeObservers} from '../js/utils';
 import buildSizeMenu, {findRatioForSize} from '../js/size-selector';
 
-const aperture = require('aperture')();
-
+const aperture = createAperture();
 const {app} = remote;
 
 // Observers that should be disposed when the window unloads
@@ -28,15 +28,10 @@ function setMainWindowSize() {
 document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
   const ratioSelector = document.querySelector('.ratio-selector');
-  const startBar = document.querySelector('.start-bar');
-  const controls = document.querySelector('.controls-content');
   const inputWidth = document.querySelector('#aspect-ratio-width');
   const inputHeight = document.querySelector('#aspect-ratio-height');
   const linkBtn = document.querySelector('.link-btn');
   const options = document.querySelector('.controls-options');
-  const progressBar = document.querySelector('#progress-bar');
-  const progressBarLabel = document.querySelector('.progress-bar-label');
-  const progressBarSection = document.querySelector('section.progress');
   const recordBtn = document.querySelector('.record');
   const toggleAudioRecordBtn = document.querySelector('.js-toggle-audio-record');
   const swapBtn = document.querySelector('.swap-btn');
@@ -130,7 +125,14 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     if (recordAudio === true) {
-      apertureOpts.audioDeviceId = audioInputDeviceId;
+      // In case for some reason the default audio device is not set
+      // use the first available device for recording
+      if (audioInputDeviceId) {
+        apertureOpts.audioDeviceId = audioInputDeviceId;
+      } else {
+        const [defaultAudioDevice] = await audioDevices();
+        apertureOpts.audioDeviceId = defaultAudioDevice && defaultAudioDevice.id;
+      }
     }
 
     try {
@@ -379,18 +381,6 @@ document.addEventListener('DOMContentLoaded', () => {
     app.kap.settings.set('recordAudio', isVisible(micOnIcon));
   };
 
-  observersToDispose.push(app.kap.settings.observe('recordAudio', event => {
-    const method = event.newValue ? 'add' : 'remove';
-    toggleAudioRecordBtn.classList[method]('is-active');
-    if (event.newValue === true) {
-      micOnIcon.classList.remove('hidden');
-      micOffIcon.classList.add('hidden');
-    } else {
-      micOnIcon.classList.add('hidden');
-      micOffIcon.classList.remove('hidden');
-    }
-  }));
-
   ipcRenderer.on('start-recording', () => startRecording());
 
   ipcRenderer.on('prepare-recording', () => prepareRecordButton());
@@ -447,50 +437,6 @@ document.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.on('stop-recording', stopRecording);
 
   ipcRenderer.on('log', (event, msgs) => console.log(...msgs));
-
-  function showExportWindow() {
-    startBar.classList.add('hidden');
-    controls.classList.add('hidden');
-    progressBarSection.classList.remove('hidden');
-    setMainWindowSize();
-    app.kap.mainWindow.show();
-  }
-
-  function hideExportWindow() {
-    app.kap.mainWindow.hide();
-    setMainWindowSize();
-    progressBarSection.classList.add('hidden');
-    startBar.classList.remove('hidden');
-    controls.classList.remove('hidden');
-    delete progressBar.value;
-    progressBarLabel.innerText = 'Analyzing…';
-    setMainWindowSize();
-  }
-
-  ipcRenderer.on('start-export', () => {
-    showExportWindow();
-  });
-
-  ipcRenderer.on('export-progress', (event, data) => {
-    progressBarLabel.innerText = data.text;
-
-    if (data.percentage) {
-      progressBar.value = data.percentage * 100;
-    } else {
-      // TODO: How do I get the indeterminate progress bar?
-      progressBar.value = 0;
-    }
-  });
-
-  ipcRenderer.on('hide-export-window', () => {
-    hideExportWindow();
-  });
-
-  ipcRenderer.on('end-export', () => {
-    progressBarLabel.innerText = 'Success 🎉'; // TODO: What should it say here?
-    progressBar.value = 100;
-    setTimeout(hideExportWindow, 1000);
-  });
 
   initErrorReporter();
 });

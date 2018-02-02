@@ -38,6 +38,7 @@ nav.prefs-nav {
     margin-right: 16px;
     color: $gray-darker;
     transition: color 0.12s ease-in-out;
+    cursor: default;
 
     svg {
       transition: fill 0.12s ease-in-out;
@@ -58,21 +59,6 @@ nav.prefs-nav {
     height: 2.4rem;
   }
 }
-
-/* `window-header` override */
-.window-header .window__title {
-  font-size: 1.3rem !important;
-  line-height: initial !important;
-}
-
-.title-bar {
-  height: 2.4rem !important;
-}
-
-.title-bar__controls {
-  display: none !important;
-}
-/* / `window-header` override */
 
 .prefs-sections {
   overflow-y: auto;
@@ -98,6 +84,10 @@ nav.prefs-nav {
 
   &:last-of-type {
     border-bottom: 1px solid $gray-lighter;
+  }
+
+  &:hover {
+    cursor: default; /* Prevent text selection cursor */
   }
 }
 

@@ -1,0 +1,15 @@
+extends _extend
+
+block head
+  title Exporting
+  +stylesheet('export')
+  +script('export')
+
+block body
+  +window-header(title='Exporting' invisibleControls).is-light.is-draggable
+
+  section.progress-wrapper
+    section.progress
+      progress.c-progress#progress-bar.progress-bar(max='100')
+
+    button.button--secondary.button--large.progress-bar-cancel-btn Cancel Export

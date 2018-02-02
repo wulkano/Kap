@@ -3,6 +3,7 @@ import fs from 'fs';
 
 import {app, BrowserWindow, ipcMain, Menu, screen, globalShortcut, dialog, Notification} from 'electron';
 import isDev from 'electron-is-dev';
+import util from 'electron-util';
 import {activateWindow} from 'mac-windows';
 
 import {init as initErrorReporter} from '../common/reporter';
@@ -281,7 +282,7 @@ function openPrefsWindow() {
     resizable: false,
     minimizable: false,
     maximizable: false,
-    titleBarStyle: 'hidden',
+    titleBarStyle: 'hiddenInset',
     show: false
   });
 
@@ -291,15 +292,6 @@ function openPrefsWindow() {
 
   prefsWindow.loadURL(`file://${__dirname}/../renderer/views/preferences.html`);
   prefsWindow.on('ready-to-show', prefsWindow.show);
-
-  prefsWindow.on('blur', () => {
-    // Because of issues on our codebase and on the `menubar` module,
-    // for now we'll have this ugly workaround: if the main window is attached
-    // to the menubar, we'll just close the prefs window when it loses focus
-    if (!mainWindowIsDetached && !prefsWindow.webContents.isDevToolsFocused()) {
-      prefsWindow.close();
-    }
-  });
 }
 
 function getCropperWindow() {
@@ -307,6 +299,8 @@ function getCropperWindow() {
 }
 
 app.on('ready', () => {
+  util.enforceMacOSAppLocation();
+
   // Ensure all plugins are up to date
   plugins.upgrade().catch(() => {});
 
