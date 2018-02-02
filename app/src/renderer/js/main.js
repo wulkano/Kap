@@ -1,6 +1,7 @@
 import {ipcRenderer, remote} from 'electron';
 import EventEmitter from 'events';
 import {default as createAperture, audioDevices} from 'aperture';
+import _ from 'lodash';
 
 import {init as initErrorReporter, report as reportError} from '../../common/reporter';
 import {log} from '../../common/logger';
@@ -15,6 +16,8 @@ const {app} = remote;
 
 // Observers that should be disposed when the window unloads
 const observersToDispose = [];
+
+const debounceTimeout = 500;
 
 function setMainWindowSize() {
   const width = document.documentElement.scrollWidth;
@@ -291,17 +294,17 @@ document.addEventListener('DOMContentLoaded', () => {
     setCropperWindowSize();
   }
 
-  inputWidth.oninput = handleWidthInput;
-  inputWidth.onchange = handleWidthInput.bind(inputWidth, null, true);
+  inputWidth.oninput = _.debounce(handleWidthInput, debounceTimeout);
   inputWidth.onkeydown = handleKeyDown;
   inputWidth.onblur = function () {
+    inputWidth.oninput.flush();
     this.value = this.value || (shake(this) && lastValidInputWidth); // Prevent the input from staying empty
   };
 
-  inputHeight.oninput = handleHeightInput;
-  inputHeight.onchange = handleHeightInput.bind(inputHeight, null, true);
+  inputHeight.oninput = _.debounce(handleHeightInput, debounceTimeout);
   inputHeight.onkeydown = handleKeyDown;
   inputHeight.onblur = function () {
+    inputHeight.oninput.flush();
     this.value = this.value || (shake(this) && lastValidInputHeight); // Prevent the input from staying empty
   };
 
