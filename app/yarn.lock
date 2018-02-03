@@ -685,9 +685,9 @@ electron-util@^0.4.1:
   dependencies:
     electron-is-dev "^0.3.0"
 
-electron-util@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/electron-util/-/electron-util-0.5.0.tgz#4f3029c3b51a840277f32ab8757bd45aa1e75c23"
+electron-util@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/electron-util/-/electron-util-0.6.0.tgz#1246851ae1df8ba43420c75a541ee45aa649847d"
   dependencies:
     electron-is-dev "^0.3.0"
 
