@@ -304,7 +304,9 @@ app.on('ready', () => {
   // Ensure all plugins are up to date
   plugins.upgrade().catch(() => {});
 
-  globalShortcut.register('Cmd+Shift+5', () => {
+  const shortcut = process.env.KAP_SHORTCUT || 'Cmd+Shift+5';
+  
+  globalShortcut.register(shortcut, () => {
     const recording = (appState === 'recording');
     mainWindow.webContents.send((recording) ? 'stop-recording' : 'prepare-recording');
   });
