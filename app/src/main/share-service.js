@@ -74,8 +74,20 @@ export default class ShareService {
     });
   }
 
-  showError(err) {
-    electron.dialog.showErrorBox(`Error in plugin ${this.pluginName}`, ensureError(err).stack);
+  showError(_err) {
+    try {
+      _err = ensureError(_err);
+    } catch (err) {
+      if (err.name === 'NonError') {
+        // `ensureError(<err>)` throws such error if `<err>` is not an `Error`
+        // So let's do nothing and show the user whatever we have on `_err`
+      } else {
+        // If the exception is something else, we want to show it to the user
+        // Let's not call `ensureError` again here to not cause an _infinite loop_ :joy:
+        _err = err;
+      }
+    }
+    electron.dialog.showErrorBox(`Error in plugin ${this.pluginName}`, (_err.stack || _err));
   }
 
   async run(exportOptions) { // `exportOptions` => format filePath width height fps loop
