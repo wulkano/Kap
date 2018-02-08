@@ -81,6 +81,7 @@ exports.shareServices = [giphy];
 The `action` function is where you implement the behavior of your service. The function receives a `context` argument with some metadata and utility methods.
 
 - `.format`: The file format the user chose in the editor window. Can be: `gif`, `mp4`, `webm`, `apng`
+- `.prettyFormat`: Prettified version of `.format` for use in notifications. Can be: `GIF`, `MP4`, `WebM`, `APNG`
 - `.defaultFileName`: Default file name for the recording. For example: `Kapture 2017-05-30 at 1.03.49.gif`
 - `.filePath()`: Convert the screen recording to the user chosen format and return a Promise for the file path.
 - `.config`: Get and set config for you plugin. It’s an instance of [`electron-store`](https://github.com/sindresorhus/electron-store#instance).

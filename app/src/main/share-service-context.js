@@ -3,10 +3,12 @@ import got from 'got';
 import moment from 'moment';
 import convert from './convert';
 import {exportProgress} from './export';
+import plugins from './plugins';
 
 export default class ShareServiceContext {
   constructor(exportOptions) {
     this.format = exportOptions.format;
+    this.prettyFormat = plugins.prettifyFormat(this.format);
 
     const now = moment();
     this.defaultFileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.${this.format}`;
