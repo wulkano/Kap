@@ -18,9 +18,9 @@ Tip: You can use modern JavaScript features like async/await in your plugin.
 - Your package must be named with the `kap-` prefix. For example `kap-giphy`.
 - You must have the `kap-plugin` keyword in package.json. Add additional relevant keywords to improve discovery.
 - The `"description"` in package.json should succinctly describe what you can do with it. For example: `Share GIFs on GIPHY`. Not something like this: `Kap plugin that uploads GIFs to GIPHY`.
-- Use `context.setProgress()` whenever possible to keep the user updated on what's happening.
+- Use `context.setProgress()` whenever possible to keep the user updated on what's happening. The `.filePath()` method sets its own progress, so you should not do it for that step.
 - The readme should follow the style of [`kap-giphy`](https://github.com/wulkano/kap-giphy).
-- Your plugin must be tested, preferably using [`kap-plugin-test`](https://github.com/SamVerschueren/kap-plugin-test). [Example](https://github.com/wulkano/kap-giphy/blob/master/test/test.js).
+- Your plugin must be tested, preferably using [`kap-plugin-test`](https://github.com/SamVerschueren/kap-plugin-test) and [`kap-plugin-mock-context`](https://github.com/samverschueren/kap-plugin-mock-context). [Example](https://github.com/wulkano/kap-giphy/blob/master/test/test.js).
 
 ## Development
 
