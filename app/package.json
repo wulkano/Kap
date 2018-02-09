@@ -31,7 +31,7 @@
     "file-size": "^1.0.0",
     "first-run": "^1.2.0",
     "got": "^8.0.3",
-    "insight": "^0.9.0",
+    "insight": "^0.10.0",
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
     "mac-windows": "^0.5.4",
