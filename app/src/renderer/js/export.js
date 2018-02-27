@@ -9,9 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
     windowTitleLabel.textContent = text;
   };
 
-  progressCancelBtn.onclick = () => {
+  progressCancelBtn.addEventListener('click', () => {
     ipcRenderer.send('cancel-export');
-  };
+  });
 
   ipcRenderer.on('should-cancel-export', () => {
     ipcRenderer.send('cancel-export');

@@ -68,9 +68,9 @@ ajv@^5.1.0:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.3.0"
 
-ajv@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.0.1.tgz#2898580a9f3def5f9c85dfead7a2223ef13cf3da"
+ajv@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.2.0.tgz#afac295bbaa0152449e522742e4547c1ae9328d2"
   dependencies:
     fast-deep-equal "^1.0.0"
     fast-json-stable-stringify "^2.0.0"
@@ -298,6 +298,10 @@ chardet@^0.4.0:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/chardet/-/chardet-0.4.2.tgz#b5473b33dc97c424e5d98dc87d55d4d8a29c8bf2"
 
+charenc@~0.0.1:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/charenc/-/charenc-0.0.2.tgz#c0a1d2f3a7092e03774bfa83f14c0fc5790a8667"
+
 chownr@^1.0.1, chownr@~1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/chownr/-/chownr-1.0.1.tgz#e2a75042a9551908bebd25b8523d5f9769d79181"
@@ -503,6 +507,10 @@ cross-spawn@^5.0.1:
     lru-cache "^4.0.1"
     shebang-command "^1.2.0"
     which "^1.2.9"
+
+crypt@~0.0.1:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/crypt/-/crypt-0.0.2.tgz#88d7ff7ec0dfb86f713dc87bbb42d044d3e6c41b"
 
 cryptiles@3.x.x:
   version "3.1.2"
@@ -1013,9 +1021,9 @@ got@^6.7.1:
     unzip-response "^2.0.1"
     url-parse-lax "^1.0.0"
 
-got@^8.0.3:
-  version "8.0.3"
-  resolved "https://registry.yarnpkg.com/got/-/got-8.0.3.tgz#15d038e8101f89e93585d1639d9c49e8a55ae6bc"
+got@^8.2.0:
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/got/-/got-8.2.0.tgz#0d11a071d05046348a2f5c0a5fa047fb687fdfc6"
   dependencies:
     "@sindresorhus/is" "^0.7.0"
     cacheable-request "^2.1.1"
@@ -1218,6 +1226,10 @@ is-arrayish@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/is-arrayish/-/is-arrayish-0.2.1.tgz#77c99840527aa8ecb1a8ba697b80645a7a926a9d"
 
+is-buffer@~1.1.1:
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/is-buffer/-/is-buffer-1.1.6.tgz#efaa2ea9daa0d7ab2ea13a97b2b8ad51fefbe8be"
+
 is-builtin-module@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/is-builtin-module/-/is-builtin-module-1.0.0.tgz#540572d34f7ac3119f8f76c30cbc1b1e037affbe"
@@ -1316,9 +1328,9 @@ isurl@^1.0.0-alpha5:
     has-to-string-tag-x "^1.2.0"
     is-object "^1.0.1"
 
-jquery@^3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.2.1.tgz#5c4d9de652af6cd0a770154a631bba12b015c787"
+jquery@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
 
 jsbn@~0.1.0:
   version "0.1.1"
@@ -1485,9 +1497,13 @@ lodash@^3.10.1:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
 
-lodash@^4.14.0, lodash@^4.17.4, lodash@^4.3.0:
+lodash@^4.14.0, lodash@^4.3.0:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
+
+lodash@^4.17.5:
+  version "4.17.5"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.5.tgz#99a92d65c0272debe8c96b6057bc8fbfa3bed511"
 
 lowercase-keys@1.0.0, lowercase-keys@^1.0.0:
   version "1.0.0"
@@ -1499,10 +1515,6 @@ lru-cache@^4.0.1, lru-cache@^4.1.1, lru-cache@~4.1.1:
   dependencies:
     pseudomap "^1.0.2"
     yallist "^2.1.2"
-
-lsmod@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/lsmod/-/lsmod-1.0.0.tgz#9a00f76dca36eb23fa05350afe1b585d4299e64b"
 
 mac-windows@^0.5.4:
   version "0.5.4"
@@ -1524,6 +1536,12 @@ make-dir@^1.0.0, make-dir@^1.1.0:
   dependencies:
     pify "^3.0.0"
 
+make-dir@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/make-dir/-/make-dir-1.2.0.tgz#6d6a49eead4aae296c53bbf3a1a008bd6c89469b"
+  dependencies:
+    pify "^3.0.0"
+
 make-fetch-happen@^2.5.0, make-fetch-happen@^2.6.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/make-fetch-happen/-/make-fetch-happen-2.6.0.tgz#8474aa52198f6b1ae4f3094c04e8370d35ea8a38"
@@ -1539,6 +1557,14 @@ make-fetch-happen@^2.5.0, make-fetch-happen@^2.6.0:
     promise-retry "^1.1.1"
     socks-proxy-agent "^3.0.1"
     ssri "^5.0.0"
+
+md5@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/md5/-/md5-2.2.1.tgz#53ab38d5fe3c8891ba465329ea23fac0540126f9"
+  dependencies:
+    charenc "~0.0.1"
+    crypt "~0.0.1"
+    is-buffer "~1.1.1"
 
 meant@~1.0.1:
   version "1.0.1"
@@ -1622,9 +1648,9 @@ mississippi@^1.2.0, mississippi@^1.3.0, mississippi@~1.3.0:
   dependencies:
     minimist "0.0.8"
 
-moment@^2.14.1:
-  version "2.19.1"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.19.1.tgz#56da1a2d1cbf01d38b7e1afc31c10bcfa1929167"
+moment@^2.20.1:
+  version "2.20.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.20.1.tgz#d6eb1a46cbcc14a2b2f9434112c1ff8907f313fd"
 
 move-concurrently@^1.0.1:
   version "1.0.1"
@@ -1648,6 +1674,10 @@ move-file@^1.0.0:
 ms@2.0.0, ms@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
+
+ms@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.1.tgz#30a5864eb3ebb0a66f2ebe6d727af06a09d86e0a"
 
 mute-stream@0.0.7, mute-stream@~0.0.4:
   version "0.0.7"
@@ -2230,16 +2260,16 @@ qw@~1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/qw/-/qw-1.0.1.tgz#efbfdc740f9ad054304426acb183412cc8b996d4"
 
-raven-js@^3.21.0:
-  version "3.21.0"
-  resolved "https://registry.yarnpkg.com/raven-js/-/raven-js-3.21.0.tgz#609236eb0ec30faf696b552f842a80b426be6258"
+raven-js@^3.22.3:
+  version "3.22.3"
+  resolved "https://registry.yarnpkg.com/raven-js/-/raven-js-3.22.3.tgz#8330dcc102b699ffbc2f48790978b997bf4d8f75"
 
-raven@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/raven/-/raven-2.3.0.tgz#96f15346bdaa433b3b6d47130804506155833d69"
+raven@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/raven/-/raven-2.4.1.tgz#7a6a6ff1c42d0a3892308f44c94273e7f88677fd"
   dependencies:
     cookie "0.3.1"
-    lsmod "1.0.0"
+    md5 "^2.2.1"
     stack-trace "0.0.9"
     timed-out "4.0.1"
     uuid "3.0.0"

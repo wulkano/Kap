@@ -19,7 +19,7 @@
     "del": "^3.0.0",
     "devtron": "^1.4.0",
     "electron": "^1.7.11",
-    "electron-builder": "^19.55.2",
+    "electron-builder": "^20.2.0",
     "electron-react-devtools": "^0.5.2",
     "gulp": "^4.0.0",
     "gulp-babel": "^7.0.0",
@@ -36,9 +36,9 @@
     "postcss-nested": "^3.0.0",
     "postcss-reporter": "^5.0.0",
     "postcss-simple-vars": "^4.1.0",
-    "stylelint": "^8.4.0",
-    "stylelint-config-xo-space": "^0.4.0",
-    "xo": "^0.18.2"
+    "stylelint": "^9.1.1",
+    "stylelint-config-xo-space": "^0.6.0",
+    "xo": "^0.20.3"
   },
   "xo": {
     "space": 2,
@@ -70,7 +70,8 @@
       "no-descending-specificity": null,
       "declaration-no-important": null,
       "property-no-vendor-prefix": null,
-      "declaration-property-value-blacklist": null
+      "declaration-property-value-blacklist": null,
+      "selector-class-pattern": null
     }
   },
   "build": {
