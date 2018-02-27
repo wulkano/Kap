@@ -141,33 +141,33 @@ document.addEventListener('DOMContentLoaded', async () => {
   loadInstalledPlugins(plugins.all());
   loadAvailablePlugins(await plugins.getFromNpm());
 
-  chooseSaveDirectoryBtn.onclick = function () {
+  chooseSaveDirectoryBtn.addEventListener('click', () => {
     const directories = dialog.showOpenDialog(electronWindow, {properties: ['openDirectory', 'createDirectory']});
     if (directories) {
       app.kap.settings.set('kapturesDir', directories[0]);
       saveToDescription.dataset.fullPath = directories[0];
       saveToDescription.innerText = `.../${directories[0].split('/').pop()}`;
     }
-  };
+  });
 
-  openPluginsFolder.onclick = function (event) {
+  openPluginsFolder.addEventListener('click', event => {
     event.preventDefault();
     // The `shell.openItem(plugins.cwd);` method doesn't focus Finder
     // See: https://github.com/electron/electron/issues/10477
     // We work around it with:
     shell.openExternal(encodeURI(`file://${plugins.cwd}`));
-  };
+  });
 
-  openOnStartupCheckbox.onchange = function () {
+  openOnStartupCheckbox.addEventListener('change', function () {
     app.kap.settings.set('openOnStartup', this.checked);
     app.setLoginItemSettings({openAtLogin: this.checked});
-  };
+  });
 
-  allowAnalyticsCheckbox.onchange = function () {
+  allowAnalyticsCheckbox.addEventListener('change', function () {
     app.kap.settings.set('allowAnalytics', this.checked);
-  };
+  });
 
-  showCursorCheckbox.onchange = function () {
+  showCursorCheckbox.addEventListener('change', function () {
     app.kap.settings.set('showCursor', this.checked);
     if (this.checked) {
       highlightClicksCheckbox.disabled = false;
@@ -177,23 +177,23 @@ document.addEventListener('DOMContentLoaded', async () => {
       highlightClicksCheckbox.checked = false;
       app.kap.settings.set('highlightClicks', highlightClicksCheckbox.checked);
     }
-  };
+  });
 
-  highlightClicksCheckbox.onchange = function () {
+  highlightClicksCheckbox.addEventListener('change', function () {
     app.kap.settings.set('highlightClicks', this.checked);
-  };
+  });
 
-  fpsSlider.oninput = function () {
+  fpsSlider.addEventListener('input', function () {
     fpsLabel.innerText = `${this.value} FPS`;
-  };
+  });
 
-  fpsSlider.onchange = function () {
+  fpsSlider.addEventListener('change', function () {
     app.kap.settings.set('fps', Number(this.value));
-  };
+  });
 
-  audioInputDeviceSelector.onchange = function () {
+  audioInputDeviceSelector.addEventListener('change', function () {
     app.kap.settings.set('audioInputDeviceId', this.value);
-  };
+  });
 
   // The `showCursor` setting can be changed via the
   // mouse btn in the main window

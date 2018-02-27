@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   fpsMaxBtn.children[0].innerText = maxFps;
 
-  preview.oncanplay = function () {
+  preview.addEventListener('canplay', function () {
     aspectRatioBaseValues = [this.videoWidth, this.videoHeight];
     [inputWidth.value, inputHeight.value] = aspectRatioBaseValues;
     [lastValidInputWidth, lastValidInputHeight] = aspectRatioBaseValues;
@@ -66,15 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1);
 
     initializeTrimmers();
-    // Remove the listener since it's called
-    // every time the video loops
-    preview.oncanplay = undefined;
-  };
+  }, {once: true});
 
-  pauseBtn.onclick = pause;
-
-  playBtn.onclick = play;
-
+  pauseBtn.addEventListener('click', pause);
+  playBtn.addEventListener('click', play);
   trimLine.addEventListener('click', skip);
   trimLine.addEventListener('mousemove', hover);
 
@@ -116,31 +111,31 @@ document.addEventListener('DOMContentLoaded', () => {
     return currentPreviewDuration;
   }
 
-  maximizeBtn.onclick = function () {
+  maximizeBtn.addEventListener('click', function () {
     this.classList.add('hidden');
     unmaximizeBtn.classList.remove('hidden');
     ipcRenderer.send('toggle-fullscreen-editor-window');
     $('body').classList.add('fullscreen');
-  };
+  });
 
-  unmaximizeBtn.onclick = function () {
+  unmaximizeBtn.addEventListener('click', function () {
     this.classList.add('hidden');
     maximizeBtn.classList.remove('hidden');
     ipcRenderer.send('toggle-fullscreen-editor-window');
     $('body').classList.remove('fullscreen');
-  };
+  });
 
-  muteBtn.onclick = () => {
+  muteBtn.addEventListener('click', () => {
     unmuteBtn.classList.remove('hidden');
     muteBtn.classList.add('hidden');
     preview.muted = true;
-  };
+  });
 
-  unmuteBtn.onclick = () => {
+  unmuteBtn.addEventListener('click', () => {
     unmuteBtn.classList.add('hidden');
     muteBtn.classList.remove('hidden');
     preview.muted = false;
-  };
+  });
 
   function shake(el) {
     el.classList.add('shake');
@@ -152,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return true;
   }
 
-  inputWidth.oninput = function () {
+  inputWidth.addEventListener('input', function () {
     this.value = validateNumericInput(this, {
       lastValidValue: lastValidInputWidth,
       empty: true,
@@ -168,15 +163,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     lastValidInputWidth = this.value || lastValidInputWidth;
-  };
+  });
 
-  inputWidth.onkeydown = handleKeyDown;
+  inputWidth.addEventListener('keydown', handleKeyDown);
 
-  inputWidth.onblur = function () {
+  inputWidth.addEventListener('blur', function () {
     this.value = this.value || (shake(this) && lastValidInputWidth); // Prevent the input from staying empty
-  };
+  });
 
-  inputHeight.oninput = function () {
+  inputHeight.addEventListener('input', function () {
     this.value = validateNumericInput(this, {
       lastValidValue: lastValidInputHeight,
       empty: true,
@@ -192,27 +187,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     lastValidInputHeight = this.value || lastValidInputHeight;
-  };
+  });
 
-  inputHeight.onkeydown = handleKeyDown;
+  inputHeight.addEventListener('keydown', handleKeyDown);
 
-  inputHeight.onblur = function () {
+  inputHeight.addEventListener('blur', function () {
     this.value = this.value || (shake(this) && lastValidInputHeight); // Prevent the input from staying empty
-  };
+  });
 
-  fps15Btn.onclick = function () {
+  fps15Btn.addEventListener('click', function () {
     this.classList.add('active');
     fpsMaxBtn.classList.remove('active');
     fps = 15;
-  };
+  });
 
-  fpsMaxBtn.onclick = function () {
+  fpsMaxBtn.addEventListener('click', function () {
     this.classList.add('active');
     fps15Btn.classList.remove('active');
     fps = maxFps;
-  };
+  });
 
-  window.onkeyup = event => {
+  window.addEventListener('keyup', event => {
     if (event.key === 'Escape') {
       if (maximizeBtn.classList.contains('hidden')) {
         // Exit fullscreen
@@ -229,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
         play();
       }
     }
-  };
+  });
 
   const shareServices = getShareServices();
   console.log('Share services', shareServices);
@@ -282,21 +277,21 @@ document.addEventListener('DOMContentLoaded', () => {
       // Else show a button instead of a dropdown that handles only "save to file"
       if (dropdown.children.length > 2) {
         // Prevent the dropdown from triggering the button
-        dropdown.onclick = event => {
+        dropdown.addEventListener('click', event => {
           event.stopPropagation();
-        };
+        });
 
-        dropdown.onchange = () => { // eslint-disable-line no-loop-func
+        dropdown.addEventListener('change', () => {
           const service = shareServices[dropdown.value];
           handleFile(service, format);
           dropdown.value = '-1';
-        };
+        });
       } else {
         const service = shareServices[0];
         formatElement.classList.add('hidden');
         formatButton.classList.remove('hidden');
 
-        formatButton.onclick = () => handleFile(service, format);
+        formatButton.addEventListener('click', () => handleFile(service, format));
       }
     }
   }
@@ -321,15 +316,15 @@ document.addEventListener('DOMContentLoaded', () => {
     pause();
   });
 
-  previewContainer.onmouseover = function () {
+  previewContainer.addEventListener('mouseover', () => {
     windowHeader.classList.remove('is-hidden');
-  };
+  });
 
-  previewContainer.onmouseout = function (event) {
+  previewContainer.addEventListener('mouseout', event => {
     if (!Array.from(windowHeader.querySelectorAll('*')).includes(event.relatedTarget)) {
       windowHeader.classList.add('is-hidden');
     }
-  };
+  });
 
   function initializeTrimmers() {
     trimmerIn.max = String(preview.duration);
@@ -337,16 +332,16 @@ document.addEventListener('DOMContentLoaded', () => {
     trimmerOut.value = String(preview.duration);
     setTrimmerValue(trimmerIn, 0);
 
-    trimmerIn.oninput = () => {
+    trimmerIn.addEventListener('input', () => {
       handleTrimmerInput(trimmerIn.id);
       getTrimmedVideoDuration();
-    };
-    trimmerOut.oninput = () => {
+    });
+    trimmerOut.addEventListener('input', () => {
       handleTrimmerInput(trimmerOut.id);
       getTrimmedVideoDuration();
-    };
-    trimmerIn.onchange = play;
-    trimmerOut.onchange = play;
+    });
+    trimmerIn.addEventListener('change', play);
+    trimmerOut.addEventListener('change', play);
   }
 
   function getTrimmerValue(trimmerEl) {

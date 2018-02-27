@@ -294,40 +294,42 @@ document.addEventListener('DOMContentLoaded', () => {
     setCropperWindowSize();
   }
 
-  inputWidth.oninput = _.debounce(handleWidthInput, debounceTimeout);
-  inputWidth.onkeydown = handleKeyDown;
-  inputWidth.onblur = function () {
-    inputWidth.oninput.flush();
+  const inputWidthListener = _.debounce(handleWidthInput, debounceTimeout);
+  inputWidth.addEventListener('input', inputWidthListener);
+  inputWidth.addEventListener('keydown', handleKeyDown);
+  inputWidth.addEventListener('blur', function () {
+    inputWidthListener.flush();
     this.value = this.value || (shake(this) && lastValidInputWidth); // Prevent the input from staying empty
-  };
+  });
 
-  inputHeight.oninput = _.debounce(handleHeightInput, debounceTimeout);
-  inputHeight.onkeydown = handleKeyDown;
-  inputHeight.onblur = function () {
-    inputHeight.oninput.flush();
+  const inputHeightListener = _.debounce(handleHeightInput, debounceTimeout);
+  inputHeight.addEventListener('input', inputHeightListener);
+  inputHeight.addEventListener('keydown', handleKeyDown);
+  inputHeight.addEventListener('blur', function () {
+    inputHeightListener.flush();
     this.value = this.value || (shake(this) && lastValidInputHeight); // Prevent the input from staying empty
-  };
+  });
 
-  options.onclick = event => {
+  options.addEventListener('click', event => {
     const {bottom, left} = options.getBoundingClientRect();
     ipcRenderer.send('show-options-menu', {x: left, y: bottom});
     event.stopPropagation();
-  };
+  });
 
-  swapBtn.onclick = () => {
+  swapBtn.addEventListener('click', () => {
     [inputWidth.value, inputHeight.value] = [inputHeight.value, inputWidth.value];
     dimensions.ratio = dimensions.ratio.reverse();
-    inputWidth.oninput();
-    inputHeight.oninput();
+    inputWidth.dispatchEvent(new Event('input'));
+    inputHeight.dispatchEvent(new Event('input'));
     setSelectedRatio(dimensions.width, dimensions.height);
     app.kap.settings.set('dimensions', dimensions);
-  };
+  });
 
-  linkBtn.onclick = function () {
+  linkBtn.addEventListener('click', function () {
     this.classList.toggle('is-active');
     dimensions.ratioLocked = !dimensions.ratioLocked;
     app.kap.settings.set('dimensions', dimensions);
-  };
+  });
 
   const handleSizeChange = function (ratio) {
     dimensions.app = null;
@@ -373,13 +375,13 @@ document.addEventListener('DOMContentLoaded', () => {
     dimensions
   });
 
-  toggleAudioRecordBtn.onclick = function () {
+  toggleAudioRecordBtn.addEventListener('click', function () {
     micOnIcon.classList.toggle('hidden');
     micOffIcon.classList.toggle('hidden');
     this.classList.toggle('is-active');
 
     app.kap.settings.set('recordAudio', isVisible(micOnIcon));
-  };
+  });
 
   ipcRenderer.on('start-recording', () => startRecording());
 

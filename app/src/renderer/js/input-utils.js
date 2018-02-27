@@ -33,10 +33,10 @@ function handleKeyDown(event) {
   const parsedValue = parseInt(this.value, 10);
   if (event.key === 'ArrowUp') {
     this.value = parsedValue + (1 * multiplier); // eslint-disable-line no-implicit-coercion
-    this.oninput();
+    this.dispatchEvent(new Event('input'));
   } else if (event.key === 'ArrowDown') {
     this.value = parsedValue - (1 * multiplier); // eslint-disable-line no-implicit-coercion
-    this.oninput();
+    this.dispatchEvent(new Event('input'));
   }
 }
 

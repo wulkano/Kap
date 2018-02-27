@@ -258,10 +258,10 @@ export default async function buildSizeMenu(options) {
     rebuild();
   });
 
-  el.onclick = () => {
+  el.addEventListener('click', () => {
     menu.popup({
       x: menuX,
       y: menuY
     });
-  };
+  });
 }
