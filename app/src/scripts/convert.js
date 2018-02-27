@@ -70,12 +70,15 @@ const convertToGif = PCancelable.fn(async (onCancel, opts) => {
   ]);
 });
 
+// https://trac.ffmpeg.org/ticket/309
+const makeEven = n => 2 * Math.round(n / 2);
+
 function convertToMp4(opts) {
   opts.progressCallback(0);
   return convert(opts.outputPath, opts, [
     '-i', opts.filePath,
     '-r', opts.fps,
-    '-s', `${opts.width}x${opts.height}`,
+    '-s', `${makeEven(opts.width)}x${makeEven(opts.height)}`,
     '-ss', opts.startTime,
     '-to', opts.endTime,
     opts.outputPath
