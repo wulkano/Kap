@@ -113,6 +113,22 @@ nav.prefs-nav {
       padding: 16px;
     }
   }
+
+  &.experimental .preference__title::after {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: $gray-darker;
+    content: 'experimental';
+    display: inline-block;
+    font-size: 1rem;
+    /* stylelint-disable font-weight-notation */
+    font-weight: 500;
+    /* stylelint-enable */
+    margin: 0 1rem;
+    padding: 0 0.8rem;
+    text-transform: uppercase;
+    width: max-content;
+  }
 }
 
 .preference-content {
