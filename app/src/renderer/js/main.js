@@ -2,6 +2,7 @@ import {ipcRenderer, remote} from 'electron';
 import EventEmitter from 'events';
 import {default as createAperture, audioDevices} from 'aperture';
 import _ from 'lodash';
+import desktopIcons from 'hide-desktop-icons';
 
 import {init as initErrorReporter, report as reportError} from '../../common/reporter';
 import {log} from '../../common/logger';
@@ -135,6 +136,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
+    if (app.kap.settings.get('hideDesktopIcons')) await desktopIcons.hide();
+
     try {
       await aperture.startRecording(apertureOpts);
       ipcRenderer.send('did-start-recording');
@@ -157,6 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ipcRenderer.send('will-stop-recording');
 
     const filePath = await aperture.stopRecording();
+    if (app.kap.settings.get('hideDesktopIcons')) desktopIcons.show();
     ipcRenderer.send('stopped-recording');
     ipcRenderer.send('open-editor-window', {filePath});
     setMainWindowSize();
