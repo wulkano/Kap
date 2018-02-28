@@ -611,7 +611,7 @@ ipcMain.on('close-editor-window', () => {
     buttons: ['Discard', 'Cancel'],
     defaultId: 1,
     message: 'Are you sure that you want to discard this recording?',
-    detail: 'It will not be saved'
+    detail: 'You\'ll no longer be able to edit and export the original recording'
   }, buttonIndex => {
     if (buttonIndex === 0) {
       discardVideo();
