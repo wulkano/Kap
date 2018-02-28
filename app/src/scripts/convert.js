@@ -70,11 +70,15 @@ const convertToGif = PCancelable.fn(async (onCancel, opts) => {
   ]);
 });
 
+// https://trac.ffmpeg.org/ticket/309
+const makeEven = n => 2 * Math.round(n / 2);
+
 function convertToMp4(opts) {
-  // TODO: Instead of fixing the `file://` prefix here, just store it in a better place in the editor
   opts.progressCallback(0);
   return convert(opts.outputPath, opts, [
     '-i', opts.filePath,
+    '-r', opts.fps,
+    '-s', `${makeEven(opts.width)}x${makeEven(opts.height)}`,
     '-ss', opts.startTime,
     '-to', opts.endTime,
     opts.outputPath
@@ -92,6 +96,8 @@ function convertToWebm(opts) {
     '-codec:v', 'vp9',
     '-codec:a', 'vorbis',
     '-strict', '-2', // Needed because `vorbis` is experimental
+    '-r', opts.fps,
+    '-s', `${opts.width}x${opts.height}`,
     '-ss', opts.startTime,
     '-to', opts.endTime,
     opts.outputPath
