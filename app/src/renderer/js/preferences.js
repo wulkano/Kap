@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     app.kap.settings.set('highlightClicks', this.checked);
   });
 
-  hideDesktopIconsCheckbox.addEventListener('change', function() {
+  hideDesktopIconsCheckbox.addEventListener('change', function () {
     app.kap.settings.set('hideDesktopIcons', this.checked);
   });
 

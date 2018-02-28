@@ -136,7 +136,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    if (app.kap.settings.get('hideDesktopIcons')) await desktopIcons.hide();
+    if (app.kap.settings.get('hideDesktopIcons')) {
+      await desktopIcons.hide();
+    }
 
     try {
       await aperture.startRecording(apertureOpts);
@@ -160,7 +162,11 @@ document.addEventListener('DOMContentLoaded', () => {
     ipcRenderer.send('will-stop-recording');
 
     const filePath = await aperture.stopRecording();
-    if (app.kap.settings.get('hideDesktopIcons')) desktopIcons.show();
+
+    if (app.kap.settings.get('hideDesktopIcons')) {
+      desktopIcons.show();
+    }
+
     ipcRenderer.send('stopped-recording');
     ipcRenderer.send('open-editor-window', {filePath});
     setMainWindowSize();
