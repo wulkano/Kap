@@ -141,21 +141,21 @@ const updateContent = (el, dimensions, windowList) => {
   content.textContent = knownRatio || `Custom (${stringRatio})`;
 };
 
-function isAppSelected(dimensions, app) {
+const isAppSelected = (dimensions, app) => {
   if (!dimensions.app) {
     return false;
   }
 
   return dimensions.app.pid === app.pid;
-}
+};
 
-function isFullscreenSelected(dimensions) {
+const isFullscreenSelected = dimensions => {
   if (!dimensions.app) {
     return false;
   }
 
   return dimensions.app.isFullscreen;
-}
+};
 
 const buildMenuItems = (options, currentDimensions, windowList) => {
   const {emitter, el} = options;

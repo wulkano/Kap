@@ -29,9 +29,9 @@ const menubar = require('menubar')({
   minWidth: 320
 });
 
+const cropperWindowBuffer = 2;
 let appState = 'initial';
 let cropperWindow;
-const cropperWindowBuffer = 2;
 let mainWindowIsDetached = false;
 let mainWindow;
 let mainWindowIsNew = true;
@@ -43,6 +43,23 @@ let tray;
 let recording = false;
 let playing = true;
 let preparingToRecord = false;
+
+const discardVideo = () => {
+  // Discard the source video
+  fs.unlink(editorWindow.kap.videoFilePath, () => {});
+
+  // For some reason it doesn't close when called in the same tick
+  setImmediate(() => {
+    editorWindow.close();
+  });
+
+  menubar.setOption('hidden', false);
+  if (mainWindowIsDetached === true) {
+    mainWindow.show();
+  } else {
+    app.dock.hide();
+  }
+};
 
 const mainTouchbar = createMainTouchbar({
   onAspectRatioChange: aspectRatio => mainWindow.webContents.send('change-aspect-ratio', aspectRatio),
@@ -80,13 +97,13 @@ ipcMain.on('show-options-menu', (event, coordinates) => {
   }
 });
 
-function closeCropperWindow() {
+const closeCropperWindow = () => {
   cropperWindow.close();
   mainWindow.setAlwaysOnTop(false); // TODO send a PR to `menubar`
   menubar.setOption('alwaysOnTop', false);
-}
+};
 
-function setCropperWindowOnBlur(closeOnBlur = true) {
+const setCropperWindowOnBlur = (closeOnBlur = true) => {
   cropperWindow.on('blur', () => {
     if (!mainWindow.isFocused() &&
         !cropperWindow.webContents.isDevToolsFocused() &&
@@ -96,14 +113,16 @@ function setCropperWindowOnBlur(closeOnBlur = true) {
       closeCropperWindow();
     }
   });
-}
+};
 
 const openCropperWindow = (size = {}, position = {}, options = {}) => {
   options = Object.assign({}, {
     closeOnBlur: true
   }, options);
+
   mainWindow.setAlwaysOnTop(true, 'screen-saver', 1); // TODO send a PR to `menubar`
   menubar.setOption('alwaysOnTop', true);
+
   if (cropperWindow) {
     cropperWindow.focus();
   } else {
@@ -174,6 +193,7 @@ const openCropperWindow = (size = {}, position = {}, options = {}) => {
           cropperWindow.setPosition(x, y, true);
         }
       }
+
       settings.set('cropperWindow.position', {x, y}, {volatile: true});
     });
   }
@@ -183,7 +203,9 @@ ipcMain.on('set-cropper-window-size', (event, args) => {
   if (!args.width || !args.height) {
     return;
   }
+
   [args.width, args.height] = [parseInt(args.width, 10), parseInt(args.height, 10)];
+
   if (cropperWindow) {
     cropperWindow.setSize(args.width + cropperWindowBuffer, args.height + cropperWindowBuffer, true); // True == animate
   } else {
@@ -216,8 +238,9 @@ ipcMain.on('close-cropper-window', () => {
   }
 });
 
-function resetMainWindowShadow() {
+const resetMainWindowShadow = () => {
   const size = mainWindow.getSize();
+
   setTimeout(() => {
     size[1]++;
     mainWindow.setSize(...size, true);
@@ -226,15 +249,15 @@ function resetMainWindowShadow() {
     size[1]--;
     mainWindow.setSize(...size, true);
   }, 110);
-}
+};
 
-function resetTrayIcon() {
+const resetTrayIcon = () => {
   appState = 'initial'; // If the icon is being reseted, we are not recording anymore
   shouldStopWhenTrayIsClicked = false;
   tray.setImage(path.join(__dirname, '..', '..', 'static', 'menubarDefaultTemplate.png'));
   menubar.setOption('alwaysOnTop', false);
   mainWindow.setAlwaysOnTop(false);
-}
+};
 
 const animateIcon = () => new Promise(resolve => {
   const interval = 20;
@@ -262,13 +285,13 @@ const animateIcon = () => new Promise(resolve => {
   next();
 });
 
-function setTrayStopIcon() {
+const setTrayStopIcon = () => {
   shouldStopWhenTrayIsClicked = true;
   animateIcon();
-}
+};
 
 // Open the Preferences Window
-function openPrefsWindow() {
+const openPrefsWindow = () => {
   if (prefsWindow) {
     return prefsWindow.show();
   }
@@ -289,11 +312,11 @@ function openPrefsWindow() {
 
   prefsWindow.loadURL(`file://${__dirname}/../renderer/views/preferences.html`);
   prefsWindow.on('ready-to-show', prefsWindow.show);
-}
+};
 
-function getCropperWindow() {
+const getCropperWindow = () => {
   return cropperWindow;
-}
+};
 
 app.on('ready', () => {
   util.enforceMacOSAppLocation();
@@ -311,9 +334,9 @@ app.on('will-quit', () => {
   globalShortcut.unregisterAll();
 });
 
-function getEditorWindow() {
+const getEditorWindow = () => {
   return editorWindow;
-}
+};
 
 menubar.on('after-create-window', () => {
   let expectedWindowPosition;
@@ -326,13 +349,13 @@ menubar.on('after-create-window', () => {
     mainWindow.openDevTools({mode: 'detach'});
   }
 
-  function recomputeExpectedWindowPosition() {
+  const recomputeExpectedWindowPosition = () => {
     expectedWindowPosition = positioner.calculate('trayCenter', tray.getBounds());
-  }
+  };
 
-  function recomputeCurrentWindowPosition() {
+  const recomputeCurrentWindowPosition = () => {
     [currentWindowPosition.x, currentWindowPosition.y] = mainWindow.getPosition();
-  }
+  };
 
   mainWindow.on('blur', () => {
     if (cropperWindow && !cropperWindow.isFocused() && !recording) {
@@ -582,23 +605,6 @@ ipcMain.on('open-editor-window', (event, opts) => {
   tray.setHighlightMode('never');
   app.dock.show();
 });
-
-function discardVideo() {
-  // Discard the source video
-  fs.unlink(editorWindow.kap.videoFilePath, () => {});
-
-  // For some reason it doesn't close when called in the same tick
-  setImmediate(() => {
-    editorWindow.close();
-  });
-
-  menubar.setOption('hidden', false);
-  if (mainWindowIsDetached === true) {
-    mainWindow.show();
-  } else {
-    app.dock.hide();
-  }
-}
 
 ipcMain.on('close-editor-window', () => {
   if (!editorWindow) {

@@ -9,13 +9,13 @@ const arrows = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  function autoDestroy() {
+  const autoDestroy = () => {
     ipcRenderer.send('close-cropper-window');
-  }
+  };
 
-  function move(direction, amount) {
+  const move = (direction, amount) => {
     ipcRenderer.send('move-cropper-window', {direction, amount});
-  }
+  };
 
   let intervalId;
   let timeoutId;
