@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const openOnStartupCheckbox = $('#open-on-startup');
   const saveToDescription = $('.js-save-to-description');
   const showCursorCheckbox = $('#show-cursor');
+  const hideDesktopIconsCheckbox = $('#hide-desktop-icons');
   const openPluginsFolder = $('.js-open-plugins');
 
   const electronWindow = getCurrentWindow();
@@ -42,6 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   openOnStartupCheckbox.checked = settingsValues.openOnStartup;
   allowAnalyticsCheckbox.checked = settingsValues.allowAnalytics;
   showCursorCheckbox.checked = settingsValues.showCursor;
+  hideDesktopIconsCheckbox.checked = settingsValues.hideDesktopIcons;
   if (settingsValues.showCursor === false) {
     highlightClicksCheckbox.disabled = true;
   } else {
@@ -181,6 +183,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   highlightClicksCheckbox.addEventListener('change', function () {
     app.kap.settings.set('highlightClicks', this.checked);
+  });
+
+  hideDesktopIconsCheckbox.addEventListener('change', function () {
+    app.kap.settings.set('hideDesktopIcons', this.checked);
   });
 
   fpsSlider.addEventListener('input', function () {

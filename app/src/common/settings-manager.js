@@ -11,6 +11,7 @@ const DEFAULTS = {
   allowAnalytics: true,
   showCursor: true,
   highlightClicks: false,
+  hideDesktopIcons: false,
   fps: 30,
   recordAudio: false,
   audioInputDeviceId: null,
