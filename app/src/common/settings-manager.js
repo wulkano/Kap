@@ -1,5 +1,4 @@
 import {homedir} from 'os';
-
 import {app} from 'electron';
 import settings from 'electron-settings';
 import objectPath from 'object-path';
@@ -39,11 +38,11 @@ const volatiles = {
 // We need to sync every setting that can be modified externally
 // e.g. the `openOnStartup` setting can be modified via
 // macOS' System Preferences.app
-function sync() {
+const sync = () => {
   settings.setSync('openOnStartup', app.getLoginItemSettings().openAtLogin);
-}
+};
 
-async function init() {
+export const init = async () => {
   settings.defaults(DEFAULTS);
   settings.applyDefaultsSync();
   sync();
@@ -54,30 +53,28 @@ async function init() {
   // TODO: if no input device is available (could happen in an iMac, for example), we need
   // to tell the user
   const devices = await aperture.audioDevices();
+
   if (devices.length > 0) {
     settings.setSync('audioInputDeviceId', devices[0].id);
   }
-}
+};
 
-function get(key) {
+export const get = key => {
   sync();
   return objectPath.get(volatiles, key) || settings.getSync(key);
-}
+};
 
-function getAll() {
+export const getAll = () => {
   sync();
   return Object.assign({}, volatiles, settings.getSync());
-}
+};
 
-function set(key, value, {volatile = false} = {}) {
+export const set = (key, value, {volatile = false} = {}) => {
   if (volatile) {
     return objectPath.set(volatiles, key, value);
   }
+
   settings.setSync(key, value);
-}
+};
 
-function observe(keyPath, handler) {
-  return settings.observe(keyPath, handler);
-}
-
-export {init, get, getAll, set, observe};
+export const observe = (keyPath, handler) => settings.observe(keyPath, handler);

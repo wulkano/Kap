@@ -1,5 +1,4 @@
 import {app, Menu, shell, ipcMain, Notification} from 'electron';
-
 import {checkForUpdates} from './auto-updater';
 
 const checkForUpdatesItem = {
@@ -16,7 +15,7 @@ const checkForUpdatesItem = {
   }
 };
 
-const cogMenu = [
+export const cogMenu = Menu.buildFromTemplate([
   {
     role: 'about'
   },
@@ -41,9 +40,9 @@ const cogMenu = [
     role: 'quit',
     accelerator: 'Cmd+Q'
   }
-];
+]);
 
-const applicationMenu = [
+export const applicationMenu = Menu.buildFromTemplate([
   {
     label: app.getName(),
     submenu: [
@@ -195,7 +194,4 @@ const applicationMenu = [
       }
     ]
   }
-];
-
-exports.applicationMenu = Menu.buildFromTemplate(applicationMenu);
-exports.cogMenu = Menu.buildFromTemplate(cogMenu);
+]);

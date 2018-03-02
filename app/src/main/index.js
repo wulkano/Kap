@@ -1,18 +1,15 @@
 import path from 'path';
 import fs from 'fs';
-
 import {app, BrowserWindow, ipcMain, Menu, screen, globalShortcut, dialog, Notification} from 'electron';
 import isDev from 'electron-is-dev';
 import util from 'electron-util';
 import {activateWindow} from 'mac-windows';
-
 import {init as initErrorReporter} from '../common/reporter';
-import logger from '../common/logger';
+import {init as initLogger} from '../common/logger';
 import * as settings from '../common/settings-manager';
-
 import {createMainTouchbar, createCropTouchbar, createEditorTouchbar} from './touch-bar';
-import autoUpdater from './auto-updater';
-import analytics from './analytics';
+import {init as initAutoUpdater} from './auto-updater';
+import {init as initAnalytics, track} from './analytics';
 import {applicationMenu, cogMenu} from './menus';
 import plugins from './plugins';
 
@@ -443,10 +440,12 @@ menubar.on('after-create-window', () => {
   });
 
   mainWindowIsNew = true;
-  autoUpdater.init(mainWindow);
-  analytics.init();
+
+  initAutoUpdater(mainWindow);
+  initAnalytics();
   initErrorReporter();
-  logger.init(mainWindow);
+  initLogger(mainWindow);
+
   Menu.setApplicationMenu(applicationMenu);
 });
 
@@ -477,7 +476,7 @@ ipcMain.on('did-start-recording', () => {
 
 ipcMain.on('stopped-recording', () => {
   resetTrayIcon();
-  analytics.track('recording/finished');
+  track('recording/finished');
 });
 
 ipcMain.on('will-stop-recording', () => {

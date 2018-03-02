@@ -5,10 +5,10 @@ import {convertToGif, convertToMp4, convertToWebm, convertToApng} from '../scrip
 import {exportProgress} from './export';
 
 // `exportOptions` => format filePath width height fps loop, defaultFileName
-export default async function (exportOptions) {
+export default async exportOptions => {
   const format = exportOptions.format;
-
   let convert;
+
   if (format === 'gif') {
     convert = convertToGif;
   } else if (format === 'mp4') {
@@ -45,4 +45,4 @@ export default async function (exportOptions) {
   await convertProcess;
 
   return outputPath;
-}
+};

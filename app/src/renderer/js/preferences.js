@@ -1,16 +1,13 @@
 import {ipcRenderer, remote, shell} from 'electron';
 import _ from 'lodash';
 import $j from 'jquery/dist/jquery.slim';
-
 // Note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleTrafficLightsClicks, $, disposeObservers} from '../js/utils';
 
 const {app, dialog, getCurrentWindow} = remote;
-
 const aperture = require('aperture');
 
 const plugins = remote.require('../main/plugins').default;
-
 const settingsValues = app.kap.settings.getAll();
 
 // Observers that should be disposed when the window unloads
@@ -30,7 +27,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const showCursorCheckbox = $('#show-cursor');
   const hideDesktopIconsCheckbox = $('#hide-desktop-icons');
   const openPluginsFolder = $('.js-open-plugins');
-
   const electronWindow = getCurrentWindow();
 
   electronWindow.setSheetOffset(header.offsetHeight);
@@ -44,11 +40,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   allowAnalyticsCheckbox.checked = settingsValues.allowAnalytics;
   showCursorCheckbox.checked = settingsValues.showCursor;
   hideDesktopIconsCheckbox.checked = settingsValues.hideDesktopIcons;
+
   if (settingsValues.showCursor === false) {
     highlightClicksCheckbox.disabled = true;
   } else {
     highlightClicksCheckbox.checked = settingsValues.highlightClicks;
   }
+
   fpsSlider.value = settingsValues.fps;
   fpsLabel.innerText = `${settingsValues.fps} FPS`;
 
@@ -62,7 +60,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   audioInputDeviceSelector.value = settingsValues.audioInputDeviceId;
 
   const tabs = $j('.prefs-nav > a');
-  tabs.on('click', function (event) {
+
+  tabs.on('click', event => {
     event.preventDefault();
     tabs.removeClass('is-active');
     $j(this).addClass('is-active');
@@ -95,26 +94,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     <% }); %>
   `);
 
-  function loadInstalledPlugins(installedPlugins) {
+  const loadInstalledPlugins = installedPlugins => {
     const html = pluginListTemplate({
       plugins: installedPlugins,
       installed: true
     });
 
     $j('#plugins-installed').html(html);
-  }
+  };
 
-  function loadAvailablePlugins(availablePlugins) {
+  const loadAvailablePlugins = availablePlugins => {
     const html = pluginListTemplate({
       plugins: availablePlugins,
       installed: false
     });
 
     $j('#plugins-available').html(html);
-  }
+  };
 
-  $j('.plugins-list').on('change', '.install-toggle', function (e) {
-    const el = e.target;
+  $j('.plugins-list').on('change', '.install-toggle', event => {
+    const el = event.target;
     const name = el.dataset.name;
 
     $j('.plugins-list .install-toggle').prop('disabled', true);
@@ -134,7 +133,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   // Open plugin homepage
-  $j('.plugins-prefs').on('click', '.preference__url', function (event) {
+  $j('.plugins-prefs').on('click', '.preference__url', event => {
     event.preventDefault();
     const url = $j(this).data('url');
     shell.openExternal(url);
@@ -160,16 +159,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     shell.openExternal(encodeURI(`file://${plugins.cwd}`));
   });
 
-  openOnStartupCheckbox.addEventListener('change', function () {
+  openOnStartupCheckbox.addEventListener('change', () => {
     app.kap.settings.set('openOnStartup', this.checked);
     app.setLoginItemSettings({openAtLogin: this.checked});
   });
 
-  allowAnalyticsCheckbox.addEventListener('change', function () {
+  allowAnalyticsCheckbox.addEventListener('change', () => {
     app.kap.settings.set('allowAnalytics', this.checked);
   });
 
-  showCursorCheckbox.addEventListener('change', function () {
+  showCursorCheckbox.addEventListener('change', () => {
     app.kap.settings.set('showCursor', this.checked);
     if (this.checked) {
       highlightClicksCheckbox.disabled = false;
@@ -181,23 +180,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
-  highlightClicksCheckbox.addEventListener('change', function () {
+  highlightClicksCheckbox.addEventListener('change', () => {
     app.kap.settings.set('highlightClicks', this.checked);
   });
 
-  hideDesktopIconsCheckbox.addEventListener('change', function () {
+  hideDesktopIconsCheckbox.addEventListener('change', () => {
     app.kap.settings.set('hideDesktopIcons', this.checked);
   });
 
-  fpsSlider.addEventListener('input', function () {
+  fpsSlider.addEventListener('input', () => {
     fpsLabel.innerText = `${this.value} FPS`;
   });
 
-  fpsSlider.addEventListener('change', function () {
+  fpsSlider.addEventListener('change', () => {
     app.kap.settings.set('fps', Number(this.value));
   });
 
-  audioInputDeviceSelector.addEventListener('change', function () {
+  audioInputDeviceSelector.addEventListener('change', () => {
     app.kap.settings.set('audioInputDeviceId', this.value);
   });
 

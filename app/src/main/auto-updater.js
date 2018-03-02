@@ -2,20 +2,18 @@ import {app, autoUpdater, Notification} from 'electron';
 import isDev from 'electron-is-dev';
 import ms from 'ms';
 import {log} from '../common/logger';
-import reporter from '../common/reporter';
+import {report} from '../common/reporter';
 
 const URL_APP_NAME = app.getName() === 'Kap Beta' ? 'kap-beta' : 'kap';
 const FEED_URL = `https://${URL_APP_NAME}-updates.now.sh/update/macos/${app.getVersion()}`;
 
-function createInterval() {
-  return setInterval(() => {
-    autoUpdater.checkForUpdates();
-  }, ms('30m'));
-}
+const createInterval = () => setInterval(() => {
+  autoUpdater.checkForUpdates();
+}, ms('30m'));
 
 let manualCheckTimeout;
 
-function init() {
+export const init = () => {
   if (isDev) {
     return;
   }
@@ -57,16 +55,13 @@ function init() {
     }
 
     log('Error fetching updates', err);
-    reporter.report(err);
+    report(err);
   });
-}
+};
 
 // The `callback` will be called if no update is available at the moment
-function checkForUpdates(callback) {
+export const checkForUpdates = callback => {
   manualCheckTimeout = setTimeout(() => {
     callback();
   }, ms('10s'));
-}
-
-exports.init = init;
-exports.checkForUpdates = checkForUpdates;
+};

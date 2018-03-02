@@ -5,12 +5,13 @@ import util from 'electron-util';
 
 let Raven;
 
-function init() {
+export const init = () => {
   if (isDev) {
     return;
   }
 
   let dsn;
+
   if (process.type === 'renderer') {
     Raven = require('raven-js');
     dsn = 'https://2dffdbd619f34418817f4db3309299ce@sentry.io/255536';
@@ -31,19 +32,16 @@ function init() {
       locale: util.api.app.getLocale()
     }
   }).install();
-}
+};
 
-function report(err) {
+export const report = err => {
   console.error(err);
 
   if (!isDev && Raven && err) {
     Raven.captureException(err);
   }
-}
+};
 
 unhandled({
   logger: report
 });
-
-exports.init = init;
-exports.report = report;

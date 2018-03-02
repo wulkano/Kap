@@ -3,10 +3,8 @@ import EventEmitter from 'events';
 import {default as createAperture, audioDevices} from 'aperture';
 import _ from 'lodash';
 import desktopIcons from 'hide-desktop-icons';
-
 import {init as initErrorReporter, report as reportError} from '../../common/reporter';
 import {log} from '../../common/logger';
-
 // Note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 import {handleTrafficLightsClicks, isVisible, disposeObservers} from '../js/utils';
@@ -20,11 +18,11 @@ const observersToDispose = [];
 
 const debounceTimeout = 500;
 
-function setMainWindowSize() {
+const setMainWindowSize = () => {
   const width = document.documentElement.scrollWidth;
   const height = document.documentElement.scrollHeight;
   ipcRenderer.send('set-main-window-size', {width, height});
-}
+};
 
 document.addEventListener('DOMContentLoaded', () => {
   // Element definitions
@@ -56,17 +54,17 @@ document.addEventListener('DOMContentLoaded', () => {
     micOffIcon.classList.add('hidden');
   }
 
-  // Set initial values
-  inputWidth.value = Math.round(width);
-  inputHeight.value = Math.round(height);
-  setSelectedRatio(width, height);
-  if (ratioLocked === true) {
-    linkBtn.classList.toggle('is-active');
-  }
+  const shake = el => {
+    el.classList.add('shake');
 
-  handleTrafficLightsClicks({hide: true});
+    el.addEventListener('webkitAnimationEnd', () => {
+      el.classList.remove('shake');
+    });
 
-  async function startRecording() {
+    return true;
+  };
+
+  const startRecording = async () => {
     ipcRenderer.send('will-start-recording');
 
     const past = Date.now();
@@ -156,9 +154,9 @@ document.addEventListener('DOMContentLoaded', () => {
       reportError(err);
       remote.dialog.showErrorBox('Recording error', err.message);
     }
-  }
+  };
 
-  async function stopRecording() {
+  const stopRecording = async () => {
     ipcRenderer.send('will-stop-recording');
 
     const filePath = await aperture.stopRecording();
@@ -170,21 +168,11 @@ document.addEventListener('DOMContentLoaded', () => {
     ipcRenderer.send('stopped-recording');
     ipcRenderer.send('open-editor-window', {filePath});
     setMainWindowSize();
-  }
-
-  function shake(el) {
-    el.classList.add('shake');
-
-    el.addEventListener('webkitAnimationEnd', () => {
-      el.classList.remove('shake');
-    });
-
-    return true;
-  }
+  };
 
   // Prepare recording button for recording state
   // - Either opens the crop window or starts recording
-  function prepareRecordButton() {
+  const prepareRecordButton = () => {
     const state = recordBtn.dataset.state;
     if (state === 'initial') {
       ipcRenderer.send('open-cropper-window', {
@@ -196,22 +184,9 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (state === 'ready-to-stop') {
       stopRecording();
     }
-  }
+  };
 
-  function setSelectedRatio(width, height) {
-    dimensions.ratio = findRatioForSize(width, height);
-
-    // Remove app from dimensions object
-    // since size is being set manually
-    if (dimensions.app && (dimensions.app.width !== width || dimensions.app.height !== height)) {
-      dimensions.app = null;
-    }
-
-    dimensionsEmitter.emit('change', dimensions);
-    app.kap.settings.set('dimensions', dimensions);
-  }
-
-  const handleRecord = function () {
+  const handleRecord = () => {
     if (app.kap.editorWindow) {
       // We need to keep the window visible to show the shake animation
       // (it'll be auto hidden by `menubar` when the editor window gain focus)
@@ -227,18 +202,43 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  const setSelectedRatio = (width, height) => {
+    dimensions.ratio = findRatioForSize(width, height);
+
+    // Remove app from dimensions object
+    // since size is being set manually
+    if (dimensions.app && (dimensions.app.width !== width || dimensions.app.height !== height)) {
+      dimensions.app = null;
+    }
+
+    dimensionsEmitter.emit('change', dimensions);
+    app.kap.settings.set('dimensions', dimensions);
+  };
+
+  // Set initial values
+  inputWidth.value = Math.round(width);
+  inputHeight.value = Math.round(height);
+
+  setSelectedRatio(width, height);
+
+  if (ratioLocked === true) {
+    linkBtn.classList.toggle('is-active');
+  }
+
+  handleTrafficLightsClicks({hide: true});
+
   recordBtn.addEventListener('click', handleRecord);
   ipcRenderer.on('record', handleRecord);
   ipcRenderer.on('crop', handleRecord);
 
-  function setCropperWindowSize(width, height) {
+  const setCropperWindowSize = (width, height) => {
     ipcRenderer.send('set-cropper-window-size', {
       width: width || lastValidInputWidth,
       height: height || lastValidInputHeight
     });
-  }
+  };
 
-  function handleWidthInput(event, validate) {
+  const handleWidthInput = (event, validate) => {
     // User is deleting the current value
     // to enter a new one
     if (!this.value) {
@@ -269,9 +269,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     lastValidInputWidth = this.value || lastValidInputWidth;
     setCropperWindowSize();
-  }
+  };
 
-  function handleHeightInput(event, validate) {
+  const handleHeightInput = (event, validate) => {
     // User is deleting the current value
     // to enter a new one
     if (!this.value) {
@@ -302,12 +302,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     lastValidInputHeight = this.value || lastValidInputHeight;
     setCropperWindowSize();
-  }
+  };
 
   const inputWidthListener = _.debounce(handleWidthInput, debounceTimeout);
+
   inputWidth.addEventListener('input', inputWidthListener);
   inputWidth.addEventListener('keydown', handleKeyDown);
-  inputWidth.addEventListener('blur', function () {
+  inputWidth.addEventListener('blur', () => {
     inputWidthListener.flush();
     this.value = this.value || (shake(this) && lastValidInputWidth); // Prevent the input from staying empty
   });
@@ -315,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const inputHeightListener = _.debounce(handleHeightInput, debounceTimeout);
   inputHeight.addEventListener('input', inputHeightListener);
   inputHeight.addEventListener('keydown', handleKeyDown);
-  inputHeight.addEventListener('blur', function () {
+  inputHeight.addEventListener('blur', () => {
     inputHeightListener.flush();
     this.value = this.value || (shake(this) && lastValidInputHeight); // Prevent the input from staying empty
   });
@@ -335,13 +336,13 @@ document.addEventListener('DOMContentLoaded', () => {
     app.kap.settings.set('dimensions', dimensions);
   });
 
-  linkBtn.addEventListener('click', function () {
+  linkBtn.addEventListener('click', () => {
     this.classList.toggle('is-active');
     dimensions.ratioLocked = !dimensions.ratioLocked;
     app.kap.settings.set('dimensions', dimensions);
   });
 
-  const handleSizeChange = function (ratio) {
+  const handleSizeChange = ratio => {
     dimensions.app = null;
     dimensions.ratio = [parseInt(ratio.split(':')[0], 10), parseInt(ratio.split(':')[1], 10)];
 
@@ -352,15 +353,16 @@ document.addEventListener('DOMContentLoaded', () => {
       dimensions.height = Math.round((dimensions.ratio[1] / dimensions.ratio[0]) * dimensions.width);
       inputHeight.value = Math.round(dimensions.height);
     }
+
     setCropperWindowSize(dimensions.width, dimensions.height);
+
     dimensionsEmitter.emit('change', dimensions);
     app.kap.settings.set('dimensions', dimensions);
   };
 
   ipcRenderer.on('change-aspect-ratio', (e, aspectRatio) => handleSizeChange(aspectRatio));
 
-  dimensionsEmitter.on('ratio-selected', ratio => handleSizeChange(ratio));
-
+  dimensionsEmitter.on('ratio-sedlected', ratio => handleSizeChange(ratio));
   dimensionsEmitter.on('app-selected', app => {
     // Set app information on dimensions so it can be reused later
     // eg. for showing app name after selection
@@ -385,16 +387,14 @@ document.addEventListener('DOMContentLoaded', () => {
     dimensions
   });
 
-  toggleAudioRecordBtn.addEventListener('click', function () {
+  toggleAudioRecordBtn.addEventListener('click', () => {
     micOnIcon.classList.toggle('hidden');
     micOffIcon.classList.toggle('hidden');
     this.classList.toggle('is-active');
-
     app.kap.settings.set('recordAudio', isVisible(micOnIcon));
   });
 
   ipcRenderer.on('start-recording', () => startRecording());
-
   ipcRenderer.on('prepare-recording', () => prepareRecordButton());
 
   ipcRenderer.on('cropper-window-closed', () => {
@@ -420,17 +420,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  function setTrayTriangleVisible(visible = true) {
+  const setTrayTriangleVisible = (visible = true) => {
     trayTriangle.style.borderBottomWidth = visible ? '1rem' : '0';
     trayTriangle.style.borderBottomColor = 'white';
 
     const bodyClasses = document.body.classList;
+
     if (visible) {
       bodyClasses.remove('is-tray-arrow-hidden');
     } else {
       bodyClasses.add('is-tray-arrow-hidden');
     }
-  }
+  };
 
   ipcRenderer.on('unstick-from-menubar', () => {
     setTrayTriangleVisible(false);
@@ -447,7 +448,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('stop-recording', stopRecording);
-
   ipcRenderer.on('log', (event, msgs) => console.log(...msgs));
 
   initErrorReporter();
@@ -455,8 +455,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.addEventListener('dragover', e => e.preventDefault());
 document.addEventListener('drop', e => e.preventDefault());
-
 window.addEventListener('load', setMainWindowSize);
+
 window.addEventListener('beforeunload', () => {
   disposeObservers(observersToDispose);
 });

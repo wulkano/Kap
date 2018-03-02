@@ -53,7 +53,7 @@ const action = async context => {
   notification.show();
 };
 
-module.exports = {
+export default {
   title: 'Save to Disk',
   formats: [
     'gif',
