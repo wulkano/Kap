@@ -31,7 +31,7 @@ export const validateNumericInput = (input, opts) => {
 
 export const handleKeyDown = event => {
   const multiplier = event.shiftKey ? 10 : 1;
-  const parsedValue = parseInt(this.value, 10);
+  const parsedValue = parseInt(event.target.value, 10);
 
   if (event.key === 'ArrowUp') {
     event.target.value = parsedValue + (1 * multiplier); // eslint-disable-line no-implicit-coercion
