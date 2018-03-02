@@ -64,10 +64,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   tabs.on('click', event => {
     event.preventDefault();
     tabs.removeClass('is-active');
-    $j(this).addClass('is-active');
+    $j(event.currentTarget).addClass('is-active');
 
     const panes = $j('.prefs-sections > section');
-    const paneName = $j(this).data('pane');
+    const paneName = $j(event.currentTarget).data('pane');
     panes.addClass('hidden');
     panes.filter(`[data-pane="${paneName}"]`).removeClass('hidden');
   });
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (el.checked) {
       el.classList.add('loading');
       ipcRenderer.send('install-plugin', name);
-      $j(this).parents('li').remove(); // We don't want to wait on `loadAvailablePlugins`
+      $j(event.currentTarget).parents('li').remove(); // We don't want to wait on `loadAvailablePlugins`
     } else {
       ipcRenderer.send('uninstall-plugin', name);
     }
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Open plugin homepage
   $j('.plugins-prefs').on('click', '.preference__url', event => {
     event.preventDefault();
-    const url = $j(this).data('url');
+    const url = $j(event.currentTarget).data('url');
     shell.openExternal(url);
   });
 
@@ -159,18 +159,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     shell.openExternal(encodeURI(`file://${plugins.cwd}`));
   });
 
-  openOnStartupCheckbox.addEventListener('change', () => {
-    app.kap.settings.set('openOnStartup', this.checked);
-    app.setLoginItemSettings({openAtLogin: this.checked});
+  openOnStartupCheckbox.addEventListener('change', event => {
+    app.kap.settings.set('openOnStartup', event.target.checked);
+    app.setLoginItemSettings({openAtLogin: event.target.checked});
   });
 
-  allowAnalyticsCheckbox.addEventListener('change', () => {
-    app.kap.settings.set('allowAnalytics', this.checked);
+  allowAnalyticsCheckbox.addEventListener('change', event => {
+    app.kap.settings.set('allowAnalytics', event.target.checked);
   });
 
-  showCursorCheckbox.addEventListener('change', () => {
-    app.kap.settings.set('showCursor', this.checked);
-    if (this.checked) {
+  showCursorCheckbox.addEventListener('change', event => {
+    app.kap.settings.set('showCursor', event.target.checked);
+    if (event.target.checked) {
       highlightClicksCheckbox.disabled = false;
       highlightClicksCheckbox.checked = app.kap.settings.get('highlightClicks');
     } else {
@@ -180,24 +180,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
-  highlightClicksCheckbox.addEventListener('change', () => {
-    app.kap.settings.set('highlightClicks', this.checked);
+  highlightClicksCheckbox.addEventListener('change', event => {
+    app.kap.settings.set('highlightClicks', event.target.checked);
   });
 
-  hideDesktopIconsCheckbox.addEventListener('change', () => {
-    app.kap.settings.set('hideDesktopIcons', this.checked);
+  hideDesktopIconsCheckbox.addEventListener('change', event => {
+    app.kap.settings.set('hideDesktopIcons', event.target.checked);
   });
 
-  fpsSlider.addEventListener('input', () => {
-    fpsLabel.innerText = `${this.value} FPS`;
+  fpsSlider.addEventListener('input', event => {
+    fpsLabel.innerText = `${event.target.value} FPS`;
   });
 
-  fpsSlider.addEventListener('change', () => {
-    app.kap.settings.set('fps', Number(this.value));
+  fpsSlider.addEventListener('change', event => {
+    app.kap.settings.set('fps', Number(event.target.value));
   });
 
-  audioInputDeviceSelector.addEventListener('change', () => {
-    app.kap.settings.set('audioInputDeviceId', this.value);
+  audioInputDeviceSelector.addEventListener('change', event => {
+    app.kap.settings.set('audioInputDeviceId', event.target.value);
   });
 
   // The `showCursor` setting can be changed via the

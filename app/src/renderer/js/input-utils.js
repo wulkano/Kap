@@ -1,4 +1,4 @@
-const validateNumericInput = (input, opts) => {
+export const validateNumericInput = (input, opts) => {
   let value = input.value;
 
   if (value === '' && opts.empty) {
@@ -29,18 +29,15 @@ const validateNumericInput = (input, opts) => {
   return value;
 };
 
-const handleKeyDown = event => {
+export const handleKeyDown = event => {
   const multiplier = event.shiftKey ? 10 : 1;
   const parsedValue = parseInt(this.value, 10);
 
   if (event.key === 'ArrowUp') {
-    this.value = parsedValue + (1 * multiplier); // eslint-disable-line no-implicit-coercion
-    this.dispatchEvent(new Event('input'));
+    event.target.value = parsedValue + (1 * multiplier); // eslint-disable-line no-implicit-coercion
+    event.target.dispatchEvent(new Event('input'));
   } else if (event.key === 'ArrowDown') {
-    this.value = parsedValue - (1 * multiplier); // eslint-disable-line no-implicit-coercion
-    this.dispatchEvent(new Event('input'));
+    event.target.value = parsedValue - (1 * multiplier); // eslint-disable-line no-implicit-coercion
+    event.target.dispatchEvent(new Event('input'));
   }
 };
-
-exports.validateNumericInput = validateNumericInput;
-exports.handleKeyDown = handleKeyDown;

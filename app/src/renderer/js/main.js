@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  const handleRecord = () => {
+  const handleRecord = event => {
     if (app.kap.editorWindow) {
       // We need to keep the window visible to show the shake animation
       // (it'll be auto hidden by `menubar` when the editor window gain focus)
@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
         temporary: true,
         forHowLong: 1000
       });
-      shake(this);
+      shake(event.target);
       ipcRenderer.send('open-editor-window', {notify: true});
     } else {
       prepareRecordButton();
@@ -241,13 +241,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const handleWidthInput = (event, validate) => {
     // User is deleting the current value
     // to enter a new one
-    if (!this.value) {
+    if (!event.target.value) {
       return;
     }
 
     const [first, second] = dimensions.ratio;
 
-    this.value = validateNumericInput(this, {
+    event.target.value = validateNumericInput(event.target, {
       lastValidValue: lastValidInputWidth,
       empty: !validate,
       max: screen.width,
@@ -255,11 +255,11 @@ document.addEventListener('DOMContentLoaded', () => {
       onInvalid: shake
     });
 
-    dimensions.width = parseInt(this.value, 10);
+    dimensions.width = parseInt(event.target.value, 10);
     app.kap.settings.set('dimensions', dimensions);
 
     if (dimensions.ratioLocked) {
-      dimensions.height = Math.round((second / first) * this.value);
+      dimensions.height = Math.round((second / first) * event.target.value);
       app.kap.settings.set('dimensions', dimensions);
       inputHeight.value = dimensions.height;
       lastValidInputHeight = dimensions.height;
@@ -267,20 +267,20 @@ document.addEventListener('DOMContentLoaded', () => {
       setSelectedRatio(dimensions.width, dimensions.height);
     }
 
-    lastValidInputWidth = this.value || lastValidInputWidth;
+    lastValidInputWidth = event.target.value || lastValidInputWidth;
     setCropperWindowSize();
   };
 
   const handleHeightInput = (event, validate) => {
     // User is deleting the current value
     // to enter a new one
-    if (!this.value) {
+    if (!event.target.value) {
       return;
     }
 
     const [first, second] = dimensions.ratio;
 
-    this.value = validateNumericInput(this, {
+    event.target.value = validateNumericInput(event.target, {
       lastValidValue: lastValidInputHeight,
       empty: !validate,
       max: screen.height - screen.availTop, // Currently we can't draw over the menubar
@@ -288,11 +288,11 @@ document.addEventListener('DOMContentLoaded', () => {
       onInvalid: shake
     });
 
-    dimensions.height = parseInt(this.value, 10);
+    dimensions.height = parseInt(event.target.value, 10);
     app.kap.settings.set('dimensions', dimensions);
 
     if (dimensions.ratioLocked) {
-      dimensions.width = Math.round((first / second) * this.value);
+      dimensions.width = Math.round((first / second) * event.target.value);
       app.kap.settings.set('dimensions', dimensions);
       inputWidth.value = dimensions.width;
       lastValidInputWidth = dimensions.width;
@@ -300,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
       setSelectedRatio(dimensions.width, dimensions.height);
     }
 
-    lastValidInputHeight = this.value || lastValidInputHeight;
+    lastValidInputHeight = event.target.value || lastValidInputHeight;
     setCropperWindowSize();
   };
 
@@ -308,17 +308,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   inputWidth.addEventListener('input', inputWidthListener);
   inputWidth.addEventListener('keydown', handleKeyDown);
-  inputWidth.addEventListener('blur', () => {
+  inputWidth.addEventListener('blur', event => {
     inputWidthListener.flush();
-    this.value = this.value || (shake(this) && lastValidInputWidth); // Prevent the input from staying empty
+    event.target.value = event.target.value || (shake(event.target) && lastValidInputWidth); // Prevent the input from staying empty
   });
 
   const inputHeightListener = _.debounce(handleHeightInput, debounceTimeout);
   inputHeight.addEventListener('input', inputHeightListener);
   inputHeight.addEventListener('keydown', handleKeyDown);
-  inputHeight.addEventListener('blur', () => {
+  inputHeight.addEventListener('blur', event => {
     inputHeightListener.flush();
-    this.value = this.value || (shake(this) && lastValidInputHeight); // Prevent the input from staying empty
+    event.target.value = event.target.value || (shake(event.target) && lastValidInputHeight); // Prevent the input from staying empty
   });
 
   options.addEventListener('click', event => {
@@ -336,8 +336,8 @@ document.addEventListener('DOMContentLoaded', () => {
     app.kap.settings.set('dimensions', dimensions);
   });
 
-  linkBtn.addEventListener('click', () => {
-    this.classList.toggle('is-active');
+  linkBtn.addEventListener('click', event => {
+    event.target.classList.toggle('is-active');
     dimensions.ratioLocked = !dimensions.ratioLocked;
     app.kap.settings.set('dimensions', dimensions);
   });
@@ -387,10 +387,10 @@ document.addEventListener('DOMContentLoaded', () => {
     dimensions
   });
 
-  toggleAudioRecordBtn.addEventListener('click', () => {
+  toggleAudioRecordBtn.addEventListener('click', event => {
     micOnIcon.classList.toggle('hidden');
     micOffIcon.classList.toggle('hidden');
-    this.classList.toggle('is-active');
+    event.target.classList.toggle('is-active');
     app.kap.settings.set('recordAudio', isVisible(micOnIcon));
   });
 
