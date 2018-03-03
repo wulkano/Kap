@@ -1,0 +1,167 @@
+@import 'eightpoint/dist/eight.min';
+@import '_variables';
+
+html,
+body,
+.content {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  -webkit-user-select: none;
+}
+
+.selecting {
+  cursor: crosshair;
+}
+
+.coordinates {
+  position: absolute;
+  display: none;
+  padding: 0.8rem 0.8rem;
+
+  .x,
+  .y {
+    font-size: 1rem;
+    line-height: 1rem;
+    padding: 0;
+    margin: 0;
+    text-shadow: 1px 1px 0 #fff
+  }
+}
+
+.overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.middle {
+  display: flex;
+  flex: 1;
+}
+
+.cropper {
+  flex: 1;
+  position: relative;
+  border: 1px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.moving {
+    cursor: move;
+  }
+}
+
+.dimensions {
+  font-size: 1.5rem;
+  text-shadow: 1px 1px 0 #fff;
+  white-space: nowrap;
+
+  &.follow-cursor {
+    position: absolute;
+    padding: 0.5rem 0.5rem;
+  }
+}
+
+.controls {
+  position: absolute;
+  top: 100%;
+  width: max-content;
+  height: 50px;
+  background-color: #fff;
+  margin-top: 10px;
+  border-radius: 4px;
+  min-width: 400px;
+  display: flex;
+  padding: 0 10px;
+  box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.2);
+
+  &.inset {
+    top: auto;
+    bottom: 0;
+    margin-bottom: 10px;
+  }
+
+  .center {
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    flex: 1;
+  }
+
+  .left,
+  .right {
+    justify-content: space-around;
+    display: flex;
+    align-items: center;
+    flex: 3;
+  }
+
+  svg {
+    transition: fill 0.12s ease-in-out;
+    fill: $gray-darker;
+    width: 24px;
+    height: 24px;
+    fill-rule: evenodd;
+
+    &:hover {
+      fill: $blue;
+    }
+
+    &.active {
+      fill: $blue;
+    }
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+.record {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: $red;
+}
+
+.handle {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background-color: #000;
+  position: absolute;
+  top: calc(50% - 4px);
+  left: calc(50% - 4px);
+
+  &.s {
+    top: calc(100% - 4px);
+    cursor: ns-resize;
+  }
+
+  &.n {
+    top: -4px;
+    cursor: ns-resize;
+  }
+
+  &.e {
+    left: calc(100% - 4px);
+    cursor: ew-resize;
+  }
+
+  &.w {
+    left: -4px;
+    cursor: ew-resize;
+  }
+}
+
+.n.w,
+.s.e {
+  cursor: nwse-resize;
+}
+
+.n.e,
+.s.w {
+  cursor: nesw-resize;
+}

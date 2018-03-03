@@ -34,6 +34,7 @@ const menubar = require('menubar')({
 
 let appState = 'initial';
 let cropperWindow;
+let overlayWindow;
 const cropperWindowBuffer = 2;
 let mainWindowIsDetached = false;
 let mainWindow;
@@ -101,85 +102,125 @@ function setCropperWindowOnBlur(closeOnBlur = true) {
   });
 }
 
-const openCropperWindow = (size = {}, position = {}, options = {}) => {
-  options = Object.assign({}, {
-    closeOnBlur: true
-  }, options);
-  mainWindow.setAlwaysOnTop(true, 'screen-saver', 1); // TODO send a PR to `menubar`
-  menubar.setOption('alwaysOnTop', true);
-  if (cropperWindow) {
-    cropperWindow.focus();
-  } else {
-    let {width = 512, height = 512} = settings.get('cropperWindow.size');
-    width = size.width || width;
-    height = size.height || height;
-    let {x, y} = settings.get('cropperWindow.position');
-    x = position.x === undefined ? x : position.x;
-    y = position.y === undefined ? y : position.y;
-    cropperWindow = new BrowserWindow({
-      width: width + cropperWindowBuffer,
-      height: height + cropperWindowBuffer,
-      frame: false,
-      transparent: true,
-      resizable: true,
-      hasShadow: false,
-      enableLargerThanScreen: true,
-      x: x - (cropperWindowBuffer / 2),
-      y: y - (cropperWindowBuffer / 2)
-    });
-    mainWindow.webContents.send('cropper-window-opened', {width, height, x, y});
-    cropperWindow.loadURL(`file://${__dirname}/../renderer/views/cropper.html`);
-    cropperWindow.setIgnoreMouseEvents(false); // TODO this should be false by default
-    cropperWindow.setAlwaysOnTop(true, 'screen-saver');
-    cropperWindow.setTouchBar(cropTouchbar);
+const openOverlayWindow = () => {
+  let {x, y, width, height} = screen.getPrimaryDisplay().bounds;
+  if(overlayWindow) overlayWindow.close();
+  overlayWindow = new BrowserWindow({
+    x: 0,
+    y: 0,
+    width,
+    height,
+    hasShadow: false,
+    enableLargerThanScreen: true,
+    resizable: false,
+    moveable: false,
+    frame: false,
+    transparent: true,
+  });
 
-    if (isDev) {
-      cropperWindow.openDevTools({mode: 'detach'});
-      cropperWindow.webContents.on('devtools-opened', () => {
-        setCropperWindowOnBlur(options.closeOnBlur);
-        mainWindow.focus();
-      });
-    } else {
-      setCropperWindowOnBlur(options.closeOnBlur);
-    }
+  overlayWindow.focus();
 
-    cropperWindow.on('closed', () => {
-      cropperWindow = undefined;
-      mainWindow.webContents.send('cropper-window-closed');
-    });
+  // overlayWindow.setIgnoreMouseEvents(true);
+  overlayWindow.loadURL(`file://${__dirname}/../renderer/views/overlay.html`);
+  overlayWindow.setAlwaysOnTop(true, 'screen-saver');
+  overlayWindow.on('closed', () => {
+    overlayWindow = undefined;
+  });
 
-    cropperWindow.on('resize', () => {
-      const size = {};
-      [size.width, size.height] = cropperWindow.getSize();
-      mainWindow.webContents.send('cropper-window-new-size', size);
-      settings.set('cropperWindow.size', size, {volatile: true});
-    });
-
-    cropperWindow.on('moved', () => {
-      let [x, y] = cropperWindow.getPosition();
-
-      // TODO: we need to implement some logic to, at the same time, allow the user
-      // to move the window to another display, but don't allow them to move the window
-      // to ouside of a display. it should be tricky to implement – how can we decide if
-      // a movement is valid – that is, the window is being moved to another display
-      // or it's simply being moved to outside of a display?
-      if (screen.getAllDisplays().length === 1) {
-        const [width, height] = cropperWindow.getSize();
-        const {width: screenWidth, height: screenHeight} = screen.getPrimaryDisplay().bounds;
-        const x2 = x + width;
-        const y2 = y + height;
-
-        if (x < 0 || y < 0 || x2 > screenWidth || y2 > screenHeight) {
-          x = x < 0 ? 0 : x;
-          x = x2 > screenWidth ? screenWidth - width : x;
-          y = y < 0 ? 0 : y;
-          y = y2 > screenHeight ? screenHeight - height : y;
-          cropperWindow.setPosition(x, y, true);
-        }
-      }
-      settings.set('cropperWindow.position', {x, y}, {volatile: true});
-    });
+  if (isDev) {
+    overlayWindow.openDevTools({mode: 'detach'});
   }
+}
+
+const openCropperWindow = (size = {}, position = {}, options = {}) => {
+  openOverlayWindow();
+
+  // options = Object.assign({}, {
+  //   closeOnBlur: true
+  // }, options);
+  // mainWindow.setAlwaysOnTop(true, 'screen-saver', 1); // TODO send a PR to `menubar`
+  // menubar.setOption('alwaysOnTop', true);
+  // if (cropperWindow) {
+  //   cropperWindow.focus();
+  // } else {
+  //   let {width = 512, height = 512} = settings.get('cropperWindow.size');
+  //   width = size.width || width;
+  //   height = size.height || height;
+  //   let {x, y} = settings.get('cropperWindow.position');
+  //   x = position.x === undefined ? x : position.x;
+  //   y = position.y === undefined ? y : position.y;
+  //   cropperWindow = new BrowserWindow({
+  //     width: width + cropperWindowBuffer,
+  //     height: height + cropperWindowBuffer,
+  //     frame: false,
+  //     transparent: true,
+  //     resizable: true,
+  //     hasShadow: false,
+  //     enableLargerThanScreen: true,
+  //     x: x - (cropperWindowBuffer / 2),
+  //     y: y - (cropperWindowBuffer / 2)
+  //   });
+  //
+  //   overlayWindow.webContents.on('did-finish-load', () => {
+  //     overlayWindow.webContents.send('asd', cropperWindow.getBounds());
+  //   });
+  //
+  //   mainWindow.webContents.send('cropper-window-opened', {width, height, x, y});
+  //   cropperWindow.loadURL(`file://${__dirname}/../renderer/views/cropper.html`);
+  //   cropperWindow.setIgnoreMouseEvents(false); // TODO this should be false by default
+  //   cropperWindow.setAlwaysOnTop(true, 'screen-saver');
+  //   cropperWindow.setTouchBar(cropTouchbar);
+  //
+  //   if (isDev) {
+  //     cropperWindow.openDevTools({mode: 'detach'});
+  //     cropperWindow.webContents.on('devtools-opened', () => {
+  //       setCropperWindowOnBlur(options.closeOnBlur);
+  //       mainWindow.focus();
+  //     });
+  //   } else {
+  //     setCropperWindowOnBlur(options.closeOnBlur);
+  //   }
+  //
+  //   cropperWindow.on('closed', () => {
+  //     cropperWindow = undefined;
+  //     overlayWindow.close();
+  //     mainWindow.webContents.send('cropper-window-closed');
+  //   });
+  //
+  //   cropperWindow.on('resize', () => {
+  //     const size = {};
+  //     [size.width, size.height] = cropperWindow.getSize();
+  //     mainWindow.webContents.send('cropper-window-new-size', size);
+  //     settings.set('cropperWindow.size', size, {volatile: true});
+  //     overlayWindow.webContents.send('asd', cropperWindow.getBounds());
+  //   });
+  //
+  //   cropperWindow.on('moved', () => {
+  //     overlayWindow.webContents.send('asd', cropperWindow.getBounds());
+  //     let [x, y] = cropperWindow.getPosition();
+  //
+  //     // TODO: we need to implement some logic to, at the same time, allow the user
+  //     // to move the window to another display, but don't allow them to move the window
+  //     // to ouside of a display. it should be tricky to implement – how can we decide if
+  //     // a movement is valid – that is, the window is being moved to another display
+  //     // or it's simply being moved to outside of a display?
+  //     if (screen.getAllDisplays().length === 1) {
+  //       const [width, height] = cropperWindow.getSize();
+  //       const {width: screenWidth, height: screenHeight} = screen.getPrimaryDisplay().bounds;
+  //       const x2 = x + width;
+  //       const y2 = y + height;
+  //
+  //       if (x < 0 || y < 0 || x2 > screenWidth || y2 > screenHeight) {
+  //         x = x < 0 ? 0 : x;
+  //         x = x2 > screenWidth ? screenWidth - width : x;
+  //         y = y < 0 ? 0 : y;
+  //         y = y2 > screenHeight ? screenHeight - height : y;
+  //         cropperWindow.setPosition(x, y, true);
+  //       }
+  //     }
+  //     settings.set('cropperWindow.position', {x, y}, {volatile: true});
+  //   });
+  // }
 };
 
 ipcMain.on('set-cropper-window-size', (event, args) => {
@@ -214,6 +255,7 @@ ipcMain.on('open-cropper-window', (event, size, position) => {
 });
 
 ipcMain.on('close-cropper-window', () => {
+  overlayWindow.close();
   if (cropperWindow && !recording) {
     closeCropperWindow();
   }
@@ -285,6 +327,7 @@ function openPrefsWindow() {
     titleBarStyle: 'hiddenInset',
     show: false
   });
+  prefsWindow.setAlwaysOnTop(true, 'screen-saver', 1);
 
   prefsWindow.on('close', () => {
     prefsWindow = undefined;
@@ -306,7 +349,7 @@ app.on('ready', () => {
 
   globalShortcut.register('Cmd+Shift+5', () => {
     const recording = (appState === 'recording');
-    mainWindow.webContents.send((recording) ? 'stop-recording' : 'prepare-recording');
+    overlayWindow.webContents.send((recording) ? 'stop-recording' : 'start-recording');
   });
 });
 
@@ -404,7 +447,7 @@ menubar.on('after-create-window', () => {
       positioner.move('trayCenter', tray.getBounds()); // Not sure why the fuck this is needed (ﾉಠдಠ)ﾉ︵┻━┻
     }
     if (appState === 'recording' && shouldStopWhenTrayIsClicked) {
-      mainWindow.webContents.send('stop-recording');
+      overlayWindow.webContents.send('stop-recording');
     } else if (app.dock.isVisible()) {
       mainWindow.show();
     }
@@ -462,6 +505,8 @@ ipcMain.on('will-start-recording', () => {
     cropperWindow.setIgnoreMouseEvents(true);
     cropperWindow.setAlwaysOnTop(true);
   }
+
+  overlayWindow.setIgnoreMouseEvents(true);
 
   appState = 'recording';
   setTrayStopIcon();
