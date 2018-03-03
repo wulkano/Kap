@@ -1,0 +1,38 @@
+extends _extend
+
+block head
+  +stylesheet('overlay')
+  +script('overlay')
+
+block body
+  .coordinates
+    .x
+    .y
+  .overlay.overlay-top
+  .middle
+    .overlay.overlay-left
+    .cropper
+      .dimensions
+      .controls
+        .left
+          +icon('fullscreen').fullscreen
+          +icon('exit-fullscreen').exit-fullscreen.hidden
+          +icon('windows').windows
+          +icon('link').link-ratio
+        .center
+          .record(title='Start Recording')
+        .right
+          +icon('mouse').show-cursor
+          +icon('mic').is-mic-on.active.hidden
+          +icon('mic-off').is-mic-off
+          +icon('ic_settings_24px').options
+      .handle.s
+      .handle.s.e
+      .handle.e
+      .handle.n.e
+      .handle.n
+      .handle.n.w
+      .handle.w
+      .handle.s.w
+    .overlay.overlay-right
+  .overlay.overlay-bottom
