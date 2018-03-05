@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ipcRenderer.on('export-progress', (e, {text, percentage}) => {
     progressBar.value = percentage ? percentage * 100 : 0;
+
     if (text) {
       updateTitle(text);
     }

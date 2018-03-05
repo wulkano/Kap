@@ -1,7 +1,6 @@
 import {remote, ipcRenderer} from 'electron';
 import aspectRatio from 'aspectratio';
 import moment from 'moment';
-
 // Note: `./` == `/app/dist/renderer/views`, not `js`
 import {handleKeyDown, validateNumericInput} from '../js/input-utils';
 import {handleTrafficLightsClicks, $, handleActiveButtonGroup, getTimestampAtEvent} from '../js/utils';
@@ -48,8 +47,108 @@ document.addEventListener('DOMContentLoaded', () => {
 
   fpsMaxBtn.children[0].innerText = maxFps;
 
-  preview.addEventListener('canplay', function () {
-    aspectRatioBaseValues = [this.videoWidth, this.videoHeight];
+  const pause = () => {
+    pauseBtn.classList.add('hidden');
+    playBtn.classList.remove('hidden');
+    preview.pause();
+    ipcRenderer.send('toggle-play', false);
+  };
+
+  const play = () => {
+    playBtn.classList.add('hidden');
+    pauseBtn.classList.remove('hidden');
+    preview.play();
+    ipcRenderer.send('toggle-play', true);
+  };
+
+  const getTrimmerValue = trimmerEl => {
+    return parseFloat(trimmerEl.value);
+  };
+
+  const setTrimmerValue = (trimmerEl, value) => {
+    trimmerEl.value = String(value);
+  };
+
+  const handleTrimmerInput = inputId => {
+    pause();
+
+    const inValue = getTrimmerValue(trimmerIn);
+    const outValue = getTrimmerValue(trimmerOut);
+    let currentFrame = inValue;
+
+    if (inputId === trimmerOut.id) {
+      currentFrame = outValue;
+    }
+
+    if (inValue >= outValue) {
+      switch (inputId) {
+        case trimmerIn.id:
+          setTrimmerValue(trimmerOut, inValue + TRIMMER_STEP);
+          break;
+        case trimmerOut.id:
+          setTrimmerValue(trimmerIn, outValue - TRIMMER_STEP);
+          break;
+        default:
+          break;
+      }
+    }
+    preview.currentTime = currentFrame;
+  };
+
+  const getTrimmedVideoDuration = () => {
+    const inValue = getTrimmerValue(trimmerIn);
+    const outValue = getTrimmerValue(trimmerOut);
+    currentPreviewDuration = outValue - inValue;
+    return currentPreviewDuration;
+  };
+
+  const initializeTrimmers = () => {
+    trimmerIn.max = String(preview.duration);
+    trimmerOut.max = String(preview.duration);
+    trimmerOut.value = String(preview.duration);
+    setTrimmerValue(trimmerIn, 0);
+
+    trimmerIn.addEventListener('input', () => {
+      handleTrimmerInput(trimmerIn.id);
+      getTrimmedVideoDuration();
+    });
+    trimmerOut.addEventListener('input', () => {
+      handleTrimmerInput(trimmerOut.id);
+      getTrimmedVideoDuration();
+    });
+    trimmerIn.addEventListener('change', play);
+    trimmerOut.addEventListener('change', play);
+  };
+
+  const hover = event => {
+    if (preview.duration) {
+      const timeAtEvent = getTimestampAtEvent(event, preview.duration);
+      previewTimeTip.style.left = `${event.pageX}px`;
+      previewTimeTip.textContent = `${moment().startOf('day').milliseconds(timeAtEvent * 1000).format('m:ss.SS')} (${moment().startOf('day').milliseconds(currentPreviewDuration * 1000).format('m:ss.SS')})`;
+    }
+  };
+
+  const skip = event => {
+    const timeAtEvent = getTimestampAtEvent(event, preview.duration);
+
+    // Check that the time is between the trimmed timeline
+    if (getTrimmerValue(trimmerIn) < timeAtEvent && timeAtEvent < getTrimmerValue(trimmerOut)) {
+      preview.currentTime = timeAtEvent;
+    }
+  };
+
+  const shake = el => {
+    el.classList.add('shake');
+
+    el.addEventListener('webkitAnimationEnd', () => {
+      el.classList.remove('shake');
+    });
+
+    return true;
+  };
+
+  preview.addEventListener('canplay', event => {
+    aspectRatioBaseValues = [event.currentTarget.videoWidth, event.currentTarget.videoHeight];
     [inputWidth.value, inputHeight.value] = aspectRatioBaseValues;
     [lastValidInputWidth, lastValidInputHeight] = aspectRatioBaseValues;
 
@@ -73,53 +172,15 @@ document.addEventListener('DOMContentLoaded', () => {
   trimLine.addEventListener('click', skip);
   trimLine.addEventListener('mousemove', hover);
 
-  function pause() {
-    pauseBtn.classList.add('hidden');
-    playBtn.classList.remove('hidden');
-    preview.pause();
-    ipcRenderer.send('toggle-play', false);
-  }
-
-  function play() {
-    playBtn.classList.add('hidden');
-    pauseBtn.classList.remove('hidden');
-    preview.play();
-    ipcRenderer.send('toggle-play', true);
-  }
-
-  function hover(event) {
-    if (preview.duration) {
-      const timeAtEvent = getTimestampAtEvent(event, preview.duration);
-      previewTimeTip.style.left = `${event.pageX}px`;
-      previewTimeTip.textContent = `${moment().startOf('day').milliseconds(timeAtEvent * 1000).format('m:ss.SS')} (${moment().startOf('day').milliseconds(currentPreviewDuration * 1000).format('m:ss.SS')})`;
-    }
-  }
-
-  function skip(event) {
-    const timeAtEvent = getTimestampAtEvent(event, preview.duration);
-
-    // Check that the time is between the trimmed timeline
-    if (getTrimmerValue(trimmerIn) < timeAtEvent && timeAtEvent < getTrimmerValue(trimmerOut)) {
-      preview.currentTime = timeAtEvent;
-    }
-  }
-
-  function getTrimmedVideoDuration() {
-    const inValue = getTrimmerValue(trimmerIn);
-    const outValue = getTrimmerValue(trimmerOut);
-    currentPreviewDuration = outValue - inValue;
-    return currentPreviewDuration;
-  }
-
-  maximizeBtn.addEventListener('click', function () {
-    this.classList.add('hidden');
+  maximizeBtn.addEventListener('click', event => {
+    event.currentTarget.classList.add('hidden');
     unmaximizeBtn.classList.remove('hidden');
     ipcRenderer.send('toggle-fullscreen-editor-window');
     $('body').classList.add('fullscreen');
   });
 
-  unmaximizeBtn.addEventListener('click', function () {
-    this.classList.add('hidden');
+  unmaximizeBtn.addEventListener('click', event => {
+    event.currentTarget.classList.add('hidden');
     maximizeBtn.classList.remove('hidden');
     ipcRenderer.send('toggle-fullscreen-editor-window');
     $('body').classList.remove('fullscreen');
@@ -137,18 +198,8 @@ document.addEventListener('DOMContentLoaded', () => {
     preview.muted = false;
   });
 
-  function shake(el) {
-    el.classList.add('shake');
-
-    el.addEventListener('webkitAnimationEnd', () => {
-      el.classList.remove('shake');
-    });
-
-    return true;
-  }
-
-  inputWidth.addEventListener('input', function () {
-    this.value = validateNumericInput(this, {
+  inputWidth.addEventListener('input', event => {
+    event.currentTarget.value = validateNumericInput(event.currentTarget, {
       lastValidValue: lastValidInputWidth,
       empty: true,
       max: preview.videoWidth,
@@ -156,23 +207,24 @@ document.addEventListener('DOMContentLoaded', () => {
       onInvalid: shake
     });
 
-    const tmp = aspectRatio.resize(...aspectRatioBaseValues, this.value);
+    const tmp = aspectRatio.resize(...aspectRatioBaseValues, event.currentTarget.value);
+
     if (tmp[1]) {
       lastValidInputHeight = tmp[1];
       inputHeight.value = tmp[1];
     }
 
-    lastValidInputWidth = this.value || lastValidInputWidth;
+    lastValidInputWidth = event.currentTarget.value || lastValidInputWidth;
   });
 
   inputWidth.addEventListener('keydown', handleKeyDown);
 
-  inputWidth.addEventListener('blur', function () {
-    this.value = this.value || (shake(this) && lastValidInputWidth); // Prevent the input from staying empty
+  inputWidth.addEventListener('blur', event => {
+    event.currentTarget.value = event.currentTarget.value || (shake(event.currentTarget) && lastValidInputWidth); // Prevent the input from staying empty
   });
 
-  inputHeight.addEventListener('input', function () {
-    this.value = validateNumericInput(this, {
+  inputHeight.addEventListener('input', event => {
+    event.currentTarget.value = validateNumericInput(event.currentTarget, {
       lastValidValue: lastValidInputHeight,
       empty: true,
       max: preview.videoHeight,
@@ -180,29 +232,30 @@ document.addEventListener('DOMContentLoaded', () => {
       onInvalid: shake
     });
 
-    const tmp = aspectRatio.resize(...aspectRatioBaseValues, undefined, this.value);
+    const tmp = aspectRatio.resize(...aspectRatioBaseValues, undefined, event.currentTarget.value);
+
     if (tmp[0]) {
       lastValidInputWidth = tmp[0];
       inputWidth.value = tmp[0];
     }
 
-    lastValidInputHeight = this.value || lastValidInputHeight;
+    lastValidInputHeight = event.currentTarget.value || lastValidInputHeight;
   });
 
   inputHeight.addEventListener('keydown', handleKeyDown);
 
-  inputHeight.addEventListener('blur', function () {
-    this.value = this.value || (shake(this) && lastValidInputHeight); // Prevent the input from staying empty
+  inputHeight.addEventListener('blur', event => {
+    event.currentTarget.value = event.currentTarget.value || (shake(event.currentTarget) && lastValidInputHeight); // Prevent the input from staying empty
   });
 
-  fps15Btn.addEventListener('click', function () {
-    this.classList.add('active');
+  fps15Btn.addEventListener('click', event => {
+    event.currentTarget.classList.add('active');
     fpsMaxBtn.classList.remove('active');
     fps = 15;
   });
 
-  fpsMaxBtn.addEventListener('click', function () {
-    this.classList.add('active');
+  fpsMaxBtn.addEventListener('click', event => {
+    event.currentTarget.classList.add('active');
     fps15Btn.classList.remove('active');
     fps = maxFps;
   });
@@ -229,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const shareServices = getShareServices();
   console.log('Share services', shareServices);
 
-  function handleFile(service, format) {
+  const handleFile = (service, format) => {
     service.run({
       format,
       filePath: preview.src,
@@ -240,9 +293,9 @@ document.addEventListener('DOMContentLoaded', () => {
       startTime: getTrimmerValue(trimmerIn),
       endTime: getTrimmerValue(trimmerOut)
     });
-  }
+  };
 
-  function registerExportOptions() {
+  const registerExportOptions = () => {
     // Use select elements to get initial list of export formats, even if we won't use the select down the line
     const exportFormats = document.querySelectorAll('.output-format .c-select');
 
@@ -260,6 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const formatButton = document.querySelector(`.output-format button[data-export-type='${format}']`);
 
       let i = 0;
+
       for (const service of shareServices) {
         if (service.formats.includes(format)) {
           const option = document.createElement('option');
@@ -294,7 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
         formatButton.addEventListener('click', () => handleFile(service, format));
       }
     }
-  }
+  };
 
   registerExportOptions();
 
@@ -325,55 +379,6 @@ document.addEventListener('DOMContentLoaded', () => {
       windowHeader.classList.add('is-hidden');
     }
   });
-
-  function initializeTrimmers() {
-    trimmerIn.max = String(preview.duration);
-    trimmerOut.max = String(preview.duration);
-    trimmerOut.value = String(preview.duration);
-    setTrimmerValue(trimmerIn, 0);
-
-    trimmerIn.addEventListener('input', () => {
-      handleTrimmerInput(trimmerIn.id);
-      getTrimmedVideoDuration();
-    });
-    trimmerOut.addEventListener('input', () => {
-      handleTrimmerInput(trimmerOut.id);
-      getTrimmedVideoDuration();
-    });
-    trimmerIn.addEventListener('change', play);
-    trimmerOut.addEventListener('change', play);
-  }
-
-  function getTrimmerValue(trimmerEl) {
-    return parseFloat(trimmerEl.value);
-  }
-
-  function setTrimmerValue(trimmerEl, value) {
-    trimmerEl.value = String(value);
-  }
-
-  function handleTrimmerInput(inputId) {
-    pause();
-    const inValue = getTrimmerValue(trimmerIn);
-    const outValue = getTrimmerValue(trimmerOut);
-    let currentFrame = inValue;
-    if (inputId === trimmerOut.id) {
-      currentFrame = outValue;
-    }
-    if (inValue >= outValue) {
-      switch (inputId) {
-        case trimmerIn.id:
-          setTrimmerValue(trimmerOut, inValue + TRIMMER_STEP);
-          break;
-        case trimmerOut.id:
-          setTrimmerValue(trimmerIn, outValue - TRIMMER_STEP);
-          break;
-        default:
-          break;
-      }
-    }
-    preview.currentTime = currentFrame;
-  }
 });
 
 document.addEventListener('dragover', e => e.preventDefault());

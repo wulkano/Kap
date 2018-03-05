@@ -1,5 +1,6 @@
-function validateNumericInput(input, opts) {
+export const validateNumericInput = (input, opts) => {
   let value = input.value;
+
   if (value === '' && opts.empty) {
     return value;
   }
@@ -26,19 +27,17 @@ function validateNumericInput(input, opts) {
   }
 
   return value;
-}
+};
 
-function handleKeyDown(event) {
+export const handleKeyDown = event => {
   const multiplier = event.shiftKey ? 10 : 1;
-  const parsedValue = parseInt(this.value, 10);
-  if (event.key === 'ArrowUp') {
-    this.value = parsedValue + (1 * multiplier); // eslint-disable-line no-implicit-coercion
-    this.dispatchEvent(new Event('input'));
-  } else if (event.key === 'ArrowDown') {
-    this.value = parsedValue - (1 * multiplier); // eslint-disable-line no-implicit-coercion
-    this.dispatchEvent(new Event('input'));
-  }
-}
+  const parsedValue = parseInt(event.currentTarget.value, 10);
 
-exports.validateNumericInput = validateNumericInput;
-exports.handleKeyDown = handleKeyDown;
+  if (event.key === 'ArrowUp') {
+    event.currentTarget.value = parsedValue + (1 * multiplier); // eslint-disable-line no-implicit-coercion
+    event.currentTarget.dispatchEvent(new Event('input'));
+  } else if (event.key === 'ArrowDown') {
+    event.currentTarget.value = parsedValue - (1 * multiplier); // eslint-disable-line no-implicit-coercion
+    event.currentTarget.dispatchEvent(new Event('input'));
+  }
+};

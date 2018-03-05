@@ -30,7 +30,7 @@ const store = new Store({
 });
 const usageHistory = store.get('appUsageHistory', {});
 
-function isAppValid(app) {
+const isAppValid = app => {
   if (
     app.width < APP_MIN_WIDTH ||
     app.height < APP_MIN_HEIGHT ||
@@ -39,10 +39,11 @@ function isAppValid(app) {
   ) {
     return false;
   }
-  return true;
-}
 
-async function getWindowList() {
+  return true;
+};
+
+const getWindowList = async () => {
   const windows = await getWindows();
   const images = await getAppIconListByPid(windows.map(win => win.pid), {
     size: 16,
@@ -62,6 +63,7 @@ async function getWindowList() {
       .map(win => {
         const iconImage = images.find(img => img.pid === win.pid);
         const icon = iconImage.icon ? nativeImage.createFromBuffer(iconImage.icon) : null;
+
         return {
           ...win,
           isFullscreen: false,
@@ -70,18 +72,20 @@ async function getWindowList() {
         };
       })
   ];
-}
+};
 
-function setAppLastUsed(app) {
+const setAppLastUsed = app => {
   const {count} = usageHistory[app.pid] || {};
+
   usageHistory[app.pid] = {
     count: (typeof count === 'number' ? count : 0) + 1,
     lastUsed: Date.now()
   };
-  store.set('appUsageHistory', usageHistory);
-}
 
-function getSortedAppList(appList) {
+  store.set('appUsageHistory', usageHistory);
+};
+
+const getSortedAppList = appList => {
   if (appList.length === 0) {
     return appList;
   }
@@ -103,9 +107,9 @@ function getSortedAppList(appList) {
     mostRecentApp,
     ...unsortedAppList.sort((a, b) => b.count - a.count)
   ];
-}
+};
 
-function getAppDisplayName(app) {
+const getAppDisplayName = app => {
   const content = document.createElement('span');
 
   // Prepend the logo
@@ -119,10 +123,11 @@ function getAppDisplayName(app) {
 
   content.appendChild(document.createTextNode(app.ownerName));
   return content.innerHTML;
-}
+};
 
-function updateContent(el, dimensions, windowList) {
+const updateContent = (el, dimensions, windowList) => {
   const content = el.querySelector('button');
+
   if (dimensions.app) {
     const app = windowList.find(win => win.pid === dimensions.app.pid);
     if (app) {
@@ -134,23 +139,25 @@ function updateContent(el, dimensions, windowList) {
   const stringRatio = dimensions.ratio.join(':');
   const knownRatio = RATIOS.find(ratio => ratio === stringRatio);
   content.textContent = knownRatio || `Custom (${stringRatio})`;
-}
+};
 
-function isAppSelected(dimensions, app) {
+const isAppSelected = (dimensions, app) => {
   if (!dimensions.app) {
     return false;
   }
+
   return dimensions.app.pid === app.pid;
-}
+};
 
-function isFullscreenSelected(dimensions) {
+const isFullscreenSelected = dimensions => {
   if (!dimensions.app) {
     return false;
   }
-  return dimensions.app.isFullscreen;
-}
 
-function buildMenuItems(options, currentDimensions, windowList) {
+  return dimensions.app.isFullscreen;
+};
+
+const buildMenuItems = (options, currentDimensions, windowList) => {
   const {emitter, el} = options;
   const [fullscreen, ...appList] = windowList;
   const knownRatio = RATIOS.find(ratio => ratio === currentDimensions.ratio.join(':'));
@@ -198,11 +205,11 @@ function buildMenuItems(options, currentDimensions, windowList) {
       checked: !knownRatio && !currentDimensions.app
     }
   ]);
-}
+};
 
 // Helper function for retrieving the simplest ratio,
 // via the largest common divisor of two numbers (thanks @doot0)
-function getLargestCommonDivisor(first, second) {
+const getLargestCommonDivisor = (first, second) => {
   if (!first) {
     return 1;
   }
@@ -212,16 +219,17 @@ function getLargestCommonDivisor(first, second) {
   }
 
   return getLargestCommonDivisor(second, first % second);
-}
+};
 
-function getSimplestRatio(width, height) {
+const getSimplestRatio = (width, height) => {
   const lcd = getLargestCommonDivisor(width, height);
   const denominator = width / lcd;
   const numerator = height / lcd;
-  return [denominator, numerator];
-}
 
-export function findRatioForSize(width, height) {
+  return [denominator, numerator];
+};
+
+export const findRatioForSize = (width, height) => {
   const ratio = nearestNormalAspectRatio(width, height);
 
   if (ratio) {
@@ -229,9 +237,9 @@ export function findRatioForSize(width, height) {
   }
 
   return getSimplestRatio(width, height);
-}
+};
 
-export default async function buildSizeMenu(options) {
+export default async options => {
   const {emitter, el} = options;
   let {dimensions} = options;
   let windowList = await getWindowList();
@@ -264,4 +272,4 @@ export default async function buildSizeMenu(options) {
       y: menuY
     });
   });
-}
+};

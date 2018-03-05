@@ -27,25 +27,25 @@ const VIEWS_PARTIALS_GLOB = `${SRC_DIR}/**/_*.pug`;
 const SVG_GLOB = `app/static/**/*.svg`;
 
 // Clean DIST directory
-export function clean() {
+export const clean = () => {
   return del([DIST_DIR]);
-}
+};
 
 // JS Task
-export function scripts() {
+export const scripts = () => {
   return src(JS_GLOB, {base: SRC_DIR})
     .pipe(babel())
     .pipe(dest(DIST_DIR));
-}
+};
 
-export function views() {
+export const views = () => {
   return src([VIEWS_GLOB, `!${VIEWS_PARTIALS_GLOB}`], {base: SRC_DIR})
     .pipe(pug())
     .pipe(injectSvg())
     .pipe(dest(DIST_DIR));
-}
+};
 
-export function styles() {
+export const styles = () => {
   return src([CSS_GLOB], {base: SRC_DIR})
     .pipe(stylelint({
       reporters: [
@@ -66,16 +66,17 @@ export function styles() {
       reporter({clearReportedMessages: true})
     ]))
     .pipe(dest(DIST_DIR));
-}
+};
 
-export function watch() {
+export const watch = () => {
   watchSrc(JS_GLOB, scripts);
   watchSrc(CSS_GLOB, styles);
   watchSrc(VIEWS_GLOB, views);
   watchSrc(SVG_GLOB, views);
-}
+};
 
 const mainTasks = parallel(scripts, styles, views);
+
 export const build = series(clean, mainTasks);
 export const dev = series(clean, mainTasks, watch);
 
