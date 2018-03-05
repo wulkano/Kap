@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
         temporary: true,
         forHowLong: 1000
       });
-      shake(event.target);
+      shake(event.currentTarget);
       ipcRenderer.send('open-editor-window', {notify: true});
     } else {
       prepareRecordButton();
@@ -305,20 +305,20 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const inputWidthListener = _.debounce(handleWidthInput, debounceTimeout);
+  const inputHeightListener = _.debounce(handleHeightInput, debounceTimeout);
 
   inputWidth.addEventListener('input', inputWidthListener);
   inputWidth.addEventListener('keydown', handleKeyDown);
   inputWidth.addEventListener('blur', event => {
     inputWidthListener.flush();
-    event.target.value = event.target.value || (shake(event.target) && lastValidInputWidth); // Prevent the input from staying empty
+    event.currentTarget.value = event.currentTarget.value || (shake(event.currentTarget) && lastValidInputWidth); // Prevent the input from staying empty
   });
 
-  const inputHeightListener = _.debounce(handleHeightInput, debounceTimeout);
   inputHeight.addEventListener('input', inputHeightListener);
   inputHeight.addEventListener('keydown', handleKeyDown);
   inputHeight.addEventListener('blur', event => {
     inputHeightListener.flush();
-    event.target.value = event.target.value || (shake(event.target) && lastValidInputHeight); // Prevent the input from staying empty
+    event.currentTarget.value = event.currentTarget.value || (shake(event.currentTarget) && lastValidInputHeight); // Prevent the input from staying empty
   });
 
   options.addEventListener('click', event => {
@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   linkBtn.addEventListener('click', event => {
-    event.target.classList.toggle('is-active');
+    event.currentTarget.classList.toggle('is-active');
     dimensions.ratioLocked = !dimensions.ratioLocked;
     app.kap.settings.set('dimensions', dimensions);
   });
@@ -390,7 +390,7 @@ document.addEventListener('DOMContentLoaded', () => {
   toggleAudioRecordBtn.addEventListener('click', event => {
     micOnIcon.classList.toggle('hidden');
     micOffIcon.classList.toggle('hidden');
-    event.target.classList.toggle('is-active');
+    event.currentTarget.classList.toggle('is-active');
     app.kap.settings.set('recordAudio', isVisible(micOnIcon));
   });
 

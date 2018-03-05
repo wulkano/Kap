@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   preview.addEventListener('canplay', event => {
-    aspectRatioBaseValues = [event.target.videoWidth, event.target.videoHeight];
+    aspectRatioBaseValues = [event.currentTarget.videoWidth, event.currentTarget.videoHeight];
     [inputWidth.value, inputHeight.value] = aspectRatioBaseValues;
     [lastValidInputWidth, lastValidInputHeight] = aspectRatioBaseValues;
 
@@ -173,14 +173,14 @@ document.addEventListener('DOMContentLoaded', () => {
   trimLine.addEventListener('mousemove', hover);
 
   maximizeBtn.addEventListener('click', event => {
-    event.target.classList.add('hidden');
+    event.currentTarget.classList.add('hidden');
     unmaximizeBtn.classList.remove('hidden');
     ipcRenderer.send('toggle-fullscreen-editor-window');
     $('body').classList.add('fullscreen');
   });
 
   unmaximizeBtn.addEventListener('click', event => {
-    event.target.classList.add('hidden');
+    event.currentTarget.classList.add('hidden');
     maximizeBtn.classList.remove('hidden');
     ipcRenderer.send('toggle-fullscreen-editor-window');
     $('body').classList.remove('fullscreen');
@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   inputWidth.addEventListener('input', event => {
-    event.target.value = validateNumericInput(event.target, {
+    event.currentTarget.value = validateNumericInput(event.currentTarget, {
       lastValidValue: lastValidInputWidth,
       empty: true,
       max: preview.videoWidth,
@@ -207,24 +207,24 @@ document.addEventListener('DOMContentLoaded', () => {
       onInvalid: shake
     });
 
-    const tmp = aspectRatio.resize(...aspectRatioBaseValues, event.target.value);
+    const tmp = aspectRatio.resize(...aspectRatioBaseValues, event.currentTarget.value);
 
     if (tmp[1]) {
       lastValidInputHeight = tmp[1];
       inputHeight.value = tmp[1];
     }
 
-    lastValidInputWidth = event.target.value || lastValidInputWidth;
+    lastValidInputWidth = event.currentTarget.value || lastValidInputWidth;
   });
 
   inputWidth.addEventListener('keydown', handleKeyDown);
 
   inputWidth.addEventListener('blur', event => {
-    event.target.value = event.target.value || (shake(event.target) && lastValidInputWidth); // Prevent the input from staying empty
+    event.currentTarget.value = event.currentTarget.value || (shake(event.currentTarget) && lastValidInputWidth); // Prevent the input from staying empty
   });
 
   inputHeight.addEventListener('input', event => {
-    event.target.value = validateNumericInput(event.target, {
+    event.currentTarget.value = validateNumericInput(event.currentTarget, {
       lastValidValue: lastValidInputHeight,
       empty: true,
       max: preview.videoHeight,
@@ -232,30 +232,30 @@ document.addEventListener('DOMContentLoaded', () => {
       onInvalid: shake
     });
 
-    const tmp = aspectRatio.resize(...aspectRatioBaseValues, undefined, event.target.value);
+    const tmp = aspectRatio.resize(...aspectRatioBaseValues, undefined, event.currentTarget.value);
 
     if (tmp[0]) {
       lastValidInputWidth = tmp[0];
       inputWidth.value = tmp[0];
     }
 
-    lastValidInputHeight = event.target.value || lastValidInputHeight;
+    lastValidInputHeight = event.currentTarget.value || lastValidInputHeight;
   });
 
   inputHeight.addEventListener('keydown', handleKeyDown);
 
   inputHeight.addEventListener('blur', event => {
-    event.target.value = event.target.value || (shake(event.target) && lastValidInputHeight); // Prevent the input from staying empty
+    event.currentTarget.value = event.currentTarget.value || (shake(event.currentTarget) && lastValidInputHeight); // Prevent the input from staying empty
   });
 
   fps15Btn.addEventListener('click', event => {
-    event.target.classList.add('active');
+    event.currentTarget.classList.add('active');
     fpsMaxBtn.classList.remove('active');
     fps = 15;
   });
 
   fpsMaxBtn.addEventListener('click', event => {
-    event.target.classList.add('active');
+    event.currentTarget.classList.add('active');
     fps15Btn.classList.remove('active');
     fps = maxFps;
   });

@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   $j('.plugins-list').on('change', '.install-toggle', event => {
-    const el = event.target;
+    const el = event.currentTarget;
     const name = el.dataset.name;
 
     $j('.plugins-list .install-toggle').prop('disabled', true);
@@ -160,17 +160,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   openOnStartupCheckbox.addEventListener('change', event => {
-    app.kap.settings.set('openOnStartup', event.target.checked);
-    app.setLoginItemSettings({openAtLogin: event.target.checked});
+    app.kap.settings.set('openOnStartup', event.currentTarget.checked);
+    app.setLoginItemSettings({openAtLogin: event.currentTarget.checked});
   });
 
   allowAnalyticsCheckbox.addEventListener('change', event => {
-    app.kap.settings.set('allowAnalytics', event.target.checked);
+    app.kap.settings.set('allowAnalytics', event.currentTarget.checked);
   });
 
   showCursorCheckbox.addEventListener('change', event => {
-    app.kap.settings.set('showCursor', event.target.checked);
-    if (event.target.checked) {
+    app.kap.settings.set('showCursor', event.currentTarget.checked);
+    if (event.currentTarget.checked) {
       highlightClicksCheckbox.disabled = false;
       highlightClicksCheckbox.checked = app.kap.settings.get('highlightClicks');
     } else {
@@ -181,23 +181,23 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   highlightClicksCheckbox.addEventListener('change', event => {
-    app.kap.settings.set('highlightClicks', event.target.checked);
+    app.kap.settings.set('highlightClicks', event.currentTarget.checked);
   });
 
   hideDesktopIconsCheckbox.addEventListener('change', event => {
-    app.kap.settings.set('hideDesktopIcons', event.target.checked);
+    app.kap.settings.set('hideDesktopIcons', event.currentTarget.checked);
   });
 
   fpsSlider.addEventListener('input', event => {
-    fpsLabel.innerText = `${event.target.value} FPS`;
+    fpsLabel.innerText = `${event.currentTarget.value} FPS`;
   });
 
   fpsSlider.addEventListener('change', event => {
-    app.kap.settings.set('fps', Number(event.target.value));
+    app.kap.settings.set('fps', Number(event.currentTarget.value));
   });
 
   audioInputDeviceSelector.addEventListener('change', event => {
-    app.kap.settings.set('audioInputDeviceId', event.target.value);
+    app.kap.settings.set('audioInputDeviceId', event.currentTarget.value);
   });
 
   // The `showCursor` setting can be changed via the
