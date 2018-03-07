@@ -5,6 +5,7 @@ import tmp from 'tmp';
 import ffmpeg from '@ffmpeg-installer/ffmpeg';
 import util from 'electron-util';
 import PCancelable from 'p-cancelable';
+import {log} from '../common/logger';
 
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
 const durationRegex = /Duration: (\d\d:\d\d:\d\d.\d\d)/gm;
@@ -14,6 +15,8 @@ const frameRegex = /frame=\s+(\d+)/gm;
 const makeEven = n => 2 * Math.round(n / 2);
 
 const convert = (outputPath, opts, args) => {
+  log('Converting screen recording:', outputPath, opts, args);
+
   return new PCancelable((onCancel, resolve, reject) => {
     const converter = execa(ffmpegPath, args);
     let amountOfFrames;
@@ -22,8 +25,12 @@ const convert = (outputPath, opts, args) => {
       converter.kill();
     });
 
+    let stderr = '';
+    converter.stderr.setEncoding('utf8');
     converter.stderr.on('data', data => {
-      data = data.toString().trim();
+      stderr += data;
+
+      data = data.trim();
       const matchesDuration = durationRegex.exec(data);
       const matchesFrame = frameRegex.exec(data);
 
@@ -36,11 +43,12 @@ const convert = (outputPath, opts, args) => {
     });
 
     converter.on('error', reject);
+
     converter.on('exit', code => {
       if (code === 0) {
         resolve(outputPath);
       } else {
-        reject(code);
+        reject(new Error(`ffmpeg exited with code: ${code}\n\n${stderr}`));
       }
     });
 

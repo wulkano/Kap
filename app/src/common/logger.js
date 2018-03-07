@@ -1,3 +1,6 @@
+import util from 'util';
+import {log as ravenLog} from './reporter';
+
 let window;
 let windowIsReady = false;
 let pendingMessages = [];
@@ -19,6 +22,8 @@ export const init = mainWindow => {
 };
 
 export const log = (...msgs) => {
+  ravenLog(util.format(msgs));
+
   if (process.type === 'browser') { // Main process
     if (window && windowIsReady) {
       window.webContents.send('log', msgs);

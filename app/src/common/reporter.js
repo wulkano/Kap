@@ -42,6 +42,12 @@ export const report = err => {
   }
 };
 
+export const log = message => {
+  if (!isDev && Raven && message) {
+    Raven.captureMessage(message);
+  }
+};
+
 unhandled({
   logger: report
 });
