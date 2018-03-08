@@ -362,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ipcRenderer.on('change-aspect-ratio', (e, aspectRatio) => handleSizeChange(aspectRatio));
 
-  dimensionsEmitter.on('ratio-sedlected', ratio => handleSizeChange(ratio));
+  dimensionsEmitter.on('ratio-selected', ratio => handleSizeChange(ratio));
   dimensionsEmitter.on('app-selected', app => {
     // Set app information on dimensions so it can be reused later
     // eg. for showing app name after selection
