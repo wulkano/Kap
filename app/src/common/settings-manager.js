@@ -11,6 +11,7 @@ const DEFAULTS = {
   showCursor: true,
   highlightClicks: false,
   hideDesktopIcons: false,
+  recordKeyboardShortcut: true,
   fps: 30,
   recordAudio: false,
   audioInputDeviceId: null,
