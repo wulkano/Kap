@@ -32,6 +32,12 @@
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/@ffmpeg-installer/win32-x64/-/win32-x64-4.0.2.tgz#288bd7480354695c30d02a945f24889a5982d9ff"
 
+"@sindresorhus/do-not-disturb@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@sindresorhus/do-not-disturb/-/do-not-disturb-0.1.0.tgz#5632c0e6c225f4929b1a26d029da57db64b6b3e3"
+  dependencies:
+    execa "^0.9.0"
+
 "@sindresorhus/is@^0.7.0":
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"

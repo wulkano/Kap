@@ -3,6 +3,7 @@ import EventEmitter from 'events';
 import {default as createAperture, audioDevices} from 'aperture';
 import _ from 'lodash';
 import desktopIcons from 'hide-desktop-icons';
+import doNotDisturb from '@sindresorhus/do-not-disturb';
 import {init as initErrorReporter, report as reportError} from '../../common/reporter';
 import {log} from '../../common/logger';
 // Note: `./` == `/app/dist/renderer/views`, not `js`
@@ -46,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const dimensionsEmitter = new EventEmitter();
   let lastValidInputWidth = width;
   let lastValidInputHeight = height;
+  let wasDoNotDisturbAlreadyEnabled;
 
   // Init dynamic elements
   if (app.kap.settings.get('recordAudio') === true) {
@@ -135,6 +137,11 @@ document.addEventListener('DOMContentLoaded', () => {
       await desktopIcons.hide();
     }
 
+    if (app.kap.settings.get('doNotDisturb')) {
+      wasDoNotDisturbAlreadyEnabled = doNotDisturb.isEnabled();
+      doNotDisturb.enable();
+    }
+
     try {
       await aperture.startRecording(apertureOpts);
       ipcRenderer.send('did-start-recording');
@@ -160,6 +167,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (app.kap.settings.get('hideDesktopIcons')) {
       desktopIcons.show();
+    }
+
+    if (app.kap.settings.get('doNotDisturb') && !wasDoNotDisturbAlreadyEnabled) {
+      doNotDisturb.disable();
     }
 
     ipcRenderer.send('stopped-recording');
