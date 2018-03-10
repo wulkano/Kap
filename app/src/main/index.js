@@ -324,10 +324,12 @@ app.on('ready', () => {
   // Ensure all plugins are up to date
   plugins.upgrade().catch(() => {});
 
-  globalShortcut.register('Cmd+Shift+5', () => {
-    const recording = (appState === 'recording');
-    mainWindow.webContents.send((recording) ? 'stop-recording' : 'prepare-recording');
-  });
+  if (settings.get('recordKeyboardShortcut')) {
+    globalShortcut.register('Cmd+Shift+5', () => {
+      const recording = (appState === 'recording');
+      mainWindow.webContents.send((recording) ? 'stop-recording' : 'prepare-recording');
+    });
+  }
 });
 
 app.on('will-quit', () => {

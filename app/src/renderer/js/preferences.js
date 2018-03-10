@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const saveToDescription = $('.js-save-to-description');
   const showCursorCheckbox = $('#show-cursor');
   const hideDesktopIconsCheckbox = $('#hide-desktop-icons');
+  const recordKeyboardShortcutCheckbox = $('#record-keyboard-shortcut');
   const openPluginsFolder = $('.js-open-plugins');
   const electronWindow = getCurrentWindow();
 
@@ -40,6 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   allowAnalyticsCheckbox.checked = settingsValues.allowAnalytics;
   showCursorCheckbox.checked = settingsValues.showCursor;
   hideDesktopIconsCheckbox.checked = settingsValues.hideDesktopIcons;
+  recordKeyboardShortcutCheckbox.checked = settingsValues.recordKeyboardShortcut;
 
   if (settingsValues.showCursor === false) {
     highlightClicksCheckbox.disabled = true;
@@ -186,6 +188,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   hideDesktopIconsCheckbox.addEventListener('change', event => {
     app.kap.settings.set('hideDesktopIcons', event.currentTarget.checked);
+  });
+
+  recordKeyboardShortcutCheckbox.addEventListener('change', event => {
+    app.kap.settings.set('recordKeyboardShortcut', event.currentTarget.checked);
   });
 
   fpsSlider.addEventListener('input', event => {
