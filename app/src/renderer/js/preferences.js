@@ -18,8 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const allowAnalyticsCheckbox = $('#allow-analytics');
   const audioInputDeviceSelector = $('.js-audio-input-device-selector');
   const chooseSaveDirectoryBtn = $('.js-choose-save');
-  const fpsLabel = $('.fps-slider .js-middle-label');
-  const fpsSlider = $('.fps-slider input');
+  const record60fpsCheckbox = $('#record-60fps');
   const header = $('header');
   const highlightClicksCheckbox = $('#highlight-clicks');
   const openOnStartupCheckbox = $('#open-on-startup');
@@ -41,6 +40,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   allowAnalyticsCheckbox.checked = settingsValues.allowAnalytics;
   showCursorCheckbox.checked = settingsValues.showCursor;
   hideDesktopIconsCheckbox.checked = settingsValues.hideDesktopIcons;
+  record60fpsCheckbox.checked = settingsValues.record60fps;
   recordKeyboardShortcutCheckbox.checked = settingsValues.recordKeyboardShortcut;
 
   if (settingsValues.showCursor === false) {
@@ -48,9 +48,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   } else {
     highlightClicksCheckbox.checked = settingsValues.highlightClicks;
   }
-
-  fpsSlider.value = settingsValues.fps;
-  fpsLabel.innerText = `${settingsValues.fps} FPS`;
 
   for (const device of await aperture.audioDevices()) {
     const option = document.createElement('option');
@@ -190,16 +187,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     app.kap.settings.set('hideDesktopIcons', event.currentTarget.checked);
   });
 
+  record60fpsCheckbox.addEventListener('change', event => {
+    app.kap.settings.set('record60fps', event.currentTarget.checked);
+  });
+
   recordKeyboardShortcutCheckbox.addEventListener('change', event => {
     app.kap.settings.set('recordKeyboardShortcut', event.currentTarget.checked);
-  });
-
-  fpsSlider.addEventListener('input', event => {
-    fpsLabel.innerText = `${event.currentTarget.value} FPS`;
-  });
-
-  fpsSlider.addEventListener('change', event => {
-    app.kap.settings.set('fps', Number(event.currentTarget.value));
   });
 
   audioInputDeviceSelector.addEventListener('change', event => {

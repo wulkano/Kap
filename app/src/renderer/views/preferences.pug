@@ -57,9 +57,9 @@ block body
       .preference.container
         .preference-part
           .preference-content
-            .preference__title Capture frame rate
-            .preference__description Capturing at a higher frame rate might impact performance
-          +range(hasLabels=true min='16' max='60' lowLabel='Low' middleLabel='30FPS' highLabel='High').preference-input.fps-slider
+            .preference__title Capture at 60 FPS
+            .preference__description The default is 30 FPS
+          +toggle('record-60fps')
       .preference.container
         .preference-part
           .preference-content

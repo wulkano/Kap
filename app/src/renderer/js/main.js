@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // We need the most recent settings
     const {
-      fps,
+      record60fps,
       showCursor,
       highlightClicks,
       recordAudio,
@@ -113,10 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } = app.kap.settings.getAll();
 
     const apertureOpts = {
-      // We have to convert this to a number as there was a bug
-      // previously that set FPS to string in the preferences
-      fps: Number(fps),
-
+      fps: record60fps ? 60 : 30,
       cropArea: cropperBounds,
       showCursor,
       highlightClicks,
