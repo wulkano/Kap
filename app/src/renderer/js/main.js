@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (app.kap.settings.get('doNotDisturb')) {
-      wasDoNotDisturbAlreadyEnabled = doNotDisturb.isEnabled();
+      wasDoNotDisturbAlreadyEnabled = await doNotDisturb.isEnabled();
       doNotDisturb.enable();
     }
 
