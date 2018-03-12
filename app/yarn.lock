@@ -1565,7 +1565,7 @@ mem@^1.1.0:
 
 "menubar@github:matheuss/menubar":
   version "5.1.0"
-  resolved "https://codeload.github.com/matheuss/menubar/tar.gz/f6c84362170bd34f6c81ae1113a6f5dfafa57eff"
+  resolved "https://codeload.github.com/matheuss/menubar/tar.gz/2859ccb18fd7293bdcb623131362fe328fc2c980"
   dependencies:
     electron-positioner "^3.0.0"
     extend "^2.0.0"
