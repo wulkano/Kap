@@ -32,6 +32,13 @@
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/@ffmpeg-installer/win32-x64/-/win32-x64-4.0.2.tgz#288bd7480354695c30d02a945f24889a5982d9ff"
 
+"@sindresorhus/do-not-disturb@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@sindresorhus/do-not-disturb/-/do-not-disturb-0.2.0.tgz#29fdb0d492ba45b2b27a70da56363b76f503630e"
+  dependencies:
+    electron-util "^0.7.0"
+    execa "^0.9.0"
+
 "@sindresorhus/is@^0.7.0":
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
@@ -696,6 +703,12 @@ electron-util@^0.4.1:
 electron-util@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/electron-util/-/electron-util-0.6.0.tgz#1246851ae1df8ba43420c75a541ee45aa649847d"
+  dependencies:
+    electron-is-dev "^0.3.0"
+
+electron-util@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/electron-util/-/electron-util-0.7.0.tgz#6cc94ae4f4280725ac10e05b54ecfae6033be045"
   dependencies:
     electron-is-dev "^0.3.0"
 

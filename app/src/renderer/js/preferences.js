@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const saveToDescription = $('.js-save-to-description');
   const showCursorCheckbox = $('#show-cursor');
   const hideDesktopIconsCheckbox = $('#hide-desktop-icons');
+  const doNotDisturbCheckbox = $('#do-not-disturb');
   const recordKeyboardShortcutCheckbox = $('#record-keyboard-shortcut');
   const openPluginsFolder = $('.js-open-plugins');
   const electronWindow = getCurrentWindow();
@@ -40,6 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   allowAnalyticsCheckbox.checked = settingsValues.allowAnalytics;
   showCursorCheckbox.checked = settingsValues.showCursor;
   hideDesktopIconsCheckbox.checked = settingsValues.hideDesktopIcons;
+  doNotDisturbCheckbox.checked = settingsValues.doNotDisturb;
   record60fpsCheckbox.checked = settingsValues.record60fps;
   recordKeyboardShortcutCheckbox.checked = settingsValues.recordKeyboardShortcut;
 
@@ -185,6 +187,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   hideDesktopIconsCheckbox.addEventListener('change', event => {
     app.kap.settings.set('hideDesktopIcons', event.currentTarget.checked);
+  });
+
+  doNotDisturbCheckbox.addEventListener('change', event => {
+    app.kap.settings.set('doNotDisturb', event.currentTarget.checked);
   });
 
   record60fpsCheckbox.addEventListener('change', event => {

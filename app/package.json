@@ -15,6 +15,7 @@
   "main": "dist/main/index.js",
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.13",
+    "@sindresorhus/do-not-disturb": "^0.2.0",
     "ajv": "^6.2.0",
     "aperture": "^4.0.0",
     "aspectratio": "^2.2.2",
