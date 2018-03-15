@@ -1556,9 +1556,9 @@ lru-cache@^4.0.0, lru-cache@^4.0.1, lru-cache@^4.1.1, lru-cache@~4.1.1:
     pseudomap "^1.0.2"
     yallist "^2.1.2"
 
-mac-windows@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/mac-windows/-/mac-windows-0.6.0.tgz#7c867712865c1f12cb9ecf50fe2cab067fc37008"
+mac-windows@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/mac-windows/-/mac-windows-0.7.1.tgz#3309ef0c7c508725cc3e17a3ea1687de0680c78b"
 
 macos-release@^1.0.0:
   version "1.1.0"
