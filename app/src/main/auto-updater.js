@@ -38,7 +38,7 @@ export const init = () => {
     log('Update downloaded, will notify the user');
 
     const notification = new Notification({
-      title: 'An update is available 🎉',
+      title: `An update for ${app.getName()} is available 🎉`,
       body: 'Click here to install it 😊'
     });
 
