@@ -22,8 +22,8 @@ export const startExport = () => {
     if (isExportInProgress) {
       const buttonIndex = dialog.showMessageBox(exportWindow, {
         type: 'question',
-        buttons: ['Cancel Export', 'Continue'],
-        defaultId: 1,
+        buttons: ['Cancel Export', 'Continue Export'],
+        defaultId: 0,
         cancelId: 1,
         message: 'Are you sure you want to cancel the export?'
       });
