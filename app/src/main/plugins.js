@@ -152,10 +152,19 @@ class Plugins {
       ['apng', 'APNG'],
       ['gif', 'GIF'],
       ['mp4', 'MP4'],
+      ['original', 'Original'],
       ['webm', 'WebM']
     ]);
 
     return formats.get(format);
+  }
+
+  formatExtension(format) {
+    if (format === 'original') {
+      return 'mp4';
+    }
+
+    return format;
   }
 }
 

@@ -14,7 +14,7 @@ const frameRegex = /frame=\s+(\d+)/gm;
 // https://trac.ffmpeg.org/ticket/309
 const makeEven = n => 2 * Math.round(n / 2);
 
-const convert = (outputPath, opts, args) => {
+const ffmpegConvert = (outputPath, opts, args) => {
   log('Converting screen recording:', outputPath, opts, args);
 
   return new PCancelable((onCancel, resolve, reject) => {
@@ -72,7 +72,7 @@ export const convertToGif = PCancelable.fn(async (onCancel, opts) => {
 
   await paletteProcessor;
 
-  return convert(opts.outputPath, opts, [
+  return ffmpegConvert(opts.outputPath, opts, [
     '-i', opts.filePath,
     '-i', palettePath,
     '-filter_complex', `fps=${opts.fps},scale=${opts.width}:${opts.height}:flags=lanczos[x]; [x][1:v]paletteuse`,
@@ -83,10 +83,22 @@ export const convertToGif = PCancelable.fn(async (onCancel, opts) => {
   ]);
 });
 
+export const trimOriginal = opts => {
+  opts.progressCallback(0);
+
+  return ffmpegConvert(opts.outputPath, opts, [
+    '-i', opts.filePath,
+    '-c', 'copy',
+    '-ss', opts.startTime,
+    '-to', opts.endTime,
+    opts.outputPath
+  ]);
+};
+
 export const convertToMp4 = opts => {
   opts.progressCallback(0);
 
-  return convert(opts.outputPath, opts, [
+  return ffmpegConvert(opts.outputPath, opts, [
     '-i', opts.filePath,
     '-r', opts.fps,
     '-s', `${makeEven(opts.width)}x${makeEven(opts.height)}`,
@@ -97,7 +109,7 @@ export const convertToMp4 = opts => {
 };
 
 export const convertToWebm = opts => {
-  return convert(opts.outputPath, opts, [
+  return ffmpegConvert(opts.outputPath, opts, [
     '-i', opts.filePath,
     // http://wiki.webmproject.org/ffmpeg
     // https://trac.ffmpeg.org/wiki/Encode/VP9
@@ -117,7 +129,7 @@ export const convertToWebm = opts => {
 
 // Should be similiar to the Gif generation
 export const convertToApng = opts => {
-  return convert(opts.outputPath, opts, [
+  return ffmpegConvert(opts.outputPath, opts, [
     '-i', opts.filePath,
     '-vf', `fps=${opts.fps},scale=${opts.width}:${opts.height}:flags=lanczos[x]`,
     // Strange for APNG instead of -loop it uses -plays see: https://stackoverflow.com/questions/43795518/using-ffmpeg-to-create-looping-apng

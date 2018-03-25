@@ -212,16 +212,24 @@ section.output {
   }
 }
 
-.output-format {
+.output-format,
+.save-option {
   display: flex;
-  margin-right: 16px;
-  margin-left: auto;
   align-items: center;
 
   & > button:not(:first-child),
   & > .c-select:not(:first-child) {
     margin-right: 8px;
   }
+}
+
+.output-format {
+  margin-left: auto;
+}
+
+.save-option {
+  margin-left: 10px;
+  margin-right: 5px;
 }
 
 .fps,
@@ -235,7 +243,8 @@ section.output {
 
 .size > span,
 .fps > span,
-.output-format > span {
+.output-format > span,
+.save-option > span {
   display: flex;
   margin-right: 8px;
   align-items: center;

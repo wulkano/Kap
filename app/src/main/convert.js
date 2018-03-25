@@ -1,7 +1,7 @@
 import path from 'path';
 import {ipcMain} from 'electron';
 import tempy from 'tempy';
-import {convertToGif, convertToMp4, convertToWebm, convertToApng} from '../scripts/convert';
+import {convertToGif, convertToMp4, convertToWebm, convertToApng, trimOriginal} from '../scripts/convert';
 import {exportProgress} from './export';
 
 // `exportOptions` => format filePath width height fps loop, defaultFileName
@@ -13,6 +13,8 @@ export default async exportOptions => {
     convert = convertToGif;
   } else if (format === 'mp4') {
     convert = convertToMp4;
+  } else if (format === 'original') {
+    convert = trimOriginal;
   } else if (format === 'webm') {
     convert = convertToWebm;
   } else if (format === 'apng') {

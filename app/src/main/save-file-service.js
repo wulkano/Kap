@@ -10,6 +10,8 @@ const action = async context => {
     filters = [{name: 'Movies', extensions: ['mp4']}];
   } else if (format === 'webm') {
     filters = [{name: 'Movies', extensions: ['webm']}];
+  } else if (format === 'original') {
+    filters = [{name: 'Movies', extensions: ['mp4']}];
   } else if (format === 'gif') {
     filters = [{name: 'Images', extensions: ['gif']}];
   } else {
@@ -58,6 +60,7 @@ export default {
   formats: [
     'gif',
     'mp4',
+    'original',
     'webm',
     'apng'
   ],
