@@ -55,7 +55,7 @@ class Plugins {
   }
 
   async upgrade() {
-    await this._runNpm('install');
+    await this._runNpm('install --registry=https://registry.npmjs.org');
   }
 
   async install(name) {
@@ -64,7 +64,7 @@ class Plugins {
       pkg.dependencies[name] = 'latest';
     });
 
-    await this._runNpm('install');
+    await this._runNpm('install --registry=https://registry.npmjs.org');
   }
 
   async uninstall(name) {
