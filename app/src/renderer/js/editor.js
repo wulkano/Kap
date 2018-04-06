@@ -33,8 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const trimmerOut = $('#trimmer-out');
   const trimLine = $('.timeline-markers');
 
-  let maxFps = app.kap.settings.get('fps');
-  maxFps = maxFps > 30 ? 30 : maxFps;
+  const maxFps = app.kap.settings.get('record60fps') ? 60 : 30;
   let fps = 15;
 
   let lastValidInputWidth;
