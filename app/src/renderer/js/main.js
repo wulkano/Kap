@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dimensions.width = parseInt(event.target.value, 10);
     app.kap.settings.set('dimensions', dimensions);
 
-    if (dimensions.ratioLocked) {
+    if (dimensions.ratioLocked && !event.detail.ignoreRatioLocked) {
       dimensions.height = Math.round((second / first) * event.target.value);
       app.kap.settings.set('dimensions', dimensions);
       inputHeight.value = dimensions.height;
@@ -302,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dimensions.height = parseInt(event.target.value, 10);
     app.kap.settings.set('dimensions', dimensions);
 
-    if (dimensions.ratioLocked) {
+    if (dimensions.ratioLocked && !event.detail.ignoreRatioLocked) {
       dimensions.width = Math.round((first / second) * event.target.value);
       app.kap.settings.set('dimensions', dimensions);
       inputWidth.value = dimensions.width;
@@ -341,8 +341,8 @@ document.addEventListener('DOMContentLoaded', () => {
   swapBtn.addEventListener('click', () => {
     [inputWidth.value, inputHeight.value] = [inputHeight.value, inputWidth.value];
     dimensions.ratio = dimensions.ratio.reverse();
-    inputWidth.dispatchEvent(new Event('input'));
-    inputHeight.dispatchEvent(new Event('input'));
+    inputWidth.dispatchEvent(new CustomEvent('input', {detail: {ignoreRatioLocked: true}}));
+    inputHeight.dispatchEvent(new CustomEvent('input', {detail: {ignoreRatioLocked: true}}));
     setSelectedRatio(dimensions.width, dimensions.height);
     app.kap.settings.set('dimensions', dimensions);
   });
