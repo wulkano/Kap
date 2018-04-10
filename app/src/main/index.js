@@ -185,11 +185,13 @@ const openCropperWindow = (size = {}, position = {}, options = {}) => {
         const x2 = x + width;
         const y2 = y + height;
 
-        if (x < 0 || y < 0 || x2 > screenWidth || y2 > screenHeight) {
-          x = x < 0 ? 0 : x;
-          x = x2 > screenWidth ? screenWidth - width : x;
-          y = y < 0 ? 0 : y;
-          y = y2 > screenHeight ? screenHeight - height : y;
+        const padding = cropperWindowBuffer / 2;
+
+        if (x < -padding || y < -padding || x2 > screenWidth + padding || y2 > screenHeight + padding) {
+          x = x < -padding ? -padding : x;
+          x = x2 > screenWidth + padding ? screenWidth + padding - width : x;
+          y = y < -padding ? -padding : y;
+          y = y2 > screenHeight + padding ? screenHeight + padding - height : y;
           cropperWindow.setPosition(x, y, true);
         }
       }
