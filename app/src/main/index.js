@@ -135,6 +135,8 @@ const openCropperWindow = (size = {}, position = {}, options = {}) => {
     cropperWindow = new BrowserWindow({
       width: width + cropperWindowBuffer,
       height: height + cropperWindowBuffer,
+      minHeight: 100 + cropperWindowBuffer,
+      minWidth: 100 + cropperWindowBuffer,
       frame: false,
       transparent: true,
       resizable: true,
