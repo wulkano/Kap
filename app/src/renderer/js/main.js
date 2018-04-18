@@ -42,6 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const [micOnIcon, micOffIcon] = toggleAudioRecordBtn.children;
 
   // Initial variables
+  const minWidth = 100;
+  const minHeight = 100;
   const dimensions = app.kap.settings.get('dimensions');
   const {width, height, ratioLocked} = dimensions;
   const dimensionsEmitter = new EventEmitter();
@@ -258,18 +260,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const [first, second] = dimensions.ratio;
 
+    const min = dimensions.ratioLocked ? Math.ceil(minHeight * first / second) : minWidth;
+    const max = dimensions.ratioLocked ? Math.ceil(screen.height * first / second) : screen.width;
+
     event.target.value = validateNumericInput(event.target, {
       lastValidValue: lastValidInputWidth,
       empty: !validate,
-      max: screen.width,
-      min: (validate && dimensions.ratioLocked) ? first : 1,
+      max: Math.min(max, screen.width),
+      min: Math.max(min, minWidth),
       onInvalid: shake
     });
 
     dimensions.width = parseInt(event.target.value, 10);
     app.kap.settings.set('dimensions', dimensions);
+    const ignoreRatioLocked = event.detail && event.detail.ignoreRatioLocked;
 
-    if (dimensions.ratioLocked) {
+    if (dimensions.ratioLocked && !ignoreRatioLocked) {
       dimensions.height = Math.round((second / first) * event.target.value);
       app.kap.settings.set('dimensions', dimensions);
       inputHeight.value = dimensions.height;
@@ -291,18 +297,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const [first, second] = dimensions.ratio;
 
+    const min = dimensions.ratioLocked ? Math.ceil(minWidth * second / first) : minHeight;
+    const max = dimensions.ratioLocked ? Math.ceil(screen.width * second / first) : screen.height;
+
     event.target.value = validateNumericInput(event.target, {
       lastValidValue: lastValidInputHeight,
       empty: !validate,
-      max: screen.height - screen.availTop, // Currently we can't draw over the menubar
-      min: (validate && dimensions.ratioLocked) ? second : 1,
+      max: Math.min(max, screen.height),
+      min: Math.max(min, minHeight),
       onInvalid: shake
     });
 
     dimensions.height = parseInt(event.target.value, 10);
     app.kap.settings.set('dimensions', dimensions);
+    const ignoreRatioLocked = event.detail && event.detail.ignoreRatioLocked;
 
-    if (dimensions.ratioLocked) {
+    if (dimensions.ratioLocked && !ignoreRatioLocked) {
       dimensions.width = Math.round((first / second) * event.target.value);
       app.kap.settings.set('dimensions', dimensions);
       inputWidth.value = dimensions.width;
@@ -341,8 +351,8 @@ document.addEventListener('DOMContentLoaded', () => {
   swapBtn.addEventListener('click', () => {
     [inputWidth.value, inputHeight.value] = [inputHeight.value, inputWidth.value];
     dimensions.ratio = dimensions.ratio.reverse();
-    inputWidth.dispatchEvent(new Event('input'));
-    inputHeight.dispatchEvent(new Event('input'));
+    inputWidth.dispatchEvent(new CustomEvent('input', {detail: {ignoreRatioLocked: true}}));
+    inputHeight.dispatchEvent(new CustomEvent('input', {detail: {ignoreRatioLocked: true}}));
     setSelectedRatio(dimensions.width, dimensions.height);
     app.kap.settings.set('dimensions', dimensions);
   });
