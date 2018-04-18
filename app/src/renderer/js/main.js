@@ -472,6 +472,33 @@ document.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.on('log', (event, msgs) => console.log(...msgs));
 
   initErrorReporter();
+
+  let isDraggingWindow = false;
+
+  document.addEventListener('mousedown', e => {
+    if (e.target.matches('.kap-header') || e.target.matches('.title-bar')) {
+      isDraggingWindow = true;
+
+      ipcRenderer.send('start-move-window', {
+        initialX: e.clientX,
+        initialY: e.clientY
+      });
+    }
+  });
+
+  document.addEventListener('mousemove', () => {
+    if (isDraggingWindow) {
+      ipcRenderer.send('move-window');
+    }
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (isDraggingWindow) {
+      ipcRenderer.send('stop-move-window');
+    }
+
+    isDraggingWindow = false;
+  });
 });
 
 document.addEventListener('dragover', e => e.preventDefault());
