@@ -1,85 +1,58 @@
 {
+  "name": "kap",
+  "productName": "Kap",
+  "version": "3.0.0",
+  "description": "The best way to record your screen",
+  "license": "MIT",
+  "repository": "wulkano/kap",
+  "homepage": "https://getkap.co",
+  "author": {
+    "name": "Wulkano",
+    "email": "hello@wulkano.com",
+    "url": "https://wulkano.com"
+  },
+  "private": true,
+  "main": "main/index.js",
   "scripts": {
-    "test": "xo",
-    "start": "electron app",
-    "build": "npm run test && gulp build",
-    "watch": "gulp dev --continue",
-    "dev": "gulp build && run-p start watch",
+    "start": "electron .",
+    "build": "next build renderer && next export renderer",
     "dist": "npm run build && build",
     "pack": "npm run build && build --dir",
-    "postinstall": "electron-builder install-app-deps",
-    "prepush": "npm run test"
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "bundle": {
+    "name": "Kap"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
-    "babel-preset-stage-3": "^6.24.1",
-    "cssnano": "^3.10.0",
-    "del": "^3.0.0",
-    "devtron": "^1.4.0",
-    "electron": "^1.7.11",
-    "electron-builder": "^20.2.0",
-    "electron-react-devtools": "^0.5.2",
-    "gulp": "^4.0.0",
-    "gulp-babel": "^7.0.0",
-    "gulp-filter": "^5.0.1",
-    "gulp-inject-svg": "^0.1.16",
-    "gulp-postcss": "^7.0.0",
-    "gulp-pug": "^3.3.0",
-    "gulp-stylelint": "^6.0.0",
-    "husky": "^0.14.3",
-    "npm-run-all": "^4.1.2",
-    "postcss-each": "^0.10.0",
-    "postcss-extend": "^1.0.5",
-    "postcss-import": "^11.0.0",
-    "postcss-nested": "^3.0.0",
-    "postcss-reporter": "^5.0.0",
-    "postcss-simple-vars": "^4.1.0",
-    "stylelint": "^9.1.1",
-    "stylelint-config-xo-space": "^0.6.0",
-    "xo": "^0.20.3"
+    "bundle": "^2.0.1",
+    "electron": "^1.7.10",
+    "electron-builder": "^20.8.1",
+    "next": "^4.2.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
   },
-  "xo": {
-    "space": 2,
-    "envs": [
-      "node",
-      "browser"
-    ],
-    "rules": {
-      "import/no-extraneous-dependencies": 0,
-      "import/named": 0,
-      "import/default": 0
-    },
-    "ignores": [
-      "app/dist/**"
-    ]
-  },
-  "stylelint": {
-    "extends": "stylelint-config-xo-space",
-    "rules": {
-      "at-rule-no-unknown": [
-        true,
-        {
-          "ignoreAtRules": [
-            "extend",
-            "each"
-          ]
-        }
-      ],
-      "no-descending-specificity": null,
-      "declaration-no-important": null,
-      "property-no-vendor-prefix": null,
-      "declaration-property-value-blacklist": null,
-      "selector-class-pattern": null
-    }
+  "dependencies": {
+    "aperture": "^4.0.0",
+    "app-root-path": "^2.0.1",
+    "classnames": "^2.2.5",
+    "electron-is-dev": "^0.3.0",
+    "electron-next": "^3.1.3",
+    "electron-settings": "^2.2.1",
+    "hide-desktop-icons": "^0.3.0",
+    "mac-windows": "^0.7.1",
+    "nearest-normal-aspect-ratio": "^1.1.0",
+    "next-compose-plugins": "^1.0.3",
+    "next-optimized-images": "^1.3.0",
+    "object-path": "^0.11.3",
+    "prop-types": "^15.6.1",
+    "unstated": "^1.2.0"
   },
   "build": {
     "appId": "com.wulkano.kap",
     "files": [
       "**/*",
-      "dist",
-      "!src"
+      "!renderer",
+      "renderer/out"
     ],
     "mac": {
       "category": "public.app-category.productivity",
@@ -100,19 +73,5 @@
         }
       ]
     }
-  },
-  "babel": {
-    "presets": [
-      "stage-3"
-    ],
-    "plugins": [
-      "transform-es2015-modules-commonjs",
-      [
-        "transform-class-properties",
-        {
-          "spec": true
-        }
-      ]
-    ]
   }
 }

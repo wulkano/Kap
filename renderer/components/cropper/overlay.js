@@ -1,0 +1,108 @@
+// Packages
+import React from 'react';
+import electron from 'electron';
+import classNames from 'classnames';
+
+// Containers
+import {
+  connect,
+  CursorContainer,
+  CropperContainer,
+  ActionBarContainer
+} from '../../containers';
+
+// Utilities
+import {getResizingCursor} from './handles';
+
+class Overlay extends React.Component {
+  remote = electron.remote || false
+
+  render() {
+    if(!this.remote) return null;
+
+    const {width: screenWidth, height: screenHeight} = this.remote.getGlobal('screen');
+
+    const {
+      onMouseUp, setCursor, startPicking, x, y, width, height, moving, resizing, currentHandle
+    } = this.props;
+
+    const className = classNames('overlay', {picking: !resizing && !moving});
+
+    return (
+      <div
+        className='content'
+        id='container'
+        onMouseMove={setCursor}
+        onMouseUp={onMouseUp}>
+        <div id='top' className={className} onMouseDown={startPicking}/>
+        <div id='middle'>
+          <div id='left' className={className} onMouseDown={startPicking}/>
+            <div id='center'>
+              { this.props.children }
+            </div>
+          <div id='right' className={className} onMouseDown={startPicking}/>
+        </div>
+        <div id='bottom' className={className} onMouseDown={startPicking}/>
+        <style jsx>{`
+          .overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+          }
+
+          .overlay.picking {
+            cursor: crosshair;
+          }
+
+          #middle {
+            display: flex;
+            flex: 1;
+          }
+
+          #center {
+            flex: 1;
+            position: relative;
+            display: flex;
+          }
+
+          #left {
+            width: ${x}px;
+          }
+
+          #top {
+            height: ${y}px;
+          }
+
+          #right {
+            width: ${screenWidth-width-x}px;
+          }
+
+          #bottom {
+            height: ${screenHeight-height-y}px;
+          }
+
+          #container {
+            flex-direction: column;
+            ${moving ? 'cursor: move;' : ''}
+            ${resizing ? getResizingCursor(currentHandle) : ''}
+          }
+        `}</style>
+      </div>
+    );
+  }
+}
+
+export default connect(
+  [CropperContainer, ActionBarContainer, CursorContainer],
+  ({x, y, width, height, moving, resizing, currentHandle}, actionBar) => ({
+    x, y, width, height, resizing, currentHandle, moving: moving || actionBar.moving
+  }),
+  ({stopMoving, stopResizing, stopPicking, startPicking}, actionBar, {setCursor}) => ({
+    onMouseUp: () => {
+      stopMoving();
+      stopResizing();
+      stopPicking();
+      actionBar.stopMoving();
+    },
+    setCursor,
+    startPicking,
+  })
+)(Overlay);

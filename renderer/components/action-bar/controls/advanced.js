@@ -1,0 +1,131 @@
+// Packages
+import React from 'react';
+import css from 'styled-jsx/css'
+
+// Vectors
+import {
+  SwapIcon,
+  BackIcon,
+  LinkIcon,
+  DropdownArrowIcon
+} from '../../../vectors';
+
+// Containers
+import {connect, ActionBarContainer, CropperContainer} from '../../../containers';
+
+const AdvancedControls = {};
+
+class Left extends React.Component {
+  render() {
+    const {toggleAdvanced, toggleRatioLock, ratioLocked, ratio = []} = this.props;
+
+    return (
+      <div className='advanced'>
+        <BackIcon onClick={toggleAdvanced}/>
+        <div className='select'>
+          <span>{ratio[0]}:{ratio[1]}</span>
+          <DropdownArrowIcon size={15}/>
+        </div>
+        <LinkIcon active={ratioLocked} onClick={() => toggleRatioLock()}/>
+        <style jsx>{`
+          .advanced {
+            heigth: 50px;
+            display: flex;
+            flex: 1;
+            align-items: center;
+            justify-content: space-between;
+          }
+
+          .select {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            height: 1.1rem;
+            transition: border 0.12s ease-in-out;
+            display: flex;
+            align-items: center;
+            padding: 0 5px;
+          }
+
+          .select span {
+            flex: 1;
+            text-align: right;
+            padding-right: 5px;
+          }
+
+          .select:hover {
+            border-color: #ccc;
+          }
+        `}</style>
+      </div>
+    );
+  }
+}
+
+AdvancedControls.Left = connect(
+  [ActionBarContainer, CropperContainer],
+  ({ratioLocked}, {ratio}) => ({ratio, ratioLocked}),
+  ({toggleAdvanced, toggleRatioLock}) => ({toggleAdvanced, toggleRatioLock})
+)(Left);
+
+class Right extends React.Component {
+  render() {
+    const {width, height} = this.props;
+
+    return (
+      <div className='advanced'>
+        <div className='dimensions'>
+          <input type='text' size='5' maxLength='5' value={width}/>
+          <input type='text' size='5' maxLength='5' value={height}/>
+        </div>
+        <SwapIcon/>
+        <style jsx>{`
+          .advanced {
+            heigth: 50px;
+            display: flex;
+            flex: 1;
+            align-items: center;
+            justify-content: space-between;
+          }
+
+          .dimensions {
+            display: flex;
+          }
+
+          input {
+            height: 1rem;
+            border: 1px solid #ddd;
+            background: white;
+            text-align: center;
+            font-size: 0.7rem;
+            transition: border 0.12s ease-in-out;
+          }
+
+          input:hover:not(:focus) {
+            border-color: #ccc;
+          }
+
+          input:first-child {
+            border-radius: 4px 0 0 4px;
+          }
+
+          input:last-child {
+            border-radius: 0 4px 4px 0;
+          }
+
+          input:focus {
+            outline: none;
+            border: 1px solid #007aff;
+          }
+        `}</style>
+      </div>
+    );
+  }
+}
+
+AdvancedControls.Right = connect(
+  [CropperContainer],
+  ({width, height}) => ({width, height})
+)(Right);
+
+export default AdvancedControls;
