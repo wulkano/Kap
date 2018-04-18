@@ -14,7 +14,7 @@
   "private": true,
   "main": "main/index.js",
   "scripts": {
-    "test": "echo \"Coming Soon\"",
+    "test": "xo",
     "start": "electron .",
     "build": "next build renderer && next export renderer",
     "dist": "npm run build && build",
@@ -25,12 +25,16 @@
     "name": "Kap"
   },
   "devDependencies": {
+    "babel-eslint": "^8.2.3",
     "bundle": "^2.0.1",
     "electron": "^1.7.10",
     "electron-builder": "^20.8.1",
+    "eslint-config-xo-react": "^0.16.0",
+    "eslint-plugin-react": "^7.7.0",
     "next": "^4.2.1",
     "react": "^16.2.0",
-    "react-dom": "^16.2.0"
+    "react-dom": "^16.2.0",
+    "xo": "^0.20.3"
   },
   "dependencies": {
     "aperture": "^4.0.0",
@@ -47,6 +51,29 @@
     "object-path": "^0.11.3",
     "prop-types": "^15.6.1",
     "unstated": "^1.2.0"
+  },
+  "xo": {
+    "parser": "babel-eslint",
+    "extends": "xo-react",
+    "space": 2,
+    "envs": [
+      "node",
+      "browser"
+    ],
+    "rules": {
+      "import/no-extraneous-dependencies": 0,
+      "import/named": 0,
+      "import/default": 0,
+      "no-use-before-define": 0,
+      "react/jsx-no-bind": 0,
+      "react/jsx-closing-tag-location": 0,
+      "react/require-default-props": 0
+    },
+    "ignores": [
+      "dist",
+      "renderer/.next",
+      "renderer/out"
+    ]
   },
   "build": {
     "appId": "com.wulkano.kap",

@@ -1,13 +1,14 @@
 // Packages
+import PropTypes from 'prop-types';
 import React from 'react';
-
-// Components
-import Handles from './handles';
-import Cursor from './cursor';
-import ActionBar from '../action-bar';
 
 // Containers
 import {connect, CropperContainer} from '../../containers';
+
+// Components
+import ActionBar from '../action-bar';
+import Handles from './handles';
+import Cursor from './cursor';
 
 class Cropper extends React.Component {
   render() {
@@ -16,7 +17,7 @@ class Cropper extends React.Component {
     return (
       <Handles>
         <div
-          className='cropper'
+          className="cropper"
           onMouseDown={startMoving}/>
         <ActionBar/>
         { resizing && <Cursor width={width} height={height}/> }
@@ -30,6 +31,13 @@ class Cropper extends React.Component {
     );
   }
 }
+
+Cropper.propTypes = {
+  startMoving: PropTypes.func.isRequired,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  resizing: PropTypes.bool
+};
 
 export default connect(
   [CropperContainer],

@@ -1,13 +1,12 @@
 // Native
-const { format } = require('url');
+const {format} = require('url');
 
 // Packages
-const { BrowserWindow } = require('electron');
+const {BrowserWindow} = require('electron');
 const isDev = require('electron-is-dev');
-const { resolve } = require('app-root-path');
+const {resolve} = require('app-root-path');
 
-
-const devPath = 'http://localhost:8000/preferences'
+const devPath = 'http://localhost:8000/preferences';
 
 const prodPath = format({
   pathname: resolve('renderer/out/preferences/index.html'),
@@ -15,7 +14,7 @@ const prodPath = format({
   slashes: true
 });
 
-const url = isDev ? devPath : prodPath
+const url = isDev ? devPath : prodPath;
 
 let prefsWindow = null;
 

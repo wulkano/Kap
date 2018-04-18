@@ -1,11 +1,14 @@
+// Packages
 import React from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
 class Svg extends React.Component {
-  onClick = e => {
+  onClick = () => {
     const {onClick} = this.props;
-    if(onClick) onClick();
+    if (onClick) {
+      onClick();
+    }
   }
 
   stopPropagation = e => {
@@ -23,7 +26,8 @@ class Svg extends React.Component {
         viewBox={viewBox}
         className={className}
         onClick={onClick}
-        onMouseDown={this.stopPropagation}>
+        onMouseDown={this.stopPropagation}
+      >
         { children }
         <style jsx>{`
             svg {
@@ -51,7 +55,8 @@ Svg.propTypes = {
   activeFill: PropTypes.string,
   active: PropTypes.bool,
   children: PropTypes.any,
-  viewBox: PropTypes.string
+  viewBox: PropTypes.string,
+  onClick: PropTypes.func
 };
 
 Svg.defaultProps = {

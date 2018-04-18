@@ -16,7 +16,7 @@ const initializeTray = () => {
   tray.on('drop-files', (event, files) => console.log(files));
 
   return tray;
-}
+};
 
 ipcMain.on('start-recording', () => {
   animateIcon();

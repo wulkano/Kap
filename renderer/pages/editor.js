@@ -1,7 +1,4 @@
-import Head from 'next/head';
-import React from 'react'
-import {ipcRenderer} from 'electron';
-
+import React from 'react';
 
 export default class extends React.Component {
   render() {
@@ -9,6 +6,6 @@ export default class extends React.Component {
       <div>
         <span>This is the editor</span>
       </div>
-    )
+    );
   }
 }

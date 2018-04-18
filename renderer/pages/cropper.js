@@ -1,6 +1,6 @@
 // Packages
-import React from 'react'
 import electron from 'electron';
+import React from 'react';
 import {Provider} from 'unstated';
 
 // Components
@@ -34,7 +34,7 @@ export default class extends React.Component {
     document.removeEventListener('keyup', this.handleKeyEvent);
   }
 
-  handleKeyEvent = (event) => {
+  handleKeyEvent = event => {
     switch (event.keyCode) {
       case 27:
         this.remote.getCurrentWindow().close();
@@ -49,10 +49,10 @@ export default class extends React.Component {
 
   render() {
     return (
-      <div className='cover-screen'>
+      <div className="cover-screen">
         <Provider inject={[cursorContainer, cropperContainer, actionBarContainer]}>
           <Overlay>
-            <Cropper />
+            <Cropper/>
           </Overlay>
         </Provider>
         <style jsx global>{`
@@ -73,6 +73,6 @@ export default class extends React.Component {
           }
         `}</style>
       </div>
-    )
+    );
   }
 }

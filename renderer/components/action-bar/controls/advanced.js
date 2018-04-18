@@ -1,6 +1,6 @@
 // Packages
+import PropTypes from 'prop-types';
 import React from 'react';
-import css from 'styled-jsx/css'
 
 // Vectors
 import {
@@ -13,6 +13,16 @@ import {
 // Containers
 import {connect, ActionBarContainer, CropperContainer} from '../../../containers';
 
+const advancedStyles = `
+  .advanced {
+    heigth: 50px;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: space-between;
+  }
+`;
+
 const AdvancedControls = {};
 
 class Left extends React.Component {
@@ -20,21 +30,15 @@ class Left extends React.Component {
     const {toggleAdvanced, toggleRatioLock, ratioLocked, ratio = []} = this.props;
 
     return (
-      <div className='advanced'>
+      <div className="advanced">
         <BackIcon onClick={toggleAdvanced}/>
-        <div className='select'>
+        <div className="select">
           <span>{ratio[0]}:{ratio[1]}</span>
           <DropdownArrowIcon size={15}/>
         </div>
         <LinkIcon active={ratioLocked} onClick={() => toggleRatioLock()}/>
         <style jsx>{`
-          .advanced {
-            heigth: 50px;
-            display: flex;
-            flex: 1;
-            align-items: center;
-            justify-content: space-between;
-          }
+          ${advancedStyles}
 
           .select {
             border: 1px solid #ddd;
@@ -62,6 +66,13 @@ class Left extends React.Component {
   }
 }
 
+Left.propTypes = {
+  toggleAdvanced: PropTypes.func.isRequired,
+  toggleRatioLock: PropTypes.func.isRequired,
+  ratioLocked: PropTypes.bool,
+  ratio: PropTypes.array
+};
+
 AdvancedControls.Left = connect(
   [ActionBarContainer, CropperContainer],
   ({ratioLocked}, {ratio}) => ({ratio, ratioLocked}),
@@ -73,20 +84,14 @@ class Right extends React.Component {
     const {width, height} = this.props;
 
     return (
-      <div className='advanced'>
-        <div className='dimensions'>
-          <input type='text' size='5' maxLength='5' value={width}/>
-          <input type='text' size='5' maxLength='5' value={height}/>
+      <div className="advanced">
+        <div className="dimensions">
+          <input type="text" size="5" maxLength="5" value={width}/>
+          <input type="text" size="5" maxLength="5" value={height}/>
         </div>
         <SwapIcon/>
         <style jsx>{`
-          .advanced {
-            heigth: 50px;
-            display: flex;
-            flex: 1;
-            align-items: center;
-            justify-content: space-between;
-          }
+          ${advancedStyles}
 
           .dimensions {
             display: flex;
@@ -122,6 +127,11 @@ class Right extends React.Component {
     );
   }
 }
+
+Right.propTypes = {
+  width: PropTypes.number,
+  height: PropTypes.number
+};
 
 AdvancedControls.Right = connect(
   [CropperContainer],

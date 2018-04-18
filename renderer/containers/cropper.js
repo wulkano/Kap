@@ -1,9 +1,9 @@
 // Packages
-import {Container} from 'unstated';
 import electron from 'electron';
 import nearestNormalAspectRatio from 'nearest-normal-aspect-ratio';
+import {Container} from 'unstated';
 
-const {width: screenWidth, height: screenHeight} = electron.screen && electron.screen.getPrimaryDisplay().bounds || {};
+const {width: screenWidth, height: screenHeight} = (electron.screen && electron.screen.getPrimaryDisplay().bounds) || {};
 
 // Helper function for retrieving the simplest ratio,
 // via the largest common divisor of two numbers (thanks @doot0)
@@ -60,12 +60,13 @@ class CropperContainer extends Container {
       width: screenWidth,
       height: screenHeight,
       showHandles: false,
-      original: {x, y, width ,height}
+      original: {x, y, width, height}
     });
   }
 
   exitFullscreen = () => {
-    this.setState({fullscreen: false, showHandles: true, ...this.state.original});
+    const {original} = this.state;
+    this.setState({fullscreen: false, showHandles: true, ...original});
   }
 
   bindCursor = cursorContainer => {
@@ -76,9 +77,9 @@ class CropperContainer extends Container {
     this.actionBarContainer = actionBarContainer;
   }
 
-  startPicking = ({pageX, pageY}) => {
+  startPicking = () => {
     this.setState({picking: true});
-    this.cursorContainer.addCursorObserver(this.pick)
+    this.cursorContainer.addCursorObserver(this.pick);
   }
 
   pick = ({pageX, pageY}) => {
@@ -107,7 +108,7 @@ class CropperContainer extends Container {
     this.setState({original: {x, y, width, height}});
   }
 
-  startResizing = (currentHandle) => {
+  startResizing = currentHandle => {
     if (!this.state.fullscreen) {
       this.setOriginal();
       this.setState({currentHandle, resizing: true});
@@ -144,11 +145,11 @@ class CropperContainer extends Container {
       offsetX: pageX
     };
 
-    if(y + pageY - offsetY + height <= screenHeight && y + pageY - offsetY >= 0) {
+    if (y + pageY - offsetY + height <= screenHeight && y + pageY - offsetY >= 0) {
       updates.y = y + pageY - offsetY;
     }
 
-    if(x + pageX - offsetX + width <= screenWidth  && x + pageX - offsetX >= 0) {
+    if (x + pageX - offsetX + width <= screenWidth && x + pageX - offsetX >= 0) {
       updates.x = x + pageX - offsetX;
     }
 
@@ -161,38 +162,37 @@ class CropperContainer extends Container {
 
     const updates = {};
 
-    if(top) {
+    if (top) {
       updates.y = pageY;
       updates.height = height + y - pageY;
 
-      if(updates.height < 1) {
+      if (updates.height < 1) {
         updates.currentHandle = {top: false, bottom: true, left, right};
       }
     } else if (bottom) {
       updates.height = pageY - y;
 
-      if(updates.height < 1) {
+      if (updates.height < 1) {
         updates.currentHandle = {bottom: false, top: true, left, right};
       }
     }
 
-    if(left) {
+    if (left) {
       updates.x = pageX;
       updates.width = width + x - pageX;
 
-      if(updates.width < 1) {
+      if (updates.width < 1) {
         updates.currentHandle = {left: false, right: true, top, bottom};
       }
-    } else if(right) {
+    } else if (right) {
       updates.width = pageX - x;
 
-      if(updates.width < 1) {
+      if (updates.width < 1) {
         updates.currentHandle = {right: false, left: true, top, bottom};
       }
     }
 
     if (this.actionBarContainer.state.ratioLocked) {
-
       // Check which dimension has changed the most
       if (
         (updates.width - original.width) * ratio[1] > (updates.height - original.height) * ratio[0]

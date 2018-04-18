@@ -1,14 +1,14 @@
-const {app, Menu, shell, ipcMain, Notification} = require('electron');
+const {Menu} = require('electron');
 
 const {openPrefsWindow} = require('./preferences');
 
-// const {checkForUpdates} = require('./auto-updater');
+// Const {checkForUpdates} = require('./auto-updater');
 
 const checkForUpdatesItem = {
   label: 'Check for Updates…',
   click(item) {
     item.enabled = false;
-    // checkForUpdates(() => {
+    // CheckForUpdates(() => {
     //   // This will be called if no update is available
     //   (new Notification({
     //     title: 'No updates available!',

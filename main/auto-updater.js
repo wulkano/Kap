@@ -1,4 +1,4 @@
-// import {app, autoUpdater, Notification} from 'electron';
+// Import {app, autoUpdater, Notification} from 'electron';
 // import isDev from 'electron-is-dev';
 // import ms from 'ms';
 // import {log} from '../common/logger';

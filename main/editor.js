@@ -1,13 +1,12 @@
 // Native
-const { format } = require('url');
+const {format} = require('url');
 
 // Packages
-const { BrowserWindow } = require('electron');
+const {BrowserWindow} = require('electron');
 const isDev = require('electron-is-dev');
-const { resolve } = require('app-root-path');
+const {resolve} = require('app-root-path');
 
-
-const devPath = 'http://localhost:8000/editor'
+const devPath = 'http://localhost:8000/editor';
 
 const prodPath = format({
   pathname: resolve('renderer/out/editor/index.html'),
@@ -15,7 +14,7 @@ const prodPath = format({
   slashes: true
 });
 
-const url = isDev ? devPath : prodPath
+const url = isDev ? devPath : prodPath;
 
 let editor = null;
 
@@ -26,7 +25,7 @@ const openEditorWindow = () => {
       height: 200
     });
 
-    editor.loadURL(url)
+    editor.loadURL(url);
     editor.on('closed', () => {
       editor = null;
     });

@@ -1,7 +1,8 @@
 // Packages
-import React from 'react';
 import electron from 'electron';
 import classNames from 'classnames';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 // Containers
 import {
@@ -18,7 +19,9 @@ class Overlay extends React.Component {
   remote = electron.remote || false
 
   render() {
-    if(!this.remote) return null;
+    if (!this.remote) {
+      return null;
+    }
 
     const {width: screenWidth, height: screenHeight} = this.remote.getGlobal('screen');
 
@@ -30,19 +33,20 @@ class Overlay extends React.Component {
 
     return (
       <div
-        className='content'
-        id='container'
+        className="content"
+        id="container"
         onMouseMove={setCursor}
-        onMouseUp={onMouseUp}>
-        <div id='top' className={className} onMouseDown={startPicking}/>
-        <div id='middle'>
-          <div id='left' className={className} onMouseDown={startPicking}/>
-            <div id='center'>
-              { this.props.children }
-            </div>
-          <div id='right' className={className} onMouseDown={startPicking}/>
+        onMouseUp={onMouseUp}
+      >
+        <div id="top" className={className} onMouseDown={startPicking}/>
+        <div id="middle">
+          <div id="left" className={className} onMouseDown={startPicking}/>
+          <div id="center">
+            { this.props.children }
+          </div>
+          <div id="right" className={className} onMouseDown={startPicking}/>
         </div>
-        <div id='bottom' className={className} onMouseDown={startPicking}/>
+        <div id="bottom" className={className} onMouseDown={startPicking}/>
         <style jsx>{`
           .overlay {
             background-color: rgba(0, 0, 0, 0.5);
@@ -72,11 +76,11 @@ class Overlay extends React.Component {
           }
 
           #right {
-            width: ${screenWidth-width-x}px;
+            width: ${screenWidth - width - x}px;
           }
 
           #bottom {
-            height: ${screenHeight-height-y}px;
+            height: ${screenHeight - height - y}px;
           }
 
           #container {
@@ -89,6 +93,23 @@ class Overlay extends React.Component {
     );
   }
 }
+
+Overlay.propTypes = {
+  onMouseUp: PropTypes.func.isRequired,
+  setCursor: PropTypes.func.isRequired,
+  startPicking: PropTypes.func.isRequired,
+  x: PropTypes.number,
+  y: PropTypes.number,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  moving: PropTypes.bool,
+  resizing: PropTypes.bool,
+  currentHandle: PropTypes.object,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ]).isRequired
+};
 
 export default connect(
   [CropperContainer, ActionBarContainer, CursorContainer],
@@ -103,6 +124,6 @@ export default connect(
       actionBar.stopMoving();
     },
     setCursor,
-    startPicking,
+    startPicking
   })
 )(Overlay);

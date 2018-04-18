@@ -1,4 +1,5 @@
 // Packages
+import React from 'react';
 import {Subscribe} from 'unstated';
 
 // Containers
@@ -14,12 +15,11 @@ export const connect = (containers, mapStateToProps, mapActionsToProps) => Compo
         const actionProps = mapActionsToProps ? mapActionsToProps(...containers) : {};
         const componentProps = {...props, ...stateProps, ...actionProps};
 
-        return <Component {...componentProps} />
+        return <Component {...componentProps}/>;
       }
     }
   </Subscribe>
 );
-
 
 export {
   CropperContainer,

@@ -1,4 +1,7 @@
+// Packages
 import React from 'react';
+
+// Components
 import Svg from './svg';
 
 const SwapIcon = props => {
@@ -6,7 +9,7 @@ const SwapIcon = props => {
 
   return (
     <Svg {...svgProps}>
-      <path d="M21,9L17,5V8H10V10H17V13M7,11L3,15L7,19V16H14V14H7V11Z" />
+      <path d="M21,9L17,5V8H10V10H17V13M7,11L3,15L7,19V16H14V14H7V11Z"/>
     </Svg>
   );
 };

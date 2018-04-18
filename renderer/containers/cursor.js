@@ -3,7 +3,7 @@ import {Container} from 'unstated';
 
 class CursorContainer extends Container {
   state = {
-    observers: [],
+    observers: []
   };
 
   setCursor = ({pageX, pageY}) => {
@@ -11,12 +11,14 @@ class CursorContainer extends Container {
     this.state.observers.forEach(observer => observer({pageX, pageY}));
   }
 
-  addCursorObserver = (observer) => {
-    this.setState({observers: [observer, ...this.state.observers]});
+  addCursorObserver = observer => {
+    const {observers} = this.state;
+    this.setState({observers: [observer, ...observers]});
   }
 
-  removeCursorObserver = (observer) => {
-    this.setState({observers: this.state.observers.filter(o => o != observer)});
+  removeCursorObserver = observer => {
+    const {observers} = this.state;
+    this.setState({observers: observers.filter(o => o !== observer)});
   }
 }
 

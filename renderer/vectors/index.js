@@ -1,3 +1,4 @@
+// Components
 import ApplicationsIcon from './applications';
 import BackIcon from './back';
 import CropIcon from './crop';

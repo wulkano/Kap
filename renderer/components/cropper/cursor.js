@@ -1,20 +1,26 @@
+// Packages
+import electron from 'electron';
+import PropTypes from 'prop-types';
 import React from 'react';
 import classNames from 'classnames';
-import electron from 'electron';
+
+// Containers
 import {connect, CursorContainer} from '../../containers';
 
 class Cursor extends React.Component {
   remote = electron.remote || false
 
   render() {
-    if(!this.remote) return null;
+    if (!this.remote) {
+      return null;
+    }
 
     const {width: screenWidth, height: screenHeight} = this.remote.getGlobal('screen');
     const {cursorY, cursorX, width, height} = this.props;
 
     const className = classNames('dimensions', {
-      'flipY': screenHeight - cursorY < 35,
-      'flipX': screenWidth - cursorX < 40
+      flipY: screenHeight - cursorY < 35,
+      flipX: screenWidth - cursorX < 40
     });
 
     return (
@@ -48,6 +54,13 @@ class Cursor extends React.Component {
     );
   }
 }
+
+Cursor.propTypes = {
+  cursorX: PropTypes.number,
+  cursorY: PropTypes.number,
+  width: PropTypes.number,
+  height: PropTypes.number
+};
 
 export default connect(
   [CursorContainer],

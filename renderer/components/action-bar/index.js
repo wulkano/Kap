@@ -1,23 +1,17 @@
 // Packages
-import React from 'react';
 import classNames from 'classnames';
-import electron from 'electron';
+import PropTypes from 'prop-types';
+import React from 'react';
+
+// Containers
+import {connect, CropperContainer, ActionBarContainer} from '../../containers';
 
 // Components
 import MainControls from './controls/main';
 import AdvancedControls from './controls/advanced';
 
-// Contaienrs
-import {connect, CropperContainer, ActionBarContainer} from '../../containers';
-
 class ActionBar extends React.Component {
-  remote = electron.remote || false
-
   render() {
-    if(!this.remote) return null;
-
-    const {width: screenWidth, height: screenHeight} = this.remote.getGlobal('screen');
-
     const {startMoving, x, y, width, height, moved, hidden, advanced, moving, startRecording, recording} = this.props;
 
     const className = classNames('action-bar', {moving, hidden, advanced, moved, recording});
@@ -25,15 +19,16 @@ class ActionBar extends React.Component {
     return (
       <div
         className={className}
-        onMouseDown={startMoving}>
-        <div className='actions'>
-          <MainControls.Left />
-          <AdvancedControls.Left />
+        onMouseDown={startMoving}
+      >
+        <div className="actions">
+          <MainControls.Left/>
+          <AdvancedControls.Left/>
         </div>
-        <div className='record' onClick={startRecording}/>
-        <div className='actions'>
-          <MainControls.Right />
-          <AdvancedControls.Right />
+        <div className="record" onClick={startRecording}/>
+        <div className="actions">
+          <MainControls.Right/>
+          <AdvancedControls.Right/>
         </div>
 
         <style jsx>{`
@@ -100,6 +95,20 @@ class ActionBar extends React.Component {
     );
   }
 }
+
+ActionBar.propTypes = {
+  startMoving: PropTypes.func.isRequired,
+  startRecording: PropTypes.func.isRequired,
+  x: PropTypes.number,
+  y: PropTypes.number,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  moved: PropTypes.bool,
+  hidden: PropTypes.bool,
+  advanced: PropTypes.bool,
+  moving: PropTypes.bool,
+  recording: PropTypes.bool
+};
 
 export default connect(
   [ActionBarContainer, CropperContainer],

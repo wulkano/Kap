@@ -1,7 +1,8 @@
 // Packages
-import React from 'react';
-import css from 'styled-jsx/css'
 import electron from 'electron';
+import PropTypes from 'prop-types';
+import React from 'react';
+import css from 'styled-jsx/css';
 
 // Vectors
 import {
@@ -32,7 +33,7 @@ class Left extends React.Component {
     const {toggleAdvanced, toggleRatioLock, ratioLocked} = this.props;
 
     return (
-      <div className='main'>
+      <div className="main">
         <CropIcon onClick={toggleAdvanced}/>
         <LinkIcon active={ratioLocked} onClick={() => toggleRatioLock()}/>
         <style jsx>{mainStyle}</style>
@@ -41,12 +42,17 @@ class Left extends React.Component {
   }
 }
 
+Left.propTypes = {
+  toggleAdvanced: PropTypes.func.isRequired,
+  toggleRatioLock: PropTypes.func.isRequired,
+  ratioLocked: PropTypes.bool
+};
+
 MainControls.Left = connect(
   [ActionBarContainer],
   ({ratioLocked}) => ({ratioLocked}),
   ({toggleAdvanced, toggleRatioLock}) => ({toggleAdvanced, toggleRatioLock})
 )(Left);
-
 
 let menu;
 
@@ -55,15 +61,12 @@ const buildMenu = async () => {
     const {Menu, MenuItem} = electron.remote;
     const {getWindows} = electron.remote.require('mac-windows');
     const windows = await getWindows();
-    getWindows().then(a => console.log('GOT ',a));
 
     menu = new Menu();
-    console.log(windows);
 
     windows.forEach(win => {
       menu.append(new MenuItem({
         label: win.ownerName,
-        // icon: icon ? icon.resize({width: 16, height: 16}) : null,
         type: 'radio',
         checked: false,
         click: () => {
@@ -72,7 +75,7 @@ const buildMenu = async () => {
       }));
     });
   }
-}
+};
 
 class Right extends React.Component {
   componentDidMount() {
@@ -83,7 +86,7 @@ class Right extends React.Component {
     const {enterFullscreen, exitFullscreen, fullscreen} = this.props;
 
     return (
-      <div className='main'>
+      <div className="main">
         <ApplicationsIcon onClick={() => menu.popup()}/>
         { !fullscreen && <FullscreenIcon onClick={enterFullscreen}/> }
         { fullscreen && <ExitFullscreenIcon onClick={exitFullscreen}/> }
@@ -92,6 +95,12 @@ class Right extends React.Component {
     );
   }
 }
+
+Right.propTypes = {
+  enterFullscreen: PropTypes.func.isRequired,
+  exitFullscreen: PropTypes.func.isRequired,
+  fullscreen: PropTypes.bool
+};
 
 MainControls.Right = connect(
   [CropperContainer],
