@@ -19,7 +19,9 @@
     "build": "next build renderer && next export renderer",
     "dist": "npm run build && build",
     "pack": "npm run build && build --dir",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "electron-builder install-app-deps",
+    "prepush": "npm run test",
+    "precommit": "npm run test"
   },
   "bundle": {
     "name": "Kap"
@@ -44,6 +46,7 @@
     "electron-next": "^3.1.3",
     "electron-settings": "^2.2.1",
     "hide-desktop-icons": "^0.3.0",
+    "husky": "^0.14.3",
     "mac-windows": "^0.7.1",
     "nearest-normal-aspect-ratio": "^1.1.0",
     "next-compose-plugins": "^1.0.3",
@@ -67,7 +70,8 @@
       "no-use-before-define": 0,
       "react/jsx-no-bind": 0,
       "react/jsx-closing-tag-location": 0,
-      "react/require-default-props": 0
+      "react/require-default-props": 0,
+      "capitalized-comments": 0
     },
     "ignores": [
       "dist",

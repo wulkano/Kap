@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import {connect, CropperContainer, ActionBarContainer} from '../../containers';
 
 class Handle extends React.Component {
-  defaultProps = {
+  static defaultProps = {
     size: 8,
     top: false,
     bottom: false,
@@ -86,7 +86,7 @@ Handle.propTypes = {
 /* eslint-disable react/no-array-index-key */
 
 class Handles extends React.Component {
-  defaultProps = {
+  static defaultProps = {
     ratioLocked: false
   }
 

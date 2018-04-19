@@ -171,6 +171,7 @@ class CropperContainer extends Container {
       }
     } else if (bottom) {
       updates.height = pageY - y;
+      updates.y = y;
 
       if (updates.height < 1) {
         updates.currentHandle = {bottom: false, top: true, left, right};
@@ -186,6 +187,7 @@ class CropperContainer extends Container {
       }
     } else if (right) {
       updates.width = pageX - x;
+      updates.x = x;
 
       if (updates.width < 1) {
         updates.currentHandle = {right: false, left: true, top, bottom};
@@ -197,18 +199,62 @@ class CropperContainer extends Container {
       if (
         (updates.width - original.width) * ratio[1] > (updates.height - original.height) * ratio[0]
       ) {
-        const lockedHeight = Math.ceil(updates.width * ratio[1] / ratio[0]);
+        let lockedHeight = Math.ceil(updates.width * ratio[1] / ratio[0]);
 
         if (top) {
           updates.y += updates.height - lockedHeight;
+
+          if (updates.y < 0) {
+            lockedHeight += updates.y;
+            const lockedWidth = Math.ceil(lockedHeight * ratio[0] / ratio[1]);
+
+            updates.y = 0;
+
+            if (left) {
+              updates.x += updates.width - lockedWidth;
+            }
+
+            updates.width = lockedWidth;
+          }
+        } else if (updates.y + lockedHeight > screenHeight) {
+          lockedHeight = screenHeight - updates.y;
+          const lockedWidth = Math.ceil(lockedHeight * ratio[0] / ratio[1]);
+
+          if (left) {
+            updates.x += updates.width - lockedWidth;
+          }
+
+          updates.width = lockedWidth;
         }
 
         updates.height = lockedHeight;
       } else {
-        const lockedWidth = Math.ceil(updates.height * ratio[0] / ratio[1]);
+        let lockedWidth = Math.ceil(updates.height * ratio[0] / ratio[1]);
 
         if (left) {
           updates.x += updates.width - lockedWidth;
+
+          if (updates.x < 0) {
+            lockedWidth += updates.x;
+            const lockedHeight = Math.ceil(lockedWidth * ratio[1] / ratio[0]);
+
+            updates.x = 0;
+
+            if (top) {
+              updates.y += updates.height - lockedHeight;
+            }
+
+            updates.height = lockedHeight;
+          }
+        } else if (updates.x + lockedWidth > screenWidth) {
+          lockedWidth = screenWidth - updates.x;
+          const lockedHeight = Math.ceil(lockedWidth * ratio[1] / ratio[0]);
+
+          if (top) {
+            updates.y += updates.height - lockedHeight;
+          }
+
+          updates.height = lockedHeight;
         }
 
         updates.width = lockedWidth;

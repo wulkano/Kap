@@ -39,9 +39,9 @@ const openCropperWindow = () => {
     cropper.setAlwaysOnTop(true, 'screen-saver', 1);
     cropper.on('ready', cropper.focus);
 
-    if (isDev) {
-      cropper.openDevTools({mode: 'detach'});
-    }
+    // if (isDev) {
+    //   cropper.openDevTools({mode: 'detach'});
+    // }
 
     cropper.on('blur', () => {
       if (!cropper.webContents.isDevToolsFocused()) {

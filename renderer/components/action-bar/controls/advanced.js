@@ -1,6 +1,7 @@
 // Packages
 import PropTypes from 'prop-types';
 import React from 'react';
+import css from 'styled-jsx/css';
 
 // Vectors
 import {
@@ -13,7 +14,7 @@ import {
 // Containers
 import {connect, ActionBarContainer, CropperContainer} from '../../../containers';
 
-const advancedStyles = `
+const advancedStyles = css`
   .advanced {
     heigth: 50px;
     display: flex;
@@ -37,9 +38,8 @@ class Left extends React.Component {
           <DropdownArrowIcon size={15}/>
         </div>
         <LinkIcon active={ratioLocked} onClick={() => toggleRatioLock()}/>
+        <style jsx>{advancedStyles}</style>
         <style jsx>{`
-          ${advancedStyles}
-
           .select {
             border: 1px solid #ddd;
             border-radius: 4px;
@@ -90,9 +90,8 @@ class Right extends React.Component {
           <input type="text" size="5" maxLength="5" value={height}/>
         </div>
         <SwapIcon/>
+        <style jsx>{advancedStyles}</style>
         <style jsx>{`
-          ${advancedStyles}
-
           .dimensions {
             display: flex;
           }

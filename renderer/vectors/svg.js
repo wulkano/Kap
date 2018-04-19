@@ -4,6 +4,13 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
 class Svg extends React.Component {
+  static defaultProps = {
+    fill: '#808080',
+    activeFill: '#007aff',
+    size: 24,
+    active: false
+  }
+
   onClick = () => {
     const {onClick} = this.props;
     if (onClick) {
@@ -57,13 +64,6 @@ Svg.propTypes = {
   children: PropTypes.any,
   viewBox: PropTypes.string,
   onClick: PropTypes.func
-};
-
-Svg.defaultProps = {
-  fill: '#808080',
-  activeFill: '#007aff',
-  size: 24,
-  active: false
 };
 
 export default Svg;
