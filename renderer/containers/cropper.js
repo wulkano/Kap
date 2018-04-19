@@ -38,17 +38,34 @@ export const findRatioForSize = (width, height) => {
 };
 
 class CropperContainer extends Container {
-  state = {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
-    resizing: false,
-    moving: false,
-    picking: false,
-    showHandles: false,
-    screenWidth,
-    screenHeight
+  remote = electron.remote || false;
+
+  constructor() {
+    super();
+
+    if (!this.remote) {
+      this.state = {};
+      return;
+    }
+
+    this.settings = this.remote.require('./common/settings');
+    this.dimensions = this.settings.get('dimensions');
+
+    this.state = {
+      ...this.dimensions,
+      resizing: false,
+      moving: false,
+      picking: false,
+      showHandles: true,
+      screenWidth,
+      screenHeight
+    };
+  }
+
+  updateSettings = updates => {
+    this.dimensions = {...this.dimensions, ...updates};
+    this.settings.set('dimensions', this.dimensions);
+    this.setState(updates);
   }
 
   bindCursor = cursorContainer => {
@@ -57,6 +74,17 @@ class CropperContainer extends Container {
 
   bindActionBar = actionBarContainer => {
     this.actionBarContainer = actionBarContainer;
+  }
+
+  setBounds = bounds => {
+    const updates = bounds;
+
+    if (!this.actionBarContainer.state.ratioLocked && (bounds.width || bounds.height)) {
+      const {width, height} = this.state;
+      updates.ratio = findRatioForSize(bounds.width || width, bounds.height || height);
+    }
+
+    this.updateSettings(updates);
   }
 
   setApp = app => {
@@ -112,6 +140,7 @@ class CropperContainer extends Container {
         picking: false,
         currentHandle: {bottom: true, right: true}
       });
+      this.setOriginal();
       this.cursorContainer.addCursorObserver(this.resize);
     }
   }
@@ -173,7 +202,7 @@ class CropperContainer extends Container {
       updates.x = x + pageX - offsetX;
     }
 
-    this.setState(updates);
+    this.setBounds(updates);
   }
 
   resize = ({pageX, pageY}) => {
@@ -279,11 +308,9 @@ class CropperContainer extends Container {
 
         updates.width = lockedWidth;
       }
-    } else {
-      updates.ratio = findRatioForSize(updates.width, updates.height);
     }
 
-    this.setState(updates);
+    this.setBounds(updates);
   }
 }
 

@@ -14,9 +14,12 @@ import {
 // Containers
 import {connect, ActionBarContainer, CropperContainer} from '../../../containers';
 
+// Utilities
+import {handleWidthInput, handleHeightInput} from '../../../utils/inputs';
+
 const advancedStyles = css`
   .advanced {
-    heigth: 50px;
+    height: 50px;
     display: flex;
     flex: 1;
     align-items: center;
@@ -80,14 +83,69 @@ AdvancedControls.Left = connect(
 )(Left);
 
 class Right extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      width: props.width,
+      height: props.height
+    };
+  }
+
+  componentWillReceiveProps(newProps) {
+    this.setState({
+      width: newProps.width,
+      height: newProps.height
+    });
+  }
+
+  onWidthChange = e => {
+    const {x, y, setBounds, ratioLocked, ratio} = this.props;
+    const {value} = e.target;
+    const {heightInput, widthInput} = this;
+
+    this.setState({width: value});
+    handleWidthInput({x, y, setBounds, ratioLocked, ratio, value, widthInput, heightInput});
+  }
+
+  onHeightChange = e => {
+    const {x, y, setBounds, ratioLocked, ratio} = this.props;
+    const {value} = e.target;
+    const {heightInput, widthInput} = this;
+
+    this.setState({height: value});
+    handleHeightInput({x, y, setBounds, ratioLocked, ratio, value, widthInput, heightInput});
+  }
+
   render() {
-    const {width, height} = this.props;
+    const {width, height} = this.state;
 
     return (
       <div className="advanced">
         <div className="dimensions">
-          <input type="text" size="5" maxLength="5" value={width}/>
-          <input type="text" size="5" maxLength="5" value={height}/>
+          <input
+            ref={
+              c => {
+                this.widthInput = c;
+              }
+            }
+            type="text"
+            size="5"
+            maxLength="5"
+            value={width}
+            onChange={this.onWidthChange}
+            onBlur={handleWidthInput.flush}/>
+          <input
+            ref={
+              c => {
+                this.heightInput = c;
+              }
+            }
+            type="text"
+            size="5"
+            maxLength="5"
+            value={height}
+            onChange={this.onHeightChange}
+            onBlur={handleHeightInput.flush}/>
         </div>
         <SwapIcon/>
         <style jsx>{advancedStyles}</style>
@@ -128,13 +186,19 @@ class Right extends React.Component {
 }
 
 Right.propTypes = {
+  x: PropTypes.number,
+  y: PropTypes.number,
   width: PropTypes.number,
-  height: PropTypes.number
+  height: PropTypes.number,
+  ratio: PropTypes.array,
+  ratioLocked: PropTypes.bool,
+  setBounds: PropTypes.func.isRequired
 };
 
 AdvancedControls.Right = connect(
-  [CropperContainer],
-  ({width, height}) => ({width, height})
+  [CropperContainer, ActionBarContainer],
+  ({x, y, width, height, ratio}, {ratioLocked}) => ({x, y, width, height, ratio, ratioLocked}),
+  ({setBounds}) => ({setBounds})
 )(Right);
 
 export default AdvancedControls;

@@ -12,9 +12,9 @@ import AdvancedControls from './controls/advanced';
 
 class ActionBar extends React.Component {
   render() {
-    const {startMoving, x, y, width, height, moved, hidden, advanced, moving, startRecording, recording} = this.props;
+    const {startMoving, x, y, width, height, hidden, advanced, moving, startRecording, recording} = this.props;
 
-    const className = classNames('action-bar', {moving, hidden, advanced, moved, recording});
+    const className = classNames('action-bar', {moving, hidden, advanced, recording});
 
     return (
       <div
@@ -65,10 +65,6 @@ class ActionBar extends React.Component {
               opacity: 0;
             }
 
-            .action-bar:not(.moved) {
-              top: 80%;
-            }
-
             .record {
               border-radius: 50%;
               background: #ff6059;
@@ -102,7 +98,6 @@ ActionBar.propTypes = {
   y: PropTypes.number,
   width: PropTypes.number,
   height: PropTypes.number,
-  moved: PropTypes.bool,
   hidden: PropTypes.bool,
   advanced: PropTypes.bool,
   moving: PropTypes.bool,
@@ -111,8 +106,8 @@ ActionBar.propTypes = {
 
 export default connect(
   [ActionBarContainer, CropperContainer],
-  ({advanced, moving, moved, width, height, x, y, recording}, {resizing, moving: cropperMoving}) => ({
-    advanced, moved, width, height, x, y, moving, recording, hidden: cropperMoving || resizing
+  ({advanced, moving, width, height, x, y, recording}, {resizing, moving: cropperMoving}) => ({
+    advanced, width, height, x, y, moving, recording, hidden: cropperMoving || resizing
   }),
   ({startMoving, startRecording}) => ({startMoving, startRecording})
 )(ActionBar);

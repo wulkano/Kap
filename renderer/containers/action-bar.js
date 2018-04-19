@@ -5,15 +5,28 @@ import {Container} from 'unstated';
 const {width: screenWidth, height: screenHeight} = (electron.screen && electron.screen.getPrimaryDisplay().bounds) || {};
 
 class ActionBarContainer extends Container {
-  state = {
-    width: 300,
-    height: 50,
-    x: (screenWidth - 300) / 2,
-    y: screenHeight - 50 - 10,
-    advanced: false,
-    ratioLocked: false,
-    screenWidth,
-    screenHeight
+  remote = electron.remote || false
+
+  constructor() {
+    super();
+
+    if (!this.remote) {
+      this.state = {};
+      return;
+    }
+
+    this.settings = this.remote.require('./common/settings');
+    this.actionBar = this.settings.get('actionBar');
+
+    this.state = {
+      x: (screenWidth - 300) / 2,
+      y: Math.ceil(screenHeight * 0.8),
+      ...this.actionBar,
+      width: 300,
+      height: 50,
+      screenWidth,
+      screenHeight
+    };
   }
 
   bindCursor = cursorContainer => {
@@ -22,6 +35,12 @@ class ActionBarContainer extends Container {
 
   bindCropper = cropperContainer => {
     this.cropperContainer = cropperContainer;
+  }
+
+  updateSettings = updates => {
+    this.actionBar = {...this.actionBar, ...updates};
+    this.settings.set('actionBar', this.actionBar);
+    this.setState(updates);
   }
 
   startRecording = event => {
@@ -41,20 +60,20 @@ class ActionBarContainer extends Container {
   toggleRatioLock = ratioLocked => {
     const {ratioLocked: isLocked} = this.state;
     if (ratioLocked) {
-      this.setState({ratioLocked});
+      this.updateSettings({ratioLocked});
     } else {
-      this.setState({ratioLocked: !isLocked});
+      this.updateSettings({ratioLocked: !isLocked});
     }
     this.cropperContainer.setOriginal();
   }
 
   toggleAdvanced = () => {
     const {advanced} = this.state;
-    this.setState({advanced: !advanced});
+    this.updateSettings({advanced: !advanced});
   }
 
   startMoving = ({pageX, pageY}) => {
-    this.setState({moving: true, offsetX: pageX, offsetY: pageY, moved: true});
+    this.setState({moving: true, offsetX: pageX, offsetY: pageY});
     this.cursorContainer.addCursorObserver(this.move);
   }
 
@@ -79,7 +98,7 @@ class ActionBarContainer extends Container {
       updates.x = x + pageX - offsetX;
     }
 
-    this.setState(updates);
+    this.updateSettings(updates);
   }
 }
 

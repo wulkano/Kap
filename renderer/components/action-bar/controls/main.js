@@ -18,7 +18,7 @@ import {connect, ActionBarContainer, CropperContainer} from '../../../containers
 
 const mainStyle = css`
   .main {
-    heigth: 50px;
+    height: 50px;
     display: flex;
     flex: 1;
     align-items: center;
@@ -67,7 +67,6 @@ class Right extends React.Component {
     };
 
     const build = async appSelected => {
-      console.log('rebuilding with ', appSelected);
       this.menu = await buildWindowsMenu(onSelect, appSelected);
     };
 

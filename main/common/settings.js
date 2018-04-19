@@ -1,8 +1,7 @@
+// Packages
 const {homedir} = require('os');
-
 const {app} = require('electron');
 const settings = require('electron-settings');
-const objectPath = require('object-path');
 const aperture = require('aperture');
 
 const DEFAULTS = {
@@ -16,23 +15,15 @@ const DEFAULTS = {
   recordAudio: false,
   audioInputDeviceId: null,
   dimensions: {
+    x: 128,
+    y: 128,
     height: 512,
     width: 512,
-    ratio: [1, 1],
-    ratioLocked: false
-  }
-};
-
-const volatiles = {
-  cropperWindow: {
-    size: {
-      width: 512,
-      height: 512
-    },
-    position: {
-      x: 'center',
-      y: 'center'
-    }
+    ratio: [1, 1]
+  },
+  actionBar: {
+    ratioLocked: false,
+    advanced: false
   }
 };
 
@@ -61,18 +52,15 @@ async function init() {
 
 function get(key) {
   sync();
-  return objectPath.get(volatiles, key) || settings.getSync(key);
+  return settings.getSync(key);
 }
 
 function getAll() {
   sync();
-  return Object.assign({}, volatiles, settings.getSync());
+  return settings.getSync();
 }
 
-function set(key, value, {volatile = false} = {}) {
-  if (volatile) {
-    return objectPath.set(volatiles, key, value);
-  }
+function set(key, value) {
   settings.setSync(key, value);
 }
 
