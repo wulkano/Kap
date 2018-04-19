@@ -1,4 +1,3 @@
-// Packages
 import {Container} from 'unstated';
 
 class CursorContainer extends Container {

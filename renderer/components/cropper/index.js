@@ -1,11 +1,8 @@
-// Packages
 import PropTypes from 'prop-types';
 import React from 'react';
 
-// Containers
 import {connect, CropperContainer} from '../../containers';
 
-// Components
 import ActionBar from '../action-bar';
 import Handles from './handles';
 import Cursor from './cursor';

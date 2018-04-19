@@ -1,4 +1,3 @@
-// Packages
 import electron from 'electron';
 import {Container} from 'unstated';
 

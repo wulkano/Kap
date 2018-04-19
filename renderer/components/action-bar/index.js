@@ -1,12 +1,9 @@
-// Packages
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-// Containers
 import {connect, CropperContainer, ActionBarContainer} from '../../containers';
 
-// Components
 import MainControls from './controls/main';
 import AdvancedControls from './controls/advanced';
 

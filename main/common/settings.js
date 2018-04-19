@@ -1,4 +1,3 @@
-// Packages
 const {homedir} = require('os');
 const {app} = require('electron');
 const settings = require('electron-settings');

@@ -1,9 +1,7 @@
-// Packages
 import PropTypes from 'prop-types';
 import React from 'react';
 import css from 'styled-jsx/css';
 
-// Vectors
 import {
   SwapIcon,
   BackIcon,
@@ -11,10 +9,8 @@ import {
   DropdownArrowIcon
 } from '../../../vectors';
 
-// Containers
 import {connect, ActionBarContainer, CropperContainer} from '../../../containers';
 
-// Utilities
 import {
   handleWidthInput,
   handleHeightInput,

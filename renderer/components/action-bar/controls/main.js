@@ -1,10 +1,8 @@
-// Packages
 import electron from 'electron';
 import PropTypes from 'prop-types';
 import React from 'react';
 import css from 'styled-jsx/css';
 
-// Vectors
 import {
   LinkIcon,
   CropIcon,
@@ -13,7 +11,6 @@ import {
   ExitFullscreenIcon
 } from '../../../vectors';
 
-// Containers
 import {connect, ActionBarContainer, CropperContainer} from '../../../containers';
 
 const mainStyle = css`

@@ -1,13 +1,10 @@
-// Packages
 import electron from 'electron';
 import React from 'react';
 import {Provider} from 'unstated';
 
-// Components
 import Overlay from '../components/cropper/overlay';
 import Cropper from '../components/cropper';
 
-// Containers
 import CursorContainer from '../containers/cursor';
 import CropperContainer from '../containers/cropper';
 import ActionBarContainer from '../containers/action-bar';

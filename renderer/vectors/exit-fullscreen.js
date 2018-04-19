@@ -1,7 +1,4 @@
-// Packages
 import React from 'react';
-
-// Components
 import Svg from './svg';
 
 const ExitFullscreenIcon = props => {

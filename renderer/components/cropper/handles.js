@@ -1,9 +1,7 @@
-// Packages
 import React from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
-// Containers
 import {connect, CropperContainer, ActionBarContainer} from '../../containers';
 
 class Handle extends React.Component {

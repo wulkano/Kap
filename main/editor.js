@@ -1,7 +1,4 @@
-// Native
 const {format} = require('url');
-
-// Packages
 const {BrowserWindow} = require('electron');
 const isDev = require('electron-is-dev');
 const {resolve} = require('app-root-path');

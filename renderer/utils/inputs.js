@@ -1,4 +1,3 @@
-// Packages
 import electron from 'electron';
 import _ from 'lodash';
 
@@ -6,7 +5,6 @@ const {width: screenWidth, height: screenHeight} = (electron.screen && electron.
 const remote = electron.remote;
 const debounceTimeout = 500;
 
-// Shake
 const shake = el => {
   el.classList.add('shake');
 

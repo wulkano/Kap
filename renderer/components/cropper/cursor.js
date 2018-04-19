@@ -1,10 +1,8 @@
-// Packages
 import electron from 'electron';
 import PropTypes from 'prop-types';
 import React from 'react';
 import classNames from 'classnames';
 
-// Containers
 import {connect, CursorContainer} from '../../containers';
 
 class Cursor extends React.Component {

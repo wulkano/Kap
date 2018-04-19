@@ -1,8 +1,6 @@
-// Packages
 import React from 'react';
 import {Subscribe} from 'unstated';
 
-// Containers
 import CropperContainer from './cropper';
 import CursorContainer from './cursor';
 import ActionBarContainer from './action-bar';

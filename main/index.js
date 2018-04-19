@@ -1,8 +1,6 @@
-// Packages
 const {app, ipcMain, globalShortcut} = require('electron');
 const prepareNext = require('electron-next');
 
-// Components
 const settings = require('./common/settings');
 const {initializeTray} = require('./tray');
 const {startRecording} = require('./aperture');

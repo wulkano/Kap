@@ -1,10 +1,8 @@
-// Packages
 import electron from 'electron';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-// Containers
 import {
   connect,
   CursorContainer,
@@ -12,7 +10,6 @@ import {
   ActionBarContainer
 } from '../../containers';
 
-// Utilities
 import {getResizingCursor} from './handles';
 
 class Overlay extends React.Component {
