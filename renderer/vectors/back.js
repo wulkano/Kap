@@ -1,14 +1,10 @@
 import React from 'react';
 import Svg from './svg';
 
-const BackIcon = props => {
-  const svgProps = {...props, viewBox: '0 0 24 24'};
-
-  return (
-    <Svg {...svgProps}>
-      <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"/>
-    </Svg>
-  );
-};
+const BackIcon = props => (
+  <Svg {...props}>
+    <path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/>
+  </Svg>
+);
 
 export default BackIcon;

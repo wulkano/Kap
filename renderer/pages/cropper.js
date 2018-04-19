@@ -36,11 +36,11 @@ export default class extends React.Component {
   }
 
   handleKeyEvent = event => {
-    switch (event.keyCode) {
-      case 27:
+    switch (event.key) {
+      case 'Escape':
         this.remote.getCurrentWindow().close();
         break;
-      case 16:
+      case 'Shift':
         if (event.type === 'keydown' && !event.defaultPrevented) {
           lastRatioLockState = actionBarContainer.state.ratioLocked;
           actionBarContainer.toggleRatioLock(true);
@@ -49,7 +49,7 @@ export default class extends React.Component {
           lastRatioLockState = null;
         }
         break;
-      case 73:
+      case 'i':
         this.remote.getCurrentWindow().setIgnoreMouseEvents(!this.dev);
         this.dev = !this.dev;
         break;
@@ -73,7 +73,7 @@ export default class extends React.Component {
             margin: 0;
             width: 100vw;
             height: 100vh;
-            -webkit-user-select: none;
+            user-select: none;
             display: flex;
             font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
           }

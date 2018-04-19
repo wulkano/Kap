@@ -3,7 +3,7 @@ import {Container} from 'unstated';
 
 const {width: screenWidth, height: screenHeight} = (electron.screen && electron.screen.getPrimaryDisplay().bounds) || {};
 
-class ActionBarContainer extends Container {
+export default class ActionBarContainer extends Container {
   remote = electron.remote || false
 
   constructor() {
@@ -48,7 +48,7 @@ class ActionBarContainer extends Container {
     const tray = electron.remote && electron.remote.getGlobal('tray');
     const {x, width, height} = tray.getBounds();
 
-    const actionBar = document.getElementsByClassName('action-bar')[0];
+    const actionBar = document.querySelector('.action-bar');
     actionBar.addEventListener('transitionend', () => {
       actionBar.style.display = 'none';
     });
@@ -100,5 +100,3 @@ class ActionBarContainer extends Container {
     this.updateSettings(updates);
   }
 }
-
-export default ActionBarContainer;

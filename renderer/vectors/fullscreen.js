@@ -1,14 +1,10 @@
 import React from 'react';
 import Svg from './svg';
 
-const FullscrenIcon = props => {
-  const svgProps = {...props, viewBox: '0 0 24 24'};
-
-  return (
-    <Svg {...svgProps}>
-      <path d="M5,5H10V7H7V10H5V5M14,5H19V10H17V7H14V5M17,14H19V19H14V17H17V14M10,17V19H5V14H7V17H10Z"/>
-    </Svg>
-  );
-};
+const FullscrenIcon = props => (
+  <Svg {...props}>
+    <path d="M5 5h5v2H7v3H5V5m9 0h5v5h-2V7h-3V5m3 9h2v5h-5v-2h3v-3m-7 3v2H5v-5h2v3h3z"/>
+  </Svg>
+);
 
 export default FullscrenIcon;

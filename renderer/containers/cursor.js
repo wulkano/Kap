@@ -1,6 +1,6 @@
 import {Container} from 'unstated';
 
-class CursorContainer extends Container {
+export default class CursorContainer extends Container {
   state = {
     observers: []
   };
@@ -20,5 +20,3 @@ class CursorContainer extends Container {
     this.setState({observers: observers.filter(o => o !== observer)});
   }
 }
-
-export default CursorContainer;

@@ -1,14 +1,10 @@
 import React from 'react';
 import Svg from './svg';
 
-const CropIcon = props => {
-  const svgProps = {...props, viewBox: '0 0 24 24'};
-
-  return (
-    <Svg {...svgProps}>
-      <path d="M7,17V1H5V5H1V7H5V17A2,2 0 0,0 7,19H17V23H19V19H23V17M17,15H19V7C19,5.89 18.1,5 17,5H9V7H17V15Z"/>
-    </Svg>
-  );
-};
+const CropIcon = props => (
+  <Svg {...props}>
+    <path d="M7 17V1H5v4H1v2h4v10a2 2 0 0 0 2 2h10v4h2v-4h4v-2m-6-2h2V7a2 2 0 0 0-2-2H9v2h8v8z"/>
+  </Svg>
+);
 
 export default CropIcon;

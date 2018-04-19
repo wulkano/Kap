@@ -4,7 +4,6 @@ import CropIcon from './crop';
 import DropdownArrowIcon from './dropdown-arrow';
 import FullscreenIcon from './fullscreen';
 import LinkIcon from './link';
-import VerticalDotsIcon from './vertical-dots';
 import SwapIcon from './swap';
 import ExitFullscreenIcon from './exit-fullscreen';
 
@@ -15,7 +14,6 @@ export {
   DropdownArrowIcon,
   FullscreenIcon,
   LinkIcon,
-  VerticalDotsIcon,
   SwapIcon,
   ExitFullscreenIcon
 };

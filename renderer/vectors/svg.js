@@ -7,7 +7,8 @@ class Svg extends React.Component {
     fill: '#808080',
     activeFill: '#007aff',
     size: 24,
-    active: false
+    active: false,
+    viewBox: '0 0 24 24'
   }
 
   onClick = () => {
@@ -28,7 +29,6 @@ class Svg extends React.Component {
 
     return (
       <svg
-        version="1.1"
         viewBox={viewBox}
         className={className}
         onClick={onClick}

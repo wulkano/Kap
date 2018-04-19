@@ -8,7 +8,7 @@ const debounceTimeout = 500;
 const shake = el => {
   el.classList.add('shake');
 
-  el.addEventListener('webkitAnimationEnd', () => {
+  el.addEventListener('animationend', () => {
     el.classList.remove('shake');
   });
 
@@ -137,7 +137,7 @@ const handleInputKeyPress = onChange => event => {
   }
 
   // Don't let shift key lock aspect ratio
-  if (event.keyCode === 16) {
+  if (event.ket === 'Shift') {
     event.preventDefault();
   }
 };

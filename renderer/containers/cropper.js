@@ -36,7 +36,7 @@ export const findRatioForSize = (width, height) => {
   return getSimplestRatio(width, height);
 };
 
-class CropperContainer extends Container {
+export default class CropperContainer extends Container {
   remote = electron.remote || false;
 
   constructor() {
@@ -322,5 +322,3 @@ class CropperContainer extends Container {
     this.setBounds(updates);
   }
 }
-
-export default CropperContainer;
