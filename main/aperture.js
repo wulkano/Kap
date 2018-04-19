@@ -3,7 +3,7 @@ const {dialog} = require('electron');
 const desktopIcons = require('hide-desktop-icons');
 const createAperture = require('aperture');
 
-const settings = require('../common/settings');
+const settings = require('./common/settings');
 const {openEditorWindow} = require('./editor');
 
 const aperture = createAperture();

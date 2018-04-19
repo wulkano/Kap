@@ -54,40 +54,33 @@ MainControls.Left = connect(
   ({toggleAdvanced, toggleRatioLock}) => ({toggleAdvanced, toggleRatioLock})
 )(Left);
 
-let menu;
-
-const buildMenu = async () => {
-  if (electron.remote) {
-    const {Menu, MenuItem} = electron.remote;
-    const {getWindows} = electron.remote.require('mac-windows');
-    const windows = await getWindows();
-
-    menu = new Menu();
-
-    windows.forEach(win => {
-      menu.append(new MenuItem({
-        label: win.ownerName,
-        type: 'radio',
-        checked: false,
-        click: () => {
-          console.log('asd');
-        }
-      }));
-    });
-  }
-};
-
 class Right extends React.Component {
+  remote = electron.remote || false;
+
   componentDidMount() {
-    buildMenu();
+    const {buildWindowsMenu, activateWindow} = this.remote.require('./common/windows');
+    const {setApp, bindRebuildMenu, appSelected} = this.props;
+
+    const onSelect = win => {
+      activateWindow(win);
+      setApp(win);
+    };
+
+    const build = async appSelected => {
+      console.log('rebuilding with ', appSelected);
+      this.menu = await buildWindowsMenu(onSelect, appSelected);
+    };
+
+    bindRebuildMenu(build);
+    build(appSelected);
   }
 
   render() {
-    const {enterFullscreen, exitFullscreen, fullscreen} = this.props;
+    const {enterFullscreen, exitFullscreen, fullscreen, appSelected} = this.props;
 
     return (
       <div className="main">
-        <ApplicationsIcon onClick={() => menu.popup()}/>
+        <ApplicationsIcon active={Boolean(appSelected)} onClick={() => this.menu.popup()}/>
         { !fullscreen && <FullscreenIcon onClick={enterFullscreen}/> }
         { fullscreen && <ExitFullscreenIcon onClick={exitFullscreen}/> }
         <style jsx>{mainStyle}</style>
@@ -99,13 +92,16 @@ class Right extends React.Component {
 Right.propTypes = {
   enterFullscreen: PropTypes.func.isRequired,
   exitFullscreen: PropTypes.func.isRequired,
-  fullscreen: PropTypes.bool
+  setApp: PropTypes.func.isRequired,
+  bindRebuildMenu: PropTypes.func.isRequired,
+  fullscreen: PropTypes.bool,
+  appSelected: PropTypes.string
 };
 
 MainControls.Right = connect(
   [CropperContainer],
-  ({fullscreen}) => ({fullscreen}),
-  ({enterFullscreen, exitFullscreen}) => ({enterFullscreen, exitFullscreen})
+  ({fullscreen, appSelected}) => ({fullscreen, appSelected}),
+  ({enterFullscreen, exitFullscreen, setApp, bindRebuildMenu}) => ({enterFullscreen, exitFullscreen, setApp, bindRebuildMenu})
 )(Right);
 
 export default MainControls;

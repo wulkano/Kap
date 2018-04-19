@@ -17,6 +17,7 @@ const prodPath = format({
 const url = isDev ? devPath : prodPath;
 
 let cropper = null;
+let shouldIgnoreBlur = false;
 
 const openCropperWindow = () => {
   if (!cropper) {
@@ -39,12 +40,12 @@ const openCropperWindow = () => {
     cropper.setAlwaysOnTop(true, 'screen-saver', 1);
     cropper.on('ready', cropper.focus);
 
-    // if (isDev) {
-    //   cropper.openDevTools({mode: 'detach'});
-    // }
+    if (isDev) {
+      cropper.openDevTools({mode: 'detach'});
+    }
 
     cropper.on('blur', () => {
-      if (!cropper.webContents.isDevToolsFocused()) {
+      if (!shouldIgnoreBlur && !cropper.webContents.isDevToolsFocused()) {
         cropper.close();
       }
     });
@@ -55,6 +56,17 @@ const openCropperWindow = () => {
   }
 };
 
+const ignoreBlur = () => {
+  shouldIgnoreBlur = true;
+};
+
+const restoreBlur = () => {
+  shouldIgnoreBlur = false;
+  cropper.focus();
+};
+
 module.exports = {
-  openCropperWindow
+  openCropperWindow,
+  ignoreBlur,
+  restoreBlur
 };

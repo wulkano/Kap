@@ -24,6 +24,8 @@ actionBarContainer.bindCropper(cropperContainer);
 export default class extends React.Component {
   remote = electron.remote || false
 
+  dev = false;
+
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyEvent);
     document.addEventListener('keyup', this.handleKeyEvent);
@@ -41,6 +43,10 @@ export default class extends React.Component {
         break;
       case 16:
         actionBarContainer.toggleRatioLock(event.type === 'keydown');
+        break;
+      case 73:
+        this.remote.getCurrentWindow().setIgnoreMouseEvents(!this.dev);
+        this.dev = !this.dev;
         break;
       default:
         break;

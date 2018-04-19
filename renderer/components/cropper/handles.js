@@ -40,7 +40,7 @@ class Handle extends React.Component {
             border: 1px solid gray;
             top: calc(50% - ${size / 2}px);
             left: calc(50% - ${size / 2}px);
-            z-index: 4;
+            z-index: 8;
             ${getResizingCursor(this.props)}
           }
 
@@ -61,7 +61,7 @@ class Handle extends React.Component {
           }
 
           .place-on-top {
-            z-index: 5;
+            z-index: 9;
           }
 
           .hide {
@@ -139,7 +139,7 @@ class Handles extends React.Component {
 
 Handles.propTypes = {
   startResizing: PropTypes.func.isRequired,
-  showHandles: PropTypes.func.isRequired,
+  showHandles: PropTypes.bool,
   ratioLocked: PropTypes.bool,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),

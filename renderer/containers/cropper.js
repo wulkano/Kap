@@ -51,8 +51,34 @@ class CropperContainer extends Container {
     screenHeight
   }
 
+  bindCursor = cursorContainer => {
+    this.cursorContainer = cursorContainer;
+  }
+
+  bindActionBar = actionBarContainer => {
+    this.actionBarContainer = actionBarContainer;
+  }
+
+  setApp = app => {
+    const {x, y, width, height, ownerName} = app;
+    this.setState({appSelected: ownerName, x, y, width, height});
+    this.rebuildMenu(ownerName);
+  }
+
+  bindRebuildMenu = rebuildMenu => {
+    this.rebuildMenu = rebuildMenu;
+  }
+
+  unselectApp = () => {
+    if (this.state.appSelected) {
+      this.setState({appSelected: false});
+      this.rebuildMenu();
+    }
+  }
+
   enterFullscreen = () => {
     const {x, y, width, height} = this.state;
+    this.unselectApp();
     this.setState({
       fullscreen: true,
       x: 0,
@@ -67,14 +93,6 @@ class CropperContainer extends Container {
   exitFullscreen = () => {
     const {original} = this.state;
     this.setState({fullscreen: false, showHandles: true, ...original});
-  }
-
-  bindCursor = cursorContainer => {
-    this.cursorContainer = cursorContainer;
-  }
-
-  bindActionBar = actionBarContainer => {
-    this.actionBarContainer = actionBarContainer;
   }
 
   startPicking = () => {
@@ -110,6 +128,7 @@ class CropperContainer extends Container {
 
   startResizing = currentHandle => {
     if (!this.state.fullscreen) {
+      this.unselectApp();
       this.setOriginal();
       this.setState({currentHandle, resizing: true});
       this.cursorContainer.addCursorObserver(this.resize);
@@ -125,6 +144,7 @@ class CropperContainer extends Container {
 
   startMoving = ({pageX, pageY}) => {
     if (!this.state.fullscreen) {
+      this.unselectApp();
       this.setState({moving: true, showHandles: false, offsetX: pageX, offsetY: pageY});
       this.cursorContainer.addCursorObserver(this.move);
     }
