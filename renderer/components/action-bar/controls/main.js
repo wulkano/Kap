@@ -59,19 +59,24 @@ class Right extends React.Component {
 
   componentDidMount() {
     const {buildWindowsMenu, activateApp} = this.remote.require('./common/windows');
-    const {setApp, bindRebuildMenu, appSelected} = this.props;
+    const {selectApp, appSelected} = this.props;
 
     const onSelect = win => {
       activateApp(win);
-      setApp(win);
+      selectApp(win);
     };
 
-    const build = async appSelected => {
+    this.build = async appSelected => {
       this.menu = await buildWindowsMenu(onSelect, appSelected);
     };
 
-    bindRebuildMenu(build);
-    build(appSelected);
+    this.build(appSelected);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.appSelected !== this.props.appSelected) {
+      this.build(nextProps.appSelected);
+    }
   }
 
   render() {
@@ -91,8 +96,7 @@ class Right extends React.Component {
 Right.propTypes = {
   enterFullscreen: PropTypes.func.isRequired,
   exitFullscreen: PropTypes.func.isRequired,
-  setApp: PropTypes.func.isRequired,
-  bindRebuildMenu: PropTypes.func.isRequired,
+  selectApp: PropTypes.func.isRequired,
   fullscreen: PropTypes.bool,
   appSelected: PropTypes.string
 };
@@ -100,7 +104,7 @@ Right.propTypes = {
 MainControls.Right = connect(
   [CropperContainer],
   ({fullscreen, appSelected}) => ({fullscreen, appSelected}),
-  ({enterFullscreen, exitFullscreen, setApp, bindRebuildMenu}) => ({enterFullscreen, exitFullscreen, setApp, bindRebuildMenu})
+  ({enterFullscreen, exitFullscreen, selectApp}) => ({enterFullscreen, exitFullscreen, selectApp})
 )(Right);
 
 export default MainControls;

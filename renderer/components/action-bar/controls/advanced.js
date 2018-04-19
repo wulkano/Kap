@@ -15,7 +15,7 @@ import {
 import {connect, ActionBarContainer, CropperContainer} from '../../../containers';
 
 // Utilities
-import {handleWidthInput, handleHeightInput} from '../../../utils/inputs';
+import {handleWidthInput, handleHeightInput, buildAspectRatioMenu} from '../../../utils/inputs';
 
 const advancedStyles = css`
   .advanced {
@@ -30,13 +30,28 @@ const advancedStyles = css`
 const AdvancedControls = {};
 
 class Left extends React.Component {
+  componentDidMount() {
+    this.buildMenu(this.props);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.ratio !== this.props.ratio) {
+      this.buildMenu(nextProps);
+    }
+  }
+
+  buildMenu = props => {
+    const {setRatio, ratio} = props;
+    this.menu = buildAspectRatioMenu({setRatio, ratio});
+  }
+
   render() {
     const {toggleAdvanced, toggleRatioLock, ratioLocked, ratio = []} = this.props;
 
     return (
       <div className="advanced">
         <BackIcon onClick={toggleAdvanced}/>
-        <div className="select">
+        <div className="select" onClick={() => this.menu.popup()}>
           <span>{ratio[0]}:{ratio[1]}</span>
           <DropdownArrowIcon size={15}/>
         </div>
@@ -79,7 +94,7 @@ Left.propTypes = {
 AdvancedControls.Left = connect(
   [ActionBarContainer, CropperContainer],
   ({ratioLocked}, {ratio}) => ({ratio, ratioLocked}),
-  ({toggleAdvanced, toggleRatioLock}) => ({toggleAdvanced, toggleRatioLock})
+  ({toggleAdvanced, toggleRatioLock}, {setRatio}) => ({toggleAdvanced, toggleRatioLock, setRatio})
 )(Left);
 
 class Right extends React.Component {

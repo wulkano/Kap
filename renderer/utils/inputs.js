@@ -3,6 +3,7 @@ import electron from 'electron';
 import _ from 'lodash';
 
 const {width: screenWidth, height: screenHeight} = (electron.screen && electron.screen.getPrimaryDisplay().bounds) || {};
+const remote = electron.remote;
 const debounceTimeout = 500;
 
 // Shake
@@ -84,7 +85,50 @@ const handleHeightInput = _.debounce(({x, y, setBounds, ratioLocked, ratio, valu
   setBounds(updates);
 }, debounceTimeout);
 
+const RATIOS = [
+  '16:9',
+  '5:4',
+  '5:3',
+  '4:3',
+  '3:2',
+  '1:1'
+];
+
+const buildAspectRatioMenu = ({setRatio, ratio}) => {
+  if (!remote) {
+    return;
+  }
+
+  const {Menu, MenuItem} = remote;
+  const selectedRatio = ratio.join(':');
+  const menu = new Menu();
+
+  RATIOS.forEach(r => menu.append(
+    new MenuItem({
+      label: r,
+      type: 'radio',
+      checked: r === selectedRatio,
+      click: () => setRatio(r.split(':').map(d => parseInt(d, 10)))
+    })
+  ));
+
+  const customOption = RATIOS.includes(selectedRatio) ? {
+    label: 'Custom',
+    type: 'radio',
+    checked: false,
+    enabled: false
+  } : {
+    label: `Custom ${selectedRatio}`,
+    type: 'radio',
+    checked: true
+  };
+
+  menu.append(new MenuItem(customOption));
+  return menu;
+};
+
 export {
   handleWidthInput,
-  handleHeightInput
+  handleHeightInput,
+  buildAspectRatioMenu
 };

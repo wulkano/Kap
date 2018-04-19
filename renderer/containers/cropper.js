@@ -87,20 +87,27 @@ class CropperContainer extends Container {
     this.updateSettings(updates);
   }
 
-  setApp = app => {
-    const {x, y, width, height, ownerName} = app;
-    this.setState({appSelected: ownerName, x, y, width, height});
-    this.rebuildMenu(ownerName);
+  setRatio = ratio => {
+    const {y, width} = this.state;
+    const updates = {ratio};
+
+    updates.height = Math.ceil(width * ratio[1] / ratio[0]);
+    if (y + updates.height > screenHeight) {
+      updates.height = screenHeight - y;
+      updates.width = Math.ceil(updates.height * ratio[0] / ratio[1]);
+    }
+
+    this.updateSettings(updates);
   }
 
-  bindRebuildMenu = rebuildMenu => {
-    this.rebuildMenu = rebuildMenu;
+  selectApp = app => {
+    const {x, y, width, height, ownerName} = app;
+    this.setState({appSelected: ownerName, x, y, width, height});
   }
 
   unselectApp = () => {
     if (this.state.appSelected) {
       this.setState({appSelected: false});
-      this.rebuildMenu();
     }
   }
 
