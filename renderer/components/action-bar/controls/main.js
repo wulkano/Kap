@@ -58,11 +58,11 @@ class Right extends React.Component {
   remote = electron.remote || false;
 
   componentDidMount() {
-    const {buildWindowsMenu, activateWindow} = this.remote.require('./common/windows');
+    const {buildWindowsMenu, activateApp} = this.remote.require('./common/windows');
     const {setApp, bindRebuildMenu, appSelected} = this.props;
 
     const onSelect = win => {
-      activateWindow(win);
+      activateApp(win);
       setApp(win);
     };
 
