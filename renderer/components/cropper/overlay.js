@@ -29,7 +29,10 @@ class Overlay extends React.Component {
       onMouseUp, setCursor, startPicking, x, y, width, height, moving, resizing, currentHandle
     } = this.props;
 
-    const className = classNames('overlay', {picking: !resizing && !moving});
+    const className = classNames('overlay', {
+      picking: !resizing && !moving,
+      'no-transition': resizing || moving
+    });
 
     return (
       <div
@@ -50,10 +53,15 @@ class Overlay extends React.Component {
         <style jsx>{`
           .overlay {
             background-color: rgba(0, 0, 0, 0.5);
+            transition: all 0.2s ease-out;
           }
 
           .overlay.picking {
             cursor: crosshair;
+          }
+
+          .overlay.no-transition {
+            transition: none;
           }
 
           #middle {

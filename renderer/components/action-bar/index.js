@@ -63,11 +63,10 @@ class ActionBar extends React.Component {
 
             .hidden {
               opacity: 0;
-              top: ${y + height + 10}px;
             }
 
-            .moved.hidden {
-              top: ${y}px;
+            .action-bar:not(.moved) {
+              top: 80%;
             }
 
             .record {
