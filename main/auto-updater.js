@@ -1,3 +1,5 @@
+'use strict';
+
 // Import {app, autoUpdater, Notification} from 'electron';
 // import isDev from 'electron-is-dev';
 // import ms from 'ms';

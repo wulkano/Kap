@@ -23,7 +23,16 @@ class Overlay extends React.Component {
     const {width: screenWidth, height: screenHeight} = this.remote.getGlobal('screen');
 
     const {
-      onMouseUp, setCursor, startPicking, x, y, width, height, moving, resizing, currentHandle
+      onMouseUp,
+      setCursor,
+      startPicking,
+      x,
+      y,
+      width,
+      height,
+      moving,
+      resizing,
+      currentHandle
     } = this.props;
 
     const className = classNames('overlay', {

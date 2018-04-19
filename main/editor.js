@@ -1,12 +1,14 @@
-const {format} = require('url');
+'use strict';
+
+const {format: formatUrl} = require('url');
 const {BrowserWindow} = require('electron');
 const isDev = require('electron-is-dev');
 const {resolve} = require('app-root-path');
 
 const devPath = 'http://localhost:8000/editor';
 
-const prodPath = format({
-  pathname: resolve('renderer/out/editor/index.html'),
+const prodPath = formatUrl({
+  pathname: resolve('renderer/out/cropper/index.html'),
   protocol: 'file:',
   slashes: true
 });

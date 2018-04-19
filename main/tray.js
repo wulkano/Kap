@@ -1,3 +1,5 @@
+'use strict';
+
 const {Tray, ipcMain} = require('electron');
 const path = require('path');
 

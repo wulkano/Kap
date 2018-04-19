@@ -1,3 +1,5 @@
+'use strict';
+
 const {dialog} = require('electron');
 const desktopIcons = require('hide-desktop-icons');
 const createAperture = require('aperture');

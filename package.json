@@ -26,18 +26,6 @@
   "bundle": {
     "name": "Kap"
   },
-  "devDependencies": {
-    "babel-eslint": "^8.2.3",
-    "bundle": "^2.0.1",
-    "electron": "^1.7.10",
-    "electron-builder": "^20.8.1",
-    "eslint-config-xo-react": "^0.16.0",
-    "eslint-plugin-react": "^7.7.0",
-    "next": "^4.2.1",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "xo": "^0.20.3"
-  },
   "dependencies": {
     "aperture": "^4.0.0",
     "app-root-path": "^2.0.1",
@@ -56,6 +44,17 @@
     "node-mac-app-icon": "^1.4.0",
     "prop-types": "^15.6.1",
     "unstated": "^1.2.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.3",
+    "electron": "^1.7.10",
+    "electron-builder": "^20.8.1",
+    "eslint-config-xo-react": "^0.16.0",
+    "eslint-plugin-react": "^7.7.0",
+    "next": "^4.2.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "xo": "^0.20.3"
   },
   "xo": {
     "parser": "babel-eslint",

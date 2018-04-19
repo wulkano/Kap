@@ -1,3 +1,5 @@
+'use strict';
+
 let window;
 let windowIsReady = false;
 let pendingMessages = [];

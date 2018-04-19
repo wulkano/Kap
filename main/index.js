@@ -1,3 +1,5 @@
+'use strict';
+
 const {app, ipcMain, globalShortcut} = require('electron');
 const prepareNext = require('electron-next');
 
@@ -17,7 +19,7 @@ app.on('ready', async () => {
   globalShortcut.register('Cmd+Shift+5', openCropperWindow);
 });
 
-app.on('window-all-closed', e => e.preventDefault());
+app.on('window-all-closed', event => event.preventDefault());
 
 ipcMain.on('start-recording', () => {
   startRecording({x: 0, y: 0, width: 200, height: 100});

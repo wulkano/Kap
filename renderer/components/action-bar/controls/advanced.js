@@ -115,18 +115,18 @@ class Right extends React.Component {
     });
   }
 
-  onWidthChange = e => {
+  onWidthChange = event => {
     const {x, y, setBounds, ratioLocked, ratio} = this.props;
-    const {value} = e.target;
+    const {value} = event.currentTarget;
     const {heightInput, widthInput} = this;
 
     this.setState({width: value});
     handleWidthInput({x, y, setBounds, ratioLocked, ratio, value, widthInput, heightInput});
   }
 
-  onHeightChange = e => {
+  onHeightChange = event => {
     const {x, y, setBounds, ratioLocked, ratio} = this.props;
-    const {value} = e.target;
+    const {value} = event.currentTarget;
     const {heightInput, widthInput} = this;
 
     this.setState({height: value});

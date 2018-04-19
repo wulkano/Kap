@@ -1,11 +1,14 @@
-const {format} = require('url');
-const {BrowserWindow} = require('electron');
+'use strict';
+
+const {format: formatUrl} = require('url');
+const electron = require('electron');
 const isDev = require('electron-is-dev');
 const {resolve} = require('app-root-path');
 
+const {BrowserWindow} = electron;
 const devPath = 'http://localhost:8000/cropper';
 
-const prodPath = format({
+const prodPath = formatUrl({
   pathname: resolve('renderer/out/cropper/index.html'),
   protocol: 'file:',
   slashes: true
@@ -18,7 +21,7 @@ let shouldIgnoreBlur = false;
 
 const openCropperWindow = () => {
   if (!cropper) {
-    const {width, height} = require('electron').screen.getPrimaryDisplay().bounds;
+    const {width, height} = electron.screen.getPrimaryDisplay().bounds;
     global.screen = {width, height};
     cropper = new BrowserWindow({
       x: 0,

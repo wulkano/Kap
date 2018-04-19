@@ -75,10 +75,10 @@ class CropperContainer extends Container {
     this.actionBarContainer = actionBarContainer;
   }
 
-  setBounds = bounds => {
+  setBounds = (bounds, ignoreRatioLocked) => {
     const updates = bounds;
 
-    if (!this.actionBarContainer.state.ratioLocked && (bounds.width || bounds.height)) {
+    if ((!this.actionBarContainer.state.ratioLocked || ignoreRatioLocked) && (bounds.width || bounds.height)) {
       const {width, height} = this.state;
       updates.ratio = findRatioForSize(bounds.width || width, bounds.height || height);
     }
@@ -90,6 +90,7 @@ class CropperContainer extends Container {
     const {y, width} = this.state;
     const updates = {ratio};
 
+    this.unselectApp();
     updates.height = Math.ceil(width * ratio[1] / ratio[0]);
     if (y + updates.height > screenHeight) {
       updates.height = screenHeight - y;
@@ -101,7 +102,8 @@ class CropperContainer extends Container {
 
   selectApp = app => {
     const {x, y, width, height, ownerName} = app;
-    this.setState({appSelected: ownerName, x, y, width, height});
+    this.setState({appSelected: ownerName});
+    this.setBounds({x, y, width, height}, true);
   }
 
   unselectApp = () => {
@@ -130,6 +132,7 @@ class CropperContainer extends Container {
   }
 
   startPicking = () => {
+    this.unselectApp();
     this.setState({picking: true});
     this.cursorContainer.addCursorObserver(this.pick);
   }

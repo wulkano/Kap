@@ -1,3 +1,5 @@
+'use strict';
+
 const {Menu} = require('electron');
 
 const {openPrefsWindow} = require('./preferences');

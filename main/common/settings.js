@@ -1,3 +1,5 @@
+'use strict';
+
 const {homedir} = require('os');
 const {app} = require('electron');
 const settings = require('electron-settings');
@@ -10,7 +12,9 @@ const DEFAULTS = {
   showCursor: true,
   highlightClicks: false,
   hideDesktopIcons: false,
-  fps: 30,
+  record60fps: false,
+  recordKeyboardShortcut: true,
+  doNotDisturb: false,
   recordAudio: false,
   audioInputDeviceId: null,
   dimensions: {

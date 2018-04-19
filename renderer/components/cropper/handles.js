@@ -95,8 +95,8 @@ class Handles extends React.Component {
       <div className="content">
         <div className="border">
           {
-            showHandles && Array.apply(null, {length: 8}).map(
-              (_, i) => (
+            showHandles && [...(new Array(8).keys())].map(
+              i => (
                 <Handle
                   key={`handle-${i}`}
                   border={1}

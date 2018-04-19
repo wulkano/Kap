@@ -82,8 +82,11 @@ class Right extends React.Component {
     return (
       <div className="main">
         <ApplicationsIcon active={Boolean(appSelected)} onClick={() => this.menu.popup()}/>
-        { !fullscreen && <FullscreenIcon onClick={enterFullscreen}/> }
-        { fullscreen && <ExitFullscreenIcon onClick={exitFullscreen}/> }
+        {
+          fullscreen ?
+            <ExitFullscreenIcon onClick={exitFullscreen}/> :
+            <FullscreenIcon onClick={enterFullscreen}/>
+        }
         <style jsx>{mainStyle}</style>
       </div>
     );

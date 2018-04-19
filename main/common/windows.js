@@ -1,3 +1,5 @@
+'use strict';
+
 const {Menu, MenuItem, nativeImage} = require('electron');
 const {getWindows, activateWindow} = require('mac-windows');
 const {getAppIconListByPid} = require('node-mac-app-icon');
@@ -56,7 +58,7 @@ const buildWindowsMenu = async (onSelect, selected) => {
   const menu = new Menu();
   const windows = await getWindowList();
 
-  windows.forEach(win => {
+  for (const win of windows) {
     menu.append(
       new MenuItem({
         label: win.ownerName,
@@ -70,7 +72,7 @@ const buildWindowsMenu = async (onSelect, selected) => {
         }
       })
     );
-  });
+  }
 
   return menu;
 };

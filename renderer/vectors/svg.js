@@ -17,8 +17,8 @@ class Svg extends React.Component {
     }
   }
 
-  stopPropagation = e => {
-    e.stopPropagation();
+  stopPropagation = event => {
+    event.stopPropagation();
   }
 
   render() {

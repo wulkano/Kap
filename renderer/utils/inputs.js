@@ -129,10 +129,11 @@ const handleInputKeyPress = onChange => event => {
   const multiplier = event.shiftKey ? 10 : 1;
   const parsedValue = parseInt(event.currentTarget.value, 10);
 
+  // Fake an onChange event
   if (event.key === 'ArrowUp') {
-    onChange({target: {value: `${parsedValue + multiplier}`}});
+    onChange({currentTarget: {value: `${parsedValue + multiplier}`}});
   } else if (event.key === 'ArrowDown') {
-    onChange({target: {value: `${parsedValue - multiplier}`}});
+    onChange({currentTarget: {value: `${parsedValue - multiplier}`}});
   }
 
   // Don't let shift key lock aspect ratio
