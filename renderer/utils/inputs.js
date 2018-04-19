@@ -127,8 +127,25 @@ const buildAspectRatioMenu = ({setRatio, ratio}) => {
   return menu;
 };
 
+const handleInputKeyPress = onChange => event => {
+  const multiplier = event.shiftKey ? 10 : 1;
+  const parsedValue = parseInt(event.currentTarget.value, 10);
+
+  if (event.key === 'ArrowUp') {
+    onChange({target: {value: `${parsedValue + multiplier}`}});
+  } else if (event.key === 'ArrowDown') {
+    onChange({target: {value: `${parsedValue - multiplier}`}});
+  }
+
+  // Don't let shift key lock aspect ratio
+  if (event.keyCode === 16) {
+    event.preventDefault();
+  }
+};
+
 export {
   handleWidthInput,
   handleHeightInput,
-  buildAspectRatioMenu
+  buildAspectRatioMenu,
+  handleInputKeyPress
 };

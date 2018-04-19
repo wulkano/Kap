@@ -21,7 +21,7 @@ cropperContainer.bindActionBar(actionBarContainer);
 actionBarContainer.bindCursor(cursorContainer);
 actionBarContainer.bindCropper(cropperContainer);
 
-let lastRatioLockState;
+let lastRatioLockState = null;
 
 export default class extends React.Component {
   remote = electron.remote || false
@@ -44,11 +44,12 @@ export default class extends React.Component {
         this.remote.getCurrentWindow().close();
         break;
       case 16:
-        if (event.type === 'keydown') {
+        if (event.type === 'keydown' && !event.defaultPrevented) {
           lastRatioLockState = actionBarContainer.state.ratioLocked;
           actionBarContainer.toggleRatioLock(true);
-        } else if (event.type === 'keyup') {
+        } else if (event.type === 'keyup' && lastRatioLockState !== null) {
           actionBarContainer.toggleRatioLock(lastRatioLockState);
+          lastRatioLockState = null;
         }
         break;
       case 73:

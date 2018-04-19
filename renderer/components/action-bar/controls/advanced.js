@@ -15,7 +15,12 @@ import {
 import {connect, ActionBarContainer, CropperContainer} from '../../../containers';
 
 // Utilities
-import {handleWidthInput, handleHeightInput, buildAspectRatioMenu} from '../../../utils/inputs';
+import {
+  handleWidthInput,
+  handleHeightInput,
+  buildAspectRatioMenu,
+  handleInputKeyPress
+} from '../../../utils/inputs';
 
 const advancedStyles = css`
   .advanced {
@@ -35,7 +40,7 @@ class Left extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.ratio !== this.props.ratio) {
+    if (nextProps.ratio !== this.props.ratio && !nextProps.resizing) {
       this.buildMenu(nextProps);
     }
   }
@@ -88,12 +93,13 @@ Left.propTypes = {
   toggleAdvanced: PropTypes.func.isRequired,
   toggleRatioLock: PropTypes.func.isRequired,
   ratioLocked: PropTypes.bool,
+  resizing: PropTypes.bool,
   ratio: PropTypes.array
 };
 
 AdvancedControls.Left = connect(
   [ActionBarContainer, CropperContainer],
-  ({ratioLocked}, {ratio}) => ({ratio, ratioLocked}),
+  ({ratioLocked}, {ratio, resizing}) => ({ratio, ratioLocked, resizing}),
   ({toggleAdvanced, toggleRatioLock}, {setRatio}) => ({toggleAdvanced, toggleRatioLock, setRatio})
 )(Left);
 
@@ -148,7 +154,8 @@ class Right extends React.Component {
             maxLength="5"
             value={width}
             onChange={this.onWidthChange}
-            onBlur={handleWidthInput.flush}/>
+            onBlur={handleWidthInput.flush}
+            onKeyDown={handleInputKeyPress(this.onWidthChange)}/>
           <input
             ref={
               c => {
@@ -160,7 +167,8 @@ class Right extends React.Component {
             maxLength="5"
             value={height}
             onChange={this.onHeightChange}
-            onBlur={handleHeightInput.flush}/>
+            onBlur={handleHeightInput.flush}
+            onKeyDown={handleInputKeyPress(this.onHeightChange)}/>
         </div>
         <SwapIcon/>
         <style jsx>{advancedStyles}</style>
