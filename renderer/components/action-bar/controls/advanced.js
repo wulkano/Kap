@@ -31,19 +31,19 @@ const advancedStyles = css`
 const AdvancedControls = {};
 
 class Left extends React.Component {
-  componentDidMount() {
-    this.buildMenu(this.props);
-  }
+  state = {}
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.ratio !== this.props.ratio && !nextProps.resizing) {
-      this.buildMenu(nextProps);
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const {ratio, resizing, setRatio} = nextProps;
+
+    if (ratio !== prevState.ratio && !resizing) {
+      return {
+        ratio,
+        menu: buildAspectRatioMenu({setRatio, ratio})
+      };
     }
-  }
 
-  buildMenu = props => {
-    const {setRatio, ratio} = props;
-    this.menu = buildAspectRatioMenu({setRatio, ratio});
+    return null;
   }
 
   render() {
@@ -52,7 +52,7 @@ class Left extends React.Component {
     return (
       <div className="advanced">
         <BackIcon onClick={toggleAdvanced}/>
-        <div className="select" onClick={() => this.menu.popup()}>
+        <div className="select" onClick={() => this.state.menu.popup()}>
           <span>{ratio[0]}:{ratio[1]}</span>
           <DropdownArrowIcon size={15}/>
         </div>
@@ -100,19 +100,18 @@ AdvancedControls.Left = connect(
 )(Left);
 
 class Right extends React.Component {
+  state = {}
+
   constructor(props) {
     super(props);
-    this.state = {
-      width: props.width,
-      height: props.height
-    };
+
+    this.widthInput = React.createRef();
+    this.heightInput = React.createRef();
   }
 
-  componentWillReceiveProps(newProps) {
-    this.setState({
-      width: newProps.width,
-      height: newProps.height
-    });
+  static getDerivedStateFromProps(nextProps) {
+    const {width, height} = nextProps;
+    return {width, height};
   }
 
   onWidthChange = event => {
@@ -140,11 +139,7 @@ class Right extends React.Component {
       <div className="advanced">
         <div className="dimensions">
           <input
-            ref={
-              c => {
-                this.widthInput = c;
-              }
-            }
+            ref={this.widthInput}
             type="text"
             size="5"
             maxLength="5"
@@ -153,11 +148,7 @@ class Right extends React.Component {
             onBlur={handleWidthInput.flush}
             onKeyDown={handleInputKeyPress(this.onWidthChange)}/>
           <input
-            ref={
-              c => {
-                this.heightInput = c;
-              }
-            }
+            ref={this.heightInput}
             type="text"
             size="5"
             maxLength="5"

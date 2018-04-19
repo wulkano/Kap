@@ -67,8 +67,10 @@ export default class ActionBarContainer extends Container {
   }
 
   toggleAdvanced = () => {
-    const {advanced} = this.state;
-    this.updateSettings({advanced: !advanced});
+    if (!this.cropperContainer.state.fullscreen) {
+      const {advanced} = this.state;
+      this.updateSettings({advanced: !advanced});
+    }
   }
 
   startMoving = ({pageX, pageY}) => {

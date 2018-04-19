@@ -57,7 +57,8 @@ export default class CropperContainer extends Container {
       picking: false,
       showHandles: true,
       screenWidth,
-      screenHeight
+      screenHeight,
+      appSelected: ''
     };
   }
 
@@ -108,7 +109,7 @@ export default class CropperContainer extends Container {
 
   unselectApp = () => {
     if (this.state.appSelected) {
-      this.setState({appSelected: false});
+      this.setState({appSelected: ''});
     }
   }
 

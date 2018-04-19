@@ -5,7 +5,7 @@ const {width: screenWidth, height: screenHeight} = (electron.screen && electron.
 const remote = electron.remote;
 const debounceTimeout = 500;
 
-const shake = el => {
+const shake = ({current: el}) => {
   el.classList.add('shake');
 
   el.addEventListener('animationend', () => {

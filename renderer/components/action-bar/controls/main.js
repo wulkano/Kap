@@ -51,29 +51,32 @@ MainControls.Left = connect(
   ({toggleAdvanced, toggleRatioLock}) => ({toggleAdvanced, toggleRatioLock})
 )(Left);
 
+const remote = electron.remote || false;
+let menu;
+
+const buildMenu = async ({appSelected, selectApp}) => {
+  const {buildWindowsMenu, activateApp} = remote.require('./common/windows');
+
+  const onSelect = win => {
+    activateApp(win);
+    selectApp(win);
+  };
+
+  menu = await buildWindowsMenu(onSelect, appSelected);
+};
+
 class Right extends React.Component {
-  remote = electron.remote || false;
+  state = {};
 
-  componentDidMount() {
-    const {buildWindowsMenu, activateApp} = this.remote.require('./common/windows');
-    const {selectApp, appSelected} = this.props;
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const {appSelected, selectApp} = nextProps;
 
-    const onSelect = win => {
-      activateApp(win);
-      selectApp(win);
-    };
-
-    this.build = async appSelected => {
-      this.menu = await buildWindowsMenu(onSelect, appSelected);
-    };
-
-    this.build(appSelected);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.appSelected !== this.props.appSelected) {
-      this.build(nextProps.appSelected);
+    if (appSelected !== prevState.appSelected) {
+      buildMenu({appSelected, selectApp});
+      return {appSelected};
     }
+
+    return null;
   }
 
   render() {
@@ -81,7 +84,7 @@ class Right extends React.Component {
 
     return (
       <div className="main">
-        <ApplicationsIcon active={Boolean(appSelected)} onClick={() => this.menu.popup()}/>
+        <ApplicationsIcon active={Boolean(appSelected)} onClick={() => menu.popup()}/>
         {
           fullscreen ?
             <ExitFullscreenIcon onClick={exitFullscreen}/> :
