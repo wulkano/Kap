@@ -101,6 +101,18 @@ export default class CropperContainer extends Container {
     this.updateSettings(updates);
   }
 
+  swapDimensions = () => {
+    const {x, height, ratio} = this.state;
+    const updates = {width: height};
+
+    if (x + updates.width > screenWidth) {
+      updates.width = screenWidth - x;
+    }
+
+    this.updateSettings(updates);
+    this.setRatio(ratio.reverse());
+  }
+
   selectApp = app => {
     const {x, y, width, height, ownerName} = app;
     this.setState({appSelected: ownerName});

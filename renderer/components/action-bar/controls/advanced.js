@@ -134,6 +134,7 @@ class Right extends React.Component {
 
   render() {
     const {width, height} = this.state;
+    const {swapDimensions} = this.props;
 
     return (
       <div className="advanced">
@@ -157,7 +158,7 @@ class Right extends React.Component {
             onBlur={handleHeightInput.flush}
             onKeyDown={handleInputKeyPress(this.onHeightChange)}/>
         </div>
-        <SwapIcon/>
+        <SwapIcon onClick={swapDimensions}/>
         <style jsx>{advancedStyles}</style>
         <style jsx>{`
           .dimensions {
@@ -202,13 +203,14 @@ Right.propTypes = {
   height: PropTypes.number,
   ratio: PropTypes.array,
   ratioLocked: PropTypes.bool,
-  setBounds: PropTypes.func.isRequired
+  setBounds: PropTypes.func.isRequired,
+  swapDimensions: PropTypes.func.isRequired
 };
 
 AdvancedControls.Right = connect(
   [CropperContainer, ActionBarContainer],
   ({x, y, width, height, ratio}, {ratioLocked}) => ({x, y, width, height, ratio, ratioLocked}),
-  ({setBounds}) => ({setBounds})
+  ({setBounds, swapDimensions}) => ({setBounds, swapDimensions})
 )(Right);
 
 export default AdvancedControls;
