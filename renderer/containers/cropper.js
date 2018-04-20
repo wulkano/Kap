@@ -76,7 +76,7 @@ export default class CropperContainer extends Container {
     this.actionBarContainer = actionBarContainer;
   }
 
-  setBounds = (bounds, ignoreRatioLocked) => {
+  setBounds = (bounds, {save = true, ignoreRatioLocked} = {}) => {
     const updates = bounds;
 
     if ((!this.actionBarContainer.state.ratioLocked || ignoreRatioLocked) && (bounds.width || bounds.height)) {
@@ -84,7 +84,11 @@ export default class CropperContainer extends Container {
       updates.ratio = findRatioForSize(bounds.width || width, bounds.height || height);
     }
 
-    this.updateSettings(updates);
+    if (save) {
+      this.updateSettings(updates);
+    } else {
+      this.setState(updates);
+    }
   }
 
   setRatio = ratio => {
@@ -116,7 +120,7 @@ export default class CropperContainer extends Container {
   selectApp = app => {
     const {x, y, width, height, ownerName} = app;
     this.setState({appSelected: ownerName});
-    this.setBounds({x, y, width, height}, true);
+    this.setBounds({x, y, width, height}, {ignoreRatioLocked: true});
   }
 
   unselectApp = () => {
@@ -188,8 +192,10 @@ export default class CropperContainer extends Container {
 
   stopResizing = () => {
     if (!this.state.fullscreen && this.state.resizing) {
+      const {x, y, width, height, ratio} = this.state;
       this.setState({currentHandle: null, resizing: false, showHandles: true, picking: false});
       this.cursorContainer.removeCursorObserver(this.resize);
+      this.updateSettings({x, y, width, height, ratio});
     }
   }
 
@@ -203,8 +209,10 @@ export default class CropperContainer extends Container {
 
   stopMoving = () => {
     if (!this.state.fullscreen && this.state.moving) {
+      const {x, y} = this.state;
       this.setState({moving: false, showHandles: true});
       this.cursorContainer.removeCursorObserver(this.move);
+      this.updateSettings({x, y});
     }
   }
 
@@ -224,7 +232,7 @@ export default class CropperContainer extends Container {
       updates.x = x + pageX - offsetX;
     }
 
-    this.setBounds(updates);
+    this.setBounds(updates, {save: false});
   }
 
   resize = ({pageX, pageY}) => {
@@ -332,6 +340,6 @@ export default class CropperContainer extends Container {
       }
     }
 
-    this.setBounds(updates);
+    this.setBounds(updates, {save: false});
   }
 }

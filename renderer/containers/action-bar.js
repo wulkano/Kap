@@ -79,6 +79,8 @@ export default class ActionBarContainer extends Container {
   }
 
   stopMoving = () => {
+    const {x, y} = this.state;
+    this.updateSettings({x, y});
     this.setState({moving: false});
     this.cursorContainer.removeCursorObserver(this.move);
   }
@@ -99,6 +101,6 @@ export default class ActionBarContainer extends Container {
       updates.x = x + pageX - offsetX;
     }
 
-    this.updateSettings(updates);
+    this.setState(updates);
   }
 }
