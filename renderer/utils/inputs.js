@@ -101,14 +101,16 @@ const buildAspectRatioMenu = ({setRatio, ratio}) => {
   const selectedRatio = ratio.join(':');
   const menu = new Menu();
 
-  RATIOS.forEach(r => menu.append(
-    new MenuItem({
-      label: r,
-      type: 'radio',
-      checked: r === selectedRatio,
-      click: () => setRatio(r.split(':').map(d => parseInt(d, 10)))
-    })
-  ));
+  for (const r of RATIOS) {
+    menu.append(
+      new MenuItem({
+        label: r,
+        type: 'radio',
+        checked: r === selectedRatio,
+        click: () => setRatio(r.split(':').map(d => parseInt(d, 10)))
+      })
+    );
+  }
 
   const customOption = RATIOS.includes(selectedRatio) ? {
     label: 'Custom',
@@ -137,7 +139,7 @@ const handleInputKeyPress = onChange => event => {
   }
 
   // Don't let shift key lock aspect ratio
-  if (event.ket === 'Shift') {
+  if (event.key === 'Shift') {
     event.preventDefault();
   }
 };
