@@ -6,6 +6,9 @@ import FullscreenIcon from './fullscreen';
 import LinkIcon from './link';
 import SwapIcon from './swap';
 import ExitFullscreenIcon from './exit-fullscreen';
+import SettingsIcon from './settings';
+import TuneIcon from './tune';
+import PluginsIcon from './plugins';
 
 export {
   ApplicationsIcon,
@@ -15,5 +18,8 @@ export {
   FullscreenIcon,
   LinkIcon,
   SwapIcon,
-  ExitFullscreenIcon
+  ExitFullscreenIcon,
+  SettingsIcon,
+  TuneIcon,
+  PluginsIcon
 };

@@ -37,6 +37,10 @@ const openPrefsWindow = () => {
     prefsWindow = null;
   });
 
+  if (isDev) {
+    prefsWindow.openDevTools({mode: 'detach'});
+  }
+
   prefsWindow.loadURL(url);
   prefsWindow.on('ready-to-show', prefsWindow.show);
 };

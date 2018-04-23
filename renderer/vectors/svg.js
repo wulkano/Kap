@@ -6,7 +6,7 @@ class Svg extends React.Component {
   static defaultProps = {
     fill: '#808080',
     activeFill: '#007aff',
-    size: 24,
+    size: '24px',
     active: false,
     viewBox: '0 0 24 24'
   }
@@ -38,8 +38,8 @@ class Svg extends React.Component {
         <style jsx>{`
             svg {
               fill: ${fill};
-              width: ${size}px;
-              height: ${size}px;
+              width: ${size};
+              height: ${size};
             }
 
             svg:hover {
@@ -57,7 +57,7 @@ class Svg extends React.Component {
 
 Svg.propTypes = {
   fill: PropTypes.string,
-  size: PropTypes.number,
+  size: PropTypes.string,
   activeFill: PropTypes.string,
   active: PropTypes.bool,
   children: PropTypes.any,

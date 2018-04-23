@@ -1,10 +1,9 @@
 'use strict';
 
-const {app, ipcMain, globalShortcut} = require('electron');
+const {app, globalShortcut} = require('electron');
 const prepareNext = require('electron-next');
 
 const {initializeTray} = require('./tray');
-const {startRecording} = require('./aperture');
 const {openCropperWindow} = require('./cropper');
 
 // Prepare the renderer once the app is ready
@@ -16,7 +15,3 @@ app.on('ready', async () => {
 });
 
 app.on('window-all-closed', event => event.preventDefault());
-
-ipcMain.on('start-recording', () => {
-  startRecording({x: 0, y: 0, width: 200, height: 100});
-});

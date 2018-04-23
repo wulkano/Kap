@@ -4,6 +4,7 @@ import {Subscribe} from 'unstated';
 import CropperContainer from './cropper';
 import CursorContainer from './cursor';
 import ActionBarContainer from './action-bar';
+import PreferencesContainer from './preferences';
 
 export const connect = (containers, mapStateToProps, mapActionsToProps) => Component => props => (
   <Subscribe to={containers}>
@@ -22,5 +23,6 @@ export const connect = (containers, mapStateToProps, mapActionsToProps) => Compo
 export {
   CropperContainer,
   CursorContainer,
-  ActionBarContainer
+  ActionBarContainer,
+  PreferencesContainer
 };

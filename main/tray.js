@@ -4,7 +4,6 @@ const {Tray, ipcMain} = require('electron');
 const path = require('path');
 
 const {openCropperWindow} = require('./cropper');
-const {stopRecording} = require('./aperture');
 const {cogMenu} = require('./menus');
 
 let tray = null;
@@ -26,7 +25,7 @@ ipcMain.on('start-recording', () => {
   tray.removeListener('click', openCropperWindow);
 
   tray.once('click', () => {
-    stopRecording();
+    // stopRecording();
 
     tray.setImage(path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'));
 

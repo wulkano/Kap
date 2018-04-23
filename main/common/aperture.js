@@ -4,10 +4,11 @@ const {dialog} = require('electron');
 const desktopIcons = require('hide-desktop-icons');
 const createAperture = require('aperture');
 
-const settings = require('./common/settings');
-const {openEditorWindow} = require('./editor');
+const {openEditorWindow} = require('../editor');
+const settings = require('./settings');
 
 const aperture = createAperture();
+const {audioDevices} = createAperture;
 
 const startRecording = async bounds => {
   const past = Date.now();
@@ -78,4 +79,8 @@ const stopRecording = async () => {
   openEditorWindow({filePath});
 };
 
-module.exports = {startRecording, stopRecording};
+module.exports = {
+  startRecording,
+  stopRecording,
+  getAudioDevices: audioDevices
+};

@@ -54,7 +54,7 @@ class Left extends React.Component {
         <BackIcon onClick={toggleAdvanced}/>
         <div className="select" onClick={() => this.state.menu.popup()}>
           <span>{ratio[0]}:{ratio[1]}</span>
-          <DropdownArrowIcon size={15}/>
+          <DropdownArrowIcon size="15px"/>
         </div>
         <LinkIcon active={ratioLocked} onClick={() => toggleRatioLock()}/>
         <style jsx>{advancedStyles}</style>
