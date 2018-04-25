@@ -1,7 +1,7 @@
 'use strict';
 
 const {format: formatUrl} = require('url');
-const {BrowserWindow} = require('electron');
+const {BrowserWindow, ipcMain} = require('electron');
 const isDev = require('electron-is-dev');
 const {resolve} = require('app-root-path');
 
@@ -41,7 +41,9 @@ const openPrefsWindow = () => {
   }
 
   prefsWindow.loadURL(url);
-  prefsWindow.on('ready-to-show', prefsWindow.show);
+  ipcMain.once('preferences-ready', () => {
+    prefsWindow.show();
+  });
 };
 
 module.exports = {

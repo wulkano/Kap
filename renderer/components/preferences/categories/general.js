@@ -24,7 +24,7 @@ class General extends React.Component {
       setOpenOnStartup
     } = this.props;
 
-    const shortDir = `.../${kapturesDir.split('/').pop()}`;
+    const shortDir = kapturesDir ? `.../${kapturesDir.split('/').pop()}` : '';
 
     return (
       <Category>

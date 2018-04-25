@@ -1,5 +1,7 @@
+import electron from 'electron';
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
 import {connect, PreferencesContainer} from '../../../containers';
 
@@ -21,13 +23,21 @@ const CATEGORIES = [
 ];
 
 class Categories extends React.Component {
+  componentDidUpdate(prevProps) {
+    if (!prevProps.mounted && this.props.mounted) {
+      // Wait for the transitions to end
+      setTimeout(() => electron.ipcRenderer.send('preferences-ready'), 300);
+    }
+  }
+
   render() {
-    const {category} = this.props;
+    const {category, mounted} = this.props;
 
     const index = CATEGORIES.findIndex(({name}) => name === category);
+    const className = classNames('categories-container', {mounted});
 
     return (
-      <div className="categories-container">
+      <div className={className}>
         <div className="switcher"/>
         {
           CATEGORIES.map(
@@ -54,10 +64,11 @@ class Categories extends React.Component {
 }
 
 Categories.propTypes = {
-  category: PropTypes.string
+  category: PropTypes.string,
+  mounted: PropTypes.bool
 };
 
 export default connect(
   [PreferencesContainer],
-  ({category}) => ({category})
+  ({category, mounted}) => ({category, mounted})
 )(Categories);

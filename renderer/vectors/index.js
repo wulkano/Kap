@@ -9,6 +9,8 @@ import ExitFullscreenIcon from './exit-fullscreen';
 import SettingsIcon from './settings';
 import TuneIcon from './tune';
 import PluginsIcon from './plugins';
+import GearIcon from './gear';
+import SpinnerIcon from './spinner';
 
 export {
   ApplicationsIcon,
@@ -21,5 +23,7 @@ export {
   ExitFullscreenIcon,
   SettingsIcon,
   TuneIcon,
-  PluginsIcon
+  PluginsIcon,
+  GearIcon,
+  SpinnerIcon
 };

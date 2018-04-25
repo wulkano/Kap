@@ -49,18 +49,24 @@ class Item extends React.Component {
             align-items: center;
           }
 
+          .experimental {
+            display: flex;
+            align-items: center;
+          }
+
           .experimental:after {
             border: 1px solid #ddd;
-            border-radius: 4px;
             color: gray;
             content: "experimental";
             display: inline-block;
-            font-size: 1rem;
+            font-size: 0.8rem;
             font-weight: 500;
             margin: 0 1rem;
-            padding: 0 .8rem;
+            border-radius: 3px;
+            padding: 3px 4px;
             text-transform: uppercase;
             width: max-content;
+            line-height: 1;
           }
         `}</style>
       </div>

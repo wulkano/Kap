@@ -6,29 +6,37 @@ export default class PreferencesContainer extends Container {
 
   state = {}
 
-  mount = async () => {
+  mount = () => {
     this.settings = this.remote.require('./common/settings');
     this.plugins = this.remote.require('./common/plugins');
 
     const installed = this.plugins.getInstalled().sort((a, b) => a.prettyName.localeCompare(b.prettyName));
-    const fromNpm = (await this.plugins.getFromNpm()).sort((a, b) => a.prettyName.localeCompare(b.prettyName));
 
     const {getAudioDevices} = this.remote.require('./common/aperture');
     const {audioInputDeviceId} = this.settings.store;
-
-    const audioDevices = await getAudioDevices();
-
-    if (!audioDevices.find(device => device.id === audioInputDeviceId)) {
-      this.settings.set('audioInputDeviceId', audioDevices[0] && audioDevices[0].id);
-    }
 
     this.setState({
       ...this.settings.store,
       category: 'general',
       openOnStartup: this.remote.app.getLoginItemSettings().openAtLogin,
-      audioDevices,
       installed,
-      fromNpm
+      mounted: true
+    });
+
+    this.plugins.getFromNpm().then(plugins => {
+      this.setState({fromNpm: plugins.sort((a, b) => a.prettyName.localeCompare(b.prettyName))});
+    });
+
+    getAudioDevices().then(audioDevices => {
+      const updates = {audioDevices};
+
+      if (!audioDevices.find(device => device.id === audioInputDeviceId)) {
+        const deviceId = audioDevices[0] && audioDevices[0].id;
+        this.settings.set('audioInputDeviceId', deviceId);
+        updates.audioInputDeviceId = deviceId;
+      }
+
+      this.setState(updates);
     });
   }
 
@@ -50,13 +58,16 @@ export default class PreferencesContainer extends Container {
     const {installed, fromNpm} = this.state;
     const plugin = installed.find(p => p.name === name);
 
-    document.querySelector(`#${name} .checked`).classList.remove('checked');
-    setTimeout(() => {
+    const onTransitionEnd = () => {
       this.setState({
         installed: installed.filter(p => p.name !== name),
-        fromNpm: [plugin, ...fromNpm].sort((a, b) => a.prettyName.localeCompare(b.prettyName))
+        fromNpm: [plugin, ...fromNpm].sort((a, b) => a.prettyName.localeCompare(b.prettyName)),
+        uninstalling: '',
+        onTransitionEnd: null
       });
-    }, 200);
+    };
+
+    this.setState({uninstalling: name, onTransitionEnd});
 
     this.plugins.uninstall(name);
   }

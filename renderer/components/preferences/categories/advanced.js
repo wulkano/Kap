@@ -59,14 +59,12 @@ class Advanced extends React.Component {
         <Item
           title="Hide desktop icons"
           subtitle="Temporarily hide the desktop icons while recording"
-          experimental
         >
           <Switch checked={hideDesktopIcons} onClick={() => toggleSetting('hideDesktopIcons')}/>
         </Item>
         <Item
           title="Do Not Disturb"
           subtitle="Activate “Do Not Disturb” while recording"
-          experimental
         >
           <Switch checked={doNotDisturb} onClick={() => toggleSetting('doNotDisturb')}/>
         </Item>

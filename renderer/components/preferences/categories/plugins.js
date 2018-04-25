@@ -43,6 +43,8 @@ PluginTitle.propTypes = {
   onClick: PropTypes.func
 };
 
+const getLink = ({homepage, links}) => homepage || (links && links.homepage);
+
 class Plugins extends React.Component {
   static defaultProps = {
     installed: [],
@@ -50,7 +52,16 @@ class Plugins extends React.Component {
   }
 
   render() {
-    const {installed, fromNpm, installing, install, uninstall, openPluginsFolder} = this.props;
+    const {
+      installed,
+      fromNpm,
+      installing,
+      uninstalling,
+      install,
+      uninstall,
+      openPluginsFolder,
+      onTransitionEnd
+    } = this.props;
 
     return (
       <Category>
@@ -64,11 +75,15 @@ class Plugins extends React.Component {
                   <PluginTitle
                     title={plugin.prettyName}
                     label={plugin.version}
-                    onClick={() => electron.shell.openExternal(plugin.homepage)}/>
+                    onClick={() => electron.shell.openExternal(getLink(plugin))}/>
                 }
                 subtitle={plugin.description}
               >
-                <Switch checked disabled={Boolean(installing)} onClick={() => uninstall(plugin.name)}/>
+                <Switch
+                  onTransitionEnd={uninstalling === plugin.name ? onTransitionEnd : undefined}
+                  checked={uninstalling !== plugin.name}
+                  disabled={Boolean(installing)}
+                  onClick={() => uninstall(plugin.name)}/>
               </Item>
             )
           )
@@ -82,7 +97,7 @@ class Plugins extends React.Component {
                   <PluginTitle
                     title={plugin.prettyName}
                     label={plugin.version}
-                    onClick={() => electron.shell.openExternal(plugin.homepage)}/>
+                    onClick={() => electron.shell.openExternal(getLink(plugin))}/>
                 }
                 subtitle={plugin.description}
               >
@@ -105,13 +120,15 @@ Plugins.propTypes = {
   installed: PropTypes.array,
   fromNpm: PropTypes.array,
   installing: PropTypes.string,
+  uninstalling: PropTypes.string,
   install: PropTypes.func.isRequired,
   uninstall: PropTypes.func.isRequired,
-  openPluginsFolder: PropTypes.func.isRequired
+  openPluginsFolder: PropTypes.func.isRequired,
+  onTransitionEnd: PropTypes.func
 };
 
 export default connect(
   [PreferencesContainer],
-  ({installed, fromNpm, installing}) => ({installed, fromNpm, installing}),
-  ({install, uninstall, openPluginsFolder}) => ({install, uninstall, openPluginsFolder})
+  ({installed, fromNpm, installing, uninstalling}) => ({installed, fromNpm, installing, uninstalling}),
+  ({install, uninstall, openPluginsFolder, onTransitionEnd}) => ({install, uninstall, openPluginsFolder, onTransitionEnd})
 )(Plugins);

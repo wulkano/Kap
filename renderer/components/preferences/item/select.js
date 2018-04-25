@@ -9,6 +9,11 @@ class Select extends React.Component {
     options: []
   }
 
+  constructor(props) {
+    super(props);
+    this.select = React.createRef();
+  }
+
   state = {}
 
   static getDerivedStateFromProps(nextProps) {
@@ -35,8 +40,16 @@ class Select extends React.Component {
     return {menu};
   }
 
+  handleClick = () => {
+    const boundingRect = this.select.current.getBoundingClientRect();
+
+    this.state.menu.popup({
+      x: Math.round(boundingRect.left),
+      y: Math.round(boundingRect.top)
+    });
+  }
+
   render() {
-    const {menu} = this.state;
     const {options, selected} = this.props;
 
     const selectedLabel = options.length === 0 ? 'No input devices' : (
@@ -44,29 +57,47 @@ class Select extends React.Component {
     );
 
     return (
-      <div className="select" onClick={() => menu.popup()}>
+      <div
+        ref={this.select}
+        className="select"
+        onClick={this.handleClick}
+      >
         <span>{selectedLabel}</span>
-        <DropdownArrowIcon size="15px"/>
+        <div className="dropdown">
+          <DropdownArrowIcon size="15px"/>
+        </div>
         <style jsx>{`
           .select {
             border: 1px solid #ddd;
             border-radius: 4px;
-            height: 1.1rem;
+            height: 2.4rem;
             transition: border 0.12s ease-in-out;
             display: flex;
             align-items: center;
-            padding: 5px;
+            padding-right: 32px;
             user-select: none;
+            line-height: 2.4rem;
+            position: relative;
           }
 
           .select span {
             flex: 1;
             text-align: right;
             padding-right: 5px;
+            padding: 0 12px;
           }
 
           .select:hover {
             border-color: #ccc;
+          }
+
+          .dropdown {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 8px;
+            pointer-events: none;
+            display: flex;
           }
         `}</style>
       </div>
