@@ -4,8 +4,8 @@ import classNames from 'classnames';
 
 class Switch extends React.Component {
   render() {
-    const {checked, onClick, disabled} = this.props;
-    const className = classNames({checked, disabled});
+    const {checked, onClick, disabled, loading} = this.props;
+    const className = classNames({checked, disabled, loading});
 
     return (
       <div className={className} onClick={disabled ? undefined : onClick}>
@@ -48,6 +48,27 @@ class Switch extends React.Component {
             border: 1px solid #ccc;
             background-color: #fff;
           }
+
+          .loading:after {
+            border: none;
+            background: #fff url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMTYgMTYiCiAgICAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgICAgICA8c3R5bGU+CiAgICAgICAgICAKICAgIEBrZXlmcmFtZXMgc3Bpbm5lciB7CiAgICAgICAgMCUgewogICAgICAgICAgICBzdHJva2UtZGFzaG9mZnNldDogMTAuNTY7CiAgICAgICAgfQogICAgICAgIDUwJSB7CiAgICAgICAgICAgIHN0cm9rZS1kYXNob2Zmc2V0OiA1MC4yNDsKICAgICAgICB9CiAgICAgICAgMTAwJSB7CiAgICAgICAgICAgIHN0cm9rZS1kYXNob2Zmc2V0OiAwLjY2OwogICAgICAgIH0KICAgIH0KCgoKICAgICAgICAgIAogICAgICAgICAgICAKCiAgICAgICAgICBjaXJjbGUgewogICAgICAgICAgICAgIGZpbGw6IHRyYW5zcGFyZW50OwogICAgICAgICAgICAgIHN0cm9rZTogIzAwN2FmZjsKICAgICAgICAgICAgICBzdHJva2UtbGluZWNhcDogcm91bmQ7CiAgICAgICAgICAgICAgc3Ryb2tlLWRhc2hhcnJheTogY2FsYygzLjE0cHggKiAxNik7CiAgICAgICAgICAgICAgc3Ryb2tlLWRhc2hvZmZzZXQ6IDE2OwogICAgICAgICAgICAgIGFuaW1hdGlvbjogc3Bpbm5lciAzcyBsaW5lYXIgaW5maW5pdGU7CiAgICAgICAgICB9CiAgICAgIDwvc3R5bGU+CiAgICAgICAgPGNpcmNsZSBjeD0iOCIgY3k9IjgiIHI9IjciIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgPjwvY2lyY2xlPgogICAgPC9zdmc+Cg==') center;
+            background-size: 100%;
+            animation: spin 3s linear infinite;
+          }
+
+          @keyframes spin {
+            0% {
+              transform: rotate(0deg);
+            }
+
+            50% {
+              transform: rotate(720deg);
+            }
+
+            100% {
+              transform: rotate(1080deg);
+            }
+          }
         `}</style>
       </div>
     );
@@ -57,6 +78,7 @@ class Switch extends React.Component {
 Switch.propTypes = {
   checked: PropTypes.bool,
   disabled: PropTypes.bool,
+  loading: PropTypes.bool,
   onClick: PropTypes.func.isRequired
 };
 

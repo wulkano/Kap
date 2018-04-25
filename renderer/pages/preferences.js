@@ -34,7 +34,6 @@ export default class PreferencesPage extends React.Component {
               margin: 0;
               width: 100vw;
               height: 100vh;
-              user-select: none;
               font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
             }
 
@@ -47,6 +46,7 @@ export default class PreferencesPage extends React.Component {
               line-height: 1.5em;
               -webkit-font-smoothing: antialiased;
               letter-spacing: -.01rem;
+              cursor: default;
             }
         `}</style>
       </div>

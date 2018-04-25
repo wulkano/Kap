@@ -4,9 +4,9 @@ import classNames from 'classnames';
 
 class Item extends React.Component {
   render() {
-    const {title, experimental, tooltip, children} = this.props;
+    const {title, experimental, tooltip, children, id} = this.props;
 
-    let subtitle = this.props.subtitle;
+    let subtitle = this.props.subtitle || [];
 
     if (!Array.isArray(subtitle)) {
       subtitle = [subtitle];
@@ -15,7 +15,7 @@ class Item extends React.Component {
     const className = classNames({experimental});
 
     return (
-      <div className="item">
+      <div className="item" id={id}>
         <div className="content">
           <div className={className}>{title}</div>
           <div className="subtitle" title={tooltip}>
@@ -69,7 +69,12 @@ class Item extends React.Component {
 }
 
 Item.propTypes = {
-  title: PropTypes.string,
+  id: PropTypes.string,
+  title: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ]),
   experimental: PropTypes.bool,
   tooltip: PropTypes.string,
   subtitle: PropTypes.oneOfType([
@@ -79,7 +84,7 @@ Item.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
-  ]).isRequired
+  ])
 };
 
 export default Item;

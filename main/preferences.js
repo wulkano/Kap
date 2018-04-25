@@ -31,7 +31,6 @@ const openPrefsWindow = () => {
     titleBarStyle: 'hiddenInset',
     show: false
   });
-  prefsWindow.setAlwaysOnTop(true, 'screen-saver', 1);
 
   prefsWindow.on('close', () => {
     prefsWindow = null;

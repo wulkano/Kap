@@ -17,6 +17,8 @@ class WindowHeader extends React.Component {
             background-image: linear-gradient(-180deg, #f9f9f9 0%, #f1f1f1 100%);
             box-shadow: 0 1px 0 0 #ddd, inset 0 1px 0 0 #fff;
             -webkit-app-region: drag;
+            user-select: none;
+            z-index: 1;
           }
 
           .window-header span {

@@ -56,6 +56,7 @@ class Select extends React.Component {
             display: flex;
             align-items: center;
             padding: 5px;
+            user-select: none;
           }
 
           .select span {
