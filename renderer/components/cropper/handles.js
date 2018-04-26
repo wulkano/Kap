@@ -85,7 +85,9 @@ Handle.propTypes = {
 
 class Handles extends React.Component {
   static defaultProps = {
-    ratioLocked: false
+    ratioLocked: false,
+    width: 0,
+    height: 0
   }
 
   render() {

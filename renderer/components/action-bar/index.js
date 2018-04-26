@@ -9,6 +9,11 @@ import AdvancedControls from './controls/advanced';
 import RecordButton from './record-button';
 
 class ActionBar extends React.Component {
+  static defaultProps = {
+    cropperWidth: 0,
+    cropperHeight: 0
+  }
+
   render() {
     const {
       startMoving,

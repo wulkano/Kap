@@ -30,6 +30,8 @@ const advancedStyles = css`
 
 const AdvancedControls = {};
 
+const stopPropagation = event => event.stopPropagation();
+
 class Left extends React.Component {
   state = {}
 
@@ -54,7 +56,7 @@ class Left extends React.Component {
         <div className="back">
           <BackIcon onClick={toggleAdvanced}/>
         </div>
-        <div className="select" onClick={() => this.state.menu.popup()}>
+        <div className="select" onClick={() => this.state.menu.popup()} onMouseDown={stopPropagation}>
           <span>{ratio[0]}:{ratio[1]}</span>
           <DropdownArrowIcon size="18px"/>
         </div>
@@ -96,7 +98,7 @@ class Left extends React.Component {
             height: 32px;
             padding: 3px 3px;
             box-sizing: border-box;
-            background: #f7f7f7;
+            background: ${ratioLocked ? '#f7f7f7' : 'transparent'};
             border: 1px solid #dbdbdb;
             border-radius: 4px;
           }
@@ -164,10 +166,11 @@ class Right extends React.Component {
           type="text"
           size="5"
           maxLength="5"
-          value={width}
+          value={width || ''}
           onChange={this.onWidthChange}
           onBlur={handleWidthInput.flush}
-          onKeyDown={handleInputKeyPress(this.onWidthChange)}/>
+          onKeyDown={handleInputKeyPress(this.onWidthChange)}
+          onMouseDown={stopPropagation}/>
         <div className="swap">
           <SwapIcon onClick={swapDimensions}/>
         </div>
@@ -176,10 +179,11 @@ class Right extends React.Component {
           type="text"
           size="5"
           maxLength="5"
-          value={height}
+          value={height || ''}
           onChange={this.onHeightChange}
           onBlur={handleHeightInput.flush}
-          onKeyDown={handleInputKeyPress(this.onHeightChange)}/>
+          onKeyDown={handleInputKeyPress(this.onHeightChange)}
+          onMouseDown={stopPropagation}/>
         <style jsx>{advancedStyles}</style>
         <style jsx>{`
           input {
@@ -206,7 +210,6 @@ class Right extends React.Component {
             height: 32px;
             padding: 3px 3px;
             box-sizing: border-box;
-            background: #f7f7f7;
             border: 1px solid #dbdbdb;
             border-radius: 4px;
             margin-right: 8px;

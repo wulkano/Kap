@@ -15,6 +15,13 @@ import {getResizingCursor} from './handles';
 class Overlay extends React.Component {
   remote = electron.remote || false
 
+  static defaultProps = {
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0
+  }
+
   render() {
     if (!this.remote) {
       return null;

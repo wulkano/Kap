@@ -6,6 +6,7 @@ class Svg extends React.Component {
   static defaultProps = {
     fill: '#808080',
     activeFill: '#007aff',
+    hoverFill: '#606060',
     size: '24px',
     active: false,
     viewBox: '0 0 24 24'
@@ -23,7 +24,16 @@ class Svg extends React.Component {
   }
 
   render() {
-    const {fill, size, activeFill, active, onClick, children, viewBox} = this.props;
+    const {
+      fill,
+      size,
+      activeFill,
+      hoverFill,
+      active,
+      onClick,
+      children,
+      viewBox
+    } = this.props;
 
     const className = classNames({active});
 
@@ -43,10 +53,10 @@ class Svg extends React.Component {
             }
 
             svg:hover {
-              fill: ${activeFill};
+              fill: ${hoverFill};
             }
 
-            .active {
+            .active, .active:hover {
               fill: ${activeFill};
             }
         `}</style>
@@ -59,6 +69,7 @@ Svg.propTypes = {
   fill: PropTypes.string,
   size: PropTypes.string,
   activeFill: PropTypes.string,
+  hoverFill: PropTypes.string,
   active: PropTypes.bool,
   children: PropTypes.any,
   viewBox: PropTypes.string,

@@ -32,29 +32,20 @@ const cogMenu = [
     label: 'Preferences…',
     accelerator: 'Cmd+,',
     click() {
+      closeCropperWindow();
       openPrefsWindow();
     }
   },
   checkForUpdatesItem,
   {
     type: 'separator'
+  },
+  {
+    role: 'quit',
+    accelerator: 'Cmd+Q'
   }
 ];
 
-const quitOption = {
-  role: 'quit',
-  accelerator: 'Cmd+Q'
-};
-
-const exitOption = {
-  label: 'Close Kap',
-  accelerator: 'Cmd+w',
-  click() {
-    closeCropperWindow();
-  }
-};
-
 module.exports = {
-  cogMenu: Menu.buildFromTemplate([...cogMenu, quitOption]),
-  moreMenu: Menu.buildFromTemplate([...cogMenu, exitOption, quitOption])
+  cogMenu: Menu.buildFromTemplate(cogMenu)
 };

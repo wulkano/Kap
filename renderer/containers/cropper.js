@@ -148,14 +148,15 @@ export default class CropperContainer extends Container {
     this.setState({fullscreen: false, showHandles: true, ...original});
   }
 
-  startPicking = () => {
+  startPicking = ({pageX, pageY}) => {
     this.unselectApp();
-    this.setState({picking: true});
+    this.setState({picking: true, original: {pageX, pageY}});
     this.cursorContainer.addCursorObserver(this.pick);
   }
 
   pick = ({pageX, pageY}) => {
-    if (!this.state.picked) {
+    const {original, picking} = this.state;
+    if (Math.abs(original.pageX - pageX) > 0 && Math.abs(original.pageY - pageY) > 0 && picking) {
       this.cursorContainer.removeCursorObserver(this.pick);
       this.setState({
         x: pageX,
@@ -165,15 +166,22 @@ export default class CropperContainer extends Container {
         resizing: true,
         picking: false,
         currentHandle: {bottom: true, right: true}
+      }, () => {
+
       });
+
       this.setOriginal();
       this.cursorContainer.addCursorObserver(this.resize);
     }
   }
 
   stopPicking = () => {
-    this.setState({picking: false});
-    this.cursorContainer.removeCursorObserver(this.pick);
+    if (this.state.picking) {
+      this.remote.getCurrentWindow().close();
+    } else {
+      this.setState({picking: false});
+      this.cursorContainer.removeCursorObserver(this.pick);
+    }
   }
 
   setOriginal = () => {

@@ -50,7 +50,7 @@ export default class CropperPage extends React.Component {
         }
         break;
       case 'i':
-        this.remote.getCurrentWindow().setIgnoreMouseEvents(!this.dev);
+        this.remote.getCurrentWindow().setIgnoreMouseEvents(true);
         this.dev = !this.dev;
         break;
       default:

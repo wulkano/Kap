@@ -20,7 +20,10 @@ let cropper = null;
 let shouldIgnoreBlur = false;
 
 const openCropperWindow = () => {
-  if (!cropper) {
+  if (cropper) {
+    cropper.setIgnoreMouseEvents(false);
+    cropper.show();
+  } else {
     const {width, height} = electron.screen.getPrimaryDisplay().bounds;
     global.screen = {width, height};
     cropper = new BrowserWindow({

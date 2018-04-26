@@ -75,7 +75,7 @@ class RecordButton extends React.Component {
               height: 48px;
               padding: 8px;
               border-radius: 50%;
-              background: rgba(255,94,87,1);
+              background: #ff5e57;
               display: flex;
               align-items: center;
               justify-content: center;
@@ -95,14 +95,14 @@ class RecordButton extends React.Component {
               width: 20px;
               height: 20px;
               border-radius: 50%;
-              background: rgba(255,94,87,1);
+              background: #ff5e57;
               margin: 2px;
             }
 
             .ripple {
               box-sizing: border-box;
               border-radius: 50%;
-              border: 1px solid rgba(255,94,87,1);
+              border: 1px solid #ff5e57;
               background: transparent;
               position: absolute;
               width: 100%;
