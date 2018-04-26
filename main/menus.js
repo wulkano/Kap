@@ -3,6 +3,7 @@
 const {Menu} = require('electron');
 
 const {openPrefsWindow} = require('./preferences');
+const {closeCropperWindow} = require('./cropper');
 
 // Const {checkForUpdates} = require('./auto-updater');
 
@@ -34,19 +35,26 @@ const cogMenu = [
       openPrefsWindow();
     }
   },
-  {
-    type: 'separator'
-  },
   checkForUpdatesItem,
   {
     type: 'separator'
-  },
-  {
-    role: 'quit',
-    accelerator: 'Cmd+Q'
   }
 ];
 
+const quitOption = {
+  role: 'quit',
+  accelerator: 'Cmd+Q'
+};
+
+const exitOption = {
+  label: 'Close Kap',
+  accelerator: 'Cmd+w',
+  click() {
+    closeCropperWindow();
+  }
+};
+
 module.exports = {
-  cogMenu: Menu.buildFromTemplate(cogMenu)
+  cogMenu: Menu.buildFromTemplate([...cogMenu, quitOption]),
+  moreMenu: Menu.buildFromTemplate([...cogMenu, exitOption, quitOption])
 };

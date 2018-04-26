@@ -66,8 +66,13 @@ const restoreBlur = () => {
   cropper.focus();
 };
 
+const closeCropperWindow = () => {
+  cropper.close();
+};
+
 module.exports = {
   openCropperWindow,
+  closeCropperWindow,
   ignoreBlur,
   restoreBlur
 };

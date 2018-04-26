@@ -4,7 +4,7 @@ import React from 'react';
 import css from 'styled-jsx/css';
 
 import {
-  LinkIcon,
+  MoreIcon,
   CropIcon,
   ApplicationsIcon,
   FullscreenIcon,
@@ -15,41 +15,14 @@ import {connect, ActionBarContainer, CropperContainer} from '../../../containers
 
 const mainStyle = css`
   .main {
-    height: 50px;
+    height: 64px;
     display: flex;
     flex: 1;
     align-items: center;
-    justify-content: space-around;
   }
 `;
 
 const MainControls = {};
-
-class Left extends React.Component {
-  render() {
-    const {toggleAdvanced, toggleRatioLock, ratioLocked} = this.props;
-
-    return (
-      <div className="main">
-        <CropIcon onClick={toggleAdvanced}/>
-        <LinkIcon active={ratioLocked} onClick={() => toggleRatioLock()}/>
-        <style jsx>{mainStyle}</style>
-      </div>
-    );
-  }
-}
-
-Left.propTypes = {
-  toggleAdvanced: PropTypes.func.isRequired,
-  toggleRatioLock: PropTypes.func.isRequired,
-  ratioLocked: PropTypes.bool
-};
-
-MainControls.Left = connect(
-  [ActionBarContainer],
-  ({ratioLocked}) => ({ratioLocked}),
-  ({toggleAdvanced, toggleRatioLock}) => ({toggleAdvanced, toggleRatioLock})
-)(Left);
 
 const remote = electron.remote || false;
 let menu;
@@ -65,7 +38,7 @@ const buildMenu = async ({appSelected, selectApp}) => {
   menu = await buildWindowsMenu(onSelect, appSelected);
 };
 
-class Right extends React.Component {
+class Left extends React.Component {
   state = {};
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -80,17 +53,65 @@ class Right extends React.Component {
   }
 
   render() {
-    const {enterFullscreen, exitFullscreen, fullscreen, appSelected} = this.props;
+    const {toggleAdvanced, appSelected} = this.props;
 
     return (
       <div className="main">
+        <div className="crop">
+          <CropIcon size="22px" onClick={toggleAdvanced}/>
+        </div>
         <ApplicationsIcon active={Boolean(appSelected)} onClick={() => menu.popup()}/>
-        {
-          fullscreen ?
-            <ExitFullscreenIcon onClick={exitFullscreen}/> :
-            <FullscreenIcon onClick={enterFullscreen}/>
-        }
         <style jsx>{mainStyle}</style>
+        <style jsx>{`
+          .crop {
+            margin-left: 32px;
+            margin-right: 64px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+        `}</style>
+      </div>
+    );
+  }
+}
+
+Left.propTypes = {
+  toggleAdvanced: PropTypes.func.isRequired,
+  selectApp: PropTypes.func.isRequired,
+  appSelected: PropTypes.string
+};
+
+MainControls.Left = connect(
+  [CropperContainer, ActionBarContainer],
+  ({appSelected}) => ({appSelected}),
+  ({selectApp}, {toggleAdvanced}) => ({selectApp, toggleAdvanced})
+)(Left);
+
+class Right extends React.Component {
+  render() {
+    const {enterFullscreen, exitFullscreen, fullscreen} = this.props;
+
+    return (
+      <div className="main">
+        <div className="fullscreen">
+          {
+            fullscreen ?
+              <ExitFullscreenIcon onClick={exitFullscreen}/> :
+              <FullscreenIcon onClick={enterFullscreen}/>
+          }
+        </div>
+        <MoreIcon onClick={() => electron.remote.require('./menus').moreMenu.popup()}/>
+        <style jsx>{mainStyle}</style>
+        <style jsx>{`
+          .fullscreen {
+            margin-left: 56px;
+            margin-right: 64px;
+            height: 24px;
+          }
+        `}</style>
       </div>
     );
   }
@@ -99,15 +120,13 @@ class Right extends React.Component {
 Right.propTypes = {
   enterFullscreen: PropTypes.func.isRequired,
   exitFullscreen: PropTypes.func.isRequired,
-  selectApp: PropTypes.func.isRequired,
-  fullscreen: PropTypes.bool,
-  appSelected: PropTypes.string
+  fullscreen: PropTypes.bool
 };
 
 MainControls.Right = connect(
   [CropperContainer],
-  ({fullscreen, appSelected}) => ({fullscreen, appSelected}),
-  ({enterFullscreen, exitFullscreen, selectApp}) => ({enterFullscreen, exitFullscreen, selectApp})
+  ({fullscreen}) => ({fullscreen}),
+  ({enterFullscreen, exitFullscreen}) => ({enterFullscreen, exitFullscreen})
 )(Right);
 
 export default MainControls;

@@ -89,13 +89,21 @@ class Handles extends React.Component {
   }
 
   render() {
-    const {startResizing, showHandles, ratioLocked} = this.props;
+    const {
+      startResizing,
+      showHandles,
+      ratioLocked,
+      width,
+      height
+    } = this.props;
+
+    const show = showHandles && width + height !== 0;
 
     return (
       <div className="content">
         <div className="border">
           {
-            showHandles && [...(new Array(8).keys())].map(
+            show && [...(new Array(8).keys())].map(
               i => (
                 <Handle
                   key={`handle-${i}`}
@@ -136,6 +144,8 @@ class Handles extends React.Component {
 /* eslint-enable react/no-array-index-key */
 
 Handles.propTypes = {
+  width: PropTypes.number,
+  height: PropTypes.number,
   startResizing: PropTypes.func.isRequired,
   showHandles: PropTypes.bool,
   ratioLocked: PropTypes.bool,
@@ -147,7 +157,7 @@ Handles.propTypes = {
 
 export default connect(
   [CropperContainer, ActionBarContainer],
-  ({showHandles}, {ratioLocked}) => ({showHandles, ratioLocked}),
+  ({showHandles, width, height}, {ratioLocked}) => ({showHandles, width, height, ratioLocked}),
   ({startResizing}) => ({startResizing})
 )(Handles);
 

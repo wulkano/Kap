@@ -11,6 +11,7 @@ import TuneIcon from './tune';
 import PluginsIcon from './plugins';
 import GearIcon from './gear';
 import SpinnerIcon from './spinner';
+import MoreIcon from './more';
 
 export {
   ApplicationsIcon,
@@ -25,5 +26,6 @@ export {
   TuneIcon,
   PluginsIcon,
   GearIcon,
-  SpinnerIcon
+  SpinnerIcon,
+  MoreIcon
 };

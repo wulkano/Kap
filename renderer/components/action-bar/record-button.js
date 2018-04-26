@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class RecordButton extends React.Component {
   state = {}
@@ -49,11 +50,14 @@ class RecordButton extends React.Component {
 
   render() {
     const {showFirst, showSecond} = this.state;
+    const {cropperExists} = this.props;
 
     return (
       <div className="container">
         <div className="outer">
-          <div className="inner"/>
+          <div className="inner">
+            {!cropperExists && <div className="fill"/>}
+          </div>
           { showFirst && <div className="ripple first" onAnimationIteration={this.shouldFirstStop}/>}
           { showSecond && <div className="ripple second" onAnimationIteration={this.shouldSecondStop}/>}
         </div>
@@ -82,10 +86,17 @@ class RecordButton extends React.Component {
             .inner {
               width: 24px;
               height: 24px;
-              padding: 12px;
               border-radius: 50%;
               background: #fff;
               box-sizing: border-box;
+            }
+
+            .fill {
+              width: 20px;
+              height: 20px;
+              border-radius: 50%;
+              background: rgba(255,94,87,1);
+              margin: 2px;
             }
 
             .ripple {
@@ -115,5 +126,9 @@ class RecordButton extends React.Component {
     );
   }
 }
+
+RecordButton.propTypes = {
+  cropperExists: PropTypes.bool
+};
 
 export default RecordButton;

@@ -20,11 +20,11 @@ import {
 
 const advancedStyles = css`
   .advanced {
-    height: 50px;
+    height: 64px;
     display: flex;
     flex: 1;
     align-items: center;
-    justify-content: space-between;
+    padding: 0 8px;
   }
 `;
 
@@ -51,33 +51,54 @@ class Left extends React.Component {
 
     return (
       <div className="advanced">
-        <BackIcon onClick={toggleAdvanced}/>
+        <div className="back">
+          <BackIcon onClick={toggleAdvanced}/>
+        </div>
         <div className="select" onClick={() => this.state.menu.popup()}>
           <span>{ratio[0]}:{ratio[1]}</span>
-          <DropdownArrowIcon size="15px"/>
+          <DropdownArrowIcon size="18px"/>
         </div>
-        <LinkIcon active={ratioLocked} onClick={() => toggleRatioLock()}/>
+        <div className="link">
+          <LinkIcon active={ratioLocked} onClick={() => toggleRatioLock()}/>
+        </div>
         <style jsx>{advancedStyles}</style>
         <style jsx>{`
+          .back {
+            padding: 0 8px;
+          }
+
           .select {
-            border: 1px solid #ddd;
+            border: 1px solid #dbdbdb;
             border-radius: 4px;
             font-size: 0.7rem;
-            height: 1.1rem;
+            width: 96px;
+            margin: 0 8px;
             transition: border 0.12s ease-in-out;
             display: flex;
             align-items: center;
-            padding: 0 5px;
+            padding: 8px;
+            height: 32px;
+            box-sizing: border-box;
           }
 
           .select span {
-            flex: 1;
-            text-align: right;
-            padding-right: 5px;
+            width: 64px;
+            line-height: 16px;
+            font-size: 12px;
           }
 
           .select:hover {
             border-color: #ccc;
+          }
+
+          .link {
+            width: 32px;
+            height: 32px;
+            padding: 3px 3px;
+            box-sizing: border-box;
+            background: #f7f7f7;
+            border: 1px solid #dbdbdb;
+            border-radius: 4px;
           }
         `}</style>
       </div>
@@ -138,57 +159,57 @@ class Right extends React.Component {
 
     return (
       <div className="advanced">
-        <div className="dimensions">
-          <input
-            ref={this.widthInput}
-            type="text"
-            size="5"
-            maxLength="5"
-            value={width}
-            onChange={this.onWidthChange}
-            onBlur={handleWidthInput.flush}
-            onKeyDown={handleInputKeyPress(this.onWidthChange)}/>
-          <input
-            ref={this.heightInput}
-            type="text"
-            size="5"
-            maxLength="5"
-            value={height}
-            onChange={this.onHeightChange}
-            onBlur={handleHeightInput.flush}
-            onKeyDown={handleInputKeyPress(this.onHeightChange)}/>
+        <input
+          ref={this.widthInput}
+          type="text"
+          size="5"
+          maxLength="5"
+          value={width}
+          onChange={this.onWidthChange}
+          onBlur={handleWidthInput.flush}
+          onKeyDown={handleInputKeyPress(this.onWidthChange)}/>
+        <div className="swap">
+          <SwapIcon onClick={swapDimensions}/>
         </div>
-        <SwapIcon onClick={swapDimensions}/>
+        <input
+          ref={this.heightInput}
+          type="text"
+          size="5"
+          maxLength="5"
+          value={height}
+          onChange={this.onHeightChange}
+          onBlur={handleHeightInput.flush}
+          onKeyDown={handleInputKeyPress(this.onHeightChange)}/>
         <style jsx>{advancedStyles}</style>
         <style jsx>{`
-          .dimensions {
-            display: flex;
-          }
-
           input {
-            height: 1rem;
+            height: 32px;
             border: 1px solid #ddd;
             background: white;
-            text-align: center;
-            font-size: 0.7rem;
+            text-align: left;
+            font-size: 12px;
             transition: border 0.12s ease-in-out;
-          }
-
-          input:hover:not(:focus) {
-            border-color: #ccc;
-          }
-
-          input:first-child {
-            border-radius: 4px 0 0 4px;
-          }
-
-          input:last-child {
-            border-radius: 0 4px 4px 0;
+            box-sizing: border-box;
+            padding: 8px;
+            border-radius: 4px;
+            margin-right: 8px;
+            width: 64px;
           }
 
           input:focus {
             outline: none;
             border: 1px solid #007aff;
+          }
+
+          .swap {
+            width: 32px;
+            height: 32px;
+            padding: 3px 3px;
+            box-sizing: border-box;
+            background: #f7f7f7;
+            border: 1px solid #dbdbdb;
+            border-radius: 4px;
+            margin-right: 8px;
           }
         `}</style>
       </div>
