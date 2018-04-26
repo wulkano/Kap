@@ -21,8 +21,8 @@ export default class ActionBarContainer extends Container {
       x: (screenWidth - 300) / 2,
       y: Math.ceil(screenHeight * 0.8),
       ...this.actionBar,
-      width: 400,
-      height: 50,
+      width: 464,
+      height: 64,
       screenWidth,
       screenHeight
     };

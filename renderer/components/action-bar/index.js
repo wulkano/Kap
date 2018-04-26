@@ -6,6 +6,7 @@ import {connect, CropperContainer, ActionBarContainer} from '../../containers';
 
 import MainControls from './controls/main';
 import AdvancedControls from './controls/advanced';
+import RecordButton from './record-button';
 
 class ActionBar extends React.Component {
   render() {
@@ -22,7 +23,7 @@ class ActionBar extends React.Component {
           <MainControls.Left/>
           <AdvancedControls.Left/>
         </div>
-        <div className="record" onClick={startRecording}/>
+        <RecordButton startRecording={startRecording}/>
         <div className="actions">
           <MainControls.Right/>
           <AdvancedControls.Right/>
@@ -60,14 +61,6 @@ class ActionBar extends React.Component {
 
             .hidden {
               opacity: 0;
-            }
-
-            .record {
-              border-radius: 50%;
-              background: #ff6059;
-              width: 32px;
-              height: 32px;
-              margin: 15px;
             }
 
             .actions {

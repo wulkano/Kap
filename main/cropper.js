@@ -36,6 +36,7 @@ const openCropperWindow = () => {
       transparent: true
     });
 
+    // cropper.setIgnoreMouseEvents(true);
     cropper.loadURL(url);
     cropper.setAlwaysOnTop(true, 'screen-saver', 1);
     cropper.on('ready', cropper.focus);
