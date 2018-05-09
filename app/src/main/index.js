@@ -373,8 +373,8 @@ menubar.on('after-create-window', () => {
     recomputeExpectedWindowPosition();
     recomputeCurrentWindowPosition();
     if (expectedWindowPosition.x !== currentWindowPosition.x || expectedWindowPosition.y !== currentWindowPosition.y) { // This line is too long
-      menubar.setOption('x', currentWindowPosition.x);
-      menubar.setOption('y', currentWindowPosition.y);
+      menubar.setOption('x', expectedWindowPosition.x);
+      menubar.setOption('y', expectedWindowPosition.y);
     } else { // Reset the position if the window is back at it's original position
       menubar.setOption('x', undefined);
       menubar.setOption('y', undefined);
