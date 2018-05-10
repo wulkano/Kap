@@ -70,7 +70,7 @@ const recordTouchBar = (isRecording, isPreparing = false) => createRecordTouchba
   isRecording,
   isPreparing,
   onAspectRatioChange: aspectRatio => mainWindow.webContents.send('change-aspect-ratio', aspectRatio),
-  onRecord: (status) => mainWindow.webContents.send(status ? 'stop-recording' : 'prepare-recording')
+  onRecord: status => mainWindow.webContents.send(status ? 'stop-recording' : 'prepare-recording')
 });
 
 const editorTouchbar = isPlaying => createEditorTouchbar({
@@ -115,6 +115,16 @@ const setCropperWindowOnBlur = (closeOnBlur = true) => {
       closeCropperWindow();
     }
   });
+};
+
+const updateRecordingTouchbar = (isRecording, isPreparing = false) => {
+  const recordTouchBarInstance = recordTouchBar(isRecording, isPreparing);
+  if (cropperWindow) {
+    cropperWindow.setTouchBar(recordTouchBarInstance);
+  }
+  if (mainWindow) {
+    mainWindow.setTouchBar(recordTouchBarInstance);
+  }
 };
 
 const openCropperWindow = (size = {}, position = {}, options = {}) => {
@@ -674,16 +684,6 @@ const notify = text => {
     body: text
   })).show();
 };
-
-const updateRecordingTouchbar = (isRecording, isPreparing = false) => {
-  const recordTouchBarInstance = recordTouchBar(isRecording, isPreparing);
-  if (cropperWindow) {
-    cropperWindow.setTouchBar(recordTouchBarInstance)
-  }
-  if (mainWindow) {
-    mainWindow.setTouchBar(recordTouchBarInstance)
-  }
-}
 
 ipcMain.on('install-plugin', async (event, name) => {
   try {
