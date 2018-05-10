@@ -7,7 +7,7 @@ import {activateWindow} from 'mac-windows';
 import {init as initErrorReporter} from '../common/reporter';
 import {init as initLogger} from '../common/logger';
 import * as settings from '../common/settings-manager';
-import {createMainTouchbar, createCropTouchbar, createEditorTouchbar} from './touch-bar';
+import {createMainTouchbar, createRecordTouchbar, createEditorTouchbar} from './touch-bar';
 import {init as initAutoUpdater} from './auto-updater';
 import {init as initAnalytics, track} from './analytics';
 import {applicationMenu, cogMenu} from './menus';
@@ -66,9 +66,11 @@ const mainTouchbar = createMainTouchbar({
   onCrop: () => mainWindow.webContents.send('crop')
 });
 
-const cropTouchbar = createCropTouchbar({
+const recordTouchBar = (isRecording, isPreparing = false) => createRecordTouchbar({
+  isRecording,
+  isPreparing,
   onAspectRatioChange: aspectRatio => mainWindow.webContents.send('change-aspect-ratio', aspectRatio),
-  onRecord: () => mainWindow.webContents.send('record')
+  onRecord: (status) => mainWindow.webContents.send(status ? 'stop-recording' : 'prepare-recording')
 });
 
 const editorTouchbar = isPlaying => createEditorTouchbar({
@@ -149,7 +151,7 @@ const openCropperWindow = (size = {}, position = {}, options = {}) => {
     cropperWindow.loadURL(`file://${__dirname}/../renderer/views/cropper.html`);
     cropperWindow.setIgnoreMouseEvents(false); // TODO this should be false by default
     cropperWindow.setAlwaysOnTop(true, 'screen-saver');
-    cropperWindow.setTouchBar(cropTouchbar);
+    updateRecordingTouchbar(false, false);
 
     if (isDev) {
       cropperWindow.openDevTools({mode: 'detach'});
@@ -261,6 +263,7 @@ const resetTrayIcon = () => {
   tray.setImage(path.join(__dirname, '..', '..', 'static', 'menubarDefaultTemplate.png'));
   menubar.setOption('alwaysOnTop', false);
   mainWindow.setAlwaysOnTop(false);
+  mainWindow.setTouchBar(mainTouchbar);
 };
 
 const animateIcon = () => new Promise(resolve => {
@@ -367,6 +370,7 @@ menubar.on('after-create-window', () => {
     if (cropperWindow && !cropperWindow.isFocused() && !recording) {
       // Close the cropper window if the main window loses focus and the cropper window
       // is not focused
+      mainWindow.setTouchBar(mainTouchbar);
       closeCropperWindow();
     }
 
@@ -485,6 +489,7 @@ ipcMain.on('start-recording', () => {
 ipcMain.on('will-start-recording', () => {
   recording = true;
   preparingToRecord = true;
+  updateRecordingTouchbar(false, true);
   if (cropperWindow) {
     cropperWindow.setResizable(false);
     cropperWindow.setIgnoreMouseEvents(true);
@@ -501,16 +506,19 @@ ipcMain.on('will-start-recording', () => {
 
 ipcMain.on('did-start-recording', () => {
   preparingToRecord = false;
+  updateRecordingTouchbar(true, false);
 });
 
 ipcMain.on('stopped-recording', () => {
   resetTrayIcon();
   track('recording/finished');
+  updateRecordingTouchbar(false, false);
 });
 
 ipcMain.on('will-stop-recording', () => {
   recording = false;
   preparingToRecord = false;
+  updateRecordingTouchbar(false, true);
   if (cropperWindow) {
     closeCropperWindow();
   }
@@ -593,6 +601,7 @@ ipcMain.on('open-editor-window', (event, opts) => {
   editorWindow.on('closed', () => {
     editorWindow = undefined;
     app.kap.editorWindow = undefined;
+    mainWindow.setTouchBar(mainTouchbar);
   });
 
   ipcMain.on('toggle-fullscreen-editor-window', () => {
@@ -665,6 +674,16 @@ const notify = text => {
     body: text
   })).show();
 };
+
+const updateRecordingTouchbar = (isRecording, isPreparing = false) => {
+  const recordTouchBarInstance = recordTouchBar(isRecording, isPreparing);
+  if (cropperWindow) {
+    cropperWindow.setTouchBar(recordTouchBarInstance)
+  }
+  if (mainWindow) {
+    mainWindow.setTouchBar(recordTouchBarInstance)
+  }
+}
 
 ipcMain.on('install-plugin', async (event, name) => {
   try {
