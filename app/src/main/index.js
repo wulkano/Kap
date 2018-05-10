@@ -379,10 +379,10 @@ menubar.on('after-create-window', () => {
 
   mainWindow.on('blur', () => {
     if (cropperWindow && !cropperWindow.isFocused() && !recording) {
+      mainWindow.setTouchBar(mainTouchbar);
       // Close the cropper window if the main window loses focus and the cropper window
       // is not focused
       closeCropperWindow();
-      mainWindow.setTouchBar(mainTouchbar);
     }
 
     recomputeExpectedWindowPosition();
