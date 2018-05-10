@@ -250,6 +250,7 @@ ipcMain.on('open-cropper-window', (event, size, position) => {
 
 ipcMain.on('close-cropper-window', () => {
   if (cropperWindow && !recording) {
+    mainWindow.setTouchBar(mainTouchbar);
     closeCropperWindow();
   }
 });
@@ -380,8 +381,8 @@ menubar.on('after-create-window', () => {
     if (cropperWindow && !cropperWindow.isFocused() && !recording) {
       // Close the cropper window if the main window loses focus and the cropper window
       // is not focused
-      mainWindow.setTouchBar(mainTouchbar);
       closeCropperWindow();
+      mainWindow.setTouchBar(mainTouchbar);
     }
 
     recomputeExpectedWindowPosition();
