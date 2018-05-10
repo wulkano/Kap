@@ -176,6 +176,7 @@ const openCropperWindow = (size = {}, position = {}, options = {}) => {
     cropperWindow.on('closed', () => {
       cropperWindow = undefined;
       mainWindow.webContents.send('cropper-window-closed');
+      mainWindow.setTouchBar(mainTouchbar);
     });
 
     cropperWindow.on('resize', () => {
@@ -274,7 +275,6 @@ const resetTrayIcon = () => {
   tray.setImage(path.join(__dirname, '..', '..', 'static', 'menubarDefaultTemplate.png'));
   menubar.setOption('alwaysOnTop', false);
   mainWindow.setAlwaysOnTop(false);
-  mainWindow.setTouchBar(mainTouchbar);
 };
 
 const animateIcon = () => new Promise(resolve => {
@@ -379,9 +379,9 @@ menubar.on('after-create-window', () => {
 
   mainWindow.on('blur', () => {
     if (cropperWindow && !cropperWindow.isFocused() && !recording) {
-      mainWindow.setTouchBar(mainTouchbar);
       // Close the cropper window if the main window loses focus and the cropper window
       // is not focused
+      mainWindow.setTouchBar(mainTouchbar);
       closeCropperWindow();
     }
 
