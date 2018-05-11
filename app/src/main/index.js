@@ -142,6 +142,7 @@ const openCropperWindow = (size = {}, position = {}, options = {}) => {
       resizable: true,
       hasShadow: false,
       enableLargerThanScreen: true,
+      center: !position.x && !position.y,
       x: x - (cropperWindowBuffer / 2),
       y: y - (cropperWindowBuffer / 2)
     });
