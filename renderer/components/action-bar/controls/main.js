@@ -27,25 +27,19 @@ const MainControls = {};
 const remote = electron.remote || false;
 let menu;
 
-const buildMenu = async ({appSelected, selectApp}) => {
-  const {buildWindowsMenu, activateApp} = remote.require('./common/windows');
-
-  const onSelect = win => {
-    activateApp(win);
-    selectApp(win);
-  };
-
-  menu = await buildWindowsMenu(onSelect, appSelected);
+const buildMenu = async ({appSelected}) => {
+  const {buildWindowsMenu} = remote.require('./common/windows');
+  menu = await buildWindowsMenu(appSelected);
 };
 
 class Left extends React.Component {
   state = {};
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const {appSelected, selectApp} = nextProps;
+    const {appSelected} = nextProps;
 
     if (appSelected !== prevState.appSelected) {
-      buildMenu({appSelected, selectApp});
+      buildMenu({appSelected});
       return {appSelected};
     }
 

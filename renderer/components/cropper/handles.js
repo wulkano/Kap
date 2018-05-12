@@ -33,7 +33,7 @@ class Handle extends React.Component {
             position: absolute;
             width: ${size}px;
             height: ${size}px;
-            border-radius: 2px;
+            border-radius: 50%;
             background: white;
             border: 1px solid gray;
             top: calc(50% - ${size / 2}px);
@@ -96,10 +96,11 @@ class Handles extends React.Component {
       showHandles,
       ratioLocked,
       width,
-      height
+      height,
+      isActive
     } = this.props;
 
-    const show = showHandles && width + height !== 0;
+    const show = isActive && showHandles && width + height !== 0;
 
     return (
       <div className="content">
@@ -146,6 +147,7 @@ class Handles extends React.Component {
 /* eslint-enable react/no-array-index-key */
 
 Handles.propTypes = {
+  isActive: PropTypes.bool,
   width: PropTypes.number,
   height: PropTypes.number,
   startResizing: PropTypes.func.isRequired,
@@ -159,7 +161,7 @@ Handles.propTypes = {
 
 export default connect(
   [CropperContainer, ActionBarContainer],
-  ({showHandles, width, height}, {ratioLocked}) => ({showHandles, width, height, ratioLocked}),
+  ({showHandles, width, height, isActive}, {ratioLocked}) => ({showHandles, width, height, isActive, ratioLocked}),
   ({startResizing}) => ({startResizing})
 )(Handles);
 

@@ -11,7 +11,11 @@ import RecordButton from './record-button';
 class ActionBar extends React.Component {
   static defaultProps = {
     cropperWidth: 0,
-    cropperHeight: 0
+    cropperHeight: 0,
+    width: 0,
+    height: 0,
+    x: 0,
+    y: 0
   }
 
   render() {
@@ -118,8 +122,8 @@ ActionBar.propTypes = {
 
 export default connect(
   [ActionBarContainer, CropperContainer],
-  ({advanced, moving, width, height, x, y, recording}, {resizing, width: cropperWidth, height: cropperHeight, moving: cropperMoving}) => ({
-    advanced, width, height, x, y, moving, recording, hidden: cropperMoving || resizing, cropperWidth, cropperHeight
+  ({advanced, moving, width, height, x, y, recording}, {picking, resizing, width: cropperWidth, isActive, height: cropperHeight, moving: cropperMoving}) => ({
+    advanced, width, height, x, y, moving, recording, hidden: !isActive || cropperMoving || resizing || picking, cropperWidth, cropperHeight
   }),
   ({startMoving, startRecording}) => ({startMoving, startRecording})
 )(ActionBar);

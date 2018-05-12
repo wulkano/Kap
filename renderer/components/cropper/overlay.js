@@ -1,4 +1,3 @@
-import electron from 'electron';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -13,8 +12,6 @@ import {
 import {getResizingCursor} from './handles';
 
 class Overlay extends React.Component {
-  remote = electron.remote || false
-
   static defaultProps = {
     x: 0,
     y: 0,
@@ -23,12 +20,6 @@ class Overlay extends React.Component {
   }
 
   render() {
-    if (!this.remote) {
-      return null;
-    }
-
-    const {width: screenWidth, height: screenHeight} = this.remote.getGlobal('screen');
-
     const {
       onMouseUp,
       setCursor,
@@ -39,12 +30,20 @@ class Overlay extends React.Component {
       height,
       moving,
       resizing,
-      currentHandle
+      currentHandle,
+      isActive,
+      isReady,
+      screenWidth,
+      screenHeight
     } = this.props;
+
+    if (!isReady) {
+      return null;
+    }
 
     const className = classNames('overlay', {
       picking: !resizing && !moving,
-      'no-transition': resizing || moving
+      'no-transition': resizing || moving || !isActive
     });
 
     return (
@@ -129,13 +128,17 @@ Overlay.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
-  ]).isRequired
+  ]).isRequired,
+  isActive: PropTypes.bool,
+  isReady: PropTypes.bool,
+  screenWidth: PropTypes.number,
+  screenHeight: PropTypes.number
 };
 
 export default connect(
   [CropperContainer, ActionBarContainer, CursorContainer],
-  ({x, y, width, height, moving, resizing, currentHandle}, actionBar) => ({
-    x, y, width, height, resizing, currentHandle, moving: moving || actionBar.moving
+  ({x, y, width, height, moving, resizing, currentHandle, screenWidth, screenHeight, isReady, isActive}, actionBar) => ({
+    x, y, width, height, resizing, currentHandle, screenWidth, screenHeight, isReady, isActive, moving: moving || actionBar.moving
   }),
   ({stopMoving, stopResizing, stopPicking, startPicking}, actionBar, {setCursor}) => ({
     onMouseUp: () => {

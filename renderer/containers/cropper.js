@@ -2,8 +2,6 @@ import electron from 'electron';
 import nearestNormalAspectRatio from 'nearest-normal-aspect-ratio';
 import {Container} from 'unstated';
 
-const {width: screenWidth, height: screenHeight} = (electron.screen && electron.screen.getPrimaryDisplay().bounds) || {};
-
 // Helper function for retrieving the simplest ratio,
 // via the largest common divisor of two numbers (thanks @doot0)
 const getLargestCommonDivisor = (first, second) => {
@@ -48,18 +46,46 @@ export default class CropperContainer extends Container {
     }
 
     this.settings = this.remote.require('./common/settings');
-    this.dimensions = this.settings.get('dimensions');
 
     this.state = {
-      ...this.dimensions,
       resizing: false,
       moving: false,
       picking: false,
       showHandles: true,
-      screenWidth,
-      screenHeight,
-      appSelected: ''
+      appSelected: '',
+      screenWidth: 0,
+      screenHeight: 0,
+      isActive: false,
+      isReady: false,
+      ratio: [1, 1]
     };
+  }
+
+  setDisplay = display => {
+    const {width, height, isActive} = display;
+
+    this.setState({
+      screenWidth: width,
+      screenHeight: height,
+      isActive,
+      isReady: true
+    });
+  }
+
+  setActive = isActive => {
+    const updates = {isActive};
+
+    if (!isActive) {
+      updates.x = 0;
+      updates.y = 0;
+      updates.width = 0;
+      updates.height = 0;
+      updates.fullscreen = false;
+      updates.showHandles = true;
+      updates.appSelected = '';
+    }
+
+    this.setState(updates);
   }
 
   updateSettings = updates => {
@@ -92,7 +118,7 @@ export default class CropperContainer extends Container {
   }
 
   setRatio = ratio => {
-    const {y, width} = this.state;
+    const {y, width, screenHeight} = this.state;
     const updates = {ratio};
 
     this.unselectApp();
@@ -106,7 +132,7 @@ export default class CropperContainer extends Container {
   }
 
   swapDimensions = () => {
-    const {x, height, ratio} = this.state;
+    const {x, height, ratio, screenWidth} = this.state;
     const updates = {width: height};
 
     if (x + updates.width > screenWidth) {
@@ -130,7 +156,7 @@ export default class CropperContainer extends Container {
   }
 
   enterFullscreen = () => {
-    const {x, y, width, height} = this.state;
+    const {x, y, width, height, screenWidth, screenHeight} = this.state;
     this.unselectApp();
     this.setState({
       fullscreen: true,
@@ -244,7 +270,7 @@ export default class CropperContainer extends Container {
   }
 
   resize = ({pageX, pageY}) => {
-    const {currentHandle, x, y, width, height, original, ratio} = this.state;
+    const {currentHandle, x, y, width, height, original, ratio, screenWidth, screenHeight} = this.state;
     const {top, bottom, left, right} = currentHandle;
 
     const updates = {};

@@ -1,7 +1,7 @@
 import electron from 'electron';
 import {Container} from 'unstated';
 
-const {width: screenWidth, height: screenHeight} = (electron.screen && electron.screen.getPrimaryDisplay().bounds) || {};
+// const {width: screenWidth, height: screenHeight} = (electron.screen && electron.screen.getPrimaryDisplay().bounds) || {};
 
 export default class ActionBarContainer extends Container {
   remote = electron.remote || false
@@ -15,17 +15,31 @@ export default class ActionBarContainer extends Container {
     }
 
     this.settings = this.remote.require('./common/settings');
-    this.actionBar = this.settings.get('actionBar');
+    this.state = {};
+  }
 
-    this.state = {
-      x: (screenWidth - 300) / 2,
-      y: Math.ceil(screenHeight * 0.8),
-      ...this.actionBar,
+  setDisplay = display => {
+    const {width, height} = display;
+
+    this.setState({
+      screenWidth: width,
+      screenHeight: height,
+      x: (width - 464) / 2,
+      y: Math.ceil(height * 0.8),
       width: 464,
-      height: 64,
-      screenWidth,
-      screenHeight
-    };
+      height: 64
+    });
+  }
+
+  resetPosition = () => {
+    const {screenWidth, screenHeight} = this.state;
+
+    this.setState({
+      x: (screenWidth - 464) / 2,
+      y: Math.ceil(screenHeight * 0.8),
+      width: 464,
+      height: 64
+    });
   }
 
   bindCursor = cursorContainer => {

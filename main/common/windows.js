@@ -5,7 +5,7 @@ const {getWindows, activateWindow} = require('mac-windows');
 const {getAppIconListByPid} = require('node-mac-app-icon');
 const Store = require('electron-store');
 
-const {ignoreBlur, restoreBlur} = require('../cropper');
+const {selectApp} = require('../cropper');
 
 const APP_BLACKLIST = [
   'Kap',
@@ -54,7 +54,7 @@ const getWindowList = async () => {
   });
 };
 
-const buildWindowsMenu = async (onSelect, selected) => {
+const buildWindowsMenu = async selected => {
   const menu = new Menu();
   const windows = await getWindowList();
 
@@ -65,11 +65,7 @@ const buildWindowsMenu = async (onSelect, selected) => {
         icon: win.icon,
         type: 'checkbox',
         checked: win.ownerName === selected,
-        click: () => {
-          if (onSelect) {
-            onSelect(win);
-          }
-        }
+        click: () => activateApp(win)
       })
     );
   }
@@ -88,14 +84,9 @@ const updateAppUsageHistory = async app => {
   store.set('appUsageHistory', usageHistory);
 };
 
-const activateApp = async window => {
+const activateApp = window => {
   updateAppUsageHistory(window);
-  // Cropper closes onBlur by default, but activating an app means focusing it, so we have to
-  // disable the onBlur behavior until the app is focused
-  ignoreBlur();
-  await activateWindow(window.ownerName);
-  // For some reason this happened a bit too early without the timeout
-  setTimeout(restoreBlur, 500);
+  selectApp(window, activateWindow);
 };
 
 module.exports = {

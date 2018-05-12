@@ -16,66 +16,134 @@ const prodPath = formatUrl({
 
 const url = isDev ? devPath : prodPath;
 
-let cropper = null;
-let shouldIgnoreBlur = false;
+const croppers = new Map();
+
+const closeAllCroppers = () => {
+  const {screen} = electron;
+
+  for (const [id, cropper] of croppers) {
+    cropper.destroy();
+    croppers.delete(id);
+  }
+
+  screen.removeAllListeners('display-removed');
+  screen.removeAllListeners('display-added');
+};
+
+const openCropper = (display, activeDisplayId) => {
+  const {id, bounds} = display;
+  const {x, y, width, height} = bounds;
+
+  const cropper = new BrowserWindow({
+    x,
+    y,
+    width,
+    height,
+    hasShadow: false,
+    enableLargerThanScreen: true,
+    resizable: false,
+    moveable: false,
+    frame: false,
+    transparent: true,
+    show: false
+  });
+
+  cropper.loadURL(url);
+  cropper.setAlwaysOnTop(true, 'screen-saver', 1);
+
+  cropper.webContents.on('did-finish-load', () => {
+    const isActive = activeDisplayId === id;
+    cropper.webContents.send('display', {id, x, y, width, height, isActive});
+  });
+
+  if (isDev) {
+    cropper.openDevTools({mode: 'detach'});
+  }
+
+  cropper.on('closed', closeAllCroppers);
+  croppers.set(id, cropper);
+  return cropper;
+};
 
 const openCropperWindow = () => {
-  if (cropper) {
-    cropper.setIgnoreMouseEvents(false);
-    cropper.show();
-  } else {
-    const {width, height} = electron.screen.getPrimaryDisplay().bounds;
-    global.screen = {width, height};
-    cropper = new BrowserWindow({
-      x: 0,
-      y: 0,
-      width,
-      height,
-      hasShadow: false,
-      enableLargerThanScreen: true,
-      resizable: false,
-      moveable: false,
-      frame: false,
-      transparent: true
-    });
+  closeAllCroppers();
 
-    // cropper.setIgnoreMouseEvents(true);
-    cropper.loadURL(url);
-    cropper.setAlwaysOnTop(true, 'screen-saver', 1);
-    cropper.on('ready', cropper.focus);
+  const {screen} = electron;
+  const displays = screen.getAllDisplays();
+  const activeDisplayId = screen.getDisplayNearestPoint(screen.getCursorScreenPoint()).id;
 
-    if (isDev) {
-      cropper.openDevTools({mode: 'detach'});
+  for (const display of displays) {
+    openCropper(display, activeDisplayId);
+  }
+
+  for (const cropper of croppers.values()) {
+    cropper.showInactive();
+  }
+
+  croppers.get(activeDisplayId).focus();
+
+  screen.on('display-removed', (event, oldDisplay) => {
+    const {id} = oldDisplay;
+    const cropper = croppers.get(id);
+
+    const wasFocused = cropper.isFocused();
+
+    cropper.removeAllListeners('closed');
+    cropper.destroy();
+    delete croppers[id];
+
+    if (wasFocused) {
+      const activeDisplayId = screen.getDisplayNearestPoint(screen.getCursorScreenPoint()).id;
+      croppers.get(activeDisplayId).focus();
+    }
+  });
+
+  screen.on('display-added', (event, newDisplay) => {
+    const cropper = openCropper(newDisplay);
+    cropper.showInactive();
+  });
+};
+
+const preventDefault = event => event.preventDefault();
+
+const selectApp = async (window, activateWindow) => {
+  for (const cropper of croppers.values()) {
+    cropper.prependListener('blur', preventDefault);
+  }
+
+  await activateWindow(window.ownerName);
+
+  const {screen} = electron;
+  const {x, y, width, height, ownerName} = window;
+
+  const display = screen.getDisplayMatching({x, y, width, height});
+  const {id, bounds: {x: screenX, y: screenY}} = display;
+
+  // For some reason this happened a bit too early without the timeout
+  setTimeout(() => {
+    for (const cropper of croppers.values()) {
+      cropper.removeListener('blur', preventDefault);
+      cropper.webContents.send('blur');
     }
 
-    cropper.on('blur', () => {
-      if (!shouldIgnoreBlur && !cropper.webContents.isDevToolsFocused()) {
-        cropper.close();
-      }
+    croppers.get(id).focus();
+
+    croppers.get(id).webContents.send('select-app', {
+      ownerName,
+      x: x - screenX,
+      y: y - screenY,
+      width,
+      height
     });
-
-    cropper.on('closed', () => {
-      cropper = null;
-    });
-  }
-};
-
-const ignoreBlur = () => {
-  shouldIgnoreBlur = true;
-};
-
-const restoreBlur = () => {
-  shouldIgnoreBlur = false;
-  cropper.focus();
+  }, 300);
 };
 
 const closeCropperWindow = () => {
-  cropper.close();
+  closeAllCroppers();
 };
 
 module.exports = {
   openCropperWindow,
   closeCropperWindow,
-  ignoreBlur,
-  restoreBlur
+  selectApp
 };

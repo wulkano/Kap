@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import classNames from 'classnames';
 
-import {connect, CursorContainer} from '../../containers';
+import {connect, CursorContainer, CropperContainer} from '../../containers';
 
 class Cursor extends React.Component {
   remote = electron.remote || false
@@ -13,8 +13,8 @@ class Cursor extends React.Component {
       return null;
     }
 
-    const {width: screenWidth, height: screenHeight} = this.remote.getGlobal('screen');
-    const {cursorY, cursorX, width, height} = this.props;
+    // const {width: screenWidth, height: screenHeight} = this.remote.getGlobal('screen');
+    const {cursorY, cursorX, width, height, screenWidth, screenHeight} = this.props;
 
     const className = classNames('dimensions', {
       flipY: screenHeight - cursorY < 35,
@@ -57,10 +57,12 @@ Cursor.propTypes = {
   cursorX: PropTypes.number,
   cursorY: PropTypes.number,
   width: PropTypes.number,
-  height: PropTypes.number
+  height: PropTypes.number,
+  screenWidth: PropTypes.number,
+  screenHeight: PropTypes.number
 };
 
 export default connect(
-  [CursorContainer],
-  ({cursorX, cursorY}) => ({cursorX, cursorY})
+  [CursorContainer, CropperContainer],
+  ({cursorX, cursorY}, {screenWidth, screenHeight}) => ({cursorX, cursorY, screenWidth, screenHeight})
 )(Cursor);
