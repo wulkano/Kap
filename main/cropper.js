@@ -4,6 +4,7 @@ const {format: formatUrl} = require('url');
 const electron = require('electron');
 const isDev = require('electron-is-dev');
 const {resolve} = require('app-root-path');
+const delay = require('delay');
 
 const settings = require('./common/settings');
 
@@ -139,22 +140,22 @@ const selectApp = async (window, activateWindow) => {
   const {id, bounds: {x: screenX, y: screenY}} = display;
 
   // For some reason this happened a bit too early without the timeout
-  setTimeout(() => {
-    for (const cropper of croppers.values()) {
-      cropper.removeListener('blur', preventDefault);
-      cropper.webContents.send('blur');
-    }
+  await delay(300);
 
-    croppers.get(id).focus();
+  for (const cropper of croppers.values()) {
+    cropper.removeListener('blur', preventDefault);
+    cropper.webContents.send('blur');
+  }
 
-    croppers.get(id).webContents.send('select-app', {
-      ownerName,
-      x: x - screenX,
-      y: y - screenY,
-      width,
-      height
-    });
-  }, 300);
+  croppers.get(id).focus();
+
+  croppers.get(id).webContents.send('select-app', {
+    ownerName,
+    x: x - screenX,
+    y: y - screenY,
+    width,
+    height
+  });
 };
 
 const setRecordingCroppers = () => {

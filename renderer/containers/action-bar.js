@@ -21,13 +21,13 @@ export default class ActionBarContainer extends Container {
 
   setDisplay = display => {
     const {width, height, cropper} = display;
-    const {x, y, ratioLocked} = cropper ? this.settings.get('actionbar') : {};
+    const {x, y, ratioLocked} = cropper ? this.settings.get('actionBar') : {};
 
     this.setState({
       screenWidth: width,
       screenHeight: height,
-      x: x || (width - barWidth) / 2,
-      y: y || Math.ceil(height * 0.8),
+      x: x ? x : (width - barWidth) / 2,
+      y: y ? y : Math.ceil(height * 0.8),
       width: barWidth,
       height: barHeight,
       ratioLocked
@@ -56,7 +56,7 @@ export default class ActionBarContainer extends Container {
   updateSettings = updates => {
     const {x, y, ratioLocked} = this.state;
 
-    this.settings.set('actionbar', {
+    this.settings.set('actionBar', {
       x,
       y,
       ratioLocked,

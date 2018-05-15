@@ -31,6 +31,7 @@
     "aperture": "^4.0.0",
     "app-root-path": "^2.0.1",
     "classnames": "^2.2.5",
+    "delay": "^2.0.0",
     "electron-is-dev": "^0.3.0",
     "electron-next": "^3.1.3",
     "electron-settings": "^2.2.1",

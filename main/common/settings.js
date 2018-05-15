@@ -21,7 +21,7 @@ const store = new Store({
 });
 
 store.set('cropper', {});
-store.set('actionbar', {});
+store.set('actionBar', {});
 
 const audioInputDeviceId = store.get('audioInputDeviceId');
 
