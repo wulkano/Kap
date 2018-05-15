@@ -41,12 +41,12 @@ export const createMainTouchbar = ({onAspectRatioChange, onCrop}) => {
   ]);
 };
 
-export const createCropTouchbar = ({onAspectRatioChange, onRecord}) => {
+export const createRecordTouchbar = ({isRecording, isPreparing, onAspectRatioChange, onRecord}) => {
   const aspectRatioPopover = createAspectRatioPopover({onChange: onAspectRatioChange});
   const recordButton = new TouchBarButton({
-    label: 'Record',
+    label: isPreparing ? 'Loading' : isRecording ? 'Stop' : 'Record',
     backgroundColor: '#ff5050',
-    click: onRecord
+    click: () => !isPreparing && onRecord(isRecording)
   });
 
   return new TouchBar([

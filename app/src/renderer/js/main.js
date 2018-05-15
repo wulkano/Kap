@@ -241,7 +241,6 @@ document.addEventListener('DOMContentLoaded', () => {
   handleTrafficLightsClicks({hide: true});
 
   recordBtn.addEventListener('click', handleRecord);
-  ipcRenderer.on('record', handleRecord);
   ipcRenderer.on('crop', handleRecord);
 
   const setCropperWindowSize = (width, height) => {

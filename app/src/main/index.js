@@ -7,7 +7,7 @@ import {activateWindow} from 'mac-windows';
 import {init as initErrorReporter} from '../common/reporter';
 import {init as initLogger} from '../common/logger';
 import * as settings from '../common/settings-manager';
-import {createMainTouchbar, createCropTouchbar, createEditorTouchbar} from './touch-bar';
+import {createMainTouchbar, createRecordTouchbar, createEditorTouchbar} from './touch-bar';
 import {init as initAutoUpdater} from './auto-updater';
 import {init as initAnalytics, track} from './analytics';
 import {applicationMenu, cogMenu} from './menus';
@@ -66,9 +66,11 @@ const mainTouchbar = createMainTouchbar({
   onCrop: () => mainWindow.webContents.send('crop')
 });
 
-const cropTouchbar = createCropTouchbar({
+const recordTouchBar = (isRecording, isPreparing = false) => createRecordTouchbar({
+  isRecording,
+  isPreparing,
   onAspectRatioChange: aspectRatio => mainWindow.webContents.send('change-aspect-ratio', aspectRatio),
-  onRecord: () => mainWindow.webContents.send('record')
+  onRecord: status => mainWindow.webContents.send(status ? 'stop-recording' : 'prepare-recording')
 });
 
 const editorTouchbar = isPlaying => createEditorTouchbar({
@@ -115,6 +117,16 @@ const setCropperWindowOnBlur = (closeOnBlur = true) => {
   });
 };
 
+const updateRecordingTouchbar = (isRecording, isPreparing = false) => {
+  const recordTouchBarInstance = recordTouchBar(isRecording, isPreparing);
+  if (cropperWindow) {
+    cropperWindow.setTouchBar(recordTouchBarInstance);
+  }
+  if (mainWindow) {
+    mainWindow.setTouchBar(recordTouchBarInstance);
+  }
+};
+
 const openCropperWindow = (size = {}, position = {}, options = {}) => {
   options = Object.assign({}, {
     closeOnBlur: true
@@ -149,7 +161,7 @@ const openCropperWindow = (size = {}, position = {}, options = {}) => {
     cropperWindow.loadURL(`file://${__dirname}/../renderer/views/cropper.html`);
     cropperWindow.setIgnoreMouseEvents(false); // TODO this should be false by default
     cropperWindow.setAlwaysOnTop(true, 'screen-saver');
-    cropperWindow.setTouchBar(cropTouchbar);
+    updateRecordingTouchbar(false, false);
 
     if (isDev) {
       cropperWindow.openDevTools({mode: 'detach'});
@@ -164,6 +176,7 @@ const openCropperWindow = (size = {}, position = {}, options = {}) => {
     cropperWindow.on('closed', () => {
       cropperWindow = undefined;
       mainWindow.webContents.send('cropper-window-closed');
+      mainWindow.setTouchBar(mainTouchbar);
     });
 
     cropperWindow.on('resize', () => {
@@ -238,6 +251,7 @@ ipcMain.on('open-cropper-window', (event, size, position) => {
 
 ipcMain.on('close-cropper-window', () => {
   if (cropperWindow && !recording) {
+    mainWindow.setTouchBar(mainTouchbar);
     closeCropperWindow();
   }
 });
@@ -367,6 +381,7 @@ menubar.on('after-create-window', () => {
     if (cropperWindow && !cropperWindow.isFocused() && !recording) {
       // Close the cropper window if the main window loses focus and the cropper window
       // is not focused
+      mainWindow.setTouchBar(mainTouchbar);
       closeCropperWindow();
     }
 
@@ -485,6 +500,7 @@ ipcMain.on('start-recording', () => {
 ipcMain.on('will-start-recording', () => {
   recording = true;
   preparingToRecord = true;
+  updateRecordingTouchbar(false, true);
   if (cropperWindow) {
     cropperWindow.setResizable(false);
     cropperWindow.setIgnoreMouseEvents(true);
@@ -501,16 +517,19 @@ ipcMain.on('will-start-recording', () => {
 
 ipcMain.on('did-start-recording', () => {
   preparingToRecord = false;
+  updateRecordingTouchbar(true, false);
 });
 
 ipcMain.on('stopped-recording', () => {
   resetTrayIcon();
   track('recording/finished');
+  updateRecordingTouchbar(false, false);
 });
 
 ipcMain.on('will-stop-recording', () => {
   recording = false;
   preparingToRecord = false;
+  updateRecordingTouchbar(false, true);
   if (cropperWindow) {
     closeCropperWindow();
   }
@@ -593,6 +612,7 @@ ipcMain.on('open-editor-window', (event, opts) => {
   editorWindow.on('closed', () => {
     editorWindow = undefined;
     app.kap.editorWindow = undefined;
+    mainWindow.setTouchBar(mainTouchbar);
   });
 
   ipcMain.on('toggle-fullscreen-editor-window', () => {
