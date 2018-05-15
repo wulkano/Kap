@@ -19,6 +19,9 @@ const Fps = ({width = 768, height = 432}) => (
     input:focus {
       outline: none;
     }
+    input:focus, input:hover {
+      background-color: hsla(0,0%,100%,.2);
+    }
     .width {
       border-radius: 4px 0px 0px 4px;
       margin-right: 1px;
