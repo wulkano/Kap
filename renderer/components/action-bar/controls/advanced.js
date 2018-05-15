@@ -56,7 +56,7 @@ class Left extends React.Component {
         <div className="back">
           <BackIcon onClick={toggleAdvanced}/>
         </div>
-        <div className="select" onClick={() => this.state.menu.popup()} onMouseDown={stopPropagation}>
+        <div className="select" onClick={() => this.state.menu.popup({})} onMouseDown={stopPropagation}>
           <span>{ratio[0]}:{ratio[1]}</span>
           <DropdownArrowIcon size="18px"/>
         </div>
