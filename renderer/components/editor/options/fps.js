@@ -15,6 +15,7 @@ const Fps = ({width = 768, height = 432}) => (
       padding: 4px 8px;
       font-size: 12px;
       width: 64px; // TODO: fix autosizing inputs?
+      transition: border .12s ease-in-out,background .12s ease-in-out;
     }
     input:focus {
       outline: none;
