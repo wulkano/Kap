@@ -101,7 +101,7 @@ export default class extends React.Component {
     return (
       <div className="root">
         <Head>
-          <meta httpEquiv="Content-Security-Policy" content="media-src file://*;"/>
+          <meta httpEquiv="Content-Security-Policy" content="media-src file:;"/>
         </Head>
         <Editor src={src}/>
         <style jsx global>{`
