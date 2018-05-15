@@ -49,14 +49,13 @@ const getWindowList = async () => {
     size: 16,
     failOnError: false
   });
-  const {width, height} = remote.screen.getPrimaryDisplay().bounds;
+  const fullscreenBounds = remote.screen.getDisplayNearestPoint(remote.screen.getCursorScreenPoint()).bounds;
 
   return [
     {
       ownerName: 'Fullscreen',
       isFullscreen: true,
-      width,
-      height
+      ...fullscreenBounds
     },
     ...windows
       .filter(isAppValid)
