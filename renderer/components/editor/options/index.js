@@ -1,6 +1,6 @@
 import React from 'react';
-import Size from './fps';
-import Fps from './size';
+import Size from './size';
+import Fps from './fps';
 
 const Options = () => (
   <div className="options">
