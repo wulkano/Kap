@@ -19,10 +19,26 @@ let editor = null;
 
 const openEditorWindow = () => {
   if (!editor) {
+    const width = 768;
+    const barHeight = 48;
+    const height = 768 * 9 / 16 + barHeight;
     editor = new BrowserWindow({
-      width: 400,
-      height: 200
+      minWidth: width,
+      minHeight: height,
+      webPreferences: {
+        webSecurity: false
+      },
+      width,
+      height,
+      frame: false,
+      vibrancy: 'ultra-dark',
+      // The below is: `rgba(0, 0, 0, 0.4)`
+      // Convert tool: https://kilianvalkhof.com/2016/css-html/css-hexadecimal-colors-with-transparency-a-conversion-tool/
+      backgroundColor: '#00000066',
+      alwaysOnTop: true
     });
+
+    // editor.setAspectRatio(16 / 9, { width: 0, height: 48 })
 
     editor.loadURL(url);
     editor.on('closed', () => {
