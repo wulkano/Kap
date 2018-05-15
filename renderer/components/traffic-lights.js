@@ -28,10 +28,10 @@ export default () => (
     background-color: #bf4942;
   }
   .traffic-lights > .traffic-light-minimize, .traffic-lights:hover > .traffic-light-minimize, .traffic-lights:active > .traffic-light-minimize {
-    background-color: #ffbd2e;
+    background-color: #FFBF2F;
   }
   .traffic-lights > .traffic-light-minimize:active:hover, .traffic-lights:hover > .traffic-light-minimize:active:hover, .traffic-lights:active > .traffic-light-minimize:active:hover {
-    background-color: #bf8e22;
+    background-color: #995700;
   }
   .traffic-lights > .traffic-light-maximize, .traffic-lights:hover > .traffic-light-maximize, .traffic-lights:active > .traffic-light-maximize {
     // background-color: #28c941;
@@ -54,7 +54,7 @@ export default () => (
     width: 12px;
     border: 1px solid rgba(0, 0, 0, 0.06);
     box-sizing: border-box;
-    margin-right: 7px;
+    margin-right: 8px;
     background-color: #ddd;
     position: relative;
     outline: none;
@@ -70,9 +70,10 @@ export default () => (
     margin: auto;
   }
   .traffic-light-close:before, .traffic-light-close:after {
-    background-color: #4d0000;
+    background-color: #760E0E;
     width: 8px;
     height: 2px;
+    border-radius: 2px;
   }
   .traffic-light-close:before {
     transform: rotate(45deg);
