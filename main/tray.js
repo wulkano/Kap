@@ -1,6 +1,6 @@
 'use strict';
 
-const {Tray, ipcMain} = require('electron');
+const {Tray} = require('electron');
 const path = require('path');
 
 const {openCropperWindow} = require('./cropper');
@@ -19,19 +19,19 @@ const initializeTray = () => {
   return tray;
 };
 
-ipcMain.on('start-recording', () => {
+const disableTray = () => {
+  tray.removeListener('click', openCropperWindow);
+};
+
+const setRecordingTray = stopRecording => {
   animateIcon();
 
-  tray.removeListener('click', openCropperWindow);
-
   tray.once('click', () => {
-    // stopRecording();
-
+    stopRecording();
     tray.setImage(path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'));
-
     tray.on('click', openCropperWindow);
   });
-});
+};
 
 const animateIcon = () => new Promise(resolve => {
   const interval = 20;
@@ -55,5 +55,7 @@ const animateIcon = () => new Promise(resolve => {
 });
 
 module.exports = {
-  initializeTray
+  initializeTray,
+  disableTray,
+  setRecordingTray
 };

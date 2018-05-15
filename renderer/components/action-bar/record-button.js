@@ -2,6 +2,8 @@ import electron from 'electron';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import {connect, CropperContainer} from '../../containers';
+
 class RecordButton extends React.Component {
   state = {}
 
@@ -57,13 +59,38 @@ class RecordButton extends React.Component {
     }
   }
 
+  startRecording = event => {
+    event.stopPropagation();
+    const {cropperExists, x, y, width, height, screenWidth, screenHeight, displayId, setRecording} = this.props;
+
+    if (cropperExists) {
+      const {remote} = electron;
+      const {startRecording} = remote.require('./common/aperture');
+
+      startRecording({
+        cropperBounds: {
+          x,
+          y,
+          width,
+          height
+        },
+        screenBounds: {
+          width: screenWidth,
+          height: screenHeight
+        },
+        displayId
+      });
+      setRecording();
+    }
+  }
+
   render() {
     const {showFirst, showSecond} = this.state;
     const {cropperExists} = this.props;
 
     return (
       <div className="container">
-        <div className="outer">
+        <div className="outer" onMouseDown={this.startRecording}>
           <div className="inner">
             {!cropperExists && <div className="fill"/>}
           </div>
@@ -137,7 +164,19 @@ class RecordButton extends React.Component {
 }
 
 RecordButton.propTypes = {
-  cropperExists: PropTypes.bool
+  cropperExists: PropTypes.bool,
+  x: PropTypes.number,
+  y: PropTypes.number,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  screenWidth: PropTypes.number,
+  screenHeight: PropTypes.number,
+  displayId: PropTypes.number,
+  setRecording: PropTypes.func
 };
 
-export default RecordButton;
+export default connect(
+  [CropperContainer],
+  ({x, y, width, height, screenWidth, screenHeight, displayId}) => ({x, y, width, height, screenWidth, screenHeight, displayId}),
+  ({setRecording}) => ({setRecording})
+)(RecordButton);

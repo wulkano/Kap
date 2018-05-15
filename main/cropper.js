@@ -52,6 +52,7 @@ const openCropper = (display, activeDisplayId) => {
 
   cropper.loadURL(url);
   cropper.setAlwaysOnTop(true, 'screen-saver', 1);
+  cropper.setVisibleOnAllWorkspaces(true);
 
   cropper.webContents.on('did-finish-load', () => {
     const isActive = activeDisplayId === id;
@@ -156,12 +157,16 @@ const selectApp = async (window, activateWindow) => {
   }, 300);
 };
 
-const closeCropperWindow = () => {
-  closeAllCroppers();
+const setRecordingCroppers = () => {
+  for (const cropper of croppers.values()) {
+    cropper.removeAllListeners('blur');
+    cropper.setIgnoreMouseEvents(true);
+  }
 };
 
 module.exports = {
   openCropperWindow,
-  closeCropperWindow,
-  selectApp
+  closeAllCroppers,
+  selectApp,
+  setRecordingCroppers
 };

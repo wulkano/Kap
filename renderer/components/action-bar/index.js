@@ -28,7 +28,6 @@ class ActionBar extends React.Component {
       hidden,
       advanced,
       moving,
-      startRecording,
       recording,
       cropperWidth,
       cropperHeight
@@ -46,7 +45,6 @@ class ActionBar extends React.Component {
           <AdvancedControls.Left/>
         </div>
         <RecordButton
-          startRecording={startRecording}
           cropperExists={cropperWidth + cropperHeight !== 0}/>
         <div className="actions">
           <MainControls.Right/>
@@ -107,7 +105,6 @@ class ActionBar extends React.Component {
 
 ActionBar.propTypes = {
   startMoving: PropTypes.func.isRequired,
-  startRecording: PropTypes.func.isRequired,
   x: PropTypes.number,
   y: PropTypes.number,
   width: PropTypes.number,
@@ -122,8 +119,8 @@ ActionBar.propTypes = {
 
 export default connect(
   [ActionBarContainer, CropperContainer],
-  ({advanced, moving, width, height, x, y, recording}, {picking, resizing, width: cropperWidth, isActive, height: cropperHeight, moving: cropperMoving}) => ({
-    advanced, width, height, x, y, moving, recording, hidden: !isActive || cropperMoving || resizing || picking, cropperWidth, cropperHeight
+  ({advanced, moving, width, height, x, y}, {recording, picking, resizing, width: cropperWidth, isActive, height: cropperHeight, moving: cropperMoving}) => ({
+    advanced, width, height, x, y, moving, hidden: !isActive || cropperMoving || resizing || picking || recording, cropperWidth, cropperHeight
   }),
-  ({startMoving, startRecording}) => ({startMoving, startRecording})
+  ({startMoving}) => ({startMoving})
 )(ActionBar);

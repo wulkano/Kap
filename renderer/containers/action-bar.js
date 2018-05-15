@@ -65,20 +65,6 @@ export default class ActionBarContainer extends Container {
     this.setState(updates);
   }
 
-  startRecording = event => {
-    event.stopPropagation();
-
-    const tray = electron.remote && electron.remote.getGlobal('tray');
-    const {x, width, height} = tray.getBounds();
-
-    const actionBar = document.querySelector('.action-bar');
-    actionBar.addEventListener('transitionend', () => {
-      actionBar.style.display = 'none';
-    });
-
-    this.setState({recording: true, x, y: 0, width, height});
-  }
-
   toggleRatioLock = ratioLocked => {
     const {ratioLocked: isLocked} = this.state;
     if (ratioLocked) {

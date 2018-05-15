@@ -1,38 +1,46 @@
 'use strict';
 
-const {dialog} = require('electron');
+const {dialog, shell} = require('electron');
 const desktopIcons = require('hide-desktop-icons');
+const dnd = require('@sindresorhus/do-not-disturb');
 const createAperture = require('aperture');
 
-const {openEditorWindow} = require('../editor');
+// const {openEditorWindow} = require('../editor');
+const {setRecordingTray, disableTray} = require('../tray');
+const {setRecordingCroppers, closeAllCroppers} = require('../cropper');
 const settings = require('./settings');
 
 const aperture = createAperture();
 const {audioDevices} = createAperture;
 
-const startRecording = async bounds => {
+let wasDoNotDisturbAlreadyEnabled;
+
+const startRecording = async options => {
+  const {cropperBounds, screenBounds, displayId} = options;
   const past = Date.now();
-  const {id: displayId} = require('electron').screen.getPrimaryDisplay();
+
+  cropperBounds.y = screenBounds.height - (cropperBounds.y + cropperBounds.height);
 
   const {
+    record60fps,
     showCursor,
     highlightClicks,
     recordAudio,
     audioInputDeviceId,
-    hideDesktopIcons
-  } = settings.getAll();
-  console.log(settings.getAll());
+    hideDesktopIcons,
+    doNotDisturb
+  } = settings.store;
 
   const apertureOpts = {
-    // We have to convert this to a number as there was a bug
-    // previously that set FPS to string in the preferences
-    fps: 30,
-
-    cropArea: bounds,
+    fps: record60fps ? 60 : 30,
+    cropArea: cropperBounds,
     showCursor,
     highlightClicks,
     displayId: String(displayId)
   };
+
+  disableTray();
+  setRecordingCroppers();
 
   if (recordAudio === true) {
     // In case for some reason the default audio device is not set
@@ -40,7 +48,7 @@ const startRecording = async bounds => {
     if (audioInputDeviceId) {
       apertureOpts.audioDeviceId = audioInputDeviceId;
     } else {
-      const [defaultAudioDevice] = await aperture.audioDevices();
+      const [defaultAudioDevice] = await audioDevices();
       apertureOpts.audioDeviceId = defaultAudioDevice && defaultAudioDevice.id;
     }
   }
@@ -49,10 +57,19 @@ const startRecording = async bounds => {
     await desktopIcons.hide();
   }
 
+  if (doNotDisturb) {
+    wasDoNotDisturbAlreadyEnabled = await dnd.isEnabled();
+
+    if (!wasDoNotDisturbAlreadyEnabled) {
+      dnd.enable();
+    }
+  }
+
   try {
-    console.log(apertureOpts);
     await aperture.startRecording(apertureOpts);
-    // IpcRenderer.send('did-start-recording');
+
+    setRecordingTray(stopRecording);
+
     console.log(`Started recording after ${(Date.now() - past) / 1000}s`);
   } catch (err) {
     // This prevents the button from being reset, since the recording has not yet started
@@ -62,21 +79,31 @@ const startRecording = async bounds => {
       return;
     }
 
-    // IpcRenderer.send('will-stop-recording');
-    // reportError(err);
     dialog.showErrorBox('Recording error', err.message);
   }
 };
 
 const stopRecording = async () => {
-  const filePath = await aperture.stopRecording();
-  console.log(filePath);
+  closeAllCroppers();
 
-  if (settings.get('hideDesktopIcons')) {
+  const filePath = await aperture.stopRecording();
+
+  const {
+    hideDesktopIcons,
+    doNotDisturb
+  } = settings.store;
+
+  if (hideDesktopIcons) {
     desktopIcons.show();
   }
 
-  openEditorWindow({filePath});
+  if (doNotDisturb && !wasDoNotDisturbAlreadyEnabled) {
+    dnd.disable();
+  }
+
+  console.log(filePath);
+  shell.openItem(filePath);
+  // openEditorWindow({filePath});
 };
 
 module.exports = {

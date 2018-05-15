@@ -1,8 +1,9 @@
 'use strict';
+
 const {homedir} = require('os');
 const Store = require('electron-store');
 
-const {getAudioDevices} = require('./aperture');
+const {audioDevices} = require('aperture');
 
 const store = new Store({
   defaults: {
@@ -24,7 +25,7 @@ store.set('actionbar', {});
 
 const audioInputDeviceId = store.get('audioInputDeviceId');
 
-getAudioDevices().then(audioDevices => {
+audioDevices().then(audioDevices => {
   if (!audioDevices.find(device => device.id === audioInputDeviceId)) {
     const deviceId = audioDevices[0] && audioDevices[0].id;
     store.set('audioInputDeviceId', deviceId);

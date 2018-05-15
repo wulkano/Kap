@@ -97,10 +97,11 @@ class Handles extends React.Component {
       ratioLocked,
       width,
       height,
-      isActive
+      isActive,
+      recording
     } = this.props;
 
-    const show = isActive && showHandles && width + height !== 0;
+    const show = !recording && isActive && showHandles && width + height !== 0;
 
     return (
       <div className="content">
@@ -153,6 +154,7 @@ Handles.propTypes = {
   startResizing: PropTypes.func.isRequired,
   showHandles: PropTypes.bool,
   ratioLocked: PropTypes.bool,
+  recording: PropTypes.bool,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
@@ -161,7 +163,7 @@ Handles.propTypes = {
 
 export default connect(
   [CropperContainer, ActionBarContainer],
-  ({showHandles, width, height, isActive}, {ratioLocked}) => ({showHandles, width, height, isActive, ratioLocked}),
+  ({showHandles, width, height, isActive, recording}, {ratioLocked}) => ({showHandles, width, height, isActive, ratioLocked, recording}),
   ({startResizing}) => ({startResizing})
 )(Handles);
 

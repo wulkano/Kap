@@ -16,7 +16,7 @@ app.on('ready', async () => {
 
   await prepareNext('./renderer');
 
-  global.tray = initializeTray();
+  initializeTray();
   globalShortcut.register('Cmd+Shift+5', openCropperWindow);
 });
 

@@ -48,6 +48,7 @@ export default class CropperContainer extends Container {
     this.settings = this.remote.require('./common/settings');
 
     this.state = {
+      recording: false,
       resizing: false,
       moving: false,
       picking: false,
@@ -62,7 +63,6 @@ export default class CropperContainer extends Container {
   }
 
   setDisplay = display => {
-    console.log(display);
     const {width: screenWidth, height: screenHeight, isActive, id, cropper = {}} = display;
     const {x, y, width, height, ratio} = cropper;
 
@@ -78,6 +78,10 @@ export default class CropperContainer extends Container {
       height,
       ratio
     });
+  }
+
+  setRecording = () => {
+    this.setState({recording: true});
   }
 
   setActive = isActive => {

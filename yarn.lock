@@ -150,6 +150,13 @@
     lodash "^4.17.4"
     pify "^3.0.0"
 
+"@sindresorhus/do-not-disturb@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@sindresorhus/do-not-disturb/-/do-not-disturb-0.2.0.tgz#29fdb0d492ba45b2b27a70da56363b76f503630e"
+  dependencies:
+    electron-util "^0.7.0"
+    execa "^0.9.0"
+
 "@sindresorhus/is@^0.7.0":
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
@@ -3070,6 +3077,12 @@ electron-util@^0.4.1:
   dependencies:
     electron-is-dev "^0.3.0"
 
+electron-util@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/electron-util/-/electron-util-0.7.0.tgz#6cc94ae4f4280725ac10e05b54ecfae6033be045"
+  dependencies:
+    electron-is-dev "^0.3.0"
+
 electron@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/electron/-/electron-2.0.0.tgz#e95dc7f3a089a52b8c2a52c7c9e1024db0c8d46e"
@@ -4697,10 +4710,11 @@ he@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/he/-/he-1.1.1.tgz#93410fd21b009735151f8868c2f271f3427e23fd"
 
-hide-desktop-icons@^0.3.0:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/hide-desktop-icons/-/hide-desktop-icons-0.3.2.tgz#158b2c4738853a38874f907968646298dae26c85"
+hide-desktop-icons@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/hide-desktop-icons/-/hide-desktop-icons-0.4.0.tgz#2081f1260c505ee84155674992d3a75843b7c39f"
   dependencies:
+    electron-util "^0.7.0"
     execa "^0.9.0"
     fkill "^5.2.0"
     wallpaper "^2.6.0"

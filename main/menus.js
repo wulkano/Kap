@@ -3,7 +3,7 @@
 const {Menu} = require('electron');
 
 const {openPrefsWindow} = require('./preferences');
-const {closeCropperWindow} = require('./cropper');
+const {closeAllCroppers} = require('./cropper');
 
 // Const {checkForUpdates} = require('./auto-updater');
 
@@ -32,7 +32,7 @@ const cogMenu = [
     label: 'Preferences…',
     accelerator: 'Cmd+,',
     click() {
-      closeCropperWindow();
+      closeAllCroppers();
       openPrefsWindow();
     }
   },
