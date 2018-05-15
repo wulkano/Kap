@@ -116,22 +116,28 @@ const setCropperWindowOnBlur = (closeOnBlur = true) => {
 };
 
 const getCropperXYCoordinates = ({position = {}, width, height}) => {
-  let {x, y} = settings.get('cropperWindow.position');
-  let bounds = screen.getDisplayNearestPoint(screen.getCursorScreenPoint()).bounds;
+  const {x, y} = settings.get('cropperWindow.position');
+  const bounds = screen.getDisplayNearestPoint(screen.getCursorScreenPoint()).bounds;
 
   if (position.x === undefined && position.y === undefined) {
     if (x === 'center' && x === 'center') {
-      let centeredX = Math.ceil(bounds.x + ((bounds.width - width + cropperWindowBuffer) / 2));
-      let centeredY = Math.ceil(bounds.y + ((bounds.height - height + cropperWindowBuffer) / 2));
-
-      return {x: centeredX, y: centeredY};
-    } else {
-      return {x: x - (cropperWindowBuffer / 2), y: y - (cropperWindowBuffer / 2)};
+      return {
+        x: Math.ceil(bounds.x + ((bounds.width - width + cropperWindowBuffer) / 2)),
+        y: Math.ceil(bounds.y + ((bounds.height - height + cropperWindowBuffer) / 2))
+      };
     }
+
+    return {
+      x: x - (cropperWindowBuffer / 2),
+      y: y - (cropperWindowBuffer / 2)
+    };
   }
 
-  return {x: position.x - (cropperWindowBuffer / 2), y: position.y - (cropperWindowBuffer / 2)};
-}
+  return {
+    x: position.x - (cropperWindowBuffer / 2),
+    y: position.y - (cropperWindowBuffer / 2)
+  };
+};
 
 const openCropperWindow = (size = {}, position = {}, options = {}) => {
   options = Object.assign({}, {
@@ -147,7 +153,7 @@ const openCropperWindow = (size = {}, position = {}, options = {}) => {
     let {width = 512, height = 512} = settings.get('cropperWindow.size');
     width = size.width || width;
     height = size.height || height;
-    let {x, y} = getCropperXYCoordinates({position, width, height});
+    const {x, y} = getCropperXYCoordinates({position, width, height});
 
     cropperWindow = new BrowserWindow({
       width: width + cropperWindowBuffer,
@@ -228,7 +234,7 @@ ipcMain.on('set-cropper-window-size', (event, args) => {
   [args.width, args.height] = [parseInt(args.width, 10), parseInt(args.height, 10)];
 
   if (cropperWindow) {
-    let {x, y} = getCropperXYCoordinates({...args});
+    const {x, y} = getCropperXYCoordinates({...args});
 
     cropperWindow.setBounds({
       width: args.width + cropperWindowBuffer,
