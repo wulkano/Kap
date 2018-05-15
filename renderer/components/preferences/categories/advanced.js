@@ -25,7 +25,8 @@ class Advanced extends React.Component {
       toggleSetting,
       audioInputDeviceId,
       setAudioInputDeviceId,
-      audioDevices
+      audioDevices,
+      recordAudio
     } = this.props;
 
     const devices = audioDevices.map(device => ({
@@ -77,9 +78,14 @@ class Advanced extends React.Component {
             onClick={() => toggleSetting('record60fps')}/>
         </Item>
         <Item
-          title="Record audio"
-          subtitle="Select input device"
+          title="Audio recording"
+          subtitle="Record audio from input device"
         >
+          <Switch
+            checked={recordAudio}
+            onClick={() => toggleSetting('recordAudio')}/>
+        </Item>
+        <Item subtitle="Select input device">
           <Select
             options={devices}
             selected={audioInputDeviceId}
@@ -108,7 +114,8 @@ Advanced.propTypes = {
   toggleSetting: PropTypes.func.isRequired,
   audioInputDeviceId: PropTypes.string,
   setAudioInputDeviceId: PropTypes.func.isRequired,
-  audioDevices: PropTypes.array
+  audioDevices: PropTypes.array,
+  recordAudio: PropTypes.bool
 };
 
 export default connect(
