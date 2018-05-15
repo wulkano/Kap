@@ -1,6 +1,7 @@
 import path from 'path';
 import React from 'react';
 import Head from 'next/head';
+import TrafficLights from '../components/traffic-lights';
 
 const Options = ({children}) => (
   <div className="options">
@@ -23,7 +24,10 @@ class Editor extends React.Component {
     return (
       <div>
         <div className="video-container">
-          <div className="title-bar">kap-beta.mp4</div>
+          <div className="title-bar">
+            <TrafficLights/>
+            <span className="title-bar__title">kap-beta.mp4</span>
+          </div>
           <video
             ref={this.onRef}
             autoPlay
@@ -42,6 +46,7 @@ class Editor extends React.Component {
             width: 100% !important;
             height: auto !important;
             max.height: calc(100vh - 48px);
+            pointer-events: none; // Bug in electron will make elements over the video to have no pointer-events if this is not disabled
           }
           .video-container {
             position: relative;
@@ -69,7 +74,6 @@ class Editor extends React.Component {
             transform: translateY(-100%);
             transition: opacity 100ms ease, transform 500ms linear;
             opacity: 0;
-
             text-align: center;
           }
           .video-container:hover .title-bar {
