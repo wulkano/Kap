@@ -328,7 +328,6 @@ const openPrefsWindow = () => {
 
   prefsWindow.on('close', () => {
     prefsWindow = undefined;
-    track('preferences/closed');
   });
 
   prefsWindow.loadURL(`file://${__dirname}/../renderer/views/preferences.html`);
