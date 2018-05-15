@@ -2,19 +2,7 @@ import path from 'path';
 import React from 'react';
 import Head from 'next/head';
 import TrafficLights from '../components/traffic-lights';
-
-const Options = ({children}) => (
-  <div className="options">
-    {children}
-    <style jsx>{`
-      .options {
-        width: 100%;
-        height: 48px;
-        -webkit-app-region: no-drag;
-      }
-    `}</style>
-  </div>
-);
+import Options from '../components/editor/options';
 
 class Editor extends React.Component {
   state = {width: 768}
@@ -39,7 +27,7 @@ class Editor extends React.Component {
           />
         </div>
 
-        <Options>aaaaaa</Options>
+        <Options/>
 
         <style jsx>{`
           video {
@@ -114,6 +102,7 @@ export default class extends React.Component {
             -webkit-app-region: drag;
             font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
           }
+          * { box-sizing: border-box; }
         `}</style>
       </div>
     );
