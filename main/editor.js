@@ -17,7 +17,7 @@ const url = isDev ? devPath : prodPath;
 
 let editor = null;
 
-const openEditorWindow = () => {
+const openEditorWindow = ({alwaysOnTop = false} = {}) => {
   if (!editor) {
     const width = 768;
     const barHeight = 48;
@@ -35,7 +35,7 @@ const openEditorWindow = () => {
       // The below is: `rgba(0, 0, 0, 0.4)`
       // Convert tool: https://kilianvalkhof.com/2016/css-html/css-hexadecimal-colors-with-transparency-a-conversion-tool/
       backgroundColor: '#00000066',
-      alwaysOnTop: true
+      alwaysOnTop
     });
 
     // editor.setAspectRatio(16 / 9, { width: 0, height: 48 })
