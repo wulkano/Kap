@@ -5,6 +5,8 @@ const electron = require('electron');
 const isDev = require('electron-is-dev');
 const {resolve} = require('app-root-path');
 
+const settings = require('./common/settings');
+
 const {BrowserWindow} = electron;
 const devPath = 'http://localhost:8000/cropper';
 
@@ -53,7 +55,23 @@ const openCropper = (display, activeDisplayId) => {
 
   cropper.webContents.on('did-finish-load', () => {
     const isActive = activeDisplayId === id;
-    cropper.webContents.send('display', {id, x, y, width, height, isActive});
+    const displayInfo = {
+      isActive,
+      id,
+      x,
+      y,
+      width,
+      height
+    };
+
+    if (isActive) {
+      const savedCropper = settings.get('cropper');
+      if (savedCropper.displayId === id) {
+        displayInfo.cropper = savedCropper;
+      }
+    }
+
+    cropper.webContents.send('display', displayInfo);
   });
 
   if (isDev) {

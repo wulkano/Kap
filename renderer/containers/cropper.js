@@ -62,13 +62,21 @@ export default class CropperContainer extends Container {
   }
 
   setDisplay = display => {
-    const {width, height, isActive} = display;
+    console.log(display);
+    const {width: screenWidth, height: screenHeight, isActive, id, cropper = {}} = display;
+    const {x, y, width, height, ratio} = cropper;
 
     this.setState({
-      screenWidth: width,
-      screenHeight: height,
+      screenWidth,
+      screenHeight,
       isActive,
-      isReady: true
+      isReady: true,
+      displayId: id,
+      x,
+      y,
+      width,
+      height,
+      ratio
     });
   }
 
@@ -89,8 +97,17 @@ export default class CropperContainer extends Container {
   }
 
   updateSettings = updates => {
-    this.dimensions = {...this.dimensions, ...updates};
-    this.settings.set('dimensions', this.dimensions);
+    const {x, y, width, height, ratio, displayId} = this.state;
+
+    this.settings.set('cropper', {
+      x,
+      y,
+      width,
+      height,
+      ratio,
+      ...updates,
+      displayId
+    });
     this.setState(updates);
   }
 

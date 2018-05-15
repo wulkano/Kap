@@ -1,7 +1,8 @@
 import electron from 'electron';
 import {Container} from 'unstated';
 
-// const {width: screenWidth, height: screenHeight} = (electron.screen && electron.screen.getPrimaryDisplay().bounds) || {};
+const barWidth = 464;
+const barHeight = 64;
 
 export default class ActionBarContainer extends Container {
   remote = electron.remote || false
@@ -19,15 +20,17 @@ export default class ActionBarContainer extends Container {
   }
 
   setDisplay = display => {
-    const {width, height} = display;
+    const {width, height, cropper} = display;
+    const {x, y, ratioLocked} = cropper ? this.settings.get('actionbar') : {};
 
     this.setState({
       screenWidth: width,
       screenHeight: height,
-      x: (width - 464) / 2,
-      y: Math.ceil(height * 0.8),
-      width: 464,
-      height: 64
+      x: x || (width - barWidth) / 2,
+      y: y || Math.ceil(height * 0.8),
+      width: barWidth,
+      height: barHeight,
+      ratioLocked
     });
   }
 
@@ -35,10 +38,10 @@ export default class ActionBarContainer extends Container {
     const {screenWidth, screenHeight} = this.state;
 
     this.setState({
-      x: (screenWidth - 464) / 2,
+      x: (screenWidth - barWidth) / 2,
       y: Math.ceil(screenHeight * 0.8),
-      width: 464,
-      height: 64
+      width: barWidth,
+      height: barHeight
     });
   }
 
@@ -51,8 +54,14 @@ export default class ActionBarContainer extends Container {
   }
 
   updateSettings = updates => {
-    this.actionBar = {...this.actionBar, ...updates};
-    this.settings.set('actionBar', this.actionBar);
+    const {x, y, ratioLocked} = this.state;
+
+    this.settings.set('actionbar', {
+      x,
+      y,
+      ratioLocked,
+      ...updates
+    });
     this.setState(updates);
   }
 

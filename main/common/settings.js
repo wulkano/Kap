@@ -2,7 +2,7 @@
 const {homedir} = require('os');
 const Store = require('electron-store');
 
-module.exports = new Store({
+const store = new Store({
   defaults: {
     kapturesDir: `${homedir()}/Movies/Kaptures`,
     allowAnalytics: true,
@@ -13,17 +13,11 @@ module.exports = new Store({
     recordKeyboardShortcut: true,
     doNotDisturb: false,
     recordAudio: false,
-    audioInputDeviceId: null,
-    dimensions: {
-      x: 128,
-      y: 128,
-      height: 512,
-      width: 512,
-      ratio: [1, 1]
-    },
-    actionBar: {
-      ratioLocked: false,
-      advanced: false
-    }
+    audioInputDeviceId: null
   }
 });
+
+store.set('cropper', {});
+store.set('actionbar', {});
+
+module.exports = store;
