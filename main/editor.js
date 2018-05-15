@@ -21,7 +21,8 @@ const openEditorWindow = ({alwaysOnTop = false} = {}) => {
   if (!editor) {
     const width = 768;
     const barHeight = 48;
-    const height = 768 * 9 / 16 + barHeight;
+    const height = (768 * (9 / 16)) + barHeight;
+
     editor = new BrowserWindow({
       minWidth: width,
       minHeight: height,
@@ -29,7 +30,7 @@ const openEditorWindow = ({alwaysOnTop = false} = {}) => {
       height,
       frame: false,
       webPreferences: {
-        webSecurity: !isDev // Disable webSecurity in dev to load video over file:// protocol
+        webSecurity: !isDev // Disable webSecurity in dev to load video over file:// protocol while serving over insecure http, this is not needed in production where we use file:// protocol for html serving.
       },
       vibrancy: 'ultra-dark',
       // The below is: `rgba(0, 0, 0, 0.4)`
@@ -37,8 +38,6 @@ const openEditorWindow = ({alwaysOnTop = false} = {}) => {
       backgroundColor: '#00000066',
       alwaysOnTop
     });
-
-    // editor.setAspectRatio(16 / 9, { width: 0, height: 48 })
 
     editor.loadURL(url);
     editor.on('closed', () => {
