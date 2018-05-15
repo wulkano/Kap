@@ -8,7 +8,7 @@ const {resolve} = require('app-root-path');
 const devPath = 'http://localhost:8000/editor';
 
 const prodPath = formatUrl({
-  pathname: resolve('renderer/out/cropper/index.html'),
+  pathname: resolve('renderer/out/editor/index.html'),
   protocol: 'file:',
   slashes: true
 });
@@ -25,12 +25,12 @@ const openEditorWindow = ({alwaysOnTop = false} = {}) => {
     editor = new BrowserWindow({
       minWidth: width,
       minHeight: height,
-      webPreferences: {
-        webSecurity: false
-      },
       width,
       height,
       frame: false,
+      webPreferences: {
+        webSecurity: !isDev // Disable webSecurity in dev to load video over file:// protocol
+      },
       vibrancy: 'ultra-dark',
       // The below is: `rgba(0, 0, 0, 0.4)`
       // Convert tool: https://kilianvalkhof.com/2016/css-html/css-hexadecimal-colors-with-transparency-a-conversion-tool/

@@ -1,5 +1,6 @@
 import path from 'path';
 import React from 'react';
+import Head from 'next/head';
 
 const Options = ({children}) => (
   <div className="options">
@@ -27,7 +28,6 @@ class Editor extends React.Component {
             ref={this.onRef}
             autoPlay
             loop
-            muted
             onDurationChange={this.onDurationChange}
             onPlay={this.onPlay}
             preload="auto"
@@ -100,6 +100,9 @@ export default class extends React.Component {
 
     return (
       <div className="root">
+        <Head>
+          <meta httpEquiv="Content-Security-Policy" content="media-src file://*;"/>
+        </Head>
         <Editor src={src}/>
         <style jsx global>{`
           body {
