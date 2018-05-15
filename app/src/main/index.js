@@ -115,6 +115,24 @@ const setCropperWindowOnBlur = (closeOnBlur = true) => {
   });
 };
 
+const getCropperXYCoordinates = ({position = {}, width, height}) => {
+  let {x, y} = settings.get('cropperWindow.position');
+  let bounds = screen.getDisplayNearestPoint(screen.getCursorScreenPoint()).bounds;
+
+  if (position.x === undefined && position.y === undefined) {
+    if (x === 'center' && x === 'center') {
+      let centeredX = Math.ceil(bounds.x + ((bounds.width - width + cropperWindowBuffer) / 2));
+      let centeredY = Math.ceil(bounds.y + ((bounds.height - height + cropperWindowBuffer) / 2));
+
+      return {x: centeredX, y: centeredY};
+    } else {
+      return {x: x - (cropperWindowBuffer / 2), y: y - (cropperWindowBuffer / 2)};
+    }
+  }
+
+  return {x: position.x - (cropperWindowBuffer / 2), y: position.y - (cropperWindowBuffer / 2)};
+}
+
 const openCropperWindow = (size = {}, position = {}, options = {}) => {
   options = Object.assign({}, {
     closeOnBlur: true
@@ -129,9 +147,8 @@ const openCropperWindow = (size = {}, position = {}, options = {}) => {
     let {width = 512, height = 512} = settings.get('cropperWindow.size');
     width = size.width || width;
     height = size.height || height;
-    let {x, y} = settings.get('cropperWindow.position');
-    x = position.x === undefined ? x : position.x;
-    y = position.y === undefined ? y : position.y;
+    let {x, y} = getCropperXYCoordinates({position, width, height});
+
     cropperWindow = new BrowserWindow({
       width: width + cropperWindowBuffer,
       height: height + cropperWindowBuffer,
@@ -142,9 +159,8 @@ const openCropperWindow = (size = {}, position = {}, options = {}) => {
       resizable: true,
       hasShadow: false,
       enableLargerThanScreen: true,
-      center: !position.x && !position.y,
-      x: x - (cropperWindowBuffer / 2),
-      y: y - (cropperWindowBuffer / 2)
+      x,
+      y
     });
     mainWindow.webContents.send('cropper-window-opened', {width, height, x, y});
     cropperWindow.loadURL(`file://${__dirname}/../renderer/views/cropper.html`);
@@ -212,7 +228,14 @@ ipcMain.on('set-cropper-window-size', (event, args) => {
   [args.width, args.height] = [parseInt(args.width, 10), parseInt(args.height, 10)];
 
   if (cropperWindow) {
-    cropperWindow.setSize(args.width + cropperWindowBuffer, args.height + cropperWindowBuffer, true); // True == animate
+    let {x, y} = getCropperXYCoordinates({...args});
+
+    cropperWindow.setBounds({
+      width: args.width + cropperWindowBuffer,
+      height: args.height + cropperWindowBuffer,
+      x,
+      y
+    }, true); // True == animate
   } else {
     openCropperWindow(args);
     mainWindow.focus();
