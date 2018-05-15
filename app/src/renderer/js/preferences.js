@@ -69,8 +69,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const panes = $j('.prefs-sections > section');
     const paneName = $j(event.currentTarget).data('pane');
+
     panes.addClass('hidden');
     panes.filter(`[data-pane="${paneName}"]`).removeClass('hidden');
+
+    if (paneName === 'plugins') {
+      plugins.track();
+    }
   });
 
   const pluginListTemplate = _.template(`

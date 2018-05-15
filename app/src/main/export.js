@@ -1,4 +1,5 @@
 import {BrowserWindow, dialog} from 'electron';
+import {track} from './analytics';
 
 let exportWindow;
 let isExportInProgress = false;
@@ -64,6 +65,7 @@ export const endExport = () => {
 
   isExportInProgress = false;
   exportWindow.send('end-export');
+  track('file/exported');
 
   setTimeout(() => {
     exportWindow.close();

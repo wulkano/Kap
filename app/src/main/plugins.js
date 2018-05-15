@@ -6,6 +6,7 @@ import execa from 'execa';
 import makeDir from 'make-dir';
 import ShareService from './share-service';
 import saveFileService from './save-file-service';
+import {track} from './analytics';
 
 class Plugins {
   constructor() {
@@ -156,6 +157,10 @@ class Plugins {
     ]);
 
     return formats.get(format);
+  }
+
+  track() {
+    return track('preferences/plugins/opened');
   }
 }
 

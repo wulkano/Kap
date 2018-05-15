@@ -45,6 +45,8 @@ let playing = true;
 let preparingToRecord = false;
 
 const discardVideo = () => {
+  track('file/discarded');
+
   // Discard the source video
   fs.unlink(editorWindow.kap.videoFilePath, () => {});
 
@@ -312,10 +314,14 @@ const openPrefsWindow = () => {
 
   prefsWindow.on('close', () => {
     prefsWindow = undefined;
+    track('preferences/closed');
   });
 
   prefsWindow.loadURL(`file://${__dirname}/../renderer/views/preferences.html`);
-  prefsWindow.on('ready-to-show', prefsWindow.show);
+  prefsWindow.on('ready-to-show', () => {
+    prefsWindow.show();
+    track('preferences/opened');
+  });
 };
 
 const getCropperWindow = () => {
@@ -501,6 +507,7 @@ ipcMain.on('will-start-recording', () => {
 
 ipcMain.on('did-start-recording', () => {
   preparingToRecord = false;
+  track('recording/started');
 });
 
 ipcMain.on('stopped-recording', () => {
@@ -563,6 +570,8 @@ ipcMain.on('move-cropper-window', (event, data) => {
 });
 
 ipcMain.on('open-editor-window', (event, opts) => {
+  track('editor/preview/accessed');
+
   if (editorWindow) {
     return editorWindow.show();
   }

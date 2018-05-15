@@ -1,5 +1,6 @@
 import {app, Menu, shell, ipcMain, Notification} from 'electron';
 import {checkForUpdates} from './auto-updater';
+import {track} from './analytics';
 
 const checkForUpdatesItem = {
   label: 'Check for Updates…',
@@ -11,6 +12,8 @@ const checkForUpdatesItem = {
         title: 'No updates available!',
         body: 'You will automatically receive updates as soon as they are available 🤗'
       })).show();
+
+      track('updates/checked');
     });
   }
 };
