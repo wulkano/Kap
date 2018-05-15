@@ -1,9 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-export default () => (
+const Fps = ({width = 768, height = 432}) => (
   <React.Fragment>
-    <input className="width"/>
-    <input className="height"/>
+    <input className="width" value={width}/>
+    <input className="height" value={height}/>
     <style jsx>{`
     input {
       appearance: none;
@@ -28,3 +29,10 @@ export default () => (
   `}</style>
   </React.Fragment>
 );
+
+Fps.propTypes = {
+  width: PropTypes.number,
+  height: PropTypes.number
+};
+
+export default Fps;

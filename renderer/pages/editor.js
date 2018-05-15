@@ -101,6 +101,8 @@ export default class extends React.Component {
             margin: 0;
             -webkit-app-region: drag;
             font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+            user-select: none;
+            cursor: default;
           }
           * { box-sizing: border-box; }
         `}</style>
