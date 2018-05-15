@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default () => <React.Fragment>
-  <button className="first">15</button>
+  <button className="first active">15</button>
   <button className="middle">30</button>
   <button className="last">60</button>
   <style jsx>{`
@@ -19,11 +19,13 @@ export default () => <React.Fragment>
     button:focus {
       outline: none;
     }
-    button:focus, button:hover {
-      background-color: hsla(0,0%,100%,.2);
+    button:not(.active):hover {
+      background-color: #5d5d5d;
+      border-color: #5d5d5d;
     }
     .active {
-      background-color: rgba(255,255,255,.10);
+      background-color: #6f6f6f;
+      border-color: #6f6f6f;
     }
     .first {
       border-radius: 4px 0px 0px 4px;

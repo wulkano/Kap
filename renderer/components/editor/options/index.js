@@ -12,7 +12,14 @@ const Options = () => (
       <span className="label">FPS</span>
       <Fps/>
     </div>
+    <div className="spacer" />
+    <div>
+      <span className="label">Export</span>
+    </div>
     <style jsx>{`
+      .spacer {
+        flex: 1;
+      }
       .options {
         width: 100%;
         height: 48px;
@@ -27,6 +34,7 @@ const Options = () => (
       }
       .label {
         padding: 16px;
+        padding-right: 8px;
       }
     `}</style>
   </div>
