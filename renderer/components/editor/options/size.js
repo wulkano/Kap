@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 const Size = ({width = 768, height = 432}) => (
   <React.Fragment>
-    <input className="width" value={width}/>
-    <input className="height" value={height}/>
+    <input className="width" size="5" value={width}/>
+    <input className="height" size="5" value={height}/>
     <style jsx>{`
     input {
       appearance: none;
@@ -14,7 +14,6 @@ const Size = ({width = 768, height = 432}) => (
       color: #FFF;
       padding: 4px 8px;
       font-size: 12px;
-      width: 64px; // TODO: fix autosizing inputs?
       transition: border .12s ease-in-out,background .12s ease-in-out;
     }
     input:focus {
