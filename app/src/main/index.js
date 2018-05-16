@@ -255,6 +255,18 @@ const recalculateCropperWindowPosition = () => {
   return positionWithBuffer;
 }
 
+const getDefaultCropperPosition = () => {
+  const { x, y } = settings.get('cropperWindow.position');
+  if (x === settings.DEFAULT_CROPPER_WINDOW_POSITION && y === settings.DEFAULT_CROPPER_WINDOW_POSITION) {
+    const newPosition = recalculateCropperWindowPosition();
+    return {
+      x: newPosition.x,
+      y: newPosition.y
+    };
+  }
+  return { x, y };
+}
+
 ipcMain.on('open-cropper-window', (event, size, position) => {
   if (cropperWindow) {
     cropperWindow.close();
