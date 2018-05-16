@@ -1,19 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {DropdownArrowIcon} from '../../../vectors';
 
 const OptionType = PropTypes.shape({
   label: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired
 });
-
-const Chevron = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="10" height="5" viewBox="0 0 10 5" className="c-select__toggle-icon" style={{marginLeft: '8px'}}>
-    <g fill="none" fillRule="evenodd" transform="translate(-7 -10)">
-      <polygon fill="#8C8C8C" points="7 10 12 15 17 10"/>
-      <polygon points="0 0 24 0 24 24 0 24"/>
-    </g>
-  </svg>
-);
 
 const Select = ({options}) => (
   <select>
@@ -38,7 +30,7 @@ const ExportSelect = ({options, label}) => {
   return (
     <div className="root">
       {hasOptions && <Select options={options}/>}
-      <button type="button"><span className="label">{label}</span>{hasOptions && <Chevron/>}</button>
+      <button type="button" className={`button ${hasOptions ? 'button--select' : ''}`}><span className="label">{label}</span>{hasOptions && <DropdownArrowIcon/>}</button>
       <style jsx>{`
         .root {
           display: inline-block;
@@ -58,6 +50,9 @@ const ExportSelect = ({options, label}) => {
           display: flex;
           align-items: center;
           flex-direction: row;
+        }
+        .button--select {
+          padding-right: 0px;
         }
         button:focus {
           outline: none;
