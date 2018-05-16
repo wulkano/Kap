@@ -24,8 +24,12 @@ const Select = ({options}) => (
   </select>
 );
 
+Select.propTypes = {
+  options: PropTypes.array.isRequired
+};
+
 const ExportSelect = ({options = [], label}) => {
-  const hasOptions = options.length !== 0;
+  const hasOptions = options && options.length !== 0;
   return (
     <div className="root">
       {hasOptions && <Select options={options}/>}

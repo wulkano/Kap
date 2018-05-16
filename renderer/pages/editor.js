@@ -1,11 +1,14 @@
 import path from 'path';
 import React from 'react';
+import PropTypes from 'prop-types';
 import Head from 'next/head';
 import TrafficLights from '../components/traffic-lights';
 import Options from '../components/editor/options';
 
 class Editor extends React.Component {
-  state = {width: 768}
+  static propTypes = {
+    src: PropTypes.string.isRequired
+  }
 
   render() {
     const {src} = this.props;
@@ -82,6 +85,10 @@ class Editor extends React.Component {
 }
 
 export default class extends React.Component {
+  static propTypes = {
+    src: PropTypes.string.isRequired
+  }
+
   static getInitialProps() {
     const src = `file://${path.join(__dirname, '../../../../test/fixtures/kap-beta.mp4')}`;
     return {src};

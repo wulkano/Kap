@@ -1,10 +1,11 @@
 import React from 'react';
 
-export default () => <React.Fragment>
-  <button className="first active">15</button>
-  <button className="middle">30</button>
-  <button className="last">60</button>
-  <style jsx>{`
+export default () => (
+  <React.Fragment>
+    <button type="button" className="first active">15</button>
+    <button type="button" className="middle">30</button>
+    <button type="button" className="last">60</button>
+    <style jsx>{`
     button {
       appearance: none;
       border: none;
@@ -38,4 +39,5 @@ export default () => <React.Fragment>
       border-radius: 0px 4px 4px 0px;
     }
   `}</style>
-</React.Fragment>;
+  </React.Fragment>
+);

@@ -3,7 +3,7 @@ import Size from './size';
 import Fps from './fps';
 import ExportSelect from './export-select';
 
-const TEST_OPTIONS = [{label: 'Export to disk', value: 'test'}]
+const TEST_OPTIONS = [{label: 'Export to disk', value: 'test'}];
 
 const Options = () => (
   <div className="options">
