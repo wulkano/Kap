@@ -77,8 +77,8 @@ export const set = (key, value, {volatile = false} = {}) => {
     return objectPath.set(volatiles, key, value);
   }
 
-  if (key !== 'dimensions') {
-    track(`settings/${key}/toggled`);
+  if (key !== 'dimensions' && typeof value === 'boolean') {
+    track(`settings/${key}/toggled/${value}`);
   }
 
   settings.setSync(key, value);
