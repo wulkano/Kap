@@ -241,6 +241,20 @@ ipcMain.on('activate-app', async (event, appName, {width, height, x, y}) => {
   openCropperWindow({width, height}, {x, y}, {closeOnBlur: false});
 });
 
+const recalculateCropperWindowPosition = () => {
+  const { DEFAULT_CROPPER_WINDOW_POSITION } = settings;
+  const position = positioner.calculate(DEFAULT_CROPPER_WINDOW_POSITION, tray.getBounds());
+  const positionWithBuffer = {
+    x: position.x - (cropperWindowBuffer / 2),
+    y: position.y - (cropperWindowBuffer / 2)
+  }
+  settings.set('cropperWindow.position', {
+    x: positionWithBuffer.x,
+    y: positionWithBuffer.y
+  });
+  return positionWithBuffer;
+}
+
 ipcMain.on('open-cropper-window', (event, size, position) => {
   if (cropperWindow) {
     cropperWindow.close();
