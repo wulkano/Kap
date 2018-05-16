@@ -101,10 +101,15 @@ export default class Video extends React.Component {
       />
       <div className="controls">
         <PlayBar currentTime={currentTime} duration={duration} skip={this.skip}/>
-
       </div>
       <style jsx>
         {`
+        video {
+          width: 100%;
+          height: auto;
+          max.height: calc(100vh - 48px);
+          pointer-events: none; // Bug in electron will make elements over the video to have no pointer-events if this is not disabled
+        }
         .root {
           height: 100%;
           display: flex;
