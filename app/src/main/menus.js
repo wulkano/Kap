@@ -6,14 +6,13 @@ const checkForUpdatesItem = {
   label: 'Check for Updates…',
   click(item) {
     item.enabled = false;
+    track('updates/checked');
     checkForUpdates(() => {
       // This will be called if no update is available
       (new Notification({
         title: 'No updates available!',
         body: 'You will automatically receive updates as soon as they are available 🤗'
       })).show();
-
-      track('updates/checked');
     });
   }
 };
