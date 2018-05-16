@@ -513,7 +513,7 @@ ipcMain.on('will-start-recording', () => {
     cropperWindow.setAlwaysOnTop(true);
   }
 
-  timeStartedRecording = new Date().now();
+  timeStartedRecording = Date.now();
   track(`recording/${timeStartedRecording}/started`);
 
   appState = 'recording';
