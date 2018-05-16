@@ -141,9 +141,7 @@ const openCropperWindow = (size = {}, position = {}, options = {}) => {
     let {width = 512, height = 512} = settings.get('cropperWindow.size');
     width = size.width || width;
     height = size.height || height;
-    let {x, y} = settings.get('cropperWindow.position');
-    x = position.x === undefined ? x : position.x;
-    y = position.y === undefined ? y : position.y;
+    const { x, y } = position;
     cropperWindow = new BrowserWindow({
       width: width + cropperWindowBuffer,
       height: height + cropperWindowBuffer,
@@ -154,8 +152,7 @@ const openCropperWindow = (size = {}, position = {}, options = {}) => {
       resizable: true,
       hasShadow: false,
       enableLargerThanScreen: true,
-      x: x - (cropperWindowBuffer / 2),
-      y: y - (cropperWindowBuffer / 2)
+      ...position
     });
     mainWindow.webContents.send('cropper-window-opened', {width, height, x, y});
     cropperWindow.loadURL(`file://${__dirname}/../renderer/views/cropper.html`);
@@ -270,6 +267,10 @@ const getDefaultCropperPosition = () => {
 ipcMain.on('open-cropper-window', (event, size, position) => {
   if (cropperWindow) {
     cropperWindow.close();
+  }
+
+  if (!position) {
+    position = getDefaultCropperPosition();
   }
 
   openCropperWindow(size, position);
