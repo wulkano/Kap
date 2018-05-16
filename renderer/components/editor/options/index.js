@@ -42,9 +42,7 @@ const Options = () => (
         padding-right: 8px;
       }
       .label {
-        padding: 16px;
-        padding-left: 0;
-        padding-right: 8px;
+        padding: 16px 8px 16px 0;
       }
       .label.fps {
         margin-left: 16px;
