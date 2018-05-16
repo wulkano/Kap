@@ -37,6 +37,7 @@ const DEFAULT_VOLATILES = {
   }
 };
 
+export const DEFAULT_CROPPER_WINDOW_POSITION = 'center';
 
 const volatiles = JSON.parse(JSON.stringify(DEFAULT_VOLATILES));
 
