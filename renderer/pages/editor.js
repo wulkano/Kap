@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Head from 'next/head';
 import TrafficLights from '../components/traffic-lights';
 import Options from '../components/editor/options';
+import Video from '../components/editor/video';
 
 class Editor extends React.Component {
   static propTypes = {
@@ -19,13 +20,7 @@ class Editor extends React.Component {
             <TrafficLights/>
             <span className="title-bar__title">kap-beta.mp4</span>
           </div>
-          <video
-            ref={this.onRef}
-            autoPlay
-            loop
-            onDurationChange={this.onDurationChange}
-            onPlay={this.onPlay}
-            preload="auto"
+          <Video
             src={src}
           />
         </div>
