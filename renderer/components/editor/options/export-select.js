@@ -1,6 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+const OptionType = PropTypes.shape({
+  label: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired
+});
+
 const Chevron = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="10" height="5" viewBox="0 0 10 5" className="c-select__toggle-icon" style={{marginLeft: '8px'}}>
     <g fill="none" fillRule="evenodd" transform="translate(-7 -10)">
@@ -25,7 +30,7 @@ const Select = ({options}) => (
 );
 
 Select.propTypes = {
-  options: PropTypes.array.isRequired
+  options: PropTypes.arrayOf(OptionType).isRequired
 };
 
 const ExportSelect = ({options, label}) => {
@@ -66,7 +71,7 @@ const ExportSelect = ({options, label}) => {
 };
 
 ExportSelect.propTypes = {
-  options: PropTypes.array,
+  options: PropTypes.arrayOf(OptionType),
   label: PropTypes.string.isRequired
 };
 
