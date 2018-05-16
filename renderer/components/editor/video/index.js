@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {PlayIcon, PauseIcon} from '../../../vectors';
 
 const PlayBar = ({skip, duration = 0, currentTime = 0}) => {
   return (
@@ -45,12 +46,19 @@ PlayBar.propTypes = {
   currentTime: PropTypes.number
 };
 
+const PlayPause = ({isPlaying = false, pause, play}) => <span onClick={isPlaying ? pause : play}>{isPlaying ? <PauseIcon fill="#FFF"/> : <PlayIcon fill="#FFF"/>}</span>;
+PlayPause.propTypes = {
+  play: PropTypes.func.isRequired,
+  pause: PropTypes.func.isRequired,
+  isPlaying: PropTypes.bool
+};
+
 export default class Video extends React.Component {
   static propTypes = {
     src: PropTypes.string.isRequired
   }
 
-  state = {currentTime: 0, duration: null, endTime: null, startTime: 0}
+  state = {currentTime: 0, duration: null, endTime: null, startTime: 0, isPlaying: false}
 
   onRef = videoRef => {
     this.videoRef = videoRef;
@@ -73,11 +81,17 @@ export default class Video extends React.Component {
         this.videoRef.currentTime = startTime;
         currentTime = startTime;
       }
-      this.setState({currentTime});
+      this.setState({currentTime, isPlaying: !this.videoRef.paused});
     }, 1000 / 120);
   };
 
+  onPause = () => this.setState({isPlaying: false});
+
   onStop = () => this.ticker && clearInterval(this.ticker);
+
+  pause = () => this.videoRef.pause()
+
+  play = () => this.videoRef.play()
 
   skip = (time = 0) => {
     this.videoRef.currentTime = time;
@@ -87,7 +101,7 @@ export default class Video extends React.Component {
 
   render() {
     const {src} = this.props;
-    const {duration, currentTime} = this.state;
+    const {duration, currentTime, isPlaying} = this.state;
     return (<div className="root">
       <video
         ref={this.onRef}
@@ -95,12 +109,19 @@ export default class Video extends React.Component {
         loop
         onDurationChange={this.onDurationChange}
         onPlay={this.onPlay}
+        onPause={this.onPause}
         onStop={this.onStop}
         preload="auto"
         src={src}
       />
-      <div className="controls">
+      <div className="controls-container">
+        <div className="controls controls--left">
+          <PlayPause isPlaying={isPlaying} pause={this.pause} play={this.play}/>
+        </div>
         <PlayBar currentTime={currentTime} duration={duration} skip={this.skip}/>
+        <div className="controls controls--right">
+          <PlayPause isPlaying={isPlaying} pause={this.pause} play={this.play}/>
+        </div>
       </div>
       <style jsx>
         {`
@@ -116,13 +137,26 @@ export default class Video extends React.Component {
           align-items: center;
           jusitfy-content: center;
         }
-        .controls {
+        .controls-container {
           display: block;
           position: absolute;
           bottom: 0;
           left: 0;
           width: 100%;
-          height: 32px;
+          height: 96px;
+          background: linear-gradient(-180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.20) 100%);
+        }
+        .controls {
+          color: #FFF;
+          position: absolute;
+          bottom: 16px;
+          padding: 0 16px;
+        }
+        .controls--left {
+          left: 0;
+        }
+        .controls--right {
+          right: 0;
         }
       `}
       </style>

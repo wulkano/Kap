@@ -12,6 +12,8 @@ import PluginsIcon from './plugins';
 import GearIcon from './gear';
 import SpinnerIcon from './spinner';
 import MoreIcon from './more';
+import PlayIcon from './play';
+import PauseIcon from './pause';
 
 export {
   ApplicationsIcon,
@@ -27,5 +29,7 @@ export {
   PluginsIcon,
   GearIcon,
   SpinnerIcon,
-  MoreIcon
+  MoreIcon,
+  PlayIcon,
+  PauseIcon
 };
