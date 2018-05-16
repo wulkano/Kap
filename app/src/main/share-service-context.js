@@ -9,9 +9,10 @@ export default class ShareServiceContext {
   constructor(exportOptions) {
     this.format = exportOptions.format;
     this.prettyFormat = plugins.prettifyFormat(this.format);
+    this.fileExtension = plugins.formatExtension(this.format);
 
     const now = moment();
-    this.defaultFileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.${this.format}`;
+    this.defaultFileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.${this.fileExtension}`;
 
     this.filePath = () => convert(Object.assign({}, exportOptions, {
       defaultFileName: this.defaultFileName

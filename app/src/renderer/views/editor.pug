@@ -68,3 +68,10 @@ block body
         .c-select__label APNG
         select
           option(selected disabled value="-1") Export Options
+      .save-option
+        span Save
+        button.button.button--dark.button--small-padding.hidden(data-export-type="original") Original
+        +select-custom(data-export-type="original").is-transparent.has-custom-label
+          .c-select__label Original
+          select
+            option(selected disabled value="-1") Export Options
