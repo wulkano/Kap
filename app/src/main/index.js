@@ -43,6 +43,7 @@ let tray;
 let recording = false;
 let playing = true;
 let preparingToRecord = false;
+let timeStartedRecording;
 
 const discardVideo = () => {
   track('file/discarded');
@@ -512,6 +513,9 @@ ipcMain.on('will-start-recording', () => {
     cropperWindow.setAlwaysOnTop(true);
   }
 
+  timeStartedRecording = new Date().getTime();
+  track(`recording/${timeStartedRecording}/started`);
+
   appState = 'recording';
   setTrayStopIcon();
   if (!mainWindowIsDetached) {
@@ -527,7 +531,7 @@ ipcMain.on('did-start-recording', () => {
 
 ipcMain.on('stopped-recording', () => {
   resetTrayIcon();
-  track('recording/finished');
+  track(`recording/${timeStartedRecording}/finished`);
   updateRecordingTouchbar(false, false);
 });
 
