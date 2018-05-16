@@ -398,6 +398,7 @@ menubar.on('after-create-window', () => {
 
   let wasStuck = true;
   mainWindow.on('move', () => { // Unfortunately this is just an alias for 'moved'
+    settings.reset('cropperWindow.position');
     recomputeExpectedWindowPosition();
     recomputeCurrentWindowPosition();
     const diff = {
