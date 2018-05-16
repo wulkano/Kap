@@ -85,7 +85,7 @@ export const set = (key, value, {volatile = false} = {}) => {
 
 export const observe = (keyPath, handler) => settings.observe(keyPath, handler);
 
-export const reset = async (keyPath) => {
+export const reset = async keyPath => {
   await settings.setSync(keyPath, objectPath.get(DEFAULT_VOLATILES, keyPath));
   objectPath.set(volatiles, keyPath, settings.getSync(keyPath));
 };

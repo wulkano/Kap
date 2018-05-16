@@ -141,7 +141,7 @@ const openCropperWindow = (size = {}, position = {}, options = {}) => {
     let {width = 512, height = 512} = settings.get('cropperWindow.size');
     width = size.width || width;
     height = size.height || height;
-    const { x, y } = position;
+    const {x, y} = position;
     cropperWindow = new BrowserWindow({
       width: width + cropperWindowBuffer,
       height: height + cropperWindowBuffer,
@@ -239,21 +239,21 @@ ipcMain.on('activate-app', async (event, appName, {width, height, x, y}) => {
 });
 
 const recalculateCropperWindowPosition = () => {
-  const { DEFAULT_CROPPER_WINDOW_POSITION } = settings;
+  const {DEFAULT_CROPPER_WINDOW_POSITION} = settings;
   const position = positioner.calculate(DEFAULT_CROPPER_WINDOW_POSITION, tray.getBounds());
   const positionWithBuffer = {
     x: position.x - (cropperWindowBuffer / 2),
     y: position.y - (cropperWindowBuffer / 2)
-  }
+  };
   settings.set('cropperWindow.position', {
     x: positionWithBuffer.x,
     y: positionWithBuffer.y
   });
   return positionWithBuffer;
-}
+};
 
 const getDefaultCropperPosition = () => {
-  const { x, y } = settings.get('cropperWindow.position');
+  const {x, y} = settings.get('cropperWindow.position');
   if (x === settings.DEFAULT_CROPPER_WINDOW_POSITION && y === settings.DEFAULT_CROPPER_WINDOW_POSITION) {
     const newPosition = recalculateCropperWindowPosition();
     return {
@@ -261,8 +261,8 @@ const getDefaultCropperPosition = () => {
       y: newPosition.y
     };
   }
-  return { x, y };
-}
+  return {x, y};
+};
 
 ipcMain.on('open-cropper-window', (event, size, position) => {
   if (cropperWindow) {
