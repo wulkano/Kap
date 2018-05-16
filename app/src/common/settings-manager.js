@@ -24,7 +24,7 @@ const DEFAULTS = {
   }
 };
 
-const volatiles = {
+const DEFAULT_VOLATILES = {
   cropperWindow: {
     size: {
       width: 512,
@@ -36,6 +36,9 @@ const volatiles = {
     }
   }
 };
+
+
+const volatiles = JSON.parse(JSON.stringify(DEFAULT_VOLATILES));
 
 // We need to sync every setting that can be modified externally
 // e.g. the `openOnStartup` setting can be modified via
