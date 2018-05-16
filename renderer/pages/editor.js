@@ -51,8 +51,8 @@ class Editor extends React.Component {
             height: calc(100vh - 48px);
           }
           .title-bar {
-            height: 48px;
-            line-height: 48px;
+            height: 36px;
+            line-height: 36px;
             font-weight: 100;
             font-size: 13px;
             text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
