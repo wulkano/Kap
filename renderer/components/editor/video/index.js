@@ -46,7 +46,7 @@ PlayBar.propTypes = {
   currentTime: PropTypes.number
 };
 
-const PlayPause = ({isPlaying = false, pause, play}) => <span onClick={isPlaying ? pause : play}>{isPlaying ? <PauseIcon fill="#FFF"/> : <PlayIcon fill="#FFF"/>}</span>;
+const PlayPause = ({isPlaying = false, pause, play}) => <span onClick={isPlaying ? pause : play}>{isPlaying ? <PauseIcon shadow fill="#FFF" hoverFill="#FFF"/> : <PlayIcon shadow fill="#FFF" hoverFill="#FFF"/>}</span>;
 PlayPause.propTypes = {
   play: PropTypes.func.isRequired,
   pause: PropTypes.func.isRequired,

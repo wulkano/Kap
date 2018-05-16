@@ -32,10 +32,11 @@ class Svg extends React.Component {
       active,
       onClick,
       children,
-      viewBox
+      viewBox,
+      shadow
     } = this.props;
 
-    const className = classNames({active});
+    const className = classNames({active, shadow});
 
     return (
       <svg
@@ -55,6 +56,10 @@ class Svg extends React.Component {
             svg:hover {
               fill: ${hoverFill};
             }
+            
+            .shadow {
+              filter: drop-shadow(0 1px 2px rgba(0,0,0,.1));
+            }
 
             .active, .active:hover {
               fill: ${activeFill};
@@ -73,7 +78,8 @@ Svg.propTypes = {
   active: PropTypes.bool,
   children: PropTypes.any,
   viewBox: PropTypes.string,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  shadow: PropTypes.bool
 };
 
 export default Svg;
