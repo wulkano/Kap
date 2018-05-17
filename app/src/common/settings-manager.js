@@ -24,7 +24,7 @@ const DEFAULTS = {
   }
 };
 
-const DEFAULT_VOLATILES = {
+const getDefaultVolatiles = () => ({
   cropperWindow: {
     size: {
       width: 512,
@@ -35,11 +35,11 @@ const DEFAULT_VOLATILES = {
       y: 'center'
     }
   }
-};
+});
 
 export const DEFAULT_CROPPER_WINDOW_POSITION = 'center';
 
-const volatiles = JSON.parse(JSON.stringify(DEFAULT_VOLATILES));
+const volatiles = getDefaultVolatiles();
 
 // We need to sync every setting that can be modified externally
 // e.g. the `openOnStartup` setting can be modified via
@@ -86,6 +86,6 @@ export const set = (key, value, {volatile = false} = {}) => {
 export const observe = (keyPath, handler) => settings.observe(keyPath, handler);
 
 export const reset = async keyPath => {
-  await settings.setSync(keyPath, objectPath.get(DEFAULT_VOLATILES, keyPath));
+  await settings.setSync(keyPath, objectPath.get(getDefaultVolatiles(), keyPath));
   objectPath.set(volatiles, keyPath, settings.getSync(keyPath));
 };
