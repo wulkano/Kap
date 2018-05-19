@@ -35,7 +35,7 @@ class Editor extends React.Component {
             display: flex;
             background: #111;
             flex: 1;
-            border-radius: 4px 4px 0 0;
+            border-radius: 5px 5px 0 0;
             overflow: hidden;
             height: calc(100vh - 48px);
           }

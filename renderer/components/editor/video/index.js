@@ -141,9 +141,18 @@ export default class Video extends React.Component {
           left: 0;
           width: 100%;
           height: 96px;
+          background: linear-gradient(-180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.0) 100%);
+          transition: background 100ms ease;
+        }
+        .root:hover .controls-container {
           background: linear-gradient(-180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.20) 100%);
         }
+        .root:hover .controls {
+          opacity: 1;
+        }
         .controls {
+          transition: opacity 200ms ease;
+          opacity: 0;
           color: #FFF;
           position: absolute;
           bottom: 16px;
