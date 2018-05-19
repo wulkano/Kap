@@ -26,30 +26,43 @@ CurrentTime.propTypes = {
   currentTime: PropTypes.number.isRequired
 };
 
+const getTimestampAtEvent = (event, duration) => {
+  const rect = event.target.getBoundingClientRect();
+  const xPositionInTrimmer = event.pageX - rect.left;
+
+  return duration * (xPositionInTrimmer / rect.width); // Calculated time in seconds where the click happened
+};
+
 const PlayBar = ({skip, duration = 0, currentTime = 0}) => {
   return (
     <React.Fragment>
       <div className="play-bar play-bar--background"/>
-      <divdoSpawn
+      <div
         className="play-bar play-bar--current-time"
-        onClick={event => {
-          const width = event.target.width;
-          console.log(width);
-          skip(0);
-        }}
         style={{
           width: `${(currentTime / duration) * 100}%`
         }}
       />
+      <div onClick={event => {
+        const time = getTimestampAtEvent(event, duration);
+        skip(time);
+      }} className="play-bar play-bar--clickarea"/>
       <style jsx>{
         `    
         .play-bar {
           position: absolute;
           height: 4px;
-          borderRadius: 3px;
           left: 0;
           bottom: 0;
           border-radius: 0px 2px 2px 0px;
+          pointer-events: none;
+        }
+        .play-bar--clickarea {
+          pointer-events: auto;
+          height: 30px;
+          transform: translateY(50%);
+          z-index: 100;
+          width: 100%;
         }
         .play-bar--current-time {
           background: linear-gradient(90deg, #7146FE 0%, #00FFBE 100%);
