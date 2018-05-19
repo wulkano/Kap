@@ -28,12 +28,13 @@ const PlayBar = ({skip, duration = 0, currentTime = 0}) => {
           borderRadius: 3px;
           left: 0;
           bottom: 0;
-        }
-        .play-bar--current-time {
-          background: linear-gradient(90deg, rgba(113,70,254,1) 0%, rgba(0,255,190,1) 100%);
           border-radius: 0px 2px 2px 0px;
         }
+        .play-bar--current-time {
+          background: linear-gradient(90deg, #7146FE 0%, #00FFBE 100%);
+        }
         .play-bar--background {
+          box-shadow: 0 1px 2px rgba(0,0,0,.1);
           background: rgba(255,255,255,.10);
           width: 100%;
         }
@@ -114,14 +115,33 @@ export default class Video extends React.Component {
         <div className="controls controls--left">
           <PlayPauseButton isPlaying={isPlaying} pause={this.pause} play={this.play}/>
         </div>
-        <PlayBar currentTime={currentTime} duration={duration} skip={this.skip}/>
+        <div className="playbar-container">
+          <PlayBar currentTime={currentTime} duration={duration} skip={this.skip}/>
+        </div>
         <div className="controls controls--right">
           <AudioButton isMuted={false} toggleMuted={() => {}}/>
           <FullscreenButton isFullscreen={false} toggleFullscreen={() => {}}/>
         </div>
       </div>
+      <style jsx global>{`
+        .root:hover .play-bar {
+          border-radius: 2px 2px 2px 2px;
+        }
+      `}</style>
       <style jsx>
         {`
+        .playbar-container {
+          position: absolute;
+          left: 0px;
+          right: 0px;
+          bottom: 0px;
+          transition: all 100ms ease;
+        }
+        .root:hover .playbar-container {
+          bottom: 29px;
+          left: 122px;
+          right: 122px;
+        }
         video {
           width: 100%;
           height: auto;
