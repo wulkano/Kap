@@ -5,11 +5,32 @@ import PlayPauseButton from '../buttons/play-pause';
 import FullscreenButton from '../buttons/fullscreen';
 import AudioButton from '../buttons/audio';
 
+import formatTime from '../../../utils/format-time';
+
+const CurrentTime = ({currentTime}) => (
+  <div className="current-time">
+    {formatTime(currentTime)}
+    <style jsx>{`
+    .current-time {
+      font-size: 12px;
+      line-height: 18px;
+      margin-top: -2px;
+      margin-left: 16px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.10);
+      font-weight: 100;
+    }
+  `}</style>
+  </div>
+);
+CurrentTime.propTypes = {
+  currentTime: PropTypes.number.isRequired
+};
+
 const PlayBar = ({skip, duration = 0, currentTime = 0}) => {
   return (
     <React.Fragment>
       <div className="play-bar play-bar--background"/>
-      <div
+      <divdoSpawn
         className="play-bar play-bar--current-time"
         onClick={event => {
           const width = event.target.width;
@@ -114,6 +135,7 @@ export default class Video extends React.Component {
       <div className="controls-container">
         <div className="controls controls--left">
           <PlayPauseButton isPlaying={isPlaying} pause={this.pause} play={this.play}/>
+          <CurrentTime currentTime={currentTime}/>
         </div>
         <div className="playbar-container">
           <PlayBar currentTime={currentTime} duration={duration} skip={this.skip}/>
@@ -177,12 +199,17 @@ export default class Video extends React.Component {
           position: absolute;
           bottom: 16px;
           padding: 0 16px;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
         }
         .controls--left {
           left: 0;
+          justify-content: flex-start;
         }
         .controls--right {
           right: 0;
+          justify-content: flex-end;
         }
       `}
       </style>
