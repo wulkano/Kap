@@ -30,7 +30,6 @@ const Options = () => (
       .options {
         width: 100%;
         height: 48px;
-        -webkit-app-region: no-drag;
         color: white;
         -webkit-font-smoothing: antialiased;
         font-size: 12px;
@@ -40,6 +39,9 @@ const Options = () => (
         align-items: center;
         padding: 0 16px;
         padding-right: 8px;
+      }
+      .options > div {
+        -webkit-app-region: no-drag;
       }
       .label {
         padding: 16px 8px 16px 0;
