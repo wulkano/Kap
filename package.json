@@ -50,6 +50,7 @@
     "node-mac-app-icon": "^1.4.0",
     "npm": "^6.0.0",
     "prop-types": "^15.6.1",
+    "react-draggable": "^3.0.5",
     "unstated": "^1.2.0"
   },
   "devDependencies": {

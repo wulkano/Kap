@@ -6,6 +6,7 @@ import FullscreenButton from '../buttons/fullscreen';
 import AudioButton from '../buttons/audio';
 
 import formatTime from '../../../utils/format-time';
+import Handle from './handle';
 
 const CurrentTime = ({currentTime}) => (
   <div className="current-time">
@@ -59,6 +60,7 @@ const PlayBar = ({skip, duration = 0, currentTime = 0}) => {
         }
         .play-bar--clickarea {
           pointer-events: auto;
+          -webkit-app-region: no-drag;
           height: 30px;
           transform: translateY(50%);
           z-index: 100;
@@ -128,11 +130,16 @@ export default class Video extends React.Component {
     this.videoRef.currentTime = time;
   };
 
+  setStartTime = startTime => this.setState({startTime});
+
+  setEndTime = endTime => this.setState({endTime});
+
   componentWillUnmount = () => this.onStop()
 
   render() {
     const {src} = this.props;
-    const {duration, currentTime, isPlaying} = this.state;
+    const {duration, currentTime, isPlaying, startTime, endTime} = this.state;
+    const width = typeof window === 'undefined' ? 0 : window.innerWidth - (122 * 2);
     return (<div className="root">
       <video
         ref={this.onRef}
@@ -151,7 +158,9 @@ export default class Video extends React.Component {
           <CurrentTime currentTime={currentTime}/>
         </div>
         <div className="playbar-container">
-          <PlayBar currentTime={currentTime} duration={duration} skip={this.skip}/>
+          <PlayBar startTime={startTime} currentTime={currentTime} duration={duration} skip={this.skip}/>
+          <Handle duration={duration} containerWidth={width} name="start" time={startTime} setTime={this.setStartTime}/>
+          {endTime && <Handle duration={duration} containerWidth={width} name="end" time={endTime} setTime={this.setEndTime}/>}
         </div>
         <div className="controls controls--right">
           <AudioButton isMuted={false} toggleMuted={() => {}}/>
@@ -161,6 +170,9 @@ export default class Video extends React.Component {
       <style jsx global>{`
         .root:hover .play-bar {
           border-radius: 2px 2px 2px 2px;
+        }
+        .controls-container:hover .handle {
+          opacity: 1;
         }
       `}</style>
       <style jsx>
