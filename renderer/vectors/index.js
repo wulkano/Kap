@@ -14,6 +14,8 @@ import SpinnerIcon from './spinner';
 import MoreIcon from './more';
 import PlayIcon from './play';
 import PauseIcon from './pause';
+import VolumeHighIcon from './volume-high';
+import VolumeOffIcon from './volume-off';
 
 export {
   ApplicationsIcon,
@@ -31,5 +33,7 @@ export {
   SpinnerIcon,
   MoreIcon,
   PlayIcon,
-  PauseIcon
+  PauseIcon,
+  VolumeHighIcon,
+  VolumeOffIcon
 };

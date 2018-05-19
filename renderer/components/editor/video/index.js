@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {PlayIcon, PauseIcon} from '../../../vectors';
+
+import PlayPauseButton from '../buttons/play-pause';
+import FullscreenButton from '../buttons/fullscreen';
+import AudioButton from '../buttons/audio';
 
 const PlayBar = ({skip, duration = 0, currentTime = 0}) => {
   return (
@@ -44,13 +47,6 @@ PlayBar.propTypes = {
   skip: PropTypes.func.isRequired,
   duration: PropTypes.number,
   currentTime: PropTypes.number
-};
-
-const PlayPause = ({isPlaying = false, pause, play}) => <span onClick={isPlaying ? pause : play}>{isPlaying ? <PauseIcon shadow fill="#FFF" hoverFill="#FFF"/> : <PlayIcon shadow fill="#FFF" hoverFill="#FFF"/>}</span>;
-PlayPause.propTypes = {
-  play: PropTypes.func.isRequired,
-  pause: PropTypes.func.isRequired,
-  isPlaying: PropTypes.bool
 };
 
 export default class Video extends React.Component {
@@ -116,11 +112,12 @@ export default class Video extends React.Component {
       />
       <div className="controls-container">
         <div className="controls controls--left">
-          <PlayPause isPlaying={isPlaying} pause={this.pause} play={this.play}/>
+          <PlayPauseButton isPlaying={isPlaying} pause={this.pause} play={this.play}/>
         </div>
         <PlayBar currentTime={currentTime} duration={duration} skip={this.skip}/>
         <div className="controls controls--right">
-          <PlayPause isPlaying={isPlaying} pause={this.pause} play={this.play}/>
+          <AudioButton isMuted={false} toggleMuted={() => {}}/>
+          <FullscreenButton isFullscreen={false} toggleFullscreen={() => {}}/>
         </div>
       </div>
       <style jsx>
