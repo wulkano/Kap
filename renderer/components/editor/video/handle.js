@@ -54,7 +54,7 @@ export default class Handle extends React.Component {
         axis="x"
         handle=".handle"
         defaultPosition={{x: time && left, y: 0}}
-        position={null}
+        position={{x: time && left, y: 0}}
         onStart={this.onDragStart}
         onStop={this.onDragStop}
         bounds={{left: limitLeft, right: limitRight}}

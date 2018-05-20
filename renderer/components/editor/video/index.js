@@ -110,6 +110,18 @@ export default class Video extends React.Component {
     this.videoRef = videoRef;
   };
 
+  handleResize = () => this.setState({...this.state, width: window.innerWidth});
+
+  componentDidMount() {
+    this.handleResize();
+    window.addEventListener('resize', this.handleResize);
+  }
+
+  componentWillUnmount() {
+    this.onStop();
+    window.removeEventListener('resize', this.handleResize);
+  }
+
   onDurationChange = event =>
     this.setState({
       duration: event.target.duration,
@@ -161,10 +173,8 @@ export default class Video extends React.Component {
     this.skip(endTime);
   }
 
-  componentWillUnmount = () => this.onStop()
-
   get width() {
-    return this.state.width || typeof window === 'undefined' ? 0 : window.innerWidth - (122 * 2);
+    return this.state.width - (122 * 2);
   }
 
   get previewDuration() {
@@ -181,7 +191,7 @@ export default class Video extends React.Component {
     const {src} = this.props;
     const {duration, isPlaying, startTime, endTime} = this.state;
     const width = this.width;
-    const scale = this.width / duration;
+    const scale = width / duration;
     return (<div className="root">
       <video
         ref={this.onRef}
@@ -202,7 +212,7 @@ export default class Video extends React.Component {
         <div className="playbar-container">
           <PlayBar previewDuration={this.previewDuration} scale={scale} startTime={startTime} endTime={endTime} currentTime={this.currentPreviewTime} duration={duration} skip={this.skip}/>
           <Handle limitLeft={0} limitRight={endTime * scale} play={this.play} pause={this.pause} duration={duration} containerWidth={width} name="start" time={startTime} setTime={this.setStartTime}/>
-          {endTime && <Handle limitLeft={startTime * scale} limitRight={this.width} play={this.play} pause={this.pause} duration={duration} containerWidth={width} name="end" time={endTime} setTime={this.setEndTime}/>}
+          {endTime && <Handle limitLeft={startTime * scale} limitRight={width} play={this.play} pause={this.pause} duration={duration} containerWidth={width} name="end" time={endTime} setTime={this.setEndTime}/>}
         </div>
         <div className="controls controls--right">
           <AudioButton isMuted={false} toggleMuted={() => {}}/>
