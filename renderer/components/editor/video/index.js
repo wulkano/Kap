@@ -132,11 +132,15 @@ export default class Video extends React.Component {
       if (!this.videoRef) {
         return;
       }
-      const {endTime, startTime} = this.state;
+      const {endTime, startTime, duration} = this.state;
       let currentTime = this.videoRef.currentTime;
-      if (currentTime > endTime) {
+      if (currentTime >= endTime) {
         this.videoRef.currentTime = startTime;
         currentTime = startTime;
+      } else if (currentTime === duration && this.state.isPlaying) {
+        this.videoRef.currentTime = startTime;
+        currentTime = startTime;
+        this.videoRef.play();
       }
       this.setState({currentTime, isPlaying: !this.videoRef.paused});
       this.ticker = setTimeout(this.refreshTime, 1000 / 120);
@@ -196,7 +200,6 @@ export default class Video extends React.Component {
       <video
         ref={this.onRef}
         autoPlay
-        loop
         onDurationChange={this.onDurationChange}
         onPlay={this.onPlay}
         onPause={this.onPause}
