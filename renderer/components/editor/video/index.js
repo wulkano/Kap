@@ -104,7 +104,7 @@ export default class Video extends React.Component {
     src: PropTypes.string.isRequired
   }
 
-  state = {currentTime: 0, duration: null, endTime: null, startTime: 0, isPlaying: false}
+  state = {currentTime: 0, duration: null, endTime: null, startTime: 0, isPlaying: false, width: 0}
 
   onRef = videoRef => {
     this.videoRef = videoRef;
@@ -159,7 +159,7 @@ export default class Video extends React.Component {
   componentWillUnmount = () => this.onStop()
 
   get width() {
-    return typeof window === 'undefined' ? 0 : window.innerWidth - (122 * 2);
+    return this.state.width || typeof window === 'undefined' ? 0 : window.innerWidth - (122 * 2);
   }
 
   get previewDuration() {

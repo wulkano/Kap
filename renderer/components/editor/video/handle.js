@@ -104,6 +104,12 @@ export default class Handle extends React.Component {
               box-shadow: 0 1px 2px rgba(0,0,0,.1);
             }
           `}</style>
+          <style jsx global>{`
+          .react-draggable-transparent-selection  {
+            // Prevent cursor from flickering
+            cursor: -webkit-grabbing !important;
+          }
+          `}</style>
         </div>
       </Draggable>
     );
