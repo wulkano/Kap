@@ -34,14 +34,16 @@ const getTimestampAtEvent = (event, duration) => {
   return duration * (xPositionInTrimmer / rect.width); // Calculated time in seconds where the click happened
 };
 
-const PlayBar = ({skip, duration = 0, currentTime = 0}) => {
+const PlayBar = ({skip, startTime, duration = 0, currentTime = 0, scale = 1}) => {
+  const left = startTime * scale;
   return (
     <React.Fragment>
       <div className="play-bar play-bar--background"/>
       <div
         className="play-bar play-bar--current-time"
         style={{
-          width: `${(currentTime / duration) * 100}%`
+          width: `${(currentTime * scale)}px`,
+          left: `${left}px`
         }}
       />
       <div onClick={event => {
@@ -83,7 +85,10 @@ const PlayBar = ({skip, duration = 0, currentTime = 0}) => {
 PlayBar.propTypes = {
   skip: PropTypes.func.isRequired,
   duration: PropTypes.number,
-  currentTime: PropTypes.number
+  currentTime: PropTypes.number,
+  scale: PropTypes.number,
+  startTime: PropTypes.number,
+  fullDuration: PropTypes.number
 };
 
 export default class Video extends React.Component {
@@ -130,16 +135,37 @@ export default class Video extends React.Component {
     this.videoRef.currentTime = time;
   };
 
-  setStartTime = startTime => this.setState({startTime});
+  setStartTime = startTime => {
+    this.setState({startTime});
+    this.skip(startTime);
+  }
 
-  setEndTime = endTime => this.setState({endTime});
+  setEndTime = endTime => {
+    this.setState({endTime});
+    this.skip(endTime);
+  }
 
   componentWillUnmount = () => this.onStop()
 
+  get width() {
+    return typeof window === 'undefined' ? 0 : window.innerWidth - (122 * 2);
+  }
+
+  get previewDuration() {
+    const {startTime, endTime} = this.state;
+    return endTime - startTime;
+  }
+
+  get currentPreviewTime() {
+    const {startTime, currentTime} = this.state;
+    return Math.max(currentTime - startTime, 0);
+  }
+
   render() {
     const {src} = this.props;
-    const {duration, currentTime, isPlaying, startTime, endTime} = this.state;
-    const width = typeof window === 'undefined' ? 0 : window.innerWidth - (122 * 2);
+    const {duration, isPlaying, startTime, endTime} = this.state;
+    const width = this.width;
+    const scale = this.width / duration;
     return (<div className="root">
       <video
         ref={this.onRef}
@@ -155,12 +181,12 @@ export default class Video extends React.Component {
       <div className="controls-container">
         <div className="controls controls--left">
           <PlayPauseButton isPlaying={isPlaying} pause={this.pause} play={this.play}/>
-          <CurrentTime currentTime={currentTime}/>
+          <CurrentTime currentTime={this.currentPreviewTime}/>
         </div>
         <div className="playbar-container">
-          <PlayBar startTime={startTime} currentTime={currentTime} duration={duration} skip={this.skip}/>
-          <Handle duration={duration} containerWidth={width} name="start" time={startTime} setTime={this.setStartTime}/>
-          {endTime && <Handle duration={duration} containerWidth={width} name="end" time={endTime} setTime={this.setEndTime}/>}
+          <PlayBar scale={scale} startTime={startTime} endTime={endTime} currentTime={this.currentPreviewTime} duration={duration} skip={this.skip}/>
+          <Handle limitLeft={0} limitRight={endTime * scale} play={this.play} pause={this.pause} duration={duration} containerWidth={width} name="start" time={startTime} setTime={this.setStartTime}/>
+          {endTime && <Handle limitLeft={startTime * scale} limitRight={this.width} play={this.play} pause={this.pause} duration={duration} containerWidth={width} name="end" time={endTime} setTime={this.setEndTime}/>}
         </div>
         <div className="controls controls--right">
           <AudioButton isMuted={false} toggleMuted={() => {}}/>

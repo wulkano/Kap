@@ -11,14 +11,38 @@ export default class Handle extends React.Component {
     duration: PropTypes.number,
     setTime: PropTypes.func.isRequired,
     time: PropTypes.number,
-    containerWidth: PropTypes.number.isRequired
+    limitLeft: PropTypes.number,
+    limitRight: PropTypes.number,
+    containerWidth: PropTypes.number.isRequired,
+    play: PropTypes.func.isRequired,
+    pause: PropTypes.func.isRequired
+  }
+
+  onDragStart = () => {
+    const {pause, setTime, time} = this.props;
+    pause();
+    setTime(time);
+    this.setState({dragging: true});
+  }
+
+  onDragStop = () => {
+    const {play} = this.props;
+    play();
+    this.setState({dragging: false});
+  }
+
+  onDrag = (event, data) => {
+    const {duration, containerWidth, setTime} = this.props;
+    const time = duration * (data.x / containerWidth);
+    setTime(time);
   }
 
   render() {
     const {
       duration,
       containerWidth,
-      setTime,
+      limitLeft,
+      limitRight,
       time = 0,
       name
     } = this.props;
@@ -31,17 +55,10 @@ export default class Handle extends React.Component {
         handle=".handle"
         defaultPosition={{x: time && left, y: 0}}
         position={null}
-        onStart={() => {
-          this.setState({dragging: true});
-        }}
-        onStop={() => {
-          this.setState({dragging: false});
-        }}
-        bounds={{left: 0, right: containerWidth}}
-        onDrag={(event, data) => {
-          const time = duration * (data.x / containerWidth);
-          setTime(time);
-        }}
+        onStart={this.onDragStart}
+        onStop={this.onDragStop}
+        bounds={{left: limitLeft, right: limitRight}}
+        onDrag={this.onDrag}
       >
         <div
           style={{
