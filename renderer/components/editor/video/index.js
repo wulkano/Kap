@@ -212,6 +212,7 @@ export default class Video extends React.Component {
         autoPlay
         onDurationChange={this.onDurationChange}
         onPlay={this.onPlay}
+        loop={endTime === duration && startTime === 0}
         onPause={this.onPause}
         onStop={this.onStop}
         onEnded={this.onEnded}
