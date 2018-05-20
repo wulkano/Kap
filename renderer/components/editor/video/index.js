@@ -36,6 +36,7 @@ const getTimestampAtEvent = (event, duration) => {
 
 const PlayBar = ({skip, startTime, duration = 0, previewDuration, currentTime = 0, scale = 1}) => {
   const left = startTime * scale;
+  const roundedLeft = startTime === 0 ? '' : 'play-bar--rounded';
   return (
     <React.Fragment>
       <div className="play-bar play-bar--background"/>
@@ -44,7 +45,7 @@ const PlayBar = ({skip, startTime, duration = 0, previewDuration, currentTime = 
         left: `${left}px`
       }}/>
       <div
-        className="play-bar play-bar--current-time"
+        className={`play-bar play-bar--current-time ${roundedLeft}`}
         style={{
           width: `${(currentTime * scale)}px`,
           left: `${left}px`
@@ -84,6 +85,9 @@ const PlayBar = ({skip, startTime, duration = 0, previewDuration, currentTime = 
           background: rgba(255,255,255,.40);
           width: 100%;
         }
+        .play-bar--rounded {
+          border-radius: 2px 2px 2px 2px;
+        }
         `
       }</style>
     </React.Fragment>
@@ -104,7 +108,7 @@ export default class Video extends React.Component {
     src: PropTypes.string.isRequired
   }
 
-  state = {currentTime: 0, duration: null, endTime: null, startTime: 0, isPlaying: false, width: 0}
+  state = {currentTime: 0, duration: null, endTime: null, startTime: 0, isPlaying: false, width: 0, hasFocus: false}
 
   onRef = videoRef => {
     this.videoRef = videoRef;
@@ -179,7 +183,12 @@ export default class Video extends React.Component {
   }
 
   get width() {
-    return this.state.width - (122 * 2);
+    const {hasFocus} = this.state;
+    if (hasFocus) {
+      return this.state.width - (122 * 2);
+    }
+
+    return this.state.width;
   }
 
   get previewDuration() {
@@ -197,7 +206,7 @@ export default class Video extends React.Component {
     const {duration, isPlaying, startTime, endTime} = this.state;
     const width = this.width;
     const scale = width / duration;
-    return (<div className="root">
+    return (<div className="root" onMouseEnter={() => this.setState({hasFocus: true})} onMouseLeave={() => this.setState({hasFocus: false})}>
       <video
         ref={this.onRef}
         autoPlay
@@ -257,6 +266,7 @@ export default class Video extends React.Component {
           display: flex;
           align-items: center;
           jusitfy-content: center;
+          transition: all 100ms ease;
         }
         .controls-container {
           display: block;
