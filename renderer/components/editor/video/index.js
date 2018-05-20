@@ -138,7 +138,12 @@ export default class Video extends React.Component {
 
   onStop = () => this.ticker && clearTimeout(this.ticker);
 
-  pause = () => this.videoRef.pause()
+  pause = () => {
+    this.videoRef.pause();
+    if (this.ticker) {
+      clearTimeout(this.ticker);
+    }
+  }
 
   play = () => this.videoRef.play()
 
