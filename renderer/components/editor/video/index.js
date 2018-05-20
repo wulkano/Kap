@@ -122,6 +122,11 @@ export default class Video extends React.Component {
     window.removeEventListener('resize', this.handleResize);
   }
 
+  onEnded = () => {
+    this.videoRef.currentTime = this.state.startTime;
+    this.videoRef.play();
+  }
+
   onDurationChange = event =>
     this.setState({
       duration: event.target.duration,
@@ -132,15 +137,11 @@ export default class Video extends React.Component {
       if (!this.videoRef) {
         return;
       }
-      const {endTime, startTime, duration} = this.state;
+      const {endTime, startTime} = this.state;
       let currentTime = this.videoRef.currentTime;
       if (currentTime >= endTime) {
         this.videoRef.currentTime = startTime;
         currentTime = startTime;
-      } else if (currentTime === duration && this.state.isPlaying) {
-        this.videoRef.currentTime = startTime;
-        currentTime = startTime;
-        this.videoRef.play();
       }
       this.setState({currentTime, isPlaying: !this.videoRef.paused});
       this.ticker = setTimeout(this.refreshTime, 1000 / 120);
@@ -204,6 +205,7 @@ export default class Video extends React.Component {
         onPlay={this.onPlay}
         onPause={this.onPause}
         onStop={this.onStop}
+        onEnded={this.onEnded}
         preload="auto"
         src={src}
       />
