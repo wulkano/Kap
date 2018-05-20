@@ -34,11 +34,15 @@ const getTimestampAtEvent = (event, duration) => {
   return duration * (xPositionInTrimmer / rect.width); // Calculated time in seconds where the click happened
 };
 
-const PlayBar = ({skip, startTime, duration = 0, currentTime = 0, scale = 1}) => {
+const PlayBar = ({skip, startTime, duration = 0, previewDuration, currentTime = 0, scale = 1}) => {
   const left = startTime * scale;
   return (
     <React.Fragment>
       <div className="play-bar play-bar--background"/>
+      <div className="play-bar play-bar--playable" style={{
+        width: `${(previewDuration * scale)}px`,
+        left: `${left}px`
+      }}/>
       <div
         className="play-bar play-bar--current-time"
         style={{
@@ -73,7 +77,11 @@ const PlayBar = ({skip, startTime, duration = 0, currentTime = 0, scale = 1}) =>
         }
         .play-bar--background {
           box-shadow: 0 1px 2px rgba(0,0,0,.1);
-          background: rgba(255,255,255,.10);
+          background: rgba(0,0,0,.20);
+          width: 100%;
+        }
+        .play-bar--playable {
+          background: rgba(255,255,255,.40);
           width: 100%;
         }
         `
@@ -88,7 +96,7 @@ PlayBar.propTypes = {
   currentTime: PropTypes.number,
   scale: PropTypes.number,
   startTime: PropTypes.number,
-  fullDuration: PropTypes.number
+  previewDuration: PropTypes.number
 };
 
 export default class Video extends React.Component {
@@ -108,8 +116,7 @@ export default class Video extends React.Component {
       endTime: event.target.duration
     });
 
-  onPlay = () => {
-    this.ticker = setInterval(() => {
+    refreshTime = () => {
       if (!this.videoRef) {
         return;
       }
@@ -120,12 +127,16 @@ export default class Video extends React.Component {
         currentTime = startTime;
       }
       this.setState({currentTime, isPlaying: !this.videoRef.paused});
-    }, 1000 / 120);
+      this.ticker = setTimeout(this.refreshTime, 1000 / 120);
+    }
+
+  onPlay = () => {
+    this.refreshTime();
   };
 
   onPause = () => this.setState({isPlaying: false});
 
-  onStop = () => this.ticker && clearInterval(this.ticker);
+  onStop = () => this.ticker && clearTimeout(this.ticker);
 
   pause = () => this.videoRef.pause()
 
@@ -136,12 +147,12 @@ export default class Video extends React.Component {
   };
 
   setStartTime = startTime => {
-    this.setState({startTime});
+    this.setState({startTime, currentTime: startTime});
     this.skip(startTime);
   }
 
   setEndTime = endTime => {
-    this.setState({endTime});
+    this.setState({endTime, currentTime: endTime});
     this.skip(endTime);
   }
 
@@ -184,7 +195,7 @@ export default class Video extends React.Component {
           <CurrentTime currentTime={this.currentPreviewTime}/>
         </div>
         <div className="playbar-container">
-          <PlayBar scale={scale} startTime={startTime} endTime={endTime} currentTime={this.currentPreviewTime} duration={duration} skip={this.skip}/>
+          <PlayBar previewDuration={this.previewDuration} scale={scale} startTime={startTime} endTime={endTime} currentTime={this.currentPreviewTime} duration={duration} skip={this.skip}/>
           <Handle limitLeft={0} limitRight={endTime * scale} play={this.play} pause={this.pause} duration={duration} containerWidth={width} name="start" time={startTime} setTime={this.setStartTime}/>
           {endTime && <Handle limitLeft={startTime * scale} limitRight={this.width} play={this.play} pause={this.pause} duration={duration} containerWidth={width} name="end" time={endTime} setTime={this.setEndTime}/>}
         </div>
