@@ -39,7 +39,7 @@ const PlayBar = ({skip, startTime, duration = 0, previewDuration, currentTime = 
   const roundedLeft = startTime === 0 ? '' : 'play-bar--rounded';
   return (
     <React.Fragment>
-      <div className="play-bar play-bar--background"/>
+      <div className="play-bar play-bar--background" style={{opacity: duration === previewDuration ? 0 : 1}}/>
       <div className="play-bar play-bar--playable" style={{
         width: `${(previewDuration * scale)}px`,
         left: `${left}px`
@@ -78,7 +78,8 @@ const PlayBar = ({skip, startTime, duration = 0, previewDuration, currentTime = 
         }
         .play-bar--background {
           box-shadow: 0 1px 2px rgba(0,0,0,.1);
-          background: rgba(0,0,0,.20);
+          transition: opacity 200ms ease;
+          background: rgba(255,255,255,.40);
           width: 100%;
         }
         .play-bar--playable {
