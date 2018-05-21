@@ -97,7 +97,7 @@ export default class ShareService {
     context._pluginName = this.pluginName;
     context.config = this.config;
 
-    track(`file/exported/using/${this.pluginName}`)
+    track(`file/exported/using/${this.pluginName}`);
 
     const kap = electron.app.kap;
     kap.editorWindow.send('toggle-format-buttons', {enabled: false});

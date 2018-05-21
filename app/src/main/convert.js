@@ -10,8 +10,8 @@ export default async exportOptions => {
   const format = exportOptions.format;
   let convert;
 
-  track(`file/exported/format/${format}`)
-  track(`file/exported/fps/${exportOptions.fps}`)
+  track(`file/exported/format/${format}`);
+  track(`file/exported/fps/${exportOptions.fps}`);
 
   if (format === 'gif') {
     convert = convertToGif;
