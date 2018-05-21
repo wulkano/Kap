@@ -36,6 +36,7 @@ export default class Editor extends React.Component {
             overflow: hidden;
             height: calc(100vh - 48px);
           }
+
           .title-bar {
             height: 36px;
             line-height: 36px;
@@ -53,11 +54,13 @@ export default class Editor extends React.Component {
             opacity: 0;
             text-align: center;
           }
+
           .video-container:hover .title-bar {
             transform: translateY(0);
             transition: transform 100ms ease;
             opacity: 1;
           }
+          
           .root {
             display: flex;
             height: 100vh;

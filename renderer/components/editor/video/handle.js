@@ -80,17 +80,20 @@ export default class Handle extends React.Component {
               top: 4px;
               position: relative;
             }
+
             .slider {
               position: absolute;
               bottom: -10px;
               z-index: 100;
               width: 1px;
             }
+
             .handle {
               -webkit-app-region: no-drag;
               transition: opacity 100ms ease;
               opacity: 0;
             }
+
             .handle-visible {
               box-shadow: 0 1px 2px rgba(0,0,0,.1);
               width: 4px;
@@ -102,9 +105,11 @@ export default class Handle extends React.Component {
               border-radius: 3px;
               right: 0px;
             }
+
             .handle-visible--start {
               right: 0px;
             }
+            
             .handle-visible--end {
               left: 0px;
             }

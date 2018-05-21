@@ -32,6 +32,7 @@ export default class extends React.Component {
             user-select: none;
             cursor: default;
           }
+
           * { box-sizing: border-box; }
         `}</style>
       </div>

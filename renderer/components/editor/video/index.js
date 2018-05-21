@@ -69,6 +69,7 @@ const PlayBar = ({skip, startTime, duration = 0, previewDuration, currentTime = 
           border-radius: 0px 2px 2px 0px;
           pointer-events: none;
         }
+        
         .play-bar--clickarea {
           pointer-events: auto;
           -webkit-app-region: no-drag;
@@ -77,19 +78,23 @@ const PlayBar = ({skip, startTime, duration = 0, previewDuration, currentTime = 
           z-index: 100;
           width: 100%;
         }
+
         .play-bar--current-time {
           background: linear-gradient(90deg, #7146FE 0%, #00FFBE 100%);
         }
+
         .play-bar--background {
           box-shadow: 0 1px 2px rgba(0,0,0,.1);
           transition: opacity 200ms ease;
           background: rgba(255,255,255,.40);
           width: 100%;
         }
+
         .play-bar--playable {
           background: rgba(255,255,255,.40);
           width: 100%;
         }
+
         .play-bar--rounded {
           border-radius: 2px 2px 2px 2px;
         }
@@ -147,9 +152,9 @@ export default class Video extends React.Component {
       if (!this.videoRef) {
         return;
       }
-      const {endTime, startTime} = this.state;
+      const {endTime, startTime, isPlaying} = this.state;
       let currentTime = this.videoRef.current.currentTime;
-      if (currentTime >= endTime) {
+      if (currentTime >= endTime && isPlaying) {
         this.videoRef.current.currentTime = startTime;
         currentTime = startTime;
       }
