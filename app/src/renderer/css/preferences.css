@@ -129,6 +129,11 @@ nav.prefs-nav {
     text-transform: uppercase;
     width: max-content;
   }
+
+  .preference__title,
+  .preference__description {
+    max-width: 288px;
+  }
 }
 
 .preference-content {
