@@ -30,7 +30,7 @@ CurrentTime.propTypes = {
 };
 
 const getTimestampAtEvent = (event, duration) => {
-  const rect = event.target.getBoundingClientRect();
+  const rect = event.currentTarget.getBoundingClientRect();
   const xPositionInTrimmer = event.pageX - rect.left;
 
   return duration * (xPositionInTrimmer / rect.width); // Calculated time in seconds where the click happened
@@ -137,8 +137,8 @@ export default class Video extends React.Component {
 
   onDurationChange = event =>
     this.setState({
-      duration: event.target.duration,
-      endTime: event.target.duration
+      duration: event.currentTarget.duration,
+      endTime: event.currentTarget.duration
     });
 
     refreshTime = () => {
