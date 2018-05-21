@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Draggable from 'react-draggable';
+import classNames from 'classnames';
 
 const HANDLE_WIDTH = 16;
 export default class Handle extends React.Component {
@@ -71,13 +72,7 @@ export default class Handle extends React.Component {
               left: name === 'end' ? null : `-${HANDLE_WIDTH}px`
             }}
           >
-            <div
-              className="handle-visible"
-              style={{
-                right: name === 'end' ? undefined : 0,
-                left: name === 'end' ? 0 : undefined
-              }}
-            />
+            <div className={classNames('handle-visible', {'handle-visible--end': name === 'end', 'handle--visible--start': name === 'start'})}/>
           </div>
           <style jsx>{`
             .handle {
@@ -105,6 +100,13 @@ export default class Handle extends React.Component {
               top: 50%;
               transform: translateY(-50%);
               border-radius: 3px;
+              right: 0px;
+            }
+            .handle-visible--start {
+              right: 0px;
+            }
+            .handle-visible--end {
+              left: 0px;
             }
           `}</style>
           <style jsx global>{`
