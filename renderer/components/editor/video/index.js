@@ -10,7 +10,7 @@ import AudioButton from '../buttons/audio';
 import formatTime from '../../../utils/format-time';
 import Handle from './handle';
 
-const TIMELINE_PADDING = 122
+const TIMELINE_PADDING = 122;
 
 const CurrentTime = ({currentTime}) => (
   <div className="current-time">
@@ -212,107 +212,108 @@ export default class Video extends React.Component {
     const {duration, isPlaying, startTime, endTime} = this.state;
     const width = this.width;
     const scale = width / duration;
-    return (<div className="root" onMouseEnter={() => this.setState({hasFocus: true})} onMouseLeave={() => this.setState({hasFocus: false})}>
-      <video
-        ref={this.videoRef}
-        autoPlay
-        onDurationChange={this.onDurationChange}
-        onPlay={this.onPlay}
-        loop={endTime === duration && startTime === 0}
-        onPause={this.onPause}
-        onStop={this.onStop}
-        onEnded={this.onEnded}
-        preload="auto"
-        src={src}
-      />
-      <div className="controls-container">
-        <div className="controls controls--left">
-          <PlayPauseButton isPlaying={isPlaying} onClick={isPlaying ? this.pause : this.play}/>
-          <CurrentTime currentTime={this.currentPreviewTime}/>
+    return (
+      <div className="root" onMouseEnter={() => this.setState({hasFocus: true})} onMouseLeave={() => this.setState({hasFocus: false})}>
+        <video
+          ref={this.videoRef}
+          autoPlay
+          onDurationChange={this.onDurationChange}
+          onPlay={this.onPlay}
+          loop={endTime === duration && startTime === 0}
+          onPause={this.onPause}
+          onStop={this.onStop}
+          onEnded={this.onEnded}
+          preload="auto"
+          src={src}
+        />
+        <div className="controls-container">
+          <div className="controls controls--left">
+            <PlayPauseButton isPlaying={isPlaying} onClick={isPlaying ? this.pause : this.play}/>
+            <CurrentTime currentTime={this.currentPreviewTime}/>
+          </div>
+          <div className="playbar-container">
+            <PlayBar previewDuration={this.previewDuration} scale={scale} startTime={startTime} endTime={endTime} currentTime={this.currentPreviewTime} duration={duration} skip={this.skip}/>
+            <Handle limitLeft={0} limitRight={endTime * scale} play={this.play} pause={this.pause} duration={duration} containerWidth={width} name="start" time={startTime} setTime={this.setStartTime}/>
+            {endTime && <Handle limitLeft={startTime * scale} limitRight={width} play={this.play} pause={this.pause} duration={duration} containerWidth={width} name="end" time={endTime} setTime={this.setEndTime}/>}
+          </div>
+          <div className="controls controls--right">
+            <AudioButton isMuted={false} toggleMuted={() => {}}/>
+            <FullscreenButton isFullscreen={false} toggleFullscreen={() => {}}/>
+          </div>
         </div>
-        <div className="playbar-container">
-          <PlayBar previewDuration={this.previewDuration} scale={scale} startTime={startTime} endTime={endTime} currentTime={this.currentPreviewTime} duration={duration} skip={this.skip}/>
-          <Handle limitLeft={0} limitRight={endTime * scale} play={this.play} pause={this.pause} duration={duration} containerWidth={width} name="start" time={startTime} setTime={this.setStartTime}/>
-          {endTime && <Handle limitLeft={startTime * scale} limitRight={width} play={this.play} pause={this.pause} duration={duration} containerWidth={width} name="end" time={endTime} setTime={this.setEndTime}/>}
-        </div>
-        <div className="controls controls--right">
-          <AudioButton isMuted={false} toggleMuted={() => {}}/>
-          <FullscreenButton isFullscreen={false} toggleFullscreen={() => {}}/>
-        </div>
+        <style jsx global>{`
+          .root:hover .play-bar {
+            border-radius: 2px 2px 2px 2px;
+          }
+          .controls-container:hover .handle {
+            opacity: 1;
+          }
+        `}</style>
+        <style jsx>
+          {`
+          .playbar-container {
+            position: absolute;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+            transition: all 100ms ease;
+          }
+          .root:hover .playbar-container {
+            bottom: 29px;
+            left: ${TIMELINE_PADDING}px;
+            right: ${TIMELINE_PADDING}px;
+          }
+          video {
+            width: 100%;
+            height: auto;
+            max.height: calc(100vh - 48px);
+            pointer-events: none; // Bug in electron will make elements over the video to have no pointer-events if this is not disabled
+          }
+          .root {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            jusitfy-content: center;
+            transition: all 100ms ease;
+          }
+          .controls-container {
+            display: block;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 96px;
+            background: linear-gradient(-180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.0) 100%);
+            transition: background 100ms ease;
+          }
+          .root:hover .controls-container {
+            background: linear-gradient(-180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.20) 100%);
+          }
+          .root:hover .controls {
+            opacity: 1;
+          }
+          .controls {
+            transition: opacity 200ms ease;
+            opacity: 0;
+            color: #fff;
+            position: absolute;
+            bottom: 16px;
+            padding: 0 16px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+          }
+          .controls--left {
+            left: 0;
+            justify-content: flex-start;
+          }
+          .controls--right {
+            right: 0;
+            justify-content: flex-end;
+          }
+        `}
+        </style>
       </div>
-      <style jsx global>{`
-        .root:hover .play-bar {
-          border-radius: 2px 2px 2px 2px;
-        }
-        .controls-container:hover .handle {
-          opacity: 1;
-        }
-      `}</style>
-      <style jsx>
-        {`
-        .playbar-container {
-          position: absolute;
-          left: 0px;
-          right: 0px;
-          bottom: 0px;
-          transition: all 100ms ease;
-        }
-        .root:hover .playbar-container {
-          bottom: 29px;
-          left: ${TIMELINE_PADDING}px;
-          right: ${TIMELINE_PADDING}px;
-        }
-        video {
-          width: 100%;
-          height: auto;
-          max.height: calc(100vh - 48px);
-          pointer-events: none; // Bug in electron will make elements over the video to have no pointer-events if this is not disabled
-        }
-        .root {
-          height: 100%;
-          display: flex;
-          align-items: center;
-          jusitfy-content: center;
-          transition: all 100ms ease;
-        }
-        .controls-container {
-          display: block;
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-          height: 96px;
-          background: linear-gradient(-180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.0) 100%);
-          transition: background 100ms ease;
-        }
-        .root:hover .controls-container {
-          background: linear-gradient(-180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.20) 100%);
-        }
-        .root:hover .controls {
-          opacity: 1;
-        }
-        .controls {
-          transition: opacity 200ms ease;
-          opacity: 0;
-          color: #fff;
-          position: absolute;
-          bottom: 16px;
-          padding: 0 16px;
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-        }
-        .controls--left {
-          left: 0;
-          justify-content: flex-start;
-        }
-        .controls--right {
-          right: 0;
-          justify-content: flex-end;
-        }
-      `}
-      </style>
-    </div>
     );
   }
 }
