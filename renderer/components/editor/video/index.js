@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import classNames from 'classnames';
+
 import PlayPauseButton from '../buttons/play-pause';
 import FullscreenButton from '../buttons/fullscreen';
 import AudioButton from '../buttons/audio';
@@ -36,7 +38,7 @@ const getTimestampAtEvent = (event, duration) => {
 
 const PlayBar = ({skip, startTime, duration = 0, previewDuration, currentTime = 0, scale = 1}) => {
   const left = startTime * scale;
-  const roundedLeft = startTime === 0 ? '' : 'play-bar--rounded';
+  const currentTimeClassName = classNames('play-bar', 'play-bar--current-time', {'play-bar--rounded': startTime === 0});
   return (
     <React.Fragment>
       <div className="play-bar play-bar--background" style={{opacity: duration === previewDuration ? 0 : 1}}/>
@@ -45,7 +47,7 @@ const PlayBar = ({skip, startTime, duration = 0, previewDuration, currentTime = 
         left: `${left}px`
       }}/>
       <div
-        className={`play-bar play-bar--current-time ${roundedLeft}`}
+        className={currentTimeClassName}
         style={{
           width: `${(currentTime * scale)}px`,
           left: `${left}px`
@@ -109,11 +111,12 @@ export default class Video extends React.Component {
     src: PropTypes.string.isRequired
   }
 
-  state = {currentTime: 0, duration: null, endTime: null, startTime: 0, isPlaying: false, width: 0, hasFocus: false}
+  constructor(props) {
+    super(props);
+    this.videoRef = React.createRef();
+  }
 
-  onRef = videoRef => {
-    this.videoRef = videoRef;
-  };
+  state = {currentTime: 0, duration: null, endTime: null, startTime: 0, isPlaying: false, width: 0, hasFocus: false}
 
   handleResize = () => this.setState({...this.state, width: window.innerWidth});
 
@@ -128,8 +131,8 @@ export default class Video extends React.Component {
   }
 
   onEnded = () => {
-    this.videoRef.currentTime = this.state.startTime;
-    this.videoRef.play();
+    this.videoRef.current.currentTime = this.state.startTime;
+    this.videoRef.current.play();
   }
 
   onDurationChange = event =>
@@ -143,12 +146,12 @@ export default class Video extends React.Component {
         return;
       }
       const {endTime, startTime} = this.state;
-      let currentTime = this.videoRef.currentTime;
+      let currentTime = this.videoRef.current.currentTime;
       if (currentTime >= endTime) {
-        this.videoRef.currentTime = startTime;
+        this.videoRef.current.currentTime = startTime;
         currentTime = startTime;
       }
-      this.setState({currentTime, isPlaying: !this.videoRef.paused});
+      this.setState({currentTime, isPlaying: !this.videoRef.current.paused});
       this.ticker = setTimeout(this.refreshTime, 1000 / 120);
     }
 
@@ -161,16 +164,16 @@ export default class Video extends React.Component {
   onStop = () => this.ticker && clearTimeout(this.ticker);
 
   pause = () => {
-    this.videoRef.pause();
+    this.videoRef.current.pause();
     if (this.ticker) {
       clearTimeout(this.ticker);
     }
   }
 
-  play = () => this.videoRef.play()
+  play = () => this.videoRef.current.play()
 
   skip = (time = 0) => {
-    this.videoRef.currentTime = time;
+    this.videoRef.current.currentTime = time;
   };
 
   setStartTime = startTime => {
@@ -209,7 +212,7 @@ export default class Video extends React.Component {
     const scale = width / duration;
     return (<div className="root" onMouseEnter={() => this.setState({hasFocus: true})} onMouseLeave={() => this.setState({hasFocus: false})}>
       <video
-        ref={this.onRef}
+        ref={this.videoRef}
         autoPlay
         onDurationChange={this.onDurationChange}
         onPlay={this.onPlay}
@@ -222,7 +225,7 @@ export default class Video extends React.Component {
       />
       <div className="controls-container">
         <div className="controls controls--left">
-          <PlayPauseButton isPlaying={isPlaying} pause={this.pause} play={this.play}/>
+          <PlayPauseButton isPlaying={isPlaying} onClick={isPlaying ? this.pause : this.play}/>
           <CurrentTime currentTime={this.currentPreviewTime}/>
         </div>
         <div className="playbar-container">

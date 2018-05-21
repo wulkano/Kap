@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
+import classNames from 'classnames';
 import {DropdownArrowIcon} from '../../../vectors';
 
 const OptionType = PropTypes.shape({
@@ -27,10 +29,11 @@ Select.propTypes = {
 
 const ExportSelect = ({options, label}) => {
   const hasOptions = options && options.length !== 0;
+  const className = classNames('button', {'button--select': hasOptions});
   return (
     <div className="root">
       {hasOptions && <Select options={options}/>}
-      <button type="button" className={`button ${hasOptions ? 'button--select' : ''}`}><span className="label">{label}</span>{hasOptions && <DropdownArrowIcon/>}</button>
+      <button type="button" className={className}><span className="label">{label}</span>{hasOptions && <DropdownArrowIcon/>}</button>
       <style jsx>{`
         .root {
           display: inline-block;

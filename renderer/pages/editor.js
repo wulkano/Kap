@@ -20,9 +20,7 @@ class Editor extends React.Component {
             <TrafficLights/>
             <span className="title-bar__title">kap-beta.mp4</span>
           </div>
-          <Video
-            src={src}
-          />
+          <Video src={src}/>
         </div>
 
         <Options/>

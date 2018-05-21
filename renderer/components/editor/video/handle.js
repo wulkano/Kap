@@ -61,40 +61,36 @@ export default class Handle extends React.Component {
         onDrag={this.onDrag}
       >
         <div
-          style={{
-            position: 'absolute',
-            bottom: '-10px',
-            zIndex: 100,
-            width: '1px'
-          }}
+          className="slider"
         >
           <div
             className="handle"
             style={{
               cursor: this.state.dragging ? '-webkit-grabbing' : '-webkit-grab',
               width: `${HANDLE_WIDTH}px`,
-              height: '32px',
-              top: '4px',
-              left: name === 'end' ? null : `-${HANDLE_WIDTH}px`,
-              position: 'relative'
+              left: name === 'end' ? null : `-${HANDLE_WIDTH}px`
             }}
           >
             <div
               className="handle-visible"
               style={{
-                width: '4px',
-                height: '16px',
-                background: 'white',
-                position: 'absolute',
                 right: name === 'end' ? undefined : 0,
-                left: name === 'end' ? 0 : undefined,
-                top: '50%',
-                transform: 'translateY(-50%)',
-                borderRadius: '3px'
+                left: name === 'end' ? 0 : undefined
               }}
             />
           </div>
           <style jsx>{`
+            .handle {
+              height: 32px;
+              top: 4px;
+              position: relative;
+            }
+            .slider {
+              position: absolute;
+              bottom: -10px;
+              z-index: 100;
+              width: 1px;
+            }
             .handle {
               -webkit-app-region: no-drag;
               transition: opacity 100ms ease;
@@ -102,6 +98,13 @@ export default class Handle extends React.Component {
             }
             .handle-visible {
               box-shadow: 0 1px 2px rgba(0,0,0,.1);
+              width: 4px;
+              height: 16px;
+              background: white;
+              position: absolute;
+              top: 50%;
+              transform: translateY(-50%);
+              border-radius: 3px;
             }
           `}</style>
           <style jsx global>{`
