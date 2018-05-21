@@ -6,6 +6,7 @@ import execa from 'execa';
 import makeDir from 'make-dir';
 import ShareService from './share-service';
 import saveFileService from './save-file-service';
+import {track} from './analytics';
 
 class Plugins {
   constructor() {
@@ -64,6 +65,8 @@ class Plugins {
       pkg.dependencies[name] = 'latest';
     });
 
+    track(`preferences/plugins/installed/${name}`);
+
     await this._runNpm('install', '--registry', 'https://registry.npmjs.org');
   }
 
@@ -71,6 +74,8 @@ class Plugins {
     this._modifyMainPackageJson(pkg => {
       delete pkg.dependencies[name];
     });
+
+    track(`preferences/plugins/uninstalled/${name}`);
 
     // Intentionally not awaited as it can just finish in the background
     this._runNpm('prune');
@@ -156,6 +161,10 @@ class Plugins {
     ]);
 
     return formats.get(format);
+  }
+
+  track() {
+    return track('preferences/plugins/opened');
   }
 }
 

@@ -1,6 +1,7 @@
 import {app, dialog, Notification, shell} from 'electron';
 import makeDir from 'make-dir';
 import moveFile from 'move-file';
+import {track} from './analytics';
 
 const action = async context => {
   const format = context.format;
@@ -40,6 +41,7 @@ const action = async context => {
 
   // TODO: Switch to the async version when we target Electron 1.8
   moveFile.sync(tempFilePath, filePath);
+  track('file/saved');
 
   const notification = new Notification({
     title: 'File saved successfully!',

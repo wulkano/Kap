@@ -36,6 +36,7 @@
     "postcss-nested": "^3.0.0",
     "postcss-reporter": "^5.0.0",
     "postcss-simple-vars": "^4.1.0",
+    "semver": "^5.5.0",
     "stylelint": "^9.1.1",
     "stylelint-config-xo-space": "^0.6.0",
     "xo": "^0.20.3"

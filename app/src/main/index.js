@@ -43,8 +43,11 @@ let tray;
 let recording = false;
 let playing = true;
 let preparingToRecord = false;
+let timeStartedRecording;
 
 const discardVideo = () => {
+  track('file/discarded');
+
   // Discard the source video
   fs.unlink(editorWindow.kap.videoFilePath, () => {});
 
@@ -329,7 +332,10 @@ const openPrefsWindow = () => {
   });
 
   prefsWindow.loadURL(`file://${__dirname}/../renderer/views/preferences.html`);
-  prefsWindow.on('ready-to-show', prefsWindow.show);
+  prefsWindow.on('ready-to-show', () => {
+    prefsWindow.show();
+    track('preferences/opened');
+  });
 };
 
 const getCropperWindow = () => {
@@ -507,6 +513,9 @@ ipcMain.on('will-start-recording', () => {
     cropperWindow.setAlwaysOnTop(true);
   }
 
+  timeStartedRecording = Date.now();
+  track(`recording/${timeStartedRecording}/started`);
+
   appState = 'recording';
   setTrayStopIcon();
   if (!mainWindowIsDetached) {
@@ -522,7 +531,7 @@ ipcMain.on('did-start-recording', () => {
 
 ipcMain.on('stopped-recording', () => {
   resetTrayIcon();
-  track('recording/finished');
+  track(`recording/${timeStartedRecording}/finished`);
   updateRecordingTouchbar(false, false);
 });
 
@@ -582,6 +591,8 @@ ipcMain.on('move-cropper-window', (event, data) => {
 });
 
 ipcMain.on('open-editor-window', (event, opts) => {
+  track('editor/preview/accessed');
+
   if (editorWindow) {
     return editorWindow.show();
   }

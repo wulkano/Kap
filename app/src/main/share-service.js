@@ -6,6 +6,7 @@ import ensureError from 'ensure-error';
 import {CancelError} from 'p-cancelable';
 import ShareServiceContext from './share-service-context';
 import {endExport, startExport, hideExportWindow} from './export';
+import {track} from './analytics';
 
 const REQUIRED_KEYS = new Set([
   'title',
@@ -95,6 +96,8 @@ export default class ShareService {
     const context = new ShareServiceContext(exportOptions);
     context._pluginName = this.pluginName;
     context.config = this.config;
+
+    track(`file/exported/using/${this.pluginName}`);
 
     const kap = electron.app.kap;
     kap.editorWindow.send('toggle-format-buttons', {enabled: false});

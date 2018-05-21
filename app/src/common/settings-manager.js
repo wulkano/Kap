@@ -3,6 +3,7 @@ import {app} from 'electron';
 import settings from 'electron-settings';
 import objectPath from 'object-path';
 import aperture from 'aperture';
+import {track} from '../main/analytics';
 
 const DEFAULTS = {
   kapturesDir: `${homedir()}/Movies/Kaptures`,
@@ -74,6 +75,10 @@ export const getAll = () => {
 export const set = (key, value, {volatile = false} = {}) => {
   if (volatile) {
     return objectPath.set(volatiles, key, value);
+  }
+
+  if (key !== 'dimensions' && typeof value === 'boolean') {
+    track(`settings/${key}/toggled/${value}`);
   }
 
   settings.setSync(key, value);

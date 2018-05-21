@@ -1,10 +1,12 @@
 import {app, Menu, shell, ipcMain, Notification} from 'electron';
 import {checkForUpdates} from './auto-updater';
+import {track} from './analytics';
 
 const checkForUpdatesItem = {
   label: 'Check for Updates…',
   click(item) {
     item.enabled = false;
+    track('updates/checked');
     checkForUpdates(() => {
       // This will be called if no update is available
       (new Notification({
