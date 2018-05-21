@@ -65,6 +65,8 @@ class Plugins {
       pkg.dependencies[name] = 'latest';
     });
 
+    track(`preferences/plugins/installed/${name}`);
+
     await this._runNpm('install', '--registry', 'https://registry.npmjs.org');
   }
 
@@ -72,6 +74,8 @@ class Plugins {
     this._modifyMainPackageJson(pkg => {
       delete pkg.dependencies[name];
     });
+
+    track(`preferences/plugins/uninstalled/${name}`);
 
     // Intentionally not awaited as it can just finish in the background
     this._runNpm('prune');
