@@ -27,8 +27,8 @@ Select.propTypes = {
   options: PropTypes.arrayOf(OptionType).isRequired
 };
 
-const ExportSelect = ({options, label}) => {
-  const hasOptions = options && options.length !== 0;
+const ExportSelect = ({options = [], label}) => {
+  const hasOptions = options.length > 0;
   const className = classNames('button', {'button--select': hasOptions});
   return (
     <div className="root">
@@ -40,12 +40,13 @@ const ExportSelect = ({options, label}) => {
           position: relative;
           margin-right: 8px;
         }
+
         button {
           appearance: none;
-          background-color: rgba(255,255,255,.10);
+          background-color: rgba(255, 255, 255, 0.10);
           border: none;
           border-radius: 4px;
-          color: #FFF;
+          color: #fff;
           font-size: 12px;
           height: 24px;
           padding: 0 8px;
@@ -54,12 +55,15 @@ const ExportSelect = ({options, label}) => {
           align-items: center;
           flex-direction: row;
         }
+
         .button--select {
           padding-right: 0px;
         }
+
         button:focus {
           outline: none;
         }
+s
         button:focus, button:hover {
           background-color: hsla(0,0%,100%,.2);
         }
@@ -74,4 +78,3 @@ ExportSelect.propTypes = {
 };
 
 export default ExportSelect;
-

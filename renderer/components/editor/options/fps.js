@@ -10,10 +10,10 @@ export default () => (
       appearance: none;
       border: none;
       height: 24px;
-      color: #FFF;
+      color: #fff;
       padding: 4px 16px;
       font-size: 12px;
-      border: 1px solid rgba(255,255,255,.10);
+      border: 1px solid rgba(255, 255, 255, 0.10);
       background: transparent;
       transition: border .12s ease-in-out,background .12s ease-in-out;
     }

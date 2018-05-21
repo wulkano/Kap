@@ -10,6 +10,8 @@ import AudioButton from '../buttons/audio';
 import formatTime from '../../../utils/format-time';
 import Handle from './handle';
 
+const TIMELINE_PADDING = 122
+
 const CurrentTime = ({currentTime}) => (
   <div className="current-time">
     {formatTime(currentTime)}
@@ -189,7 +191,7 @@ export default class Video extends React.Component {
   get width() {
     const {hasFocus} = this.state;
     if (hasFocus) {
-      return this.state.width - (122 * 2);
+      return this.state.width - (TIMELINE_PADDING * 2);
     }
 
     return this.state.width;
@@ -257,8 +259,8 @@ export default class Video extends React.Component {
         }
         .root:hover .playbar-container {
           bottom: 29px;
-          left: 122px;
-          right: 122px;
+          left: ${TIMELINE_PADDING}px;
+          right: ${TIMELINE_PADDING}px;
         }
         video {
           width: 100%;
@@ -292,7 +294,7 @@ export default class Video extends React.Component {
         .controls {
           transition: opacity 200ms ease;
           opacity: 0;
-          color: #FFF;
+          color: #fff;
           position: absolute;
           bottom: 16px;
           padding: 0 16px;
