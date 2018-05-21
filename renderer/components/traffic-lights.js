@@ -7,7 +7,7 @@ export default () => (
     <div className="traffic-lights">
       <button type="button" className="traffic-light traffic-light-close" onClick={() => remote.app.quit()} id="close"/>
       <button type="button" className="traffic-light traffic-light-minimize" onClick={() => remote.BrowserWindow.getFocusedWindow().minimize()} id="minimize"/>
-      <button type="button" disabled className="traffic-light traffic-light-maximize" onClick={() => false && remote.BrowserWindow.getFocusedWindow().maximize()} id="maximize"/>
+      <button type="button" disabled className="traffic-light traffic-light-maximize" id="maximize"/>
     </div>
     <style jsx>{`
   .root {
@@ -32,12 +32,6 @@ export default () => (
   }
   .traffic-lights > .traffic-light-minimize:active:hover, .traffic-lights:hover > .traffic-light-minimize:active:hover, .traffic-lights:active > .traffic-light-minimize:active:hover {
     background-color: #995700;
-  }
-  .traffic-lights > .traffic-light-maximize, .traffic-lights:hover > .traffic-light-maximize, .traffic-lights:active > .traffic-light-maximize {
-    // background-color: #28c941;
-  }
-  .traffic-lights > .traffic-light-maximize:active:hover, .traffic-lights:hover > .traffic-light-maximize:active:hover, .traffic-lights:active > .traffic-light-maximize:active:hover {
-    // background-color: #1d9730;
   }
   .traffic-lights > .traffic-light:before, .traffic-lights > .traffic-light:after {
     visibility: hidden;
@@ -92,26 +86,6 @@ export default () => (
   .traffic-light-minimize:active:hover:before {
     background-color: #592800;
   }
-  .traffic-light-maximize:before {
-    display: none;
-    background-color: #006500;
-    width: 6px;
-    height: 6px;
-  }
-  .traffic-light-maximize:after {
-    display: none;
-    background-color: #28c941;
-    width: 10px;
-    height: 2px;
-    transform: rotate(45deg);
-  }
-  .traffic-light-maximize:active:hover:before {
-    // background-color: #003200;
-  }
-  .traffic-light-maximize:active:hover:after {
-    // background-color: #1d9730;
-  }
-  
   `}</style>
   </div>
 );
