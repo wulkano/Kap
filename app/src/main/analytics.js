@@ -6,7 +6,7 @@ import {get as getSetting} from '../common/settings-manager';
 
 const trackingCode = 'UA-84705099-2';
 const insight = new Insight({trackingCode, pkg});
-const version = parse(pkg.version, {loose: true});
+const version = parse(pkg.version);
 
 export const init = () => {
   if (firstRun()) {
