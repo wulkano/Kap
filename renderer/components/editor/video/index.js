@@ -239,7 +239,7 @@ export default class Video extends React.Component {
           <div className="playbar-container">
             <PlayBar previewDuration={this.previewDuration} scale={scale} startTime={startTime} endTime={endTime} currentTime={this.currentPreviewTime} duration={duration} skip={this.skip}/>
             <Handle limitLeft={0} limitRight={endTime * scale} play={this.play} pause={this.pause} duration={duration} containerWidth={width} name="start" time={startTime} setTime={this.setStartTime}/>
-            {endTime && <Handle limitLeft={startTime * scale} limitRight={width} play={this.play} pause={this.pause} duration={duration} containerWidth={width} name="end" time={endTime} setTime={this.setEndTime}/>}
+            {endTime !== null && <Handle limitLeft={startTime * scale} limitRight={width} play={this.play} pause={this.pause} duration={duration} containerWidth={width} name="end" time={endTime} setTime={this.setEndTime}/>}
           </div>
           <div className="controls controls--right">
             <AudioButton isMuted={false} toggleMuted={() => {}}/>
