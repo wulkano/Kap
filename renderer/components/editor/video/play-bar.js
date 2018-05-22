@@ -25,7 +25,7 @@ class PreviewVideo extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.time && nextProps.time !== this.videoRef.currentTime) {
+    if (nextProps.time && nextProps.time !== this.videoRef.current.currentTime) {
       this.videoRef.current.currentTime = nextProps.time;
     }
   }
