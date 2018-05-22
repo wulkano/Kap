@@ -40,7 +40,7 @@ export default class Video extends React.Component {
     this.videoRef = React.createRef();
   }
 
-  state = {currentTime: 0, duration: null, endTime: null, startTime: 0, isPlaying: false, width: 0, hasFocus: false}
+  state = {currentTime: 0, duration: null, endTime: null, startTime: 0, isPlaying: false, width: 0, hasFocus: false, dragName: null}
 
   handleResize = () => this.setState({...this.state, width: window.innerWidth});
 
@@ -56,7 +56,11 @@ export default class Video extends React.Component {
 
   onEnded = () => {
     this.videoRef.current.currentTime = this.state.startTime;
-    this.videoRef.current.play();
+
+    // Only re-play if we hit the end while playing, not when trimming
+    if (!this.state.dragName) {
+      this.videoRef.current.play();
+    }
   }
 
   onDurationChange = event =>
