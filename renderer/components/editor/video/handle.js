@@ -16,20 +16,28 @@ export default class Handle extends React.Component {
     limitRight: PropTypes.number,
     containerWidth: PropTypes.number.isRequired,
     play: PropTypes.func.isRequired,
-    pause: PropTypes.func.isRequired
+    pause: PropTypes.func.isRequired,
+    onDragStart: PropTypes.func,
+    onDragStop: PropTypes.func
   }
 
   onDragStart = () => {
-    const {pause, setTime, time} = this.props;
+    const {pause, setTime, time, onDragStart, name} = this.props;
     pause();
     setTime(time);
     this.setState({dragging: true});
+    if (onDragStart) {
+      onDragStart({name});
+    }
   }
 
   onDragStop = () => {
-    const {play} = this.props;
+    const {play, onDragStop, name} = this.props;
     play();
     this.setState({dragging: false});
+    if (onDragStop) {
+      onDragStop({name});
+    }
   }
 
   onDrag = (event, data) => {

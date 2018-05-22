@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import classNames from 'classnames';
-
 import PlayPauseButton from '../buttons/play-pause';
 import FullscreenButton from '../buttons/fullscreen';
 import AudioButton from '../buttons/audio';
 
 import formatTime from '../../../utils/format-time';
 import Handle from './handle';
+import PlayBar from './play-bar';
 
 const TIMELINE_PADDING = 122;
 
@@ -29,88 +28,6 @@ const CurrentTime = ({currentTime}) => (
 );
 CurrentTime.propTypes = {
   currentTime: PropTypes.number.isRequired
-};
-
-const getTimestampAtEvent = (event, duration) => {
-  const rect = event.currentTarget.getBoundingClientRect();
-  const xPositionInTrimmer = event.pageX - rect.left;
-
-  return duration * (xPositionInTrimmer / rect.width); // Calculated time in seconds where the click happened
-};
-
-const PlayBar = ({skip, startTime, duration = 0, previewDuration, currentTime = 0, scale = 1}) => {
-  const left = startTime * scale;
-  const currentTimeClassName = classNames('play-bar', 'play-bar--current-time', {'play-bar--rounded': startTime === 0});
-  return (
-    <React.Fragment>
-      <div className="play-bar play-bar--background" style={{opacity: duration === previewDuration ? 0 : 1}}/>
-      <div className="play-bar play-bar--playable" style={{
-        width: `${(previewDuration * scale)}px`,
-        left: `${left}px`
-      }}/>
-      <div
-        className={currentTimeClassName}
-        style={{
-          width: `${(currentTime * scale)}px`,
-          left: `${left}px`
-        }}
-      />
-      <div onClick={event => {
-        const time = getTimestampAtEvent(event, duration);
-        skip(time);
-      }} className="play-bar play-bar--clickarea"/>
-      <style jsx>{
-        `    
-        .play-bar {
-          position: absolute;
-          height: 4px;
-          left: 0;
-          bottom: 0;
-          border-radius: 0px 2px 2px 0px;
-          pointer-events: none;
-        }
-        
-        .play-bar--clickarea {
-          pointer-events: auto;
-          -webkit-app-region: no-drag;
-          height: 30px;
-          transform: translateY(50%);
-          z-index: 100;
-          width: 100%;
-        }
-
-        .play-bar--current-time {
-          background: linear-gradient(90deg, #7146FE 0%, #00FFBE 100%);
-        }
-
-        .play-bar--background {
-          box-shadow: 0 1px 2px rgba(0,0,0,.1);
-          transition: opacity 200ms ease;
-          background: rgba(255,255,255,.40);
-          width: 100%;
-        }
-
-        .play-bar--playable {
-          background: rgba(255,255,255,.40);
-          width: 100%;
-        }
-
-        .play-bar--rounded {
-          border-radius: 2px 2px 2px 2px;
-        }
-        `
-      }</style>
-    </React.Fragment>
-  );
-};
-
-PlayBar.propTypes = {
-  skip: PropTypes.func.isRequired,
-  duration: PropTypes.number,
-  currentTime: PropTypes.number,
-  scale: PropTypes.number,
-  startTime: PropTypes.number,
-  previewDuration: PropTypes.number
 };
 
 export default class Video extends React.Component {
@@ -159,6 +76,9 @@ export default class Video extends React.Component {
         currentTime = startTime;
       }
       this.setState({currentTime, isPlaying: !this.videoRef.current.paused});
+      if (this.ticker) {
+        clearTimeout(this.ticker);
+      }
       this.ticker = setTimeout(this.refreshTime, 1000 / 120);
     }
 
@@ -180,6 +100,7 @@ export default class Video extends React.Component {
   play = () => this.videoRef.current.play()
 
   skip = (time = 0) => {
+    this.setState({currentTime: time});
     this.videoRef.current.currentTime = time;
   };
 
@@ -212,6 +133,27 @@ export default class Video extends React.Component {
     return Math.max(currentTime - startTime, 0);
   }
 
+  handleDragStop = () => {
+    this.setState({dragName: null});
+  }
+
+  handleDragStart = event => {
+    this.setState({dragName: event.name});
+  }
+
+  get dragTime() {
+    const {dragName, startTime, endTime} = this.state;
+    if (dragName === 'start') {
+      return startTime;
+    }
+
+    if (dragName === 'end') {
+      return endTime;
+    }
+
+    return null;
+  }
+
   render() {
     const {src} = this.props;
     const {duration, isPlaying, startTime, endTime} = this.state;
@@ -226,7 +168,6 @@ export default class Video extends React.Component {
           onPlay={this.onPlay}
           loop={endTime === duration && startTime === 0}
           onPause={this.onPause}
-          onStop={this.onStop}
           onEnded={this.onEnded}
           preload="auto"
           src={src}
@@ -237,9 +178,9 @@ export default class Video extends React.Component {
             <CurrentTime currentTime={this.currentPreviewTime}/>
           </div>
           <div className="playbar-container">
-            <PlayBar previewDuration={this.previewDuration} scale={scale} startTime={startTime} endTime={endTime} currentTime={this.currentPreviewTime} duration={duration} skip={this.skip}/>
-            <Handle limitLeft={0} limitRight={endTime * scale} play={this.play} pause={this.pause} duration={duration} containerWidth={width} name="start" time={startTime} setTime={this.setStartTime}/>
-            {endTime !== null && <Handle limitLeft={startTime * scale} limitRight={width} play={this.play} pause={this.pause} duration={duration} containerWidth={width} name="end" time={endTime} setTime={this.setEndTime}/>}
+            <PlayBar dragTime={this.dragTime} src={src} previewDuration={this.previewDuration} scale={scale} startTime={startTime} endTime={endTime} currentTime={this.currentPreviewTime} duration={duration} skip={this.skip}/>
+            <Handle onDragStart={this.handleDragStart} onDragStop={this.handleDragStop} limitLeft={0} limitRight={endTime * scale} play={this.play} pause={this.pause} duration={duration} containerWidth={width} name="start" time={startTime} setTime={this.setStartTime}/>
+            {endTime !== null && <Handle onDragStart={this.handleDragStart} onDragStop={this.handleDragStop} limitLeft={startTime * scale} limitRight={width} play={this.play} pause={this.pause} duration={duration} containerWidth={width} name="end" time={endTime} setTime={this.setEndTime}/>}
           </div>
           <div className="controls controls--right">
             <AudioButton isMuted={false} toggleMuted={() => {}}/>
