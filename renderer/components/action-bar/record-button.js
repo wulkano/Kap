@@ -42,7 +42,7 @@ class RecordButton extends React.Component {
           }
         };
       }, err => {
-        console.error('An error occurred when trying to get audio levels: ', err);
+        console.error('An error occurred when trying to get audio levels:', err);
       });
     }
   }
