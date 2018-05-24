@@ -66,6 +66,6 @@ You can unsubscribe from emails regarding Kap at any time by using the unsubscri
 
 ## Help us do even better
 
-We'd love to hear from you! [Open an issue](https://github.com/wulkano/kap/issues/new) or [send an email](hello@wulkano.com) to help shape and strengthen our stance on privacy.  
+We'd love to hear from you! [Open an issue](https://github.com/wulkano/kap/issues/new) or [send an email](mailto:hello@wulkano.com) to help shape and strengthen our stance on privacy.  
 
 *Updated May 24, 2018*
