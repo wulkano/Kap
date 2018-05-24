@@ -19,7 +19,7 @@ We do not allow any [third party cookies](https://en.wikipedia.org/wiki/HTTP_coo
 
 You are of course free to block and remove cookies, you'll typically find these options in the address bar of your browser.
 
-[Learn more about our use of Google Analytics](https://github.com/wulkano/kap/new/master#google-analytics-gdpr-compliant). 
+[Learn more about our use of Google Analytics](#google-analytics-gdpr-compliant). 
 
 ## Third party services 
 
