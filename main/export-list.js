@@ -8,7 +8,6 @@ const execa = require('execa');
 const {getExportsWindow} = require('./exports');
 const Export = require('./export');
 
-
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
 
 const getPreview = async inputPath => {
@@ -23,7 +22,7 @@ const getPreview = async inputPath => {
   ]);
 
   return base64Img.base64Sync(previewPath);
-}
+};
 
 class ExportList {
   constructor() {
@@ -66,7 +65,7 @@ class ExportList {
     }
   }
 
-  async addExport() {//options) {
+  async addExport() {
     const options = {
       exportOptions: {
         width: 1200,
@@ -96,11 +95,13 @@ class ExportList {
       }
 
       for (const key in updates) {
-        newExport[key] = updates[key];
+        if (updates[key]) {
+          newExport[key] = updates[key];
+        }
       }
 
       callExportsWindow('update-export', Object.assign({}, newExport.data, {createdAt}));
-    }
+    };
 
     this.exports.push(newExport);
     this.queue.push(newExport);
@@ -115,7 +116,7 @@ class ExportList {
   }
 }
 
-const exportList = new ExportList();
+let exportList;
 
 ipc.answerRenderer('get-exports', () => exportList.getExports());
 
@@ -129,6 +130,8 @@ const callExportsWindow = (channel, data) => {
   if (exportsWindow) {
     ipc.callRenderer(exportsWindow, channel, data);
   }
-}
+};
 
-module.exports = exportList;
+module.exports = () => {
+  exportList = new ExportList();
+};

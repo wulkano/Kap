@@ -12,7 +12,7 @@ const prettifyFormat = format => {
   ]);
 
   return formats.get(format);
-}
+};
 
 class ShareServiceContext {
   constructor(options) {
@@ -51,14 +51,14 @@ class ShareServiceContext {
     this.canceled = true;
     this.onCancel();
 
-    for(req of this.requests) {
+    for (const req of this.requests) {
       req.cancel();
     }
   }
 
   clear() {
     this.canceled = true;
-    for(req of this.requests) {
+    for (const req of this.requests) {
       req.cancel();
     }
   }

@@ -1,6 +1,6 @@
-import electron from 'electron';
 import {Container} from 'unstated';
-import ipc from 'electron-better-ipc';
+
+let ipc;
 
 export default class ExportsContainer extends Container {
   state = {
@@ -8,7 +8,7 @@ export default class ExportsContainer extends Container {
   }
 
   mount = async () => {
-    console.log('here');
+    ipc = require('electron-better-ipc');
     const exports = await ipc.callMain('get-exports');
 
     this.setState({exports: exports.sort((a, b) => a.createdAt - b.createdAt)});

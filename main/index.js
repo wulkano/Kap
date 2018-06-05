@@ -6,7 +6,7 @@ const prepareNext = require('electron-next');
 const {initializeTray} = require('./tray');
 const {openCropperWindow} = require('./cropper');
 const plugins = require('./common/plugins');
-require('./export-list');
+const initializeExportList = require('./export-list');
 
 // Prepare the renderer once the app is ready
 app.on('ready', async () => {
@@ -18,6 +18,7 @@ app.on('ready', async () => {
   await prepareNext('./renderer');
 
   initializeTray();
+  initializeExportList();
   globalShortcut.register('Cmd+Shift+5', openCropperWindow);
 });
 

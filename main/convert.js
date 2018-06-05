@@ -1,4 +1,5 @@
 const os = require('os');
+const path = require('path');
 const execa = require('execa');
 const moment = require('moment');
 const tmp = require('tmp');
@@ -6,7 +7,6 @@ const ffmpeg = require('@ffmpeg-installer/ffmpeg');
 const util = require('electron-util');
 const PCancelable = require('p-cancelable');
 const tempy = require('tempy');
-const path = require('path');
 
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
 const durationRegex = /Duration: (\d\d:\d\d:\d\d.\d\d)/gm;

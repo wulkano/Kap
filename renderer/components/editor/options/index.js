@@ -40,6 +40,7 @@ const Options = () => (
         align-items: center;
         padding: 0 16px;
         padding-right: 8px;
+        background: rgba(32,33,37,0.97);
       }
 
       .options > div {
@@ -49,7 +50,7 @@ const Options = () => (
       .label {
         padding: 16px 8px 16px 0;
       }
-      
+
       .label.fps {
         margin-left: 16px;
       }
@@ -58,4 +59,3 @@ const Options = () => (
 );
 
 export default Options;
-

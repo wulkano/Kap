@@ -60,7 +60,7 @@ export default class Editor extends React.Component {
             transition: transform 100ms ease;
             opacity: 1;
           }
-          
+
           .root {
             display: flex;
             height: 100vh;

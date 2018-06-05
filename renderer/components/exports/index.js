@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import {CancelIcon, MoreIcon} from '../../vectors';
@@ -14,18 +15,29 @@ class Exports extends React.Component {
 
     return (
       <div>
-        <button onClick={add}>Add one</button>
+        <button type="button" onClick={add}>Add one</button>
         {
-          exports.map(exp => <Export {...exp} cancel={() => cancel(exp.createdAt)}/>)
+          exports.map(
+            exp => <Export {...exp} key={exp.createdAt} cancel={() => cancel(exp.createdAt)}/>
+          )
         }
-        <style jsx>{`
-            flex: 1;
-            overflow-y: auto;
-        `}</style>
       </div>
     );
   }
 }
+
+// TODO: fix styles
+
+// <style jsx>{`
+//     flex: 1;
+//     overflow-y: auto;
+// `}</style>
+
+Exports.propTypes = {
+  exports: PropTypes.arrayOf(PropTypes.object),
+  add: PropTypes.func,
+  cancel: PropTypes.func
+};
 
 export default connect(
   [ExportsContainer],
@@ -48,22 +60,22 @@ class Export extends React.Component {
     const cancelable = status === 'waiting' || status === 'processing';
 
     return (
-      <div className='export-container'>
-        <div className='thumbnail'>
-          <div className='icon'>
+      <div className="export-container">
+        <div className="thumbnail">
+          <div className="icon">
             {
               cancelable ?
                 <CancelIcon fill="white" hoverFill="white" onClick={cancel}/> :
                 <MoreIcon fill="white" hoverFill="white"/>
             }
           </div>
-          <div className='progress'>
+          <div className="progress">
             { status === 'processing' && <Progress percent={Math.min(percentage, 1)}/> }
           </div>
         </div>
-        <div className='details'>
-          <div className='title'>{defaultFileName}</div>
-          <div className='subtitle'>{text}</div>
+        <div className="details">
+          <div className="title">{defaultFileName}</div>
+          <div className="subtitle">{text}</div>
         </div>
         <style jsx>{`
           .export-container {
@@ -130,15 +142,24 @@ class Export extends React.Component {
   }
 }
 
+Export.propTypes = {
+  defaultFileName: PropTypes.string,
+  status: PropTypes.string,
+  text: PropTypes.string,
+  percentage: PropTypes.number,
+  img: PropTypes.string,
+  cancel: PropTypes.func
+};
+
 class Progress extends React.Component {
   render() {
     const {percent = 0} = this.props;
     const circumference = 12 * 2 * Math.PI;
-    const offset = circumference - percent * circumference;
+    const offset = circumference - (percent * circumference);
 
     return (
       <svg viewBox="0 0 24 24">
-        <circle stroke="white" strokeWidth="2" fill='transparent' cx="12" cy="12" r="12" />
+        <circle stroke="white" strokeWidth="2" fill="transparent" cx="12" cy="12" r="12"/>
         <style jsx>{`
           svg {
             width: 24px;
@@ -157,3 +178,7 @@ class Progress extends React.Component {
     );
   }
 }
+
+Progress.propTypes = {
+  percent: PropTypes.number
+};

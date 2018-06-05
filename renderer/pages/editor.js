@@ -1,4 +1,5 @@
-import path from 'path';
+// import ipc from 'electron-better-ipc';
+import electron from 'electron';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
@@ -10,13 +11,44 @@ export default class extends React.Component {
     src: PropTypes.string.isRequired
   }
 
-  static getInitialProps() {
-    const src = `file://${path.join(__dirname, '../../../../test/fixtures/kap-beta.mp4')}`;
-    return {src};
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      src: ''
+    };
+
+    if (!electron.ipcRenderer) {
+      return;
+    }
+
+    const ipc = require('electron-better-ipc');
+
+    ipc.answerMain('filePath', async filePath => {
+      await new Promise((resolve, reject) => { // eslint-disable-line no-unused-vars
+        // TODO fix me
+        this.onFinishLoading = resolve;
+        console.log('Got', filePath);
+        this.setState({src: `file://${filePath}`});
+      });
+
+      return true;
+    });
+  }
+
+  componentDidUpdate() {
+    console.log('Finish loading is', this.onFinishLoading);
+    console.log('src is', this.state.src);
+
+    if (this.onFinishLoading && this.state.src) {
+      console.log('Resolved it');
+      this.onFinishLoading();
+      delete this.onFinishLoading;
+    }
   }
 
   render() {
-    const {src} = this.props;
+    const {src} = this.state;
 
     return (
       <div className="root">

@@ -12,6 +12,9 @@ const getTimestampAtEvent = (event, duration) => {
   return duration * (xPositionInTrimmer / rect.width); // Calculated time in seconds where the click happened
 };
 
+/* eslint-disable react/no-deprecated */
+// TODO: remove this ^
+
 const PREVIEW_WIDTH = 132;
 class PreviewVideo extends React.Component {
   constructor(props) {
@@ -68,11 +71,11 @@ const HoverTime = ({time, duration, scale, src, showVideo}) => {
   .video {
     width: ${PREVIEW_WIDTH}px;
   }
-  
+
   .preview {
     width: ${PREVIEW_WIDTH}px;
     margin-bottom: 16px;
-    
+
   }
   .time-container {
     left: 0px;
@@ -156,7 +159,7 @@ export default class PlayBar extends React.Component {
           className="play-bar play-bar--clickarea"
         />
         <style jsx>{
-          `    
+          `
         .play-bar {
           position: absolute;
           height: 4px;
@@ -165,7 +168,7 @@ export default class PlayBar extends React.Component {
           border-radius: 0px 2px 2px 0px;
           pointer-events: none;
         }
-        
+
         .play-bar--clickarea {
           pointer-events: auto;
           -webkit-app-region: no-drag;

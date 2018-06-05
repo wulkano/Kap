@@ -26,10 +26,7 @@ const openExportsWindow = () => {
       resizable: false,
       minimizable: false,
       maximizable: false,
-      titleBarStyle: 'hiddenInset',
-      webPreferences: {
-        webSecurity: !isDev // Disable webSecurity in dev to load video over file:// protocol while serving over insecure http, this is not needed in production where we use file:// protocol for html serving.
-      },
+      titleBarStyle: 'hiddenInset'
     });
 
     if (isDev) {

@@ -1,6 +1,6 @@
 'use strict';
 
-const {dialog, shell} = require('electron');
+const {dialog} = require('electron');
 const desktopIcons = require('hide-desktop-icons');
 const dnd = require('@sindresorhus/do-not-disturb');
 const createAperture = require('aperture');
@@ -102,8 +102,7 @@ const stopRecording = async () => {
   }
 
   console.log(filePath);
-  shell.openItem(filePath);
-  openEditorWindow({filePath});
+  openEditorWindow(filePath);
 };
 
 module.exports = {

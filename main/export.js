@@ -7,22 +7,6 @@ const {convertTo} = require('./convert');
 const ShareServiceContext = require('./share-service-context');
 const Plugin = require('./plugin');
 
-// const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
-//
-// const getPreview = async inputPath => {
-//   const previewPath = tmp.tmpNameSync({postfix: '.jpg'});
-//   await execa(ffmpegPath, [
-//     '-ss', 0,
-//     '-i', inputPath,
-//     '-t', 1,
-//     '-vframes', 1,
-//     '-f', 'image2',
-//     previewPath
-//   ]);
-//
-//   return base64Img.base64Sync(previewPath);
-// }
-
 class Export {
   constructor(options) {
     this.exportOptions = options.exportOptions;
@@ -31,8 +15,6 @@ class Export {
     this.service = this.plugin.getSerivce(options.serviceTitle);
     this.format = options.format;
     this.img = '';
-
-    // getPreview(this.inputPath).then(img => this.updateExport({img}));
 
     const now = moment();
     this.defaultFileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.${this.format}`;
@@ -64,7 +46,7 @@ class Export {
       this.resolve = resolve;
       this.reject = reject;
 
-      const action = this.service.action(this.context)
+      this.service.action(this.context)
         .then(() => {
           if (!this.canceled) {
             this.updateExport({text: 'Export completed', status: 'completed', percentage: undefined});

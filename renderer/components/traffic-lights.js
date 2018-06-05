@@ -5,7 +5,7 @@ import React from 'react';
 export default () => (
   <div className="root">
     <div className="traffic-lights">
-      <button type="button" className="traffic-light traffic-light-close" onClick={() => remote.app.quit()} id="close"/>
+      <button type="button" className="traffic-light traffic-light-close" onClick={() => remote.BrowserWindow.getFocusedWindow().close()} id="close"/>
       <button type="button" className="traffic-light traffic-light-minimize" onClick={() => remote.BrowserWindow.getFocusedWindow().minimize()} id="minimize"/>
       <button type="button" disabled className="traffic-light traffic-light-maximize" id="maximize"/>
     </div>
@@ -40,7 +40,7 @@ export default () => (
     visibility: visible;
   }
 
-  
+
   .traffic-light {
     border-radius: 100%;
     padding: 0;
