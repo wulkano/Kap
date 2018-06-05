@@ -104,6 +104,12 @@ class Plugins {
         return x;
       });
   }
+
+  getPluginService(pluginName, serviceTitle) {
+    const plugin = require(path.join(this.cwd, 'node_modules', pluginName));
+    const service = plugin.shareServices.find(shareService => shareService.title === serviceTitle);
+    return service;
+  }
 }
 
 const plugins = new Plugins();

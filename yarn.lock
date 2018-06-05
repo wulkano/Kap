@@ -98,6 +98,36 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
+"@ffmpeg-installer/darwin-x64@4.0.5":
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/@ffmpeg-installer/darwin-x64/-/darwin-x64-4.0.5.tgz#101e213545f90852ff127dcd7b8cfd1fd4859a99"
+
+"@ffmpeg-installer/ffmpeg@^1.0.14":
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/@ffmpeg-installer/ffmpeg/-/ffmpeg-1.0.14.tgz#0e50f5b2b6af659eb830278078b6290ac503032b"
+  optionalDependencies:
+    "@ffmpeg-installer/darwin-x64" "4.0.5"
+    "@ffmpeg-installer/linux-ia32" "4.0.4"
+    "@ffmpeg-installer/linux-x64" "4.0.4"
+    "@ffmpeg-installer/win32-ia32" "4.0.4"
+    "@ffmpeg-installer/win32-x64" "4.0.3"
+
+"@ffmpeg-installer/linux-ia32@4.0.4":
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/@ffmpeg-installer/linux-ia32/-/linux-ia32-4.0.4.tgz#b8d2c789f2b481f032b9c74efd648699768f1693"
+
+"@ffmpeg-installer/linux-x64@4.0.4":
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/@ffmpeg-installer/linux-x64/-/linux-x64-4.0.4.tgz#0d550a1de1dd506c8a71c896013a58527f3d2604"
+
+"@ffmpeg-installer/win32-ia32@4.0.4":
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/@ffmpeg-installer/win32-ia32/-/win32-ia32-4.0.4.tgz#f620bbec3c1c0452e9263709317e18cd2f1ce954"
+
+"@ffmpeg-installer/win32-x64@4.0.3":
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/@ffmpeg-installer/win32-x64/-/win32-x64-4.0.3.tgz#ff9cf465f5a1a46c2a0334f745aa8bec3b3f48a9"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -222,6 +252,13 @@ aggregate-error@^1.0.0:
   dependencies:
     clean-stack "^1.0.0"
     indent-string "^3.0.0"
+
+ajax-request@^1.2.0:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/ajax-request/-/ajax-request-1.2.3.tgz#99fcbec1d6d2792f85fa949535332bd14f5f3790"
+  dependencies:
+    file-system "^2.1.1"
+    utils-extend "^1.0.7"
 
 ajv-keywords@^2.0.0, ajv-keywords@^2.1.0:
   version "2.1.1"
@@ -1178,6 +1215,13 @@ babylon@^6.18.0:
 balanced-match@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
+
+base64-img@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/base64-img/-/base64-img-1.0.4.tgz#3e22d55d6c74a24553d840d2b1bc12a7db078d35"
+  dependencies:
+    ajax-request "^1.2.0"
+    file-system "^2.1.0"
 
 base64-js@0.0.8:
   version "0.0.8"
@@ -2904,6 +2948,10 @@ ejs@^2.5.7, ejs@^2.5.8:
   version "2.5.8"
   resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.5.8.tgz#2ab6954619f225e6193b7ac5f7c39c48fefe4380"
 
+electron-better-ipc@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/electron-better-ipc/-/electron-better-ipc-0.1.1.tgz#36c54a20499ecb061564ac82c054e88611b90efb"
+
 electron-builder-lib@20.8.1:
   version "20.8.1"
   resolved "https://registry.yarnpkg.com/electron-builder-lib/-/electron-builder-lib-20.8.1.tgz#633167c55f183951b031b59261a923968c098073"
@@ -3086,6 +3134,12 @@ electron-util@^0.4.1:
 electron-util@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/electron-util/-/electron-util-0.7.0.tgz#6cc94ae4f4280725ac10e05b54ecfae6033be045"
+  dependencies:
+    electron-is-dev "^0.3.0"
+
+electron-util@^0.8.2:
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/electron-util/-/electron-util-0.8.2.tgz#9ec18f54141192e3fcbfe1d6dfd22780de87ffed"
   dependencies:
     electron-is-dev "^0.3.0"
 
@@ -3788,6 +3842,19 @@ file-loader@^1.1.11:
   dependencies:
     loader-utils "^1.0.2"
     schema-utils "^0.4.5"
+
+file-match@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/file-match/-/file-match-1.0.2.tgz#c9cad265d2c8adf3a81475b0df475859069faef7"
+  dependencies:
+    utils-extend "^1.0.6"
+
+file-system@^2.1.0, file-system@^2.1.1:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/file-system/-/file-system-2.2.2.tgz#7d65833e3a2347dcd956a813c677153ed3edd987"
+  dependencies:
+    file-match "^1.0.1"
+    utils-extend "^1.0.4"
 
 file-type@5.2.0, file-type@^5.2.0:
   version "5.2.0"
@@ -7321,7 +7388,7 @@ p-cancelable@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/p-cancelable/-/p-cancelable-0.3.0.tgz#b9e123800bcebb7ac13a479be195b507b98d30fa"
 
-p-cancelable@^0.4.0:
+p-cancelable@^0.4.0, p-cancelable@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/p-cancelable/-/p-cancelable-0.4.1.tgz#35f363d67d52081c8d9585e37bcceb7e0bbcb2a0"
 
@@ -7368,6 +7435,10 @@ p-map@^1.1.1:
 p-pipe@^1.1.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/p-pipe/-/p-pipe-1.2.0.tgz#4b1a11399a11520a67790ee5a0c1d5881d6befe9"
+
+p-queue@^2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/p-queue/-/p-queue-2.4.2.tgz#03609826682b743be9a22dba25051bd46724fc34"
 
 p-reduce@^1.0.0:
   version "1.0.0"
@@ -9925,6 +9996,10 @@ util@0.10.3, util@^0.10.3:
   resolved "https://registry.yarnpkg.com/util/-/util-0.10.3.tgz#7afb1afe50805246489e3db7fe0ed379336ac0f9"
   dependencies:
     inherits "2.0.1"
+
+utils-extend@^1.0.4, utils-extend@^1.0.6, utils-extend@^1.0.7:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/utils-extend/-/utils-extend-1.0.8.tgz#ccfd7b64540f8e90ee21eec57769d0651cab8a5f"
 
 uuid@3.1.0, uuid@^3.0.0, uuid@^3.1.0:
   version "3.1.0"

@@ -4,13 +4,14 @@ const {Tray} = require('electron');
 const path = require('path');
 
 const {openCropperWindow} = require('./cropper');
+const {openExportsWindow} = require('./exports');
 const {cogMenu} = require('./menus');
 
 let tray = null;
 
 const initializeTray = () => {
   tray = new Tray(path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'));
-  tray.on('click', openCropperWindow);
+  tray.on('click', openExportsWindow);
   tray.on('right-click', () => {
     tray.popUpContextMenu(cogMenu);
   });

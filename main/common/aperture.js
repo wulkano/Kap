@@ -5,7 +5,7 @@ const desktopIcons = require('hide-desktop-icons');
 const dnd = require('@sindresorhus/do-not-disturb');
 const createAperture = require('aperture');
 
-// const {openEditorWindow} = require('../editor');
+const {openEditorWindow} = require('../editor');
 const {setRecordingTray, disableTray} = require('../tray');
 const {setRecordingCroppers, closeAllCroppers} = require('../cropper');
 const settings = require('./settings');
@@ -103,7 +103,7 @@ const stopRecording = async () => {
 
   console.log(filePath);
   shell.openItem(filePath);
-  // openEditorWindow({filePath});
+  openEditorWindow({filePath});
 };
 
 module.exports = {

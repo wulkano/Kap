@@ -16,6 +16,7 @@ import PlayIcon from './play';
 import PauseIcon from './pause';
 import VolumeHighIcon from './volume-high';
 import VolumeOffIcon from './volume-off';
+import CancelIcon from './cancel';
 
 export {
   ApplicationsIcon,
@@ -35,5 +36,6 @@ export {
   PlayIcon,
   PauseIcon,
   VolumeHighIcon,
-  VolumeOffIcon
+  VolumeOffIcon,
+  CancelIcon
 };

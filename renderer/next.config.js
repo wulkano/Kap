@@ -7,5 +7,6 @@ exports.webpack = config => Object.assign(config, {
 exports.exportPathMap = () => ({
   '/cropper': {page: '/cropper'},
   '/editor': {page: '/editor'},
-  '/preferences': {page: '/preferences'}
+  '/preferences': {page: '/preferences'},
+  '/exports': {page: '/exports'}
 });
