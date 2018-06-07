@@ -30,10 +30,6 @@ export default class ExportsContainer extends Container {
     this.setState({exports});
   }
 
-  add = () => {
-    ipc.callMain('export', {some: 'data'});
-  }
-
   cancel = createdAt => {
     ipc.callMain('cancel-export', createdAt);
   }

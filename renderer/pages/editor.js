@@ -1,68 +1,80 @@
-// import ipc from 'electron-better-ipc';
-import electron from 'electron';
 import React from 'react';
-import PropTypes from 'prop-types';
 import Head from 'next/head';
+import {Provider} from 'unstated';
 
 import Editor from '../components/editor';
+import Options from '../components/editor/options';
+import {EditorContainer, VideoContainer} from '../containers';
 
-export default class extends React.Component {
-  static propTypes = {
-    src: PropTypes.string.isRequired
-  }
+const editorContainer = new EditorContainer();
+const videoContainer = new VideoContainer();
 
-  constructor(props) {
-    super(props);
+videoContainer.setEditorContainer(editorContainer);
+editorContainer.setVideoContainer(videoContainer);
 
-    this.state = {
-      src: ''
-    };
-
-    if (!electron.ipcRenderer) {
-      return;
-    }
-
+export default class EditorPage extends React.Component {
+  componentDidMount() {
     const ipc = require('electron-better-ipc');
 
     ipc.answerMain('filePath', async filePath => {
-      await new Promise((resolve, reject) => { // eslint-disable-line no-unused-vars
-        // TODO fix me
-        this.onFinishLoading = resolve;
-        console.log('Got', filePath);
-        this.setState({src: `file://${filePath}`});
+      await new Promise((resolve, reject) => {
+        editorContainer.mount(filePath, resolve, reject);
       });
-
       return true;
+    });
+
+    ipc.callMain('export-options').then(options => {
+      editorContainer.setOptions(options);
     });
   }
 
-  componentDidUpdate() {
-    console.log('Finish loading is', this.onFinishLoading);
-    console.log('src is', this.state.src);
-
-    if (this.onFinishLoading && this.state.src) {
-      console.log('Resolved it');
-      this.onFinishLoading();
-      delete this.onFinishLoading;
-    }
-  }
-
   render() {
-    const {src} = this.state;
-
     return (
       <div className="root">
         <Head>
           <meta httpEquiv="Content-Security-Policy" content="media-src file:;"/>
         </Head>
-        <Editor src={src}/>
+        <div className="cover-window">
+          <Provider inject={[editorContainer, videoContainer]}>
+            <div className="video-container">
+              <Editor/>
+            </div>
+            <div className="controls-container">
+              <Options/>
+            </div>
+          </Provider>
+        </div>
         <style jsx global>{`
-          body {
+          body,
+          .cover-window {
             margin: 0;
+            width: 100vw;
+            height: 100vh;
             -webkit-app-region: drag;
             font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
             user-select: none;
             cursor: default;
+            -webkit-font-smoothing: antialiased;
+            letter-spacing: -.01rem;
+            text-shadow: 0 1px 2px rgba(0,0,0,.1);
+          }
+
+          .cover-window {
+            display: flex;
+            flex-direction: column;
+          }
+
+          .video-container {
+            flex: 1;
+            display: flex;
+            background: #000;
+          }
+
+          .controls-container {
+            height: 48px;
+            z-index: 10;
+            display: flex;
+            background: rgba(32,33,37,0.98);
           }
 
           * { box-sizing: border-box; }

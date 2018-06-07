@@ -11,38 +11,33 @@ class Exports extends React.Component {
   }
 
   render() {
-    const {exports, add, cancel} = this.props;
+    const {exports, cancel} = this.props;
 
     return (
       <div>
-        <button type="button" onClick={add}>Add one</button>
         {
           exports.map(
             exp => <Export {...exp} key={exp.createdAt} cancel={() => cancel(exp.createdAt)}/>
           )
         }
+        <style jsx>{`
+            flex: 1;
+            overflow-y: auto;
+        `}</style>
       </div>
     );
   }
 }
 
-// TODO: fix styles
-
-// <style jsx>{`
-//     flex: 1;
-//     overflow-y: auto;
-// `}</style>
-
 Exports.propTypes = {
   exports: PropTypes.arrayOf(PropTypes.object),
-  add: PropTypes.func,
   cancel: PropTypes.func
 };
 
 export default connect(
   [ExportsContainer],
   ({exports}) => ({exports}),
-  ({add, cancel}) => ({add, cancel})
+  ({cancel}) => ({cancel})
 )(Exports);
 
 class Export extends React.Component {
@@ -51,17 +46,17 @@ class Export extends React.Component {
       defaultFileName,
       status,
       text,
-      percentage,
+      percentage = 0,
       img,
       cancel
     } = this.props;
-    console.log(percentage);
 
     const cancelable = status === 'waiting' || status === 'processing';
 
     return (
       <div className="export-container">
         <div className="thumbnail">
+          <div className="overlay"/>
           <div className="icon">
             {
               cancelable ?
@@ -95,6 +90,14 @@ class Export extends React.Component {
             border-radius: 4px;
             margin-right: 16px;
             position: relative;
+            overflow: hidden;
+          }
+
+          .overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .4);
           }
 
           .icon, .progress {
@@ -171,7 +174,7 @@ class Progress extends React.Component {
           circle {
             stroke-dasharray: ${circumference} ${circumference};
             stroke-dashoffset: ${offset};
-            transition: stroke-dashoffset 0.35s;
+            ${percent === 0 ? '' : 'transition: stroke-dashoffset 0.35s;'}
           }
         `}</style>
       </svg>

@@ -1,3 +1,5 @@
+'use strict';
+
 const os = require('os');
 const path = require('path');
 const execa = require('execa');
@@ -60,8 +62,8 @@ const convertToMp4 = opts => {
     '-i', opts.inputPath,
     '-r', opts.fps,
     '-s', `${makeEven(opts.width)}x${makeEven(opts.height)}`,
-    // '-ss', opts.startTime,
-    // '-to', opts.endTime,
+    '-ss', opts.startTime,
+    '-to', opts.endTime,
     opts.outputPath
   ]);
 };
@@ -100,7 +102,7 @@ const convertToApng = opts => {
 
 // `time ffmpeg -i original.mp4 -vf fps=30,scale=480:-1::flags=lanczos,palettegen palette.png`
 // `time ffmpeg -i original.mp4 -i palette.png -filter_complex 'fps=30,scale=-1:-1:flags=lanczos[x]; [x][1:v]paletteuse' palette.gif`
-const convertToGif = PCancelable.fn(async (onCancel, opts) => {
+const convertToGif = PCancelable.fn(async (opts, onCancel) => {
   const palettePath = tmp.tmpNameSync({postfix: '.png'});
   const paletteProcessor = execa(ffmpegPath, [
     '-i', opts.inputPath,
@@ -141,5 +143,6 @@ const convertTo = (opts, format) => {
 };
 
 module.exports = {
-  convertTo
+  convertTo,
+  converters
 };

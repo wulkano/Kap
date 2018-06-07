@@ -11,6 +11,7 @@ class Export {
   constructor(options) {
     this.exportOptions = options.exportOptions;
     this.inputPath = options.inputPath;
+    this.pluginName = options.pluginName;
     this.plugin = new Plugin(options.pluginName);
     this.service = this.plugin.getSerivce(options.serviceTitle);
     this.format = options.format;
@@ -25,7 +26,8 @@ class Export {
       config: this.plugin.getConfig(),
       onCancel: this.cancel.bind(this),
       onProgress: this.setProgress.bind(this),
-      convert: this.convert.bind(this)
+      convert: this.convert.bind(this),
+      pluginName: this.pluginName
     });
 
     this.run = this.run.bind(this);
@@ -37,7 +39,8 @@ class Export {
       text: this.text,
       status: this.status,
       percentage: this.percentage,
-      img: this.img
+      img: this.img,
+      createdAt: this.createdAt
     };
   }
 
@@ -74,7 +77,7 @@ class Export {
     }
   }
 
-  setProgress(text, percentage) {
+  setProgress(text, percentage = '') {
     this.updateExport({text, percentage, status: 'processing'});
   }
 

@@ -3,6 +3,8 @@
 const electron = require('electron');
 const got = require('got');
 
+const {Notification} = electron;
+
 const prettifyFormat = format => {
   const formats = new Map([
     ['apng', 'APNG'],
@@ -23,6 +25,7 @@ class ShareServiceContext {
     this.config = options.config;
     this.onCancel = options.onCancel;
     this.onProgress = options.onProgress;
+    this.pluginName = options.pluginName;
 
     this.canceled = false;
     this.requests = [];
@@ -76,12 +79,12 @@ class ShareServiceContext {
       return;
     }
 
-    (
-      new electron.Notification({
-        title: this._pluginName,
-        body: text
-      })
-    ).show();
+    const notification = new Notification({
+      title: this.pluginName,
+      body: text
+    });
+
+    notification.show();
   }
 
   setProgress(text, percentage) {

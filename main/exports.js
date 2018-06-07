@@ -1,7 +1,7 @@
 'use strict';
 
 const {format: formatUrl} = require('url');
-const {BrowserWindow} = require('electron');
+const {BrowserWindow, app} = require('electron');
 const isDev = require('electron-is-dev');
 const {resolve} = require('app-root-path');
 
@@ -17,16 +17,16 @@ const url = isDev ? devPath : prodPath;
 
 let exportsWindow = null;
 
-const openExportsWindow = () => {
+const openExportsWindow = show => {
   if (!exportsWindow) {
     exportsWindow = new BrowserWindow({
       width: 320,
       height: 360,
-      alwaysOnTop: true,
       resizable: false,
       minimizable: false,
       maximizable: false,
-      titleBarStyle: 'hiddenInset'
+      titleBarStyle: 'hiddenInset',
+      show
     });
 
     if (isDev) {
@@ -34,6 +34,12 @@ const openExportsWindow = () => {
     }
 
     exportsWindow.loadURL(url);
+
+    exportsWindow.on('close', event => {
+      event.preventDefault();
+      exportsWindow.hide();
+    });
+
     exportsWindow.on('closed', () => {
       exportsWindow = null;
     });
@@ -42,7 +48,22 @@ const openExportsWindow = () => {
 
 const getExportsWindow = () => exportsWindow;
 
+const showExportsWindow = () => {
+  if (exportsWindow && !exportsWindow.isVisible()) {
+    exportsWindow.show();
+  } else {
+    openExportsWindow(true);
+  }
+};
+
+app.on('before-quit', () => {
+  if (exportsWindow) {
+    exportsWindow.removeAllListeners('close');
+  }
+});
+
 module.exports = {
   openExportsWindow,
-  getExportsWindow
+  getExportsWindow,
+  showExportsWindow
 };

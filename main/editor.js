@@ -1,10 +1,14 @@
 'use strict';
 
 const {format: formatUrl} = require('url');
+const path = require('path');
+const fs = require('fs');
+const electron = require('electron');
 const {BrowserWindow} = require('electron');
 const isDev = require('electron-is-dev');
 const {resolve} = require('app-root-path');
 const ipc = require('electron-better-ipc');
+const {converters} = require('./convert');
 
 const devPath = 'http://localhost:8000/editor';
 
@@ -43,10 +47,46 @@ const openEditorWindow = filePath => {
 
   editorWindow.webContents.on('did-finish-load', async () => {
     await ipc.callRenderer(editorWindow, 'filePath', filePath);
-    console.log('AM BACK');
     editorWindow.show();
   });
 };
+
+const prettifyFormat = format => {
+  const formats = new Map([
+    ['apng', 'APNG'],
+    ['gif', 'GIF'],
+    ['mp4', 'MP4'],
+    ['webm', 'WebM']
+  ]);
+
+  return formats.get(format);
+};
+
+ipc.answerRenderer('export-options', () => {
+  const cwd = path.join(electron.app.getPath('userData'), 'plugins');
+  const pkg = fs.readFileSync(path.join(cwd, 'package.json'), 'utf8');
+  const pluginNames = Object.keys(JSON.parse(pkg).dependencies);
+
+  const options = {};
+  for (const format of converters.keys()) {
+    options[format] = {
+      format,
+      prettyFormat: prettifyFormat(format),
+      plugins: []
+    };
+  }
+
+  for (const pluginName of pluginNames) {
+    const plugin = require(path.join(cwd, 'node_modules', pluginName));
+    for (const service of plugin.shareServices) {
+      for (const format of service.formats) {
+        options[format].plugins.push({title: service.title, pluginName});
+      }
+    }
+  }
+
+  return options;
+});
 
 module.exports = {
   openEditorWindow

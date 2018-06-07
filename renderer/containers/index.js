@@ -6,6 +6,8 @@ import CursorContainer from './cursor';
 import ActionBarContainer from './action-bar';
 import PreferencesContainer from './preferences';
 import ExportsContainer from './exports';
+import EditorContainer from './editor';
+import VideoContainer from './video';
 
 export const connect = (containers, mapStateToProps, mapActionsToProps) => Component => props => (
   <Subscribe to={containers}>
@@ -26,5 +28,7 @@ export {
   CursorContainer,
   ActionBarContainer,
   PreferencesContainer,
-  ExportsContainer
+  ExportsContainer,
+  EditorContainer,
+  VideoContainer
 };

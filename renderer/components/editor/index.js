@@ -1,71 +1,177 @@
+import electron from 'electron';
 import React from 'react';
-import PropTypes from 'prop-types';
 
-import TrafficLights from '../traffic-lights';
-import Options from './options';
-import Video from './video';
+import VideoPlayer from './video-player';
 
 export default class Editor extends React.Component {
-  static propTypes = {
-    src: PropTypes.string.isRequired
+  state = {
+    hover: false
+  }
+
+  close = () => {
+    electron.remote.BrowserWindow.getFocusedWindow().close();
+  }
+
+  minimize = () => {
+    electron.remote.BrowserWindow.getFocusedWindow().minimize();
+  }
+
+  maximize = () => {
+    electron.remote.BrowserWindow.getFocusedWindow().maximize();
+  }
+
+  mouseEnter = () => {
+    this.setState({hover: true});
+  }
+
+  mouseLeave = () => {
+    this.setState({hover: false});
   }
 
   render() {
-    const {src} = this.props;
+    const {hover} = this.state;
+
     return (
-      <div>
-        <div className="video-container">
-          <div className="title-bar">
-            <TrafficLights/>
-            <span className="title-bar__title">kap-beta.mp4</span>
+      <div className="container" onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
+        <div className="title-bar">
+          <div className="title-bar-container">
+            <div className="traffic-lights">
+              <div className="traffic-light close" onClick={this.close}/>
+              <div className="traffic-light minimize" onClick={this.minimize}/>
+              <div className="traffic-light maximize disabled"/>
+            </div>
+            <div className="title">Editor</div>
           </div>
-          <Video src={src}/>
         </div>
-
-        <Options/>
-
+        <VideoPlayer hover={hover}/>
         <style jsx>{`
-          .video-container {
-            position: relative;
-            align-items: center;
-            justify-content: center;
-            display: flex;
-            background: #111;
+          .container {
             flex: 1;
-            border-radius: 5px 5px 0 0;
+            display: flex;
             overflow: hidden;
-            height: calc(100vh - 48px);
           }
 
           .title-bar {
+            position: absolute;
+            top: -36px;
+            left: 0;
+            width: 100%;
             height: 36px;
-            line-height: 36px;
-            font-weight: 100;
-            font-size: 13px;
-            text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
             background: rgba(0, 0, 0, 0.4);
-            color: white;
+            transition: top .12s ease-in-out;
+            display: flex;
+            z-index: 10;
+          }
+
+          .container:hover .title-bar {
+            top: 0;
+          }
+
+          .title-bar-container {
+            flex: 1;
+          }
+
+          .traffic-lights {
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: flex;
+            align-items: center;
+            height: 100%;
+            margin-left: 12px;
+          }
+
+          .title {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+          }
+
+          .traffic-light {
+            border-radius: 100%;
+            height: 12px;
+            width: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            background-color: #ddd;
+            margin-right: 8px;
+            position: relative;
+            -webkit-app-region: no-drag;
+          }
+
+          .traffic-light:after, .traffic-light:before {
+            visibility: hidden;
+          }
+
+          .traffic-lights:hover .traffic-light:after,
+          .traffic-lights:hover .traffic-light:before {
+            visibility: visible;
+          }
+
+          .close {
+            background-color: #ff6159;
+          }
+
+          .close:active {
+            background-color: #bf4942;
+          }
+
+          .close:after, .close:before {
+            background-color: #760e0e;
+            width: 8px;
+            height: 2px;
+            content: '';
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            transform: translateY(-100%);
-            transition: opacity 100ms ease, transform 500ms linear;
-            opacity: 0;
-            text-align: center;
+            right: 0;
+            bottom: 0;
+            margin: auto;
           }
 
-          .video-container:hover .title-bar {
-            transform: translateY(0);
-            transition: transform 100ms ease;
-            opacity: 1;
+          .close:after {
+            transform: rotate(45deg);
           }
 
-          .root {
-            display: flex;
-            height: 100vh;
-            width: 100vw;
-            flex-direction: column;
+          .close:before {
+            transform: rotate(-45deg);
+          }
+
+          .minimize {
+            background-color: #ffbf2f;
+          }
+
+          .minimize:active {
+            background-color: #995700;
+          }
+
+          .minimize:after {
+            background-color: #760e0e;
+            width: 8px;
+            height: 2px;
+            border-radius: 2px;
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+          }
+
+          .maximize {
+
+          }
+
+          .disabled {
+            background-color: #ddd;
+            pointer-events: none;
+          }
+
+          .disabled:after, .disabled:before {
+            display: none;
           }
         `}</style>
       </div>

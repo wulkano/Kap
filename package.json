@@ -90,7 +90,8 @@
       "react/require-default-props": 0,
       "capitalized-comments": 0,
       "react/no-unused-prop-types": 0,
-      "react/no-access-state-in-setstate": 0
+      "react/no-access-state-in-setstate": 0,
+      "react/jsx-curly-brace-presence": 0
     },
     "ignores": [
       "dist",
