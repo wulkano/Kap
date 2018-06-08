@@ -4,6 +4,7 @@ const {Tray} = require('electron');
 const path = require('path');
 
 const {openCropperWindow} = require('./cropper');
+const {openEditorWindow} = require('./editor');
 const {cogMenu} = require('./menus');
 
 let tray = null;
@@ -14,7 +15,14 @@ const initializeTray = () => {
   tray.on('right-click', () => {
     tray.popUpContextMenu(cogMenu);
   });
-  tray.on('drop-files', (event, files) => console.log(files));
+  tray.on('drop-files', (event, files) => {
+    for (const file of files) {
+      const extension = path.extname(file).toLowerCase();
+      if (extension === '.mp4' || extension === '.mov') {
+        openEditorWindow(file);
+      }
+    }
+  });
 
   return tray;
 };

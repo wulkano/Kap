@@ -108,7 +108,20 @@
     ],
     "mac": {
       "category": "public.app-category.productivity",
-      "minimumSystemVersion": "10.12.0"
+      "minimumSystemVersion": "10.12.0",
+      "extendInfo": {
+        "CFBundleDocumentTypes": [
+          {
+            "CFBundleTypeName": "Video",
+            "CFBundleTypeRole": "Editor",
+            "LSHandlerRank": "Alternate",
+            "LSItemContentTypes": [
+              "public.mpeg-4",
+              "com.apple.quicktime-movie"
+            ]
+          }
+        ]
+      }
     },
     "dmg": {
       "iconSize": 160,
