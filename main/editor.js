@@ -4,7 +4,7 @@ const {format: formatUrl} = require('url');
 const path = require('path');
 const fs = require('fs');
 const electron = require('electron');
-const {BrowserWindow} = require('electron');
+const {BrowserWindow, app} = require('electron');
 const isDev = require('electron-is-dev');
 const {resolve} = require('app-root-path');
 const ipc = require('electron-better-ipc');
@@ -19,6 +19,8 @@ const prodPath = formatUrl({
 });
 
 const url = isDev ? devPath : prodPath;
+
+let editors = 0;
 
 const OPTIONS_BAR_HEIGHT = 48;
 const VIDEO_ASPECT = 9 / 16;
@@ -40,10 +42,20 @@ const openEditorWindow = filePath => {
     show: false
   });
 
+  editors++;
+  app.dock.show();
+
   editorWindow.loadURL(url);
   if (isDev) {
     editorWindow.openDevTools({mode: 'detach'});
   }
+
+  editorWindow.on('closed', () => {
+    editors--;
+    if (!editors) {
+      app.dock.hide();
+    }
+  });
 
   editorWindow.webContents.on('did-finish-load', async () => {
     await ipc.callRenderer(editorWindow, 'filePath', filePath);
