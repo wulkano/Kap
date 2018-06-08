@@ -9,6 +9,7 @@ const isDev = require('electron-is-dev');
 const {resolve} = require('app-root-path');
 const ipc = require('electron-better-ipc');
 const {converters} = require('./convert');
+const getFps = require('./utils/fps');
 
 const devPath = 'http://localhost:8000/editor';
 
@@ -28,7 +29,9 @@ const MIN_VIDEO_WIDTH = 768;
 const MIN_VIDEO_HEIGHT = MIN_VIDEO_WIDTH * VIDEO_ASPECT;
 const MIN_WINDOW_HEIGHT = MIN_VIDEO_HEIGHT + OPTIONS_BAR_HEIGHT;
 
-const openEditorWindow = filePath => {
+const openEditorWindow = async (filePath, recordFps) => {
+  const fps = recordFps || await getFps(filePath);
+
   const editorWindow = new BrowserWindow({
     minWidth: MIN_VIDEO_WIDTH,
     minHeight: MIN_WINDOW_HEIGHT,
@@ -58,7 +61,7 @@ const openEditorWindow = filePath => {
   });
 
   editorWindow.webContents.on('did-finish-load', async () => {
-    await ipc.callRenderer(editorWindow, 'filePath', filePath);
+    await ipc.callRenderer(editorWindow, 'file', {filePath, fps});
     editorWindow.show();
   });
 };
@@ -84,7 +87,10 @@ ipc.answerRenderer('export-options', () => {
     options[format] = {
       format,
       prettyFormat: prettifyFormat(format),
-      plugins: []
+      plugins: [{
+        title: 'Save to Disk',
+        pluginName: 'default'
+      }]
     };
   }
 

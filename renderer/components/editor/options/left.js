@@ -1,20 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 
 import {connect, EditorContainer} from '../../../containers';
+import Select from './select';
 
 class LeftOptions extends React.Component {
   handleClick = fps => () => this.props.setFps(fps);
 
   render() {
-    const {width, height, changeDimension, fps, fpsOptions} = this.props;
+    const {width, height, changeDimension, fps, fpsOptions, setFps, format} = this.props;
 
     if (!width && !height) {
       return null;
     }
 
-    const selectedIndex = fpsOptions.findIndex(option => option === fps);
+    const options = (
+      format === 'gif' || format === 'apng' ? fpsOptions.filter(opt => opt < 60) : fpsOptions
+    ).map(opt => ({value: opt, label: opt}));
 
     return (
       <div className="container">
@@ -22,18 +24,8 @@ class LeftOptions extends React.Component {
         <input type="text" value={width} size="5" maxLength="5" placeholder="Width" name="width" onChange={changeDimension}/>
         <input type="text" value={height} size="5" maxLength="5" placeholder="Height" name="height" onChange={changeDimension}/>
         <div className="label">FPS</div>
-        <div className="fps-select">
-          <div className="active-shim"/>
-          {
-            fpsOptions.map(option => {
-              const className = classNames('option', {selected: fps === option});
-              return (
-                <div key={option} className={className} onClick={this.handleClick(option)}>
-                  {option}
-                </div>
-              );
-            })
-          }
+        <div className="fps">
+          <Select options={options} selected={fps} onChange={setFps}/>
         </div>
         <style jsx>{`
           .container {
@@ -46,6 +38,11 @@ class LeftOptions extends React.Component {
             font-size: 12px;
             margin-right: 8px;
             color: white;
+          }
+
+          .fps {
+            height: 24px;
+            width: 64px;
           }
 
           input {
@@ -76,14 +73,6 @@ class LeftOptions extends React.Component {
             background: hsla(0,0%,100%,.2);
           }
 
-          .fps-select {
-            display: flex;
-            position: relative;
-            border: 1px solid hsla(0,0%,100%,.1);
-            border-radius: 4px;
-            overflow: hidden;
-          }
-
           .option {
             width: 48px;
             height: 22px;
@@ -104,17 +93,6 @@ class LeftOptions extends React.Component {
           .option.selected {
             background: transparent;
           }
-
-          .active-shim {
-            background: hsla(0,0%,100%,.1);
-            width: 48px;
-            height: 22px;
-            position: absolute;
-            top: 0;
-            left: ${selectedIndex * 48}px;
-            z-index: 20;
-            transition: all .2s cubic-bezier(.37,1.12,.18,1);
-          }
         `}</style>
       </div>
     );
@@ -127,11 +105,12 @@ LeftOptions.propTypes = {
   changeDimension: PropTypes.func,
   fps: PropTypes.number,
   fpsOptions: PropTypes.arrayOf(PropTypes.number),
-  setFps: PropTypes.func
+  setFps: PropTypes.func,
+  format: PropTypes.string
 };
 
 export default connect(
   [EditorContainer],
-  ({width, height, fps, fpsOptions}) => ({width, height, fps, fpsOptions}),
+  ({width, height, fps, fpsOptions, format}) => ({width, height, fps, fpsOptions, format}),
   ({changeDimension, setFps}) => ({changeDimension, setFps})
 )(LeftOptions);

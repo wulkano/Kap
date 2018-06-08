@@ -48,7 +48,8 @@ class ExportList {
         delete this.currentExport;
         this._startNext();
       })
-      .catch(() => {
+      .catch(err => {
+        console.log(err);
         this.currentExport.updateExport({
           status: 'failed',
           text: 'Export failed'

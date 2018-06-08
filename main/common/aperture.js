@@ -14,6 +14,7 @@ const aperture = createAperture();
 const {audioDevices} = createAperture;
 
 let wasDoNotDisturbAlreadyEnabled;
+let lastRecordedFps;
 
 const startRecording = async options => {
   const {cropperBounds, screenBounds, displayId} = options;
@@ -39,6 +40,8 @@ const startRecording = async options => {
     displayId: String(displayId)
   };
 
+  lastRecordedFps = apertureOpts.fps;
+
   disableTray();
   setRecordingCroppers();
 
@@ -53,9 +56,13 @@ const startRecording = async options => {
     }
   }
 
+  console.log(`1 after ${(Date.now() - past) / 1000}s`);
+
   if (hideDesktopIcons) {
     await desktopIcons.hide();
   }
+
+  console.log(`2 after ${(Date.now() - past) / 1000}s`);
 
   if (doNotDisturb) {
     wasDoNotDisturbAlreadyEnabled = await dnd.isEnabled();
@@ -65,8 +72,10 @@ const startRecording = async options => {
     }
   }
 
+  console.log(`3 after ${(Date.now() - past) / 1000}s`);
+
   try {
-    console.log(`Here after ${(Date.now() - past) / 1000}s`);
+    console.log(`4 after ${(Date.now() - past) / 1000}s`);
     await aperture.startRecording(apertureOpts);
     console.log(`Started recording after ${(Date.now() - past) / 1000}s`);
     setRecordingTray(stopRecording);
@@ -100,7 +109,7 @@ const stopRecording = async () => {
     dnd.disable();
   }
 
-  openEditorWindow(filePath);
+  openEditorWindow(filePath, lastRecordedFps);
 };
 
 module.exports = {
