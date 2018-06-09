@@ -4,6 +4,7 @@ import {Provider} from 'unstated';
 
 import Overlay from '../components/cropper/overlay';
 import Cropper from '../components/cropper';
+import ActionBar from '../components/action-bar';
 
 import CursorContainer from '../containers/cursor';
 import CropperContainer from '../containers/cropper';
@@ -102,6 +103,7 @@ export default class CropperPage extends React.Component {
         <Provider inject={[cursorContainer, cropperContainer, actionBarContainer]}>
           <Overlay>
             <Cropper/>
+            <ActionBar/>
           </Overlay>
         </Provider>
         <style jsx global>{`

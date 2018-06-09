@@ -101,7 +101,11 @@ class Handles extends React.Component {
       recording
     } = this.props;
 
-    const show = !recording && isActive && showHandles && width + height !== 0;
+    if (width + height === 0) {
+      return null;
+    }
+
+    const show = !recording && isActive && showHandles;
 
     return (
       <div className="content">

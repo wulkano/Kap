@@ -72,8 +72,8 @@ export default class CropperContainer extends Container {
       isActive,
       isReady: true,
       displayId: id,
-      x,
-      y,
+      x: x || screenWidth / 2,
+      y: y || screenHeight / 2,
       width,
       height,
       ratio

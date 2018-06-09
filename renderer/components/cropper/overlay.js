@@ -66,7 +66,7 @@ class Overlay extends React.Component {
         <style jsx>{`
           .overlay {
             background-color: rgba(0, 0, 0, .5);
-            transition: all .5s ease-in-out;
+            transition: background-color .5s ease-in-out, width .2s ease-out, height .2s ease-out;
           }
 
           .overlay.recording {

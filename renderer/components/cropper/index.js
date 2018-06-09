@@ -3,7 +3,6 @@ import React from 'react';
 
 import {connect, CropperContainer} from '../../containers';
 
-import ActionBar from '../action-bar';
 import Handles from './handles';
 import Cursor from './cursor';
 
@@ -16,7 +15,6 @@ class Cropper extends React.Component {
         <div
           className="cropper"
           onMouseDown={startMoving}/>
-        <ActionBar/>
         { resizing && <Cursor width={width} height={height}/> }
         <style jsx>{`
           .cropper {
