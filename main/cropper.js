@@ -158,10 +158,16 @@ const selectApp = async (window, activateWindow) => {
   });
 };
 
-const setRecordingCroppers = () => {
+const disableCroppers = async () => {
   for (const cropper of croppers.values()) {
     cropper.removeAllListeners('blur');
     cropper.setIgnoreMouseEvents(true);
+  }
+};
+
+const setRecordingCroppers = async () => {
+  for (const cropper of croppers.values()) {
+    cropper.webContents.send('start-recording');
   }
 };
 
@@ -169,5 +175,6 @@ module.exports = {
   openCropperWindow,
   closeAllCroppers,
   selectApp,
-  setRecordingCroppers
+  setRecordingCroppers,
+  disableCroppers
 };

@@ -31,7 +31,7 @@ const disableTray = () => {
   tray.removeListener('click', openCropperWindow);
 };
 
-const setRecordingTray = stopRecording => {
+const setRecordingTray = async stopRecording => {
   animateIcon();
 
   tray.once('click', () => {

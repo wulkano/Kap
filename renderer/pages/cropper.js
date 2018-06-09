@@ -47,6 +47,10 @@ export default class CropperPage extends React.Component {
       cropperContainer.setActive(false);
     });
 
+    ipcRenderer.on('start-recording', () => {
+      cropperContainer.setRecording();
+    });
+
     const window = remote.getCurrentWindow();
     window.on('focus', () => {
       cropperContainer.setActive(true);

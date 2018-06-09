@@ -7,7 +7,7 @@ const createAperture = require('aperture');
 
 const {openEditorWindow} = require('../editor');
 const {setRecordingTray, disableTray} = require('../tray');
-const {setRecordingCroppers, closeAllCroppers} = require('../cropper');
+const {disableCroppers, setRecordingCroppers, closeAllCroppers} = require('../cropper');
 const settings = require('./settings');
 
 const aperture = createAperture();
@@ -17,6 +17,9 @@ let wasDoNotDisturbAlreadyEnabled;
 let lastRecordedFps;
 
 const startRecording = async options => {
+  disableTray();
+  disableCroppers();
+
   const {cropperBounds, screenBounds, displayId} = options;
   const past = Date.now();
 
@@ -42,9 +45,6 @@ const startRecording = async options => {
 
   lastRecordedFps = apertureOpts.fps;
 
-  disableTray();
-  setRecordingCroppers();
-
   if (recordAudio === true) {
     // In case for some reason the default audio device is not set
     // use the first available device for recording
@@ -56,13 +56,13 @@ const startRecording = async options => {
     }
   }
 
-  console.log(`1 after ${(Date.now() - past) / 1000}s`);
+  console.log(`Collected settings after ${(Date.now() - past) / 1000}s`);
 
   if (hideDesktopIcons) {
     await desktopIcons.hide();
   }
 
-  console.log(`2 after ${(Date.now() - past) / 1000}s`);
+  console.log(`Hid desktop icons after ${(Date.now() - past) / 1000}s`);
 
   if (doNotDisturb) {
     wasDoNotDisturbAlreadyEnabled = await dnd.isEnabled();
@@ -72,12 +72,12 @@ const startRecording = async options => {
     }
   }
 
-  console.log(`3 after ${(Date.now() - past) / 1000}s`);
+  console.log(`Took care of DND after ${(Date.now() - past) / 1000}s`);
 
   try {
-    console.log(`4 after ${(Date.now() - past) / 1000}s`);
     await aperture.startRecording(apertureOpts);
     console.log(`Started recording after ${(Date.now() - past) / 1000}s`);
+    setRecordingCroppers();
     setRecordingTray(stopRecording);
   } catch (err) {
     // This prevents the button from being reset, since the recording has not yet started

@@ -66,7 +66,7 @@ class ActionBar extends React.Component {
               align-items: center;
               overflow: hidden;
               opacity: 1;
-              transition: all 0.2s ease-out;
+              transition: opacity 0.2s ease-out;
               box-sizing: border-box;
             }
 

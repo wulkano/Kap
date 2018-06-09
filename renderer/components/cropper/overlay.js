@@ -16,7 +16,8 @@ class Overlay extends React.Component {
     x: 0,
     y: 0,
     width: 0,
-    height: 0
+    height: 0,
+    isReady: false
   }
 
   render() {
@@ -38,18 +39,17 @@ class Overlay extends React.Component {
       recording
     } = this.props;
 
-    if (!isReady) {
-      return null;
-    }
+    const contentClassName = classNames('content', {'not-ready': !isReady});
 
     const className = classNames('overlay', {
+      recording,
       picking: !recording && !resizing && !moving,
       'no-transition': resizing || moving || !isActive
     });
 
     return (
       <div
-        className="content"
+        className={contentClassName}
         id="container"
         onMouseMove={setCursor}
         onMouseUp={onMouseUp}
@@ -58,15 +58,19 @@ class Overlay extends React.Component {
         <div id="middle">
           <div id="left" className={className} onMouseDown={startPicking}/>
           <div id="center">
-            { this.props.children }
+            { isReady && this.props.children }
           </div>
           <div id="right" className={className} onMouseDown={startPicking}/>
         </div>
         <div id="bottom" className={className} onMouseDown={startPicking}/>
         <style jsx>{`
           .overlay {
-            background-color: rgba(0, 0, 0, 0.5);
-            transition: all 0.2s ease-out;
+            background-color: rgba(0, 0, 0, .5);
+            transition: all .5s ease-in-out;
+          }
+
+          .overlay.recording {
+            background-color: rgba(0, 0, 0, .1);
           }
 
           .overlay.picking {
@@ -74,7 +78,7 @@ class Overlay extends React.Component {
           }
 
           .overlay.no-transition {
-            transition: none;
+            transition: background-color .5s ease-in-out;
           }
 
           #middle {
@@ -102,6 +106,20 @@ class Overlay extends React.Component {
 
           #bottom {
             height: ${screenHeight - height - y}px;
+          }
+
+          .not-ready .overlay {
+            background-color: rgba(0, 0, 0, 0);
+          }
+
+          .not-ready #left,
+          .not-ready #right {
+            width: 50%;
+          }
+
+          .not-ready #top,
+          .not-ready #bottom {
+            height: 50%;
           }
 
           #container {
