@@ -77,7 +77,7 @@ class Export {
     }
   }
 
-  setProgress(text, percentage = '') {
+  setProgress(text, percentage = 0) {
     this.updateExport({text, percentage, status: 'processing'});
   }
 

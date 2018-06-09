@@ -33,4 +33,8 @@ export default class ExportsContainer extends Container {
   cancel = createdAt => {
     ipc.callMain('cancel-export', createdAt);
   }
+
+  openInEditor = createdAt => {
+    ipc.callMain('open-export', createdAt);
+  }
 }

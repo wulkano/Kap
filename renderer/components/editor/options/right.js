@@ -30,13 +30,13 @@ class RightOptions extends React.Component {
           .format {
             height: 24px;
             width: 80px;
-            margin-right: 16px;
+            margin-right: 8px;
           }
 
           .plugin {
             height: 24px;
             width: 128px;
-            margin-right: 16px;
+            margin-right: 8px;
           }
 
           .button {

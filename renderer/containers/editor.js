@@ -18,7 +18,7 @@ export default class EditorContainer extends Container {
     const fpsOptions = this.state.fpsOptions.filter(opt => opt <= fps);
     const defaultFps = fpsOptions.sort((a, b) => b - a).find(opt => opt === fps) || fpsOptions[fpsOptions.length - 1];
 
-    this.setState({src, filePath, fps: Math.min(defaultFps, 30), fpsOptions});
+    this.setState({src, filePath, fps: Math.min(defaultFps, 30), fpsOptions, originalFps: fps});
     this.videoContainer.setSrc(src);
   }
 
@@ -55,7 +55,7 @@ export default class EditorContainer extends Container {
   }
 
   startExport = () => {
-    const {width, height, fps, filePath, options, format, plugin} = this.state;
+    const {width, height, fps, filePath, options, format, plugin, originalFps} = this.state;
     const {startTime, endTime} = this.videoContainer.state;
 
     const pluginName = options[format].plugins.find(p => p.title === plugin).pluginName;
@@ -71,7 +71,8 @@ export default class EditorContainer extends Container {
       inputPath: filePath,
       pluginName,
       serviceTitle: plugin,
-      format
+      format,
+      originalFps
     };
 
     const ipc = require('electron-better-ipc');

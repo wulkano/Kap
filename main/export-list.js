@@ -8,6 +8,7 @@ const util = require('electron-util');
 const execa = require('execa');
 
 const {showExportsWindow, getExportsWindow, openExportsWindow} = require('./exports');
+const {openEditorWindow} = require('./editor');
 const Export = require('./export');
 
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
@@ -80,6 +81,7 @@ class ExportList {
     newExport.text = 'Waiting…';
     newExport.img = await getPreview(options.inputPath);
     newExport.createdAt = createdAt;
+    newExport.originalFps = options.originalFps;
 
     callExportsWindow('update-export', Object.assign({}, newExport.data, {createdAt}));
     showExportsWindow();
@@ -109,6 +111,13 @@ class ExportList {
   getExports() {
     return this.exports.map(exp => exp.data);
   }
+
+  openExport(createdAt) {
+    const exp = this.exports.find(exp => exp.createdAt === createdAt);
+    if (exp) {
+      openEditorWindow(exp.inputPath, exp.originalFps);
+    }
+  }
 }
 
 let exportList;
@@ -118,6 +127,8 @@ ipc.answerRenderer('get-exports', () => exportList.getExports());
 ipc.answerRenderer('export', options => exportList.addExport(options));
 
 ipc.answerRenderer('cancel-export', createdAt => exportList.cancelExport(createdAt));
+
+ipc.answerRenderer('open-export', createdAt => exportList.openExport(createdAt));
 
 const callExportsWindow = (channel, data) => {
   const exportsWindow = getExportsWindow();

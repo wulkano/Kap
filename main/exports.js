@@ -49,10 +49,14 @@ const openExportsWindow = show => {
 const getExportsWindow = () => exportsWindow;
 
 const showExportsWindow = () => {
-  if (exportsWindow && !exportsWindow.isVisible()) {
-    exportsWindow.show();
-  } else {
+  if (!exportsWindow) {
     openExportsWindow(true);
+  }
+
+  if (exportsWindow.isVisible()) {
+    exportsWindow.focus();
+  } else {
+    exportsWindow.show();
   }
 };
 
