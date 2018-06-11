@@ -26,7 +26,6 @@ class Select extends React.Component {
             width: 100%;
             height: 100%;
             position: relative;
-            background: yellow;
             border-radius: 4px;
             padding: 4px 8px;
             background: hsla(0,0%,100%,.1);

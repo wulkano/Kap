@@ -2,21 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {connect, EditorContainer} from '../../../containers';
-import Select from './select';
+import Slider from './slider';
 
 class LeftOptions extends React.Component {
-  handleClick = fps => () => this.props.setFps(fps);
-
   render() {
-    const {width, height, changeDimension, fps, fpsOptions, setFps, format} = this.props;
+    const {width, height, changeDimension, fps, originalFps, setFps} = this.props;
 
     if (!width && !height) {
       return null;
     }
-
-    const options = (
-      format === 'gif' || format === 'apng' ? fpsOptions.filter(opt => opt < 60) : fpsOptions
-    ).map(opt => ({value: opt, label: opt}));
 
     return (
       <div className="container">
@@ -25,7 +19,7 @@ class LeftOptions extends React.Component {
         <input type="text" value={height} size="5" maxLength="5" placeholder="Height" name="height" onChange={changeDimension}/>
         <div className="label">FPS</div>
         <div className="fps">
-          <Select options={options} selected={fps} onChange={setFps}/>
+          <Slider value={fps} onChange={setFps} min={1} max={originalFps}/>
         </div>
         <style jsx>{`
           .container {
@@ -42,7 +36,7 @@ class LeftOptions extends React.Component {
 
           .fps {
             height: 24px;
-            width: 64px;
+            width: 32px;
           }
 
           input {
@@ -104,13 +98,12 @@ LeftOptions.propTypes = {
   height: PropTypes.number,
   changeDimension: PropTypes.func,
   fps: PropTypes.number,
-  fpsOptions: PropTypes.arrayOf(PropTypes.number),
   setFps: PropTypes.func,
-  format: PropTypes.string
+  originalFps: PropTypes.number
 };
 
 export default connect(
   [EditorContainer],
-  ({width, height, fps, fpsOptions, format}) => ({width, height, fps, fpsOptions, format}),
+  ({width, height, fps, originalFps}) => ({width, height, fps, originalFps}),
   ({changeDimension, setFps}) => ({changeDimension, setFps})
 )(LeftOptions);

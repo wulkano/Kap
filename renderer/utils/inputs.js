@@ -5,7 +5,7 @@ const {width: screenWidth, height: screenHeight} = (electron.screen && electron.
 const remote = electron.remote;
 const debounceTimeout = 500;
 
-const shake = ({current: el}) => {
+export const shake = el => {
   el.classList.add('shake');
 
   el.addEventListener('animationend', () => {
@@ -22,10 +22,10 @@ const handleWidthInput = _.debounce(({x, y, setBounds, ratioLocked, ratio, value
     const val = parseInt(value, 10);
 
     if (val <= 0) {
-      shake(widthInput);
+      shake(widthInput.current);
       updates.width = 1;
     } else if (x + val > screenWidth) {
-      shake(widthInput);
+      shake(widthInput.current);
       updates.width = screenWidth - x;
     } else {
       updates.width = val;
@@ -35,15 +35,15 @@ const handleWidthInput = _.debounce(({x, y, setBounds, ratioLocked, ratio, value
       updates.height = Math.ceil(updates.width * ratio[1] / ratio[0]);
 
       if (y + updates.height > screenHeight) {
-        shake(heightInput);
-        shake(widthInput);
+        shake(heightInput.current);
+        shake(widthInput.current);
         updates.height = screenHeight - y;
         updates.width = Math.ceil(updates.height * ratio[0] / ratio[1]);
       }
     }
   } else {
     // If it's not an integer keep last valid value
-    shake(widthInput);
+    shake(widthInput.current);
   }
 
   setBounds(updates);
@@ -56,10 +56,10 @@ const handleHeightInput = _.debounce(({x, y, setBounds, ratioLocked, ratio, valu
     const val = parseInt(value, 10);
 
     if (val <= 0) {
-      shake(heightInput);
+      shake(heightInput.current);
       updates.height = 1;
     } else if (y + val > screenHeight) {
-      shake(heightInput);
+      shake(heightInput.current);
       updates.height = screenHeight - y;
     } else {
       updates.height = val;
@@ -69,15 +69,15 @@ const handleHeightInput = _.debounce(({x, y, setBounds, ratioLocked, ratio, valu
       updates.width = Math.ceil(updates.height * ratio[0] / ratio[1]);
 
       if (x + updates.width > screenWidth) {
-        shake(widthInput);
-        shake(heightInput);
+        shake(widthInput.current);
+        shake(heightInput.current);
         updates.width = screenWidth - x;
         updates.height = Math.ceil(updates.width * ratio[1] / ratio[0]);
       }
     }
   } else {
     // If it's not an integer keep last valid value
-    shake(heightInput);
+    shake(heightInput.current);
   }
 
   setBounds(updates);

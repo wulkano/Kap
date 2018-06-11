@@ -106,7 +106,7 @@ class PlayBar extends React.Component {
               flex: 1;
               display: flex;
               align-items: center;
-              z-index: 100;
+              z-index: 25;
               overflow: visible;
               height: 50%;
             }

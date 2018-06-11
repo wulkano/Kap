@@ -17,6 +17,7 @@ import PauseIcon from './pause';
 import VolumeHighIcon from './volume-high';
 import VolumeOffIcon from './volume-off';
 import CancelIcon from './cancel';
+import TooltipIcon from './tooltip';
 
 export {
   ApplicationsIcon,
@@ -37,5 +38,6 @@ export {
   PauseIcon,
   VolumeHighIcon,
   VolumeOffIcon,
-  CancelIcon
+  CancelIcon,
+  TooltipIcon
 };

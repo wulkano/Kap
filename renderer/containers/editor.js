@@ -1,10 +1,10 @@
 import {Container} from 'unstated';
+import {shake} from '../utils/inputs';
 
 export default class EditorContainer extends Container {
   state ={
     fps: 15,
-    formats: ['gif', 'mp4', 'webm', 'apng'],
-    fpsOptions: [6, 10, 12, 15, 20, 25, 30, 60]
+    formats: ['gif', 'mp4', 'webm', 'apng']
   }
 
   setVideoContainer = videoContainer => {
@@ -15,10 +15,7 @@ export default class EditorContainer extends Container {
     const src = `file://${filePath}`;
     this.finishLoading = resolve;
 
-    const fpsOptions = this.state.fpsOptions.filter(opt => opt <= fps);
-    const defaultFps = fpsOptions.sort((a, b) => b - a).find(opt => opt === fps) || fpsOptions[fpsOptions.length - 1];
-
-    this.setState({src, filePath, fps: Math.min(defaultFps, 30), fpsOptions, originalFps: fps});
+    this.setState({src, filePath, fps, originalFps: fps});
     this.videoContainer.setSrc(src);
   }
 
@@ -37,18 +34,33 @@ export default class EditorContainer extends Container {
   }
 
   selectFormat = format => {
-    const {plugin, options, fps} = this.state;
+    const {plugin, options} = this.state;
     const {plugins} = options[format];
     const newPlugin = plugins.find(p => p.title === plugin) ? plugin : plugins[0].title;
 
-    const newFps = fps === 60 && (format === 'gif' || format === 'apng') ? 30 : fps;
-
-    this.setState({format, plugin: newPlugin, fps: newFps});
+    this.setState({format, plugin: newPlugin});
   }
 
   selectPlugin = plugin => this.setState({plugin})
 
-  setFps = fps => this.setState({fps: parseInt(fps, 10)})
+  setFps = (value, target) => {
+    if (value.match(/^\d+$/)) {
+      const fps = parseInt(value, 10);
+      const {originalFps} = this.state;
+
+      if (fps < 1) {
+        shake(target);
+        this.setState({fps: 1});
+      } else if (fps > originalFps) {
+        shake(target);
+        this.setState({fps: originalFps});
+      } else {
+        this.setState({fps});
+      }
+    } else {
+      shake(target);
+    }
+  }
 
   load = () => {
     this.finishLoading();
