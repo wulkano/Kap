@@ -1,12 +1,22 @@
+import electron from 'electron';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {connect, VideoContainer} from '../../containers';
+import {connect, VideoContainer, EditorContainer} from '../../containers';
 
 class Video extends React.Component {
   constructor(props) {
     super(props);
     this.videoRef = React.createRef();
+  }
+
+  componentDidMount() {
+    const {remote} = electron;
+    const {Menu, MenuItem} = remote;
+    const {getScreenshot} = this.props;
+
+    this.menu = new Menu();
+    this.menu.append(new MenuItem({label: 'Save screenshot', click: getScreenshot}));
   }
 
   componentDidUpdate(prevProps) {
@@ -17,6 +27,23 @@ class Video extends React.Component {
     }
   }
 
+  contextMenu = () => {
+    const video = this.videoRef.current;
+    const wasPaused = video.paused;
+
+    if (!wasPaused) {
+      video.pause();
+    }
+
+    this.menu.popup({
+      callback: () => {
+        if (!wasPaused) {
+          video.play();
+        }
+      }
+    });
+  }
+
   render() {
     const {src} = this.props;
 
@@ -25,7 +52,7 @@ class Video extends React.Component {
     }
 
     return (
-      <div className="container">
+      <div className="container" onContextMenu={this.contextMenu}>
         <video ref={this.videoRef} preload="auto" src={src}/>
         <style jsx>{`
           video {
@@ -44,11 +71,12 @@ class Video extends React.Component {
 
 Video.propTypes = {
   src: PropTypes.string,
-  setVideo: PropTypes.func
+  setVideo: PropTypes.func,
+  getScreenshot: PropTypes.func
 };
 
 export default connect(
-  [VideoContainer],
+  [VideoContainer, EditorContainer],
   ({src}) => ({src}),
-  ({setVideo}) => ({setVideo})
+  ({setVideo}, {getScreenshot}) => ({setVideo, getScreenshot})
 )(Video);

@@ -1,4 +1,7 @@
+import electron from 'electron';
 import {Container} from 'unstated';
+import moment from 'moment';
+
 import {shake} from '../utils/inputs';
 
 export default class EditorContainer extends Container {
@@ -64,6 +67,27 @@ export default class EditorContainer extends Container {
 
   load = () => {
     this.finishLoading();
+  }
+
+  getScreenshot = () => {
+    const time = this.videoContainer.state.currentTime;
+    const {filePath} = this.state;
+    const {remote} = electron;
+
+    const now = moment();
+
+    const path = remote.dialog.showSaveDialog(remote.BrowserWindow.getFocusedWindow(), {
+      defaultPath: `Screenshot ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}`,
+      filters: [{name: 'Images', extensions: ['jpg', 'png']}]
+    });
+
+    const ipc = require('electron-better-ipc');
+
+    ipc.callMain('export-screenshot', {
+      inputPath: filePath,
+      outputPath: path,
+      time
+    });
   }
 
   startExport = () => {

@@ -36,7 +36,6 @@ export default class VideoContainer extends Container {
   }
 
   setStartTime = startTime => {
-    console.log('Called');
     const {endTime} = this.state;
     if (startTime < endTime) {
       this.video.currentTime = startTime;
