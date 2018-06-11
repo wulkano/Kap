@@ -13,10 +13,10 @@ class Video extends React.Component {
   componentDidMount() {
     const {remote} = electron;
     const {Menu, MenuItem} = remote;
-    const {getScreenshot} = this.props;
+    const {getSnapshot} = this.props;
 
     this.menu = new Menu();
-    this.menu.append(new MenuItem({label: 'Save screenshot', click: getScreenshot}));
+    this.menu.append(new MenuItem({label: 'Snapshot', click: getSnapshot}));
   }
 
   componentDidUpdate(prevProps) {
@@ -72,11 +72,11 @@ class Video extends React.Component {
 Video.propTypes = {
   src: PropTypes.string,
   setVideo: PropTypes.func,
-  getScreenshot: PropTypes.func
+  getSnapshot: PropTypes.func
 };
 
 export default connect(
   [VideoContainer, EditorContainer],
   ({src}) => ({src}),
-  ({setVideo}, {getScreenshot}) => ({setVideo, getScreenshot})
+  ({setVideo}, {getSnapshot}) => ({setVideo, getSnapshot})
 )(Video);

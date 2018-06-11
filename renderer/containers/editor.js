@@ -69,7 +69,7 @@ export default class EditorContainer extends Container {
     this.finishLoading();
   }
 
-  getScreenshot = () => {
+  getSnapshot = () => {
     const time = this.videoContainer.state.currentTime;
     const {filePath} = this.state;
     const {remote} = electron;
@@ -77,13 +77,12 @@ export default class EditorContainer extends Container {
     const now = moment();
 
     const path = remote.dialog.showSaveDialog(remote.BrowserWindow.getFocusedWindow(), {
-      defaultPath: `Screenshot ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}`,
-      filters: [{name: 'Images', extensions: ['jpg', 'png']}]
+      defaultPath: `Snapshot ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.jpg`
     });
 
     const ipc = require('electron-better-ipc');
 
-    ipc.callMain('export-screenshot', {
+    ipc.callMain('export-snapshot', {
       inputPath: filePath,
       outputPath: path,
       time

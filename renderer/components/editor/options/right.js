@@ -13,6 +13,7 @@ class RightOptions extends React.Component {
 
     return (
       <div className="container">
+        <div className="label">Destination</div>
         <div className="format">
           <Select options={formatOptions} selected={format} onChange={selectFormat}/>
         </div>
@@ -25,6 +26,12 @@ class RightOptions extends React.Component {
             height: 100%;
             display: flex;
             align-items: center;
+          }
+
+          .label {
+            font-size: 12px;
+            margin-right: 8px;
+            color: white;
           }
 
           .format {

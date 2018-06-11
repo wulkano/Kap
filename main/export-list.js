@@ -27,7 +27,7 @@ const getPreview = async inputPath => {
   return base64Img.base64Sync(previewPath);
 };
 
-const saveScreenshot = async ({inputPath, outputPath, time}) => {
+const saveSnapshot = async ({inputPath, outputPath, time}) => {
   execa(ffmpegPath, [
     '-i', inputPath,
     '-ss', time,
@@ -139,7 +139,7 @@ ipc.answerRenderer('cancel-export', createdAt => exportList.cancelExport(created
 
 ipc.answerRenderer('open-export', createdAt => exportList.openExport(createdAt));
 
-ipc.answerRenderer('export-screenshot', saveScreenshot);
+ipc.answerRenderer('export-snapshot', saveSnapshot);
 
 const callExportsWindow = (channel, data) => {
   const exportsWindow = getExportsWindow();
