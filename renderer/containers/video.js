@@ -58,6 +58,7 @@ export default class VideoContainer extends Container {
       const {videoWidth, videoHeight, duration} = video;
       this.editorContainer.setDimensions(videoWidth, videoHeight);
       this.setState({duration, startTime: 0, endTime: duration});
+      this.mute();
     });
 
     video.addEventListener('canplaythrough', () => {

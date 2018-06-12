@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {VolumeHighIcon, VolumeOffIcon, FullscreenIcon} from '../../../vectors';
-import {connect, VideoContainer} from '../../../containers';
+import {connect, VideoContainer, EditorContainer} from '../../../containers';
 
 class RightControls extends React.Component {
   fullscreen = () => {
@@ -12,14 +12,15 @@ class RightControls extends React.Component {
   }
 
   render() {
-    const {muted, mute, unmute} = this.props;
+    const {muted, mute, unmute, format} = this.props;
+    const canUnmute = ['gif', 'apng'].indexOf(format) === -1;
 
     return (
       <div className="container">
         <div className="mute">
           {
             muted ?
-              <VolumeOffIcon fill="#fff" hoverFill="#fff" onClick={unmute}/> :
+              <VolumeOffIcon fill="#fff" hoverFill="#fff" onClick={canUnmute ? unmute : undefined}/> :
               <VolumeHighIcon fill="#fff" hoverFill="#fff" onClick={mute}/>
           }
         </div>
@@ -49,11 +50,12 @@ class RightControls extends React.Component {
 RightControls.propTypes = {
   muted: PropTypes.bool,
   mute: PropTypes.func,
-  unmute: PropTypes.func
+  unmute: PropTypes.func,
+  format: PropTypes.string
 };
 
 export default connect(
-  [VideoContainer],
-  ({muted}) => ({muted}),
+  [VideoContainer, EditorContainer],
+  ({muted}, {format}) => ({muted, format}),
   ({mute, unmute}) => ({mute, unmute})
 )(RightControls);

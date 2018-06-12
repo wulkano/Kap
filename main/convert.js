@@ -57,7 +57,22 @@ const convert = (outputPath, opts, args) => {
   });
 };
 
-const convertToMp4 = opts => {
+const mute = async inputPath => {
+  const mutedPath = tmp.tmpNameSync({postfix: path.extname(inputPath)});
+  await execa(ffmpegPath, [
+    '-i', inputPath,
+    '-an',
+    '-vcodec', 'copy',
+    mutedPath
+  ]);
+  return mutedPath;
+};
+
+const convertToMp4 = async opts => {
+  if (opts.muted) {
+    opts.inputPath = await mute(opts.inputPath);
+  }
+
   return convert(opts.outputPath, opts, [
     '-i', opts.inputPath,
     '-r', opts.fps,
@@ -68,7 +83,11 @@ const convertToMp4 = opts => {
   ]);
 };
 
-const convertToWebm = opts => {
+const convertToWebm = async opts => {
+  if (opts.muted) {
+    opts.inputPath = await mute(opts.inputPath);
+  }
+
   return convert(opts.outputPath, opts, [
     '-i', opts.inputPath,
     // http://wiki.webmproject.org/ffmpeg

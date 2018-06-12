@@ -4,6 +4,8 @@ import moment from 'moment';
 
 import {shake} from '../utils/inputs';
 
+const isMuted = format => ['gif', 'apng'].indexOf(format) !== -1;
+
 export default class EditorContainer extends Container {
   state ={
     fps: 15,
@@ -33,13 +35,20 @@ export default class EditorContainer extends Container {
   setOptions = options => {
     const [format] = this.state.formats;
     const [{title: plugin}] = options[format].plugins;
-    this.setState({options, format, plugin});
+    this.setState({options, format, plugin, wasMuted: false});
   }
 
   selectFormat = format => {
-    const {plugin, options} = this.state;
+    const {plugin, options, wasMuted} = this.state;
     const {plugins} = options[format];
     const newPlugin = plugins.find(p => p.title === plugin) ? plugin : plugins[0].title;
+
+    if (isMuted(format) && !isMuted(this.state.format)) {
+      this.setState({wasMuted: this.videoContainer.state.muted});
+      this.videoContainer.mute();
+    } else if (!isMuted(format) && isMuted(this.state.format) && !wasMuted) {
+      this.videoContainer.unmute();
+    }
 
     this.setState({format, plugin: newPlugin});
   }
@@ -91,7 +100,7 @@ export default class EditorContainer extends Container {
 
   startExport = () => {
     const {width, height, fps, filePath, options, format, plugin, originalFps} = this.state;
-    const {startTime, endTime} = this.videoContainer.state;
+    const {startTime, endTime, muted} = this.videoContainer.state;
 
     const pluginName = options[format].plugins.find(p => p.title === plugin).pluginName;
 
@@ -101,7 +110,8 @@ export default class EditorContainer extends Container {
         height,
         fps,
         startTime,
-        endTime
+        endTime,
+        muted
       },
       inputPath: filePath,
       pluginName,
