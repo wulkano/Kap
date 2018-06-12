@@ -1,7 +1,7 @@
 <!--
 Thank you for taking the time to report an issue! ❤️
 
-Please fill in as much information as possible about the issue you're having.
+Before you continue; please make sure you've searched our existing issues to avoid duplicates. When you're ready to open a new issue include as much information as possible, you can use the handy template below for bug reports.
 
 macOS Version:        The output of `sw_vers`, remember that we currently only support macOS 10.12 or later 
 Kap Version:          Find this in the about section of Kap, or by right clicking on the Kap icon and pressing "Get Info"
