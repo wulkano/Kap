@@ -25,11 +25,52 @@ export default class EditorContainer extends Container {
   }
 
   setDimensions = (width, height) => {
-    this.setState({width, height, ratio: width / height});
+    this.setState({width, height, ratio: width / height, original: {width, height}});
   }
 
   changeDimension = event => {
-    this.setState({[event.target.name]: event.target.value});
+    const {ratio, original} = this.state;
+    const {target} = event;
+    const {name, value} = target;
+    const updates = {};
+
+    if (value.match(/^\d+$/)) {
+      const val = parseInt(value, 10);
+
+      if (name === 'width') {
+        const min = Math.max(1, Math.ceil(ratio));
+
+        if (val < min) {
+          shake(target);
+          updates.width = min;
+        } else if (val > original.width) {
+          shake(target);
+          updates.width = original.width;
+        } else {
+          updates.width = val;
+        }
+
+        updates.height = Math.round(updates.width / ratio);
+      } else {
+        const min = Math.max(1, Math.ceil(1 / ratio));
+
+        if (val < min) {
+          shake(target);
+          updates.height = min;
+        } else if (val > original.height) {
+          shake(target);
+          updates.height = original.height;
+        } else {
+          updates.height = val;
+        }
+
+        updates.width = Math.round(updates.height * ratio);
+      }
+
+      this.setState(updates);
+    } else {
+      shake(target);
+    }
   }
 
   setOptions = options => {
