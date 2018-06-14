@@ -144,9 +144,7 @@ const openCropperWindow = (size = {}, position = {}, options = {}) => {
     let {width = 512, height = 512} = settings.get('cropperWindow.size');
     width = size.width || width;
     height = size.height || height;
-    let {x, y} = settings.get('cropperWindow.position');
-    x = position.x === undefined ? x : position.x;
-    y = position.y === undefined ? y : position.y;
+    const {x, y} = position;
     cropperWindow = new BrowserWindow({
       width: width + cropperWindowBuffer,
       height: height + cropperWindowBuffer,
@@ -157,8 +155,7 @@ const openCropperWindow = (size = {}, position = {}, options = {}) => {
       resizable: true,
       hasShadow: false,
       enableLargerThanScreen: true,
-      x: x - (cropperWindowBuffer / 2),
-      y: y - (cropperWindowBuffer / 2)
+      ...position
     });
     mainWindow.webContents.send('cropper-window-opened', {width, height, x, y});
     cropperWindow.loadURL(`file://${__dirname}/../renderer/views/cropper.html`);
@@ -244,9 +241,39 @@ ipcMain.on('activate-app', async (event, appName, {width, height, x, y}) => {
   openCropperWindow({width, height}, {x, y}, {closeOnBlur: false});
 });
 
+const recalculateCropperWindowPosition = () => {
+  const {DEFAULT_CROPPER_WINDOW_POSITION} = settings;
+  const position = positioner.calculate(DEFAULT_CROPPER_WINDOW_POSITION, tray.getBounds());
+  const positionWithBuffer = {
+    x: position.x - (cropperWindowBuffer / 2),
+    y: position.y - (cropperWindowBuffer / 2)
+  };
+  settings.set('cropperWindow.position', {
+    x: positionWithBuffer.x,
+    y: positionWithBuffer.y
+  });
+  return positionWithBuffer;
+};
+
+const getDefaultCropperPosition = () => {
+  const {x, y} = settings.get('cropperWindow.position');
+  if (x === settings.DEFAULT_CROPPER_WINDOW_POSITION && y === settings.DEFAULT_CROPPER_WINDOW_POSITION) {
+    const newPosition = recalculateCropperWindowPosition();
+    return {
+      x: newPosition.x,
+      y: newPosition.y
+    };
+  }
+  return {x, y};
+};
+
 ipcMain.on('open-cropper-window', (event, size, position) => {
   if (cropperWindow) {
     cropperWindow.close();
+  }
+
+  if (!position) {
+    position = getDefaultCropperPosition();
   }
 
   openCropperWindow(size, position);
@@ -404,6 +431,7 @@ menubar.on('after-create-window', () => {
 
   let wasStuck = true;
   mainWindow.on('move', () => { // Unfortunately this is just an alias for 'moved'
+    settings.reset('cropperWindow.position');
     recomputeExpectedWindowPosition();
     recomputeCurrentWindowPosition();
     const diff = {
