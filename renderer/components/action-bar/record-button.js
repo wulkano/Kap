@@ -61,11 +61,13 @@ class RecordButton extends React.Component {
 
   startRecording = event => {
     event.stopPropagation();
-    const {cropperExists, x, y, width, height, screenWidth, screenHeight, displayId} = this.props;
+    const {cropperExists, x, y, width, height, screenWidth, screenHeight, displayId, willStartRecording} = this.props;
 
     if (cropperExists) {
       const {remote} = electron;
       const {startRecording} = remote.require('./common/aperture');
+
+      willStartRecording();
 
       startRecording({
         cropperBounds: {
@@ -170,10 +172,12 @@ RecordButton.propTypes = {
   height: PropTypes.number,
   screenWidth: PropTypes.number,
   screenHeight: PropTypes.number,
-  displayId: PropTypes.number
+  displayId: PropTypes.number,
+  willStartRecording: PropTypes.func
 };
 
 export default connect(
   [CropperContainer],
-  ({x, y, width, height, screenWidth, screenHeight, displayId}) => ({x, y, width, height, screenWidth, screenHeight, displayId})
+  ({x, y, width, height, screenWidth, screenHeight, displayId}) => ({x, y, width, height, screenWidth, screenHeight, displayId}),
+  ({willStartRecording}) => ({willStartRecording})
 )(RecordButton);

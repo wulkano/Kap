@@ -80,6 +80,10 @@ export default class CropperContainer extends Container {
     });
   }
 
+  willStartRecording = () => {
+    this.setState({willStartRecording: true});
+  }
+
   setRecording = () => {
     this.setState({isRecording: true});
   }
