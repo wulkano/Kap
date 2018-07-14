@@ -10,7 +10,7 @@ export const shake = el => {
 
   el.addEventListener('animationend', () => {
     el.classList.remove('shake');
-  });
+  }, {once: true});
 
   return true;
 };

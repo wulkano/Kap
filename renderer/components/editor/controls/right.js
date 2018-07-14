@@ -12,14 +12,14 @@ class RightControls extends React.Component {
   }
 
   render() {
-    const {muted, mute, unmute, format} = this.props;
-    const canUnmute = ['gif', 'apng'].indexOf(format) === -1;
+    const {isMuted, mute, unmute, format} = this.props;
+    const canUnmute = !['gif', 'apng'].includes(format);
 
     return (
       <div className="container">
         <div className="mute">
           {
-            muted ?
+            isMuted ?
               <VolumeOffIcon fill="#fff" hoverFill="#fff" onClick={canUnmute ? unmute : undefined}/> :
               <VolumeHighIcon fill="#fff" hoverFill="#fff" onClick={mute}/>
           }
@@ -48,7 +48,7 @@ class RightControls extends React.Component {
 }
 
 RightControls.propTypes = {
-  muted: PropTypes.bool,
+  isMuted: PropTypes.bool,
   mute: PropTypes.func,
   unmute: PropTypes.func,
   format: PropTypes.string
@@ -56,6 +56,6 @@ RightControls.propTypes = {
 
 export default connect(
   [VideoContainer, EditorContainer],
-  ({muted}, {format}) => ({muted, format}),
+  ({isMuted}, {format}) => ({isMuted, format}),
   ({mute, unmute}) => ({mute, unmute})
 )(RightControls);

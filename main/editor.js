@@ -1,25 +1,15 @@
 'use strict';
 
-const {format: formatUrl} = require('url');
 const path = require('path');
 const fs = require('fs');
 const electron = require('electron');
 const {BrowserWindow, app} = require('electron');
-const isDev = require('electron-is-dev');
-const {resolve} = require('app-root-path');
 const ipc = require('electron-better-ipc');
+const {is} = require('electron-util');
+
 const {converters} = require('./convert');
 const getFps = require('./utils/fps');
-
-const devPath = 'http://localhost:8000/editor';
-
-const prodPath = formatUrl({
-  pathname: resolve('renderer/out/editor/index.html'),
-  protocol: 'file:',
-  slashes: true
-});
-
-const url = isDev ? devPath : prodPath;
+const loadRoute = require('./utils/routes');
 
 let editors = 0;
 
@@ -39,7 +29,7 @@ const openEditorWindow = async (filePath, recordFps) => {
     height: MIN_WINDOW_HEIGHT,
     frame: false,
     webPreferences: {
-      webSecurity: !isDev // Disable webSecurity in dev to load video over file:// protocol while serving over insecure http, this is not needed in production where we use file:// protocol for html serving.
+      webSecurity: !is.development // Disable webSecurity in dev to load video over file:// protocol while serving over insecure http, this is not needed in production where we use file:// protocol for html serving.
     },
     transparent: true,
     show: false
@@ -48,10 +38,7 @@ const openEditorWindow = async (filePath, recordFps) => {
   editors++;
   app.dock.show();
 
-  editorWindow.loadURL(url);
-  if (isDev) {
-    editorWindow.openDevTools({mode: 'detach'});
-  }
+  loadRoute(editorWindow, 'editor');
 
   editorWindow.on('closed', () => {
     editors--;

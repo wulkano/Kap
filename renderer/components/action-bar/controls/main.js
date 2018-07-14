@@ -27,34 +27,34 @@ const MainControls = {};
 const remote = electron.remote || false;
 let menu;
 
-const buildMenu = async ({appSelected}) => {
+const buildMenu = async ({selectedApp}) => {
   const {buildWindowsMenu} = remote.require('./common/windows');
-  menu = await buildWindowsMenu(appSelected);
+  menu = await buildWindowsMenu(selectedApp);
 };
 
 class Left extends React.Component {
   state = {};
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const {appSelected} = nextProps;
+    const {selectedApp} = nextProps;
 
-    if (appSelected !== prevState.appSelected) {
-      buildMenu({appSelected});
-      return {appSelected};
+    if (selectedApp !== prevState.selectedApp) {
+      buildMenu({selectedApp});
+      return {selectedApp};
     }
 
     return null;
   }
 
   render() {
-    const {toggleAdvanced, appSelected} = this.props;
+    const {toggleAdvanced, selectedApp} = this.props;
 
     return (
       <div className="main">
         <div className="crop">
           <CropIcon onClick={toggleAdvanced}/>
         </div>
-        <ApplicationsIcon active={Boolean(appSelected)} onClick={() => menu.popup({})}/>
+        <ApplicationsIcon active={Boolean(selectedApp)} onClick={() => menu.popup({})}/>
         <style jsx>{mainStyle}</style>
         <style jsx>{`
           .crop {
@@ -75,24 +75,24 @@ class Left extends React.Component {
 Left.propTypes = {
   toggleAdvanced: PropTypes.func.isRequired,
   selectApp: PropTypes.func.isRequired,
-  appSelected: PropTypes.string
+  selectedApp: PropTypes.string
 };
 
 MainControls.Left = connect(
   [CropperContainer, ActionBarContainer],
-  ({appSelected}) => ({appSelected}),
+  ({selectedApp}) => ({selectedApp}),
   ({selectApp}, {toggleAdvanced}) => ({selectApp, toggleAdvanced})
 )(Left);
 
 class Right extends React.Component {
   render() {
-    const {enterFullscreen, exitFullscreen, fullscreen} = this.props;
+    const {enterFullscreen, exitFullscreen, isFullscreen} = this.props;
 
     return (
       <div className="main">
         <div className="fullscreen">
           {
-            fullscreen ?
+            isFullscreen ?
               <ExitFullscreenIcon onClick={exitFullscreen} active/> :
               <FullscreenIcon onClick={enterFullscreen}/>
           }
@@ -114,12 +114,12 @@ class Right extends React.Component {
 Right.propTypes = {
   enterFullscreen: PropTypes.func.isRequired,
   exitFullscreen: PropTypes.func.isRequired,
-  fullscreen: PropTypes.bool
+  isFullscreen: PropTypes.bool
 };
 
 MainControls.Right = connect(
   [CropperContainer],
-  ({fullscreen}) => ({fullscreen}),
+  ({isFullscreen}) => ({isFullscreen}),
   ({enterFullscreen, exitFullscreen}) => ({enterFullscreen, exitFullscreen})
 )(Right);
 

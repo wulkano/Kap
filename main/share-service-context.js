@@ -43,19 +43,19 @@ class ShareServiceContext {
       return;
     }
 
-    const req = got(url, Object.assign({}, options, {useElectronNet: false}));
+    const request = got(url, Object.assign({}, options, {useElectronNet: false}));
 
-    this.requests.push(req);
+    this.requests.push(request);
 
-    return req;
+    return request;
   }
 
   cancel() {
     this.canceled = true;
     this.onCancel();
 
-    for (const req of this.requests) {
-      req.cancel();
+    for (const request of this.requests) {
+      request.cancel();
     }
   }
 

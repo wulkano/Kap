@@ -48,12 +48,12 @@ export default class CropperContainer extends Container {
     this.settings = this.remote.require('./common/settings');
 
     this.state = {
-      recording: false,
-      resizing: false,
-      moving: false,
-      picking: false,
+      isRecording: false,
+      isResizing: false,
+      isMoving: false,
+      isPicking: false,
       showHandles: true,
-      appSelected: '',
+      selectedApp: '',
       screenWidth: 0,
       screenHeight: 0,
       isActive: false,
@@ -81,7 +81,7 @@ export default class CropperContainer extends Container {
   }
 
   setRecording = () => {
-    this.setState({recording: true});
+    this.setState({isRecording: true});
   }
 
   setActive = isActive => {
@@ -92,9 +92,9 @@ export default class CropperContainer extends Container {
       updates.y = 0;
       updates.width = 0;
       updates.height = 0;
-      updates.fullscreen = false;
+      updates.isFullscreen = false;
       updates.showHandles = true;
-      updates.appSelected = '';
+      updates.selectedApp = '';
     }
 
     this.setState(updates);
@@ -166,13 +166,13 @@ export default class CropperContainer extends Container {
 
   selectApp = app => {
     const {x, y, width, height, ownerName} = app;
-    this.setState({appSelected: ownerName});
+    this.setState({selectedApp: ownerName});
     this.setBounds({x, y, width, height}, {ignoreRatioLocked: true});
   }
 
   unselectApp = () => {
-    if (this.state.appSelected) {
-      this.setState({appSelected: ''});
+    if (this.state.selectedApp) {
+      this.setState({selectedApp: ''});
     }
   }
 
@@ -180,7 +180,7 @@ export default class CropperContainer extends Container {
     const {x, y, width, height, screenWidth, screenHeight} = this.state;
     this.unselectApp();
     this.setState({
-      fullscreen: true,
+      isFullscreen: true,
       x: 0,
       y: 0,
       width: screenWidth,
@@ -192,26 +192,26 @@ export default class CropperContainer extends Container {
 
   exitFullscreen = () => {
     const {original} = this.state;
-    this.setState({fullscreen: false, showHandles: true, ...original});
+    this.setState({isFullscreen: false, showHandles: true, ...original});
   }
 
   startPicking = ({pageX, pageY}) => {
     this.unselectApp();
-    this.setState({picking: true, original: {pageX, pageY}});
+    this.setState({isPicking: true, original: {pageX, pageY}});
     this.cursorContainer.addCursorObserver(this.pick);
   }
 
   pick = ({pageX, pageY}) => {
-    const {original, picking} = this.state;
-    if (Math.abs(original.pageX - pageX) > 0 && Math.abs(original.pageY - pageY) > 0 && picking) {
+    const {original, isPicking} = this.state;
+    if (Math.abs(original.pageX - pageX) > 0 && Math.abs(original.pageY - pageY) > 0 && isPicking) {
       this.cursorContainer.removeCursorObserver(this.pick);
       this.setState({
         x: pageX,
         y: pageY,
         width: 0,
         height: 0,
-        resizing: true,
-        picking: false,
+        isResizing: true,
+        isPicking: false,
         currentHandle: {bottom: true, right: true}
       }, () => {
 
@@ -223,10 +223,10 @@ export default class CropperContainer extends Container {
   }
 
   stopPicking = () => {
-    if (this.state.picking) {
+    if (this.state.isPicking) {
       this.remote.getCurrentWindow().close();
     } else {
-      this.setState({picking: false});
+      this.setState({isPicking: false});
       this.cursorContainer.removeCursorObserver(this.pick);
     }
   }
@@ -237,35 +237,35 @@ export default class CropperContainer extends Container {
   }
 
   startResizing = currentHandle => {
-    if (!this.state.fullscreen) {
+    if (!this.state.isFullscreen) {
       this.unselectApp();
       this.setOriginal();
-      this.setState({currentHandle, resizing: true});
+      this.setState({currentHandle, isResizing: true});
       this.cursorContainer.addCursorObserver(this.resize);
     }
   }
 
   stopResizing = () => {
-    if (!this.state.fullscreen && this.state.resizing) {
+    if (!this.state.isFullscreen && this.state.isResizing) {
       const {x, y, width, height, ratio} = this.state;
-      this.setState({currentHandle: null, resizing: false, showHandles: true, picking: false});
+      this.setState({currentHandle: null, isResizing: false, showHandles: true, isPicking: false});
       this.cursorContainer.removeCursorObserver(this.resize);
       this.updateSettings({x, y, width, height, ratio});
     }
   }
 
   startMoving = ({pageX, pageY}) => {
-    if (!this.state.fullscreen) {
+    if (!this.state.isFullscreen) {
       this.unselectApp();
-      this.setState({moving: true, showHandles: false, offsetX: pageX, offsetY: pageY});
+      this.setState({isMoving: true, showHandles: false, offsetX: pageX, offsetY: pageY});
       this.cursorContainer.addCursorObserver(this.move);
     }
   }
 
   stopMoving = () => {
-    if (!this.state.fullscreen && this.state.moving) {
+    if (!this.state.isFullscreen && this.state.isMoving) {
       const {x, y} = this.state;
-      this.setState({moving: false, showHandles: true});
+      this.setState({isMoving: false, showHandles: true});
       this.cursorContainer.removeCursorObserver(this.move);
       this.updateSettings({x, y});
     }

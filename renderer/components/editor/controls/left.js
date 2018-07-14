@@ -7,13 +7,13 @@ import formatTime from '../../../utils/format-time';
 
 class LeftControls extends React.Component {
   render() {
-    const {play, pause, paused, currentTime} = this.props;
+    const {play, pause, isPaused, currentTime} = this.props;
 
     return (
       <div className="container">
         <div className="play">
           {
-            paused ?
+            isPaused ?
               <PlayIcon fill="#fff" hoverFill="#fff" onClick={play}/> :
               <PauseIcon fill="#fff" hoverFill="#fff" onClick={pause}/>
           }
@@ -43,12 +43,12 @@ class LeftControls extends React.Component {
 LeftControls.propTypes = {
   play: PropTypes.func,
   pause: PropTypes.func,
-  paused: PropTypes.bool,
+  isPaused: PropTypes.bool,
   currentTime: PropTypes.number
 };
 
 export default connect(
   [VideoContainer],
-  ({paused, currentTime}) => ({paused, currentTime}),
+  ({isPaused, currentTime}) => ({isPaused, currentTime}),
   ({play, pause}) => ({play, pause})
 )(LeftControls);

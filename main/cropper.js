@@ -1,23 +1,12 @@
 'use strict';
 
-const {format: formatUrl} = require('url');
 const electron = require('electron');
-const isDev = require('electron-is-dev');
-const {resolve} = require('app-root-path');
 const delay = require('delay');
 
 const settings = require('./common/settings');
+const loadRoute = require('./utils/routes');
 
 const {BrowserWindow} = electron;
-const devPath = 'http://localhost:8000/cropper';
-
-const prodPath = formatUrl({
-  pathname: resolve('renderer/out/cropper/index.html'),
-  protocol: 'file:',
-  slashes: true
-});
-
-const url = isDev ? devPath : prodPath;
 
 const croppers = new Map();
 
@@ -51,7 +40,8 @@ const openCropper = (display, activeDisplayId) => {
     show: false
   });
 
-  cropper.loadURL(url);
+  loadRoute(cropper, 'cropper');
+
   cropper.setAlwaysOnTop(true, 'screen-saver', 1);
   cropper.setVisibleOnAllWorkspaces(true);
 
@@ -75,10 +65,6 @@ const openCropper = (display, activeDisplayId) => {
 
     cropper.webContents.send('display', displayInfo);
   });
-
-  if (isDev) {
-    cropper.openDevTools({mode: 'detach'});
-  }
 
   cropper.on('closed', closeAllCroppers);
   croppers.set(id, cropper);

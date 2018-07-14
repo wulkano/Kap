@@ -4,7 +4,7 @@ import moment from 'moment';
 
 import {shake} from '../utils/inputs';
 
-const isMuted = format => ['gif', 'apng'].indexOf(format) !== -1;
+const isMuted = format => ['gif', 'apng'].includes(format);
 
 export default class EditorContainer extends Container {
   state ={

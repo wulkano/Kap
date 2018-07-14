@@ -80,7 +80,7 @@ class LeftOptions extends React.Component {
           }
 
           .option:hover {
-            background: hsla(0,0%,100%,.2);
+            background: hsla(0, 0%, 100%, 0.2);
           }
 
           .option:active,

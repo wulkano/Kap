@@ -76,21 +76,21 @@ export default class ActionBarContainer extends Container {
   }
 
   toggleAdvanced = () => {
-    if (!this.cropperContainer.state.fullscreen) {
+    if (!this.cropperContainer.state.isFullscreen) {
       const {advanced} = this.state;
       this.updateSettings({advanced: !advanced});
     }
   }
 
   startMoving = ({pageX, pageY}) => {
-    this.setState({moving: true, offsetX: pageX, offsetY: pageY});
+    this.setState({isMoving: true, offsetX: pageX, offsetY: pageY});
     this.cursorContainer.addCursorObserver(this.move);
   }
 
   stopMoving = () => {
     const {x, y} = this.state;
     this.updateSettings({x, y});
-    this.setState({moving: false});
+    this.setState({isMoving: false});
     this.cursorContainer.removeCursorObserver(this.move);
   }
 

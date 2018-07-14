@@ -2,9 +2,9 @@ import {Container} from 'unstated';
 
 export default class VideoContainer extends Container {
   state = {
-    ready: false,
-    paused: false,
-    muted: false,
+    isReady: false,
+    isPaused: false,
+    isMuted: false,
     startTime: 0,
     endTime: 0
   };
@@ -62,22 +62,22 @@ export default class VideoContainer extends Container {
     });
 
     video.addEventListener('canplaythrough', () => {
-      const {ready} = this.state;
-      if (!ready) {
+      const {isReady} = this.state;
+      if (!isReady) {
         this.editorContainer.load();
         video.play();
-        this.setState({ready: true});
+        this.setState({isReady: true});
       }
     });
 
     video.addEventListener('play', () => {
       this.checkTime();
-      this.setState({paused: false});
+      this.setState({isPaused: false});
     });
 
     video.addEventListener('pause', () => {
       clearTimeout(this.ticker);
-      this.setState({paused: true});
+      this.setState({isPaused: true});
     });
 
     video.addEventListener('ended', () => {
@@ -88,22 +88,22 @@ export default class VideoContainer extends Container {
   }
 
   play = () => {
-    this.setState({paused: false});
+    this.setState({isPaused: false});
     this.video.play();
   }
 
   pause = () => {
-    this.setState({paused: true});
+    this.setState({isPaused: true});
     this.video.pause();
   }
 
   mute = () => {
-    this.setState({muted: true});
+    this.setState({isMuted: true});
     this.video.muted = true;
   }
 
   unmute = () => {
-    this.setState({muted: false});
+    this.setState({isMuted: false});
     this.video.muted = false;
   }
 

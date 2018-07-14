@@ -5,12 +5,12 @@ import {TooltipIcon} from '../../../vectors';
 
 class Slider extends React.Component {
   state = {
-    open: false
+    isOpen: false
   }
 
-  show = () => this.setState({open: true})
+  show = () => this.setState({isOpen: true})
 
-  hide = () => this.setState({open: false})
+  hide = () => this.setState({isOpen: false})
 
   handleChange = event => {
     const {onChange} = this.props;
@@ -19,14 +19,14 @@ class Slider extends React.Component {
 
   render() {
     const {value, max, min} = this.props;
-    const {open} = this.state;
+    const {isOpen} = this.state;
 
     return (
       <div className="container">
-        { open && <div className="overlay" onClick={this.hide}/> }
+        { isOpen && <div className="overlay" onClick={this.hide}/> }
         <input type="text" className="value" value={value} onChange={this.handleChange} onFocus={this.show}/>
         {
-          open && (
+          isOpen && (
             <div className="popup" onClick={event => event.stopPropagation()}>
               <input type="range" className="slider" onChange={this.handleChange} min={min} max={max} step={1} value={value}/>
               <div className="arrow">

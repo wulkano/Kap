@@ -36,9 +36,9 @@ class Left extends React.Component {
   state = {}
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const {ratio, resizing, setRatio} = nextProps;
+    const {ratio, isResizing, setRatio} = nextProps;
 
-    if (ratio !== prevState.ratio && !resizing) {
+    if (ratio !== prevState.ratio && !isResizing) {
       return {
         ratio,
         menu: buildAspectRatioMenu({setRatio, ratio})
@@ -112,13 +112,13 @@ Left.propTypes = {
   toggleAdvanced: PropTypes.func.isRequired,
   toggleRatioLock: PropTypes.func.isRequired,
   ratioLocked: PropTypes.bool,
-  resizing: PropTypes.bool,
+  isResizing: PropTypes.bool,
   ratio: PropTypes.array
 };
 
 AdvancedControls.Left = connect(
   [ActionBarContainer, CropperContainer],
-  ({ratioLocked}, {ratio, resizing}) => ({ratio, ratioLocked, resizing}),
+  ({ratioLocked}, {ratio, isResizing}) => ({ratio, ratioLocked, isResizing}),
   ({toggleAdvanced, toggleRatioLock}, {setRatio}) => ({toggleAdvanced, toggleRatioLock, setRatio})
 )(Left);
 

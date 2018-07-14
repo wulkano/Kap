@@ -1,23 +1,14 @@
 'use strict';
 
-const {format: formatUrl} = require('url');
 const {BrowserWindow, ipcMain} = require('electron');
-const isDev = require('electron-is-dev');
-const {resolve} = require('app-root-path');
-
-const devPath = 'http://localhost:8000/preferences';
-
-const prodPath = formatUrl({
-  pathname: resolve('renderer/out/preferences/index.html'),
-  protocol: 'file:',
-  slashes: true
-});
-
-const url = isDev ? devPath : prodPath;
+const {closeAllCroppers} = require('./cropper');
+const loadRoute = require('./utils/routes');
 
 let prefsWindow = null;
 
 const openPrefsWindow = () => {
+  closeAllCroppers();
+
   if (prefsWindow) {
     return prefsWindow.show();
   }
@@ -36,11 +27,8 @@ const openPrefsWindow = () => {
     prefsWindow = null;
   });
 
-  if (isDev) {
-    prefsWindow.openDevTools({mode: 'detach'});
-  }
+  loadRoute(prefsWindow, 'preferences');
 
-  prefsWindow.loadURL(url);
   ipcMain.once('preferences-ready', () => {
     prefsWindow.show();
   });

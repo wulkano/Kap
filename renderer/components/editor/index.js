@@ -161,10 +161,6 @@ export default class Editor extends React.Component {
             margin: auto;
           }
 
-          .maximize {
-
-          }
-
           .disabled {
             background-color: #ddd;
             pointer-events: none;

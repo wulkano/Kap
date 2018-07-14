@@ -24,17 +24,17 @@ const CATEGORIES = [
 
 class Categories extends React.Component {
   componentDidUpdate(prevProps) {
-    if (!prevProps.mounted && this.props.mounted) {
+    if (!prevProps.isMounted && this.props.isMounted) {
       // Wait for the transitions to end
       setTimeout(() => electron.ipcRenderer.send('preferences-ready'), 300);
     }
   }
 
   render() {
-    const {category, mounted} = this.props;
+    const {category} = this.props;
 
     const index = CATEGORIES.findIndex(({name}) => name === category);
-    const className = classNames('categories-container', {mounted});
+    const className = classNames('categories-container');
 
     return (
       <div className={className}>
@@ -65,10 +65,10 @@ class Categories extends React.Component {
 
 Categories.propTypes = {
   category: PropTypes.string,
-  mounted: PropTypes.bool
+  isMounted: PropTypes.bool
 };
 
 export default connect(
   [PreferencesContainer],
-  ({category, mounted}) => ({category, mounted})
+  ({category, isMounted}) => ({category, isMounted})
 )(Categories);

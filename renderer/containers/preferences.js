@@ -20,7 +20,7 @@ export default class PreferencesContainer extends Container {
       category: 'general',
       openOnStartup: this.remote.app.getLoginItemSettings().openAtLogin,
       installed,
-      mounted: true
+      isMounted: true
     });
 
     this.plugins.getFromNpm().then(plugins => {
@@ -30,10 +30,12 @@ export default class PreferencesContainer extends Container {
     getAudioDevices().then(audioDevices => {
       const updates = {audioDevices};
 
-      if (!audioDevices.find(device => device.id === audioInputDeviceId)) {
-        const deviceId = audioDevices[0] && audioDevices[0].id;
-        this.settings.set('audioInputDeviceId', deviceId);
-        updates.audioInputDeviceId = deviceId;
+      if (!audioDevices.some(device => device.id === audioInputDeviceId)) {
+        const [device] = audioDevices;
+        if (device) {
+          this.settings.set('audioInputDeviceId', device.id);
+          updates.audioInputDeviceId = device.id;
+        }
       }
 
       this.setState(updates);

@@ -1,19 +1,7 @@
 'use strict';
 
-const {format: formatUrl} = require('url');
 const {BrowserWindow, app} = require('electron');
-const isDev = require('electron-is-dev');
-const {resolve} = require('app-root-path');
-
-const devPath = 'http://localhost:8000/exports';
-
-const prodPath = formatUrl({
-  pathname: resolve('renderer/out/exports/index.html'),
-  protocol: 'file:',
-  slashes: true
-});
-
-const url = isDev ? devPath : prodPath;
+const loadRoute = require('./utils/routes');
 
 let exportsWindow = null;
 
@@ -29,11 +17,7 @@ const openExportsWindow = show => {
       show
     });
 
-    if (isDev) {
-      exportsWindow.openDevTools({mode: 'detach'});
-    }
-
-    exportsWindow.loadURL(url);
+    loadRoute(exportsWindow, 'exports');
 
     exportsWindow.on('close', event => {
       event.preventDefault();

@@ -29,22 +29,22 @@ class Overlay extends React.Component {
       y,
       width,
       height,
-      moving,
-      resizing,
+      isMoving,
+      isResizing,
       currentHandle,
       isActive,
       isReady,
       screenWidth,
       screenHeight,
-      recording
+      isRecording
     } = this.props;
 
     const contentClassName = classNames('content', {'not-ready': !isReady});
 
     const className = classNames('overlay', {
-      recording,
-      picking: !recording && !resizing && !moving,
-      'no-transition': resizing || moving || !isActive
+      recording: isRecording,
+      picking: !isRecording && !isResizing && !isMoving,
+      'no-transition': isResizing || isMoving || !isActive
     });
 
     return (
@@ -124,8 +124,8 @@ class Overlay extends React.Component {
 
           #container {
             flex-direction: column;
-            ${moving ? 'cursor: move;' : ''}
-            ${resizing ? getResizingCursor(currentHandle) : ''}
+            ${isMoving ? 'cursor: move;' : ''}
+            ${isResizing ? getResizingCursor(currentHandle) : ''}
           }
         `}</style>
       </div>
@@ -141,8 +141,8 @@ Overlay.propTypes = {
   y: PropTypes.number,
   width: PropTypes.number,
   height: PropTypes.number,
-  moving: PropTypes.bool,
-  resizing: PropTypes.bool,
+  isMoving: PropTypes.bool,
+  isResizing: PropTypes.bool,
   currentHandle: PropTypes.object,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
@@ -152,13 +152,13 @@ Overlay.propTypes = {
   isReady: PropTypes.bool,
   screenWidth: PropTypes.number,
   screenHeight: PropTypes.number,
-  recording: PropTypes.bool
+  isRecording: PropTypes.bool
 };
 
 export default connect(
   [CropperContainer, ActionBarContainer, CursorContainer],
-  ({x, y, width, height, moving, resizing, currentHandle, screenWidth, screenHeight, isReady, isActive, recording}, actionBar) => ({
-    x, y, width, height, resizing, currentHandle, screenWidth, screenHeight, isReady, isActive, recording, moving: moving || actionBar.moving
+  ({x, y, width, height, isMoving, isResizing, currentHandle, screenWidth, screenHeight, isReady, isActive, isRecording}, actionBar) => ({
+    x, y, width, height, isResizing, currentHandle, screenWidth, screenHeight, isReady, isActive, isRecording, isMoving: isMoving || actionBar.isMoving
   }),
   ({stopMoving, stopResizing, stopPicking, startPicking}, actionBar, {setCursor}) => ({
     onMouseUp: () => {
