@@ -140,10 +140,11 @@ export default class EditorContainer extends Container {
   }
 
   startExport = () => {
-    const {width, height, fps, filePath, options, format, plugin, originalFps} = this.state;
+    const {width, height, fps, filePath, options, format, plugin: serviceTitle, originalFps} = this.state;
     const {startTime, endTime, muted} = this.videoContainer.state;
 
-    const pluginName = options[format].plugins.find(p => p.title === plugin).pluginName;
+    const plugin = options[format].plugins.find(p => p.title === serviceTitle);
+    const {pluginName, isDefault} = plugin;
 
     const data = {
       exportOptions: {
@@ -156,7 +157,8 @@ export default class EditorContainer extends Container {
       },
       inputPath: filePath,
       pluginName,
-      serviceTitle: plugin,
+      isDefault,
+      serviceTitle,
       format,
       originalFps
     };

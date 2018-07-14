@@ -1,17 +1,27 @@
 'use strict';
 
+const {dialog} = require('electron');
 const ipc = require('electron-better-ipc');
 const base64Img = require('base64-img');
 const tmp = require('tmp');
 const ffmpeg = require('@ffmpeg-installer/ffmpeg');
 const util = require('electron-util');
 const execa = require('execa');
+const makeDir = require('make-dir');
 
+const settings = require('./common/settings');
 const {showExportsWindow, getExportsWindow, openExportsWindow} = require('./exports');
 const {openEditorWindow} = require('./editor');
 const Export = require('./export');
 
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
+
+const filterMap = new Map([
+  ['mp4', [{name: 'Movies', extensions: ['mp4']}]],
+  ['webm', [{name: 'Movies', extensions: ['webm']}]],
+  ['gif', [{name: 'Images', extensions: ['gif']}]],
+  ['apng', [{name: 'Images', extensions: ['apng']}]]
+]);
 
 const getPreview = async inputPath => {
   const previewPath = tmp.tmpNameSync({postfix: '.jpg'});
@@ -85,6 +95,26 @@ class ExportList {
   async addExport(options) {
     const newExport = new Export(options);
     const createdAt = (new Date()).toISOString();
+
+    if (options.isDefault) {
+      showExportsWindow();
+      const kapturesDir = settings.get('kapturesDir');
+      await makeDir(kapturesDir);
+
+      const filters = filterMap.get(options.format);
+
+      const filePath = dialog.showSaveDialog(getExportsWindow(), {
+        title: newExport.defaultFileName,
+        defaultPath: `${kapturesDir}/${newExport.defaultFileName}`,
+        filters
+      });
+
+      if (filePath) {
+        newExport.context.targetFilePath = filePath;
+      } else {
+        return;
+      }
+    }
 
     newExport.status = 'waiting';
     newExport.text = 'Waiting…';

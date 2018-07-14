@@ -76,7 +76,8 @@ ipc.answerRenderer('export-options', () => {
       prettyFormat: prettifyFormat(format),
       plugins: [{
         title: 'Save to Disk',
-        pluginName: 'default'
+        pluginName: 'default',
+        isDefault: true
       }]
     };
   }

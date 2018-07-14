@@ -50,7 +50,6 @@ class Export {
       this.reject = reject;
 
       onCancel(() => this.context.clear());
-
       try {
         await this.service.action(this.context);
         if (!this.canceled) {
