@@ -26,9 +26,11 @@ store.set('actionBar', {});
 const audioInputDeviceId = store.get('audioInputDeviceId');
 
 audioDevices().then(audioDevices => {
-  if (!audioDevices.find(device => device.id === audioInputDeviceId)) {
-    const deviceId = audioDevices[0] && audioDevices[0].id;
-    store.set('audioInputDeviceId', deviceId);
+  if (!audioDevices.some(device => device.id === audioInputDeviceId)) {
+    const [device] = audioDevices;
+    if (device) {
+      store.set('audioInputDeviceId', device.id);
+    }
   }
 });
 

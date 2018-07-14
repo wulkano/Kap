@@ -15,7 +15,7 @@ class Export {
     this.plugin = new Plugin(options.pluginName);
     this.service = this.plugin.getSerivce(options.serviceTitle);
     this.format = options.format;
-    this.img = '';
+    this.image = '';
 
     const now = moment();
     this.defaultFileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.${this.format}`;
@@ -39,26 +39,27 @@ class Export {
       text: this.text,
       status: this.status,
       percentage: this.percentage,
-      img: this.img,
+      image: this.image,
       createdAt: this.createdAt
     };
   }
 
   run() {
-    return new PCancelable((resolve, reject, onCancel) => {
+    return new PCancelable(async (resolve, reject, onCancel) => {
       this.resolve = resolve;
       this.reject = reject;
 
-      this.service.action(this.context)
-        .then(() => {
-          if (!this.canceled) {
-            this.updateExport({text: 'Export completed', status: 'completed', percentage: undefined});
-          }
-          resolve();
-        })
-        .catch(reject);
-
       onCancel(() => this.context.clear());
+
+      try {
+        await this.service.action(this.context);
+        if (!this.canceled) {
+          this.updateExport({text: 'Export completed', status: 'completed', percentage: undefined});
+        }
+        resolve();
+      } catch (error) {
+        reject();
+      }
     });
   }
 
@@ -81,30 +82,26 @@ class Export {
     this.updateExport({text, percentage, status: 'processing'});
   }
 
-  convert() {
+  async convert() {
     this.convertProcess = convertTo(
-      Object.assign(
-        {},
-        this.exportOptions,
-        {
-          defaultFileName: this.defaultFileName,
-          inputPath: this.inputPath,
-          onProgress: percentage => this.setProgress('Converting…', percentage)
-        }
-      ),
+      {
+        ...this.exportOptions,
+        defaultFileName: this.defaultFileName,
+        inputPath: this.inputPath,
+        onProgress: percentage => this.setProgress('Converting…', percentage)
+      },
       this.format
     );
 
-    return this.convertProcess
-      .then(filePath => {
-        this.resolve();
-        return filePath;
-      })
-      .catch(error => {
-        if (!this.convertProcess.isCanceled) {
-          this.reject(error);
-        }
-      });
+    try {
+      const filePath = await this.convertProcess;
+      this.resolve();
+      return filePath;
+    } catch (error) {
+      if (!this.convertProcess.isCanceled) {
+        this.reject(error);
+      }
+    }
   }
 }
 

@@ -1,6 +1,7 @@
 MIT License
 
-Copyright (c) 2018 Leonard Lamprecht
+Copyright (c) Wulkano <hello@wulkano.com> (https://wulkano.com)
+Copyright (c) Leonard Lamprecht
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

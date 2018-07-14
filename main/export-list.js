@@ -75,9 +75,9 @@ class ExportList {
       delete this.currentExport;
       this._startNext();
     } else {
-      const index = this.exports.findIndex(exp => exp.createdAt === createdAt);
-      if (index > -1) {
-        this.exports[index].cancel();
+      const exportToCancel = this.exports.find(exp => exp.createdAt === createdAt);
+      if (exportToCancel) {
+        exportToCancel.cancel();
       }
     }
   }
@@ -88,11 +88,11 @@ class ExportList {
 
     newExport.status = 'waiting';
     newExport.text = 'Waiting…';
-    newExport.img = await getPreview(options.inputPath);
+    newExport.image = await getPreview(options.inputPath);
     newExport.createdAt = createdAt;
     newExport.originalFps = options.originalFps;
 
-    callExportsWindow('update-export', Object.assign({}, newExport.data, {createdAt}));
+    callExportsWindow('update-export', {...newExport.data, createdAt});
     showExportsWindow();
 
     newExport.updateExport = updates => {
@@ -106,7 +106,7 @@ class ExportList {
         }
       }
 
-      callExportsWindow('update-export', Object.assign({}, newExport.data, {createdAt}));
+      callExportsWindow('update-export', {...newExport.data, createdAt});
     };
 
     this.exports.push(newExport);

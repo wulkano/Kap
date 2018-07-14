@@ -32,7 +32,7 @@ app.on('ready', async () => {
 
   initializeTray();
   initializeExportList();
-  globalShortcut.register('Cmd+Shift+5', openCropperWindow);
+  globalShortcut.register('Command+Shift+5', openCropperWindow);
 
   for (const file of filesToOpen) {
     openEditorWindow(file);

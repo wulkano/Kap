@@ -29,7 +29,7 @@ export default class Export extends React.Component {
       status,
       text,
       percentage,
-      img,
+      image,
       cancel
     } = this.props;
 
@@ -73,7 +73,7 @@ export default class Export extends React.Component {
           .thumbnail {
             width: 48px;
             height: 48px;
-            background: url(${img}) no-repeat center;
+            background: url(${image}) no-repeat center;
             background-size: cover;
             border-radius: 4px;
             margin-right: 16px;
@@ -138,7 +138,7 @@ Export.propTypes = {
   status: PropTypes.string,
   text: PropTypes.string,
   percentage: PropTypes.number,
-  img: PropTypes.string,
+  image: PropTypes.string,
   cancel: PropTypes.func,
   openInEditor: PropTypes.func
 };

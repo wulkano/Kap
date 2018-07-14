@@ -8,6 +8,7 @@ const {openEditorWindow} = require('./editor');
 const {cogMenu} = require('./menus');
 
 let tray = null;
+const EXTENSIONS = ['.mp4', '.mov', '.m4v'];
 
 const initializeTray = () => {
   tray = new Tray(path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'));
@@ -18,7 +19,7 @@ const initializeTray = () => {
   tray.on('drop-files', (event, files) => {
     for (const file of files) {
       const extension = path.extname(file).toLowerCase();
-      if (extension === '.mp4' || extension === '.mov') {
+      if (EXTENSIONS.includes(extension)) {
         openEditorWindow(file);
       }
     }
