@@ -6,8 +6,10 @@ const prepareNext = require('electron-next');
 const {initializeTray} = require('./tray');
 const {openCropperWindow} = require('./cropper');
 const plugins = require('./common/plugins');
+const {initializeAnalytics} = require('./common/analytics');
 const initializeExportList = require('./export-list');
 const {openEditorWindow} = require('./editor');
+const {track} = require('./common/analytics');
 
 const filesToOpen = [];
 
@@ -15,6 +17,7 @@ app.on('open-file', (event, path) => {
   event.preventDefault();
 
   if (app.isReady()) {
+    track('editor/opened/running');
     openEditorWindow(path);
   } else {
     filesToOpen.push(path);
@@ -30,11 +33,13 @@ app.on('ready', async () => {
 
   await prepareNext('./renderer');
 
+  initializeAnalytics();
   initializeTray();
   initializeExportList();
   globalShortcut.register('Command+Shift+5', openCropperWindow);
 
   for (const file of filesToOpen) {
+    track('editor/opened/startup');
     openEditorWindow(file);
   }
 });

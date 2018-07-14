@@ -10,6 +10,7 @@ const execa = require('execa');
 const makeDir = require('make-dir');
 
 const settings = require('./common/settings');
+const {track} = require('./common/analytics');
 const {showExportsWindow, getExportsWindow, openExportsWindow} = require('./exports');
 const {openEditorWindow} = require('./editor');
 const Export = require('./export');
@@ -81,12 +82,14 @@ class ExportList {
 
   async cancelExport(createdAt) {
     if (this.currentExport && this.currentExport.createdAt === createdAt) {
+      track('export/canceled/current');
       this.currentExport.cancel();
       delete this.currentExport;
       this._startNext();
     } else {
       const exportToCancel = this.exports.find(exp => exp.createdAt === createdAt);
       if (exportToCancel) {
+        track('export/canceled/waiting');
         exportToCancel.cancel();
       }
     }
@@ -141,6 +144,7 @@ class ExportList {
 
     this.exports.push(newExport);
     this.queue.push(newExport);
+    track(`export/queued/${this.queue.length}`);
 
     if (!this.currentExport) {
       this._startNext();

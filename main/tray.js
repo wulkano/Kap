@@ -6,6 +6,7 @@ const path = require('path');
 const {openCropperWindow} = require('./cropper');
 const {openEditorWindow} = require('./editor');
 const {cogMenu} = require('./menus');
+const {track} = require('./common/analytics');
 
 let tray = null;
 const EXTENSIONS = ['.mp4', '.mov', '.m4v'];
@@ -20,6 +21,7 @@ const initializeTray = () => {
     for (const file of files) {
       const extension = path.extname(file).toLowerCase();
       if (EXTENSIONS.includes(extension)) {
+        track('editor/opened/tray');
         openEditorWindow(file);
       }
     }

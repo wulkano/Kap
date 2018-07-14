@@ -9,6 +9,7 @@ const ffmpeg = require('@ffmpeg-installer/ffmpeg');
 const util = require('electron-util');
 const PCancelable = require('p-cancelable');
 const tempy = require('tempy');
+const {track} = require('./common/analytics');
 
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
 const durationRegex = /Duration: (\d\d:\d\d:\d\d.\d\d)/gm;
@@ -18,11 +19,14 @@ const frameRegex = /frame=\s+(\d+)/gm;
 const makeEven = n => 2 * Math.round(n / 2);
 
 const convert = (outputPath, opts, args) => {
+  track(`file/exported/fps/${opts.fps}`);
+
   return new PCancelable((resolve, reject, onCancel) => {
     const converter = execa(ffmpegPath, args);
     let amountOfFrames;
 
     onCancel(() => {
+      track('file/exported/convert/canceled');
       converter.kill();
     });
 
@@ -47,8 +51,10 @@ const convert = (outputPath, opts, args) => {
 
     converter.on('exit', code => {
       if (code === 0) {
+        track('file/exported/convert/completed');
         resolve(outputPath);
       } else {
+        track('file/exported/convert/failed');
         reject(new Error(`ffmpeg exited with code: ${code}\n\n${stderr}`));
       }
     });
@@ -157,6 +163,7 @@ const convertTo = (opts, format) => {
   const outputPath = path.join(tempy.directory(), opts.defaultFileName);
   const converter = converters.get(format);
   opts.onProgress(0);
+  track(`file/exported/format/${format}`);
 
   return converter(Object.assign({outputPath}, opts));
 };

@@ -9,6 +9,7 @@ const {openEditorWindow} = require('../editor');
 const {setRecordingTray, disableTray} = require('../tray');
 const {disableCroppers, setRecordingCroppers, closeAllCroppers} = require('../cropper');
 const settings = require('./settings');
+const {track} = require('./analytics');
 
 const aperture = createAperture();
 const {audioDevices} = createAperture;
@@ -16,12 +17,14 @@ const {audioDevices} = createAperture;
 let wasDoNotDisturbAlreadyEnabled;
 let lastRecordedFps;
 
+let past;
+
 const startRecording = async options => {
   disableTray();
   disableCroppers();
 
   const {cropperBounds, screenBounds, displayId} = options;
-  const past = Date.now();
+  past = Date.now();
 
   cropperBounds.y = screenBounds.height - (cropperBounds.y + cropperBounds.height);
 
@@ -76,9 +79,11 @@ const startRecording = async options => {
 
   try {
     await aperture.startRecording(apertureOpts);
+    track(`recording/started/${(Date.now() - past) / 1000}`);
     console.log(`Started recording after ${(Date.now() - past) / 1000}s`);
     setRecordingCroppers();
     setRecordingTray(stopRecording);
+    past = Date.now();
   } catch (err) {
     // This prevents the button from being reset, since the recording has not yet started
     // This delay is due to internal framework delays in aperture native code
@@ -92,6 +97,7 @@ const startRecording = async options => {
 };
 
 const stopRecording = async () => {
+  track(`recording/stopped/${(Date.now() - past) / 1000}`);
   closeAllCroppers();
 
   const filePath = await aperture.stopRecording();
@@ -109,6 +115,7 @@ const stopRecording = async () => {
     dnd.disable();
   }
 
+  track('editor/opened/recording');
   openEditorWindow(filePath, lastRecordedFps);
 };
 

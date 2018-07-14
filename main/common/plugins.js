@@ -6,6 +6,7 @@ const execa = require('execa');
 const makeDir = require('make-dir');
 
 const {notify} = require('./notifications');
+const {track} = require('./analytics');
 
 class Plugins {
   constructor() {
@@ -59,6 +60,7 @@ class Plugins {
   }
 
   async install(name) {
+    track(`plugin/installed/${name}`);
     // We manually add it to the package.json here so we're able to set the version to `latest`
     this._modifyMainPackageJson(pkg => {
       pkg.dependencies[name] = 'latest';
@@ -73,6 +75,7 @@ class Plugins {
   }
 
   async uninstall(name) {
+    track(`plugin/uninstalled/${name}`);
     this._modifyMainPackageJson(pkg => {
       delete pkg.dependencies[name];
     });

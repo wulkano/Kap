@@ -3,6 +3,7 @@
 const PCancelable = require('p-cancelable');
 const moment = require('moment');
 
+const {track} = require('./common/analytics');
 const {convertTo} = require('./convert');
 const ShareServiceContext = require('./share-service-context');
 const Plugin = require('./plugin');
@@ -45,6 +46,7 @@ class Export {
   }
 
   run() {
+    track(`export/started/${this.pluginName}`);
     return new PCancelable(async (resolve, reject, onCancel) => {
       this.resolve = resolve;
       this.reject = reject;

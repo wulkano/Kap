@@ -3,10 +3,12 @@
 const {BrowserWindow, ipcMain} = require('electron');
 const {closeAllCroppers} = require('./cropper');
 const loadRoute = require('./utils/routes');
+const {track} = require('./common/analytics');
 
 let prefsWindow = null;
 
 const openPrefsWindow = () => {
+  track('preferences/opened');
   closeAllCroppers();
 
   if (prefsWindow) {
