@@ -8,7 +8,7 @@ import {track} from '../main/analytics';
 const DEFAULTS = {
   kapturesDir: `${homedir()}/Movies/Kaptures`,
   openOnStartup: false,
-  allowAnalytics: true,
+  allowAnalytics: false,
   showCursor: true,
   highlightClicks: false,
   hideDesktopIcons: false,
