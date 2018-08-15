@@ -54,8 +54,9 @@ class Advanced extends React.Component {
         <Item subtitle="Highlight clicks">
           <Switch
             checked={highlightClicks}
+            disabled={!showCursor}
             onClick={() => toggleSetting('highlightClicks')}
-            disabled={!showCursor}/>
+          />
         </Item>
         <Item
           title="Hide desktop icons"

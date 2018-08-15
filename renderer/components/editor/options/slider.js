@@ -28,7 +28,7 @@ class Slider extends React.Component {
         {
           isOpen && (
             <div className="popup" onClick={event => event.stopPropagation()}>
-              <input type="range" className="slider" onChange={this.handleChange} min={min} max={max} step={1} value={value}/>
+              <input type="range" className="slider" min={min} max={max} step={1} value={value} onChange={this.handleChange}/>
               <div className="arrow">
                 <TooltipIcon fill="rgba(255,255,255,0.85)" hoverFill="rgba(255,255,255,0.85)"/>
               </div>

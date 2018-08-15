@@ -2,7 +2,7 @@ import electron from 'electron';
 import _ from 'lodash';
 
 const {width: screenWidth, height: screenHeight} = (electron.screen && electron.screen.getPrimaryDisplay().bounds) || {};
-const remote = electron.remote;
+const {remote} = electron;
 const debounceTimeout = 500;
 
 export const shake = el => {

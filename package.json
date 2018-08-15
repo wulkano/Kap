@@ -63,15 +63,15 @@
     "unstated": "^1.2.0"
   },
   "devDependencies": {
-    "babel-eslint": "^8.2.3",
+    "babel-eslint": "^8.2.6",
     "electron": "^2.0.0",
     "electron-builder": "^20.8.1",
-    "eslint-config-xo-react": "^0.16.0",
-    "eslint-plugin-react": "^7.7.0",
+    "eslint-config-xo-react": "^0.17.0",
+    "eslint-plugin-react": "^7.11.1",
     "next": "^4.2.1",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
-    "xo": "^0.20.3"
+    "xo": "^0.22.0"
   },
   "xo": {
     "parser": "babel-eslint",
@@ -81,19 +81,22 @@
       "node",
       "browser"
     ],
+    "settings": {
+      "react": {
+        "version": "16.3"
+      }
+    },
     "rules": {
-      "import/no-extraneous-dependencies": 0,
-      "import/named": 0,
-      "import/default": 0,
-      "no-use-before-define": 0,
-      "react/jsx-no-bind": 0,
-      "react/jsx-closing-tag-location": 0,
-      "react/require-default-props": 0,
-      "capitalized-comments": 0,
-      "react/no-unused-prop-types": 0,
-      "react/no-access-state-in-setstate": 0,
-      "react/jsx-curly-brace-presence": 0,
-      "react/jsx-sort-props": 0
+      "import/no-extraneous-dependencies": "off",
+      "array-element-newline": "off",
+      "no-use-before-define": "off",
+      "react/jsx-no-bind": "off",
+      "react/jsx-closing-tag-location": "off",
+      "react/require-default-props": "off",
+      "react/no-unused-prop-types": "off",
+      "react/no-access-state-in-setstate": "off",
+      "react/jsx-curly-brace-presence": "off",
+      "require-atomic-updates": "off"
     },
     "ignores": [
       "dist",

@@ -85,8 +85,8 @@ class PlayBar extends React.Component {
               value={startTime}
               min={0}
               max={duration}
-              onChange={this.setStartTime}
               step={0.00001}
+              onChange={this.setStartTime}
               onMouseDown={this.startResizing}
               onMouseUp={this.stopResizing}/>
             <input
@@ -95,8 +95,8 @@ class PlayBar extends React.Component {
               value={endTime}
               min={0}
               max={duration}
-              onChange={this.setEndTime}
               step={0.00001}
+              onChange={this.setEndTime}
               onMouseDown={this.startResizing}
               onMouseUp={this.stopResizing}/>
           </div>

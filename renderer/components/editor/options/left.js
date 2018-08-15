@@ -19,7 +19,7 @@ class LeftOptions extends React.Component {
         <input type="text" value={height} size="5" maxLength="5" placeholder="Height" name="height" onChange={changeDimension}/>
         <div className="label">FPS</div>
         <div className="fps">
-          <Slider value={fps} onChange={setFps} min={1} max={originalFps}/>
+          <Slider value={fps} min={1} max={originalFps} onChange={setFps}/>
         </div>
         <style jsx>{`
           .container {

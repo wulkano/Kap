@@ -93,7 +93,7 @@ class Right extends React.Component {
         <div className="fullscreen">
           {
             isFullscreen ?
-              <ExitFullscreenIcon onClick={exitFullscreen} active/> :
+              <ExitFullscreenIcon active onClick={exitFullscreen}/> :
               <FullscreenIcon onClick={enterFullscreen}/>
           }
         </div>

@@ -120,8 +120,9 @@ class Handles extends React.Component {
                   bottom={i % 3 === 1}
                   left={Math.floor(i / 3) === 0}
                   right={Math.floor(i / 3) === 1}
+                  ratioLocked={ratioLocked}
                   onClick={startResizing}
-                  ratioLocked={ratioLocked}/>
+                />
               )
             )
           }

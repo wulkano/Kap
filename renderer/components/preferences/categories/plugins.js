@@ -80,9 +80,9 @@ class Plugins extends React.Component {
                 subtitle={plugin.description}
               >
                 <Switch
-                  onTransitionEnd={uninstalling === plugin.name ? onTransitionEnd : undefined}
                   checked={uninstalling !== plugin.name}
                   disabled={Boolean(installing)}
+                  onTransitionEnd={uninstalling === plugin.name ? onTransitionEnd : undefined}
                   onClick={() => uninstall(plugin.name)}/>
               </Item>
             )

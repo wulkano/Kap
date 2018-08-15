@@ -33,8 +33,9 @@ class PreferencesNavigation extends React.Component {
               <span key={name}>
                 <Icon
                   size="2.4rem"
+                  active={category === name}
                   onClick={() => selectCategory(name)}
-                  active={category === name}/>
+                />
               </span>
             )
           )
