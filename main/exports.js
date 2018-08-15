@@ -11,8 +11,8 @@ const openExportsWindow = show => {
       width: 320,
       height: 360,
       resizable: false,
-      minimizable: false,
       maximizable: false,
+      fullscreenable: false,
       titleBarStyle: 'hiddenInset',
       show
     });
