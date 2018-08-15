@@ -119,7 +119,7 @@ class PlayBar extends React.Component {
               left: 50%;
               transform: translateX(-50%);
               width: 60%;
-              transition: all .12s ease-in-out;
+              transition: all 0.12s ease-in-out;
             }
 
             .progress-bar-container:not(.hover) {

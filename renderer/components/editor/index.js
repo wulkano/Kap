@@ -58,7 +58,7 @@ export default class Editor extends React.Component {
             width: 100%;
             height: 36px;
             background: rgba(0, 0, 0, 0.4);
-            transition: top .12s ease-in-out;
+            transition: top 0.12s ease-in-out;
             display: flex;
             z-index: 10;
           }
@@ -101,7 +101,8 @@ export default class Editor extends React.Component {
             -webkit-app-region: no-drag;
           }
 
-          .traffic-light:after, .traffic-light:before {
+          .traffic-light:after,
+          .traffic-light:before {
             visibility: hidden;
           }
 
@@ -118,7 +119,8 @@ export default class Editor extends React.Component {
             background-color: #bf4942;
           }
 
-          .close:after, .close:before {
+          .close:after,
+          .close:before {
             background-color: #760e0e;
             width: 8px;
             height: 2px;
@@ -166,7 +168,8 @@ export default class Editor extends React.Component {
             pointer-events: none;
           }
 
-          .disabled:after, .disabled:before {
+          .disabled:after,
+          .disabled:before {
             display: none;
           }
         `}</style>

@@ -15,7 +15,15 @@ class Handle extends React.Component {
   }
 
   render() {
-    const {size, top, bottom, right, left, onClick, ratioLocked} = this.props;
+    const {
+      size,
+      top,
+      bottom,
+      right,
+      left,
+      onClick,
+      ratioLocked
+    } = this.props;
 
     const className = classNames('handle', {
       'handle-top': top,

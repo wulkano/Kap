@@ -1,14 +1,5 @@
-# build output
-out
-.next
-dist
-
-# dependencies
 node_modules
-
-# logs
-npm-debug.log
-yarn-error.log
-
-# MacOS
-.DS_Store
+/renderer/out
+/renderer/.next
+/app/dist
+/dist

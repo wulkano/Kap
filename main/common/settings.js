@@ -25,13 +25,15 @@ store.set('actionBar', {});
 
 const audioInputDeviceId = store.get('audioInputDeviceId');
 
-audioDevices().then(audioDevices => {
-  if (!audioDevices.some(device => device.id === audioInputDeviceId)) {
-    const [device] = audioDevices;
+(async () => {
+  const devices = await audioDevices();
+
+  if (!devices.some(device => device.id === audioInputDeviceId)) {
+    const [device] = devices;
     if (device) {
       store.set('audioInputDeviceId', device.id);
     }
   }
-});
+})();
 
 module.exports = store;

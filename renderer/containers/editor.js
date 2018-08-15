@@ -9,7 +9,12 @@ const isMuted = format => ['gif', 'apng'].includes(format);
 export default class EditorContainer extends Container {
   state ={
     fps: 15,
-    formats: ['gif', 'mp4', 'webm', 'apng']
+    formats: [
+      'gif',
+      'mp4',
+      'webm',
+      'apng'
+    ]
   }
 
   setVideoContainer = videoContainer => {

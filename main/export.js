@@ -55,7 +55,11 @@ class Export {
       try {
         await this.service.action(this.context);
         if (!this.canceled) {
-          this.updateExport({text: 'Export completed', status: 'completed', percentage: undefined});
+          this.updateExport({
+            text: 'Export completed',
+            status: 'completed',
+            percentage: undefined
+          });
         }
         resolve();
       } catch (error) {
@@ -65,7 +69,11 @@ class Export {
   }
 
   cancel() {
-    this.updateExport({text: 'Export canceled', status: 'canceled', percentage: undefined});
+    this.updateExport({
+      text: 'Export canceled',
+      status: 'canceled',
+      percentage: undefined
+    });
     this.canceled = true;
 
     if (this.resolve) {
@@ -80,7 +88,10 @@ class Export {
   }
 
   setProgress(text, percentage = 0) {
-    this.updateExport({text, percentage, status: 'processing'});
+    this.updateExport({
+      text, percentage,
+      status: 'processing'
+    });
   }
 
   async convert() {

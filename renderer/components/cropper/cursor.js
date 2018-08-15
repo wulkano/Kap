@@ -13,8 +13,14 @@ class Cursor extends React.Component {
       return null;
     }
 
-    /// const {width: screenWidth, height: screenHeight} = this.remote.getGlobal('screen');
-    const {cursorY, cursorX, width, height, screenWidth, screenHeight} = this.props;
+    const {
+      cursorY,
+      cursorX,
+      width,
+      height,
+      screenWidth,
+      screenHeight
+    } = this.props;
 
     const className = classNames('dimensions', {
       flipY: screenHeight - cursorY < 35,

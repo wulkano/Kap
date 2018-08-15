@@ -30,7 +30,7 @@ class Slider extends React.Component {
             <div className="popup" onClick={event => event.stopPropagation()}>
               <input type="range" className="slider" min={min} max={max} step={1} value={value} onChange={this.handleChange}/>
               <div className="arrow">
-                <TooltipIcon fill="rgba(255,255,255,0.85)" hoverFill="rgba(255,255,255,0.85)"/>
+                <TooltipIcon fill="rgba(255, 255, 255, 0.85)" hoverFill="rgba(255, 255, 255, 0.85)"/>
               </div>
             </div>
           )
@@ -47,7 +47,7 @@ class Slider extends React.Component {
           .value {
             width: 100%;
             height: 100%;
-            background: hsla(0,0%,100%,.1);
+            background: hsla(0, 0%, 100%, 0.1);
             border-radius: 4px;
             padding: 4px 8px;
             text-align: center;
@@ -61,7 +61,7 @@ class Slider extends React.Component {
           }
 
           .value:hover {
-            background: hsla(0,0%,100%,.2);
+            background: hsla(0, 0%, 100%, 0.2);
           }
 
           .arrow {
@@ -81,8 +81,8 @@ class Slider extends React.Component {
             left: 50%;
             transform: translateX(-50%);
             margin-bottom: 16px;
-            background: rgba(255,255,255,0.85);
-            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.40);
+            background: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.40);
             z-index: 50;
             border-radius: 2px;
             -webkit-app-region: no-drag;
@@ -114,7 +114,7 @@ class Slider extends React.Component {
             border-color: transparent;
             background: #fff;
             border-radius: 4px;
-            box-shadow: 0px 0px 1px rgba(0, 0, 0, .4);
+            box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.4);
           }
 
           .slider::-webkit-slider-thumb {
@@ -123,7 +123,7 @@ class Slider extends React.Component {
             width: 16px;
             border-radius: 50%;
             background: #fff;
-            box-shadow: 0px 1px 2px rgba(0, 0, 0, .4);
+            box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.4);
             margin-top: -6px;
             z-index: 50;
           }

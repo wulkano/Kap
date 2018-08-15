@@ -49,7 +49,16 @@ const handleWidthInput = _.debounce(({x, y, setBounds, ratioLocked, ratio, value
   setBounds(updates);
 }, debounceTimeout);
 
-const handleHeightInput = _.debounce(({x, y, setBounds, ratioLocked, ratio, value, widthInput, heightInput}) => {
+const handleHeightInput = _.debounce(({
+  x,
+  y,
+  setBounds,
+  ratioLocked,
+  ratio,
+  value,
+  widthInput,
+  heightInput
+}) => {
   const updates = {};
 
   if (value.match(/^\d+$/)) {

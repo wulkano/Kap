@@ -7,9 +7,9 @@ const Button = ({title, onClick}) => (
     <style jsx>{`
       border: 1px solid #ddd;
       background: #fff;
-      transition: border .12s ease-in-out;
+      transition: border 0.12s ease-in-out;
       height: 2.4rem;
-      padding: 0 .8rem;
+      padding: 0 0.8rem;
       border-radius: 4px;
       color: #111;
       font-size: 1.2rem;

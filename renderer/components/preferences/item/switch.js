@@ -23,23 +23,23 @@ class Switch extends React.Component {
             border-radius: 2.625em;
             position: relative;
             background-color: #fff;
-            transition: .2s ease-in-out;
+            transition: 0.2s ease-in-out;
             box-sizing: border-box;
           }
 
           .toggle {
-            content: "";
+            content: '';
             display: block;
             width: 1.6rem;
             height: 1.6rem;
             border-radius: 50%;
-            margin-top: .3rem;
-            margin-left: .3rem;
+            margin-top: 0.3rem;
+            margin-left: 0.3rem;
             position: absolute;
             top: 0;
             left: 0;
             background: gray;
-            transition: left .12s ease-in-out;
+            transition: left 0.12s ease-in-out;
           }
 
           .checked .toggle {
@@ -52,7 +52,7 @@ class Switch extends React.Component {
           }
 
           .disabled .toggle {
-            margin-top: .2rem;
+            margin-top: 0.2rem;
             border: 1px solid #ccc;
             background-color: #fff;
           }

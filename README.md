@@ -12,7 +12,7 @@
 Or install with [Homebrew-Cask](https://caskroom.github.io):
 
 ```
-$ brew update && brew cask install kap
+$ brew cask install kap
 ```
 
 ## Contribute

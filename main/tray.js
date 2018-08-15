@@ -56,7 +56,7 @@ const animateIcon = () => new Promise(resolve => {
       try {
         tray.setImage(path.join(__dirname, '..', 'static', 'menubar-loading', filename));
         next();
-      } catch (err) {
+      } catch (_) {
         resolve();
       }
     }, interval);

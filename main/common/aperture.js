@@ -65,7 +65,7 @@ const startRecording = async options => {
     await desktopIcons.hide();
   }
 
-  console.log(`Hid desktop icons after ${(Date.now() - past) / 1000}s`);
+  console.log(`Hide desktop icons after ${(Date.now() - past) / 1000}s`);
 
   if (doNotDisturb) {
     wasDoNotDisturbAlreadyEnabled = await dnd.isEnabled();

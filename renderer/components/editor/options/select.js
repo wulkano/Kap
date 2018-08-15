@@ -28,7 +28,7 @@ class Select extends React.Component {
             position: relative;
             border-radius: 4px;
             padding: 4px 8px;
-            background: hsla(0,0%,100%,.1);
+            background: hsla(0, 0%, 100%, 0.1);
             font-size: 12px;
             color: white;
             display: flex;
@@ -43,7 +43,7 @@ class Select extends React.Component {
           }
 
           .container:hover {
-            background: hsla(0,0%,100%,.2);
+            background: hsla(0, 0%, 100%, 0.2);
           }
 
           select {

@@ -1,3 +1,5 @@
+'use strict';
+
 const {Notification, shell} = require('electron');
 const moveFile = require('move-file');
 

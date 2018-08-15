@@ -41,7 +41,7 @@ class LeftOptions extends React.Component {
 
           input {
             height: 24px;
-            background: hsla(0,0%,100%,.1);
+            background: hsla(0, 0%, 100%, 0.1);
             text-align: center;
             font-size: 12px;
             box-sizing: border-box;
@@ -64,7 +64,7 @@ class LeftOptions extends React.Component {
 
           input:focus, input:hover {
             outline: none;
-            background: hsla(0,0%,100%,.2);
+            background: hsla(0, 0%, 100%, 0.2);
           }
 
           .option {

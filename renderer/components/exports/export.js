@@ -85,7 +85,7 @@ export default class Export extends React.Component {
             position: absolute;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, .4);
+            background: rgba(0, 0, 0, 0.4);
           }
 
           .icon, .progress {
@@ -117,7 +117,7 @@ export default class Export extends React.Component {
           }
 
           .export-container:hover {
-            background: #F9F9F9;
+            background: #f9f9f9;
           }
 
           .export-container:hover .progress {

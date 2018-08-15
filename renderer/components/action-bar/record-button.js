@@ -41,8 +41,8 @@ class RecordButton extends React.Component {
             this.setState({shouldStop: true});
           }
         };
-      }, err => {
-        console.error('An error occurred when trying to get audio levels:', err);
+      }, error => {
+        console.error('An error occurred when trying to get audio levels:', error);
       });
     }
   }
@@ -61,7 +61,17 @@ class RecordButton extends React.Component {
 
   startRecording = event => {
     event.stopPropagation();
-    const {cropperExists, x, y, width, height, screenWidth, screenHeight, displayId, willStartRecording} = this.props;
+    const {
+      cropperExists,
+      x,
+      y,
+      width,
+      height,
+      screenWidth,
+      screenHeight,
+      displayId,
+      willStartRecording
+    } = this.props;
 
     if (cropperExists) {
       const {remote} = electron;
@@ -95,8 +105,8 @@ class RecordButton extends React.Component {
           <div className="inner">
             {!cropperExists && <div className="fill"/>}
           </div>
-          { showFirst && <div className="ripple first" onAnimationIteration={this.shouldFirstStop}/>}
-          { showSecond && <div className="ripple second" onAnimationIteration={this.shouldSecondStop}/>}
+          {showFirst && <div className="ripple first" onAnimationIteration={this.shouldFirstStop}/>}
+          {showSecond && <div className="ripple second" onAnimationIteration={this.shouldSecondStop}/>}
         </div>
         <style jsx>{`
             .container {
@@ -154,9 +164,15 @@ class RecordButton extends React.Component {
               animation: ripple 1.8s linear 0.9s infinite;
             }
 
-            @keyframes ripple{
-              0% {transform:scale(1); }
-              100% {transform:scale(1.3); opacity:0;}
+            @keyframes ripple {
+              0% {
+                transform: scale(1);
+              }
+
+              100% {
+                transform: scale(1.3);
+                opacity: 0;
+              }
             }
         `}</style>
       </div>

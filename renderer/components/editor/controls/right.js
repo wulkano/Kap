@@ -36,7 +36,8 @@ class RightControls extends React.Component {
               justify-content: flex-end;
             }
 
-            .mute, .fullscreen {
+            .mute,
+            .fullscreen {
               width: 24px;
               height: 24px;
               margin-left: 16px;

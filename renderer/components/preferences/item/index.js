@@ -57,7 +57,7 @@ class Item extends React.Component {
           .experimental:after {
             border: 1px solid #ddd;
             color: gray;
-            content: "experimental";
+            content: 'experimental';
             display: inline-block;
             font-size: 0.8rem;
             font-weight: 500;

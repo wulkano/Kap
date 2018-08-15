@@ -34,11 +34,11 @@ export default class VideoPlayer extends React.Component {
             height: 64px;
             bottom: ${hover ? 0 : -64}px;
             left: 0;
-            background-image: linear-gradient(-180deg,transparent,rgba(0,0,0,.2));
+            background-image: linear-gradient(-180deg,transparent,rgba(0, 0, 0, 0.2));
             padding: 16px 0;
             display: flex;
             align-items: center;
-            transition: bottom .12s ease-in-out;
+            transition: bottom 0.12s ease-in-out;
             -webkit-app-region: no-drag;
           }
 

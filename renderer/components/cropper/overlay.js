@@ -65,12 +65,12 @@ class Overlay extends React.Component {
         <div id="bottom" className={className} onMouseDown={startPicking}/>
         <style jsx>{`
           .overlay {
-            background-color: rgba(0, 0, 0, .5);
-            transition: background-color .5s ease-in-out, width .2s ease-out, height .2s ease-out;
+            background-color: rgba(0, 0, 0, 0.5);
+            transition: background-color 0.5s ease-in-out, width 0.2s ease-out, height 0.2s ease-out;
           }
 
           .overlay.recording {
-            background-color: rgba(0, 0, 0, .1);
+            background-color: rgba(0, 0, 0, 0.1);
           }
 
           .overlay.picking {
@@ -78,7 +78,7 @@ class Overlay extends React.Component {
           }
 
           .overlay.no-transition {
-            transition: background-color .5s ease-in-out;
+            transition: background-color 0.5s ease-in-out;
           }
 
           #middle {

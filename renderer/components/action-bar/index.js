@@ -57,7 +57,7 @@ class ActionBar extends React.Component {
               width: ${width}px;
               background: white;
               border-radius: 4px;
-              box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.2);
+              box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
               z-index: 10;
               top: ${y}px;
               left: ${x}px;

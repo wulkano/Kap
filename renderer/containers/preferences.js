@@ -27,7 +27,8 @@ export default class PreferencesContainer extends Container {
       this.setState({fromNpm: plugins.sort((a, b) => a.prettyName.localeCompare(b.prettyName))});
     });
 
-    getAudioDevices().then(audioDevices => {
+    (async () => {
+      const audioDevices = await getAudioDevices();
       const updates = {audioDevices};
 
       if (!audioDevices.some(device => device.id === audioInputDeviceId)) {
@@ -39,7 +40,7 @@ export default class PreferencesContainer extends Container {
       }
 
       this.setState(updates);
-    });
+    })();
   }
 
   install = async name => {
@@ -95,7 +96,12 @@ export default class PreferencesContainer extends Container {
   pickKapturesDir = () => {
     const {dialog, getCurrentWindow} = this.remote;
 
-    const directories = dialog.showOpenDialog(getCurrentWindow(), {properties: ['openDirectory', 'createDirectory']});
+    const directories = dialog.showOpenDialog(getCurrentWindow(), {
+      properties: [
+        'openDirectory',
+        'createDirectory'
+      ]
+    });
     this.toggleSetting('kapturesDir', directories[0]);
   }
 
