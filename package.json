@@ -1,47 +1,81 @@
 {
+  "name": "kap",
+  "productName": "Kap",
+  "version": "3.0.0",
+  "description": "The best way to record your screen",
+  "license": "MIT",
+  "repository": "wulkano/kap",
+  "homepage": "https://getkap.co",
+  "author": {
+    "name": "Wulkano",
+    "email": "hello@wulkano.com",
+    "url": "https://wulkano.com"
+  },
+  "private": true,
+  "main": "main/index.js",
   "scripts": {
     "test": "xo",
-    "start": "electron app",
-    "build": "npm run test && gulp build",
-    "watch": "gulp dev --continue",
-    "dev": "gulp build && run-p start watch",
+    "start": "electron .",
+    "build": "next build renderer && next export renderer",
     "dist": "npm run build && build",
     "pack": "npm run build && build --dir",
     "postinstall": "electron-builder install-app-deps",
-    "prepush": "npm run test"
+    "prepush": "npm run test",
+    "precommit": "npm run test"
+  },
+  "bundle": {
+    "name": "Kap"
+  },
+  "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.0.14",
+    "@sindresorhus/do-not-disturb": "^0.2.0",
+    "aperture": "^4.0.0",
+    "base64-img": "^1.0.4",
+    "classnames": "^2.2.5",
+    "delay": "^2.0.0",
+    "electron-better-ipc": "^0.1.1",
+    "electron-next": "^3.1.3",
+    "electron-store": "^1.3.0",
+    "electron-util": "^0.8.2",
+    "execa": "^0.10.0",
+    "first-run": "^1.2.0",
+    "got": "^8.3.0",
+    "hide-desktop-icons": "^0.4.0",
+    "husky": "^0.14.3",
+    "insight": "^0.10.1",
+    "lodash": "^4.17.5",
+    "mac-windows": "^0.7.1",
+    "make-dir": "^1.2.0",
+    "moment": "^2.22.1",
+    "move-file": "^1.0.0",
+    "nearest-normal-aspect-ratio": "^1.1.0",
+    "next-compose-plugins": "^1.0.3",
+    "next-optimized-images": "^1.3.0",
+    "node-mac-app-icon": "^1.4.0",
+    "npm": "^6.0.0",
+    "p-cancelable": "^0.4.1",
+    "p-queue": "^2.4.2",
+    "prop-types": "^15.6.1",
+    "react-draggable": "^3.0.5",
+    "semver": "^5.5.0",
+    "tempy": "^0.2.1",
+    "tmp": "^0.0.33",
+    "unstated": "^1.2.0"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
-    "babel-preset-stage-3": "^6.24.1",
-    "cssnano": "^3.10.0",
-    "del": "^3.0.0",
-    "devtron": "^1.4.0",
-    "electron": "^1.7.11",
-    "electron-builder": "^20.2.0",
-    "electron-react-devtools": "^0.5.2",
-    "gulp": "^4.0.0",
-    "gulp-babel": "^7.0.0",
-    "gulp-filter": "^5.0.1",
-    "gulp-inject-svg": "^0.1.16",
-    "gulp-postcss": "^7.0.0",
-    "gulp-pug": "^3.3.0",
-    "gulp-stylelint": "^6.0.0",
-    "husky": "^0.14.3",
-    "npm-run-all": "^4.1.2",
-    "postcss-each": "^0.10.0",
-    "postcss-extend": "^1.0.5",
-    "postcss-import": "^11.0.0",
-    "postcss-nested": "^3.0.0",
-    "postcss-reporter": "^5.0.0",
-    "postcss-simple-vars": "^4.1.0",
-    "semver": "^5.5.0",
-    "stylelint": "^9.1.1",
-    "stylelint-config-xo-space": "^0.6.0",
+    "babel-eslint": "^8.2.3",
+    "electron": "^2.0.0",
+    "electron-builder": "^20.8.1",
+    "eslint-config-xo-react": "^0.16.0",
+    "eslint-plugin-react": "^7.7.0",
+    "next": "^4.2.1",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
     "xo": "^0.20.3"
   },
   "xo": {
+    "parser": "babel-eslint",
+    "extends": "xo-react",
     "space": 2,
     "envs": [
       "node",
@@ -50,41 +84,46 @@
     "rules": {
       "import/no-extraneous-dependencies": 0,
       "import/named": 0,
-      "import/default": 0
+      "import/default": 0,
+      "no-use-before-define": 0,
+      "react/jsx-no-bind": 0,
+      "react/jsx-closing-tag-location": 0,
+      "react/require-default-props": 0,
+      "capitalized-comments": 0,
+      "react/no-unused-prop-types": 0,
+      "react/no-access-state-in-setstate": 0,
+      "react/jsx-curly-brace-presence": 0,
+      "react/jsx-sort-props": 0
     },
     "ignores": [
-      "app/dist/**"
+      "dist",
+      "renderer/.next",
+      "renderer/out"
     ]
-  },
-  "stylelint": {
-    "extends": "stylelint-config-xo-space",
-    "rules": {
-      "at-rule-no-unknown": [
-        true,
-        {
-          "ignoreAtRules": [
-            "extend",
-            "each"
-          ]
-        }
-      ],
-      "no-descending-specificity": null,
-      "declaration-no-important": null,
-      "property-no-vendor-prefix": null,
-      "declaration-property-value-blacklist": null,
-      "selector-class-pattern": null
-    }
   },
   "build": {
     "appId": "com.wulkano.kap",
     "files": [
       "**/*",
-      "dist",
-      "!src"
+      "!renderer",
+      "renderer/out"
     ],
     "mac": {
       "category": "public.app-category.productivity",
-      "minimumSystemVersion": "10.12.0"
+      "minimumSystemVersion": "10.12.0",
+      "extendInfo": {
+        "CFBundleDocumentTypes": [
+          {
+            "CFBundleTypeName": "Video",
+            "CFBundleTypeRole": "Editor",
+            "LSHandlerRank": "Alternate",
+            "LSItemContentTypes": [
+              "public.mpeg-4",
+              "com.apple.quicktime-movie"
+            ]
+          }
+        ]
+      }
     },
     "dmg": {
       "iconSize": 160,
@@ -101,19 +140,5 @@
         }
       ]
     }
-  },
-  "babel": {
-    "presets": [
-      "stage-3"
-    ],
-    "plugins": [
-      "transform-es2015-modules-commonjs",
-      [
-        "transform-class-properties",
-        {
-          "spec": true
-        }
-      ]
-    ]
   }
 }

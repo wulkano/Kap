@@ -1,5 +1,14 @@
+# build output
+out
+.next
+dist
+
+# dependencies
 node_modules
-/app/dist
-/app/vendor
-/dist
-yarn*log
+
+# logs
+npm-debug.log
+yarn-error.log
+
+# MacOS
+.DS_Store
