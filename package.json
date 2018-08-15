@@ -118,7 +118,7 @@
         "CFBundleDocumentTypes": [
           {
             "CFBundleTypeName": "Video",
-            "CFBundleTypeRole": "Editor",
+            "CFBundleTypeRole": "Viewer",
             "LSHandlerRank": "Alternate",
             "LSItemContentTypes": [
               "public.mpeg-4",
