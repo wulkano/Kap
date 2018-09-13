@@ -6,7 +6,9 @@ import {DropdownArrowIcon} from '../../../vectors';
 
 class Select extends React.Component {
   static defaultProps = {
-    options: []
+    options: [],
+    placeholder: 'Select',
+    noOptionsMessage: 'No options'
   }
 
   constructor(props) {
@@ -41,19 +43,21 @@ class Select extends React.Component {
   }
 
   handleClick = () => {
-    const boundingRect = this.select.current.getBoundingClientRect();
+    if (this.props.options.length !== 0) {
+      const boundingRect = this.select.current.getBoundingClientRect();
 
-    this.state.menu.popup({
-      x: Math.round(boundingRect.left),
-      y: Math.round(boundingRect.top)
-    });
+      this.state.menu.popup({
+        x: Math.round(boundingRect.left),
+        y: Math.round(boundingRect.top)
+      });
+    }
   }
 
   render() {
-    const {options, selected} = this.props;
+    const {options, selected, placeholder, noOptionsMessage} = this.props;
 
-    const selectedLabel = options.length === 0 ? 'No input devices' : (
-      selected ? options.find(option => option.value === selected).label : 'Select Device'
+    const selectedLabel = options.length === 0 ? noOptionsMessage : (
+      selected === undefined ? placeholder : options.find(option => option.value === selected).label
     );
 
     return (
@@ -78,13 +82,16 @@ class Select extends React.Component {
             user-select: none;
             line-height: 2.4rem;
             position: relative;
+            width: 92px;
           }
 
           .select span {
             flex: 1;
-            text-align: right;
-            padding-right: 5px;
-            padding: 0 12px;
+            padding-left: 8px;
+            font-size: 1.2rem;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
           }
 
           .select:hover {
@@ -111,7 +118,9 @@ Select.propTypes = {
     value: PropTypes.any
   })),
   onSelect: PropTypes.func.isRequired,
-  selected: PropTypes.string
+  selected: PropTypes.string,
+  placeholder: PropTypes.string,
+  noOptionsMessage: PropTypes.string
 };
 
 export default Select;

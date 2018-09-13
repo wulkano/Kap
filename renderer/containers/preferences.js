@@ -17,7 +17,7 @@ export default class PreferencesContainer extends Container {
 
     this.setState({
       ...this.settings.store,
-      category: 'general',
+      category: 'settings',
       openOnStartup: this.remote.app.getLoginItemSettings().openAtLogin,
       installed,
       isMounted: true
