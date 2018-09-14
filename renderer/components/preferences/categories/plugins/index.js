@@ -66,8 +66,8 @@ class Plugins extends React.Component {
               {
                 pluginsInstalled.length === 0 ? (
                   <EmptyTab
-                    title="No plugins, yet!"
-                    subtitle="Customize Kap your liking with Plugins."
+                    title="No plugins yet"
+                    subtitle="Customize Kap your liking with plugins."
                     link="Discover"
                     onClick={() => selectTab('discover')}/>
                 ) : (
@@ -114,7 +114,7 @@ class Plugins extends React.Component {
           }
 
           .plugins-nav .selected {
-            border-bottom: 2px solid #007AFF;
+            border-bottom: 2px solid #007aff;
             padding-bottom: 0;
           }
 
