@@ -43,7 +43,7 @@ class Select extends React.Component {
   }
 
   handleClick = () => {
-    if (this.props.options.length !== 0) {
+    if (this.props.options.length > 0) {
       const boundingRect = this.select.current.getBoundingClientRect();
 
       this.state.menu.popup({
