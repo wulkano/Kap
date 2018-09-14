@@ -10,7 +10,7 @@ export default class PreferencesContainer extends Container {
     this.settings = this.remote.require('./common/settings');
     this.plugins = this.remote.require('./common/plugins');
 
-    const installed = this.plugins.getInstalled().sort((a, b) => a.prettyName.localeCompare(b.prettyName));
+    const pluginsInstalled = this.plugins.getInstalled().sort((a, b) => a.prettyName.localeCompare(b.prettyName));
 
     const {getAudioDevices} = this.remote.require('./common/aperture');
     const {audioInputDeviceId} = this.settings.store;
@@ -18,14 +18,13 @@ export default class PreferencesContainer extends Container {
     this.setState({
       ...this.settings.store,
       category: 'general',
+      tab: 'discover',
       openOnStartup: this.remote.app.getLoginItemSettings().openAtLogin,
-      installed,
+      pluginsInstalled,
       isMounted: true
     });
 
-    this.plugins.getFromNpm().then(plugins => {
-      this.setState({fromNpm: plugins.sort((a, b) => a.prettyName.localeCompare(b.prettyName))});
-    });
+    this.fetchFromNpm();
 
     (async () => {
       const audioDevices = await getAudioDevices();
@@ -43,34 +42,43 @@ export default class PreferencesContainer extends Container {
     })();
   }
 
-  install = async name => {
-    const {installed, fromNpm} = this.state;
-    const plugin = fromNpm.find(p => p.name === name);
+  fetchFromNpm = async () => {
+    this.plugins.getFromNpm().then(plugins => {
+      this.setState({
+        npmError: false,
+        pluginsFromNpm: plugins.sort((a, b) => a.prettyName.localeCompare(b.prettyName))
+      });
+    }).catch(() => this.setState({npmError: true}));
+  }
 
-    this.setState({installing: name});
+  install = async name => {
+    const {pluginsInstalled, pluginsFromNpm} = this.state;
+    const plugin = pluginsFromNpm.find(p => p.name === name);
+
+    this.setState({pluginBeingInstalled: name});
     await this.plugins.install(name);
 
     this.setState({
-      installing: '',
-      fromNpm: fromNpm.filter(p => p.name !== name),
-      installed: [plugin, ...installed].sort((a, b) => a.prettyName.localeCompare(b.prettyName))
+      pluginBeingInstalled: null,
+      pluginsFromNpm: pluginsFromNpm.filter(p => p.name !== name),
+      pluginsInstalled: [plugin, ...pluginsInstalled].sort((a, b) => a.prettyName.localeCompare(b.prettyName))
     });
   }
 
   uninstall = name => {
-    const {installed, fromNpm} = this.state;
-    const plugin = installed.find(p => p.name === name);
+    const {pluginsInstalled, pluginsFromNpm} = this.state;
+    const plugin = pluginsInstalled.find(p => p.name === name);
 
     const onTransitionEnd = () => {
       this.setState({
-        installed: installed.filter(p => p.name !== name),
-        fromNpm: [plugin, ...fromNpm].sort((a, b) => a.prettyName.localeCompare(b.prettyName)),
-        uninstalling: '',
+        pluginsInstalled: pluginsInstalled.filter(p => p.name !== name),
+        pluginsFromNpm: [plugin, ...pluginsFromNpm].sort((a, b) => a.prettyName.localeCompare(b.prettyName)),
+        pluginBeingUninstalled: null,
         onTransitionEnd: null
       });
     };
 
-    this.setState({uninstalling: name, onTransitionEnd});
+    this.setState({pluginBeingUninstalled: name, onTransitionEnd});
 
     this.plugins.uninstall(name);
   }
@@ -79,6 +87,10 @@ export default class PreferencesContainer extends Container {
 
   selectCategory = category => {
     this.setState({category});
+  }
+
+  selectTab = tab => {
+    this.setState({tab});
   }
 
   toggleSetting = (setting, value) => {

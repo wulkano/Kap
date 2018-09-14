@@ -18,7 +18,7 @@ class WindowHeader extends React.Component {
             box-shadow: 0 1px 0 0 #ddd, inset 0 1px 0 0 #fff;
             -webkit-app-region: drag;
             user-select: none;
-            z-index: 1;
+            z-index: 11;
           }
 
           .window-header span {

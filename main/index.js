@@ -29,6 +29,7 @@ app.on('ready', async () => {
   app.dock.hide();
 
   // Ensure all plugins are up to date
+  plugins.prune().catch(() => {});
   plugins.upgrade().catch(() => {});
 
   await prepareNext('./renderer');
