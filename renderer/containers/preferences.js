@@ -43,12 +43,15 @@ export default class PreferencesContainer extends Container {
   }
 
   fetchFromNpm = async () => {
-    this.plugins.getFromNpm().then(plugins => {
+    try {
+      const plugins = await this.plugins.getFromNpm();
       this.setState({
         npmError: false,
         pluginsFromNpm: plugins.sort((a, b) => a.prettyName.localeCompare(b.prettyName))
       });
-    }).catch(() => this.setState({npmError: true}));
+    } catch (error) {
+      this.setState({npmError: true});
+    }
   }
 
   install = async name => {
