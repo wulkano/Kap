@@ -29,6 +29,7 @@
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.15",
     "@sindresorhus/do-not-disturb": "^0.2.0",
+    "ajv": "^6.5.3",
     "aperture": "^4.0.0",
     "base64-img": "^1.0.4",
     "classnames": "^2.2.6",

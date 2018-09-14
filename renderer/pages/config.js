@@ -2,6 +2,7 @@ import React from 'react';
 import {Provider} from 'unstated';
 
 import {ConfigContainer} from '../containers';
+import Config from '../components/config';
 import WindowHeader from '../components/window-header';
 
 const configContainer = new ConfigContainer();
@@ -26,6 +27,7 @@ export default class ConfigPage extends React.Component {
         <div className="cover-window">
           <Provider inject={[configContainer]}>
             <WindowHeader title={pluginName.replace(/^kap-/, '')}/>
+            <Config/>
           </Provider>
         </div>
         <style jsx global>{`
