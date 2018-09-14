@@ -36,8 +36,6 @@ class Settings extends React.Component {
       setOpenOnStartup
     } = this.props;
 
-    const shortDir = kapturesDir ? `.../${kapturesDir.split('/').pop()}` : '';
-
     const devices = audioDevices.map(device => ({
       label: device.name,
       value: device.id
@@ -126,7 +124,7 @@ class Settings extends React.Component {
         <Item title="Start automatically" subtitle="Launch Kap on system startup">
           <Switch checked={openOnStartup} onClick={setOpenOnStartup}/>
         </Item>
-        <Item title="Save to…" subtitle={shortDir} tooltip={kapturesDir}>
+        <Item title="Save to…" subtitle={kapturesDir} tooltip={kapturesDir}>
           <Button title="Choose" onClick={pickKapturesDir}/>
         </Item>
       </Category>
