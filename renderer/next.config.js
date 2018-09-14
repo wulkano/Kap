@@ -8,5 +8,6 @@ exports.exportPathMap = () => ({
   '/cropper': {page: '/cropper'},
   '/editor': {page: '/editor'},
   '/preferences': {page: '/preferences'},
-  '/exports': {page: '/exports'}
+  '/exports': {page: '/exports'},
+  '/config': {page: '/config'}
 });

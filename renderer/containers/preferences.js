@@ -83,6 +83,8 @@ export default class PreferencesContainer extends Container {
     this.plugins.uninstall(name);
   }
 
+  openPluginsConfig = name => this.plugins.openPluginConfig(name);
+
   openPluginsFolder = () => electron.shell.openItem(this.plugins.cwd);
 
   selectCategory = category => {

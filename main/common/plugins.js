@@ -5,6 +5,7 @@ const got = require('got');
 const execa = require('execa');
 const makeDir = require('make-dir');
 
+const {openConfigWindow} = require('../config');
 const {notify} = require('./notifications');
 const {track} = require('./analytics');
 
@@ -85,11 +86,16 @@ class Plugins {
     this._runNpm('prune');
   }
 
+  getServices(pluginName) {
+    return require(path.join(this.cwd, 'node_modules', pluginName)).shareServices;
+  }
+
   getInstalled() {
     return this._pluginNames().map(name => {
-      const path = this._pluginPath(name, 'package.json');
-      const json = JSON.parse(fs.readFileSync(path, 'utf8'));
+      const pluginPath = this._pluginPath(name, 'package.json');
+      const json = JSON.parse(fs.readFileSync(pluginPath, 'utf8'));
       this._addPrettyName(json);
+      json.hasConfig = this.getServices(name).some(({config}) => Boolean(config));
       return json;
     });
   }
@@ -110,9 +116,11 @@ class Plugins {
   }
 
   getPluginService(pluginName, serviceTitle) {
-    const plugin = require(path.join(this.cwd, 'node_modules', pluginName));
-    const service = plugin.shareServices.find(shareService => shareService.title === serviceTitle);
-    return service;
+    return this.getServices(pluginName).find(shareService => shareService.title === serviceTitle);
+  }
+
+  openPluginConfig(name) {
+    openConfigWindow(name, this.getServices(name).map(({config, title}) => ({config, title})));
   }
 }
 

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import Item from '../../item';
 import Switch from '../../item/switch';
+import {EditIcon} from '../../../../vectors';
 
 const PluginTitle = ({title, label, onClick}) => (
   <div>
@@ -41,7 +42,7 @@ PluginTitle.propTypes = {
 
 const getLink = ({homepage, links}) => homepage || (links && links.homepage);
 
-const Plugin = ({plugin, checked, disabled, onTransitionEnd, onClick, loading}) => {
+const Plugin = ({plugin, checked, disabled, onTransitionEnd, onClick, loading, openConfig}) => {
   return (
     <Item
       key={plugin.name}
@@ -54,6 +55,19 @@ const Plugin = ({plugin, checked, disabled, onTransitionEnd, onClick, loading}) 
       }
       subtitle={plugin.description}
     >
+      {
+        openConfig && (
+          <div className="config-icon">
+            <EditIcon size="18px" onClick={openConfig}/>
+            <style jsx>{`
+              .config-icon {
+                margin-right: 16px;
+                display: flex;
+              }
+            `}</style>
+          </div>
+        )
+      }
       <Switch
         checked={checked}
         disabled={disabled}
@@ -70,7 +84,8 @@ Plugin.propTypes = {
   disabled: PropTypes.bool,
   onTransitionEnd: PropTypes.func,
   onClick: PropTypes.func,
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
+  openConfig: PropTypes.func
 };
 
 export default Plugin;

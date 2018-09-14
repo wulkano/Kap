@@ -18,6 +18,7 @@ import VolumeHighIcon from './volume-high';
 import VolumeOffIcon from './volume-off';
 import CancelIcon from './cancel';
 import TooltipIcon from './tooltip';
+import EditIcon from './edit';
 
 export {
   ApplicationsIcon,
@@ -39,5 +40,6 @@ export {
   VolumeHighIcon,
   VolumeOffIcon,
   CancelIcon,
-  TooltipIcon
+  TooltipIcon,
+  EditIcon
 };
