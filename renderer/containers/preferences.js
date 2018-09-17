@@ -1,5 +1,6 @@
 import electron from 'electron';
 import {Container} from 'unstated';
+import delay from 'delay';
 
 export default class PreferencesContainer extends Container {
   remote = electron.remote || false;
@@ -72,7 +73,8 @@ export default class PreferencesContainer extends Container {
     const {pluginsInstalled, pluginsFromNpm} = this.state;
     const plugin = pluginsInstalled.find(p => p.name === name);
 
-    const onTransitionEnd = () => {
+    const onTransitionEnd = async () => {
+      await delay(500);
       this.setState({
         pluginsInstalled: pluginsInstalled.filter(p => p.name !== name),
         pluginsFromNpm: [plugin, ...pluginsFromNpm].sort((a, b) => a.prettyName.localeCompare(b.prettyName)),
