@@ -102,7 +102,10 @@ export default class PreferencesContainer extends Container {
         'createDirectory'
       ]
     });
-    this.toggleSetting('kapturesDir', directories[0]);
+
+    if (directories) {
+      this.toggleSetting('kapturesDir', directories[0]);
+    }
   }
 
   setAudioInputDeviceId = id => {
