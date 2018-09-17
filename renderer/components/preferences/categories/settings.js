@@ -1,5 +1,7 @@
+import electron from 'electron';
 import React from 'react';
 import PropTypes from 'prop-types';
+import tildify from 'tildify';
 
 import {connect, PreferencesContainer} from '../../../containers';
 
@@ -12,7 +14,12 @@ import Category from './category';
 
 class Settings extends React.Component {
   static defaultProps = {
-    audioDevices: []
+    audioDevices: [],
+    kapturesDir: ''
+  }
+
+  openKapturesDir = () => {
+    electron.shell.openItem(this.props.kapturesDir);
   }
 
   render() {
@@ -40,6 +47,8 @@ class Settings extends React.Component {
       label: device.name,
       value: device.id
     }));
+
+    const kapturesDirPath = tildify(kapturesDir);
 
     const fpsOptions = [{label: '30 FPS', value: false}, {label: '60 FPS', value: true}];
 
@@ -124,7 +133,7 @@ class Settings extends React.Component {
         <Item title="Start automatically" subtitle="Launch Kap on system startup">
           <Switch checked={openOnStartup} onClick={setOpenOnStartup}/>
         </Item>
-        <Item title="Save to…" subtitle={kapturesDir} tooltip={kapturesDir}>
+        <Item title="Save to…" subtitle={kapturesDirPath} tooltip={kapturesDir} onSubtitleClick={this.openKapturesDir}>
           <Button title="Choose" onClick={pickKapturesDir}/>
         </Item>
       </Category>
