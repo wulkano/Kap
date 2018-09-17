@@ -96,7 +96,7 @@ class ExportList {
   }
 
   async addExport(options) {
-    options.exportOptions.loop = settings.get('loopKaptures');
+    options.exportOptions.loop = settings.get('loopRecordings');
     const newExport = new Export(options);
     const createdAt = (new Date()).toISOString();
 
