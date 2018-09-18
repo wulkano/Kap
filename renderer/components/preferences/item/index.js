@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 class Item extends React.Component {
   render() {
-    const {title, experimental, tooltip, children, id} = this.props;
+    const {title, experimental, tooltip, children, id, onSubtitleClick} = this.props;
 
     let subtitle = this.props.subtitle || [];
 
@@ -13,12 +13,13 @@ class Item extends React.Component {
     }
 
     const className = classNames({experimental});
+    const subtitleClassName = classNames('subtitle', {link: Boolean(onSubtitleClick)});
 
     return (
       <div className="item" id={id}>
         <div className="content">
           <div className={className}>{title}</div>
-          <div className="subtitle" title={tooltip}>
+          <div className={subtitleClassName} title={tooltip} onClick={onSubtitleClick}>
             { subtitle.map(s => <div key={s}>{s}</div>) }
           </div>
         </div>
@@ -52,6 +53,11 @@ class Item extends React.Component {
           .experimental {
             display: flex;
             align-items: center;
+          }
+
+          .link {
+            color: #007aff;
+            cursor: pointer;
           }
 
           .experimental:after {
@@ -90,7 +96,8 @@ Item.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
-  ])
+  ]),
+  onSubtitleClick: PropTypes.func
 };
 
 export default Item;

@@ -18,7 +18,7 @@ export default class PreferencesContainer extends Container {
 
     this.setState({
       ...this.settings.store,
-      category: 'general',
+      category: 'settings',
       tab: 'discover',
       openOnStartup: this.remote.app.getLoginItemSettings().openAtLogin,
       pluginsInstalled,
@@ -119,7 +119,10 @@ export default class PreferencesContainer extends Container {
         'createDirectory'
       ]
     });
-    this.toggleSetting('kapturesDir', directories[0]);
+
+    if (directories) {
+      this.toggleSetting('kapturesDir', directories[0]);
+    }
   }
 
   setAudioInputDeviceId = id => {

@@ -2,15 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {connect, PreferencesContainer} from '../../containers';
-import {SettingsIcon, TuneIcon, PluginsIcon} from '../../vectors';
+import {SettingsIcon, PluginsIcon} from '../../vectors';
 
 const CATEGORIES = [
   {
-    name: 'general',
+    name: 'settings',
     icon: SettingsIcon
-  }, {
-    name: 'advanced',
-    icon: TuneIcon
   }, {
     name: 'plugins',
     icon: PluginsIcon
@@ -19,7 +16,7 @@ const CATEGORIES = [
 
 class PreferencesNavigation extends React.Component {
   static defaultProps = {
-    category: 'general'
+    category: 'settings'
   }
 
   render() {
