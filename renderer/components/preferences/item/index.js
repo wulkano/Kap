@@ -3,34 +3,55 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 class Item extends React.Component {
+  static defaultProps = {
+    subtitle: [],
+    errors: []
+  }
+
   render() {
-    const {title, experimental, tooltip, children, id} = this.props;
+    const {
+      title,
+      subtitle,
+      experimental,
+      tooltip,
+      children,
+      id,
+      vertical,
+      errors
+    } = this.props;
 
-    let subtitle = this.props.subtitle || [];
-
-    if (!Array.isArray(subtitle)) {
-      subtitle = [subtitle];
-    }
+    const subtitleArray = Array.isArray(subtitle) ? subtitle : [subtitle];
 
     const className = classNames({experimental});
 
     return (
-      <div className="item" id={id}>
-        <div className="content">
-          <div className={className}>{title}</div>
-          <div className="subtitle" title={tooltip}>
-            { subtitle.map(s => <div key={s}>{s}</div>) }
+      <div className="container" id={id}>
+        <div className="item">
+          <div className="content">
+            <div className={className}>{title}</div>
+            <div className="subtitle" title={tooltip}>
+              { subtitleArray.map(s => <div key={s}>{s}</div>) }
+            </div>
+          </div>
+          <div className="input">
+            {children}
           </div>
         </div>
-        <div className="input">
-          {children}
+        <div className="errors">
+          { errors.map(e => <div key={e}>{e}</div>) }
         </div>
         <style jsx>{`
-          .item {
+          .container {
             display: flex;
             max-width: 100%;
             padding: 16px;
             border-bottom: 1px solid #f1f1f1;
+            flex-direction: column;
+          }
+
+          .item {
+            display: flex;
+            flex-direction: ${vertical ? 'column' : 'row'};
           }
 
           .content {
@@ -52,6 +73,13 @@ class Item extends React.Component {
           .experimental {
             display: flex;
             align-items: center;
+          }
+
+          .errors {
+            padding-top: 8px;
+            color: red;
+            font-size: 1.2rem;
+            line-height: 1.2rem;
           }
 
           .experimental:after {
@@ -90,7 +118,9 @@ Item.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
-  ])
+  ]),
+  vertical: PropTypes.bool,
+  errors: PropTypes.arrayOf(PropTypes.string)
 };
 
 export default Item;

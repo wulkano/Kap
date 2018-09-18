@@ -11,6 +11,7 @@ export default class PreferencesContainer extends Container {
     this.plugins = this.remote.require('./common/plugins');
 
     const pluginsInstalled = this.plugins.getInstalled().sort((a, b) => a.prettyName.localeCompare(b.prettyName));
+    console.log(pluginsInstalled);
 
     const {getAudioDevices} = this.remote.require('./common/aperture');
     const {audioInputDeviceId} = this.settings.store;

@@ -1,29 +1,109 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import {connect, ConfigContainer} from '../../containers';
-
-import Item from '../preferences/item';
-import Button from '../preferences/item/button';
+import Tab from './tab';
 
 class Config extends React.Component {
   render() {
-    const {validators, values} = this.props;
-    if (!validators) return null;
-    const [validator] = validators;
-    const { config } = validator;
+    const {validators, values, onChange, selectedTab, selectTab} = this.props;
+
+    if (!validators) {
+      return null;
+    }
+
+    if (validators.length === 1) {
+      const [validator] = validators;
+      return <Tab validator={validator} values={values} onChange={onChange}/>;
+    }
 
     return (
       <div className="container">
-        {
-          [...Object.keys(config)].map(property => {
-            return (
-              <Item title={property} subtitle={values[property]}>
-                <Button title="Choose"/>
-              </Item>
-            );
-          })
-        }
+        <nav className="service-nav">
+          {
+            validators.map((validator, index) => {
+              return (
+                <div
+                  key={validator.title}
+                  className={selectedTab === index ? 'selected' : ''}
+                  onClick={() => selectTab(index)}
+                >
+                  {validator.title}
+                </div>
+              );
+            })
+          }
+        </nav>
+        <div className="tab-container">
+          <div className="switcher"/>
+          {
+            validators.map(validator => {
+              return (
+                <div key={validator.title} className="tab">
+                  <Tab validator={validator} values={values} onChange={onChange}/>
+                </div>
+              );
+            })
+          }
+        </div>
         <style jsx>{`
+          .container {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+          }
+
+          .service-nav {
+            height: 3.6rem;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 0 0 #ddd, inset 0 1px 0 0 #fff;
+            z-index: 10;
+            max-width: 100%;
+            overflow-x: auto;
+          }
+
+          .service-nav div {
+            margin-right: 16px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-bottom: 2px;
+            font-size: 1.2rem;
+            color: #007AFF;
+            font-weight: 500;
+            width: 64px;
+          }
+
+          .service-nav div:last-child {
+            margin-right: 0;
+          }
+
+          .service-nav .selected {
+            border-bottom: 2px solid #007AFF;
+            padding-bottom: 0;
+          }
+
+          .tab-container {
+            flex: 1;
+            display: flex;
+            overflow-x: hidden;
+          }
+
+          .tab {
+            overflow-y: auto;
+            width: 100%;
+            height: 100%;
+            flex-shrink: 0;
+          }
+
+          .switcher {
+            margin-left: ${-selectedTab * 100}%;
+            transition: margin 0.3s ease-in-out;
+          }
         `}</style>
       </div>
     );
@@ -31,10 +111,15 @@ class Config extends React.Component {
 }
 
 Config.propTypes = {
-
+  validators: PropTypes.arrayOf(PropTypes.func),
+  values: PropTypes.object,
+  onChange: PropTypes.func.isRequired,
+  selectedTab: PropTypes.number,
+  selectTab: PropTypes.func.isRequired
 };
 
 export default connect(
   [ConfigContainer],
-  ({validators, values}) => ({validators, values})
+  ({validators, values, selectedTab}) => ({validators, values, selectedTab}),
+  ({onChange, selectTab}) => ({onChange, selectTab})
 )(Config);

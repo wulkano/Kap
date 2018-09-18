@@ -17,16 +17,10 @@ class Plugin {
       this.plugin = require(path.join(cwd, 'node_modules', pluginName));
     }
 
-    const ajv = new Ajv({
-      format: 'full',
-      useDefaults: true,
-      errorDataPath: 'property'
-    });
-
     this.defaults = {};
 
     this.validators = this.plugin.shareServices.filter(({config}) => Boolean(config)).map(service => {
-      const schemaProps = service.config;
+      const schemaProps = JSON.parse(JSON.stringify(service.config));
       const requiredKeys = [];
       for (const key of Object.keys(schemaProps)) {
         if (!schemaProps[key].title) {
@@ -45,6 +39,13 @@ class Plugin {
         required: requiredKeys
       };
 
+      const ajv = new Ajv({
+        format: 'full',
+        useDefaults: true,
+        errorDataPath: 'property',
+        allErrors: true
+      });
+
       const validator = ajv.compile(schema);
       validator(this.defaults);
       validator.title = service.title;
@@ -52,6 +53,11 @@ class Plugin {
 
       return validator;
     });
+  }
+
+  isConfigValid() {
+    const config = this.getConfig();
+    return this.validators.reduce((isValid, validator) => isValid && validator(config), true);
   }
 
   getSerivce(serviceTitle) {

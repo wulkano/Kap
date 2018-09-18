@@ -5,6 +5,7 @@ const got = require('got');
 const execa = require('execa');
 const makeDir = require('make-dir');
 
+const Plugin = require('../plugin');
 const {openConfigWindow} = require('../config');
 const {notify} = require('./notifications');
 const {track} = require('./analytics');
@@ -94,8 +95,10 @@ class Plugins {
     return this._pluginNames().map(name => {
       const pluginPath = this._pluginPath(name, 'package.json');
       const json = JSON.parse(fs.readFileSync(pluginPath, 'utf8'));
+      const plugin = new Plugin(name);
       this._addPrettyName(json);
       json.hasConfig = this.getServices(name).some(({config}) => Boolean(config));
+      json.isValid = plugin.isConfigValid();
       return json;
     });
   }
@@ -120,7 +123,7 @@ class Plugins {
   }
 
   openPluginConfig(name) {
-    openConfigWindow(name, this.getServices(name).map(({config, title}) => ({config, title})));
+    openConfigWindow(name);
   }
 }
 

@@ -7,7 +7,7 @@ const loadRoute = require('./utils/routes');
 
 const configWindows = new Map();
 
-const openConfigWindow = async (pluginName, services) => {
+const openConfigWindow = async pluginName => {
   if (configWindows.has(pluginName)) {
     configWindows.get(pluginName).focus();
   } else {
@@ -28,7 +28,7 @@ const openConfigWindow = async (pluginName, services) => {
     });
 
     configWindow.webContents.on('did-finish-load', async () => {
-      ipc.callRenderer(configWindow, 'plugin', {pluginName, services});
+      ipc.callRenderer(configWindow, 'plugin', pluginName);
       configWindow.show();
     });
   }

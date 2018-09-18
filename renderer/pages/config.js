@@ -8,25 +8,25 @@ import WindowHeader from '../components/window-header';
 const configContainer = new ConfigContainer();
 
 export default class ConfigPage extends React.Component {
-  state = {}
+  state = {pluginName: ''}
 
   componentDidMount() {
     const ipc = require('electron-better-ipc');
 
-    ipc.answerMain('plugin', ({pluginName, services}) => {
-      configContainer.setPlugin(pluginName, services);
-      this.setState({pluginName});
+    ipc.answerMain('plugin', pluginName => {
+      configContainer.setPlugin(pluginName);
+      this.setState({pluginName: pluginName.replace(/^kap-/, '')});
     });
   }
 
   render() {
-    const {pluginName = ''} = this.state;
+    const {pluginName} = this.state;
 
     return (
       <div className="root">
         <div className="cover-window">
           <Provider inject={[configContainer]}>
-            <WindowHeader title={pluginName.replace(/^kap-/, '')}/>
+            <WindowHeader title={pluginName}/>
             <Config/>
           </Provider>
         </div>
