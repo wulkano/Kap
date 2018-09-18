@@ -89,7 +89,7 @@ class Settings extends React.Component {
           <Switch checked={doNotDisturb} onClick={() => toggleSetting('doNotDisturb')}/>
         </Item>
         <Item
-          title="Loop Exports"
+          title="Loop exports"
           subtitle="Infinitely loop exports when supported"
         >
           <Switch checked={loopExports} onClick={() => toggleSetting('loopExports')}/>
