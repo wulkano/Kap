@@ -1,7 +1,6 @@
 import electron from 'electron';
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 
 import {connect, PreferencesContainer} from '../../../containers';
 
@@ -30,10 +29,9 @@ class Categories extends React.Component {
     const {category} = this.props;
 
     const index = CATEGORIES.findIndex(({name}) => name === category);
-    const className = classNames('categories-container');
 
     return (
-      <div className={className}>
+      <div className="categories-container">
         <div className="switcher"/>
         {
           CATEGORIES.map(
@@ -51,7 +49,7 @@ class Categories extends React.Component {
 
             .switcher {
               margin-left: -${index * 100}%;
-              transition: margin 0.3s ease;
+              transition: margin 0.3s ease-in-out;
             }
         `}</style>
       </div>

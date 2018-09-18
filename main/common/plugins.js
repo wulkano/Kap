@@ -79,9 +79,10 @@ class Plugins {
     this._modifyMainPackageJson(pkg => {
       delete pkg.dependencies[name];
     });
+  }
 
-    // Intentionally not awaited as it can just finish in the background
-    this._runNpm('prune');
+  async prune() {
+    await this._runNpm('prune');
   }
 
   getInstalled() {
