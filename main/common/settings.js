@@ -13,7 +13,7 @@ const store = new Store({
     highlightClicks: false,
     hideDesktopIcons: false,
     record60fps: false,
-    loopRecordings: true,
+    loopExports: true,
     recordKeyboardShortcut: true,
     doNotDisturb: false,
     recordAudio: false,

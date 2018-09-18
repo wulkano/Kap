@@ -33,7 +33,7 @@ class Settings extends React.Component {
       doNotDisturb,
       record60fps,
       recordKeyboardShortcut,
-      loopRecordings,
+      loopExports,
       toggleSetting,
       audioInputDeviceId,
       setAudioInputDeviceId,
@@ -89,10 +89,10 @@ class Settings extends React.Component {
           <Switch checked={doNotDisturb} onClick={() => toggleSetting('doNotDisturb')}/>
         </Item>
         <Item
-          title="Loop Recordings"
+          title="Loop Exports"
           subtitle="Infinitely loop exports when supported"
         >
-          <Switch checked={loopRecordings} onClick={() => toggleSetting('loopRecordings')}/>
+          <Switch checked={loopExports} onClick={() => toggleSetting('loopExports')}/>
         </Item>
         <Item
           title="Audio recording"
@@ -156,7 +156,7 @@ Settings.propTypes = {
   kapturesDir: PropTypes.string,
   openOnStartup: PropTypes.bool,
   allowAnalytics: PropTypes.bool,
-  loopRecordings: PropTypes.bool,
+  loopExports: PropTypes.bool,
   pickKapturesDir: PropTypes.func.isRequired,
   setOpenOnStartup: PropTypes.func.isRequired
 };
@@ -176,7 +176,7 @@ export default connect(
     kapturesDir,
     openOnStartup,
     allowAnalytics,
-    loopRecordings
+    loopExports
   }) => ({
     showCursor,
     highlightClicks,
@@ -190,7 +190,7 @@ export default connect(
     kapturesDir,
     openOnStartup,
     allowAnalytics,
-    loopRecordings
+    loopExports
   }),
   ({
     toggleSetting,
