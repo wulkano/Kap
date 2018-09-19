@@ -111,6 +111,9 @@ class Plugins {
       return {hasConfig, isValid};
     } catch (error) {
       notify(`Something went wrong while installing ${prettyName}`);
+      this._modifyMainPackageJson(pkg => {
+        delete pkg.dependencies[name];
+      });
       console.log(error);
     }
   }
