@@ -7,13 +7,13 @@ const {track} = require('./common/analytics');
 
 let prefsWindow = null;
 
-const openPrefsWindow = () => new Promise(resolve => {
+const openPrefsWindow = () => {
   track('preferences/opened');
   closeAllCroppers();
 
   if (prefsWindow) {
     prefsWindow.show();
-    resolve(prefsWindow);
+    return prefsWindow;
   }
 
   prefsWindow = new BrowserWindow({
@@ -32,11 +32,13 @@ const openPrefsWindow = () => new Promise(resolve => {
 
   loadRoute(prefsWindow, 'preferences');
 
-  ipcMain.once('preferences-ready', () => {
-    prefsWindow.show();
-    resolve(prefsWindow);
+  return new Promise(resolve => {
+    ipcMain.once('preferences-ready', () => {
+      prefsWindow.show();
+      resolve(prefsWindow);
+    });
   });
-});
+};
 
 module.exports = {
   openPrefsWindow
