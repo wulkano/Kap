@@ -64,12 +64,12 @@ class ExportList {
       return;
     }
 
-    this.currentExport.run()
-      .then(() => {
+    (async () => {
+      try {
+        await this.currentExport.run();
         delete this.currentExport;
         this._startNext();
-      })
-      .catch(err => {
+      } catch (err) {
         console.log(err);
         this.currentExport.updateExport({
           status: 'failed',
@@ -77,7 +77,8 @@ class ExportList {
         });
         delete this.currentExport;
         this._startNext();
-      });
+      }
+    })();
   }
 
   async cancelExport(createdAt) {

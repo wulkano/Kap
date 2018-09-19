@@ -33,12 +33,14 @@ const getWindowList = async () => {
     const iconImage = images.find(img => img.pid === win.pid);
     const icon = iconImage.icon ? nativeImage.createFromBuffer(iconImage.icon) : null;
 
-    const window = Object.assign({}, win, {
+    const window = {
+      ...win,
       icon2x: icon,
       icon: icon ? icon.resize({width: 16, height: 16}) : null,
       count: 0,
-      lastUsed: 0
-    }, usageHistory[win.pid]);
+      lastUsed: 0,
+      ...usageHistory[win.pid]
+    };
 
     maxLastUsed = Math.max(maxLastUsed, window.lastUsed);
     return window;

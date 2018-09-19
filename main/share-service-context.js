@@ -43,7 +43,7 @@ class ShareServiceContext {
       return;
     }
 
-    const request = got(url, Object.assign({}, options, {useElectronNet: false}));
+    const request = got(url, options);
 
     this.requests.push(request);
 

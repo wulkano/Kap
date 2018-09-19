@@ -165,7 +165,7 @@ const convertTo = (opts, format) => {
   opts.onProgress(0);
   track(`file/exported/format/${format}`);
 
-  return converter(Object.assign({outputPath}, opts));
+  return converter({outputPath, ...opts});
 };
 
 module.exports = {

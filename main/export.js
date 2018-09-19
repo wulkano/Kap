@@ -62,7 +62,7 @@ class Export {
           });
         }
         resolve();
-      } catch (error) {
+      } catch (_) {
         reject();
       }
     });
