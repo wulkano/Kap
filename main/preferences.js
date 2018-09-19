@@ -12,7 +12,8 @@ const openPrefsWindow = () => {
   closeAllCroppers();
 
   if (prefsWindow) {
-    return prefsWindow.show();
+    prefsWindow.show();
+    return prefsWindow;
   }
 
   prefsWindow = new BrowserWindow({
@@ -34,6 +35,8 @@ const openPrefsWindow = () => {
   ipcMain.once('preferences-ready', () => {
     prefsWindow.show();
   });
+
+  return prefsWindow;
 };
 
 module.exports = {

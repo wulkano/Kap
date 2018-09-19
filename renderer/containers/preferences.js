@@ -80,6 +80,7 @@ export default class PreferencesContainer extends Container {
 
     const onTransitionEnd = async () => {
       await delay(500);
+      plugin.hasConfig = false;
       this.setState({
         pluginsInstalled: pluginsInstalled.filter(p => p.name !== name),
         pluginsFromNpm: [plugin, ...pluginsFromNpm].sort((a, b) => a.prettyName.localeCompare(b.prettyName)),

@@ -2,9 +2,12 @@
 
 const electron = require('electron');
 const path = require('path');
+const fs = require('fs');
 const Store = require('electron-store');
 const Ajv = require('ajv');
 const saveFilePlugin = require('./save-file-service');
+
+const {app, shell} = electron;
 
 class Plugin {
   constructor(pluginName) {
@@ -13,8 +16,11 @@ class Plugin {
     if (pluginName === 'default') {
       this.plugin = saveFilePlugin;
     } else {
-      const cwd = path.join(electron.app.getPath('userData'), 'plugins');
-      this.plugin = require(path.join(cwd, 'node_modules', pluginName));
+      const cwd = path.join(app.getPath('userData'), 'plugins');
+      const pluginPath = path.join(cwd, 'node_modules', pluginName);
+      this.plugin = require(pluginPath);
+      const {homepage, links} = JSON.parse(fs.readFileSync(path.join(pluginPath, 'package.json'), 'utf8'));
+      this.link = homepage || (links && links.homepage);
     }
 
     this.defaults = {};
@@ -53,23 +59,28 @@ class Plugin {
 
       return validator;
     });
+
+    this.config = new Store({
+      name: this.pluginName,
+      cwd: 'plugins',
+      defaults: this.defaults
+    });
   }
 
   isConfigValid() {
-    const config = this.getConfig();
-    return this.validators.reduce((isValid, validator) => isValid && validator(config), true);
+    return this.validators.reduce((isValid, validator) => isValid && validator(this.config.store), true);
   }
 
   getSerivce(serviceTitle) {
     return this.plugin.shareServices.find(shareService => shareService.title === serviceTitle);
   }
 
-  getConfig() {
-    return new Store({
-      name: this.pluginName,
-      cwd: 'plugins',
-      defaults: this.defaults
-    });
+  openConfig() {
+    this.config.openInEditor();
+  }
+
+  viewOnGithub() {
+    shell.openExternal(this.link);
   }
 }
 

@@ -6,46 +6,64 @@ import Tab from './tab';
 
 class Config extends React.Component {
   render() {
-    const {validators, values, onChange, selectedTab, selectTab} = this.props;
+    const {
+      validators,
+      values,
+      onChange,
+      selectedTab,
+      selectTab,
+      closeWindow,
+      openConfig,
+      viewOnGithub
+    } = this.props;
 
     if (!validators) {
       return null;
     }
 
-    if (validators.length === 1) {
-      const [validator] = validators;
-      return <Tab validator={validator} values={values} onChange={onChange}/>;
-    }
-
     return (
       <div className="container">
-        <nav className="service-nav">
-          {
-            validators.map((validator, index) => {
-              return (
-                <div
-                  key={validator.title}
-                  className={selectedTab === index ? 'selected' : ''}
-                  onClick={() => selectTab(index)}
-                >
-                  {validator.title}
-                </div>
-              );
-            })
-          }
-        </nav>
+        {
+          validators.length > 1 && (
+            <nav className="service-nav">
+              {
+                validators.map((validator, index) => {
+                  return (
+                    <div
+                      key={validator.title}
+                      className={selectedTab === index ? 'selected' : ''}
+                      onClick={() => selectTab(index)}
+                    >
+                      {validator.title}
+                    </div>
+                  );
+                })
+              }
+            </nav>
+          )
+        }
         <div className="tab-container">
           <div className="switcher"/>
           {
             validators.map(validator => {
               return (
                 <div key={validator.title} className="tab">
-                  <Tab validator={validator} values={values} onChange={onChange}/>
+                  <Tab
+                    validator={validator}
+                    values={values}
+                    openConfig={openConfig}
+                    viewOnGithub={viewOnGithub}
+                    onChange={onChange}
+                  />
                 </div>
               );
             })
           }
         </div>
+        <footer>
+          <div className="fade"/>
+          <div className="button" onClick={closeWindow}>Done</div>
+        </footer>
         <style jsx>{`
           .container {
             height: 100%;
@@ -104,6 +122,34 @@ class Config extends React.Component {
             margin-left: ${-selectedTab * 100}%;
             transition: margin 0.3s ease-in-out;
           }
+
+          footer {
+            width: 100%;
+            display: flex;
+            position: relative;
+          }
+
+          footer .fade {
+            position: absolute;
+            background: linear-gradient(-180deg, rgba(255,255,255,0) 0%, #fff 100%);
+            width: 100%;
+            height: 16px;
+            top: 0;
+            transform: translateY(-100%);
+          }
+
+          footer .button {
+            height: 32px;
+            line-height: 16px;
+            margin: 0 16px 16px 16px;
+            background: #007aff;
+            border-radius: 3px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+          }
         `}</style>
       </div>
     );
@@ -115,11 +161,14 @@ Config.propTypes = {
   values: PropTypes.object,
   onChange: PropTypes.func.isRequired,
   selectedTab: PropTypes.number,
-  selectTab: PropTypes.func.isRequired
+  selectTab: PropTypes.func.isRequired,
+  closeWindow: PropTypes.func.isRequired,
+  openConfig: PropTypes.func.isRequired,
+  viewOnGithub: PropTypes.func.isRequired
 };
 
 export default connect(
   [ConfigContainer],
   ({validators, values, selectedTab}) => ({validators, values, selectedTab}),
-  ({onChange, selectTab}) => ({onChange, selectTab})
+  ({onChange, selectTab, closeWindow, openConfig, viewOnGithub}) => ({onChange, selectTab, closeWindow, openConfig, viewOnGithub})
 )(Config);

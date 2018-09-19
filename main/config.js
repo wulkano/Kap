@@ -4,6 +4,7 @@ const {BrowserWindow} = require('electron');
 const ipc = require('electron-better-ipc');
 
 const loadRoute = require('./utils/routes');
+const {openPrefsWindow} = require('./preferences');
 
 const configWindows = new Map();
 
@@ -11,14 +12,17 @@ const openConfigWindow = async pluginName => {
   if (configWindows.has(pluginName)) {
     configWindows.get(pluginName).focus();
   } else {
+    const prefsWindow = openPrefsWindow();
     const configWindow = new BrowserWindow({
       width: 320,
-      height: 360,
+      height: 436,
       resizable: false,
       minimizable: false,
       maximizable: false,
       titleBarStyle: 'hiddenInset',
-      show: false
+      show: false,
+      parent: prefsWindow,
+      modal: true
     });
 
     loadRoute(configWindow, 'config');

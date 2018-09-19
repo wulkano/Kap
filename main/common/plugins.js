@@ -83,7 +83,7 @@ class Plugins {
         body: `"${prettyName}" is ready for use`
       } : {
         title: 'Configure plugin',
-        body: `"${prettyName}" requires configuration plz`,
+        body: `"${prettyName}" requires configuration`,
         actions: [
           {type: 'button', text: 'Configure'},
           {type: 'button', text: 'Close'}

@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 import Item from '../preferences/item';
 import Select from '../preferences/item/select';
 import Switch from '../preferences/item/switch';
+import {OpenInBrowserIcon, OpenFolderIcon} from '../../vectors';
 
-const ConfigInput = ({name, type, schema, value, onChange}) => {
+const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
   if (type === 'string') {
     return (
       <div>
@@ -14,14 +15,15 @@ const ConfigInput = ({name, type, schema, value, onChange}) => {
           input {
             outline: none;
             width: 100%;
-            border: 1px solid #ddd;
+            border: 1px solid ${hasErrors ? 'rgba(255,59,48,0.20)' : '#ddd'};
             border-radius: 3px;
             box-sizing: border-box;
-            height: 24px;
+            height: 32px;
             padding: 4px 8px;
-            line-height: 16px;
+            line-height: 32px;
             font-size: 12px;
-            margin: 16px 0;
+            margin-top: 16px;
+            ${hasErrors ? 'background: rgba(255,59,48,0.10);' : ''}
           }
 
           div {
@@ -48,12 +50,13 @@ ConfigInput.propTypes = {
     PropTypes.string,
     PropTypes.bool
   ]),
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
+  hasErrors: PropTypes.bool
 };
 
 class Tab extends React.Component {
   render() {
-    const {validator, values, onChange} = this.props;
+    const {validator, values, onChange, openConfig, viewOnGithub} = this.props;
 
     const {config, errors} = validator;
     const allErrors = errors || [];
@@ -77,6 +80,7 @@ class Tab extends React.Component {
                 errors={errors}
               >
                 <ConfigInput
+                  hasErrors={errors.length > 0}
                   name={key}
                   type={type}
                   schema={schema}
@@ -87,6 +91,12 @@ class Tab extends React.Component {
             );
           })
         }
+        <Item subtitle="Open file" onClick={openConfig}>
+          <OpenFolderIcon fill="#007aff" hoverFill="#007aff" onClick={openConfig}/>
+        </Item>
+        <Item subtitle="View on GitHub" onClick={viewOnGithub}>
+          <OpenInBrowserIcon fill="#007aff" hoverFill="#007aff" onClick={viewOnGithub}/>
+        </Item>
         <style jsx>{`
           .container {
             width: 100%;
@@ -102,7 +112,9 @@ class Tab extends React.Component {
 Tab.propTypes = {
   validator: PropTypes.func,
   values: PropTypes.object,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
+  openConfig: PropTypes.func.isRequired,
+  viewOnGithub: PropTypes.func.isRequired
 };
 
 export default Tab;

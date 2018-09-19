@@ -9,7 +9,7 @@ export default class ConfigContainer extends Container {
   setPlugin(pluginName) {
     const Plugin = this.remote.require('./plugin');
     this.plugin = new Plugin(pluginName);
-    this.config = this.plugin.getConfig();
+    this.config = this.plugin.config;
     this.validators = this.plugin.validators;
     this.validate();
     this.setState({
@@ -24,6 +24,12 @@ export default class ConfigContainer extends Container {
       validator(this.config.store);
     }
   }
+
+  closeWindow = () => this.remote.getCurrentWindow().close();
+
+  openConfig = () => this.plugin.openConfig();
+
+  viewOnGithub = () => this.plugin.viewOnGithub();
 
   onChange = (key, value) => {
     if (value === undefined) {

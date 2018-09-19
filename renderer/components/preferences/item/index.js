@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
+import {ErrorIcon} from '../../../vectors';
+
 class Item extends React.Component {
   static defaultProps = {
     subtitle: [],
@@ -18,17 +20,22 @@ class Item extends React.Component {
       id,
       vertical,
       errors,
-      onSubtitleClick
+      onSubtitleClick,
+      needsConfig,
+      onClick
     } = this.props;
 
     const subtitleArray = Array.isArray(subtitle) ? subtitle : [subtitle];
 
-    const className = classNames({experimental});
+    const className = classNames('title', {experimental});
     const subtitleClassName = classNames('subtitle', {link: Boolean(onSubtitleClick)});
 
     return (
-      <div className="container">
+      <div className="container" onClick={onClick}>
         <div className="item" id={id}>
+          {
+            needsConfig && <div className="invalid"><ErrorIcon fill="#ff6059" hoverFill="#ff6059"/></div>
+          }
           <div className="content">
             <div className={className}>{title}</div>
             <div className={subtitleClassName} title={tooltip} onClick={onSubtitleClick}>
@@ -39,14 +46,14 @@ class Item extends React.Component {
             {children}
           </div>
         </div>
-        <div className="errors">
-          { errors.map(e => <div key={e}>{e}</div>) }
-        </div>
+        {
+          errors && errors.length > 0 && <div className="errors">{ errors.map(e => <div key={e}>{e}</div>) }</div>
+        }
         <style jsx>{`
           .container {
             display: flex;
             max-width: 100%;
-            padding: 16px;
+            padding: ${onClick ? '16px' : '32px'} 16px;
             border-bottom: 1px solid #f1f1f1;
             flex-direction: column;
           }
@@ -56,14 +63,31 @@ class Item extends React.Component {
             flex-direction: ${vertical ? 'column' : 'row'};
           }
 
+          .invalid {
+            height: 36px;
+            padding-right: 16px;
+            margin-right: 16px;
+            border-right: 1px solid #f1f1f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            align-self: center;
+          }
+
+          .title {
+            font-size: 1.2rem;
+            line-height: 1.6rem;
+          }
+
           .content {
             flex: 1;
             display: flex;
             flex-direction: column;
+            justify-content: center;
           }
 
           .subtitle {
-            color: gray;
+            color: ${onClick ? '#007aff' : '#000'};
             font-size: 1.2rem;
           }
 
@@ -79,7 +103,7 @@ class Item extends React.Component {
 
           .errors {
             padding-top: 8px;
-            color: red;
+            color: #ff6059;
             font-size: 1.2rem;
             line-height: 1.2rem;
           }
@@ -128,7 +152,9 @@ Item.propTypes = {
   ]),
   vertical: PropTypes.bool,
   errors: PropTypes.arrayOf(PropTypes.string),
-  onSubtitleClick: PropTypes.func
+  onSubtitleClick: PropTypes.func,
+  needsConfig: PropTypes.bool,
+  onClick: PropTypes.func
 };
 
 export default Item;
