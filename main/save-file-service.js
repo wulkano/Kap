@@ -11,8 +11,7 @@ const action = async context => {
     return;
   }
 
-  // TODO: Switch to the async version when we target Electron 1.8
-  moveFile.sync(tempFilePath, context.targetFilePath);
+  await moveFile(tempFilePath, context.targetFilePath);
 
   const notification = new Notification({
     title: 'File saved successfully!',

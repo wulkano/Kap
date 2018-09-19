@@ -34,7 +34,9 @@ const initializePlugins = async () => {
 };
 
 // Prepare the renderer once the app is ready
-app.on('ready', async () => {
+(async () => {
+  await app.whenReady();
+
   app.dock.hide();
 
   // Ensure all plugins are up to date
@@ -51,6 +53,6 @@ app.on('ready', async () => {
     track('editor/opened/startup');
     openEditorWindow(file);
   }
-});
+})();
 
 app.on('window-all-closed', event => event.preventDefault());
