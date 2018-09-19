@@ -19,6 +19,7 @@ import VolumeOffIcon from './volume-off';
 import CancelIcon from './cancel';
 import TooltipIcon from './tooltip';
 import EditIcon from './edit';
+import ErrorIcon from './error';
 
 export {
   ApplicationsIcon,
@@ -41,5 +42,6 @@ export {
   VolumeOffIcon,
   CancelIcon,
   TooltipIcon,
-  EditIcon
+  EditIcon,
+  ErrorIcon
 };
