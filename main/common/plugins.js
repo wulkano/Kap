@@ -84,10 +84,7 @@ class Plugins {
       } : {
         title: 'Configure plugin',
         body: `"${prettyName}" requires configuration`,
-        actions: [
-          {type: 'button', text: 'Later'},
-          {type: 'button', text: 'Configure'}
-        ]
+        actions: [{type: 'button', text: 'Configure'}]
       };
 
       const notification = new Notification(options);
@@ -99,9 +96,9 @@ class Plugins {
 
         notification.on('action', (_, index) => {
           if (index === 0) {
-            notification.close();
-          } else {
             this.openPluginConfig(name);
+          } else {
+            notification.close();
           }
         });
       }
