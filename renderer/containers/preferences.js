@@ -57,13 +57,18 @@ export default class PreferencesContainer extends Container {
     const plugin = pluginsFromNpm.find(p => p.name === name);
 
     this.setState({pluginBeingInstalled: name});
-    await this.plugins.install(name);
+    const result = await this.plugins.install(name);
 
-    this.setState({
-      pluginBeingInstalled: null,
-      pluginsFromNpm: pluginsFromNpm.filter(p => p.name !== name),
-      pluginsInstalled: [plugin, ...pluginsInstalled].sort((a, b) => a.prettyName.localeCompare(b.prettyName))
-    });
+    if (result) {
+      const {isValid, hasConfig} = result;
+      plugin.isValid = isValid;
+      plugin.hasConfig = hasConfig;
+      this.setState({
+        pluginBeingInstalled: null,
+        pluginsFromNpm: pluginsFromNpm.filter(p => p.name !== name),
+        pluginsInstalled: [plugin, ...pluginsInstalled].sort((a, b) => a.prettyName.localeCompare(b.prettyName))
+      });
+    }
   }
 
   uninstall = name => {

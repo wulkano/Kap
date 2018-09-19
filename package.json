@@ -116,6 +116,7 @@
       "category": "public.app-category.productivity",
       "minimumSystemVersion": "10.12.0",
       "extendInfo": {
+        "NSUserNotificationAlertStyle": "alert",
         "CFBundleDocumentTypes": [
           {
             "CFBundleTypeName": "Video",

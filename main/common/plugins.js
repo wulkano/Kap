@@ -5,6 +5,8 @@ const got = require('got');
 const execa = require('execa');
 const makeDir = require('make-dir');
 
+const {app, Notification} = electron;
+
 const Plugin = require('../plugin');
 const {openConfigWindow} = require('../config');
 const {notify} = require('./notifications');
@@ -17,7 +19,7 @@ class Plugins {
   }
 
   _makePluginsDir() {
-    const cwd = path.join(electron.app.getPath('userData'), 'plugins');
+    const cwd = path.join(app.getPath('userData'), 'plugins');
     const fp = path.join(cwd, 'package.json');
 
     if (!fs.existsSync(fp)) {
@@ -44,8 +46,8 @@ class Plugins {
     });
   }
 
-  _addPrettyName(pkg) {
-    pkg.prettyName = pkg.name.replace(/^kap-/, '');
+  _getPrettyName(name) {
+    return name.replace(/^kap-/, '');
   }
 
   _pluginPath(name, subPath = '') {
@@ -62,14 +64,55 @@ class Plugins {
   }
 
   async install(name) {
+    const prettyName = this._getPrettyName(name);
     track(`plugin/installed/${name}`);
     // We manually add it to the package.json here so we're able to set the version to `latest`
     this._modifyMainPackageJson(pkg => {
       pkg.dependencies[name] = 'latest';
     });
 
-    await this._npmInstall();
-    notify(`Successfully installed plugin ${name}`);
+    try {
+      await this._npmInstall();
+
+      const plugin = new Plugin(name);
+      const isValid = plugin.isConfigValid();
+      const hasConfig = this.getServices(name).some(({config}) => Boolean(config));
+
+      const options = isValid ? {
+        title: 'Plugin installed',
+        body: `"${prettyName}" is ready for use`
+      } : {
+        title: 'Configure plugin',
+        body: `"${prettyName}" requires configuration plz`,
+        actions: [
+          {type: 'button', text: 'Configure'},
+          {type: 'button', text: 'Close'}
+        ]
+      };
+
+      const notification = new Notification(options);
+
+      if (!isValid) {
+        notification.on('click', () => {
+          this.openPluginConfig(name);
+        });
+
+        notification.on('action', (_, index) => {
+          if (index === 0) {
+            this.openPluginConfig(name);
+          } else {
+            notification.close();
+          }
+        });
+      }
+
+      notification.show();
+
+      return {hasConfig, isValid};
+    } catch (error) {
+      notify(`Something went wrong while installing ${prettyName}`);
+      console.log(error);
+    }
   }
 
   async upgrade() {
@@ -96,7 +139,7 @@ class Plugins {
       const pluginPath = this._pluginPath(name, 'package.json');
       const json = JSON.parse(fs.readFileSync(pluginPath, 'utf8'));
       const plugin = new Plugin(name);
-      this._addPrettyName(json);
+      json.prettyName = this._getPrettyName(name);
       json.hasConfig = this.getServices(name).some(({config}) => Boolean(config));
       json.isValid = plugin.isConfigValid();
       return json;
@@ -112,10 +155,7 @@ class Plugins {
       .map(x => x.package)
       .filter(x => x.name.startsWith('kap-'))
       .filter(x => !installed.includes(x.name)) // Filter out installed plugins
-      .map(x => {
-        this._addPrettyName(x);
-        return x;
-      });
+      .map(x => ({...x, prettyName: this._getPrettyName(x.name)}));
   }
 
   getPluginService(pluginName, serviceTitle) {
