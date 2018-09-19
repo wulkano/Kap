@@ -17,19 +17,21 @@ class Item extends React.Component {
       children,
       id,
       vertical,
-      errors
+      errors,
+      onSubtitleClick
     } = this.props;
 
     const subtitleArray = Array.isArray(subtitle) ? subtitle : [subtitle];
 
     const className = classNames({experimental});
+    const subtitleClassName = classNames('subtitle', {link: Boolean(onSubtitleClick)});
 
     return (
-      <div className="container" id={id}>
-        <div className="item">
+      <div className="container">
+        <div className="item" id={id}>
           <div className="content">
             <div className={className}>{title}</div>
-            <div className="subtitle" title={tooltip}>
+            <div className={subtitleClassName} title={tooltip} onClick={onSubtitleClick}>
               { subtitleArray.map(s => <div key={s}>{s}</div>) }
             </div>
           </div>
@@ -82,6 +84,11 @@ class Item extends React.Component {
             line-height: 1.2rem;
           }
 
+          .link {
+            color: #007aff;
+            cursor: pointer;
+          }
+
           .experimental:after {
             border: 1px solid #ddd;
             color: gray;
@@ -120,7 +127,8 @@ Item.propTypes = {
     PropTypes.node
   ]),
   vertical: PropTypes.bool,
-  errors: PropTypes.arrayOf(PropTypes.string)
+  errors: PropTypes.arrayOf(PropTypes.string),
+  onSubtitleClick: PropTypes.func
 };
 
 export default Item;

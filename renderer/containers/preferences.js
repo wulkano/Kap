@@ -1,5 +1,6 @@
 import electron from 'electron';
 import {Container} from 'unstated';
+import delay from 'delay';
 
 export default class PreferencesContainer extends Container {
   remote = electron.remote || false;
@@ -11,14 +12,13 @@ export default class PreferencesContainer extends Container {
     this.plugins = this.remote.require('./common/plugins');
 
     const pluginsInstalled = this.plugins.getInstalled().sort((a, b) => a.prettyName.localeCompare(b.prettyName));
-    console.log(pluginsInstalled);
 
     const {getAudioDevices} = this.remote.require('./common/aperture');
     const {audioInputDeviceId} = this.settings.store;
 
     this.setState({
       ...this.settings.store,
-      category: 'general',
+      category: 'settings',
       tab: 'discover',
       openOnStartup: this.remote.app.getLoginItemSettings().openAtLogin,
       pluginsInstalled,
@@ -44,12 +44,15 @@ export default class PreferencesContainer extends Container {
   }
 
   fetchFromNpm = async () => {
-    this.plugins.getFromNpm().then(plugins => {
+    try {
+      const plugins = await this.plugins.getFromNpm();
       this.setState({
         npmError: false,
         pluginsFromNpm: plugins.sort((a, b) => a.prettyName.localeCompare(b.prettyName))
       });
-    }).catch(() => this.setState({npmError: true}));
+    } catch (error) {
+      this.setState({npmError: true});
+    }
   }
 
   install = async name => {
@@ -75,7 +78,8 @@ export default class PreferencesContainer extends Container {
     const {pluginsInstalled, pluginsFromNpm} = this.state;
     const plugin = pluginsInstalled.find(p => p.name === name);
 
-    const onTransitionEnd = () => {
+    const onTransitionEnd = async () => {
+      await delay(500);
       this.setState({
         pluginsInstalled: pluginsInstalled.filter(p => p.name !== name),
         pluginsFromNpm: [plugin, ...pluginsFromNpm].sort((a, b) => a.prettyName.localeCompare(b.prettyName)),
@@ -122,7 +126,10 @@ export default class PreferencesContainer extends Container {
         'createDirectory'
       ]
     });
-    this.toggleSetting('kapturesDir', directories[0]);
+
+    if (directories) {
+      this.toggleSetting('kapturesDir', directories[0]);
+    }
   }
 
   setAudioInputDeviceId = id => {

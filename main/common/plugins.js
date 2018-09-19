@@ -127,7 +127,7 @@ class Plugins {
   }
 
   async prune() {
-    this._runNpm('prune');
+    await this._runNpm('prune');
   }
 
   getServices(pluginName) {

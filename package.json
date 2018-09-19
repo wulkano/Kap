@@ -60,6 +60,7 @@
     "react-draggable": "^3.0.5",
     "semver": "^5.5.0",
     "tempy": "^0.2.1",
+    "tildify": "^1.2.0",
     "tmp": "^0.0.33",
     "unstated": "^1.2.0"
   },

@@ -24,13 +24,21 @@ app.on('open-file', (event, path) => {
   }
 });
 
+const initializePlugins = async () => {
+  try {
+    await plugins.prune();
+    await plugins.upgrade();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // Prepare the renderer once the app is ready
 app.on('ready', async () => {
   app.dock.hide();
 
   // Ensure all plugins are up to date
-  plugins.prune().catch(() => {});
-  plugins.upgrade().catch(() => {});
+  initializePlugins();
 
   await prepareNext('./renderer');
 

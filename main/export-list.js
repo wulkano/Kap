@@ -96,6 +96,7 @@ class ExportList {
   }
 
   async addExport(options) {
+    options.exportOptions.loop = settings.get('loopExports');
     const newExport = new Export(options);
     const createdAt = (new Date()).toISOString();
 
