@@ -12,7 +12,7 @@ const openConfigWindow = async pluginName => {
   if (configWindows.has(pluginName)) {
     configWindows.get(pluginName).focus();
   } else {
-    const prefsWindow = openPrefsWindow();
+    const prefsWindow = await openPrefsWindow();
     const configWindow = new BrowserWindow({
       width: 320,
       height: 436,
