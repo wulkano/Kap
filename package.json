@@ -55,6 +55,7 @@
     "node-mac-app-icon": "^1.4.0",
     "npm": "^6.4.0",
     "p-cancelable": "^0.5.0",
+    "p-event": "^2.1.0",
     "p-queue": "^2.4.2",
     "prop-types": "^15.6.2",
     "react-draggable": "^3.0.5",

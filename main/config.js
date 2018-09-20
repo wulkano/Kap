@@ -2,6 +2,7 @@
 
 const {BrowserWindow} = require('electron');
 const ipc = require('electron-better-ipc');
+const pEvent = require('p-event');
 
 const loadRoute = require('./utils/routes');
 const {openPrefsWindow} = require('./preferences');
@@ -27,9 +28,7 @@ const openConfigWindow = async pluginName => {
     configWindow.show();
   });
 
-  return new Promise(resolve => {
-    configWindow.on('closed', resolve);
-  });
+  await pEvent(configWindow, 'closed');
 };
 
 module.exports = {
