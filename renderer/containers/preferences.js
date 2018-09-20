@@ -7,7 +7,8 @@ export default class PreferencesContainer extends Container {
 
   state = {}
 
-  mount = () => {
+  mount = setOverlay => {
+    this.setOverlay = setOverlay;
     this.settings = this.remote.require('./common/settings');
     this.plugins = this.remote.require('./common/plugins');
 
@@ -60,13 +61,18 @@ export default class PreferencesContainer extends Container {
     const plugin = pluginsFromNpm.find(p => p.name === name);
 
     this.setState({pluginBeingInstalled: name});
-    await this.plugins.install(name);
+    const result = await this.plugins.install(name);
 
-    this.setState({
-      pluginBeingInstalled: null,
-      pluginsFromNpm: pluginsFromNpm.filter(p => p.name !== name),
-      pluginsInstalled: [plugin, ...pluginsInstalled].sort((a, b) => a.prettyName.localeCompare(b.prettyName))
-    });
+    if (result) {
+      const {isValid, hasConfig} = result;
+      plugin.isValid = isValid;
+      plugin.hasConfig = hasConfig;
+      this.setState({
+        pluginBeingInstalled: null,
+        pluginsFromNpm: pluginsFromNpm.filter(p => p.name !== name),
+        pluginsInstalled: [plugin, ...pluginsInstalled].sort((a, b) => a.prettyName.localeCompare(b.prettyName))
+      });
+    }
   }
 
   uninstall = name => {
@@ -75,6 +81,7 @@ export default class PreferencesContainer extends Container {
 
     const onTransitionEnd = async () => {
       await delay(500);
+      plugin.hasConfig = false;
       this.setState({
         pluginsInstalled: pluginsInstalled.filter(p => p.name !== name),
         pluginsFromNpm: [plugin, ...pluginsFromNpm].sort((a, b) => a.prettyName.localeCompare(b.prettyName)),
@@ -86,6 +93,19 @@ export default class PreferencesContainer extends Container {
     this.setState({pluginBeingUninstalled: name, onTransitionEnd});
 
     this.plugins.uninstall(name);
+  }
+
+  openPluginsConfig = async name => {
+    const {pluginsInstalled} = this.state;
+    this.setState({category: 'plugins', tab: 'installed'});
+    const index = pluginsInstalled.findIndex(p => p.name === name);
+    this.setOverlay(true);
+
+    const isValid = await this.plugins.openPluginConfig(name);
+
+    this.setOverlay(false);
+    pluginsInstalled[index].isValid = isValid;
+    this.setState({pluginsInstalled});
   }
 
   openPluginsFolder = () => electron.shell.openItem(this.plugins.cwd);

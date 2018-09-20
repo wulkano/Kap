@@ -1,18 +1,21 @@
 'use strict';
 
 const {BrowserWindow, ipcMain} = require('electron');
+const pEvent = require('p-event');
+
 const {closeAllCroppers} = require('./cropper');
 const loadRoute = require('./utils/routes');
 const {track} = require('./common/analytics');
 
 let prefsWindow = null;
 
-const openPrefsWindow = () => {
+const openPrefsWindow = async () => {
   track('preferences/opened');
   closeAllCroppers();
 
   if (prefsWindow) {
-    return prefsWindow.show();
+    prefsWindow.show();
+    return prefsWindow;
   }
 
   prefsWindow = new BrowserWindow({
@@ -31,9 +34,9 @@ const openPrefsWindow = () => {
 
   loadRoute(prefsWindow, 'preferences');
 
-  ipcMain.once('preferences-ready', () => {
-    prefsWindow.show();
-  });
+  await pEvent(ipcMain, 'preferences-ready');
+  prefsWindow.show();
+  return prefsWindow;
 };
 
 module.exports = {

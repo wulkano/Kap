@@ -29,6 +29,7 @@
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.15",
     "@sindresorhus/do-not-disturb": "^0.2.0",
+    "ajv": "^6.5.3",
     "aperture": "^4.0.0",
     "base64-img": "^1.0.4",
     "classnames": "^2.2.6",
@@ -54,9 +55,11 @@
     "node-mac-app-icon": "^1.4.0",
     "npm": "^6.4.0",
     "p-cancelable": "^0.5.0",
+    "p-event": "^2.1.0",
     "p-queue": "^2.4.2",
     "prop-types": "^15.6.2",
     "react-draggable": "^3.0.5",
+    "react-linkify": "^0.2.2",
     "semver": "^5.5.0",
     "tempy": "^0.2.1",
     "tildify": "^1.2.0",
@@ -116,6 +119,7 @@
       "category": "public.app-category.productivity",
       "minimumSystemVersion": "10.12.0",
       "extendInfo": {
+        "NSUserNotificationAlertStyle": "alert",
         "CFBundleDocumentTypes": [
           {
             "CFBundleTypeName": "Video",

@@ -18,6 +18,10 @@ import VolumeHighIcon from './volume-high';
 import VolumeOffIcon from './volume-off';
 import CancelIcon from './cancel';
 import TooltipIcon from './tooltip';
+import EditIcon from './edit';
+import ErrorIcon from './error';
+import OpenConfigIcon from './open-config';
+import OpenOnGithubIcon from './open-on-github';
 
 export {
   ApplicationsIcon,
@@ -39,5 +43,9 @@ export {
   VolumeHighIcon,
   VolumeOffIcon,
   CancelIcon,
-  TooltipIcon
+  TooltipIcon,
+  EditIcon,
+  ErrorIcon,
+  OpenConfigIcon,
+  OpenOnGithubIcon
 };

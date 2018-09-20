@@ -4,7 +4,13 @@ const electron = require('electron');
 const got = require('got');
 const execa = require('execa');
 const makeDir = require('make-dir');
+const ipc = require('electron-better-ipc');
 
+const {app, Notification} = electron;
+
+const Plugin = require('../plugin');
+const {openConfigWindow} = require('../config');
+const {openPrefsWindow} = require('../preferences');
 const {notify} = require('./notifications');
 const {track} = require('./analytics');
 
@@ -15,7 +21,7 @@ class Plugins {
   }
 
   _makePluginsDir() {
-    const cwd = path.join(electron.app.getPath('userData'), 'plugins');
+    const cwd = path.join(app.getPath('userData'), 'plugins');
     const fp = path.join(cwd, 'package.json');
 
     if (!fs.existsSync(fp)) {
@@ -42,8 +48,8 @@ class Plugins {
     });
   }
 
-  _addPrettyName(pkg) {
-    pkg.prettyName = pkg.name.replace(/^kap-/, '');
+  _getPrettyName(name) {
+    return name.replace(/^kap-/, '');
   }
 
   _pluginPath(name, subPath = '') {
@@ -60,14 +66,58 @@ class Plugins {
   }
 
   async install(name) {
+    const prettyName = this._getPrettyName(name);
     track(`plugin/installed/${name}`);
     // We manually add it to the package.json here so we're able to set the version to `latest`
     this._modifyMainPackageJson(pkg => {
       pkg.dependencies[name] = 'latest';
     });
 
-    await this._npmInstall();
-    notify(`Successfully installed plugin ${name}`);
+    try {
+      await this._npmInstall();
+
+      const plugin = new Plugin(name);
+      const isValid = plugin.isConfigValid();
+      const hasConfig = this.getServices(name).some(({config = {}}) => Object.keys(config).length > 0);
+
+      const options = isValid ? {
+        title: 'Plugin installed',
+        body: `"${prettyName}" is ready for use`
+      } : {
+        title: 'Configure plugin',
+        body: `"${prettyName}" requires configuration`,
+        actions: [{type: 'button', text: 'Configure'}]
+      };
+
+      const notification = new Notification(options);
+
+      if (!isValid) {
+        const openConfig = async () => {
+          const prefsWindow = await openPrefsWindow();
+          ipc.callRenderer(prefsWindow, 'open-plugin-config', name);
+        };
+
+        notification.on('click', openConfig);
+
+        notification.on('action', (_, index) => {
+          if (index === 0) {
+            openConfig();
+          } else {
+            notification.close();
+          }
+        });
+      }
+
+      notification.show();
+
+      return {hasConfig, isValid};
+    } catch (error) {
+      notify(`Something went wrong while installing ${prettyName}`);
+      this._modifyMainPackageJson(pkg => {
+        delete pkg.dependencies[name];
+      });
+      console.log(error);
+    }
   }
 
   async upgrade() {
@@ -85,11 +135,18 @@ class Plugins {
     await this._runNpm('prune');
   }
 
+  getServices(pluginName) {
+    return require(path.join(this.cwd, 'node_modules', pluginName)).shareServices;
+  }
+
   getInstalled() {
     return this._pluginNames().map(name => {
-      const path = this._pluginPath(name, 'package.json');
-      const json = JSON.parse(fs.readFileSync(path, 'utf8'));
-      this._addPrettyName(json);
+      const pluginPath = this._pluginPath(name, 'package.json');
+      const json = JSON.parse(fs.readFileSync(pluginPath, 'utf8'));
+      const plugin = new Plugin(name);
+      json.prettyName = this._getPrettyName(name);
+      json.hasConfig = this.getServices(name).some(({config = {}}) => Object.keys(config).length > 0);
+      json.isValid = plugin.isConfigValid();
       return json;
     });
   }
@@ -103,16 +160,17 @@ class Plugins {
       .map(x => x.package)
       .filter(x => x.name.startsWith('kap-'))
       .filter(x => !installed.includes(x.name)) // Filter out installed plugins
-      .map(x => {
-        this._addPrettyName(x);
-        return x;
-      });
+      .map(x => ({...x, prettyName: this._getPrettyName(x.name)}));
   }
 
   getPluginService(pluginName, serviceTitle) {
-    const plugin = require(path.join(this.cwd, 'node_modules', pluginName));
-    const service = plugin.shareServices.find(shareService => shareService.title === serviceTitle);
-    return service;
+    return this.getServices(pluginName).find(shareService => shareService.title === serviceTitle);
+  }
+
+  async openPluginConfig(name) {
+    await openConfigWindow(name);
+    const plugin = new Plugin(name);
+    return plugin.isConfigValid();
   }
 }
 

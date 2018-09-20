@@ -23,7 +23,8 @@ class Plugins extends React.Component {
       tab,
       selectTab,
       npmError,
-      fetchFromNpm
+      fetchFromNpm,
+      openPluginsConfig
     } = this.props;
 
     return (
@@ -49,16 +50,26 @@ class Plugins extends React.Component {
               {
                 npmError ? (
                   <EmptyTab
+                    showIcon
                     title="Oops!"
                     subtitle="Something went wrong…"
                     link="Refresh"
                     onClick={fetchFromNpm}/>
                 ) : (
-                  <Tab
-                    current={pluginBeingInstalled}
-                    plugins={pluginsFromNpm}
-                    disabled={Boolean(pluginBeingInstalled)}
-                    onClick={install}/>
+                  pluginsFromNpm.length === 0 ? (
+                    <EmptyTab
+                      title="So, you really like plugins?"
+                      subtitle="You have all the plugins."
+                      link="Marvel at them"
+                      image="/static/all-the-things.png"
+                      onClick={() => selectTab('installed')}/>
+                  ) : (
+                    <Tab
+                      current={pluginBeingInstalled}
+                      plugins={pluginsFromNpm}
+                      disabled={Boolean(pluginBeingInstalled)}
+                      onClick={install}/>
+                  )
                 )
               }
             </div>
@@ -66,6 +77,7 @@ class Plugins extends React.Component {
               {
                 pluginsInstalled.length === 0 ? (
                   <EmptyTab
+                    showIcon
                     title="No plugins yet"
                     subtitle="Customize Kap your liking with plugins."
                     link="Discover"
@@ -76,8 +88,9 @@ class Plugins extends React.Component {
                     disabled={Boolean(pluginBeingInstalled)}
                     current={pluginBeingUninstalled}
                     plugins={pluginsInstalled}
-                    onTransitionEnd={onTransitionEnd}
-                    onClick={uninstall}/>
+                    openConfig={openPluginsConfig}
+                    onClick={uninstall}
+                    onTransitionEnd={onTransitionEnd}/>
                 )
               }
             </div>
@@ -152,7 +165,8 @@ Plugins.propTypes = {
   tab: PropTypes.string,
   selectTab: PropTypes.func.isRequired,
   npmError: PropTypes.bool,
-  fetchFromNpm: PropTypes.func.isRequired
+  fetchFromNpm: PropTypes.func.isRequired,
+  openPluginsConfig: PropTypes.func.isRequired
 };
 
 export default connect(
@@ -177,11 +191,13 @@ export default connect(
     install,
     uninstall,
     selectTab,
-    fetchFromNpm
+    fetchFromNpm,
+    openPluginsConfig
   }) => ({
     install,
     uninstall,
     selectTab,
-    fetchFromNpm
+    fetchFromNpm,
+    openPluginsConfig
   })
 )(Plugins);

@@ -8,6 +8,7 @@ import PreferencesContainer from './preferences';
 import ExportsContainer from './exports';
 import EditorContainer from './editor';
 import VideoContainer from './video';
+import ConfigContainer from './config';
 
 export const connect = (containers, mapStateToProps, mapActionsToProps) => Component => props => (
   <Subscribe to={containers}>
@@ -30,5 +31,6 @@ export {
   PreferencesContainer,
   ExportsContainer,
   EditorContainer,
-  VideoContainer
+  VideoContainer,
+  ConfigContainer
 };

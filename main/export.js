@@ -24,7 +24,7 @@ class Export {
     this.context = new ShareServiceContext({
       format: this.format,
       defaultFileName: this.defaultFileName,
-      config: this.plugin.getConfig(),
+      config: this.plugin.config,
       onCancel: this.cancel.bind(this),
       onProgress: this.setProgress.bind(this),
       convert: this.convert.bind(this),

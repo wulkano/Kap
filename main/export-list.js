@@ -11,6 +11,7 @@ const makeDir = require('make-dir');
 
 const settings = require('./common/settings');
 const {track} = require('./common/analytics');
+const {openPrefsWindow} = require('./preferences');
 const {showExportsWindow, getExportsWindow, openExportsWindow} = require('./exports');
 const {openEditorWindow} = require('./editor');
 const Export = require('./export');
@@ -119,6 +120,24 @@ class ExportList {
       } else {
         return;
       }
+    }
+
+    if (!newExport.plugin.isConfigValid()) {
+      const result = dialog.showMessageBox({
+        type: 'error',
+        buttons: ['Configure', 'Cancel'],
+        defaultId: 0,
+        message: 'Error in plugin config',
+        detail: `Review the config for the "${options.pluginName}" plugin to continue exporting`,
+        cancelId: 1
+      });
+
+      if (result === 0) {
+        const prefsWindow = await openPrefsWindow();
+        ipc.callRenderer(prefsWindow, 'open-plugin-config', options.pluginName);
+      }
+
+      return;
     }
 
     newExport.status = 'waiting';

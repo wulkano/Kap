@@ -1,47 +1,106 @@
+import electron from 'electron';
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import Linkify from 'react-linkify';
+
+const Link = ({href, children}) => (
+  <span onClick={() => electron.shell.openExternal(href)}>
+    {children}
+    <style jsx>{`
+      color: #007aff;
+      text-decoration: none;
+      cursor: pointer;
+
+      :hover {
+        text-decoration: underline;
+      }
+    `}</style>
+  </span>
+);
+
+Link.propTypes = {
+  href: PropTypes.string,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ])
+};
 
 class Item extends React.Component {
+  static defaultProps = {
+    subtitle: [],
+    errors: []
+  }
+
   render() {
-    const {title, experimental, tooltip, children, id, onSubtitleClick} = this.props;
+    const {
+      title,
+      subtitle,
+      experimental,
+      tooltip,
+      children,
+      id,
+      vertical,
+      errors,
+      onSubtitleClick,
+      warning,
+      onClick,
+      last
+    } = this.props;
 
-    let subtitle = this.props.subtitle || [];
+    const subtitleArray = Array.isArray(subtitle) ? subtitle : [subtitle];
 
-    if (!Array.isArray(subtitle)) {
-      subtitle = [subtitle];
-    }
-
-    const className = classNames({experimental});
+    const className = classNames('title', {experimental});
     const subtitleClassName = classNames('subtitle', {link: Boolean(onSubtitleClick)});
 
     return (
-      <div className="item" id={id}>
-        <div className="content">
-          <div className={className}>{title}</div>
-          <div className={subtitleClassName} title={tooltip} onClick={onSubtitleClick}>
-            { subtitle.map(s => <div key={s}>{s}</div>) }
+      <div className="container" onClick={onClick}>
+        <div className="item" id={id}>
+          {warning}
+          <div className="content">
+            <div className={className}>{title}</div>
+            <div className={subtitleClassName} title={tooltip} onClick={onSubtitleClick}>
+              { subtitleArray.map(s => <div key={s}><Linkify component={Link}>{s}</Linkify></div>) }
+            </div>
+          </div>
+          <div className="input">
+            {children}
           </div>
         </div>
-        <div className="input">
-          {children}
-        </div>
+        {
+          errors && errors.length > 0 && <div className="errors">{ errors.map(e => <div key={e}>{e}</div>) }</div>
+        }
         <style jsx>{`
-          .item {
+          .container {
             display: flex;
             max-width: 100%;
-            padding: 16px;
+            padding: ${onClick ? '16px' : '32px'} 16px;
+            margin-bottom: ${last ? '16px' : '0'};
             border-bottom: 1px solid #f1f1f1;
+            flex-direction: column;
+          }
+
+          .item {
+            display: flex;
+            flex-direction: ${vertical ? 'column' : 'row'};
+          }
+
+          .title {
+            font-size: 1.2rem;
+            line-height: 1.6rem;
+            font-weight: 500;
           }
 
           .content {
             flex: 1;
             display: flex;
             flex-direction: column;
+            justify-content: center;
           }
 
           .subtitle {
-            color: gray;
+            color: ${onClick ? '#007aff' : '#606060'};
             font-size: 1.2rem;
           }
 
@@ -53,6 +112,13 @@ class Item extends React.Component {
           .experimental {
             display: flex;
             align-items: center;
+          }
+
+          .errors {
+            padding-top: 8px;
+            color: #ff6059;
+            font-size: 1.2rem;
+            line-height: 1.2rem;
           }
 
           .link {
@@ -97,7 +163,15 @@ Item.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
   ]),
-  onSubtitleClick: PropTypes.func
+  vertical: PropTypes.bool,
+  errors: PropTypes.arrayOf(PropTypes.string),
+  onSubtitleClick: PropTypes.func,
+  warning: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ]),
+  onClick: PropTypes.func,
+  last: PropTypes.bool
 };
 
 export default Item;
