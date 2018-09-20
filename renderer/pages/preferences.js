@@ -1,5 +1,6 @@
 import React from 'react';
 import {Provider} from 'unstated';
+import classNames from 'classnames';
 
 import PreferencesNavigation from '../components/preferences/navigation';
 import WindowHeader from '../components/window-header';
@@ -22,10 +23,11 @@ export default class PreferencesPage extends React.Component {
 
   render() {
     const {overlay} = this.state;
+    const className = classNames('overlay', {active: overlay});
 
     return (
       <div className="cover-window">
-        { overlay && <div className="overlay"/> }
+        <div className={className}/>
         <Provider inject={[preferencesContainer]}>
           <WindowHeader title="Preferences">
             <PreferencesNavigation/>
@@ -65,6 +67,11 @@ export default class PreferencesPage extends React.Component {
               left: 0;
               width: 100%;
               height: 100%;
+              transition: background-color .3s ease-in-out;
+              pointer-events: none;
+            }
+
+            .overlay.active {
               background-color: rgba(0,0,0,0.5);
             }
         `}</style>
