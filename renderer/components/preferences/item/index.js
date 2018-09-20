@@ -1,7 +1,31 @@
+import electron from 'electron';
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import linkifyUrls from 'linkify-urls';
+import Linkify from 'react-linkify';
+
+const Link = ({href, children}) => (
+  <span onClick={() => electron.shell.openExternal(href)}>
+    {children}
+    <style jsx>{`
+      color: #007aff;
+      text-decoration: none;
+      cursor: pointer;
+
+      :hover {
+        text-decoration: underline;
+      }
+    `}</style>
+  </span>
+);
+
+Link.propTypes = {
+  href: PropTypes.string,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ])
+};
 
 class Item extends React.Component {
   static defaultProps = {
@@ -36,10 +60,7 @@ class Item extends React.Component {
           <div className="content">
             <div className={className}>{title}</div>
             <div className={subtitleClassName} title={tooltip} onClick={onSubtitleClick}>
-              {
-                /* eslint-disable react/no-danger */
-                subtitleArray.map(s => <div key={s} dangerouslySetInnerHTML={{__html: linkifyUrls(s)}}/>)
-              }
+              { subtitleArray.map(s => <div key={s}><Linkify component={Link}>{s}</Linkify></div>) }
             </div>
           </div>
           <div className="input">
@@ -79,11 +100,6 @@ class Item extends React.Component {
           .subtitle {
             color: ${onClick ? '#007aff' : '#606060'};
             font-size: 1.2rem;
-          }
-
-          .subtitle a {
-            color: #007aff;
-            text-decoration: none;
           }
 
           .input {
