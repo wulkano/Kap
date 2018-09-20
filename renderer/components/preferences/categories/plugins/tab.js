@@ -3,16 +3,29 @@ import PropTypes from 'prop-types';
 
 import Plugin from './plugin';
 
-export const EmptyTab = ({title, subtitle, link, onClick}) => {
+export const EmptyTab = ({title, subtitle, link, onClick, showIcon, children}) => {
   return (
     <div className="container">
-      <div className="icon">📦</div>
-      <div className="title">{title}</div>
-      <div className="subtitle">{subtitle}</div>
-      <div className="link" onClick={onClick}>{link}</div>
+      <div className="content">
+        { showIcon && <div className="icon">📦</div> }
+        <div className="title">{title}</div>
+        <div className="subtitle">{subtitle}</div>
+        <div className="link" onClick={onClick}>{link}</div>
+      </div>
+      <footer>
+        {children}
+      </footer>
       <style jsx>{`
         .container {
-          flex: 1;
+          height: 100%;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .content {
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -23,6 +36,7 @@ export const EmptyTab = ({title, subtitle, link, onClick}) => {
           color: #111111;
           font-size: 1.6rem;
           font-weight: 500;
+          margin-top: 36px;
         }
 
         .subtitle {
@@ -42,6 +56,11 @@ export const EmptyTab = ({title, subtitle, link, onClick}) => {
           font-size: 126px;
           height: 20rem;
           line-height: 20rem;
+          margin-bottom: -32px;
+        }
+
+        footer {
+          display: flex;
         }
       `}</style>
     </div>
@@ -52,7 +71,12 @@ EmptyTab.propTypes = {
   title: PropTypes.string,
   subtitle: PropTypes.string,
   link: PropTypes.string,
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
+  showIcon: PropTypes.bool,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ])
 };
 
 const Tab = ({checked, current, plugins, disabled, onClick, onTransitionEnd, openConfig}) => {

@@ -50,16 +50,28 @@ class Plugins extends React.Component {
               {
                 npmError ? (
                   <EmptyTab
+                    showIcon
                     title="Oops!"
                     subtitle="Something went wrong…"
                     link="Refresh"
                     onClick={fetchFromNpm}/>
                 ) : (
-                  <Tab
-                    current={pluginBeingInstalled}
-                    plugins={pluginsFromNpm}
-                    disabled={Boolean(pluginBeingInstalled)}
-                    onClick={install}/>
+                  pluginsFromNpm.length === 0 ? (
+                    <EmptyTab
+                      title="So, you really like plugins?"
+                      subtitle="You have all the plugins."
+                      link="Marvel at them"
+                      onClick={() => selectTab('installed')}
+                    >
+                      <img src="/static/all-the-things.png" alt="my image"/>
+                    </EmptyTab>
+                  ) : (
+                    <Tab
+                      current={pluginBeingInstalled}
+                      plugins={pluginsFromNpm}
+                      disabled={Boolean(pluginBeingInstalled)}
+                      onClick={install}/>
+                  )
                 )
               }
             </div>
@@ -67,6 +79,7 @@ class Plugins extends React.Component {
               {
                 pluginsInstalled.length === 0 ? (
                   <EmptyTab
+                    showIcon
                     title="No plugins yet"
                     subtitle="Customize Kap your liking with plugins."
                     link="Discover"
