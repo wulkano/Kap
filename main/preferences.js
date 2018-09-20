@@ -24,6 +24,7 @@ const openPrefsWindow = async () => {
     resizable: false,
     minimizable: false,
     maximizable: false,
+    fullscreenable: false,
     titleBarStyle: 'hiddenInset',
     show: false
   });

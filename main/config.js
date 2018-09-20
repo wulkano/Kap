@@ -15,6 +15,7 @@ const openConfigWindow = async pluginName => {
     resizable: false,
     minimizable: false,
     maximizable: false,
+    fullscreenable: false,
     titleBarStyle: 'hiddenInset',
     show: false,
     parent: prefsWindow,
