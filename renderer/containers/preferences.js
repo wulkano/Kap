@@ -97,6 +97,7 @@ export default class PreferencesContainer extends Container {
 
   openPluginsConfig = async name => {
     const {pluginsInstalled} = this.state;
+    this.setState({category: 'plugins', tab: 'installed'});
     const index = pluginsInstalled.findIndex(p => p.name === name);
     this.setOverlay(true);
 
