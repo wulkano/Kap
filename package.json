@@ -72,7 +72,7 @@
     "electron-builder": "^20.27.0",
     "eslint-config-xo-react": "^0.17.0",
     "eslint-plugin-react": "^7.11.1",
-    "next": "^4.2.1",
+    "next": "^7.0.0",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "xo": "^0.22.0"
