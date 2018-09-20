@@ -126,8 +126,8 @@ class ExportList {
         type: 'error',
         buttons: ['Configure', 'Cancel'],
         defaultId: 0,
-        message: 'Error in plugin configuration',
-        detail: 'Review your plugin configuration for "now" to continue exporting',
+        message: 'Error in plugin config',
+        detail: `Review the config for the "${options.pluginName}" plugin to continue exporting`,
         cancelId: 1
       });
 
