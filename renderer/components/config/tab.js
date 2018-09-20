@@ -8,9 +8,10 @@ import {OpenInBrowserIcon, OpenFolderIcon} from '../../vectors';
 
 const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
   if (type === 'string') {
+    const className = hasErrors ? 'has-errors' : '';
     return (
       <div>
-        <input value={value || ''} onChange={e => onChange(name, e.target.value || undefined)}/>
+        <input className={className} value={value || ''} onChange={e => onChange(name, e.target.value || undefined)}/>
         <style jsx>{`
           input {
             outline: none;
@@ -23,7 +24,10 @@ const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
             line-height: 32px;
             font-size: 12px;
             margin-top: 16px;
-            ${hasErrors ? 'background: rgba(255,59,48,0.10);' : ''}
+          }
+
+          .has-errors {
+            background: rgba(255,59,48,0.10);
           }
 
           div {
@@ -67,7 +71,7 @@ class Tab extends React.Component {
           [...Object.keys(config)].map(key => {
             const schema = config[key];
             const type = schema.enum ? 'select' : schema.type;
-            const errors = allErrors
+            const itemErrors = allErrors
               .filter(({dataPath}) => dataPath.endsWith(key))
               .map(({message}) => `This ${message}`);
 
@@ -77,10 +81,10 @@ class Tab extends React.Component {
                 title={schema.title}
                 subtitle={schema.description}
                 vertical={type === 'string'}
-                errors={errors}
+                errors={itemErrors}
               >
                 <ConfigInput
-                  hasErrors={errors.length > 0}
+                  hasErrors={itemErrors.length > 0}
                   name={key}
                   type={type}
                   schema={schema}
