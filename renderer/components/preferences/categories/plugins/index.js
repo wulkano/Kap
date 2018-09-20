@@ -61,10 +61,8 @@ class Plugins extends React.Component {
                       title="So, you really like plugins?"
                       subtitle="You have all the plugins."
                       link="Marvel at them"
-                      onClick={() => selectTab('installed')}
-                    >
-                      <img src="/static/all-the-things.png" alt="my image"/>
-                    </EmptyTab>
+                      image="/static/all-the-things.png"
+                      onClick={() => selectTab('installed')}/>
                   ) : (
                     <Tab
                       current={pluginBeingInstalled}

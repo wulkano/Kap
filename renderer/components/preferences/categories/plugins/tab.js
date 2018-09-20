@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Plugin from './plugin';
 
-export const EmptyTab = ({title, subtitle, link, onClick, showIcon, children}) => {
+export const EmptyTab = ({title, subtitle, link, onClick, showIcon, image}) => {
   return (
     <div className="container">
       <div className="content">
@@ -12,9 +12,7 @@ export const EmptyTab = ({title, subtitle, link, onClick, showIcon, children}) =
         <div className="subtitle">{subtitle}</div>
         <div className="link" onClick={onClick}>{link}</div>
       </div>
-      <footer>
-        {children}
-      </footer>
+      <footer/>
       <style jsx>{`
         .container {
           height: 100%;
@@ -61,6 +59,12 @@ export const EmptyTab = ({title, subtitle, link, onClick, showIcon, children}) =
 
         footer {
           display: flex;
+          width: 100%;
+          background-image: url(${image});
+          background-size: contain;
+          background-repeat: no-repeat;
+          background-position: center bottom;
+          height: 180px;
         }
       `}</style>
     </div>
@@ -73,10 +77,7 @@ EmptyTab.propTypes = {
   link: PropTypes.string,
   onClick: PropTypes.func.isRequired,
   showIcon: PropTypes.bool,
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
-  ])
+  image: PropTypes.string
 };
 
 const Tab = ({checked, current, plugins, disabled, onClick, onTransitionEnd, openConfig}) => {
