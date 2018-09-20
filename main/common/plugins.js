@@ -140,7 +140,7 @@ class Plugins {
       const json = JSON.parse(fs.readFileSync(pluginPath, 'utf8'));
       const plugin = new Plugin(name);
       json.prettyName = this._getPrettyName(name);
-      json.hasConfig = this.getServices(name).some(({config}) => Boolean(config));
+      json.hasConfig = this.getServices(name).some(({config = {}}) => Object.keys(config).length > 0);
       json.isValid = plugin.isConfigValid();
       return json;
     });
