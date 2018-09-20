@@ -77,7 +77,7 @@ class Item extends React.Component {
           }
 
           .subtitle {
-            color: ${onClick ? '#007aff' : '#000'};
+            color: ${onClick ? '#007aff' : '#606060'};
             font-size: 1.2rem;
           }
 
