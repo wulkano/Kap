@@ -97,16 +97,24 @@ class Tab extends React.Component {
           })
         }
         <Item subtitle="Open config file" onClick={openConfig}>
-          <OpenConfigIcon fill="#007aff" hoverFill="#007aff" onClick={openConfig}/>
+          <div className="icon-container"><OpenConfigIcon fill="#007aff" hoverFill="#007aff" onClick={openConfig}/></div>
         </Item>
         <Item subtitle="View plugin on GitHub" onClick={viewOnGithub}>
-          <OpenOnGithubIcon fill="#007aff" hoverFill="#007aff" onClick={viewOnGithub}/>
+          <div className="icon-container"><OpenOnGithubIcon size="20px" fill="#007aff" hoverFill="#007aff" onClick={viewOnGithub}/></div>
         </Item>
         <style jsx>{`
           .container {
             width: 100%;
             height: 100%;
             overflow-y: auto;
+          }
+
+          .icon-container {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
           }
         `}</style>
       </div>
