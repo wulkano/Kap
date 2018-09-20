@@ -78,7 +78,7 @@ class Plugins {
 
       const plugin = new Plugin(name);
       const isValid = plugin.isConfigValid();
-      const hasConfig = this.getServices(name).some(({config}) => Boolean(config));
+      const hasConfig = this.getServices(name).some(({config = {}}) => Object.keys(config).length > 0);
 
       const options = isValid ? {
         title: 'Plugin installed',
