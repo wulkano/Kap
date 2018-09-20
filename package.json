@@ -15,7 +15,7 @@
   "main": "main/index.js",
   "scripts": {
     "test": "xo",
-    "start": "electron .",
+    "start": "yarn && electron .",
     "build": "next build renderer && next export renderer",
     "dist": "npm run build && build",
     "pack": "npm run build && build --dir",
