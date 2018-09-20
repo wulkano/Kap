@@ -118,7 +118,7 @@ Select.propTypes = {
     value: PropTypes.any
   })),
   onSelect: PropTypes.func.isRequired,
-  selected: PropTypes.string,
+  selected: PropTypes.any,
   placeholder: PropTypes.string,
   noOptionsMessage: PropTypes.string
 };
