@@ -94,7 +94,15 @@ export default class PreferencesContainer extends Container {
     this.plugins.uninstall(name);
   }
 
-  openPluginsConfig = name => this.plugins.openPluginConfig(name);
+  openPluginsConfig = async name => {
+    const {pluginsInstalled} = this.state;
+    const index = pluginsInstalled.findIndex(p => p.name === name);
+
+    const isValid = await this.plugins.openPluginConfig(name);
+
+    pluginsInstalled[index].isValid = isValid;
+    this.setState({pluginsInstalled});
+  }
 
   openPluginsFolder = () => electron.shell.openItem(this.plugins.cwd);
 

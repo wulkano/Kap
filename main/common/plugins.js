@@ -162,8 +162,10 @@ class Plugins {
     return this.getServices(pluginName).find(shareService => shareService.title === serviceTitle);
   }
 
-  openPluginConfig(name) {
-    openConfigWindow(name);
+  async openPluginConfig(name) {
+    await openConfigWindow(name);
+    const plugin = new Plugin(name);
+    return plugin.isConfigValid();
   }
 }
 

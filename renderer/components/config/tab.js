@@ -16,7 +16,7 @@ const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
           input {
             outline: none;
             width: 100%;
-            border: 1px solid ${hasErrors ? 'rgba(255,59,48,0.20)' : '#ddd'};
+            border: 1px solid #ddd;
             border-radius: 3px;
             box-sizing: border-box;
             height: 32px;
@@ -28,6 +28,7 @@ const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
 
           .has-errors {
             background: rgba(255,59,48,0.10);
+            border-color: rgba(255,59,48,0.20);
           }
 
           div {
