@@ -4,11 +4,13 @@ const electron = require('electron');
 const got = require('got');
 const execa = require('execa');
 const makeDir = require('make-dir');
+const ipc = require('electron-better-ipc');
 
 const {app, Notification} = electron;
 
 const Plugin = require('../plugin');
 const {openConfigWindow} = require('../config');
+const {openPrefsWindow} = require('../preferences');
 const {notify} = require('./notifications');
 const {track} = require('./analytics');
 
@@ -90,13 +92,16 @@ class Plugins {
       const notification = new Notification(options);
 
       if (!isValid) {
-        notification.on('click', () => {
-          this.openPluginConfig(name);
-        });
+        const openConfig = async () => {
+          const prefsWindow = await openPrefsWindow();
+          ipc.callRenderer(prefsWindow, 'open-plugin-config', name);
+        };
+
+        notification.on('click', openConfig);
 
         notification.on('action', (_, index) => {
           if (index === 0) {
-            this.openPluginConfig(name);
+            openConfig();
           } else {
             notification.close();
           }
