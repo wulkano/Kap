@@ -45,7 +45,8 @@ class Item extends React.Component {
       errors,
       onSubtitleClick,
       warning,
-      onClick
+      onClick,
+      last
     } = this.props;
 
     const subtitleArray = Array.isArray(subtitle) ? subtitle : [subtitle];
@@ -75,6 +76,7 @@ class Item extends React.Component {
             display: flex;
             max-width: 100%;
             padding: ${onClick ? '16px' : '32px'} 16px;
+            margin-bottom: ${last ? '16px' : '0'};
             border-bottom: 1px solid #f1f1f1;
             flex-direction: column;
           }
@@ -168,7 +170,8 @@ Item.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
   ]),
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  last: PropTypes.bool
 };
 
 export default Item;

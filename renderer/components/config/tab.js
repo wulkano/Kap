@@ -99,7 +99,7 @@ class Tab extends React.Component {
         <Item subtitle="Open config file" onClick={openConfig}>
           <div className="icon-container"><OpenConfigIcon fill="#007aff" hoverFill="#007aff" onClick={openConfig}/></div>
         </Item>
-        <Item subtitle="View plugin on GitHub" onClick={viewOnGithub}>
+        <Item last subtitle="View plugin on GitHub" onClick={viewOnGithub}>
           <div className="icon-container"><OpenOnGithubIcon size="20px" fill="#007aff" hoverFill="#007aff" onClick={viewOnGithub}/></div>
         </Item>
         <style jsx>{`
