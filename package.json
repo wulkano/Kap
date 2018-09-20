@@ -44,6 +44,7 @@
     "hide-desktop-icons": "^0.4.0",
     "husky": "^0.14.3",
     "insight": "^0.10.1",
+    "linkify-urls": "^2.1.0",
     "lodash": "^4.17.10",
     "mac-windows": "^0.7.1",
     "make-dir": "^1.3.0",

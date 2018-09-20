@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-
-import {ErrorIcon} from '../../../vectors';
+import linkifyUrls from 'linkify-urls';
 
 class Item extends React.Component {
   static defaultProps = {
@@ -21,7 +20,7 @@ class Item extends React.Component {
       vertical,
       errors,
       onSubtitleClick,
-      needsConfig,
+      warning,
       onClick
     } = this.props;
 
@@ -33,13 +32,14 @@ class Item extends React.Component {
     return (
       <div className="container" onClick={onClick}>
         <div className="item" id={id}>
-          {
-            needsConfig && <div className="invalid"><ErrorIcon fill="#ff6059" hoverFill="#ff6059"/></div>
-          }
+          {warning}
           <div className="content">
             <div className={className}>{title}</div>
             <div className={subtitleClassName} title={tooltip} onClick={onSubtitleClick}>
-              { subtitleArray.map(s => <div key={s}>{s}</div>) }
+              {
+                /* eslint-disable react/no-danger */
+                subtitleArray.map(s => <div key={s} dangerouslySetInnerHTML={{__html: linkifyUrls(s)}}/>)
+              }
             </div>
           </div>
           <div className="input">
@@ -63,20 +63,10 @@ class Item extends React.Component {
             flex-direction: ${vertical ? 'column' : 'row'};
           }
 
-          .invalid {
-            height: 36px;
-            padding-right: 16px;
-            margin-right: 16px;
-            border-right: 1px solid #f1f1f1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            align-self: center;
-          }
-
           .title {
             font-size: 1.2rem;
             line-height: 1.6rem;
+            font-weight: 500;
           }
 
           .content {
@@ -89,6 +79,11 @@ class Item extends React.Component {
           .subtitle {
             color: ${onClick ? '#007aff' : '#000'};
             font-size: 1.2rem;
+          }
+
+          .subtitle a {
+            color: #007aff;
+            text-decoration: none;
           }
 
           .input {
@@ -153,7 +148,10 @@ Item.propTypes = {
   vertical: PropTypes.bool,
   errors: PropTypes.arrayOf(PropTypes.string),
   onSubtitleClick: PropTypes.func,
-  needsConfig: PropTypes.bool,
+  warning: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ]),
   onClick: PropTypes.func
 };
 

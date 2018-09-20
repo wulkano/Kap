@@ -11,7 +11,7 @@ const makeDir = require('make-dir');
 
 const settings = require('./common/settings');
 const {track} = require('./common/analytics');
-const {openConfigWindow} = require('./config');
+const {openPrefsWindow} = require('./preferences');
 const {showExportsWindow, getExportsWindow, openExportsWindow} = require('./exports');
 const {openEditorWindow} = require('./editor');
 const Export = require('./export');
@@ -132,7 +132,8 @@ class ExportList {
       });
 
       if (result === 0) {
-        openConfigWindow(options.pluginName);
+        const prefsWindow = await openPrefsWindow();
+        ipc.callRenderer(prefsWindow, 'open-plugin-config', options.pluginName);
       }
 
       return;

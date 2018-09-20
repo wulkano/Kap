@@ -7,7 +7,8 @@ export default class PreferencesContainer extends Container {
 
   state = {}
 
-  mount = () => {
+  mount = setOverlay => {
+    this.setOverlay = setOverlay;
     this.settings = this.remote.require('./common/settings');
     this.plugins = this.remote.require('./common/plugins');
 
@@ -97,9 +98,11 @@ export default class PreferencesContainer extends Container {
   openPluginsConfig = async name => {
     const {pluginsInstalled} = this.state;
     const index = pluginsInstalled.findIndex(p => p.name === name);
+    this.setOverlay(true);
 
     const isValid = await this.plugins.openPluginConfig(name);
 
+    this.setOverlay(false);
     pluginsInstalled[index].isValid = isValid;
     this.setState({pluginsInstalled});
   }

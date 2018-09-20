@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Item from '../preferences/item';
 import Select from '../preferences/item/select';
 import Switch from '../preferences/item/switch';
-import {OpenInBrowserIcon, OpenFolderIcon} from '../../vectors';
+import {OpenOnGithubIcon, OpenConfigIcon} from '../../vectors';
 
 const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
   if (type === 'string') {
@@ -96,11 +96,11 @@ class Tab extends React.Component {
             );
           })
         }
-        <Item subtitle="Open file" onClick={openConfig}>
-          <OpenFolderIcon fill="#007aff" hoverFill="#007aff" onClick={openConfig}/>
+        <Item subtitle="Open config file" onClick={openConfig}>
+          <OpenConfigIcon fill="#007aff" hoverFill="#007aff" onClick={openConfig}/>
         </Item>
-        <Item subtitle="View on GitHub" onClick={viewOnGithub}>
-          <OpenInBrowserIcon fill="#007aff" hoverFill="#007aff" onClick={viewOnGithub}/>
+        <Item subtitle="View plugin on GitHub" onClick={viewOnGithub}>
+          <OpenOnGithubIcon fill="#007aff" hoverFill="#007aff" onClick={viewOnGithub}/>
         </Item>
         <style jsx>{`
           .container {

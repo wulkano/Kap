@@ -20,8 +20,8 @@ import CancelIcon from './cancel';
 import TooltipIcon from './tooltip';
 import EditIcon from './edit';
 import ErrorIcon from './error';
-import OpenFolderIcon from './open-folder';
-import OpenInBrowserIcon from './open-in-browser';
+import OpenConfigIcon from './open-config';
+import OpenOnGithubIcon from './open-on-github';
 
 export {
   ApplicationsIcon,
@@ -46,6 +46,6 @@ export {
   TooltipIcon,
   EditIcon,
   ErrorIcon,
-  OpenFolderIcon,
-  OpenInBrowserIcon
+  OpenConfigIcon,
+  OpenOnGithubIcon
 };
