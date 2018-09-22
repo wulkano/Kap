@@ -13,6 +13,17 @@ const registerShortcut = shortcut => {
     console.error('Error registering shortcut', shortcut);
   }
 };
+
+const registrerFromStore = () => {
+  if (store.get('recordKeyboardShortcut')) {
+    const cropperShortcut = store.get('cropperShortcut');
+    if (cropperShortcut) {
+      registerShortcut(cropperShortcut);
+    }
+  } else {
+    globalShortcut.unregisterAll();
+  }
+};
 const initializeGlobalAccelerators = () => {
   ipc.answerRenderer('update-shortcut', ({setting, shortcut}) => {
     if (store.has(setting)) {
@@ -29,12 +40,9 @@ const initializeGlobalAccelerators = () => {
   });
 
   // Register keyboard shortcuts from store
-  if (store.get('recordKeyboardShortcut')) {
-    const cropperShortcut = store.get('cropperShortcut');
-    if (cropperShortcut) {
-      registerShortcut(cropperShortcut);
-    }
-  }
+  registrerFromStore();
+
+  store.events.on('change', registrerFromStore);
 };
 module.exports = {
   initializeGlobalAccelerators
