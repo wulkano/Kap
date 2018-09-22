@@ -86,7 +86,7 @@ class Settings extends React.Component {
           <Switch checked={recordKeyboardShortcut} onClick={() => toggleSetting('recordKeyboardShortcut')}/>
         </Item>
         {recordKeyboardShortcut && (
-          <Item title="Trigger Kap">
+          <Item subtitle="Trigger Kap">
             <ShortcutInput {...cropperShortcut} onChange={shortcut => updateShortcut('cropperShortcut', shortcut)}/>
           </Item>
         )}

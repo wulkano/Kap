@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
+import {shake} from '../../utils/inputs';
 
 const Key = ({children}) => (
   <span>
@@ -65,6 +66,8 @@ export default class ShortcutInput extends React.Component {
   store = () => {
     if (this.isValid) {
       this.props.onChange(this.state);
+    } else {
+      shake(this.rootRef.current);
     }
   }
 
@@ -81,11 +84,13 @@ export default class ShortcutInput extends React.Component {
     return keys.map(key => <Key key={key}>{key}</Key>);
   }
 
+  rootRef = React.createRef()
+
   inputRef = React.createRef()
 
   render() {
     return (
-      <div className={cn('root', {invalid: !this.isValid})} onClick={() => this.inputRef.current.focus()}>
+      <div ref={this.rootRef} className={cn('root', {invalid: !this.isValid})} onClick={() => this.inputRef.current.focus()}>
         {this.renderKeys()}
         <input ref={this.inputRef} onKeyUp={this.store} onKeyDown={this.handleKeyDown} onChange={noop}/>
         <style jsx>{`
