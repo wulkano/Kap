@@ -5,25 +5,33 @@ const shortcutToAccelerator = require('../renderer/utils/shortcut-to-accelerator
 const store = require('./common/settings');
 const {openCropperWindow} = require('./cropper');
 
-const registerShortcut = shortcut => {
+// All settings that should be loaded and handled as global accelerators
+const handlers = {
+  cropperShortcut: openCropperWindow
+};
+
+const registerShortcut = (shortcut, action) => {
   try {
     const shortcutAccelerator = shortcutToAccelerator(shortcut);
-    globalShortcut.register(shortcutAccelerator, openCropperWindow);
+    globalShortcut.register(shortcutAccelerator, action);
   } catch (error) {
-    console.error('Error registering shortcut', shortcut);
+    console.error('Error registering shortcut', shortcut, action, error);
   }
 };
 
 const registrerFromStore = () => {
   if (store.get('recordKeyboardShortcut')) {
-    const cropperShortcut = store.get('cropperShortcut');
-    if (cropperShortcut) {
-      registerShortcut(cropperShortcut);
+    for (const [setting, action] of Object.entries(handlers)) {
+      const shortcut = store.get(setting);
+      if (shortcut) {
+        registerShortcut(shortcut, action);
+      }
     }
   } else {
     globalShortcut.unregisterAll();
   }
 };
+
 const initializeGlobalAccelerators = () => {
   ipc.answerRenderer('update-shortcut', ({setting, shortcut}) => {
     try {
@@ -39,7 +47,7 @@ const initializeGlobalAccelerators = () => {
     }
     store.set(setting, shortcut);
     if (shortcut) {
-      registerShortcut(shortcut);
+      registerShortcut(shortcut, handlers[setting]);
     }
   });
 
