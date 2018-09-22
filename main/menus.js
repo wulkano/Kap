@@ -1,6 +1,6 @@
 'use strict';
 
-const {Menu} = require('electron');
+const {Menu, shell} = require('electron');
 
 const {openPrefsWindow} = require('./preferences');
 
@@ -33,6 +33,10 @@ const cogMenu = [
     click: openPrefsWindow
   },
   checkForUpdatesItem,
+  {
+    label: 'Send us feedback…',
+    click: () => shell.openExternal('https://github.com/wulkano/kap/issues/new?template=beta.md')
+  },
   {
     type: 'separator'
   },
