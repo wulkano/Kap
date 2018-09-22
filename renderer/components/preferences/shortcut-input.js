@@ -49,24 +49,27 @@ export default class ShortcutInput extends React.Component {
   handleKeyDown = event => {
     event.preventDefault();
     const {metaKey, altKey, ctrlKey, shiftKey} = event;
-    const INVALID_KEYS = [17, 16, 91];
+    const INVALID_KEYS = [17, 16, 91, 8];
     const char = INVALID_KEYS.includes(event.which) ? '' : String.fromCharCode(event.which);
     this.setState({metaKey, altKey, ctrlKey, shiftKey, char});
   }
 
   get isValid() {
     const {metaKey, altKey, ctrlKey, shiftKey, char} = this.state;
+    if (![metaKey, altKey, ctrlKey, shiftKey].includes(true)) {
+      return false;
+    }
     if (char.length === 0) {
       return false;
     }
-    return [metaKey, altKey, ctrlKey, shiftKey].includes(true);
+    return true;
   }
 
   store = () => {
     if (this.isValid) {
       this.props.onChange(this.state);
     } else {
-      shake(this.rootRef.current);
+      shake(this.boxRef.current);
     }
   }
 
@@ -83,17 +86,31 @@ export default class ShortcutInput extends React.Component {
     return keys.map(key => <Key key={key}>{key}</Key>);
   }
 
-  rootRef = React.createRef()
+  clearShortcut = () => {
+    this.setState({metaKey: false, altKey: false, ctrlKey: false, shiftKey: false, char: ''});
+    this.props.onChange(null);
+  }
+
+  boxRef = React.createRef()
 
   inputRef = React.createRef()
 
   render() {
     return (
-      <div ref={this.rootRef} className={cn('root', {invalid: !this.isValid})} onClick={() => this.inputRef.current.focus()}>
-        {this.renderKeys()}
-        <input ref={this.inputRef} onKeyUp={this.store} onKeyDown={this.handleKeyDown} onChange={noop}/>
+      <div className="shortcut-input">
+        <div ref={this.boxRef} className={cn('box', {invalid: !this.isValid})} onClick={() => this.inputRef.current.focus()}>
+          {this.renderKeys()}
+          <input ref={this.inputRef} onKeyUp={this.store} onKeyDown={this.handleKeyDown} onChange={noop}/>
+        </div>
+        <button type="button" onClick={this.clearShortcut}>x</button>
         <style jsx>{`
-          .root {
+          .shortcut-input {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            justify-content: stretch;
+          }
+          .box {
             position: relative;
             padding: 1px 3px;
             background: #F9F9F9;
@@ -103,7 +120,7 @@ export default class ShortcutInput extends React.Component {
             width: 96px;
             cursor: text;
           }
-          .invalid {
+          .invalid:focus-within {
             border-color: red!important;
           }
           input {
@@ -112,6 +129,17 @@ export default class ShortcutInput extends React.Component {
             outline: none !important;
             border: none;
             background: transparent;
+          }
+          button {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            background: #FFFFFF;
+            border-radius: 3px 3px 3px 3px;
+            padding: 1px 3px;
+            border: 1px solid #DDDDDD;
+            margin-left: 8px;
+            width: 28px;
           }
         `}</style>
       </div>
