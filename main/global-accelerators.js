@@ -26,12 +26,16 @@ const registrerFromStore = () => {
 };
 const initializeGlobalAccelerators = () => {
   ipc.answerRenderer('update-shortcut', ({setting, shortcut}) => {
-    if (store.has(setting)) {
-      const oldShortcut = store.get(setting);
-      const shortcutAccelerator = shortcutToAccelerator(oldShortcut);
-      if (globalShortcut.isRegistered(shortcutAccelerator)) {
-        globalShortcut.unregister(shortcutAccelerator);
+    try {
+      if (store.has(setting)) {
+        const oldShortcut = store.get(setting);
+        const shortcutAccelerator = shortcutToAccelerator(oldShortcut);
+        if (globalShortcut.isRegistered(shortcutAccelerator)) {
+          globalShortcut.unregister(shortcutAccelerator);
+        }
       }
+    } catch (error) {
+      console.error('Error unregestering old shortcutAccelerator', error);
     }
     if (shortcut) {
       registerShortcut(shortcut);

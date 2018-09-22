@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import cn from 'classnames';
 
 const Key = ({children}) => (
   <span>
@@ -47,14 +48,22 @@ export default class ShortcutInput extends React.Component {
   handleKeyDown = event => {
     event.preventDefault();
     const {metaKey, altKey, ctrlKey, shiftKey} = event;
-    const char = String.fromCharCode(event.which);
+    const INVALID_KEYS = [17, 16, 91];
+    const char = INVALID_KEYS.includes(event.which) ? '' : String.fromCharCode(event.which);
+    console.log('event.which', event.which, char);
     this.setState({metaKey, altKey, ctrlKey, shiftKey, char});
   }
 
+  get isValid() {
+    const {metaKey, altKey, ctrlKey, shiftKey, char} = this.state;
+    if (char.length === 0) {
+      return false;
+    }
+    return [metaKey, altKey, ctrlKey, shiftKey].includes(true);
+  }
+
   store = () => {
-    if (this.state.string === '') {
-      throw new Error('Needs string');
-    } else {
+    if (this.isValid) {
       this.props.onChange(this.state);
     }
   }
@@ -67,7 +76,7 @@ export default class ShortcutInput extends React.Component {
       ctrlKey && '⌃',
       shiftKey && '⇧',
       char
-    ].filter(Boolean).filter(key => key !== '');
+    ].filter(Boolean);
 
     return keys.map(key => <Key key={key}>{key}</Key>);
   }
@@ -76,7 +85,7 @@ export default class ShortcutInput extends React.Component {
 
   render() {
     return (
-      <div className="root" onClick={() => this.inputRef.current.focus()}>
+      <div className={cn('root', {invalid: !this.isValid})} onClick={() => this.inputRef.current.focus()}>
         {this.renderKeys()}
         <input ref={this.inputRef} onKeyUp={this.store} onKeyDown={this.handleKeyDown} onChange={noop}/>
         <style jsx>{`
@@ -89,6 +98,9 @@ export default class ShortcutInput extends React.Component {
             height: 25px;
             width: 96px;
             cursor: text;
+          }
+          .invalid {
+            border-color: red!important;
           }
           input {
             display: inline-block;
