@@ -2951,9 +2951,9 @@ electron-is-dev@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/electron-is-dev/-/electron-is-dev-0.3.0.tgz#14e6fda5c68e9e4ecbeff9ccf037cbd7c05c5afe"
 
-electron-next@^3.1.4:
-  version "3.1.4"
-  resolved "https://registry.yarnpkg.com/electron-next/-/electron-next-3.1.4.tgz#e8de2d066d108cf85302b255eb9c31009f60df11"
+electron-next@^3.1.5:
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/electron-next/-/electron-next-3.1.5.tgz#6d7df1ffe9bdc300f79b33a1eea43c6767085f57"
   dependencies:
     app-root-path ">=2.0.1"
     electron-is-dev ">=0.3.0"
