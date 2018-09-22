@@ -1,6 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+const Key = ({children}) => (
+  <span>
+    {children}
+    <style jsx>{`
+    span {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 10px;
+      background: #FFFFFF;
+      border-radius: 4px 4px 4px 4px;
+      border: 1px solid #DDDDDD;
+      height: 19px;
+      width: 19px;
+      margin-right: 2px;
+    }
+  `}</style>
+  </span>
+);
+
+Key.propTypes = {
+  children: PropTypes.element
+};
+
 const noop = () => {};
 export default class ShortcutInput extends React.Component {
   static propTypes = {
@@ -40,14 +64,41 @@ export default class ShortcutInput extends React.Component {
     const keys = [
       metaKey && '⌘',
       altKey && '⌥',
-      ctrlKey && 'ctrl',
+      ctrlKey && '⌃',
       shiftKey && '⇧',
       char
-    ].filter(Boolean);
-    return `${keys.join('+')}`;
+    ].filter(Boolean).filter(key => key !== '');
+
+    return keys.map(key => <Key key={key}>{key}</Key>);
   }
 
+  inputRef = React.createRef()
+
   render() {
-    return <input value={this.renderKeys()} onKeyUp={this.store} onKeyDown={this.handleKeyDown} onChange={noop}/>;
+    return (
+      <div className="root" onClick={() => this.inputRef.current.focus()}>
+        {this.renderKeys()}
+        <input ref={this.inputRef} onKeyUp={this.store} onKeyDown={this.handleKeyDown} onChange={noop}/>
+        <style jsx>{`
+          .root {
+            position: relative;
+            padding: 1px 3px;
+            background: #F9F9F9;
+            border-radius: 3px 3px 3px 3px;
+            border: 1px solid #DDDDDD;
+            height: 25px;
+            width: 96px;
+            cursor: text;
+          }
+          input {
+            display: inline-block;
+            width: 1px;
+            outline: none !important;
+            border: none;
+            background: transparent;
+          }
+        `}</style>
+      </div>
+    );
   }
 }
