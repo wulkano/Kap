@@ -91,6 +91,12 @@ export default class ShortcutInput extends React.Component {
     this.props.onChange(null);
   }
 
+  handleBlur = () => {
+    if (!this.isValid) {
+      this.clearShortcut();
+    }
+  }
+
   boxRef = React.createRef()
 
   inputRef = React.createRef()
@@ -100,7 +106,7 @@ export default class ShortcutInput extends React.Component {
       <div className="shortcut-input">
         <div ref={this.boxRef} className={cn('box', {invalid: !this.isValid})} onClick={() => this.inputRef.current.focus()}>
           {this.renderKeys()}
-          <input ref={this.inputRef} onKeyUp={this.store} onKeyDown={this.handleKeyDown} onChange={noop}/>
+          <input ref={this.inputRef} onKeyUp={this.store} onKeyDown={this.handleKeyDown} onBlur={this.handleBlur} onChange={noop}/>
         </div>
         <button type="button" onClick={this.clearShortcut}>x</button>
         <style jsx>{`
