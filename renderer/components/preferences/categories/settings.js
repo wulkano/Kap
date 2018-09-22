@@ -9,6 +9,7 @@ import Item from '../item';
 import Switch from '../item/switch';
 import Button from '../item/button';
 import Select from '../item/select';
+import ShortcutInput from '../shortcut-input';
 
 import Category from './category';
 
@@ -40,7 +41,9 @@ class Settings extends React.Component {
       audioDevices,
       recordAudio,
       pickKapturesDir,
-      setOpenOnStartup
+      setOpenOnStartup,
+      cropperShortcut,
+      updateShortcut
     } = this.props;
 
     const devices = audioDevices.map(device => ({
@@ -76,6 +79,17 @@ class Settings extends React.Component {
             onClick={() => toggleSetting('highlightClicks')}
           />
         </Item>
+        <Item
+          title="Keyboard shortcuts"
+          subtitle="Toggle and customise keyboard shortcuts"
+        >
+          <Switch checked={recordKeyboardShortcut} onClick={() => toggleSetting('recordKeyboardShortcut')}/>
+        </Item>
+        {recordKeyboardShortcut && (
+          <Item title="Trigger Kap">
+            <ShortcutInput {...cropperShortcut} onChange={shortcut => updateShortcut('cropperShortcut', shortcut)}/>
+          </Item>
+        )}
         <Item
           title="Hide desktop icons"
           subtitle="Temporarily hide desktop icons while recording"
@@ -119,14 +133,6 @@ class Settings extends React.Component {
             selected={record60fps}
             onSelect={value => toggleSetting('record60fps', value)}/>
         </Item>
-        <Item
-          title="Keyboard shortcuts"
-          subtitle="Toggle and customise keyboard shortcuts"
-        >
-          <Switch
-            checked={recordKeyboardShortcut}
-            onClick={() => toggleSetting('recordKeyboardShortcut')}/>
-        </Item>
         <Item title="Allow analytics" subtitle="Help us improve Kap by sending anonymous usage stats">
           <Switch checked={allowAnalytics} onClick={() => toggleSetting('allowAnalytics')}/>
         </Item>
@@ -158,7 +164,15 @@ Settings.propTypes = {
   allowAnalytics: PropTypes.bool,
   loopExports: PropTypes.bool,
   pickKapturesDir: PropTypes.func.isRequired,
-  setOpenOnStartup: PropTypes.func.isRequired
+  setOpenOnStartup: PropTypes.func.isRequired,
+  updateShortcut: PropTypes.func.isRequired,
+  cropperShortcut: PropTypes.shape({
+    metaKey: PropTypes.bool.isRequired,
+    altKey: PropTypes.bool.isRequired,
+    ctrlKey: PropTypes.bool.isRequired,
+    shiftKey: PropTypes.bool.isRequired,
+    char: PropTypes.string.isRequired
+  })
 };
 
 export default connect(
@@ -176,7 +190,8 @@ export default connect(
     kapturesDir,
     openOnStartup,
     allowAnalytics,
-    loopExports
+    loopExports,
+    cropperShortcut
   }) => ({
     showCursor,
     highlightClicks,
@@ -190,17 +205,20 @@ export default connect(
     kapturesDir,
     openOnStartup,
     allowAnalytics,
-    loopExports
+    loopExports,
+    cropperShortcut
   }),
   ({
     toggleSetting,
     setAudioInputDeviceId,
     pickKapturesDir,
-    setOpenOnStartup
+    setOpenOnStartup,
+    updateShortcut
   }) => ({
     toggleSetting,
     setAudioInputDeviceId,
     pickKapturesDir,
-    setOpenOnStartup
+    setOpenOnStartup,
+    updateShortcut
   })
 )(Settings);

@@ -1,4 +1,5 @@
 import electron from 'electron';
+import ipc from 'electron-better-ipc';
 import {Container} from 'unstated';
 import delay from 'delay';
 
@@ -122,6 +123,15 @@ export default class PreferencesContainer extends Container {
     const newVal = value === undefined ? !this.state[setting] : value;
     this.setState({[setting]: newVal});
     this.settings.set(setting, newVal);
+  }
+
+  updateShortcut = async (setting, shortcut) => {
+    try {
+      await ipc.callMain('update-shortcut', {setting, shortcut});
+      this.setState({[setting]: shortcut});
+    } catch (error) {
+      console.warn('Error updating shortcut', error);
+    }
   }
 
   setOpenOnStartup = value => {
