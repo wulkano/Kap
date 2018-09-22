@@ -8,16 +8,17 @@ const Key = ({children}) => (
     {children}
     <style jsx>{`
     span {
-      display: inline-flex;
+      display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 10px;
+      font-size: 12px;
       background: #FFFFFF;
       border-radius: 4px 4px 4px 4px;
       border: 1px solid #DDDDDD;
-      height: 19px;
-      width: 19px;
+      height: 20px;
+      width: 20px;
       margin-right: 2px;
+      box-sizing: border-box;
     }
   `}</style>
   </span>
@@ -108,7 +109,7 @@ export default class ShortcutInput extends React.Component {
           {this.renderKeys()}
           <input ref={this.inputRef} onKeyUp={this.store} onKeyDown={this.handleKeyDown} onBlur={this.handleBlur} onChange={noop}/>
         </div>
-        <button type="button" onClick={this.clearShortcut}><svg style={{width: '24px', height: '24px'}} viewBox="0 0 24 24">
+        <button type="button" onClick={this.clearShortcut}><svg style={{width: '20px', height: '20px'}} viewBox="0 0 24 24">
           <path fill="#808080" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
         </svg></button>
         <style jsx>{`
@@ -120,13 +121,15 @@ export default class ShortcutInput extends React.Component {
           }
           .box {
             position: relative;
-            padding: 1px 3px;
+            padding: 1px 1px;
             background: #F9F9F9;
             border-radius: 3px 3px 3px 3px;
             border: 1px solid #DDDDDD;
-            height: 25px;
             width: 96px;
             cursor: text;
+            display: flex;
+            height: 24px;
+            box-sizing: border-box;
           }
           .invalid:focus-within {
             border-color: red!important;
@@ -147,7 +150,9 @@ export default class ShortcutInput extends React.Component {
             padding: 1px 3px;
             border: 1px solid #DDDDDD;
             margin-left: 8px;
-            width: 28px;
+            width: 24px;
+            height: 24px;
+            box-sizing: border-box;
           }
         `}</style>
       </div>
