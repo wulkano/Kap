@@ -51,7 +51,6 @@ export default class ShortcutInput extends React.Component {
     const {metaKey, altKey, ctrlKey, shiftKey} = event;
     const INVALID_KEYS = [17, 16, 91];
     const char = INVALID_KEYS.includes(event.which) ? '' : String.fromCharCode(event.which);
-    console.log('event.which', event.which, char);
     this.setState({metaKey, altKey, ctrlKey, shiftKey, char});
   }
 
