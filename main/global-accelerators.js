@@ -45,8 +45,6 @@ const initializeGlobalAccelerators = () => {
 
   // Register keyboard shortcuts from store
   registrerFromStore();
-
-  store.events.on('change', registrerFromStore);
 };
 module.exports = {
   initializeGlobalAccelerators
