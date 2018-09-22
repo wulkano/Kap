@@ -1,5 +1,4 @@
 import electron from 'electron';
-import ipc from 'electron-better-ipc';
 import {Container} from 'unstated';
 import delay from 'delay';
 
@@ -12,6 +11,7 @@ export default class PreferencesContainer extends Container {
     this.setOverlay = setOverlay;
     this.settings = this.remote.require('./common/settings');
     this.plugins = this.remote.require('./common/plugins');
+    this.ipc = require('electron-better-ipc');
 
     const pluginsInstalled = this.plugins.getInstalled().sort((a, b) => a.prettyName.localeCompare(b.prettyName));
 
@@ -127,7 +127,7 @@ export default class PreferencesContainer extends Container {
 
   updateShortcut = async (setting, shortcut) => {
     try {
-      await ipc.callMain('update-shortcut', {setting, shortcut});
+      await this.ipc.callMain('update-shortcut', {setting, shortcut});
       this.setState({[setting]: shortcut});
     } catch (error) {
       console.warn('Error updating shortcut', error);
