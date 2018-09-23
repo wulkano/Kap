@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import PreferencesNavigation from '../components/preferences/navigation';
 import WindowHeader from '../components/window-header';
 import Categories from '../components/preferences/categories';
+import {track} from '../utils/analytics';
 
 import PreferencesContainer from '../containers/preferences';
 
@@ -19,7 +20,10 @@ export default class PreferencesPage extends React.Component {
     ipc.answerMain('open-plugin-config', preferencesContainer.openPluginsConfig);
   }
 
-  setOverlay = overlay => this.setState({overlay});
+  setOverlay = overlay => {
+    this.setState({overlay});
+    track(`preferences/overlay/${overlay ? 'active' : 'inactive'}`);
+  }
 
   render() {
     const {overlay} = this.state;
