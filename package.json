@@ -29,14 +29,17 @@
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.15",
     "@sindresorhus/do-not-disturb": "^0.2.0",
+    "@sindresorhus/to-milliseconds": "^1.0.0",
     "ajv": "^6.5.3",
     "aperture": "^4.0.0",
     "base64-img": "^1.0.4",
     "classnames": "^2.2.6",
     "delay": "^3.0.0",
     "electron-better-ipc": "^0.1.1",
+    "electron-log": "^2.2.17",
     "electron-next": "^3.1.5",
     "electron-store": "^2.0.0",
+    "electron-updater": "^3.1.2",
     "electron-util": "^0.9.0",
     "execa": "^0.10.0",
     "first-run": "^1.2.0",
@@ -116,6 +119,7 @@
       "renderer/out"
     ],
     "mac": {
+      "electronUpdaterCompatibility": ">=2.16",
       "category": "public.app-category.productivity",
       "minimumSystemVersion": "10.12.0",
       "extendInfo": {
