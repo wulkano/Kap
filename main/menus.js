@@ -3,6 +3,7 @@
 const {Menu} = require('electron');
 
 const {openPrefsWindow} = require('./preferences');
+const {track} = require('./common/analytics');
 
 // Const {checkForUpdates} = require('./auto-updater');
 
@@ -10,6 +11,7 @@ const checkForUpdatesItem = {
   label: 'Check for Updates…',
   click(item) {
     item.enabled = false;
+    track('tray/check-for-updates');
     // CheckForUpdates(() => {
     //   // This will be called if no update is available
     //   (new Notification({
