@@ -79,8 +79,11 @@ const startRecording = async options => {
 
   try {
     await aperture.startRecording(apertureOpts);
-    track(`recording/started/${(Date.now() - past) / 1000}`);
-    console.log(`Started recording after ${(Date.now() - past) / 1000}s`);
+    const startTime = (Date.now() - past) / 1000;
+    if (startTime > 3) {
+      track(`recording/started/${startTime}`);
+    }
+    console.log(`Started recording after ${startTime}s`);
     setRecordingCroppers();
     setRecordingTray(stopRecording);
     past = Date.now();
@@ -97,7 +100,7 @@ const startRecording = async options => {
 };
 
 const stopRecording = async () => {
-  track(`recording/stopped/${(Date.now() - past) / 1000}`);
+  console.log(`Stopped recording after ${(Date.now() - past) / 1000}s`);
   closeAllCroppers();
 
   const filePath = await aperture.stopRecording();
