@@ -1,6 +1,7 @@
 import electron from 'electron';
 import {Container} from 'unstated';
 import delay from 'delay';
+import {track} from '../utils/analytics';
 
 export default class PreferencesContainer extends Container {
   remote = electron.remote || false;
@@ -120,6 +121,7 @@ export default class PreferencesContainer extends Container {
 
   toggleSetting = (setting, value) => {
     const newVal = value === undefined ? !this.state[setting] : value;
+    track(`preferences/setting/${setting}/${value}`);
     this.setState({[setting]: newVal});
     this.settings.set(setting, newVal);
   }
