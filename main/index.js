@@ -11,6 +11,8 @@ const initializeExportList = require('./export-list');
 const {openEditorWindow} = require('./editor');
 const {track} = require('./common/analytics');
 
+require('./utils/sentry');
+
 const filesToOpen = [];
 
 app.on('open-file', (event, path) => {

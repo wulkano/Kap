@@ -10,6 +10,8 @@ import CursorContainer from '../containers/cursor';
 import CropperContainer from '../containers/cropper';
 import ActionBarContainer from '../containers/action-bar';
 
+import '../utils/sentry';
+
 const cursorContainer = new CursorContainer();
 const cropperContainer = new CropperContainer();
 const actionBarContainer = new ActionBarContainer();
