@@ -51,6 +51,14 @@ const initializeGlobalAccelerators = () => {
     }
   });
 
+  ipc.answerRenderer('toggle-shortcuts', ({enabled}) => {
+    if (enabled) {
+      registrerFromStore();
+    } else {
+      globalShortcut.unregisterAll();
+    }
+  });
+
   // Register keyboard shortcuts from store
   registrerFromStore();
 };

@@ -125,6 +125,14 @@ export default class PreferencesContainer extends Container {
     this.settings.set(setting, newVal);
   }
 
+  toggleShortcuts = async () => {
+    const setting = 'recordKeyboardShortcut';
+    const newVal = !this.state[setting];
+    this.setState({[setting]: newVal});
+    this.settings.set(setting, newVal);
+    await this.ipc.callMain('toggle-shortcuts', {enabled: newVal});
+  }
+
   updateShortcut = async (setting, shortcut) => {
     try {
       await this.ipc.callMain('update-shortcut', {setting, shortcut});

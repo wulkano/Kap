@@ -43,7 +43,8 @@ class Settings extends React.Component {
       pickKapturesDir,
       setOpenOnStartup,
       cropperShortcut,
-      updateShortcut
+      updateShortcut,
+      toggleShortcuts
     } = this.props;
 
     const devices = audioDevices.map(device => ({
@@ -83,7 +84,7 @@ class Settings extends React.Component {
           title="Keyboard shortcuts"
           subtitle="Toggle and customise keyboard shortcuts"
         >
-          <Switch checked={recordKeyboardShortcut} onClick={() => toggleSetting('recordKeyboardShortcut')}/>
+          <Switch checked={recordKeyboardShortcut} onClick={toggleShortcuts}/>
         </Item>
         {recordKeyboardShortcut && (
           <Item subtitle="Trigger Kap">
@@ -166,6 +167,7 @@ Settings.propTypes = {
   pickKapturesDir: PropTypes.func.isRequired,
   setOpenOnStartup: PropTypes.func.isRequired,
   updateShortcut: PropTypes.func.isRequired,
+  toggleShortcuts: PropTypes.func.isRequired,
   cropperShortcut: PropTypes.shape({
     metaKey: PropTypes.bool.isRequired,
     altKey: PropTypes.bool.isRequired,
@@ -213,12 +215,14 @@ export default connect(
     setAudioInputDeviceId,
     pickKapturesDir,
     setOpenOnStartup,
-    updateShortcut
+    updateShortcut,
+    toggleShortcuts
   }) => ({
     toggleSetting,
     setAudioInputDeviceId,
     pickKapturesDir,
     setOpenOnStartup,
-    updateShortcut
+    updateShortcut,
+    toggleShortcuts
   })
 )(Settings);
