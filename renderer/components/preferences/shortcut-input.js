@@ -50,7 +50,7 @@ export default class ShortcutInput extends React.Component {
   handleKeyDown = event => {
     event.preventDefault();
     const {metaKey, altKey, ctrlKey, shiftKey} = event;
-    const INVALID_KEYS = [17, 16, 91, 8];
+    const INVALID_KEYS = [17, 16, 91, 8, 18];
     const char = INVALID_KEYS.includes(event.which) ? '' : String.fromCharCode(event.which);
     this.setState({metaKey, altKey, ctrlKey, shiftKey, char});
   }
