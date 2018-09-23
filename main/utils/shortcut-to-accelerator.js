@@ -1,14 +1,14 @@
 const shortcutToAccelerator = shortcut => {
-  const {metaKey, altKey, ctrlKey, shiftKey, char} = shortcut;
-  if (!char) {
-    throw new Error(`shortcut needs char ${JSON.stringify(shortcut)}`);
+  const {metaKey, altKey, ctrlKey, shiftKey, character} = shortcut;
+  if (!character) {
+    throw new Error(`shortcut needs character ${JSON.stringify(shortcut)}`);
   }
   const keys = [
     metaKey && 'Command',
     altKey && 'Option',
     ctrlKey && 'Control',
     shiftKey && 'Shift',
-    char
+    character
   ].filter(Boolean);
   return keys.join('+');
 };

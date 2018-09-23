@@ -171,7 +171,7 @@ Settings.propTypes = {
     altKey: PropTypes.bool.isRequired,
     ctrlKey: PropTypes.bool.isRequired,
     shiftKey: PropTypes.bool.isRequired,
-    char: PropTypes.string.isRequired
+    character: PropTypes.string.isRequired
   })
 };
 

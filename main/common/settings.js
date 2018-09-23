@@ -23,7 +23,7 @@ const store = new Store({
       altKey: false,
       ctrlKey: false,
       shiftKey: true,
-      char: '5'
+      character: '5'
     }
   }
 });

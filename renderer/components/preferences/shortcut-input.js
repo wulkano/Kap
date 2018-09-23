@@ -35,7 +35,7 @@ export default class ShortcutInput extends React.Component {
     altKey: PropTypes.bool.isRequired,
     ctrlKey: PropTypes.bool.isRequired,
     shiftKey: PropTypes.bool.isRequired,
-    char: PropTypes.string.isRequired,
+    character: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired
   }
 
@@ -44,23 +44,23 @@ export default class ShortcutInput extends React.Component {
     altKey: this.props.altKey || false,
     ctrlKey: this.props.ctrlKey || false,
     shiftKey: this.props.shiftKey || false,
-    char: this.props.char || ''
+    character: this.props.character || ''
   }
 
   handleKeyDown = event => {
     event.preventDefault();
     const {metaKey, altKey, ctrlKey, shiftKey} = event;
     const INVALID_KEYS = [17, 16, 91, 8, 18];
-    const char = INVALID_KEYS.includes(event.which) ? '' : String.fromCharCode(event.which);
-    this.setState({metaKey, altKey, ctrlKey, shiftKey, char});
+    const character = INVALID_KEYS.includes(event.which) ? '' : String.fromCharCode(event.which);
+    this.setState({metaKey, altKey, ctrlKey, shiftKey, character});
   }
 
   get isValid() {
-    const {metaKey, altKey, ctrlKey, shiftKey, char} = this.state;
+    const {metaKey, altKey, ctrlKey, shiftKey, character} = this.state;
     if (![metaKey, altKey, ctrlKey, shiftKey].includes(true)) {
       return false;
     }
-    if (char.length === 0) {
+    if (character.length === 0) {
       return false;
     }
     return true;
@@ -75,20 +75,20 @@ export default class ShortcutInput extends React.Component {
   }
 
   renderKeys = () => {
-    const {metaKey, altKey, ctrlKey, shiftKey, char} = this.state;
+    const {metaKey, altKey, ctrlKey, shiftKey, character} = this.state;
     const keys = [
       metaKey && '⌘',
       altKey && '⌥',
       ctrlKey && '⌃',
       shiftKey && '⇧',
-      char
+      character
     ].filter(Boolean);
 
     return keys.map(key => <Key key={key}>{key}</Key>);
   }
 
   clearShortcut = () => {
-    this.setState({metaKey: false, altKey: false, ctrlKey: false, shiftKey: false, char: ''});
+    this.setState({metaKey: false, altKey: false, ctrlKey: false, shiftKey: false, character: ''});
     this.props.onChange(null);
   }
 
