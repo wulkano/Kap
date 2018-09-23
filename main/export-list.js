@@ -177,6 +177,7 @@ class ExportList {
   }
 
   openExport(createdAt) {
+    track('export/history/opened/recording');
     const exp = this.exports.find(exp => exp.createdAt === createdAt);
     if (exp) {
       openEditorWindow(exp.inputPath, exp.originalFps);
