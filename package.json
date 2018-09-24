@@ -60,6 +60,8 @@
     "p-cancelable": "^0.5.0",
     "p-event": "^2.1.0",
     "prop-types": "^15.6.2",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
     "react-linkify": "^0.2.2",
     "semver": "^5.5.0",
     "tempy": "^0.2.1",
@@ -74,8 +76,6 @@
     "eslint-config-xo-react": "^0.17.0",
     "eslint-plugin-react": "^7.11.1",
     "next": "^7.0.0",
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2",
     "xo": "^0.22.0"
   },
   "xo": {
