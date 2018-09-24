@@ -22,7 +22,7 @@ const checkForUpdatesItem = {
 
 const issueBody = `
 <!--
-Thank you for helping us test the Kap Beta, your feedback helps us make Kap better for everyone!
+Thank you for helping us test Kap, your feedback helps us make Kap better for everyone!
 
 Before you continue; please make sure you've searched our existing issues to avoid duplicates. When you're ready to open a new issue, include as much information as possible. You can use the handy template below for bug reports.
 
