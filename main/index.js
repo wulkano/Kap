@@ -1,15 +1,15 @@
 'use strict';
 
-const {app, globalShortcut} = require('electron');
+const {app} = require('electron');
 const prepareNext = require('electron-next');
 
 const {initializeTray} = require('./tray');
-const {openCropperWindow} = require('./cropper');
 const plugins = require('./common/plugins');
 const {initializeAnalytics} = require('./common/analytics');
 const initializeExportList = require('./export-list');
 const {openEditorWindow} = require('./editor');
 const {track} = require('./common/analytics');
+const {initializeGlobalAccelerators} = require('./global-accelerators');
 
 const filesToOpen = [];
 
@@ -47,7 +47,7 @@ const initializePlugins = async () => {
   initializeAnalytics();
   initializeTray();
   initializeExportList();
-  globalShortcut.register('Command+Shift+5', openCropperWindow);
+  initializeGlobalAccelerators();
 
   for (const file of filesToOpen) {
     track('editor/opened/startup');
