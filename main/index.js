@@ -15,6 +15,8 @@ const {openEditorWindow} = require('./editor');
 const {track} = require('./common/analytics');
 const {initializeGlobalAccelerators} = require('./global-accelerators');
 
+require('./utils/sentry');
+
 const filesToOpen = [];
 
 app.on('open-file', (event, path) => {

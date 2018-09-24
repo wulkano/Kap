@@ -28,6 +28,8 @@
   },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.15",
+    "@sentry/browser": "^4.0.4",
+    "@sentry/electron": "^0.10.0",
     "@sindresorhus/do-not-disturb": "^0.2.0",
     "@sindresorhus/to-milliseconds": "^1.0.0",
     "ajv": "^6.5.3",
@@ -95,6 +97,7 @@
     },
     "rules": {
       "import/no-extraneous-dependencies": "off",
+      "import/no-unassigned-import": "off",
       "array-element-newline": "off",
       "no-use-before-define": "off",
       "react/jsx-no-bind": "off",
