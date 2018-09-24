@@ -1,7 +1,7 @@
 'use strict';
 
-const {Menu, shell, app} = require('electron');
 const os = require('os');
+const {Menu, shell, app} = require('electron');
 const {openPrefsWindow} = require('./preferences');
 
 const issueBody = `
