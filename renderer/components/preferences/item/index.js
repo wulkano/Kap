@@ -110,6 +110,7 @@ class Item extends React.Component {
 
           .subtitle {
             color: ${onClick ? '#007aff' : '#606060'};
+            font-weight: ${onClick ? '500' : 'normal'};
             font-size: 1.2rem;
           }
 
