@@ -72,7 +72,7 @@ export default class PreferencesPage extends React.Component {
             }
 
             .overlay.active {
-              background-color: rgba(0,0,0,0.5);
+              background-color: rgba(0,0,0,0.2);
             }
 
 

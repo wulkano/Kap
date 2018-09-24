@@ -87,6 +87,7 @@ export default class Editor extends React.Component {
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 1.4rem;
             color: #fff;
           }
 
