@@ -15,7 +15,7 @@ const aperture = createAperture();
 const {audioDevices} = createAperture;
 
 let wasDoNotDisturbAlreadyEnabled;
-let lastRecordedFps;
+let lastUsedSettings;
 
 let past;
 
@@ -46,7 +46,11 @@ const startRecording = async options => {
     displayId: String(displayId)
   };
 
-  lastRecordedFps = apertureOpts.fps;
+  lastUsedSettings = {
+    recordedFps: apertureOpts.fps,
+    hideDesktopIcons,
+    doNotDisturb
+  };
 
   if (recordAudio === true) {
     // In case for some reason the default audio device is not set
@@ -110,9 +114,10 @@ const stopRecording = async () => {
   const filePath = await aperture.stopRecording();
 
   const {
+    recordedFps,
     hideDesktopIcons,
     doNotDisturb
-  } = settings.store;
+  } = lastUsedSettings;
 
   if (hideDesktopIcons) {
     desktopIcons.show();
@@ -123,7 +128,7 @@ const stopRecording = async () => {
   }
 
   track('editor/opened/recording');
-  openEditorWindow(filePath, lastRecordedFps);
+  openEditorWindow(filePath, recordedFps);
 };
 
 module.exports = {
