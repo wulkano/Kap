@@ -124,7 +124,7 @@ export default class PreferencesContainer extends Container {
 
   toggleSetting = (setting, value) => {
     const newVal = value === undefined ? !this.state[setting] : value;
-    this.track(`preferences/setting/${setting}/${value}`);
+    this.track(`preferences/setting/${setting}/${newVal}`);
     this.setState({[setting]: newVal});
     this.settings.set(setting, newVal);
   }
