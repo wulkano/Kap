@@ -6,8 +6,6 @@ import Editor from '../components/editor';
 import Options from '../components/editor/options';
 import {EditorContainer, VideoContainer} from '../containers';
 
-import '../utils/sentry';
-
 const editorContainer = new EditorContainer();
 const videoContainer = new VideoContainer();
 

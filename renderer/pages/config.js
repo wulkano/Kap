@@ -5,8 +5,6 @@ import {ConfigContainer} from '../containers';
 import Config from '../components/config';
 import WindowHeader from '../components/window-header';
 
-import '../utils/sentry';
-
 const configContainer = new ConfigContainer();
 
 export default class ConfigPage extends React.Component {

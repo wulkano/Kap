@@ -742,7 +742,7 @@
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.2.tgz#54c5a964462be3d4d78af631363c18d6fa91ac26"
 
-"@sentry/browser@^4.0.3":
+"@sentry/browser@^4.0.3", "@sentry/browser@^4.0.4":
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-4.0.4.tgz#6dfe05099d9ce23d7e9becaa905af5406520d448"
   dependencies:

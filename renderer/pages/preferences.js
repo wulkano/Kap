@@ -8,8 +8,6 @@ import Categories from '../components/preferences/categories';
 
 import PreferencesContainer from '../containers/preferences';
 
-import '../utils/sentry';
-
 const preferencesContainer = new PreferencesContainer();
 
 export default class PreferencesPage extends React.Component {

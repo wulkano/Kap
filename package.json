@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.15",
+    "@sentry/browser": "^4.0.4",
     "@sentry/electron": "^0.10.0",
     "@sindresorhus/do-not-disturb": "^0.2.0",
     "ajv": "^6.5.3",

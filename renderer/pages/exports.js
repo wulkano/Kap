@@ -6,8 +6,6 @@ import Exports from '../components/exports';
 
 import ExportsContainer from '../containers/exports';
 
-import '../utils/sentry';
-
 const exportsContainer = new ExportsContainer();
 
 export default class ExportsPage extends React.Component {
