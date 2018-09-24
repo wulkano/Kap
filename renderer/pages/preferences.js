@@ -5,7 +5,6 @@ import classNames from 'classnames';
 import PreferencesNavigation from '../components/preferences/navigation';
 import WindowHeader from '../components/window-header';
 import Categories from '../components/preferences/categories';
-import {track} from '../utils/analytics';
 
 import PreferencesContainer from '../containers/preferences';
 
@@ -22,7 +21,6 @@ export default class PreferencesPage extends React.Component {
 
   setOverlay = overlay => {
     this.setState({overlay});
-    track(`preferences/overlay/${overlay ? 'active' : 'inactive'}`);
   }
 
   render() {

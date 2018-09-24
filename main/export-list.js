@@ -132,6 +132,8 @@ class ExportList {
         cancelId: 1
       });
 
+      track(`export/plugin/invalid/${options.pluginName}`);
+
       if (result === 0) {
         const prefsWindow = await openPrefsWindow();
         ipc.callRenderer(prefsWindow, 'open-plugin-config', options.pluginName);
