@@ -17,7 +17,14 @@ const store = new Store({
     recordKeyboardShortcut: true,
     doNotDisturb: false,
     recordAudio: false,
-    audioInputDeviceId: null
+    audioInputDeviceId: null,
+    cropperShortcut: {
+      metaKey: true,
+      altKey: false,
+      ctrlKey: false,
+      shiftKey: true,
+      character: '5'
+    }
   }
 });
 

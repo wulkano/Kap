@@ -3,6 +3,7 @@
 const {Menu} = require('electron');
 
 const {openPrefsWindow} = require('./preferences');
+const {track} = require('./common/analytics');
 
 const cogMenu = [
   {

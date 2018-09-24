@@ -11,6 +11,8 @@ export default class PreferencesContainer extends Container {
     this.setOverlay = setOverlay;
     this.settings = this.remote.require('./common/settings');
     this.plugins = this.remote.require('./common/plugins');
+    this.track = this.remote.require('./common/analytics').track;
+    this.ipc = require('electron-better-ipc');
 
     const pluginsInstalled = this.plugins.getInstalled().sort((a, b) => a.prettyName.localeCompare(b.prettyName));
 
@@ -96,6 +98,7 @@ export default class PreferencesContainer extends Container {
   }
 
   openPluginsConfig = async name => {
+    this.track(`plugin/config/${name}`);
     const {pluginsInstalled} = this.state;
     this.setState({category: 'plugins', tab: 'installed'});
     const index = pluginsInstalled.findIndex(p => p.name === name);
@@ -115,13 +118,31 @@ export default class PreferencesContainer extends Container {
   }
 
   selectTab = tab => {
+    this.track(`preferences/tab/${tab}`);
     this.setState({tab});
   }
 
   toggleSetting = (setting, value) => {
     const newVal = value === undefined ? !this.state[setting] : value;
+    this.track(`preferences/setting/${setting}/${value}`);
     this.setState({[setting]: newVal});
     this.settings.set(setting, newVal);
+  }
+
+  toggleShortcuts = async () => {
+    const setting = 'recordKeyboardShortcut';
+    const newVal = !this.state[setting];
+    this.toggleSetting(setting, newVal);
+    await this.ipc.callMain('toggle-shortcuts', {enabled: newVal});
+  }
+
+  updateShortcut = async (setting, shortcut) => {
+    try {
+      await this.ipc.callMain('update-shortcut', {setting, shortcut});
+      this.setState({[setting]: shortcut});
+    } catch (error) {
+      console.warn('Error updating shortcut', error);
+    }
   }
 
   setOpenOnStartup = value => {
