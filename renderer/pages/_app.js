@@ -1,5 +1,4 @@
 import electron from 'electron';
-import {is} from 'electron-util';
 import App from 'next/app';
 import * as Sentry from '@sentry/browser';
 
@@ -12,6 +11,8 @@ export default class Kap extends App {
     super(...args);
 
     if (remote) {
+      // TODO: When we disable SSR, this can be a normal import
+      const {is} = remote.require('electron-util');
       const settings = remote.require('./common/settings');
 
       if (!is.development && settings.get('allowAnalytics')) {
