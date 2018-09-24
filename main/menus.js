@@ -34,7 +34,7 @@ const cogMenu = [
   },
   checkForUpdatesItem,
   {
-    label: 'Send us feedback…',
+    label: 'Send Feedback…',
     click: () => shell.openExternal('https://github.com/wulkano/kap/issues/new?template=beta.md')
   },
   {
