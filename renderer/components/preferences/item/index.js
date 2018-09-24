@@ -46,16 +46,18 @@ class Item extends React.Component {
       onSubtitleClick,
       warning,
       onClick,
-      last
+      last,
+      parentItem
     } = this.props;
 
     const subtitleArray = Array.isArray(subtitle) ? subtitle : [subtitle];
 
     const className = classNames('title', {experimental});
+    const containerClassName = classNames('container', {parent: parentItem});
     const subtitleClassName = classNames('subtitle', {link: Boolean(onSubtitleClick)});
 
     return (
-      <div className="container" onClick={onClick}>
+      <div className={containerClassName} onClick={onClick}>
         <div className="item" id={id}>
           {warning}
           <div className="content">
@@ -79,6 +81,13 @@ class Item extends React.Component {
             margin-bottom: ${last ? '16px' : '0'};
             border-bottom: 1px solid #f1f1f1;
             flex-direction: column;
+          }
+
+          .parent {
+            padding-left: 0;
+            padding-right: 0;
+            margin-left: 16px;
+            margin-right: 16px;
           }
 
           .item {
@@ -171,7 +180,8 @@ Item.propTypes = {
     PropTypes.node
   ]),
   onClick: PropTypes.func,
-  last: PropTypes.bool
+  last: PropTypes.bool,
+  parentItem: PropTypes.bool
 };
 
 export default Item;
