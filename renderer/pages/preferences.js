@@ -19,9 +19,7 @@ export default class PreferencesPage extends React.Component {
     ipc.answerMain('open-plugin-config', preferencesContainer.openPluginsConfig);
   }
 
-  setOverlay = overlay => {
-    this.setState({overlay});
-  }
+  setOverlay = overlay => this.setState({overlay});
 
   render() {
     const {overlay} = this.state;
