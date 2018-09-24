@@ -1,15 +1,19 @@
 'use strict';
 
-const {app, globalShortcut} = require('electron');
+const {app} = require('electron');
 const prepareNext = require('electron-next');
+const {is} = require('electron-util');
+const log = require('electron-log');
+const {autoUpdater} = require('electron-updater');
+const toMilliseconds = require('@sindresorhus/to-milliseconds');
 
 const {initializeTray} = require('./tray');
-const {openCropperWindow} = require('./cropper');
 const plugins = require('./common/plugins');
 const {initializeAnalytics} = require('./common/analytics');
 const initializeExportList = require('./export-list');
 const {openEditorWindow} = require('./editor');
 const {track} = require('./common/analytics');
+const {initializeGlobalAccelerators} = require('./global-accelerators');
 
 const filesToOpen = [];
 
@@ -33,6 +37,22 @@ const initializePlugins = async () => {
   }
 };
 
+const checkForUpdates = () => {
+  if (is.development) {
+    return false;
+  }
+
+  // For auto-update debugging in Console.app
+  autoUpdater.logger = log;
+  autoUpdater.logger.transports.file.level = 'info';
+
+  setInterval(() => {
+    autoUpdater.checkForUpdates();
+  }, toMilliseconds({hours: 1}));
+
+  autoUpdater.checkForUpdates();
+};
+
 // Prepare the renderer once the app is ready
 (async () => {
   await app.whenReady();
@@ -47,12 +67,14 @@ const initializePlugins = async () => {
   initializeAnalytics();
   initializeTray();
   initializeExportList();
-  globalShortcut.register('Command+Shift+5', openCropperWindow);
+  initializeGlobalAccelerators();
 
   for (const file of filesToOpen) {
     track('editor/opened/startup');
     openEditorWindow(file);
   }
+
+  checkForUpdates();
 })();
 
 app.on('window-all-closed', event => event.preventDefault());

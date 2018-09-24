@@ -132,6 +132,8 @@ class ExportList {
         cancelId: 1
       });
 
+      track(`export/plugin/invalid/${options.pluginName}`);
+
       if (result === 0) {
         const prefsWindow = await openPrefsWindow();
         ipc.callRenderer(prefsWindow, 'open-plugin-config', options.pluginName);
@@ -177,6 +179,7 @@ class ExportList {
   }
 
   openExport(createdAt) {
+    track('export/history/opened/recording');
     const exp = this.exports.find(exp => exp.createdAt === createdAt);
     if (exp) {
       openEditorWindow(exp.inputPath, exp.originalFps);

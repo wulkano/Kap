@@ -4,22 +4,6 @@ const {Menu, shell, app} = require('electron');
 const os = require('os');
 const {openPrefsWindow} = require('./preferences');
 
-// Const {checkForUpdates} = require('./auto-updater');
-
-const checkForUpdatesItem = {
-  label: 'Check for Updates…',
-  click(item) {
-    item.enabled = false;
-    // CheckForUpdates(() => {
-    //   // This will be called if no update is available
-    //   (new Notification({
-    //     title: 'No updates available!',
-    //     body: 'You will automatically receive updates as soon as they are available 🤗'
-    //   })).show();
-    // });
-  }
-};
-
 const issueBody = `
 <!--
 Thank you for helping us test Kap, your feedback helps us make Kap better for everyone!
@@ -58,7 +42,6 @@ const cogMenu = [
     accelerator: 'Cmd+,',
     click: openPrefsWindow
   },
-  checkForUpdatesItem,
   {
     label: 'Send Feedback…',
     click: () => shell.openExternal(`https://github.com/wulkano/kap/issues/new?body=${encodeURIComponent(issueBody)}`)
