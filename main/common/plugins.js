@@ -129,6 +129,8 @@ class Plugins {
     this._modifyMainPackageJson(pkg => {
       delete pkg.dependencies[name];
     });
+    const plugin = new Plugin(name);
+    plugin.config.clear();
   }
 
   async prune() {
