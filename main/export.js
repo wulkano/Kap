@@ -105,15 +105,9 @@ class Export {
       this.format
     );
 
-    try {
-      const filePath = await this.convertProcess;
-      this.resolve();
-      return filePath;
-    } catch (error) {
-      if (!this.convertProcess.isCanceled) {
-        this.reject(error);
-      }
-    }
+    const filePath = await this.convertProcess;
+    this.resolve();
+    return filePath;
   }
 }
 
