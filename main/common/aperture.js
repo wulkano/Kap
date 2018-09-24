@@ -6,6 +6,7 @@ const dnd = require('@sindresorhus/do-not-disturb');
 const createAperture = require('aperture');
 
 const {openEditorWindow} = require('../editor');
+const {closePrefsWindow} = require('../preferences');
 const {setRecordingTray, disableTray} = require('../tray');
 const {disableCroppers, setRecordingCroppers, closeAllCroppers} = require('../cropper');
 const settings = require('./settings');
@@ -20,6 +21,7 @@ let lastRecordedFps;
 let past;
 
 const startRecording = async options => {
+  closePrefsWindow();
   disableTray();
   disableCroppers();
 
