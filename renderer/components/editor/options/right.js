@@ -55,7 +55,6 @@ class RightOptions extends React.Component {
             border-radius: 4px;
             text-align: center;
             width: 80px;
-            cursor: pointer;
           }
 
           .button:hover {

@@ -193,7 +193,6 @@ class PlayBar extends React.Component {
               transition: all 0.16s ease-in-out;
               -webkit-appearance: none;
               pointer-events: auto;
-              cursor: pointer;
               z-index: 20;
             }
 
