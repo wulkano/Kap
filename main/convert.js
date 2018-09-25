@@ -75,7 +75,7 @@ const mute = async inputPath => {
 };
 
 const convertToMp4 = async opts => {
-  if (opts.muted) {
+  if (opts.isMuted) {
     opts.inputPath = await mute(opts.inputPath);
   }
 
@@ -90,7 +90,7 @@ const convertToMp4 = async opts => {
 };
 
 const convertToWebm = async opts => {
-  if (opts.muted) {
+  if (opts.isMuted) {
     opts.inputPath = await mute(opts.inputPath);
   }
 

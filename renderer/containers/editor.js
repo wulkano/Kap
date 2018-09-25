@@ -158,7 +158,7 @@ export default class EditorContainer extends Container {
         fps,
         startTime,
         endTime,
-        muted: isMuted
+        isMuted
       },
       inputPath: filePath,
       pluginName,
