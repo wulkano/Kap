@@ -1,13 +1,9 @@
 'use strict';
 
-const path = require('path');
-const fs = require('fs');
-const electron = require('electron');
 const {BrowserWindow, app} = require('electron');
 const ipc = require('electron-better-ipc');
 const {is} = require('electron-util');
 
-const {converters} = require('./convert');
 const getFps = require('./utils/fps');
 const loadRoute = require('./utils/routes');
 
@@ -43,10 +39,6 @@ const openEditorWindow = async (filePath, recordFps) => {
   editors.set(filePath, editorWindow);
   app.dock.show();
 
-  if (!exportOptions) {
-    exportOptions = getExportOptions();
-  }
-
   loadRoute(editorWindow, 'editor');
 
   editorWindow.on('closed', () => {
@@ -63,55 +55,14 @@ const openEditorWindow = async (filePath, recordFps) => {
   });
 };
 
-const prettifyFormat = format => {
-  const formats = new Map([
-    ['apng', 'APNG'],
-    ['gif', 'GIF'],
-    ['mp4', 'MP4'],
-    ['webm', 'WebM']
-  ]);
-
-  return formats.get(format);
+const setOptions = options => {
+  exportOptions = options;
 };
 
-const getExportOptions = () => {
-  const cwd = path.join(electron.app.getPath('userData'), 'plugins');
-  const pkg = fs.readFileSync(path.join(cwd, 'package.json'), 'utf8');
-  const pluginNames = Object.keys(JSON.parse(pkg).dependencies);
-
-  const options = {};
-  for (const format of converters.keys()) {
-    options[format] = {
-      format,
-      prettyFormat: prettifyFormat(format),
-      plugins: [{
-        title: 'Save to Disk',
-        pluginName: 'default',
-        isDefault: true
-      }]
-    };
-  }
-
-  for (const pluginName of pluginNames) {
-    const plugin = require(path.join(cwd, 'node_modules', pluginName));
-    for (const service of plugin.shareServices) {
-      for (const format of service.formats) {
-        options[format].plugins.push({title: service.title, pluginName});
-      }
-    }
-  }
-
-  return options;
-};
-
-const updateExportOptions = () => {
-  exportOptions = getExportOptions();
-  for (const win of editors.values()) {
-    ipc.callRenderer(win, 'export-options', exportOptions);
-  }
-};
+const getEditors = () => editors.values();
 
 module.exports = {
   openEditorWindow,
-  updateExportOptions
+  setOptions,
+  getEditors
 };

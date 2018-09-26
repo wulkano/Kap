@@ -9,7 +9,7 @@ const ipc = require('electron-better-ipc');
 const {app, Notification} = electron;
 
 const Plugin = require('../plugin');
-const {updateExportOptions} = require('../editor');
+const {updateExportOptions} = require('../export-options');
 const {openConfigWindow} = require('../config');
 const {openPrefsWindow} = require('../preferences');
 const {notify} = require('./notifications');
