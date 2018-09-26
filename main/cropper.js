@@ -6,9 +6,16 @@ const delay = require('delay');
 const settings = require('./common/settings');
 const loadRoute = require('./utils/routes');
 
-const {BrowserWindow} = electron;
+const {BrowserWindow, systemPreferences} = electron;
 
 const croppers = new Map();
+let closeWhenActiveSpaceChanges = false;
+
+systemPreferences.subscribeWorkspaceNotification('NSWorkspaceActiveSpaceDidChangeNotification', () => {
+  if (closeWhenActiveSpaceChanges) {
+    closeAllCroppers();
+  }
+});
 
 const closeAllCroppers = () => {
   const {screen} = electron;
@@ -20,6 +27,7 @@ const closeAllCroppers = () => {
 
   screen.removeAllListeners('display-removed');
   screen.removeAllListeners('display-added');
+  closeWhenActiveSpaceChanges = false;
 };
 
 const openCropper = (display, activeDisplayId) => {
@@ -57,7 +65,7 @@ const openCropper = (display, activeDisplayId) => {
     };
 
     if (isActive) {
-      const savedCropper = settings.get('cropper');
+      const savedCropper = settings.get('cropper', {});
       if (savedCropper.displayId === id) {
         displayInfo.cropper = savedCropper;
       }
@@ -87,6 +95,7 @@ const openCropperWindow = () => {
   }
 
   croppers.get(activeDisplayId).focus();
+  closeWhenActiveSpaceChanges = true;
 
   screen.on('display-removed', (event, oldDisplay) => {
     const {id} = oldDisplay;
@@ -145,6 +154,7 @@ const selectApp = async (window, activateWindow) => {
 };
 
 const disableCroppers = async () => {
+  closeWhenActiveSpaceChanges = false;
   for (const cropper of croppers.values()) {
     cropper.removeAllListeners('blur');
     cropper.setIgnoreMouseEvents(true);
