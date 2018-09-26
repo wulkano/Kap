@@ -123,8 +123,6 @@ AdvancedControls.Left = connect(
 )(Left);
 
 class Right extends React.Component {
-  state = {}
-
   constructor(props) {
     super(props);
 
@@ -132,32 +130,26 @@ class Right extends React.Component {
     this.heightInput = React.createRef();
   }
 
-  static getDerivedStateFromProps(nextProps) {
-    const {width, height} = nextProps;
-    return {width, height};
-  }
-
   onWidthChange = event => {
-    const {x, y, setBounds, ratioLocked, ratio} = this.props;
+    const {x, y, setBounds, ratioLocked, ratio, setWidth} = this.props;
     const {value} = event.currentTarget;
     const {heightInput, widthInput} = this;
 
-    this.setState({width: value});
+    setWidth(value);
     handleWidthInput({x, y, setBounds, ratioLocked, ratio, value, widthInput, heightInput});
   }
 
   onHeightChange = event => {
-    const {x, y, setBounds, ratioLocked, ratio} = this.props;
+    const {x, y, setBounds, ratioLocked, ratio, setHeight} = this.props;
     const {value} = event.currentTarget;
     const {heightInput, widthInput} = this;
 
-    this.setState({height: value});
+    setHeight(value);
     handleHeightInput({x, y, setBounds, ratioLocked, ratio, value, widthInput, heightInput});
   }
 
   render() {
-    const {width, height} = this.state;
-    const {swapDimensions} = this.props;
+    const {swapDimensions, width, height} = this.props;
 
     return (
       <div className="advanced">
@@ -166,7 +158,7 @@ class Right extends React.Component {
           type="text"
           size="5"
           maxLength="5"
-          value={width || ''}
+          value={width}
           onChange={this.onWidthChange}
           onBlur={handleWidthInput.flush}
           onKeyDown={handleInputKeyPress(this.onWidthChange)}
@@ -179,7 +171,7 @@ class Right extends React.Component {
           type="text"
           size="5"
           maxLength="5"
-          value={height || ''}
+          value={height}
           onChange={this.onHeightChange}
           onBlur={handleHeightInput.flush}
           onKeyDown={handleInputKeyPress(this.onHeightChange)}
@@ -223,18 +215,38 @@ class Right extends React.Component {
 Right.propTypes = {
   x: PropTypes.number,
   y: PropTypes.number,
-  width: PropTypes.number,
-  height: PropTypes.number,
+  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   ratio: PropTypes.array,
   ratioLocked: PropTypes.bool,
   setBounds: PropTypes.func.isRequired,
-  swapDimensions: PropTypes.func.isRequired
+  swapDimensions: PropTypes.func.isRequired,
+  setWidth: PropTypes.func.isRequired,
+  setHeight: PropTypes.func.isRequired
 };
 
 AdvancedControls.Right = connect(
   [CropperContainer, ActionBarContainer],
-  ({x, y, width, height, ratio}, {ratioLocked}) => ({x, y, width, height, ratio, ratioLocked}),
-  ({setBounds, swapDimensions}) => ({setBounds, swapDimensions})
+  (
+    {x, y, ratio},
+    {cropperWidth, cropperHeight, ratioLocked}
+  ) => ({
+    x,
+    y,
+    width: cropperWidth,
+    height: cropperHeight,
+    ratio,
+    ratioLocked
+  }),
+  (
+    {setBounds, swapDimensions},
+    {setWidth, setHeight}
+  ) => ({
+    setBounds,
+    swapDimensions,
+    setWidth,
+    setHeight
+  })
 )(Right);
 
 export default AdvancedControls;

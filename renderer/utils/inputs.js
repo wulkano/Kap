@@ -18,6 +18,10 @@ export const shake = el => {
 const handleWidthInput = _.debounce(({x, y, setBounds, ratioLocked, ratio, value, widthInput, heightInput}) => {
   const updates = {};
 
+  if (value === '') {
+    return;
+  }
+
   if (value.match(/^\d+$/)) {
     const val = parseInt(value, 10);
 
@@ -41,12 +45,13 @@ const handleWidthInput = _.debounce(({x, y, setBounds, ratioLocked, ratio, value
         updates.width = Math.ceil(updates.height * ratio[0] / ratio[1]);
       }
     }
+
+    setBounds(updates);
   } else {
     // If it's not an integer keep last valid value
+    setBounds();
     shake(widthInput.current);
   }
-
-  setBounds(updates);
 }, debounceTimeout);
 
 const handleHeightInput = _.debounce(({
@@ -60,6 +65,10 @@ const handleHeightInput = _.debounce(({
   heightInput
 }) => {
   const updates = {};
+
+  if (value === '') {
+    return;
+  }
 
   if (value.match(/^\d+$/)) {
     const val = parseInt(value, 10);
@@ -84,12 +93,12 @@ const handleHeightInput = _.debounce(({
         updates.height = Math.ceil(updates.width * ratio[1] / ratio[0]);
       }
     }
+    setBounds(updates);
   } else {
     // If it's not an integer keep last valid value
+    setBounds();
     shake(heightInput.current);
   }
-
-  setBounds(updates);
 }, debounceTimeout);
 
 const RATIOS = [

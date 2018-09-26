@@ -76,8 +76,9 @@ export default class CropperContainer extends Container {
       y: y || screenHeight / 2,
       width,
       height,
-      ratio
+      ratio: ratio || [1, 1]
     });
+    this.actionBarContainer.setInputValues({width: width || 0, height: height || 0});
   }
 
   willStartRecording = () => {
@@ -128,17 +129,22 @@ export default class CropperContainer extends Container {
   }
 
   setBounds = (bounds, {save = true, ignoreRatioLocked} = {}) => {
-    const updates = bounds;
+    if (bounds) {
+      const updates = bounds;
 
-    if ((!this.actionBarContainer.state.ratioLocked || ignoreRatioLocked) && (bounds.width || bounds.height)) {
-      const {width, height} = this.state;
-      updates.ratio = findRatioForSize(bounds.width || width, bounds.height || height);
-    }
+      if ((!this.actionBarContainer.state.ratioLocked || ignoreRatioLocked) && (bounds.width || bounds.height)) {
+        const {width, height} = this.state;
+        updates.ratio = findRatioForSize(bounds.width || width, bounds.height || height);
+      }
 
-    if (save) {
-      this.updateSettings(updates);
+      if (save) {
+        this.updateSettings(updates);
+      } else {
+        this.setState(updates);
+      }
+      this.actionBarContainer.setInputValues(updates);
     } else {
-      this.setState(updates);
+      this.actionBarContainer.setInputValues(this.state);
     }
   }
 
@@ -154,6 +160,7 @@ export default class CropperContainer extends Container {
     }
 
     this.updateSettings(updates);
+    this.actionBarContainer.setInputValues(updates);
   }
 
   swapDimensions = () => {
@@ -165,6 +172,7 @@ export default class CropperContainer extends Container {
     }
 
     this.updateSettings(updates);
+    this.actionBarContainer.setInputValues(updates);
     this.setRatio(ratio.reverse());
   }
 
