@@ -43,7 +43,7 @@ const startRecording = async options => {
     cropArea: cropperBounds,
     showCursor,
     highlightClicks,
-    displayId: String(displayId)
+    screenId: displayId
   };
 
   lastUsedSettings = {
@@ -87,28 +87,28 @@ const startRecording = async options => {
     if (startTime > 3) {
       track(`recording/started/${startTime}`);
     } else {
-      track(`recording/started`);
+      track('recording/started');
     }
     console.log(`Started recording after ${startTime}s`);
     setRecordingCroppers();
     setRecordingTray(stopRecording);
     past = Date.now();
-  } catch (err) {
-    track(`recording/stoppped/error`);
+  } catch (error) {
+    track('recording/stoppped/error');
     // This prevents the button from being reset, since the recording has not yet started
     // This delay is due to internal framework delays in aperture native code
-    if (err.message.includes('stopRecording')) {
-      console.log(`Recording not yet started, can't stop recording before it actually started`);
+    if (error.message.includes('stopRecording')) {
+      console.log('Recording not yet started, can\'t stop recording before it actually started');
       return;
     }
 
-    dialog.showErrorBox('Recording error', err.message);
+    dialog.showErrorBox('Recording error', error.message);
   }
 };
 
 const stopRecording = async () => {
   console.log(`Stopped recording after ${(Date.now() - past) / 1000}s`);
-  track(`recording/stoppped`);
+  track('recording/stoppped');
   closeAllCroppers();
 
   const filePath = await aperture.stopRecording();

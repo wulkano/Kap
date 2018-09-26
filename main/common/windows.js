@@ -75,7 +75,7 @@ const buildWindowsMenu = async selected => {
   return menu;
 };
 
-const updateAppUsageHistory = async app => {
+const updateAppUsageHistory = app => {
   const {count = 0} = usageHistory[app.pid] || {};
 
   usageHistory[app.pid] = {
