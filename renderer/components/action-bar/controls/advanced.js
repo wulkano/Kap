@@ -225,8 +225,8 @@ class Right extends React.Component {
 Right.propTypes = {
   x: PropTypes.number,
   y: PropTypes.number,
-  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  width: PropTypes.string,
+  height: PropTypes.string,
   ratio: PropTypes.array,
   ratioLocked: PropTypes.bool,
   setBounds: PropTypes.func.isRequired,
