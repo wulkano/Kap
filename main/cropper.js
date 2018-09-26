@@ -151,7 +151,7 @@ const selectApp = async (window, activateWindow) => {
   });
 };
 
-const disableCroppers = async () => {
+const disableCroppers = () => {
   if (notificationId !== null) {
     systemPreferences.unsubscribeWorkspaceNotification(notificationId);
     notificationId = null;
@@ -164,7 +164,7 @@ const disableCroppers = async () => {
   }
 };
 
-const setRecordingCroppers = async () => {
+const setRecordingCroppers = () => {
   for (const cropper of croppers.values()) {
     cropper.webContents.send('start-recording');
   }
