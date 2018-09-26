@@ -35,7 +35,7 @@ const handleWidthInput = _.debounce(({
   if (value.match(/^\d+$/)) {
     const val = parseInt(value, 10);
 
-    if (val <= 0) {
+    if (val < 0) {
       shake(widthInput.current);
       updates.width = 1;
     } else if (x + val > screenWidth) {
@@ -84,7 +84,7 @@ const handleHeightInput = _.debounce(({
   if (value.match(/^\d+$/)) {
     const val = parseInt(value, 10);
 
-    if (val <= 0) {
+    if (val < 0) {
       shake(heightInput.current);
       updates.height = 1;
     } else if (y + val > screenHeight) {

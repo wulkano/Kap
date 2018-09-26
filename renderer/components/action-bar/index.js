@@ -44,7 +44,7 @@ class ActionBar extends React.Component {
           <AdvancedControls.Left/>
         </div>
         <RecordButton
-          cropperExists={cropperWidth + cropperHeight !== 0}/>
+          cropperExists={cropperWidth && cropperHeight}/>
         <div className="actions">
           <MainControls.Right/>
           <AdvancedControls.Right/>

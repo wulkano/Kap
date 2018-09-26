@@ -24,10 +24,10 @@ export default class ActionBarContainer extends Container {
 
   setInputValues = ({width, height}) => {
     const updates = {};
-    if (width) {
+    if (width !== undefined) {
       updates.cropperWidth = width;
     }
-    if (height) {
+    if (height !== undefined) {
       updates.cropperHeight = height;
     }
     this.setState(updates);
