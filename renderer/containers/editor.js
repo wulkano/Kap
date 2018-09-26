@@ -25,7 +25,7 @@ export default class EditorContainer extends Container {
     const src = `file://${filePath}`;
     this.finishLoading = resolve;
 
-    this.setState({src, filePath, fps, originalFps: fps});
+    this.setState({src, filePath, fps, originalFps: fps, wasMuted: false});
     this.videoContainer.setSrc(src);
   }
 
@@ -79,9 +79,10 @@ export default class EditorContainer extends Container {
   }
 
   setOptions = options => {
+    console.log('Got options');
     const [format] = this.state.formats;
     const [{title: plugin}] = options[format].plugins;
-    this.setState({options, format, plugin, wasMuted: false});
+    this.setState({options, format, plugin});
   }
 
   selectFormat = format => {

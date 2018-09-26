@@ -23,9 +23,7 @@ export default class EditorPage extends React.Component {
       return true;
     });
 
-    (async () => {
-      editorContainer.setOptions(await ipc.callMain('export-options'));
-    })();
+    ipc.answerMain('export-options', editorContainer.setOptions);
   }
 
   render() {

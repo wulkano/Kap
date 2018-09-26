@@ -9,6 +9,7 @@ const ipc = require('electron-better-ipc');
 const {app, Notification} = electron;
 
 const Plugin = require('../plugin');
+const {updateExportOptions} = require('../editor');
 const {openConfigWindow} = require('../config');
 const {openPrefsWindow} = require('../preferences');
 const {notify} = require('./notifications');
@@ -109,6 +110,7 @@ class Plugins {
       }
 
       notification.show();
+      updateExportOptions();
 
       return {hasConfig, isValid};
     } catch (error) {
@@ -131,6 +133,7 @@ class Plugins {
     });
     const plugin = new Plugin(name);
     plugin.config.clear();
+    updateExportOptions();
   }
 
   async prune() {

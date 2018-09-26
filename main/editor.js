@@ -11,7 +11,8 @@ const {converters} = require('./convert');
 const getFps = require('./utils/fps');
 const loadRoute = require('./utils/routes');
 
-let editors = 0;
+const editors = new Map();
+let exportOptions;
 
 const OPTIONS_BAR_HEIGHT = 48;
 const VIDEO_ASPECT = 9 / 16;
@@ -20,6 +21,10 @@ const MIN_VIDEO_HEIGHT = MIN_VIDEO_WIDTH * VIDEO_ASPECT;
 const MIN_WINDOW_HEIGHT = MIN_VIDEO_HEIGHT + OPTIONS_BAR_HEIGHT;
 
 const openEditorWindow = async (filePath, recordFps) => {
+  if (editors.has(filePath)) {
+    editors.get(filePath).show();
+    return;
+  }
   const fps = recordFps || await getFps(filePath);
 
   const editorWindow = new BrowserWindow({
@@ -35,19 +40,24 @@ const openEditorWindow = async (filePath, recordFps) => {
     show: false
   });
 
-  editors++;
+  editors.set(filePath, editorWindow);
   app.dock.show();
+
+  if (!exportOptions) {
+    exportOptions = getExportOptions();
+  }
 
   loadRoute(editorWindow, 'editor');
 
   editorWindow.on('closed', () => {
-    editors--;
-    if (!editors) {
+    editors.delete(filePath);
+    if (editors.size === 0) {
       app.dock.hide();
     }
   });
 
   editorWindow.webContents.on('did-finish-load', async () => {
+    ipc.callRenderer(editorWindow, 'export-options', exportOptions);
     await ipc.callRenderer(editorWindow, 'file', {filePath, fps});
     editorWindow.show();
   });
@@ -64,7 +74,7 @@ const prettifyFormat = format => {
   return formats.get(format);
 };
 
-ipc.answerRenderer('export-options', () => {
+const getExportOptions = () => {
   const cwd = path.join(electron.app.getPath('userData'), 'plugins');
   const pkg = fs.readFileSync(path.join(cwd, 'package.json'), 'utf8');
   const pluginNames = Object.keys(JSON.parse(pkg).dependencies);
@@ -92,8 +102,16 @@ ipc.answerRenderer('export-options', () => {
   }
 
   return options;
-});
+};
+
+const updateExportOptions = () => {
+  exportOptions = getExportOptions();
+  for (const win of editors.values()) {
+    ipc.callRenderer(win, 'export-options', exportOptions);
+  }
+};
 
 module.exports = {
-  openEditorWindow
+  openEditorWindow,
+  updateExportOptions
 };
