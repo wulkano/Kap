@@ -146,7 +146,7 @@ export default class EditorContainer extends Container {
 
   startExport = () => {
     const {width, height, fps, filePath, options, format, plugin: serviceTitle, originalFps} = this.state;
-    const {startTime, endTime, muted} = this.videoContainer.state;
+    const {startTime, endTime, isMuted} = this.videoContainer.state;
 
     const plugin = options[format].plugins.find(p => p.title === serviceTitle);
     const {pluginName, isDefault} = plugin;
@@ -158,7 +158,7 @@ export default class EditorContainer extends Container {
         fps,
         startTime,
         endTime,
-        muted
+        isMuted
       },
       inputPath: filePath,
       pluginName,
