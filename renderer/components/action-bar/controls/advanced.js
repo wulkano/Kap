@@ -130,22 +130,32 @@ class Right extends React.Component {
     this.heightInput = React.createRef();
   }
 
-  onWidthChange = event => {
+  onWidthChange = (event, {ignoreEmpty} = {}) => {
     const {x, y, setBounds, ratioLocked, ratio, setWidth} = this.props;
     const {value} = event.currentTarget;
     const {heightInput, widthInput} = this;
 
     setWidth(value);
-    handleWidthInput({x, y, setBounds, ratioLocked, ratio, value, widthInput, heightInput});
+    handleWidthInput({x, y, setBounds, ratioLocked, ratio, value, widthInput, heightInput, ignoreEmpty});
   }
 
-  onHeightChange = event => {
+  onHeightChange = (event, {ignoreEmpty} = {}) => {
     const {x, y, setBounds, ratioLocked, ratio, setHeight} = this.props;
     const {value} = event.currentTarget;
     const {heightInput, widthInput} = this;
 
     setHeight(value);
-    handleHeightInput({x, y, setBounds, ratioLocked, ratio, value, widthInput, heightInput});
+    handleHeightInput({x, y, setBounds, ratioLocked, ratio, value, widthInput, heightInput, ignoreEmpty});
+  }
+
+  onWidthBlur = event => {
+    this.onWidthChange(event, {ignoreEmpty: false});
+    handleWidthInput.flush();
+  }
+
+  onHeightBlur = event => {
+    this.onHeightChange(event, {ignoreEmpty: false});
+    handleHeightInput.flush();
   }
 
   render() {
@@ -160,7 +170,7 @@ class Right extends React.Component {
           maxLength="5"
           value={width}
           onChange={this.onWidthChange}
-          onBlur={handleWidthInput.flush}
+          onBlur={this.onWidthBlur}
           onKeyDown={handleInputKeyPress(this.onWidthChange)}
           onMouseDown={stopPropagation}/>
         <div className="swap">
@@ -173,7 +183,7 @@ class Right extends React.Component {
           maxLength="5"
           value={height}
           onChange={this.onHeightChange}
-          onBlur={handleHeightInput.flush}
+          onBlur={this.onHeightBlur}
           onKeyDown={handleInputKeyPress(this.onHeightChange)}
           onMouseDown={stopPropagation}/>
         <style jsx>{advancedStyles}</style>

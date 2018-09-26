@@ -15,10 +15,20 @@ export const shake = el => {
   return true;
 };
 
-const handleWidthInput = _.debounce(({x, y, setBounds, ratioLocked, ratio, value, widthInput, heightInput}) => {
+const handleWidthInput = _.debounce(({
+  x,
+  y,
+  setBounds,
+  ratioLocked,
+  ratio,
+  value,
+  widthInput,
+  heightInput,
+  ignoreEmpty = true
+}) => {
   const updates = {};
 
-  if (value === '') {
+  if (value === '' && ignoreEmpty) {
     return;
   }
 
@@ -62,11 +72,12 @@ const handleHeightInput = _.debounce(({
   ratio,
   value,
   widthInput,
-  heightInput
+  heightInput,
+  ignoreEmpty = true
 }) => {
   const updates = {};
 
-  if (value === '') {
+  if (value === '' && ignoreEmpty) {
     return;
   }
 
