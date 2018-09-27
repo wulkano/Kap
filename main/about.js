@@ -1,6 +1,7 @@
 const electron = require('electron');
 const {is} = require('electron-util');
 const ipc = require('electron-better-ipc');
+const delay = require('delay');
 
 const loadRoute = require('./utils/routes');
 const {closeAllCroppers} = require('./cropper');
@@ -18,7 +19,7 @@ const openAboutWindow = () => {
   }
 
   aboutWindow = new BrowserWindow({
-    width: 280,
+    width: 284,
     height: 200,
     resizable: false,
     maximizable: false,
@@ -34,7 +35,10 @@ const openAboutWindow = () => {
 
   loadRoute(aboutWindow, 'about');
 
-  ipc.answerRenderer('about-ready', () => aboutWindow.show());
+  ipc.answerRenderer('about-ready', async () => {
+    await delay(100);
+    aboutWindow.show();
+  });
 
   aboutWindow.on('close', () => {
     aboutWindow = null;

@@ -22,9 +22,11 @@ export default class AboutPage extends React.Component {
     ipc.callMain('about-ready');
   }
 
-  openPrivacy = () => {
-    electron.remote.shell.openExternal('https://github.com/wulkano/kap/blob/master/PRIVACY.md');
-  }
+  openGithub = () => electron.remote.shell.openExternal('https://github.com/wulkano/kap')
+
+  openLicense = () => electron.remote.shell.openExternal('https://github.com/wulkano/kap/blob/master/license.md')
+
+  openPrivacy = () => electron.remote.shell.openExternal('https://github.com/wulkano/kap/blob/master/PRIVACY.md')
 
   render() {
     const {name, icon, version} = this.state;
@@ -39,7 +41,11 @@ export default class AboutPage extends React.Component {
         <div className="name">{name}</div>
         <div className="version">Version {version}</div>
         <div className="copyright">Copyright © Wulkano</div>
-        <div className="privacy" onClick={this.openPrivacy}>Privacy</div>
+        <footer>
+          <div className="link" onClick={this.openGithub}>GitHub</div>
+          <div className="link" onClick={this.openLicense}>License</div>
+          <div className="link" onClick={this.openPrivacy}>Privacy</div>
+        </footer>
         <style jsx global>{`
           html {
             font-size: 62.5%;
@@ -65,6 +71,8 @@ export default class AboutPage extends React.Component {
             width: 64px;
             height: 64px;
             margin: 8px 0;
+            pointer-events: none;
+            user-select: none;
           }
 
           .name {
@@ -77,11 +85,19 @@ export default class AboutPage extends React.Component {
             margin-top: 8px;
           }
 
-          .privacy {
+          footer {
             margin-top: 8px;
             color: #007aff;
             font-weight: 500;
+            display: flex;
+          }
+
+          .link {
             cursor: pointer;
+          }
+
+          .link + .link {
+            margin-left: 16px;
           }
         `}</style>
       </div>
