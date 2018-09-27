@@ -3,6 +3,7 @@
 const os = require('os');
 const {Menu, shell, app} = require('electron');
 const {openPrefsWindow} = require('./preferences');
+const {showExportsWindow} = require('./exports');
 
 const issueBody = `
 <!--
@@ -30,7 +31,7 @@ Workaround:           A workaround for the issue if you've found on. (this will 
 <!-- If you have additional information, enter it below. -->
 `;
 
-const cogMenu = [
+const cogMenuTemplate = [
   {
     role: 'about'
   },
@@ -41,6 +42,15 @@ const cogMenu = [
     label: 'Preferences…',
     accelerator: 'Cmd+,',
     click: openPrefsWindow
+  },
+  {
+    label: 'Export History…',
+    click: showExportsWindow,
+    enabled: false,
+    id: 'exports'
+  },
+  {
+    type: 'separator'
   },
   {
     label: 'Send Feedback…',
@@ -55,6 +65,14 @@ const cogMenu = [
   }
 ];
 
+const cogMenu = Menu.buildFromTemplate(cogMenuTemplate);
+const exportsItem = cogMenu.getMenuItemById('exports');
+
+const toggleExportMenuItem = enabled => {
+  exportsItem.enabled = enabled;
+};
+
 module.exports = {
-  cogMenu: Menu.buildFromTemplate(cogMenu)
+  cogMenu,
+  toggleExportMenuItem
 };

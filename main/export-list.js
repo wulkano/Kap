@@ -14,6 +14,7 @@ const {track} = require('./common/analytics');
 const {openPrefsWindow} = require('./preferences');
 const {showExportsWindow, getExportsWindow, openExportsWindow} = require('./exports');
 const {openEditorWindow} = require('./editor');
+const {toggleExportMenuItem} = require('./menus');
 const Export = require('./export');
 
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
@@ -98,6 +99,7 @@ class ExportList {
   }
 
   async addExport(options) {
+    toggleExportMenuItem(true);
     options.exportOptions.loop = settings.get('loopExports');
     const newExport = new Export(options);
     const createdAt = (new Date()).toISOString();
