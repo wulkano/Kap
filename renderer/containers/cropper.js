@@ -326,6 +326,7 @@ export default class CropperContainer extends Container {
   resize = ({pageX, pageY}) => {
     const {currentHandle, x, y, width, height, original, ratio, screenWidth, screenHeight} = this.state;
     const {top, bottom, left, right} = currentHandle;
+    const {ratioLocked} = this.actionBarContainer.state;
 
     const updates = {};
 
@@ -333,14 +334,14 @@ export default class CropperContainer extends Container {
       updates.y = pageY;
       updates.height = height + y - pageY;
 
-      if (updates.height < 1) {
+      if (updates.height < 1 && !ratioLocked) {
         updates.currentHandle = {top: false, bottom: true, left, right};
       }
     } else if (bottom) {
       updates.height = pageY - y;
       updates.y = y;
 
-      if (updates.height < 1) {
+      if (updates.height < 1 && !ratioLocked) {
         updates.currentHandle = {bottom: false, top: true, left, right};
       }
     }
@@ -349,19 +350,23 @@ export default class CropperContainer extends Container {
       updates.x = pageX;
       updates.width = width + x - pageX;
 
-      if (updates.width < 1) {
+      if (updates.width < 1 && !ratioLocked) {
         updates.currentHandle = {left: false, right: true, top, bottom};
       }
     } else if (right) {
       updates.width = pageX - x;
       updates.x = x;
 
-      if (updates.width < 1) {
+      if (updates.width < 1 && !ratioLocked) {
         updates.currentHandle = {right: false, left: true, top, bottom};
       }
     }
 
-    if (this.actionBarContainer.state.ratioLocked) {
+    if (ratioLocked) {
+      if (updates.width < 1 && updates.height < 1) {
+        updates.currentHandle = {bottom: !bottom, top: !top, left: !left, right: !right};
+      }
+
       // Check which dimension has changed the most
       if (
         (updates.width - original.width) * ratio[1] > (updates.height - original.height) * ratio[0]
