@@ -67,7 +67,7 @@ class RightOptions extends React.Component {
 }
 
 RightOptions.propTypes = {
-  options: PropTypes.object,
+  options: PropTypes.arrayOf(PropTypes.object),
   format: PropTypes.string,
   plugin: PropTypes.string,
   selectFormat: PropTypes.func,
