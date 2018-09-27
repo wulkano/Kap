@@ -215,18 +215,20 @@ export default class CropperContainer extends Container {
 
   pick = ({pageX, pageY}) => {
     const {original, isPicking} = this.state;
-    if (Math.abs(original.pageX - pageX) > 0 && Math.abs(original.pageY - pageY) > 0 && isPicking) {
+    const width = Math.abs(original.pageX - pageX);
+    const height = Math.abs(original.pageY - pageY);
+    if ((width > 0 || height > 0) && isPicking) {
       this.cursorContainer.removeCursorObserver(this.pick);
+      const top = pageY < original.pageY;
+      const left = pageX < original.pageX;
       this.setState({
-        x: pageX,
-        y: pageY,
-        width: 0,
-        height: 0,
+        x: Math.min(pageX, original.pageX),
+        y: Math.min(pageY, original.pageY),
+        width,
+        height,
         isResizing: true,
         isPicking: false,
-        currentHandle: {bottom: true, right: true}
-      }, () => {
-
+        currentHandle: {top, bottom: !top, left, right: !left}
       });
 
       this.setOriginal();
@@ -238,7 +240,6 @@ export default class CropperContainer extends Container {
     if (this.state.isPicking) {
       this.remote.getCurrentWindow().close();
     } else {
-      this.setState({isPicking: false});
       this.cursorContainer.removeCursorObserver(this.pick);
     }
   }
