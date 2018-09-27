@@ -6,9 +6,10 @@ const delay = require('delay');
 const settings = require('./common/settings');
 const loadRoute = require('./utils/routes');
 
-const {BrowserWindow} = electron;
+const {BrowserWindow, systemPreferences} = electron;
 
 const croppers = new Map();
+let notificationId = null;
 
 const closeAllCroppers = () => {
   const {screen} = electron;
@@ -20,6 +21,10 @@ const closeAllCroppers = () => {
 
   screen.removeAllListeners('display-removed');
   screen.removeAllListeners('display-added');
+  if (notificationId !== null) {
+    systemPreferences.unsubscribeWorkspaceNotification(notificationId);
+    notificationId = null;
+  }
 };
 
 const openCropper = (display, activeDisplayId) => {
@@ -43,7 +48,6 @@ const openCropper = (display, activeDisplayId) => {
   loadRoute(cropper, 'cropper');
 
   cropper.setAlwaysOnTop(true, 'screen-saver', 1);
-  cropper.setVisibleOnAllWorkspaces(true);
 
   cropper.webContents.on('did-finish-load', () => {
     const isActive = activeDisplayId === id;
@@ -57,7 +61,7 @@ const openCropper = (display, activeDisplayId) => {
     };
 
     if (isActive) {
-      const savedCropper = settings.get('cropper');
+      const savedCropper = settings.get('cropper', {});
       if (savedCropper.displayId === id) {
         displayInfo.cropper = savedCropper;
       }
@@ -87,6 +91,9 @@ const openCropperWindow = () => {
   }
 
   croppers.get(activeDisplayId).focus();
+  notificationId = systemPreferences.subscribeWorkspaceNotification('NSWorkspaceActiveSpaceDidChangeNotification', () => {
+    closeAllCroppers();
+  });
 
   screen.on('display-removed', (event, oldDisplay) => {
     const {id} = oldDisplay;
@@ -144,14 +151,20 @@ const selectApp = async (window, activateWindow) => {
   });
 };
 
-const disableCroppers = async () => {
+const disableCroppers = () => {
+  if (notificationId !== null) {
+    systemPreferences.unsubscribeWorkspaceNotification(notificationId);
+    notificationId = null;
+  }
+
   for (const cropper of croppers.values()) {
     cropper.removeAllListeners('blur');
     cropper.setIgnoreMouseEvents(true);
+    cropper.setVisibleOnAllWorkspaces(true);
   }
 };
 
-const setRecordingCroppers = async () => {
+const setRecordingCroppers = () => {
   for (const cropper of croppers.values()) {
     cropper.webContents.send('start-recording');
   }

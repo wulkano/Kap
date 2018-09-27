@@ -75,7 +75,7 @@ const mute = async inputPath => {
 };
 
 const convertToMp4 = async opts => {
-  if (opts.muted) {
+  if (opts.isMuted) {
     opts.inputPath = await mute(opts.inputPath);
   }
 
@@ -90,7 +90,7 @@ const convertToMp4 = async opts => {
 };
 
 const convertToWebm = async opts => {
-  if (opts.muted) {
+  if (opts.isMuted) {
     opts.inputPath = await mute(opts.inputPath);
   }
 
@@ -118,7 +118,7 @@ const convertToApng = opts => {
     '-i', opts.inputPath,
     '-vf', `fps=${opts.fps},scale=${opts.width}:${opts.height}:flags=lanczos[x]`,
     // Strange for APNG instead of -loop it uses -plays see: https://stackoverflow.com/questions/43795518/using-ffmpeg-to-create-looping-apng
-    `-plays`, opts.loop === true ? '0' : '-1', // 0 == forever; -1 == no loop
+    '-plays', opts.loop === true ? '0' : '-1', // 0 == forever; -1 == no loop
     '-ss', opts.startTime,
     '-to', opts.endTime,
     opts.outputPath
@@ -145,7 +145,7 @@ const convertToGif = PCancelable.fn(async (opts, onCancel) => {
     '-i', opts.inputPath,
     '-i', palettePath,
     '-filter_complex', `fps=${opts.fps},scale=${opts.width}:${opts.height}:flags=lanczos[x]; [x][1:v]paletteuse`,
-    `-loop`, opts.loop === true ? '0' : '-1', // 0 == forever; -1 == no loop
+    '-loop', opts.loop === true ? '0' : '-1', // 0 == forever; -1 == no loop
     '-ss', opts.startTime,
     '-to', opts.endTime,
     opts.outputPath

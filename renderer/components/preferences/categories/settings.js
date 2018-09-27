@@ -59,6 +59,7 @@ class Settings extends React.Component {
     return (
       <Category>
         <Item
+          parentItem
           title="Show cursor"
           subtitle="Display the mouse cursor in your Kaptures"
         >
@@ -81,6 +82,7 @@ class Settings extends React.Component {
           />
         </Item>
         <Item
+          parentItem
           title="Keyboard shortcuts"
           subtitle="Toggle and customise keyboard shortcuts"
         >
@@ -110,6 +112,7 @@ class Settings extends React.Component {
           <Switch checked={loopExports} onClick={() => toggleSetting('loopExports')}/>
         </Item>
         <Item
+          parentItem
           title="Audio recording"
           subtitle="Record audio from input device"
         >

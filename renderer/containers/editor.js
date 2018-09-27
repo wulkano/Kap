@@ -33,11 +33,17 @@ export default class EditorContainer extends Container {
     this.setState({width, height, ratio: width / height, original: {width, height}});
   }
 
-  changeDimension = event => {
-    const {ratio, original} = this.state;
+  changeDimension = (event, {ignoreEmpty = true} = {}) => {
+    const {ratio, original, lastValid = {}} = this.state;
     const {target} = event;
     const {name, value} = target;
-    const updates = {};
+    const updates = {...lastValid, lastValid: null};
+
+    if (value === '' && ignoreEmpty) {
+      const {width, height} = this.state;
+      this.setState({width: null, height: null, lastValid: {width, height}});
+      return;
+    }
 
     if (value.match(/^\d+$/)) {
       const val = parseInt(value, 10);
@@ -71,11 +77,11 @@ export default class EditorContainer extends Container {
 
         updates.width = Math.round(updates.height * ratio);
       }
-
-      this.setState(updates);
     } else {
       shake(target);
     }
+
+    this.setState(updates);
   }
 
   setOptions = options => {
@@ -146,7 +152,7 @@ export default class EditorContainer extends Container {
 
   startExport = () => {
     const {width, height, fps, filePath, options, format, plugin: serviceTitle, originalFps} = this.state;
-    const {startTime, endTime, muted} = this.videoContainer.state;
+    const {startTime, endTime, isMuted} = this.videoContainer.state;
 
     const plugin = options[format].plugins.find(p => p.title === serviceTitle);
     const {pluginName, isDefault} = plugin;
@@ -158,7 +164,7 @@ export default class EditorContainer extends Container {
         fps,
         startTime,
         endTime,
-        muted
+        isMuted
       },
       inputPath: filePath,
       pluginName,

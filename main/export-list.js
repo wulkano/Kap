@@ -40,7 +40,7 @@ const getPreview = async inputPath => {
 };
 
 const saveSnapshot = async ({inputPath, outputPath, time}) => {
-  execa(ffmpegPath, [
+  await execa(ffmpegPath, [
     '-i', inputPath,
     '-ss', time,
     '-vframes', 1,
@@ -54,7 +54,7 @@ class ExportList {
     this.queue = [];
   }
 
-  async _startNext() {
+  _startNext() {
     if (this.queue.length === 0) {
       return;
     }
@@ -70,8 +70,8 @@ class ExportList {
         await this.currentExport.run();
         delete this.currentExport;
         this._startNext();
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        console.log(error);
         this.currentExport.updateExport({
           status: 'failed',
           text: 'Export failed'
@@ -82,7 +82,7 @@ class ExportList {
     })();
   }
 
-  async cancelExport(createdAt) {
+  cancelExport(createdAt) {
     if (this.currentExport && this.currentExport.createdAt === createdAt) {
       track('export/canceled/current');
       this.currentExport.cancel();

@@ -16,7 +16,7 @@ const aperture = createAperture();
 const {audioDevices} = createAperture;
 
 let wasDoNotDisturbAlreadyEnabled;
-let lastRecordedFps;
+let lastUsedSettings;
 
 let past;
 
@@ -45,10 +45,14 @@ const startRecording = async options => {
     cropArea: cropperBounds,
     showCursor,
     highlightClicks,
-    displayId: String(displayId)
+    screenId: displayId
   };
 
-  lastRecordedFps = apertureOpts.fps;
+  lastUsedSettings = {
+    recordedFps: apertureOpts.fps,
+    hideDesktopIcons,
+    doNotDisturb
+  };
 
   if (recordAudio === true) {
     // In case for some reason the default audio device is not set
@@ -85,36 +89,37 @@ const startRecording = async options => {
     if (startTime > 3) {
       track(`recording/started/${startTime}`);
     } else {
-      track(`recording/started`);
+      track('recording/started');
     }
     console.log(`Started recording after ${startTime}s`);
     setRecordingCroppers();
     setRecordingTray(stopRecording);
     past = Date.now();
-  } catch (err) {
-    track(`recording/stoppped/error`);
+  } catch (error) {
+    track('recording/stoppped/error');
     // This prevents the button from being reset, since the recording has not yet started
     // This delay is due to internal framework delays in aperture native code
-    if (err.message.includes('stopRecording')) {
-      console.log(`Recording not yet started, can't stop recording before it actually started`);
+    if (error.message.includes('stopRecording')) {
+      console.log('Recording not yet started, can\'t stop recording before it actually started');
       return;
     }
 
-    dialog.showErrorBox('Recording error', err.message);
+    dialog.showErrorBox('Recording error', error.message);
   }
 };
 
 const stopRecording = async () => {
   console.log(`Stopped recording after ${(Date.now() - past) / 1000}s`);
-  track(`recording/stoppped`);
+  track('recording/stoppped');
   closeAllCroppers();
 
   const filePath = await aperture.stopRecording();
 
   const {
+    recordedFps,
     hideDesktopIcons,
     doNotDisturb
-  } = settings.store;
+  } = lastUsedSettings;
 
   if (hideDesktopIcons) {
     desktopIcons.show();
@@ -125,7 +130,7 @@ const stopRecording = async () => {
   }
 
   track('editor/opened/recording');
-  openEditorWindow(filePath, lastRecordedFps);
+  openEditorWindow(filePath, recordedFps);
 };
 
 module.exports = {

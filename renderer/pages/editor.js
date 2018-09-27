@@ -45,6 +45,10 @@ export default class EditorPage extends React.Component {
           </Provider>
         </div>
         <style jsx global>{`
+          html {
+            font-size: 62.5%;
+          }
+
           body,
           .cover-window {
             margin: 0;

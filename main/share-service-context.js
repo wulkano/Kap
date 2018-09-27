@@ -38,7 +38,7 @@ class ShareServiceContext {
     this.openConfigFile = this.openConfigFile.bind(this);
   }
 
-  async request(url, options) {
+  request(url, options) {
     if (this.canceled) {
       return;
     }
