@@ -19,8 +19,16 @@ export default class Export extends React.Component {
     this.menu.append(new MenuItem({label: 'Open Original', click: openInEditor}));
   }
 
-  openMenu = () => {
+  openMenu = event => {
+    event.stopPropagation();
     this.menu.popup({});
+  }
+
+  openFile = () => {
+    const {filePath} = this.props;
+    if (filePath) {
+      electron.remote.shell.showItemInFolder(filePath);
+    }
   }
 
   render() {
@@ -36,7 +44,7 @@ export default class Export extends React.Component {
     const cancelable = status === 'waiting' || status === 'processing';
 
     return (
-      <div className="export-container">
+      <div className="export-container" onClick={this.openFile}>
         <div className="thumbnail" onClick={this.openMenu}>
           <div className="overlay"/>
           <div className="icon">
@@ -140,5 +148,6 @@ Export.propTypes = {
   percentage: PropTypes.number,
   image: PropTypes.string,
   cancel: PropTypes.func,
-  openInEditor: PropTypes.func
+  openInEditor: PropTypes.func,
+  filePath: PropTypes.string
 };

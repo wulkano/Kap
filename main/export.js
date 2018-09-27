@@ -41,7 +41,8 @@ class Export {
       status: this.status,
       percentage: this.percentage,
       image: this.image,
-      createdAt: this.createdAt
+      createdAt: this.createdAt,
+      filePath: this.filePath
     };
   }
 
@@ -105,9 +106,9 @@ class Export {
       this.format
     );
 
-    const filePath = await this.convertProcess;
+    this.filePath = await this.convertProcess;
     this.resolve();
-    return filePath;
+    return this.filePath;
   }
 }
 
