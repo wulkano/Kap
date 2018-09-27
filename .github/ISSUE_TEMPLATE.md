@@ -5,9 +5,9 @@ Before you continue; please make sure you've searched our existing issues to avo
 
 macOS Version:        The output of `sw_vers`, remember that we currently only support macOS 10.12 or later 
 Kap Version:          Find this in the about section of Kap, or by right clicking on the Kap icon and pressing "Get Info"
-Step to reproduce :   If applicable provide steps to reproduce the issue you're having
+Step to reproduce:    If applicable provide steps to reproduce the issue you're having
 Current behaviour:    A description of how Kap is currently behaving
-Expected behaviour :  How you expected Kap to behave
+Expected behaviour:   How you expected Kap to behave
 Workaround:           A workaround the issue if you've found on (this will help others experiencing the same issue!)
 -->
 
