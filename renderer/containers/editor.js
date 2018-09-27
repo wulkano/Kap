@@ -33,11 +33,17 @@ export default class EditorContainer extends Container {
     this.setState({width, height, ratio: width / height, original: {width, height}});
   }
 
-  changeDimension = event => {
-    const {ratio, original} = this.state;
+  changeDimension = (event, {ignoreEmpty = true} = {}) => {
+    const {ratio, original, lastValid = {}} = this.state;
     const {target} = event;
     const {name, value} = target;
-    const updates = {};
+    const updates = {...lastValid, lastValid: null};
+
+    if (value === '' && ignoreEmpty) {
+      const {width, height} = this.state;
+      this.setState({width: null, height: null, lastValid: {width, height}});
+      return;
+    }
 
     if (value.match(/^\d+$/)) {
       const val = parseInt(value, 10);
@@ -71,11 +77,11 @@ export default class EditorContainer extends Container {
 
         updates.width = Math.round(updates.height * ratio);
       }
-
-      this.setState(updates);
     } else {
       shake(target);
     }
+
+    this.setState(updates);
   }
 
   setOptions = options => {

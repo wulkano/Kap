@@ -124,7 +124,7 @@ class Plugins {
     await this._npmInstall();
   }
 
-  async uninstall(name) {
+  uninstall(name) {
     track(`plugin/uninstalled/${name}`);
     this._modifyMainPackageJson(pkg => {
       delete pkg.dependencies[name];

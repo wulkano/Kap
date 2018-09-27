@@ -19,36 +19,34 @@
     "build": "next build renderer && next export renderer",
     "dist": "npm run build && build",
     "pack": "npm run build && build --dir",
-    "postinstall": "electron-builder install-app-deps",
-    "prepush": "npm run test",
-    "precommit": "npm run test"
+    "postinstall": "electron-builder install-app-deps"
   },
   "bundle": {
     "name": "Kap"
   },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.15",
-    "@sentry/browser": "^4.0.4",
-    "@sentry/electron": "^0.10.0",
+    "@sentry/browser": "^4.0.5",
+    "@sentry/electron": "^0.11.0",
     "@sindresorhus/do-not-disturb": "^0.2.0",
     "@sindresorhus/to-milliseconds": "^1.0.0",
-    "ajv": "^6.5.3",
-    "aperture": "^4.0.0",
+    "ajv": "^6.5.4",
+    "aperture": "^5.1.0",
     "base64-img": "^1.0.4",
     "classnames": "^2.2.6",
-    "delay": "^3.0.0",
+    "delay": "^4.0.1",
     "electron-better-ipc": "^0.1.1",
     "electron-log": "^2.2.17",
     "electron-next": "^3.1.5",
     "electron-store": "^2.0.0",
     "electron-updater": "^3.1.2",
     "electron-util": "^0.9.0",
-    "execa": "^0.10.0",
     "file-icon": "^3.0.0",
+    "execa": "^1.0.0",
     "first-run": "^1.2.0",
     "got": "^9.0.0",
     "hide-desktop-icons": "^0.4.0",
-    "husky": "^0.14.3",
+    "husky": "^1.0.0",
     "insight": "^0.10.1",
     "lodash": "^4.17.10",
     "mac-windows": "^0.7.1",
@@ -71,13 +69,13 @@
     "unstated": "^1.2.0"
   },
   "devDependencies": {
-    "babel-eslint": "^8.2.6",
+    "babel-eslint": "^10.0.0",
     "electron": "^3.0.0",
     "electron-builder": "^20.27.0",
     "eslint-config-xo-react": "^0.17.0",
     "eslint-plugin-react": "^7.11.1",
     "next": "^7.0.0",
-    "xo": "^0.22.0"
+    "xo": "^0.23.0"
   },
   "xo": {
     "parser": "babel-eslint",
@@ -110,6 +108,12 @@
       "renderer/.next",
       "renderer/out"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test",
+      "pre-push": "npm test"
+    }
   },
   "build": {
     "appId": "com.wulkano.kap",
