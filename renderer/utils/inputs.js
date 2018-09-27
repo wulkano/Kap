@@ -4,6 +4,8 @@ import _ from 'lodash';
 const {width: screenWidth, height: screenHeight} = (electron.screen && electron.screen.getPrimaryDisplay().bounds) || {};
 const {remote} = electron;
 const debounceTimeout = 500;
+export const minWidth = 20;
+export const minHeight = 20;
 
 export const shake = el => {
   el.classList.add('shake');
@@ -15,9 +17,18 @@ export const shake = el => {
   return true;
 };
 
+export const resizeTo = (bounds, target) => {
+  const {x, y} = bounds;
+  return {
+    width: target.width,
+    x: Math.min(x, screenWidth - target.width),
+    height: target.height,
+    y: Math.min(y, screenHeight - target.height)
+  };
+};
+
 const handleWidthInput = _.debounce(({
-  x,
-  y,
+  bounds,
   setBounds,
   ratioLocked,
   ratio,
@@ -26,7 +37,7 @@ const handleWidthInput = _.debounce(({
   heightInput,
   ignoreEmpty = true
 }) => {
-  const updates = {};
+  const target = {};
 
   if (value === '' && ignoreEmpty) {
     return;
@@ -35,38 +46,36 @@ const handleWidthInput = _.debounce(({
   if (value.match(/^\d+$/)) {
     const val = parseInt(value, 10);
 
-    if (val < 0) {
+    target.width = Math.max(minWidth, Math.min(screenWidth, val));
+    if (target.width !== val) {
       shake(widthInput.current);
-      updates.width = 1;
-    } else if (x + val > screenWidth) {
-      shake(widthInput.current);
-      updates.width = screenWidth - x;
-    } else {
-      updates.width = val;
     }
 
     if (ratioLocked) {
-      updates.height = Math.ceil(updates.width * ratio[1] / ratio[0]);
+      const computedHeight = Math.ceil(target.width * ratio[1] / ratio[0]);
+      target.height = Math.max(minHeight, Math.min(screenHeight, computedHeight));
 
-      if (y + updates.height > screenHeight) {
-        shake(heightInput.current);
+      if (target.height !== computedHeight) {
         shake(widthInput.current);
-        updates.height = screenHeight - y;
-        updates.width = Math.ceil(updates.height * ratio[0] / ratio[1]);
+        shake(heightInput.current);
+        target.width = Math.ceil(target.height * ratio[0] / ratio[1]);
       }
+    } else if (bounds.height) {
+      target.height = bounds.height;
+    } else {
+      target.height = minHeight;
     }
 
-    setBounds(updates);
+    setBounds(resizeTo(bounds, target));
   } else {
     // If it's not an integer keep last valid value
-    setBounds();
     shake(widthInput.current);
+    setBounds();
   }
 }, debounceTimeout);
 
 const handleHeightInput = _.debounce(({
-  x,
-  y,
+  bounds,
   setBounds,
   ratioLocked,
   ratio,
@@ -75,7 +84,7 @@ const handleHeightInput = _.debounce(({
   heightInput,
   ignoreEmpty = true
 }) => {
-  const updates = {};
+  const target = {};
 
   if (value === '' && ignoreEmpty) {
     return;
@@ -84,31 +93,31 @@ const handleHeightInput = _.debounce(({
   if (value.match(/^\d+$/)) {
     const val = parseInt(value, 10);
 
-    if (val < 0) {
+    target.height = Math.max(minHeight, Math.min(screenHeight, val));
+    if (target.height !== val) {
       shake(heightInput.current);
-      updates.height = 1;
-    } else if (y + val > screenHeight) {
-      shake(heightInput.current);
-      updates.height = screenHeight - y;
-    } else {
-      updates.height = val;
     }
 
     if (ratioLocked) {
-      updates.width = Math.ceil(updates.height * ratio[0] / ratio[1]);
+      const computedWidth = Math.ceil(target.height * ratio[0] / ratio[1]);
+      target.width = Math.max(minWidth, Math.min(screenWidth, computedWidth));
 
-      if (x + updates.width > screenWidth) {
+      if (target.width !== computedWidth) {
         shake(widthInput.current);
         shake(heightInput.current);
-        updates.width = screenWidth - x;
-        updates.height = Math.ceil(updates.width * ratio[1] / ratio[0]);
+        target.height = Math.ceil(target.width * ratio[1] / ratio[0]);
       }
+    } else if (bounds.width) {
+      target.width = bounds.width;
+    } else {
+      target.width = minWidth;
     }
-    setBounds(updates);
+
+    setBounds(resizeTo(bounds, target));
   } else {
     // If it's not an integer keep last valid value
-    setBounds();
     shake(heightInput.current);
+    setBounds();
   }
 }, debounceTimeout);
 

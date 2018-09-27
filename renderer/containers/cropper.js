@@ -2,6 +2,8 @@ import electron from 'electron';
 import nearestNormalAspectRatio from 'nearest-normal-aspect-ratio';
 import {Container} from 'unstated';
 
+import {minHeight, minWidth, resizeTo} from '../utils/inputs';
+
 // Helper function for retrieving the simplest ratio,
 // via the largest common divisor of two numbers (thanks @doot0)
 const getLargestCommonDivisor = (first, second) => {
@@ -78,7 +80,7 @@ export default class CropperContainer extends Container {
       height: height || 0,
       ratio: ratio || [1, 1]
     });
-    this.actionBarContainer.setInputValues({width: width || 0, height: height || 0});
+    this.actionBarContainer.setInputValues({width, height});
   }
 
   willStartRecording = () => {
@@ -143,37 +145,48 @@ export default class CropperContainer extends Container {
         this.setState(updates);
       }
       this.actionBarContainer.setInputValues(updates);
-    } else {
+    } else if (this.state.width || this.state.height) {
       this.actionBarContainer.setInputValues(this.state);
+    } else {
+      this.actionBarContainer.setInputValues({});
     }
   }
 
   setRatio = ratio => {
-    const {y, width, screenHeight} = this.state;
-    const updates = {ratio};
+    const {x, y, width, screenHeight} = this.state;
+    const target = {width};
 
     this.unselectApp();
-    updates.height = Math.ceil(width * ratio[1] / ratio[0]);
-    if (y + updates.height > screenHeight) {
-      updates.height = screenHeight - y;
-      updates.width = Math.ceil(updates.height * ratio[0] / ratio[1]);
+    const computedHeight = Math.ceil(width * ratio[1] / ratio[0]);
+    target.height = Math.max(minHeight, Math.min(screenHeight, computedHeight));
+
+    if (target.height !== computedHeight) {
+      target.width = Math.ceil(target.height * ratio[0] / ratio[1]);
     }
+
+    const updates = {ratio, ...resizeTo({x, y}, target)};
 
     this.updateSettings(updates);
     this.actionBarContainer.setInputValues(updates);
   }
 
   swapDimensions = () => {
-    const {x, height, ratio, screenWidth} = this.state;
-    const updates = {width: height};
+    const {x, y, width, height, ratio, screenHeight} = this.state;
+    const target = {
+      width: height,
+      height: Math.min(width, screenHeight)
+    };
 
-    if (x + updates.width > screenWidth) {
-      updates.width = screenWidth - x;
+    this.unselectApp();
+
+    if (target.height !== width) {
+      target.width = Math.ceil(target.height * ratio[1] / ratio[0]);
     }
+
+    const updates = {ratio: ratio.reverse(), ...resizeTo({x, y}, target)};
 
     this.updateSettings(updates);
     this.actionBarContainer.setInputValues(updates);
-    this.setRatio(ratio.reverse());
   }
 
   selectApp = app => {
@@ -263,7 +276,13 @@ export default class CropperContainer extends Container {
       const {x, y, width, height, ratio} = this.state;
       this.setState({currentHandle: null, isResizing: false, showHandles: true, isPicking: false});
       this.cursorContainer.removeCursorObserver(this.resize);
-      this.updateSettings({x, y, width, height, ratio});
+      this.setBounds({
+        ...resizeTo({x, y}, {
+          width: Math.max(minWidth, width),
+          height: Math.max(minHeight, height)
+        }),
+        ratio
+      });
     }
   }
 
@@ -277,7 +296,8 @@ export default class CropperContainer extends Container {
 
   stopMoving = () => {
     if (!this.state.isFullscreen && this.state.isMoving) {
-      const {x, y} = this.state;
+      const {x, y, width, height} = this.state;
+      this.setBounds({x, y, width, height});
       this.setState({isMoving: false, showHandles: true});
       this.cursorContainer.removeCursorObserver(this.move);
       this.updateSettings({x, y});

@@ -131,21 +131,21 @@ class Right extends React.Component {
   }
 
   onWidthChange = (event, {ignoreEmpty} = {}) => {
-    const {x, y, setBounds, ratioLocked, ratio, setWidth} = this.props;
+    const {bounds, height, setBounds, ratioLocked, ratio, setWidth} = this.props;
     const {value} = event.currentTarget;
     const {heightInput, widthInput} = this;
 
     setWidth(value);
-    handleWidthInput({x, y, setBounds, ratioLocked, ratio, value, widthInput, heightInput, ignoreEmpty});
+    handleWidthInput({bounds, height, setBounds, ratioLocked, ratio, value, widthInput, heightInput, ignoreEmpty});
   }
 
   onHeightChange = (event, {ignoreEmpty} = {}) => {
-    const {x, y, setBounds, ratioLocked, ratio, setHeight} = this.props;
+    const {bounds, width, setBounds, ratioLocked, ratio, setHeight} = this.props;
     const {value} = event.currentTarget;
     const {heightInput, widthInput} = this;
 
     setHeight(value);
-    handleHeightInput({x, y, setBounds, ratioLocked, ratio, value, widthInput, heightInput, ignoreEmpty});
+    handleHeightInput({bounds, width, setBounds, ratioLocked, ratio, value, widthInput, heightInput, ignoreEmpty});
   }
 
   onWidthBlur = event => {
@@ -223,8 +223,7 @@ class Right extends React.Component {
 }
 
 Right.propTypes = {
-  x: PropTypes.number,
-  y: PropTypes.number,
+  bounds: PropTypes.object,
   width: PropTypes.string,
   height: PropTypes.string,
   ratio: PropTypes.array,
@@ -238,11 +237,10 @@ Right.propTypes = {
 AdvancedControls.Right = connect(
   [CropperContainer, ActionBarContainer],
   (
-    {x, y, ratio},
+    {x, y, ratio, width, height},
     {cropperWidth, cropperHeight, ratioLocked}
   ) => ({
-    x,
-    y,
+    bounds: {x, y, width, height},
     width: cropperWidth,
     height: cropperHeight,
     ratio,

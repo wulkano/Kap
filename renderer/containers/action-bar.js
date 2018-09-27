@@ -17,20 +17,16 @@ export default class ActionBarContainer extends Container {
 
     this.settings = this.remote.require('./common/settings');
     this.state = {
-      cropperWidth: '0',
-      cropperHeight: '0'
+      cropperWidth: '',
+      cropperHeight: ''
     };
   }
 
   setInputValues = ({width, height}) => {
-    const updates = {};
-    if (width !== undefined) {
-      updates.cropperWidth = width.toString();
-    }
-    if (height !== undefined) {
-      updates.cropperHeight = height.toString();
-    }
-    this.setState(updates);
+    this.setState({
+      cropperWidth: width ? width.toString() : '',
+      cropperHeight: height ? height.toString() : ''
+    });
   }
 
   setWidth = cropperWidth => this.setState({cropperWidth})
