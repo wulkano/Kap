@@ -6,10 +6,10 @@ import Select from './select';
 
 class RightOptions extends React.Component {
   render() {
-    const {options, format, plugin, selectFormat, selectPlugin, formats, startExport} = this.props;
+    const {options, format, plugin, selectFormat, selectPlugin, startExport} = this.props;
 
-    const formatOptions = options ? formats.map(format => ({value: format, label: options[format].prettyFormat})) : [];
-    const pluginOptions = options ? options[format].plugins.map(plugin => ({value: plugin.title, label: plugin.title})) : [];
+    const formatOptions = options ? options.map(({format, prettyFormat}) => ({value: format, label: prettyFormat})) : [];
+    const pluginOptions = options ? options.find(option => option.format === format).plugins.map(plugin => ({value: plugin.title, label: plugin.title})) : [];
 
     return (
       <div className="container">
@@ -67,17 +67,16 @@ class RightOptions extends React.Component {
 }
 
 RightOptions.propTypes = {
-  options: PropTypes.object,
+  options: PropTypes.arrayOf(PropTypes.object),
   format: PropTypes.string,
   plugin: PropTypes.string,
   selectFormat: PropTypes.func,
   selectPlugin: PropTypes.func,
-  formats: PropTypes.arrayOf(PropTypes.string),
   startExport: PropTypes.func
 };
 
 export default connect(
   [EditorContainer],
-  ({options, format, plugin, formats}) => ({options, format, plugin, formats}),
+  ({options, format, plugin}) => ({options, format, plugin}),
   ({selectFormat, selectPlugin, startExport}) => ({selectFormat, selectPlugin, startExport})
 )(RightOptions);
