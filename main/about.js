@@ -1,15 +1,17 @@
 const electron = require('electron');
 const {is} = require('electron-util');
 const ipc = require('electron-better-ipc');
-const loadRoute = require('./utils/routes');
 
-const {getAppIcon} = require('./utils/icon');
+const loadRoute = require('./utils/routes');
+const {closeAllCroppers} = require('./cropper');
 
 const {BrowserWindow} = electron;
 
 let aboutWindow;
 
 const openAboutWindow = () => {
+  closeAllCroppers();
+
   if (aboutWindow) {
     aboutWindow.show();
     return;
@@ -32,11 +34,7 @@ const openAboutWindow = () => {
 
   loadRoute(aboutWindow, 'about');
 
-  ipc.answerRenderer('about-ready', async () => {
-    aboutWindow.show();
-    const icon = await getAppIcon();
-    ipc.callRenderer(aboutWindow, 'icon', icon);
-  });
+  ipc.answerRenderer('about-ready', () => aboutWindow.show());
 
   aboutWindow.on('close', () => {
     aboutWindow = null;

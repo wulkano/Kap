@@ -4,20 +4,22 @@ import React from 'react';
 export default class AboutPage extends React.Component {
   state = {}
 
-  componentDidMount() {
+  async componentDidMount() {
     const {app} = electron.remote;
-    this.ipc = require('electron-better-ipc');
+    const {getAppIcon} = electron.remote.require('./utils/icon');
+
+    const icon = await getAppIcon();
 
     this.setState({
       name: app.getName(),
-      version: app.getVersion()
+      version: app.getVersion(),
+      icon
     });
-
-    this.ipc.answerMain('icon', icon => this.setState({icon}));
   }
 
   componentDidUpdate() {
-    this.ipc.callMain('about-ready');
+    const ipc = require('electron-better-ipc');
+    ipc.callMain('about-ready');
   }
 
   openPrivacy = () => {
