@@ -168,17 +168,18 @@ const buildAspectRatioMenu = ({setRatio, ratio}) => {
 const handleInputKeyPress = onChange => event => {
   const multiplier = event.shiftKey ? 10 : 1;
   const parsedValue = parseInt(event.currentTarget.value, 10);
+  const [min, max] = event.currentTarget.name === 'width' ? [minWidth, screenWidth] : [minHeight, screenHeight];
 
   // Fake an onChange event
   if (event.key === 'ArrowUp') {
-    onChange({currentTarget: {value: `${parsedValue + multiplier}`}});
+    onChange({currentTarget: {value: `${Math.min(parsedValue + multiplier, max)}`}});
   } else if (event.key === 'ArrowDown') {
-    onChange({currentTarget: {value: `${parsedValue - multiplier}`}});
+    onChange({currentTarget: {value: `${Math.max(parsedValue - multiplier, min)}`}});
   }
 
   // Don't let shift key lock aspect ratio
   if (event.key === 'Shift') {
-    event.preventDefault();
+    event.stopPropagation();
   }
 };
 

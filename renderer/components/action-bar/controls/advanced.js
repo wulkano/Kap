@@ -136,7 +136,17 @@ class Right extends React.Component {
     const {heightInput, widthInput} = this;
 
     setWidth(value);
-    handleWidthInput({bounds, height, setBounds, ratioLocked, ratio, value, widthInput, heightInput, ignoreEmpty});
+    handleWidthInput({
+      bounds,
+      height,
+      setBounds,
+      ratioLocked,
+      ratio,
+      value,
+      widthInput,
+      heightInput,
+      ignoreEmpty
+    });
   }
 
   onHeightChange = (event, {ignoreEmpty} = {}) => {
@@ -145,7 +155,17 @@ class Right extends React.Component {
     const {heightInput, widthInput} = this;
 
     setHeight(value);
-    handleHeightInput({bounds, width, setBounds, ratioLocked, ratio, value, widthInput, heightInput, ignoreEmpty});
+    handleHeightInput({
+      bounds,
+      width,
+      setBounds,
+      ratioLocked,
+      ratio,
+      value,
+      widthInput,
+      heightInput,
+      ignoreEmpty
+    });
   }
 
   onWidthBlur = event => {
@@ -166,6 +186,7 @@ class Right extends React.Component {
         <input
           ref={this.widthInput}
           type="text"
+          name="width"
           size="5"
           maxLength="5"
           value={width}
@@ -179,6 +200,7 @@ class Right extends React.Component {
         <input
           ref={this.heightInput}
           type="text"
+          name="height"
           size="5"
           maxLength="5"
           value={height}
