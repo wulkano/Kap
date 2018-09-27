@@ -3661,6 +3661,10 @@ file-entry-cache@^2.0.0:
     flat-cache "^1.2.1"
     object-assign "^4.0.1"
 
+file-icon@^3.0.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/file-icon/-/file-icon-3.1.0.tgz#f1639685d74b9ae621eeb809576e7a3d22c9fe8b"
+
 file-match@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/file-match/-/file-match-1.0.2.tgz#c9cad265d2c8adf3a81475b0df475859069faef7"

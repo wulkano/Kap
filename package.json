@@ -42,6 +42,7 @@
     "electron-updater": "^3.1.2",
     "electron-util": "^0.9.0",
     "execa": "^1.0.0",
+    "file-icon": "^3.0.0",
     "first-run": "^1.2.0",
     "got": "^9.0.0",
     "hide-desktop-icons": "^0.4.0",
@@ -92,15 +93,11 @@
     "rules": {
       "import/no-extraneous-dependencies": "off",
       "import/no-unassigned-import": "off",
-      "array-element-newline": "off",
       "no-use-before-define": "off",
-      "react/jsx-no-bind": "off",
       "react/jsx-closing-tag-location": "off",
       "react/require-default-props": "off",
       "react/no-unused-prop-types": "off",
-      "react/no-access-state-in-setstate": "off",
-      "react/jsx-curly-brace-presence": "off",
-      "require-atomic-updates": "off"
+      "react/jsx-curly-brace-presence": "off"
     },
     "ignores": [
       "dist",

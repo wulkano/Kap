@@ -1,3 +1,4 @@
+/* eslint-disable array-element-newline */
 'use strict';
 
 const {dialog} = require('electron');
