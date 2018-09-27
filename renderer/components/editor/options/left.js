@@ -5,18 +5,35 @@ import {connect, EditorContainer} from '../../../containers';
 import Slider from './slider';
 
 class LeftOptions extends React.Component {
+  handleBlur = event => {
+    const {changeDimension} = this.props;
+    changeDimension(event, {ignoreEmpty: false});
+  }
+
   render() {
     const {width, height, changeDimension, fps, originalFps, setFps} = this.props;
-
-    if (!width && !height) {
-      return null;
-    }
 
     return (
       <div className="container">
         <div className="label">Size</div>
-        <input type="text" value={width} size="5" maxLength="5" placeholder="Width" name="width" onChange={changeDimension}/>
-        <input type="text" value={height} size="5" maxLength="5" placeholder="Height" name="height" onChange={changeDimension}/>
+        <input
+          type="text"
+          value={width || ''}
+          size="5"
+          maxLength="5"
+          name="width"
+          onChange={changeDimension}
+          onBlur={this.handleBlur}
+        />
+        <input
+          type="text"
+          value={height || ''}
+          size="5"
+          maxLength="5"
+          name="height"
+          onChange={changeDimension}
+          onBlur={this.handleBlur}
+        />
         <div className="label">FPS</div>
         <div className="fps">
           <Slider value={fps} min={1} max={originalFps} onChange={setFps}/>

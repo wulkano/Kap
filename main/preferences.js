@@ -40,6 +40,13 @@ const openPrefsWindow = async () => {
   return prefsWindow;
 };
 
+const closePrefsWindow = () => {
+  if (prefsWindow) {
+    prefsWindow.close();
+  }
+};
+
 module.exports = {
-  openPrefsWindow
+  openPrefsWindow,
+  closePrefsWindow
 };

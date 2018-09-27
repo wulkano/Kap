@@ -123,6 +123,8 @@ export default class PreferencesContainer extends Container {
   }
 
   toggleSetting = (setting, value) => {
+    // TODO: Fix this ESLint violation
+    // eslint-disable-next-line react/no-access-state-in-setstate
     const newVal = value === undefined ? !this.state[setting] : value;
     this.track(`preferences/setting/${setting}/${newVal}`);
     this.setState({[setting]: newVal});
@@ -146,6 +148,8 @@ export default class PreferencesContainer extends Container {
   }
 
   setOpenOnStartup = value => {
+    // TODO: Fix this ESLint violation
+    // eslint-disable-next-line react/no-access-state-in-setstate
     const openOnStartup = typeof value === 'boolean' ? value : !this.state.openOnStartup;
     this.setState({openOnStartup});
     this.remote.app.setLoginItemSettings({openAtLogin: openOnStartup});

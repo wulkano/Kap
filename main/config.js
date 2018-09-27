@@ -24,7 +24,7 @@ const openConfigWindow = async pluginName => {
 
   loadRoute(configWindow, 'config');
 
-  configWindow.webContents.on('did-finish-load', async () => {
+  configWindow.webContents.on('did-finish-load', () => {
     ipc.callRenderer(configWindow, 'plugin', pluginName);
     configWindow.show();
   });

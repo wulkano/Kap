@@ -7,14 +7,8 @@ import {shake} from '../utils/inputs';
 const isMuted = format => ['gif', 'apng'].includes(format);
 
 export default class EditorContainer extends Container {
-  state ={
-    fps: 15,
-    formats: [
-      'gif',
-      'mp4',
-      'webm',
-      'apng'
-    ]
+  state = {
+    fps: 15
   }
 
   setVideoContainer = videoContainer => {
@@ -25,7 +19,7 @@ export default class EditorContainer extends Container {
     const src = `file://${filePath}`;
     this.finishLoading = resolve;
 
-    this.setState({src, filePath, fps, originalFps: fps});
+    this.setState({src, filePath, fps, originalFps: fps, wasMuted: false});
     this.videoContainer.setSrc(src);
   }
 
@@ -33,11 +27,17 @@ export default class EditorContainer extends Container {
     this.setState({width, height, ratio: width / height, original: {width, height}});
   }
 
-  changeDimension = event => {
-    const {ratio, original} = this.state;
+  changeDimension = (event, {ignoreEmpty = true} = {}) => {
+    const {ratio, original, lastValid = {}} = this.state;
     const {target} = event;
     const {name, value} = target;
-    const updates = {};
+    const updates = {...lastValid, lastValid: null};
+
+    if (value === '' && ignoreEmpty) {
+      const {width, height} = this.state;
+      this.setState({width: null, height: null, lastValid: {width, height}});
+      return;
+    }
 
     if (value.match(/^\d+$/)) {
       const val = parseInt(value, 10);
@@ -71,26 +71,41 @@ export default class EditorContainer extends Container {
 
         updates.width = Math.round(updates.height * ratio);
       }
-
-      this.setState(updates);
     } else {
       shake(target);
     }
+
+    this.setState(updates);
   }
 
   setOptions = options => {
-    const [format] = this.state.formats;
-    const [{title: plugin}] = options[format].plugins;
-    this.setState({options, format, plugin, wasMuted: false});
+    const {format, plugin} = this.state;
+    const updates = {options};
+
+    if (format) {
+      const option = options.find(option => option.format === format);
+
+      if (!option.plugins.find(p => p.title === plugin)) {
+        const [{title}] = option.plugins;
+        updates.plugin = title;
+      }
+    } else {
+      const [option] = options;
+      const [{title}] = option.plugins;
+      updates.format = option.format;
+      updates.plugin = title;
+    }
+
+    this.setState(updates);
   }
 
   selectFormat = format => {
     const {plugin, options, wasMuted} = this.state;
-    const {plugins} = options[format];
+    const {plugins} = options.find(option => option.format === format);
     const newPlugin = plugins.find(p => p.title === plugin) ? plugin : plugins[0].title;
 
     if (isMuted(format) && !isMuted(this.state.format)) {
-      this.setState({wasMuted: this.videoContainer.state.muted});
+      this.setState({wasMuted: this.videoContainer.state.isMuted});
       this.videoContainer.mute();
     } else if (!isMuted(format) && isMuted(this.state.format) && !wasMuted) {
       this.videoContainer.unmute();
@@ -146,9 +161,9 @@ export default class EditorContainer extends Container {
 
   startExport = () => {
     const {width, height, fps, filePath, options, format, plugin: serviceTitle, originalFps} = this.state;
-    const {startTime, endTime, muted} = this.videoContainer.state;
+    const {startTime, endTime, isMuted} = this.videoContainer.state;
 
-    const plugin = options[format].plugins.find(p => p.title === serviceTitle);
+    const plugin = options.find(option => option.format === format).plugins.find(p => p.title === serviceTitle);
     const {pluginName, isDefault} = plugin;
 
     const data = {
@@ -158,7 +173,7 @@ export default class EditorContainer extends Container {
         fps,
         startTime,
         endTime,
-        muted
+        isMuted
       },
       inputPath: filePath,
       pluginName,
@@ -171,5 +186,6 @@ export default class EditorContainer extends Container {
     const ipc = require('electron-better-ipc');
 
     ipc.callMain('export', data);
+    ipc.callMain('update-usage', {format, plugin: pluginName});
   }
 }

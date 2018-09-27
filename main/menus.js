@@ -3,6 +3,7 @@
 const os = require('os');
 const {Menu, shell, app} = require('electron');
 const {openPrefsWindow} = require('./preferences');
+const {openAboutWindow} = require('./about');
 
 const issueBody = `
 <!--
@@ -32,7 +33,8 @@ Workaround:           A workaround for the issue if you've found on. (this will 
 
 const cogMenu = [
   {
-    role: 'about'
+    label: `About ${app.getName()}`,
+    click: openAboutWindow
   },
   {
     type: 'separator'

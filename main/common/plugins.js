@@ -9,6 +9,7 @@ const ipc = require('electron-better-ipc');
 const {app, Notification} = electron;
 
 const Plugin = require('../plugin');
+const {updateExportOptions} = require('../export-options');
 const {openConfigWindow} = require('../config');
 const {openPrefsWindow} = require('../preferences');
 const {notify} = require('./notifications');
@@ -109,6 +110,7 @@ class Plugins {
       }
 
       notification.show();
+      updateExportOptions();
 
       return {hasConfig, isValid};
     } catch (error) {
@@ -124,13 +126,14 @@ class Plugins {
     await this._npmInstall();
   }
 
-  async uninstall(name) {
+  uninstall(name) {
     track(`plugin/uninstalled/${name}`);
     this._modifyMainPackageJson(pkg => {
       delete pkg.dependencies[name];
     });
     const plugin = new Plugin(name);
     plugin.config.clear();
+    updateExportOptions();
   }
 
   async prune() {

@@ -11,12 +11,14 @@ const {track} = require('./common/analytics');
 let tray = null;
 const EXTENSIONS = ['.mp4', '.mov', '.m4v'];
 
+const openContextMenu = () => {
+  tray.popUpContextMenu(cogMenu);
+};
+
 const initializeTray = () => {
   tray = new Tray(path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'));
   tray.on('click', openCropperWindow);
-  tray.on('right-click', () => {
-    tray.popUpContextMenu(cogMenu);
-  });
+  tray.on('right-click', openContextMenu);
   tray.on('drop-files', (event, files) => {
     for (const file of files) {
       const extension = path.extname(file).toLowerCase();
@@ -32,15 +34,17 @@ const initializeTray = () => {
 
 const disableTray = () => {
   tray.removeListener('click', openCropperWindow);
+  tray.removeListener('right-click', openContextMenu);
 };
 
-const setRecordingTray = async stopRecording => {
+const setRecordingTray = stopRecording => {
   animateIcon();
 
   tray.once('click', () => {
     stopRecording();
     tray.setImage(path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'));
     tray.on('click', openCropperWindow);
+    tray.on('right-click', openContextMenu);
   });
 };
 
