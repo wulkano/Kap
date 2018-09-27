@@ -42,7 +42,8 @@ class Export {
       percentage: this.percentage,
       image: this.image,
       createdAt: this.createdAt,
-      filePath: this.filePath
+      filePath: this.filePath,
+      error: this.error
     };
   }
 
@@ -63,8 +64,8 @@ class Export {
           });
         }
         resolve();
-      } catch (_) {
-        reject();
+      } catch (error) {
+        reject(error);
       }
     });
   }

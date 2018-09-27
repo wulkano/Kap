@@ -24,6 +24,9 @@ export default class ExportsContainer extends Container {
     if (index === -1) {
       exports.unshift(updates);
     } else {
+      if (!exports[index].error && updates.error) {
+        console.error(updates.error);
+      }
       exports[index] = updates;
     }
 

@@ -75,7 +75,8 @@ class ExportList {
         console.log(error);
         this.currentExport.updateExport({
           status: 'failed',
-          text: 'Export failed'
+          text: 'Export failed',
+          error: error.stack
         });
         delete this.currentExport;
         this._startNext();
