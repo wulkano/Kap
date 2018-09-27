@@ -121,7 +121,7 @@ const handleHeightInput = _.debounce(({
   }
 }, debounceTimeout);
 
-const RATIOS = [
+export const RATIOS = [
   '16:9',
   '5:4',
   '5:3',

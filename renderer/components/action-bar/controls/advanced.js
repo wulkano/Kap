@@ -15,7 +15,8 @@ import {
   handleWidthInput,
   handleHeightInput,
   buildAspectRatioMenu,
-  handleInputKeyPress
+  handleInputKeyPress,
+  RATIOS
 } from '../../../utils/inputs';
 
 const advancedStyles = css`
@@ -35,6 +36,8 @@ const stopPropagation = event => event.stopPropagation();
 class Left extends React.Component {
   state = {}
 
+  select = React.createRef();
+
   static getDerivedStateFromProps(nextProps, prevState) {
     const {ratio, isResizing, setRatio} = nextProps;
 
@@ -48,6 +51,21 @@ class Left extends React.Component {
     return null;
   }
 
+  openMenu = () => {
+    const {ratio} = this.props;
+    const boundingRect = this.select.current.getBoundingClientRect();
+    const {top, left} = boundingRect;
+    const selectedRatio = ratio.join(':');
+    const index = RATIOS.findIndex(r => r === selectedRatio);
+    const positioningItem = index > -1 ? index : RATIOS.length;
+
+    this.state.menu.popup({
+      x: Math.round(left),
+      y: Math.round(top),
+      positioningItem
+    });
+  }
+
   render() {
     const {toggleAdvanced, toggleRatioLock, ratioLocked, ratio = []} = this.props;
 
@@ -56,7 +74,7 @@ class Left extends React.Component {
         <div className="back">
           <BackIcon onClick={toggleAdvanced}/>
         </div>
-        <div className="select" onClick={() => this.state.menu.popup({})} onMouseDown={stopPropagation}>
+        <div ref={this.select} className="select" onClick={this.openMenu} onMouseDown={stopPropagation}>
           <span>{ratio[0]}:{ratio[1]}</span>
           <DropdownArrowIcon size="18px"/>
         </div>

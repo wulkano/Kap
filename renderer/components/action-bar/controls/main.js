@@ -35,6 +35,8 @@ const buildMenu = async ({selectedApp}) => {
 class Left extends React.Component {
   state = {};
 
+  icon = React.createRef();
+
   static getDerivedStateFromProps(nextProps, prevState) {
     const {selectedApp} = nextProps;
 
@@ -46,6 +48,16 @@ class Left extends React.Component {
     return null;
   }
 
+  openMenu = () => {
+    const boundingRect = this.icon.current.getBoundingClientRect();
+    const {bottom, left} = boundingRect;
+
+    menu.popup({
+      x: Math.round(left),
+      y: Math.round(bottom)
+    });
+  }
+
   render() {
     const {toggleAdvanced, selectedApp} = this.props;
 
@@ -54,7 +66,7 @@ class Left extends React.Component {
         <div className="crop">
           <CropIcon onClick={toggleAdvanced}/>
         </div>
-        <ApplicationsIcon active={Boolean(selectedApp)} onClick={() => menu.popup({})}/>
+        <div ref={this.icon}><ApplicationsIcon active={Boolean(selectedApp)} onClick={this.openMenu}/></div>
         <style jsx>{mainStyle}</style>
         <style jsx>{`
           .crop {
@@ -85,6 +97,18 @@ MainControls.Left = connect(
 )(Left);
 
 class Right extends React.Component {
+  icon = React.createRef();
+
+  openMenu = () => {
+    const boundingRect = this.icon.current.getBoundingClientRect();
+    const {bottom, left} = boundingRect;
+
+    electron.remote.require('./menus').cogMenu.popup({
+      x: Math.round(left),
+      y: Math.round(bottom)
+    });
+  }
+
   render() {
     const {enterFullscreen, exitFullscreen, isFullscreen} = this.props;
 
@@ -97,7 +121,7 @@ class Right extends React.Component {
               <FullscreenIcon onClick={enterFullscreen}/>
           }
         </div>
-        <MoreIcon onClick={() => electron.remote.require('./menus').cogMenu.popup({})}/>
+        <div ref={this.icon}><MoreIcon onClick={this.openMenu}/></div>
         <style jsx>{mainStyle}</style>
         <style jsx>{`
           .fullscreen {
