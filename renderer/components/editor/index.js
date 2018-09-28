@@ -17,7 +17,8 @@ export default class Editor extends React.Component {
   }
 
   maximize = () => {
-    electron.remote.BrowserWindow.getFocusedWindow().maximize();
+    const win = electron.remote.BrowserWindow.getFocusedWindow();
+    win.setFullScreen(!win.isFullScreen());
   }
 
   mouseEnter = () => {
@@ -38,7 +39,7 @@ export default class Editor extends React.Component {
             <div className="traffic-lights">
               <div className="traffic-light close" onClick={this.close}/>
               <div className="traffic-light minimize" onClick={this.minimize}/>
-              <div className="traffic-light maximize disabled"/>
+              <div className="traffic-light maximize" onClick={this.maximize}/>
             </div>
             <div className="title">Editor</div>
           </div>
@@ -105,6 +106,13 @@ export default class Editor extends React.Component {
           .traffic-light:after,
           .traffic-light:before {
             visibility: hidden;
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
           }
 
           .traffic-lights:hover .traffic-light:after,
@@ -124,14 +132,7 @@ export default class Editor extends React.Component {
           .close:before {
             background-color: #760e0e;
             width: 8px;
-            height: 2px;
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            margin: auto;
+            height: 1px;
           }
 
           .close:after {
@@ -153,15 +154,32 @@ export default class Editor extends React.Component {
           .minimize:after {
             background-color: #760e0e;
             width: 8px;
+            height: 1px;
+          }
+
+          .maximize {
+            background-color: #28c941;
+          }
+
+          .maximize:active {
+            background-color: #1d9730;
+          }
+
+          .maximize:before {
+            background-color: #006500;
+            width: 6px;
+            height: 6px;
+          }
+
+          .maximize:after {
+            background-color: #28c941;
+            width: 10px;
             height: 2px;
-            border-radius: 2px;
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            margin: auto;
+            transform: rotate(45deg);
+          }
+
+          .maximize:active:after {
+            background-color: #1d9730;
           }
 
           .disabled {
