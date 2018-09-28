@@ -1,7 +1,7 @@
 'use strict';
 
 const {Notification, shell} = require('electron');
-const moveFile = require('move-file');
+const cpFile = require('cp-file');
 
 const action = async context => {
   const tempFilePath = await context.filePath();
@@ -11,7 +11,7 @@ const action = async context => {
     return;
   }
 
-  await moveFile(tempFilePath, context.targetFilePath);
+  await cpFile(tempFilePath, context.targetFilePath);
 
   const notification = new Notification({
     title: 'File saved successfully!',
