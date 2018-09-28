@@ -37,9 +37,26 @@ export default class Editor extends React.Component {
         <div className="title-bar">
           <div className="title-bar-container">
             <div className="traffic-lights">
-              <div className="traffic-light close" onClick={this.close}/>
-              <div className="traffic-light minimize" onClick={this.minimize}/>
-              <div className="traffic-light maximize" onClick={this.maximize}/>
+              <div className="traffic-light close" onClick={this.close}>
+                <svg width="12" height="12">
+                  <circle cx="6" cy="6" r="5.75" strokeWidth="0.5"/>
+                  <line x1="3.17" y1="3.17" x2="8.83" y2="8.83" stroke="black"/>
+                  <line x1="3.17" y1="8.83" x2="8.83" y2="3.17" stroke="#760e0e"/>
+                </svg>
+              </div>
+              <div className="traffic-light minimize" onClick={this.minimize}>
+                <svg width="12" height="12">
+                  <circle cx="6" cy="6" r="5.75" strokeWidth="0.5"/>
+                  <line x1="2" y1="6" x2="10" y2="6"/>
+                </svg>
+              </div>
+              <div className="traffic-light maximize" onClick={this.maximize}>
+                <svg width="12" height="12">
+                  <circle cx="6" cy="6" r="5.75" strokeWidth="0.5"/>
+                  <rect x="3.5" y="3.5" width="5" height="5" rx="1" ry="1"/>
+                  <rect className="background-rect" x="5.5" y="1.5" width="1" height="9" transform="rotate(-45 6 6)"/>
+                </svg>
+              </div>
             </div>
             <div className="title">Editor</div>
           </div>
@@ -96,90 +113,82 @@ export default class Editor extends React.Component {
             border-radius: 100%;
             height: 12px;
             width: 12px;
-            border: 1px solid rgba(0, 0, 0, 0.06);
             background-color: #ddd;
             margin-right: 8px;
             position: relative;
             -webkit-app-region: no-drag;
           }
 
-          .traffic-light:after,
-          .traffic-light:before {
+          .traffic-light line,
+          .traffic-light rect {
             visibility: hidden;
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            margin: auto;
           }
 
-          .traffic-lights:hover .traffic-light:after,
-          .traffic-lights:hover .traffic-light:before {
+          .traffic-lights:hover line,
+          .traffic-lights:hover rect {
             visibility: visible;
           }
 
-          .close {
-            background-color: #ff6159;
+          .close line {
+            stroke: #580300;
           }
 
-          .close:active {
-            background-color: #bf4942;
+          .close circle {
+            stroke: #E24640;
+            fill: #ff6155;
           }
 
-          .close:after,
-          .close:before {
-            background-color: #760e0e;
-            width: 8px;
-            height: 1px;
+          .close:active circle {
+            fill: #c1483f;
+            stroke: #c1483f;
           }
 
-          .close:after {
-            transform: rotate(45deg);
+          .close:active line {
+            stroke: #1e0101;
           }
 
-          .close:before {
-            transform: rotate(-45deg);
+          .minimize line {
+            stroke: #a66400;
           }
 
-          .minimize {
-            background-color: #ffbf2f;
+          .minimize circle {
+            stroke: #DFA023;
+            fill: #ffc008;
           }
 
-          .minimize:active {
-            background-color: #995700;
+          .minimize:active circle {
+            fill: #c0910a;
+            stroke: #c0910a;
           }
 
-          .minimize:after {
-            background-color: #760e0e;
-            width: 8px;
-            height: 1px;
+          .minimize:active line {
+            stroke: #5a2800;
           }
 
-          .maximize {
-            background-color: #28c941;
+          .maximize rect {
+            fill: #006500;
+            stroke: #006500;
           }
 
-          .maximize:active {
-            background-color: #1d9730;
+          .maximize:active rect {
+            fill: #003200;
+            stroke: #003200;
           }
 
-          .maximize:before {
-            background-color: #006500;
-            width: 6px;
-            height: 6px;
+          .maximize circle {
+            stroke: #1BAC2C;
+            fill: #16d137;
           }
 
-          .maximize:after {
-            background-color: #28c941;
-            width: 10px;
-            height: 2px;
-            transform: rotate(45deg);
+          .maximize .background-rect {
+            stroke: #16d137;
+            fill: #16d137;
           }
 
-          .maximize:active:after {
-            background-color: #1d9730;
+          .maximize:active circle,
+          .maximize:active .background-rect {
+            fill: #119b29;
+            stroke: #119b29;
           }
 
           .disabled {
