@@ -122,6 +122,7 @@ export default class Export extends React.Component {
           .subtitle {
             font-size: 12px;
             color: #808080;
+            user-select: none;
           }
 
           .export-container:hover {
