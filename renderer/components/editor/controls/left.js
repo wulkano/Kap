@@ -14,8 +14,8 @@ class LeftControls extends React.Component {
         <div className="play">
           {
             isPaused ?
-              <PlayIcon fill="#fff" hoverFill="#fff" onClick={play}/> :
-              <PauseIcon fill="#fff" hoverFill="#fff" onClick={pause}/>
+              <PlayIcon shadow fill="#fff" hoverFill="#fff" onClick={play}/> :
+              <PauseIcon shadow fill="#fff" hoverFill="#fff" onClick={pause}/>
           }
         </div>
         <div className="time">{formatTime(currentTime)}</div>
@@ -33,6 +33,11 @@ class LeftControls extends React.Component {
               width: 24px;
               height: 24px;
               margin-right: 16px;
+            }
+
+            .time {
+              width: 46px;
+              text-shadow: 1px 1px rgba(0, 0, 0, 0.1);
             }
         `}</style>
       </div>
