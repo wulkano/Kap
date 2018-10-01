@@ -168,6 +168,7 @@ export default class CropperContainer extends Container {
 
     this.updateSettings(updates);
     this.actionBarContainer.setInputValues(updates);
+    this.actionBarContainer.toggleRatioLock(true);
   }
 
   swapDimensions = () => {
