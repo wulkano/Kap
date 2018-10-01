@@ -17,6 +17,11 @@ class Slider extends React.Component {
     onChange(event.target.value, event.target);
   }
 
+  handleBlur = event => {
+    const {onChange} = this.props;
+    onChange(event.target.value, event.target, {ignoreEmpty: false});
+  }
+
   render() {
     const {value, max, min} = this.props;
     const {isOpen} = this.state;
@@ -24,11 +29,11 @@ class Slider extends React.Component {
     return (
       <div className="container">
         { isOpen && <div className="overlay" onClick={this.hide}/> }
-        <input type="text" className="value" value={value} onChange={this.handleChange} onFocus={this.show}/>
+        <input type="text" className="value" value={value || ''} onChange={this.handleChange} onBlur={this.handleBlur} onFocus={this.show}/>
         {
           isOpen && (
             <div className="popup" onClick={event => event.stopPropagation()}>
-              <input type="range" className="slider" min={min} max={max} step={1} value={value} onChange={this.handleChange}/>
+              <input type="range" className="slider" min={min} max={max} step={1} value={value || min} onChange={this.handleChange}/>
               <div className="arrow">
                 <TooltipIcon fill="rgba(255, 255, 255, 0.85)" hoverFill="rgba(255, 255, 255, 0.85)"/>
               </div>

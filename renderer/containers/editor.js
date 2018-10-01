@@ -46,10 +46,10 @@ export default class EditorContainer extends Container {
         const min = Math.max(1, Math.ceil(ratio));
 
         if (val < min) {
-          shake(target);
+          shake(target, {className: 'shake-left'});
           updates.width = min;
         } else if (val > original.width) {
-          shake(target);
+          shake(target, {className: 'shake-left'});
           updates.width = original.width;
         } else {
           updates.width = val;
@@ -60,10 +60,10 @@ export default class EditorContainer extends Container {
         const min = Math.max(1, Math.ceil(1 / ratio));
 
         if (val < min) {
-          shake(target);
+          shake(target, {className: 'shake-right'});
           updates.height = min;
         } else if (val > original.height) {
-          shake(target);
+          shake(target, {className: 'shake-right'});
           updates.height = original.height;
         } else {
           updates.height = val;
@@ -71,8 +71,10 @@ export default class EditorContainer extends Container {
 
         updates.width = Math.round(updates.height * ratio);
       }
+    } else if (name === 'width') {
+      shake(target, {className: 'shake-left'});
     } else {
-      shake(target);
+      shake(target, {className: 'shake-right'});
     }
 
     this.setState(updates);
@@ -116,7 +118,16 @@ export default class EditorContainer extends Container {
 
   selectPlugin = plugin => this.setState({plugin})
 
-  setFps = (value, target) => {
+  setFps = (value, target, {ignoreEmpty = true} = {}) => {
+    if (value === '') {
+      if (ignoreEmpty) {
+        this.setState(state => ({fps: null, lastValidFps: state.fps}));
+      } else {
+        this.setState(state => ({lastValidFps: null, fps: state.lastValidFps}));
+      }
+      return;
+    }
+
     if (value.match(/^\d+$/)) {
       const fps = parseInt(value, 10);
       const {originalFps} = this.state;
