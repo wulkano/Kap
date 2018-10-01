@@ -88,15 +88,15 @@ export default class Editor extends React.Component {
 
           .title-bar-container {
             flex: 1;
+            height: 100%;
+            display: flex;
+            align-items: center;
           }
 
           .traffic-lights {
-            position: absolute;
-            left: 0;
-            top: 0;
             display: flex;
             align-items: center;
-            height: 100%;
+            height: max-content;
             margin-left: 12px;
           }
 
