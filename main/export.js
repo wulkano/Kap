@@ -17,6 +17,7 @@ class Export {
     this.service = this.plugin.getSerivce(options.serviceTitle);
     this.format = options.format;
     this.image = '';
+    this.isDefault = options.isDefault;
 
     const now = moment();
     this.defaultFileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.${this.format}`;
@@ -42,7 +43,7 @@ class Export {
       percentage: this.percentage,
       image: this.image,
       createdAt: this.createdAt,
-      filePath: this.filePath,
+      filePath: this.filePath && (this.isDefault ? this.context.targetFilePath : this.filePath),
       error: this.error
     };
   }
