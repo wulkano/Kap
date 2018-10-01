@@ -329,42 +329,40 @@ export default class CropperContainer extends Container {
     const {top, bottom, left, right} = currentHandle;
     const {ratioLocked} = this.actionBarContainer.state;
 
-    const updates = {};
+    const updates = {currentHandle: {top, bottom, right, left}};
 
     if (top) {
       updates.y = pageY;
       updates.height = height + y - pageY;
-
-      if (updates.height < 1 && !ratioLocked) {
-        updates.currentHandle = {top: false, bottom: true, left, right};
-      }
     } else if (bottom) {
       updates.height = pageY - y;
       updates.y = y;
+    }
 
-      if (updates.height < 1 && !ratioLocked) {
-        updates.currentHandle = {bottom: false, top: true, left, right};
-      }
+    if (updates.height !== undefined && updates.height < 0 && !ratioLocked) {
+      updates.y += updates.height;
+      updates.height = -updates.height;
+      updates.currentHandle.bottom = !bottom;
+      updates.currentHandle.top = !top;
     }
 
     if (left) {
       updates.x = pageX;
       updates.width = width + x - pageX;
-
-      if (updates.width < 1 && !ratioLocked) {
-        updates.currentHandle = {left: false, right: true, top, bottom};
-      }
     } else if (right) {
       updates.width = pageX - x;
       updates.x = x;
+    }
 
-      if (updates.width < 1 && !ratioLocked) {
-        updates.currentHandle = {right: false, left: true, top, bottom};
-      }
+    if (updates.width !== undefined && updates.width < 0 && !ratioLocked) {
+      updates.x += updates.width;
+      updates.width = -updates.width;
+      updates.currentHandle.left = !left;
+      updates.currentHandle.right = !right;
     }
 
     if (ratioLocked) {
-      if (updates.width < 1 && updates.height < 1) {
+      if (updates.width < 0 && updates.height < 0) {
         updates.currentHandle = {bottom: !bottom, top: !top, left: !left, right: !right};
       }
 
