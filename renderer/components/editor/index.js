@@ -17,6 +17,7 @@ export default class Editor extends React.Component {
   }
 
   maximize = () => {
+    // TODO: When we get to Electron 4 use this API https://github.com/electron/electron/commit/a42ca9eecc6e82c087604f92a3e6581de66ece5a
     const win = electron.remote.BrowserWindow.getFocusedWindow();
     win.setFullScreen(!win.isFullScreen());
   }
