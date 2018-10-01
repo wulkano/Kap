@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import css from 'styled-jsx/css';
 
+import IconMenu from '../../icon-menu';
 import {
   MoreIcon,
   CropIcon,
@@ -10,7 +11,6 @@ import {
   FullscreenIcon,
   ExitFullscreenIcon
 } from '../../../vectors';
-
 import {connect, ActionBarContainer, CropperContainer} from '../../../containers';
 
 const mainStyle = css`
@@ -35,8 +35,6 @@ const buildMenu = async ({selectedApp}) => {
 class Left extends React.Component {
   state = {};
 
-  icon = React.createRef();
-
   static getDerivedStateFromProps(nextProps, prevState) {
     const {selectedApp} = nextProps;
 
@@ -48,16 +46,6 @@ class Left extends React.Component {
     return null;
   }
 
-  openMenu = () => {
-    const boundingRect = this.icon.current.getBoundingClientRect();
-    const {bottom, left} = boundingRect;
-
-    menu.popup({
-      x: Math.round(left),
-      y: Math.round(bottom)
-    });
-  }
-
   render() {
     const {toggleAdvanced, selectedApp} = this.props;
 
@@ -66,7 +54,7 @@ class Left extends React.Component {
         <div className="crop">
           <CropIcon onClick={toggleAdvanced}/>
         </div>
-        <div ref={this.icon}><ApplicationsIcon active={Boolean(selectedApp)} onClick={this.openMenu}/></div>
+        <IconMenu onOpen={menu && menu.popup}><ApplicationsIcon active={Boolean(selectedApp)}/></IconMenu>
         <style jsx>{mainStyle}</style>
         <style jsx>{`
           .crop {
@@ -97,18 +85,6 @@ MainControls.Left = connect(
 )(Left);
 
 class Right extends React.Component {
-  icon = React.createRef();
-
-  openMenu = () => {
-    const boundingRect = this.icon.current.getBoundingClientRect();
-    const {bottom, left} = boundingRect;
-
-    electron.remote.require('./menus').cogMenu.popup({
-      x: Math.round(left),
-      y: Math.round(bottom)
-    });
-  }
-
   render() {
     const {enterFullscreen, exitFullscreen, isFullscreen} = this.props;
 
@@ -121,7 +97,7 @@ class Right extends React.Component {
               <FullscreenIcon onClick={enterFullscreen}/>
           }
         </div>
-        <div ref={this.icon}><MoreIcon onClick={this.openMenu}/></div>
+        <IconMenu onOpen={electron.remote.require('./menus').cogMenu.popup}><MoreIcon/></IconMenu>
         <style jsx>{mainStyle}</style>
         <style jsx>{`
           .fullscreen {

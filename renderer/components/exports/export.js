@@ -2,6 +2,7 @@ import electron from 'electron';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import IconMenu from '../icon-menu';
 import {CancelIcon, MoreIcon} from '../../vectors';
 import {Progress, ProgressSpinner} from './progress';
 
@@ -10,17 +11,16 @@ export default class Export extends React.Component {
     percentage: 0
   }
 
+  state = {}
+
   componentDidMount() {
     const {remote} = electron;
     const {Menu, MenuItem} = remote;
     const {openInEditor} = this.props;
 
-    this.menu = new Menu();
-    this.menu.append(new MenuItem({label: 'Open Original', click: openInEditor}));
-  }
-
-  openMenu = () => {
-    this.menu.popup({});
+    const menu = new Menu();
+    menu.append(new MenuItem({label: 'Open Original', click: openInEditor}));
+    this.setState({menu});
   }
 
   render() {
@@ -32,18 +32,19 @@ export default class Export extends React.Component {
       image,
       cancel
     } = this.props;
+    const {menu} = this.state;
 
     const cancelable = status === 'waiting' || status === 'processing';
 
     return (
       <div className="export-container">
-        <div className="thumbnail" onClick={this.openMenu}>
+        <div className="thumbnail">
           <div className="overlay"/>
           <div className="icon">
             {
               cancelable ?
                 <CancelIcon fill="white" hoverFill="white" onClick={cancel}/> :
-                <MoreIcon fill="white" hoverFill="white"/>
+                <IconMenu onOpen={menu && menu.popup}><MoreIcon fill="white" hoverFill="white"/></IconMenu>
             }
           </div>
           <div className="progress">

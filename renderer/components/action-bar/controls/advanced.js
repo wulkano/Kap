@@ -61,7 +61,7 @@ class Left extends React.Component {
 
     this.state.menu.popup({
       x: Math.round(left),
-      y: Math.round(top),
+      y: Math.round(top) + 6,
       positioningItem
     });
   }
