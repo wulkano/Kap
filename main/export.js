@@ -17,6 +17,7 @@ class Export {
     this.service = this.plugin.getSerivce(options.serviceTitle);
     this.format = options.format;
     this.image = '';
+    this.isDefault = options.isDefault;
 
     const now = moment();
     this.defaultFileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.${this.format}`;
@@ -41,7 +42,9 @@ class Export {
       status: this.status,
       percentage: this.percentage,
       image: this.image,
-      createdAt: this.createdAt
+      createdAt: this.createdAt,
+      filePath: this.filePath && (this.isDefault ? this.context.targetFilePath : this.filePath),
+      error: this.error
     };
   }
 
@@ -62,8 +65,8 @@ class Export {
           });
         }
         resolve();
-      } catch (_) {
-        reject();
+      } catch (error) {
+        reject(error);
       }
     });
   }
@@ -105,9 +108,9 @@ class Export {
       this.format
     );
 
-    const filePath = await this.convertProcess;
+    this.filePath = await this.convertProcess;
     this.resolve();
-    return filePath;
+    return this.filePath;
   }
 }
 
