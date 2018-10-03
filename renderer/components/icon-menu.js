@@ -4,10 +4,11 @@ import PropTypes from 'prop-types';
 class IconMenu extends React.Component {
   container = React.createRef();
 
-  openMenu = () => {
+  openMenu = event => {
     const boundingRect = this.container.current.getBoundingClientRect();
     const {bottom, left} = boundingRect;
     const {onOpen} = this.props;
+    event.stopPropagation();
 
     if (onOpen) {
       onOpen({
