@@ -119,11 +119,12 @@ export default class EditorContainer extends Container {
   selectPlugin = plugin => this.setState({plugin})
 
   setFps = (value, target, {ignoreEmpty = true} = {}) => {
+    const {fps, lastValidFps} = this.state;
     if (value === '') {
       if (ignoreEmpty) {
-        this.setState(state => ({fps: null, lastValidFps: state.fps}));
+        this.setState({fps: null, lastValidFps: fps});
       } else {
-        this.setState(state => ({lastValidFps: null, fps: state.lastValidFps}));
+        this.setState({lastValidFps: null, fps: lastValidFps});
       }
       return;
     }
