@@ -11,7 +11,7 @@ export default class ExportsContainer extends Container {
     ipc = require('electron-better-ipc');
     const exports = await ipc.callMain('get-exports');
 
-    this.setState({exports: exports.sort((a, b) => a.createdAt - b.createdAt)});
+    this.setState({exports: exports.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))});
 
     ipc.answerMain('update-export', this.update);
   }
@@ -24,6 +24,9 @@ export default class ExportsContainer extends Container {
     if (index === -1) {
       exports.unshift(updates);
     } else {
+      if (!exports[index].error && updates.error) {
+        console.error(updates.error);
+      }
       exports[index] = updates;
     }
 

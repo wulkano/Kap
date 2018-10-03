@@ -23,6 +23,13 @@ export default class Export extends React.Component {
     this.setState({menu});
   }
 
+  openFile = () => {
+    const {filePath} = this.props;
+    if (filePath) {
+      electron.remote.shell.showItemInFolder(filePath);
+    }
+  }
+
   render() {
     const {
       defaultFileName,
@@ -37,7 +44,7 @@ export default class Export extends React.Component {
     const cancelable = status === 'waiting' || status === 'processing';
 
     return (
-      <div className="export-container">
+      <div className="export-container" onClick={this.openFile}>
         <div className="thumbnail">
           <div className="overlay"/>
           <div className="icon">
@@ -115,6 +122,7 @@ export default class Export extends React.Component {
           .subtitle {
             font-size: 12px;
             color: #808080;
+            user-select: none;
           }
 
           .export-container:hover {
@@ -141,5 +149,6 @@ Export.propTypes = {
   percentage: PropTypes.number,
   image: PropTypes.string,
   cancel: PropTypes.func,
-  openInEditor: PropTypes.func
+  openInEditor: PropTypes.func,
+  filePath: PropTypes.string
 };
