@@ -2,7 +2,7 @@ import electron from 'electron';
 import nearestNormalAspectRatio from 'nearest-normal-aspect-ratio';
 import {Container} from 'unstated';
 
-import {minHeight, minWidth, resizeTo} from '../utils/inputs';
+import {minHeight, minWidth, resizeTo, setScreenSize} from '../utils/inputs';
 
 // Helper function for retrieving the simplest ratio,
 // via the largest common divisor of two numbers (thanks @doot0)
@@ -68,6 +68,7 @@ export default class CropperContainer extends Container {
     const {width: screenWidth, height: screenHeight, isActive, id, cropper = {}} = display;
     const {x, y, width, height, ratio} = cropper;
 
+    setScreenSize(screenWidth, screenHeight);
     this.setState({
       screenWidth,
       screenHeight,

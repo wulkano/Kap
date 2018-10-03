@@ -1,7 +1,14 @@
 import electron from 'electron';
 import _ from 'lodash';
 
-const {width: screenWidth, height: screenHeight} = (electron.screen && electron.screen.getPrimaryDisplay().bounds) || {};
+let screenWidth = 0;
+let screenHeight = 0;
+
+export const setScreenSize = (width, height) => {
+  screenWidth = width;
+  screenHeight = height;
+};
+
 const {remote} = electron;
 const debounceTimeout = 500;
 export const minWidth = 20;
