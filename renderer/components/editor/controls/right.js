@@ -1,46 +1,47 @@
-import electron from 'electron';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {VolumeHighIcon, VolumeOffIcon, FullscreenIcon} from '../../../vectors';
+import {VolumeHighIcon, VolumeOffIcon} from '../../../vectors';
 import {connect, VideoContainer, EditorContainer} from '../../../containers';
 
-class RightControls extends React.Component {
-  fullscreen = () => {
-    const {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
-    electron.remote.BrowserWindow.getFocusedWindow().setBounds({x: 0, y: 0, width, height});
-  }
+import formatTime from '../../../utils/format-time';
 
+class RightControls extends React.Component {
   render() {
-    const {isMuted, mute, unmute, format} = this.props;
+    const {isMuted, mute, unmute, format, duration} = this.props;
     const canUnmute = !['gif', 'apng'].includes(format);
 
     return (
       <div className="container">
+        <div className="time">{formatTime(duration)}</div>
         <div className="mute">
           {
             isMuted ?
-              <VolumeOffIcon fill="#fff" hoverFill="#fff" onClick={canUnmute ? unmute : undefined}/> :
-              <VolumeHighIcon fill="#fff" hoverFill="#fff" onClick={mute}/>
+              <VolumeOffIcon shadow fill="#fff" hoverFill="#fff" onClick={canUnmute ? unmute : undefined}/> :
+              <VolumeHighIcon shadow fill="#fff" hoverFill="#fff" onClick={mute}/>
           }
-        </div>
-        <div className="fullscreen">
-          <FullscreenIcon fill="#fff" hoverFill="#fff" onClick={this.fullscreen}/>
         </div>
         <style jsx>{`
             .container {
               display: flex;
               width: 100%;
               align-items: center;
+              font-size: 12px;
               padding: 0 16px;
+              color: white;
               justify-content: flex-end;
             }
 
-            .mute,
-            .fullscreen {
+            .mute {
               width: 24px;
               height: 24px;
               margin-left: 16px;
+            }
+
+            .time {
+              text-shadow: 1px 1px rgba(0, 0, 0, 0.1);
+              text-align: left;
+              width: 46px;
             }
         `}</style>
       </div>
@@ -52,11 +53,12 @@ RightControls.propTypes = {
   isMuted: PropTypes.bool,
   mute: PropTypes.func,
   unmute: PropTypes.func,
-  format: PropTypes.string
+  format: PropTypes.string,
+  duration: PropTypes.number
 };
 
 export default connect(
   [VideoContainer, EditorContainer],
-  ({isMuted}, {format}) => ({isMuted, format}),
+  ({isMuted, duration}, {format}) => ({isMuted, format, duration}),
   ({mute, unmute}) => ({mute, unmute})
 )(RightControls);

@@ -14,11 +14,11 @@ const debounceTimeout = 500;
 export const minWidth = 20;
 export const minHeight = 20;
 
-export const shake = el => {
-  el.classList.add('shake');
+export const shake = (el, {className = 'shake'} = {}) => {
+  el.classList.add(className);
 
   el.addEventListener('animationend', () => {
-    el.classList.remove('shake');
+    el.classList.remove(className);
   }, {once: true});
 
   return true;
