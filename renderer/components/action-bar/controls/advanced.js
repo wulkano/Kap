@@ -15,7 +15,8 @@ import {
   handleWidthInput,
   handleHeightInput,
   buildAspectRatioMenu,
-  handleInputKeyPress
+  handleInputKeyPress,
+  RATIOS
 } from '../../../utils/inputs';
 
 const advancedStyles = css`
@@ -35,6 +36,8 @@ const stopPropagation = event => event.stopPropagation();
 class Left extends React.Component {
   state = {}
 
+  select = React.createRef();
+
   static getDerivedStateFromProps(nextProps, prevState) {
     const {ratio, isResizing, setRatio} = nextProps;
 
@@ -48,6 +51,21 @@ class Left extends React.Component {
     return null;
   }
 
+  openMenu = () => {
+    const {ratio} = this.props;
+    const boundingRect = this.select.current.getBoundingClientRect();
+    const {top, left} = boundingRect;
+    const selectedRatio = ratio.join(':');
+    const index = RATIOS.findIndex(r => r === selectedRatio);
+    const positioningItem = index > -1 ? index : RATIOS.length;
+
+    this.state.menu.popup({
+      x: Math.round(left),
+      y: Math.round(top) + 6,
+      positioningItem
+    });
+  }
+
   render() {
     const {toggleAdvanced, toggleRatioLock, ratioLocked, ratio = []} = this.props;
 
@@ -56,7 +74,7 @@ class Left extends React.Component {
         <div className="back">
           <BackIcon onClick={toggleAdvanced}/>
         </div>
-        <div className="select" onClick={() => this.state.menu.popup({})} onMouseDown={stopPropagation}>
+        <div ref={this.select} className="select" onClick={this.openMenu} onMouseDown={stopPropagation}>
           <span>{ratio[0]}:{ratio[1]}</span>
           <DropdownArrowIcon size="18px"/>
         </div>
@@ -123,8 +141,6 @@ AdvancedControls.Left = connect(
 )(Left);
 
 class Right extends React.Component {
-  state = {}
-
   constructor(props) {
     super(props);
 
@@ -132,43 +148,68 @@ class Right extends React.Component {
     this.heightInput = React.createRef();
   }
 
-  static getDerivedStateFromProps(nextProps) {
-    const {width, height} = nextProps;
-    return {width, height};
-  }
-
-  onWidthChange = event => {
-    const {x, y, setBounds, ratioLocked, ratio} = this.props;
+  onWidthChange = (event, {ignoreEmpty} = {}) => {
+    const {bounds, height, setBounds, ratioLocked, ratio, setWidth} = this.props;
     const {value} = event.currentTarget;
     const {heightInput, widthInput} = this;
 
-    this.setState({width: value});
-    handleWidthInput({x, y, setBounds, ratioLocked, ratio, value, widthInput, heightInput});
+    setWidth(value);
+    handleWidthInput({
+      bounds,
+      height,
+      setBounds,
+      ratioLocked,
+      ratio,
+      value,
+      widthInput,
+      heightInput,
+      ignoreEmpty
+    });
   }
 
-  onHeightChange = event => {
-    const {x, y, setBounds, ratioLocked, ratio} = this.props;
+  onHeightChange = (event, {ignoreEmpty} = {}) => {
+    const {bounds, width, setBounds, ratioLocked, ratio, setHeight} = this.props;
     const {value} = event.currentTarget;
     const {heightInput, widthInput} = this;
 
-    this.setState({height: value});
-    handleHeightInput({x, y, setBounds, ratioLocked, ratio, value, widthInput, heightInput});
+    setHeight(value);
+    handleHeightInput({
+      bounds,
+      width,
+      setBounds,
+      ratioLocked,
+      ratio,
+      value,
+      widthInput,
+      heightInput,
+      ignoreEmpty
+    });
+  }
+
+  onWidthBlur = event => {
+    this.onWidthChange(event, {ignoreEmpty: false});
+    handleWidthInput.flush();
+  }
+
+  onHeightBlur = event => {
+    this.onHeightChange(event, {ignoreEmpty: false});
+    handleHeightInput.flush();
   }
 
   render() {
-    const {width, height} = this.state;
-    const {swapDimensions} = this.props;
+    const {swapDimensions, width, height} = this.props;
 
     return (
       <div className="advanced">
         <input
           ref={this.widthInput}
           type="text"
+          name="width"
           size="5"
           maxLength="5"
-          value={width || ''}
+          value={width}
           onChange={this.onWidthChange}
-          onBlur={handleWidthInput.flush}
+          onBlur={this.onWidthBlur}
           onKeyDown={handleInputKeyPress(this.onWidthChange)}
           onMouseDown={stopPropagation}/>
         <div className="swap">
@@ -177,11 +218,12 @@ class Right extends React.Component {
         <input
           ref={this.heightInput}
           type="text"
+          name="height"
           size="5"
           maxLength="5"
-          value={height || ''}
+          value={height}
           onChange={this.onHeightChange}
-          onBlur={handleHeightInput.flush}
+          onBlur={this.onHeightBlur}
           onKeyDown={handleInputKeyPress(this.onHeightChange)}
           onMouseDown={stopPropagation}/>
         <style jsx>{advancedStyles}</style>
@@ -221,20 +263,38 @@ class Right extends React.Component {
 }
 
 Right.propTypes = {
-  x: PropTypes.number,
-  y: PropTypes.number,
-  width: PropTypes.number,
-  height: PropTypes.number,
+  bounds: PropTypes.object,
+  width: PropTypes.string,
+  height: PropTypes.string,
   ratio: PropTypes.array,
   ratioLocked: PropTypes.bool,
   setBounds: PropTypes.func.isRequired,
-  swapDimensions: PropTypes.func.isRequired
+  swapDimensions: PropTypes.func.isRequired,
+  setWidth: PropTypes.func.isRequired,
+  setHeight: PropTypes.func.isRequired
 };
 
 AdvancedControls.Right = connect(
   [CropperContainer, ActionBarContainer],
-  ({x, y, width, height, ratio}, {ratioLocked}) => ({x, y, width, height, ratio, ratioLocked}),
-  ({setBounds, swapDimensions}) => ({setBounds, swapDimensions})
+  (
+    {x, y, ratio, width, height},
+    {cropperWidth, cropperHeight, ratioLocked}
+  ) => ({
+    bounds: {x, y, width, height},
+    width: cropperWidth,
+    height: cropperHeight,
+    ratio,
+    ratioLocked
+  }),
+  (
+    {setBounds, swapDimensions},
+    {setWidth, setHeight}
+  ) => ({
+    setBounds,
+    swapDimensions,
+    setWidth,
+    setHeight
+  })
 )(Right);
 
 export default AdvancedControls;

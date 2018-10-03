@@ -2,6 +2,8 @@ import electron from 'electron';
 import nearestNormalAspectRatio from 'nearest-normal-aspect-ratio';
 import {Container} from 'unstated';
 
+import {minHeight, minWidth, resizeTo, setScreenSize} from '../utils/inputs';
+
 // Helper function for retrieving the simplest ratio,
 // via the largest common divisor of two numbers (thanks @doot0)
 const getLargestCommonDivisor = (first, second) => {
@@ -66,6 +68,7 @@ export default class CropperContainer extends Container {
     const {width: screenWidth, height: screenHeight, isActive, id, cropper = {}} = display;
     const {x, y, width, height, ratio} = cropper;
 
+    setScreenSize(screenWidth, screenHeight);
     this.setState({
       screenWidth,
       screenHeight,
@@ -74,10 +77,11 @@ export default class CropperContainer extends Container {
       displayId: id,
       x: x || screenWidth / 2,
       y: y || screenHeight / 2,
-      width,
-      height,
-      ratio
+      width: width || 0,
+      height: height || 0,
+      ratio: ratio || [1, 1]
     });
+    this.actionBarContainer.setInputValues({width, height});
   }
 
   willStartRecording = () => {
@@ -128,44 +132,63 @@ export default class CropperContainer extends Container {
   }
 
   setBounds = (bounds, {save = true, ignoreRatioLocked} = {}) => {
-    const updates = bounds;
+    if (bounds) {
+      const updates = bounds;
 
-    if ((!this.actionBarContainer.state.ratioLocked || ignoreRatioLocked) && (bounds.width || bounds.height)) {
-      const {width, height} = this.state;
-      updates.ratio = findRatioForSize(bounds.width || width, bounds.height || height);
-    }
+      if ((!this.actionBarContainer.state.ratioLocked || ignoreRatioLocked) && (bounds.width || bounds.height)) {
+        const {width, height} = this.state;
+        updates.ratio = findRatioForSize(bounds.width || width, bounds.height || height);
+      }
 
-    if (save) {
-      this.updateSettings(updates);
+      if (save) {
+        this.updateSettings(updates);
+      } else {
+        this.setState(updates);
+      }
+      this.actionBarContainer.setInputValues(updates);
+    } else if (this.state.width || this.state.height) {
+      this.actionBarContainer.setInputValues(this.state);
     } else {
-      this.setState(updates);
+      this.actionBarContainer.setInputValues({});
     }
   }
 
   setRatio = ratio => {
-    const {y, width, screenHeight} = this.state;
-    const updates = {ratio};
+    const {x, y, width, screenHeight} = this.state;
+    const target = {width};
 
     this.unselectApp();
-    updates.height = Math.ceil(width * ratio[1] / ratio[0]);
-    if (y + updates.height > screenHeight) {
-      updates.height = screenHeight - y;
-      updates.width = Math.ceil(updates.height * ratio[0] / ratio[1]);
+    const computedHeight = Math.ceil(width * ratio[1] / ratio[0]);
+    target.height = Math.max(minHeight, Math.min(screenHeight, computedHeight));
+
+    if (target.height !== computedHeight) {
+      target.width = Math.ceil(target.height * ratio[0] / ratio[1]);
     }
 
+    const updates = {ratio, ...resizeTo({x, y}, target)};
+
     this.updateSettings(updates);
+    this.actionBarContainer.setInputValues(updates);
+    this.actionBarContainer.toggleRatioLock(true);
   }
 
   swapDimensions = () => {
-    const {x, height, ratio, screenWidth} = this.state;
-    const updates = {width: height};
+    const {x, y, width, height, ratio, screenHeight} = this.state;
+    const target = {
+      width: height,
+      height: Math.min(width, screenHeight)
+    };
 
-    if (x + updates.width > screenWidth) {
-      updates.width = screenWidth - x;
+    this.unselectApp();
+
+    if (target.height !== width) {
+      target.width = Math.ceil(target.height * ratio[1] / ratio[0]);
     }
 
+    const updates = {ratio: ratio.reverse(), ...resizeTo({x, y}, target)};
+
     this.updateSettings(updates);
-    this.setRatio(ratio.reverse());
+    this.actionBarContainer.setInputValues(updates);
   }
 
   selectApp = app => {
@@ -207,18 +230,20 @@ export default class CropperContainer extends Container {
 
   pick = ({pageX, pageY}) => {
     const {original, isPicking} = this.state;
-    if (Math.abs(original.pageX - pageX) > 0 && Math.abs(original.pageY - pageY) > 0 && isPicking) {
+    const width = Math.abs(original.pageX - pageX);
+    const height = Math.abs(original.pageY - pageY);
+    if ((width > 0 || height > 0) && isPicking) {
       this.cursorContainer.removeCursorObserver(this.pick);
+      const top = pageY < original.pageY;
+      const left = pageX < original.pageX;
       this.setState({
-        x: pageX,
-        y: pageY,
-        width: 0,
-        height: 0,
+        x: Math.min(pageX, original.pageX),
+        y: Math.min(pageY, original.pageY),
+        width,
+        height,
         isResizing: true,
         isPicking: false,
-        currentHandle: {bottom: true, right: true}
-      }, () => {
-
+        currentHandle: {top, bottom: !top, left, right: !left}
       });
 
       this.setOriginal();
@@ -230,7 +255,6 @@ export default class CropperContainer extends Container {
     if (this.state.isPicking) {
       this.remote.getCurrentWindow().close();
     } else {
-      this.setState({isPicking: false});
       this.cursorContainer.removeCursorObserver(this.pick);
     }
   }
@@ -254,7 +278,13 @@ export default class CropperContainer extends Container {
       const {x, y, width, height, ratio} = this.state;
       this.setState({currentHandle: null, isResizing: false, showHandles: true, isPicking: false});
       this.cursorContainer.removeCursorObserver(this.resize);
-      this.updateSettings({x, y, width, height, ratio});
+      this.setBounds({
+        ...resizeTo({x, y}, {
+          width: Math.max(minWidth, width),
+          height: Math.max(minHeight, height)
+        }),
+        ratio
+      });
     }
   }
 
@@ -268,7 +298,8 @@ export default class CropperContainer extends Container {
 
   stopMoving = () => {
     if (!this.state.isFullscreen && this.state.isMoving) {
-      const {x, y} = this.state;
+      const {x, y, width, height} = this.state;
+      this.setBounds({x, y, width, height});
       this.setState({isMoving: false, showHandles: true});
       this.cursorContainer.removeCursorObserver(this.move);
       this.updateSettings({x, y});
@@ -297,42 +328,45 @@ export default class CropperContainer extends Container {
   resize = ({pageX, pageY}) => {
     const {currentHandle, x, y, width, height, original, ratio, screenWidth, screenHeight} = this.state;
     const {top, bottom, left, right} = currentHandle;
+    const {ratioLocked} = this.actionBarContainer.state;
 
-    const updates = {};
+    const updates = {currentHandle: {top, bottom, right, left}};
 
     if (top) {
       updates.y = pageY;
       updates.height = height + y - pageY;
-
-      if (updates.height < 1) {
-        updates.currentHandle = {top: false, bottom: true, left, right};
-      }
     } else if (bottom) {
       updates.height = pageY - y;
       updates.y = y;
+    }
 
-      if (updates.height < 1) {
-        updates.currentHandle = {bottom: false, top: true, left, right};
-      }
+    if (updates.height !== undefined && updates.height < 0 && !ratioLocked) {
+      updates.y += updates.height;
+      updates.height = -updates.height;
+      updates.currentHandle.bottom = !bottom;
+      updates.currentHandle.top = !top;
     }
 
     if (left) {
       updates.x = pageX;
       updates.width = width + x - pageX;
-
-      if (updates.width < 1) {
-        updates.currentHandle = {left: false, right: true, top, bottom};
-      }
     } else if (right) {
       updates.width = pageX - x;
       updates.x = x;
-
-      if (updates.width < 1) {
-        updates.currentHandle = {right: false, left: true, top, bottom};
-      }
     }
 
-    if (this.actionBarContainer.state.ratioLocked) {
+    if (updates.width !== undefined && updates.width < 0 && !ratioLocked) {
+      updates.x += updates.width;
+      updates.width = -updates.width;
+      updates.currentHandle.left = !left;
+      updates.currentHandle.right = !right;
+    }
+
+    if (ratioLocked) {
+      if (updates.width < 0 && updates.height < 0) {
+        updates.currentHandle = {bottom: !bottom, top: !top, left: !left, right: !right};
+      }
+
       // Check which dimension has changed the most
       if (
         (updates.width - original.width) * ratio[1] > (updates.height - original.height) * ratio[0]

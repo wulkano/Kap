@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import css from 'styled-jsx/css';
 
+import IconMenu from '../../icon-menu';
 import {
   MoreIcon,
   CropIcon,
@@ -10,7 +11,6 @@ import {
   FullscreenIcon,
   ExitFullscreenIcon
 } from '../../../vectors';
-
 import {connect, ActionBarContainer, CropperContainer} from '../../../containers';
 
 const mainStyle = css`
@@ -54,7 +54,7 @@ class Left extends React.Component {
         <div className="crop">
           <CropIcon onClick={toggleAdvanced}/>
         </div>
-        <ApplicationsIcon active={Boolean(selectedApp)} onClick={() => menu.popup({})}/>
+        <IconMenu onOpen={menu && menu.popup}><ApplicationsIcon active={Boolean(selectedApp)}/></IconMenu>
         <style jsx>{mainStyle}</style>
         <style jsx>{`
           .crop {
@@ -97,7 +97,7 @@ class Right extends React.Component {
               <FullscreenIcon onClick={enterFullscreen}/>
           }
         </div>
-        <MoreIcon onClick={() => electron.remote.require('./menus').cogMenu.popup({})}/>
+        <IconMenu onOpen={electron.remote.require('./menus').cogMenu.popup}><MoreIcon/></IconMenu>
         <style jsx>{mainStyle}</style>
         <style jsx>{`
           .fullscreen {
