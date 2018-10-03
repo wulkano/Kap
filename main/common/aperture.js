@@ -96,7 +96,7 @@ const startRecording = async options => {
     setRecordingTray(stopRecording);
     past = Date.now();
   } catch (error) {
-    track('recording/stoppped/error');
+    track('recording/stopped/error');
     // This prevents the button from being reset, since the recording has not yet started
     // This delay is due to internal framework delays in aperture native code
     if (error.message.includes('stopRecording')) {
@@ -110,7 +110,7 @@ const startRecording = async options => {
 
 const stopRecording = async () => {
   console.log(`Stopped recording after ${(Date.now() - past) / 1000}s`);
-  track('recording/stoppped');
+  track('recording/stopped');
   closeAllCroppers();
 
   const filePath = await aperture.stopRecording();

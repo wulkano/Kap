@@ -2,6 +2,8 @@ import electron from 'electron';
 import {Container} from 'unstated';
 import delay from 'delay';
 
+const SETTINGS_ANALYTICS_BLACKLIST = ['kapturesDir'];
+
 export default class PreferencesContainer extends Container {
   remote = electron.remote || false;
 
@@ -126,7 +128,9 @@ export default class PreferencesContainer extends Container {
     // TODO: Fix this ESLint violation
     // eslint-disable-next-line react/no-access-state-in-setstate
     const newVal = value === undefined ? !this.state[setting] : value;
-    this.track(`preferences/setting/${setting}/${newVal}`);
+    if (!SETTINGS_ANALYTICS_BLACKLIST.includes(setting)) {
+      this.track(`preferences/setting/${setting}/${newVal}`);
+    }
     this.setState({[setting]: newVal});
     this.settings.set(setting, newVal);
   }
