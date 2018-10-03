@@ -25,7 +25,7 @@ class Preview extends React.Component {
     return (
       <div className="container" onMouseMove={event => event.stopPropagation()}>
         <video ref={this.videoRef} preload="auto" src={src}/>
-        <div className="time">{formatTime(time, duration)}</div>
+        <div className="time">{formatTime(time, {extra: duration})}</div>
         <style jsx>{`
           .container {
             flex: 1;

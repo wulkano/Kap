@@ -18,7 +18,7 @@ class LeftControls extends React.Component {
               <PauseIcon shadow size="26px" fill="#fff" hoverFill="#fff" onClick={pause}/>
           }
         </div>
-        <div className="time">{formatTime(currentTime)}</div>
+        <div className="time">{formatTime(currentTime, {showMilliseconds: false})}</div>
         <style jsx>{`
             .container {
               display: flex;
