@@ -123,6 +123,7 @@
       "category": "public.app-category.productivity",
       "minimumSystemVersion": "10.12.0",
       "extendInfo": {
+        "NSRequiresAquaSystemAppearance": false,
         "NSUserNotificationAlertStyle": "alert",
         "CFBundleDocumentTypes": [
           {
