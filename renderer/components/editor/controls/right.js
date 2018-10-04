@@ -10,6 +10,7 @@ class RightControls extends React.Component {
   render() {
     const {isMuted, mute, unmute, format, duration} = this.props;
     const canUnmute = !['gif', 'apng'].includes(format);
+    const unmuteColor = canUnmute ? '#fff' : 'rgba(255, 255, 255, 0.25)';
 
     return (
       <div className="container">
@@ -17,7 +18,7 @@ class RightControls extends React.Component {
         <div className="mute">
           {
             isMuted ?
-              <VolumeOffIcon shadow fill="#fff" hoverFill="#fff" onClick={canUnmute ? unmute : undefined}/> :
+              <VolumeOffIcon shadow fill={unmuteColor} hoverFill={unmuteColor} onClick={canUnmute ? unmute : undefined}/> :
               <VolumeHighIcon shadow fill="#fff" hoverFill="#fff" onClick={mute}/>
           }
         </div>
