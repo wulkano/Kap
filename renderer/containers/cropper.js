@@ -77,8 +77,8 @@ export default class CropperContainer extends Container {
       displayId: id,
       x: x || screenWidth / 2,
       y: y || screenHeight / 2,
-      width: width || 0,
-      height: height || 0,
+      width: width || 400,
+      height: height || 400,
       ratio: ratio || [1, 1]
     });
     this.actionBarContainer.setInputValues({width, height});
