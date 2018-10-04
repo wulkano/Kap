@@ -4,6 +4,7 @@ const fs = require('fs');
 const electron = require('electron');
 const Store = require('electron-store');
 const ipc = require('electron-better-ipc');
+const makeDir = require('make-dir');
 
 const {app} = electron;
 const {converters} = require('./convert');
@@ -32,7 +33,14 @@ const prettifyFormat = format => {
 
 const getExportOptions = () => {
   const cwd = path.join(app.getPath('userData'), 'plugins');
-  const pkg = fs.readFileSync(path.join(cwd, 'package.json'), 'utf8');
+  const packageJsonPath = path.join(cwd, 'package.json');
+
+  if (!fs.existsSync(packageJsonPath)) {
+    makeDir.sync(cwd);
+    fs.writeFileSync(packageJsonPath, '{"dependencies":{}}');
+  }
+
+  const pkg = fs.readFileSync(packageJsonPath, 'utf8');
   const pluginNames = Object.keys(JSON.parse(pkg).dependencies);
 
   const options = [];
