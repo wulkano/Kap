@@ -66,6 +66,7 @@ export default class Editor extends React.Component {
             justify-content: center;
             font-size: 1.4rem;
             color: #fff;
+            margin-left: -72px;
           }
         `}</style>
       </div>
