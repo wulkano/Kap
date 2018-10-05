@@ -7,7 +7,7 @@
 To make sure that your code works in the finished app, you can generate the binary:
 
 ```
-$ yarn pack
+$ yarn run pack
 ```
 
 After that, you'll see the binary in the `dist` folder 😀
