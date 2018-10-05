@@ -10,7 +10,7 @@ import formatTime from '../../../utils/format-time';
 class RightControls extends React.Component {
   state = {}
 
-  componentDidMount(){
+  componentDidMount() {
     const settings = electron.remote.require('./common/settings');
     const recordAudio = settings.get('recordAudio');
     this.setState({recordAudio});
