@@ -2,6 +2,7 @@
 
 const os = require('os');
 const {Menu, shell, app, dialog} = require('electron');
+const {EXTENSIONS} = require('./common/constants');
 const {openPrefsWindow} = require('./preferences');
 const {showExportsWindow} = require('./exports');
 const {openAboutWindow} = require('./about');
@@ -47,23 +48,20 @@ const cogMenuTemplate = [
     accelerator: 'Cmd+o',
     click: () => {
       closeAllCroppers();
+
       dialog.showOpenDialog({
         filters: [
-          {name: 'Videos', extensions: ['mov', 'mp4', 'm4v']},
-          {name: 'All Files', extensions: ['*']}
+          {name: 'Videos', extensions: EXTENSIONS}
         ],
         properties: ['openFile']
       }, filePaths => {
         if (filePaths) {
-          filePaths.forEach(file => openEditorWindow(file));
+          for (const file of filePaths) {
+            openEditorWindow(file);
+          }
         }
       });
     }
-  },
-  {
-    label: 'Preferences…',
-    accelerator: 'Cmd+,',
-    click: openPrefsWindow
   },
   {
     label: 'Export History…',
@@ -73,6 +71,11 @@ const cogMenuTemplate = [
   },
   {
     type: 'separator'
+  },
+  {
+    label: 'Preferences…',
+    accelerator: 'Cmd+,',
+    click: openPrefsWindow
   },
   {
     label: 'Send Feedback…',
