@@ -1,5 +1,5 @@
 'use strict';
 
-const EXTENSIONS = ['mp4', 'mov', 'm4v'];
+const supportedVideoExtensions = ['mp4', 'mov', 'm4v'];
 
-module.exports = {EXTENSIONS};
+module.exports = {supportedVideoExtensions};

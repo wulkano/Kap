@@ -3,14 +3,14 @@
 const {Tray} = require('electron');
 const path = require('path');
 
-const {EXTENSIONS} = require('./common/constants');
+const {supportedVideoExtensions} = require('./common/constants');
 const {openCropperWindow} = require('./cropper');
 const {openEditorWindow} = require('./editor');
 const {cogMenu} = require('./menus');
 const {track} = require('./common/analytics');
 
 let tray = null;
-const fileExtensions = EXTENSIONS.map(ext => `.${ext}`);
+const fileExtensions = supportedVideoExtensions.map(ext => `.${ext}`);
 
 const openContextMenu = () => {
   tray.popUpContextMenu(cogMenu);

@@ -2,7 +2,7 @@
 
 const os = require('os');
 const {Menu, shell, app, dialog} = require('electron');
-const {EXTENSIONS} = require('./common/constants');
+const {supportedVideoExtensions} = require('./common/constants');
 const {openPrefsWindow} = require('./preferences');
 const {showExportsWindow} = require('./exports');
 const {openAboutWindow} = require('./about');
@@ -51,7 +51,7 @@ const cogMenuTemplate = [
 
       dialog.showOpenDialog({
         filters: [
-          {name: 'Videos', extensions: EXTENSIONS}
+          {name: 'Videos', extensions: supportedVideoExtensions}
         ],
         properties: ['openFile']
       }, filePaths => {
