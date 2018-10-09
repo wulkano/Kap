@@ -1,10 +1,13 @@
 'use strict';
 
 const os = require('os');
-const {Menu, shell, app} = require('electron');
+const {Menu, shell, app, dialog} = require('electron');
+const {supportedVideoExtensions} = require('./common/constants');
 const {openPrefsWindow} = require('./preferences');
 const {showExportsWindow} = require('./exports');
 const {openAboutWindow} = require('./about');
+const {openEditorWindow} = require('./editor');
+const {closeAllCroppers} = require('./cropper');
 
 const issueBody = `
 <!--
@@ -41,9 +44,24 @@ const cogMenuTemplate = [
     type: 'separator'
   },
   {
-    label: 'Preferences…',
-    accelerator: 'Cmd+,',
-    click: openPrefsWindow
+    label: 'Open Video…',
+    accelerator: 'Cmd+o',
+    click: () => {
+      closeAllCroppers();
+
+      dialog.showOpenDialog({
+        filters: [
+          {name: 'Videos', extensions: supportedVideoExtensions}
+        ],
+        properties: ['openFile']
+      }, filePaths => {
+        if (filePaths) {
+          for (const file of filePaths) {
+            openEditorWindow(file);
+          }
+        }
+      });
+    }
   },
   {
     label: 'Export History…',
@@ -53,6 +71,11 @@ const cogMenuTemplate = [
   },
   {
     type: 'separator'
+  },
+  {
+    label: 'Preferences…',
+    accelerator: 'Cmd+,',
+    click: openPrefsWindow
   },
   {
     label: 'Send Feedback…',
