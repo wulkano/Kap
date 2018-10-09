@@ -41,6 +41,10 @@ const cogMenuTemplate = [
     click: openAboutWindow
   },
   {
+    label: 'Send Feedback…',
+    click: () => shell.openExternal(`https://github.com/wulkano/kap/issues/new?body=${encodeURIComponent(issueBody)}`)
+  },
+  {
     type: 'separator'
   },
   {
@@ -76,10 +80,6 @@ const cogMenuTemplate = [
     label: 'Preferences…',
     accelerator: 'Cmd+,',
     click: openPrefsWindow
-  },
-  {
-    label: 'Send Feedback…',
-    click: () => shell.openExternal(`https://github.com/wulkano/kap/issues/new?body=${encodeURIComponent(issueBody)}`)
   },
   {
     type: 'separator'
