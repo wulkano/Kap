@@ -63,7 +63,7 @@ class Plugins {
   }
 
   async _npmInstall() {
-    await this._runNpm('install', '--registry', 'https://registry.npmjs.org');
+    await this._runNpm('install', '--no-package-lock', '--registry', 'https://registry.npmjs.org');
   }
 
   async install(name) {
