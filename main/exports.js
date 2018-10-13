@@ -30,6 +30,12 @@ const openExportsWindow = show => {
   }
 };
 
+const closeExportsWindow = () => {
+  if (exportsWindow) {
+    exportsWindow.close();
+  }
+};
+
 const getExportsWindow = () => exportsWindow;
 
 const showExportsWindow = () => {
@@ -53,5 +59,6 @@ app.on('before-quit', () => {
 module.exports = {
   openExportsWindow,
   getExportsWindow,
+  closeExportsWindow,
   showExportsWindow
 };
