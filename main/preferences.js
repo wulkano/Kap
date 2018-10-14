@@ -29,6 +29,9 @@ const openPrefsWindow = async () => {
     show: false
   });
 
+  const titlebarHeight = 85;
+  prefsWindow.setSheetOffset(titlebarHeight);
+
   prefsWindow.on('close', () => {
     prefsWindow = null;
   });

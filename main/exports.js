@@ -17,6 +17,9 @@ const openExportsWindow = show => {
       show
     });
 
+    const titlebarHeight = 37;
+    exportsWindow.setSheetOffset(titlebarHeight);
+
     loadRoute(exportsWindow, 'exports');
 
     exportsWindow.on('close', event => {
