@@ -101,7 +101,7 @@ class ExportList {
   }
 
   async addExport(options) {
-    const exportWindowVisible = getExportsWindow().isVisible(); // Check if export window is visible
+    const isExportsWindowVisible = getExportsWindow().isVisible();
     toggleExportMenuItem(true);
     options.exportOptions.loop = settings.get('loopExports');
     const newExport = new Export(options);
@@ -123,7 +123,7 @@ class ExportList {
       if (filePath) {
         newExport.context.targetFilePath = filePath;
       } else {
-        if (!exportWindowVisible) { // Don't close exports window if visible already
+        if (!isExportsWindowVisible) {
           closeExportsWindow();
         }
         return;
