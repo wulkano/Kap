@@ -54,7 +54,7 @@ class Left extends React.Component {
         <div className="crop">
           <CropIcon onClick={toggleAdvanced}/>
         </div>
-        <IconMenu onOpen={menu && menu.popup}><ApplicationsIcon active={Boolean(selectedApp)}/></IconMenu>
+        <IconMenu itemCount={menu && menu.items.length} onOpen={menu && menu.popup}><ApplicationsIcon active={Boolean(selectedApp)}/></IconMenu>
         <style jsx>{mainStyle}</style>
         <style jsx>{`
           .crop {
@@ -87,6 +87,7 @@ MainControls.Left = connect(
 class Right extends React.Component {
   render() {
     const {enterFullscreen, exitFullscreen, isFullscreen} = this.props;
+    const {cogMenu} = electron.remote.require('./menus');
 
     return (
       <div className="main">
@@ -97,7 +98,7 @@ class Right extends React.Component {
               <FullscreenIcon onClick={enterFullscreen}/>
           }
         </div>
-        <IconMenu onOpen={electron.remote.require('./menus').cogMenu.popup}><MoreIcon/></IconMenu>
+        <IconMenu itemCount={cogMenu.items.length} onOpen={cogMenu.popup}><MoreIcon/></IconMenu>
         <style jsx>{mainStyle}</style>
         <style jsx>{`
           .fullscreen {

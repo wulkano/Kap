@@ -2,7 +2,7 @@ import electron from 'electron';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const MENU_UP_THRESHOLD = 60;
+const MENU_UP_THRESHOLD = 100;
 
 class IconMenu extends React.Component {
   remote = electron.remote || false
@@ -10,17 +10,20 @@ class IconMenu extends React.Component {
   container = React.createRef();
 
   openMenu = event => {
+    const {itemCount} = this.props;
     const boundingRect = this.container.current.getBoundingClientRect();
     const {screen} = this.remote;
-    const {bottom, left, top} = boundingRect;
+    const {bottom, left, top, height} = boundingRect;
     const {height: screenHeight} = screen.getDisplayNearestPoint(screen.getCursorScreenPoint()).workArea;
     const {onOpen} = this.props;
+    const willOpenUp = screenHeight - bottom < MENU_UP_THRESHOLD;
     event.stopPropagation();
 
     if (onOpen) {
       onOpen({
         x: Math.round(left),
-        y: Math.round(screenHeight - bottom < MENU_UP_THRESHOLD ? top : bottom)
+        y: Math.round(willOpenUp ? top - height : bottom),
+        positioningItem: willOpenUp ? itemCount - 1 : -1
       });
     }
   }
@@ -45,7 +48,8 @@ IconMenu.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
-  ]).isRequired
+  ]).isRequired,
+  itemCount: PropTypes.number
 };
 
 export default IconMenu;
