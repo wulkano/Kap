@@ -41,10 +41,9 @@ export default class EditorContainer extends Container {
 
     if (value.match(/^\d+$/)) {
       const val = parseInt(value, 10);
+      const min = 1;
 
       if (name === 'width') {
-        const min = Math.max(1, Math.ceil(ratio));
-
         if (val < min) {
           shake(target, {className: 'shake-left'});
           updates.width = min;
@@ -57,8 +56,6 @@ export default class EditorContainer extends Container {
 
         updates.height = Math.round(updates.width / ratio);
       } else {
-        const min = Math.max(1, Math.ceil(1 / ratio));
-
         if (val < min) {
           shake(target, {className: 'shake-right'});
           updates.height = min;
