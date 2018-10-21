@@ -1,8 +1,38 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import css from 'styled-jsx/css';
 import {connect, EditorContainer} from '../../../containers';
+import {minHeight, minWidth} from '../../../utils/inputs';
+import KeyboardNumberInput from '../../keyboard-number-input';
 import Slider from './slider';
+
+const {className: keyboardInputClass, styles: keyboardInputStyles} = css.resolve`
+  height: 24px;
+  background: hsla(0, 0%, 100%, 0.1);
+  text-align: center;
+  font-size: 12px;
+  box-sizing: border-box;
+  border: none;
+  padding: 4px;
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
+  width: 48px;
+  color: white;
+
+  input + input {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
+    margin-left: 1px;
+    margin-right: 16px;
+  }
+
+  :focus, :hover {
+    outline: none;
+    background: hsla(0, 0%, 100%, 0.2);
+  }
+`;
 
 class LeftOptions extends React.Component {
   handleBlur = event => {
@@ -11,33 +41,40 @@ class LeftOptions extends React.Component {
   }
 
   render() {
-    const {width, height, changeDimension, fps, originalFps, setFps} = this.props;
+    const {width, height, changeDimension, fps, originalFps, setFps, original} = this.props;
 
     return (
       <div className="container">
         <div className="label">Size</div>
-        <input
-          type="text"
+        <KeyboardNumberInput
+          className={keyboardInputClass}
           value={width || ''}
           size="5"
           maxLength="5"
+          min={minWidth}
+          max={original && original.width}
           name="width"
           onChange={changeDimension}
+          onKeyDown={changeDimension}
           onBlur={this.handleBlur}
         />
-        <input
-          type="text"
+        <KeyboardNumberInput
+          className={keyboardInputClass}
           value={height || ''}
           size="5"
           maxLength="5"
+          min={minHeight}
+          max={original && original.height}
           name="height"
           onChange={changeDimension}
+          onKeyDown={changeDimension}
           onBlur={this.handleBlur}
         />
         <div className="label">FPS</div>
         <div className="fps">
           <Slider value={fps} min={1} max={originalFps} onChange={setFps}/>
         </div>
+        {keyboardInputStyles}
         <style jsx>{`
           .container {
             height: 100%;
@@ -54,34 +91,6 @@ class LeftOptions extends React.Component {
           .fps {
             height: 24px;
             width: 32px;
-          }
-
-          input {
-            height: 24px;
-            background: hsla(0, 0%, 100%, 0.1);
-            text-align: center;
-            font-size: 12px;
-            box-sizing: border-box;
-            border: none;
-            padding: 4px;
-            border-bottom-left-radius: 4px;
-            border-top-left-radius: 4px;
-            width: 48px;
-            color: white;
-          }
-
-          input + input {
-            border-bottom-left-radius: 0;
-            border-top-left-radius: 0;
-            border-bottom-right-radius: 4px;
-            border-top-right-radius: 4px;
-            margin-left: 1px;
-            margin-right: 16px;
-          }
-
-          input:focus, input:hover {
-            outline: none;
-            background: hsla(0, 0%, 100%, 0.2);
           }
 
           .option {
@@ -116,11 +125,15 @@ LeftOptions.propTypes = {
   changeDimension: PropTypes.func,
   fps: PropTypes.number,
   setFps: PropTypes.func,
-  originalFps: PropTypes.number
+  originalFps: PropTypes.number,
+  original: PropTypes.shape({
+    width: PropTypes.number,
+    height: PropTypes.number
+  })
 };
 
 export default connect(
   [EditorContainer],
-  ({width, height, fps, originalFps}) => ({width, height, fps, originalFps}),
+  ({width, height, fps, originalFps, original}) => ({width, height, fps, originalFps, original}),
   ({changeDimension, setFps}) => ({changeDimension, setFps})
 )(LeftOptions);
