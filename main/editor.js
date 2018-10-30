@@ -65,6 +65,7 @@ const openEditorWindow = async (filePath, recordFps) => {
 
   editorWindow.on('closed', () => {
     forceClose = false;
+    editorWindow = null;
     editors.delete(filePath);
     if (editors.size === 0) {
       app.dock.hide();
