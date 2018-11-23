@@ -208,10 +208,12 @@ class Right extends React.Component {
           size="5"
           maxLength="5"
           value={width}
+          tabIndex={this.props.advanced ? 1 : -1}
           onChange={this.onWidthChange}
           onBlur={this.onWidthBlur}
           onKeyDown={handleInputKeyPress(this.onWidthChange)}
-          onMouseDown={stopPropagation}/>
+          onMouseDown={stopPropagation}
+        />
         <div className="swap">
           <SwapIcon onClick={swapDimensions}/>
         </div>
@@ -222,10 +224,12 @@ class Right extends React.Component {
           size="5"
           maxLength="5"
           value={height}
+          tabIndex={this.props.advanced ? 2 : -1}
           onChange={this.onHeightChange}
           onBlur={this.onHeightBlur}
           onKeyDown={handleInputKeyPress(this.onHeightChange)}
-          onMouseDown={stopPropagation}/>
+          onMouseDown={stopPropagation}
+        />
         <style jsx>{advancedStyles}</style>
         <style jsx>{`
           input {
@@ -268,6 +272,7 @@ Right.propTypes = {
   height: PropTypes.string,
   ratio: PropTypes.array,
   ratioLocked: PropTypes.bool,
+  advanced: PropTypes.bool,
   setBounds: PropTypes.func.isRequired,
   swapDimensions: PropTypes.func.isRequired,
   setWidth: PropTypes.func.isRequired,
@@ -278,13 +283,14 @@ AdvancedControls.Right = connect(
   [CropperContainer, ActionBarContainer],
   (
     {x, y, ratio, width, height},
-    {cropperWidth, cropperHeight, ratioLocked}
+    {cropperWidth, cropperHeight, ratioLocked, advanced}
   ) => ({
     bounds: {x, y, width, height},
     width: cropperWidth,
     height: cropperHeight,
     ratio,
-    ratioLocked
+    ratioLocked,
+    advanced
   }),
   (
     {setBounds, swapDimensions},
