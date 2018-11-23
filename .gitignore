@@ -3,4 +3,3 @@ node_modules
 /renderer/.next
 /app/dist
 /dist
-.idea/*
