@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import {connect, CropperContainer} from '../../containers';
 
 class RecordButton extends React.Component {
+  state = {}
+
   componentDidMount() {
     const settings = electron.remote.require('./common/settings');
     const recordAudio = settings.get('recordAudio');

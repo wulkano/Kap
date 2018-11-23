@@ -16,7 +16,7 @@ class ActionBar extends React.Component {
     height: 0,
     x: 0,
     y: 0
-  };
+  }
 
   render() {
     const {
