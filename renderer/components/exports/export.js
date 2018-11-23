@@ -50,8 +50,8 @@ export default class Export extends React.Component {
           <div className="icon">
             {
               cancelable ?
-                <CancelIcon fill="white" hoverFill="white" onClick={cancel}/> :
-                <IconMenu onOpen={menu && menu.popup}><MoreIcon fill="white" hoverFill="white"/></IconMenu>
+                <div className="icon" onClick={cancel}><CancelIcon fill="white" hoverFill="white"/></div> :
+                <IconMenu fullScreen onOpen={menu && menu.popup}><MoreIcon fill="white" hoverFill="white"/></IconMenu>
             }
           </div>
           <div className="progress">

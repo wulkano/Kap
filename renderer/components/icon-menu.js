@@ -5,7 +5,9 @@ class IconMenu extends React.Component {
   container = React.createRef();
 
   openMenu = event => {
-    const boundingRect = this.container.current.getBoundingClientRect();
+    const boundingRect = this.props.fullScreen ?
+      this.container.current.children[0].getBoundingClientRect() :
+      this.container.current.getBoundingClientRect();
     const {bottom, left} = boundingRect;
     const {onOpen} = this.props;
     event.stopPropagation();
@@ -27,6 +29,8 @@ class IconMenu extends React.Component {
           display: flex;
           align-items: center;
           justify-content: center;
+          width: ${this.props.fullScreen ? '100%' : 'none'};
+          height: ${this.props.fullScreen ? '100%' : 'none'}
         `}</style>
       </div>
     );
@@ -35,6 +39,7 @@ class IconMenu extends React.Component {
 
 IconMenu.propTypes = {
   onOpen: PropTypes.func,
+  fullScreen: PropTypes.bool,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
