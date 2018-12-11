@@ -1,6 +1,6 @@
 'use strict';
 
-const {BrowserWindow, app} = require('electron');
+const {BrowserWindow, app, dialog} = require('electron');
 const ipc = require('electron-better-ipc');
 const {is} = require('electron-util');
 
@@ -9,12 +9,37 @@ const loadRoute = require('./utils/routes');
 
 const editors = new Map();
 let exportOptions;
-
+let editorWindow;
 const OPTIONS_BAR_HEIGHT = 48;
 const VIDEO_ASPECT = 9 / 16;
 const MIN_VIDEO_WIDTH = 768;
 const MIN_VIDEO_HEIGHT = MIN_VIDEO_WIDTH * VIDEO_ASPECT;
 const MIN_WINDOW_HEIGHT = MIN_VIDEO_HEIGHT + OPTIONS_BAR_HEIGHT;
+
+const discardVideo = event => {
+  if (!editorWindow) {
+    return;
+  }
+
+  event.preventDefault();
+
+  const buttonIndex = dialog.showMessageBox(editorWindow, {
+    type: 'question',
+    buttons: [
+      'Discard',
+      'Cancel'
+    ],
+    defaultId: 0,
+    cancelId: 1,
+    message: 'Are you sure that you want to discard this recording?',
+    detail: 'You will no longer be able to edit and export the original recording.'
+  });
+
+  if (buttonIndex === 0) {
+    editorWindow.removeListener('close', discardVideo);
+    editorWindow.close();
+  }
+};
 
 const openEditorWindow = async (filePath, recordFps) => {
   if (editors.has(filePath)) {
@@ -23,7 +48,7 @@ const openEditorWindow = async (filePath, recordFps) => {
   }
   const fps = recordFps || await getFps(filePath);
 
-  const editorWindow = new BrowserWindow({
+  editorWindow = new BrowserWindow({
     minWidth: MIN_VIDEO_WIDTH,
     minHeight: MIN_WINDOW_HEIGHT,
     width: MIN_VIDEO_WIDTH,
@@ -41,7 +66,9 @@ const openEditorWindow = async (filePath, recordFps) => {
 
   loadRoute(editorWindow, 'editor');
 
+  editorWindow.on('close', discardVideo);
   editorWindow.on('closed', () => {
+    editorWindow = null;
     editors.delete(filePath);
     if (editors.size === 0) {
       app.dock.hide();
