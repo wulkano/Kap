@@ -17,6 +17,9 @@ const openExportsWindow = show => {
       show
     });
 
+    const titlebarHeight = 37;
+    exportsWindow.setSheetOffset(titlebarHeight);
+
     loadRoute(exportsWindow, 'exports');
 
     exportsWindow.on('close', event => {
@@ -27,6 +30,12 @@ const openExportsWindow = show => {
     exportsWindow.on('closed', () => {
       exportsWindow = null;
     });
+  }
+};
+
+const closeExportsWindow = () => {
+  if (exportsWindow) {
+    exportsWindow.close();
   }
 };
 
@@ -53,5 +62,6 @@ app.on('before-quit', () => {
 module.exports = {
   openExportsWindow,
   getExportsWindow,
+  closeExportsWindow,
   showExportsWindow
 };

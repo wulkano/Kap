@@ -2,6 +2,26 @@ import electron from 'electron';
 import React from 'react';
 
 export default class TrafficLights extends React.Component {
+  state = {
+    tint: 'blue'
+  };
+
+  componentDidMount() {
+    this.tintSubscription = electron.remote.systemPreferences.subscribeNotification('AppleAquaColorVariantChanged', this.onTintChange);
+    this.setState({tint: this.getTintColor()});
+  }
+
+  componentWillUnmount() {
+    electron.remote.systemPreferences.unsubscribeNotification(this.tintSubscription);
+  }
+
+  getTintColor = () =>
+    electron.remote.systemPreferences.getUserDefault('AppleAquaColorVariant', 'string') === '1' ? 'blue' : 'graphite';
+
+  onTintChange = () => {
+    this.setState({tint: this.getTintColor()});
+  }
+
   close = () => {
     electron.remote.BrowserWindow.getFocusedWindow().close();
   }
@@ -18,7 +38,7 @@ export default class TrafficLights extends React.Component {
 
   render() {
     return (
-      <div className="traffic-lights">
+      <div className={`traffic-lights ${this.state.tint}`}>
         <div className="traffic-light close" onClick={this.close}>
           <svg width="12" height="12">
             <circle cx="6" cy="6" r="5.75" strokeWidth="0.5"/>
@@ -127,6 +147,28 @@ export default class TrafficLights extends React.Component {
           .maximize:active .background-rect {
             fill: #119b29;
             stroke: #119b29;
+          }
+
+          .graphite .close circle,
+          .graphite .minimize circle,
+          .graphite .maximize circle {
+            fill: #8f8f94;
+            stroke: #606066;
+          }
+
+          .graphite .close line,
+          .graphite .minimize line {
+            stroke: #27272c;
+          }
+
+          .maximize rect {
+            fill: #27272c;
+            stroke: #27272c;
+          }
+
+          .graphite .maximize .background-rect {
+            fill: #8f8f94;
+            stroke: #8f8f94;
           }
         `}</style>
       </div>
