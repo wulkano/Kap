@@ -49,7 +49,7 @@ const cogMenuTemplate = [
   },
   {
     label: 'Open Video…',
-    accelerator: 'Cmd+o',
+    accelerator: 'Command+O',
     click: () => {
       closeAllCroppers();
 
@@ -78,7 +78,7 @@ const cogMenuTemplate = [
   },
   {
     label: 'Preferences…',
-    accelerator: 'Cmd+,',
+    accelerator: 'Command+,',
     click: openPrefsWindow
   },
   {
