@@ -1,7 +1,8 @@
 'use strict';
 
 const os = require('os');
-const {Menu, shell, app, dialog} = require('electron');
+const {Menu, app, dialog} = require('electron');
+const {openNewGitHubIssue} = require('electron-util');
 const {supportedVideoExtensions} = require('./common/constants');
 const {openPrefsWindow} = require('./preferences');
 const {showExportsWindow} = require('./exports');
@@ -42,7 +43,13 @@ const cogMenuTemplate = [
   },
   {
     label: 'Send Feedback…',
-    click: () => shell.openExternal(`https://github.com/wulkano/kap/issues/new?body=${encodeURIComponent(issueBody)}`)
+    click() {
+      openNewGitHubIssue({
+        user: 'wulkano',
+        repo: 'kap',
+        body: issueBody
+      });
+    }
   },
   {
     type: 'separator'
