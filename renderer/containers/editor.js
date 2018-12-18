@@ -1,8 +1,7 @@
 import electron from 'electron';
 import {Container} from 'unstated';
 import moment from 'moment';
-
-import {shake} from '../utils/inputs';
+import {shake, minHeight, minWidth} from '../utils/inputs';
 
 const isMuted = format => ['gif', 'apng'].includes(format);
 
@@ -29,8 +28,8 @@ export default class EditorContainer extends Container {
 
   changeDimension = (event, {ignoreEmpty = true} = {}) => {
     const {ratio, original, lastValid = {}} = this.state;
-    const {target} = event;
-    const {name, value} = target;
+    const {currentTarget} = event;
+    const {name, value} = currentTarget;
     const updates = {...lastValid, lastValid: null};
 
     if (value === '' && ignoreEmpty) {
@@ -41,14 +40,13 @@ export default class EditorContainer extends Container {
 
     if (value.match(/^\d+$/)) {
       const val = parseInt(value, 10);
-      const min = 1;
 
       if (name === 'width') {
-        if (val < min) {
-          shake(target, {className: 'shake-left'});
-          updates.width = min;
+        if (val < minWidth) {
+          shake(currentTarget, {className: 'shake-left'});
+          updates.width = minWidth;
         } else if (val > original.width) {
-          shake(target, {className: 'shake-left'});
+          shake(currentTarget, {className: 'shake-left'});
           updates.width = original.width;
         } else {
           updates.width = val;
@@ -56,11 +54,11 @@ export default class EditorContainer extends Container {
 
         updates.height = Math.round(updates.width / ratio);
       } else {
-        if (val < min) {
-          shake(target, {className: 'shake-right'});
-          updates.height = min;
+        if (val < minHeight) {
+          shake(currentTarget, {className: 'shake-right'});
+          updates.height = minHeight;
         } else if (val > original.height) {
-          shake(target, {className: 'shake-right'});
+          shake(currentTarget, {className: 'shake-right'});
           updates.height = original.height;
         } else {
           updates.height = val;
@@ -69,9 +67,9 @@ export default class EditorContainer extends Container {
         updates.width = Math.round(updates.height * ratio);
       }
     } else if (name === 'width') {
-      shake(target, {className: 'shake-left'});
+      shake(currentTarget, {className: 'shake-left'});
     } else {
-      shake(target, {className: 'shake-right'});
+      shake(currentTarget, {className: 'shake-right'});
     }
 
     this.setState(updates);
