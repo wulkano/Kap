@@ -42,6 +42,9 @@ const cogMenuTemplate = [
     click: openAboutWindow
   },
   {
+    type: 'separator'
+  },
+  {
     label: 'Send Feedback…',
     click() {
       openNewGitHubIssue({
