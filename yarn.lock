@@ -3065,10 +3065,10 @@ electron-util@^0.9.1:
   dependencies:
     electron-is-dev "^0.3.0"
 
-electron@^3.0.11:
-  version "3.0.11"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-3.0.11.tgz#81e350db741fc0f2997ecb2fef5ed085ca42a723"
-  integrity sha512-galllxAMT3HLbHNR6i5WXrUXzsxzz0D1X6vu3uFMhofU9Wdbxv2w7BAD/BcYTT4c1bu4nZEgXO6AvHXjq0Sksw==
+electron@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-4.0.0.tgz#6ccb40cc8bf2d49954dcea73b97ae7ad12ee04b3"
+  integrity sha512-3XPG/3IXlvnT1oe1K6zEushoD0SKbP8xwdrL10EWGe6k2iOV4hSHqJ8vWnR8yZ7VbSXmBRfomEFDNAo/q/cwKw==
   dependencies:
     "@types/node" "^8.0.24"
     electron-download "^4.1.0"
@@ -5962,7 +5962,7 @@ new-github-issue-url@^0.1.2:
   resolved "https://registry.yarnpkg.com/new-github-issue-url/-/new-github-issue-url-0.1.2.tgz#43f852cbf4f5eaa128e0850ea527d9c103fd3b1c"
   integrity sha512-FmF8JH2dGczrnY4cVKB7BjpaKFpySvZvPNZOhuMevY4+a1jSlI/me95rdulg9C5/74P/i02G+3WqpXN1Fhcoow==
 
-next@^7.0.0:
+next@^7.0.2:
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/next/-/next-7.0.2.tgz#5ff6b3f0e6cf03ce539d5779a55dc1f8fb1759d7"
   integrity sha512-DOPKKk+2rAEvXS/JMaZL5+jd2WUJI5BEv8xXiR4ijqIuvAL0dI/cT8H6bhFCqbYIgFNuefp+NSVh2kvxpELyeg==
