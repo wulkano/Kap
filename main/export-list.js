@@ -1,7 +1,8 @@
 /* eslint-disable array-element-newline */
 'use strict';
 
-const {dialog} = require('electron');
+const {dialog, nativeImage} = require('electron');
+const {join: pathJoin} = require('path');
 const ipc = require('electron-better-ipc');
 const base64Img = require('base64-img');
 const tmp = require('tmp');
@@ -193,6 +194,24 @@ class ExportList {
       openEditorWindow(exp.inputPath, exp.originalFps);
     }
   }
+
+  dragExport(createdAt) {
+    track('export/history/drag/recording');
+    const exportsWindow = getExportsWindow();
+
+    const exp = this.exports.find(exp => exp.createdAt === createdAt);
+    if (exp) {
+      // TODO: Why is this not working?
+      let icon = nativeImage.createFromDataURL(exp.image);
+      if (icon.isEmpty()) {
+        icon = nativeImage.createFromPath(pathJoin(__dirname, '../', 'renderer/static/all-the-things.png'));
+      }
+      exportsWindow.webContents.startDrag({
+        file: exp.context.targetFilePath,
+        icon
+      });
+    }
+  }
 }
 
 let exportList;
@@ -204,6 +223,8 @@ ipc.answerRenderer('export', options => exportList.addExport(options));
 ipc.answerRenderer('cancel-export', createdAt => exportList.cancelExport(createdAt));
 
 ipc.answerRenderer('open-export', createdAt => exportList.openExport(createdAt));
+
+ipc.answerRenderer('start-drag', createdAt => exportList.dragExport(createdAt));
 
 ipc.answerRenderer('export-snapshot', saveSnapshot);
 

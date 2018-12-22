@@ -30,6 +30,14 @@ export default class Export extends React.Component {
     }
   }
 
+  startDrag = event => {
+    event.preventDefault();
+    const {filePath, startDrag} = this.props;
+    if (filePath) {
+      startDrag();
+    }
+  }
+
   render() {
     const {
       defaultFileName,
@@ -44,7 +52,12 @@ export default class Export extends React.Component {
     const cancelable = status === 'waiting' || status === 'processing';
 
     return (
-      <div className="export-container" onClick={this.openFile}>
+      <div
+        draggable
+        className="export-container"
+        onDragStart={this.startDrag}
+        onClick={this.openFile}
+      >
         <div className="thumbnail">
           <div className="overlay"/>
           <div className="icon">
@@ -150,5 +163,6 @@ Export.propTypes = {
   image: PropTypes.string,
   cancel: PropTypes.func,
   openInEditor: PropTypes.func,
+  startDrag: PropTypes.func,
   filePath: PropTypes.string
 };

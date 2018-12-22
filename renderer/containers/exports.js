@@ -16,6 +16,10 @@ export default class ExportsContainer extends Container {
     ipc.answerMain('update-export', this.update);
   }
 
+  startDrag = createdAt => {
+    ipc.callMain('start-drag', createdAt);
+  }
+
   update = updates => {
     const {createdAt} = updates;
     const {exports} = this.state;

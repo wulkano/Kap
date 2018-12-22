@@ -6,7 +6,7 @@ import Export from './export';
 
 class Exports extends React.Component {
   render() {
-    const {exports, cancel, openInEditor} = this.props;
+    const {exports, cancel, openInEditor, startDrag} = this.props;
 
     return (
       <div>
@@ -16,6 +16,7 @@ class Exports extends React.Component {
               {...exp}
               key={exp.createdAt}
               cancel={() => cancel(exp.createdAt)}
+              startDrag={() => startDrag(exp.createdAt)}
               openInEditor={() => openInEditor(exp.createdAt)}/>
           ))
         }
@@ -31,11 +32,12 @@ class Exports extends React.Component {
 Exports.propTypes = {
   exports: PropTypes.arrayOf(PropTypes.object),
   cancel: PropTypes.func,
-  openInEditor: PropTypes.func
+  openInEditor: PropTypes.func,
+  startDrag: PropTypes.func
 };
 
 export default connect(
   [ExportsContainer],
   ({exports}) => ({exports}),
-  ({cancel, openInEditor}) => ({cancel, openInEditor})
+  ({cancel, openInEditor, startDrag}) => ({cancel, openInEditor, startDrag})
 )(Exports);
