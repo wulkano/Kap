@@ -1,7 +1,7 @@
 /* eslint-disable array-element-newline */
 'use strict';
 
-const {dialog, nativeImage} = require('electron');
+const {dialog} = require('electron');
 const {join: pathJoin} = require('path');
 const ipc = require('electron-better-ipc');
 const base64Img = require('base64-img');
@@ -20,6 +20,7 @@ const {toggleExportMenuItem} = require('./menus');
 const Export = require('./export');
 
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
+const fileIconPath = pathJoin(__dirname, '../', 'static/fileIcon.png');
 
 const filterMap = new Map([
   ['mp4', [{name: 'Movies', extensions: ['mp4']}]],
@@ -201,14 +202,9 @@ class ExportList {
 
     const exp = this.exports.find(exp => exp.createdAt === createdAt);
     if (exp) {
-      // TODO: Why is this not working?
-      let icon = nativeImage.createFromDataURL(exp.image);
-      if (icon.isEmpty()) {
-        icon = nativeImage.createFromPath(pathJoin(__dirname, '../', 'renderer/static/all-the-things.png'));
-      }
       exportsWindow.webContents.startDrag({
         file: exp.context.targetFilePath,
-        icon
+        icon: fileIconPath
       });
     }
   }
