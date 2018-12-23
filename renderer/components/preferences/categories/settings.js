@@ -14,7 +14,7 @@ import ShortcutInput from '../shortcut-input';
 
 import Category from './category';
 
-const showCursorNotSupported = macosVersion.is('>=10.13 <10.14');
+const showCursorSupported = macosVersion.isGreaterThanOrEqualTo('10.14');
 
 class Settings extends React.Component {
   static defaultProps = {
@@ -61,24 +61,23 @@ class Settings extends React.Component {
 
     return (
       <Category>
-        <Item
-          parentItem
-          title="Show cursor"
-          subtitle="Display the mouse cursor in your Kaptures"
-          errors={showCursorNotSupported ? ['Not supported on MacOS High Sierra'] : null}
-        >
-          <Switch
-            checked={showCursor}
-            disabled={showCursorNotSupported}
-            onClick={
-              () => {
-                if (showCursor) {
-                  toggleSetting('highlightClicks', false);
+        {showCursorSupported && (
+          <Item
+            parentItem
+            title="Show cursor"
+            subtitle="Display the mouse cursor in your Kaptures"
+          >
+            <Switch
+              checked={showCursor}
+              onClick={
+                () => {
+                  if (showCursor) {
+                    toggleSetting('highlightClicks', false);
+                  }
+                  toggleSetting('showCursor');
                 }
-                toggleSetting('showCursor');
-              }
-            }/>
-        </Item>
+              }/>
+          </Item>)}
         <Item subtitle="Highlight clicks">
           <Switch
             checked={highlightClicks}
