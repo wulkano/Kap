@@ -5478,7 +5478,7 @@ macos-release@^1.0.0:
   resolved "https://registry.yarnpkg.com/macos-release/-/macos-release-1.1.0.tgz#831945e29365b470aa8724b0ab36c8f8959d10fb"
   integrity sha512-mmLbumEYMi5nXReB9js3WGsB8UE6cDBWyIO62Z4DNx6GbRhDxHNjA1MlzSpJ2S2KM1wyiPRA0d19uHWYYvMHjA==
 
-macos-version@^4.0.1:
+macos-version@^4.0.1, macos-version@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/macos-version/-/macos-version-4.1.0.tgz#028e44adb28037e50395e2285bef054ef9b08ffa"
   integrity sha1-Ao5ErbKAN+UDleIoW+8FTvmwj/o=
