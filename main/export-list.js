@@ -20,7 +20,7 @@ const {toggleExportMenuItem} = require('./menus');
 const Export = require('./export');
 
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
-const fileIconPath = pathJoin(__dirname, '../', 'static/fileIcon.png');
+const fileIconPath = pathJoin(__dirname, '../static/fileIcon.png');
 
 const filterMap = new Map([
   ['mp4', [{name: 'Movies', extensions: ['mp4']}]],
