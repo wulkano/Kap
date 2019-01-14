@@ -2,7 +2,7 @@
 'use strict';
 
 const {dialog} = require('electron');
-const {join: pathJoin} = require('path');
+const path = require('path');
 const ipc = require('electron-better-ipc');
 const base64Img = require('base64-img');
 const tmp = require('tmp');
@@ -20,7 +20,7 @@ const {toggleExportMenuItem} = require('./menus');
 const Export = require('./export');
 
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
-const fileIconPath = pathJoin(__dirname, '../', 'static/fileIcon.png');
+const fileIconPath = path.join(__dirname, '../', 'static/fileIcon.png');
 
 const filterMap = new Map([
   ['mp4', [{name: 'Movies', extensions: ['mp4']}]],
