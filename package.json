@@ -86,11 +86,6 @@
       "node",
       "browser"
     ],
-    "settings": {
-      "react": {
-        "version": "16.6"
-      }
-    },
     "rules": {
       "import/no-extraneous-dependencies": "off",
       "import/no-unassigned-import": "off",
