@@ -82,6 +82,7 @@ const updateExportOptions = () => {
   for (const editor of editors) {
     ipc.callRenderer(editor, 'export-options', exportOptions);
   }
+
   setOptions(exportOptions);
 };
 

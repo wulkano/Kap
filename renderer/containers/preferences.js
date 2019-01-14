@@ -131,6 +131,7 @@ export default class PreferencesContainer extends Container {
     if (!SETTINGS_ANALYTICS_BLACKLIST.includes(setting)) {
       this.track(`preferences/setting/${setting}/${newVal}`);
     }
+
     this.setState({[setting]: newVal});
     this.settings.set(setting, newVal);
   }

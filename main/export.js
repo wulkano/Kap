@@ -64,6 +64,7 @@ class Export {
             percentage: undefined
           });
         }
+
         resolve();
       } catch (error) {
         reject(error);

@@ -145,6 +145,7 @@ export default class CropperContainer extends Container {
       } else {
         this.setState(updates);
       }
+
       this.actionBarContainer.setInputValues(updates);
     } else if (this.state.width || this.state.height) {
       this.actionBarContainer.setInputValues(this.state);

@@ -154,7 +154,8 @@ Left.propTypes = {
   toggleRatioLock: PropTypes.func.isRequired,
   ratioLocked: PropTypes.bool,
   isResizing: PropTypes.bool,
-  ratio: PropTypes.array
+  ratio: PropTypes.array,
+  setRatio: PropTypes.func.isRequired
 };
 
 AdvancedControls.Left = connect(

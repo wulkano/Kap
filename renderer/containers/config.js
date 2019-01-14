@@ -37,6 +37,7 @@ export default class ConfigContainer extends Container {
     } else {
       this.config.set(key, value);
     }
+
     this.validate();
     this.setState({values: this.config.store});
   }

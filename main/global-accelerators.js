@@ -45,7 +45,9 @@ const initializeGlobalAccelerators = () => {
     } catch (error) {
       console.error('Error unregestering old shortcutAccelerator', error);
     }
+
     store.set(setting, shortcut);
+
     if (shortcut) {
       registerShortcut(shortcut, handlers[setting]);
     }
@@ -62,6 +64,7 @@ const initializeGlobalAccelerators = () => {
   // Register keyboard shortcuts from store
   registrerFromStore();
 };
+
 module.exports = {
   initializeGlobalAccelerators
 };

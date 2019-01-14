@@ -60,9 +60,11 @@ export default class ShortcutInput extends React.Component {
     if (![metaKey, altKey, ctrlKey, shiftKey].includes(true)) {
       return false;
     }
+
     if (character.length === 0) {
       return false;
     }
+
     return true;
   }
 

@@ -27,6 +27,7 @@ export default class ExportsContainer extends Container {
       if (!exports[index].error && updates.error) {
         console.error(updates.error);
       }
+
       exports[index] = updates;
     }
 

@@ -126,6 +126,7 @@ class ExportList {
         if (!isExportsWindowVisible) {
           closeExportsWindow();
         }
+
         return;
       }
     }

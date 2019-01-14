@@ -87,6 +87,7 @@ export default class CropperPage extends React.Component {
           actionBarContainer.toggleRatioLock(lastRatioLockState);
           lastRatioLockState = null;
         }
+
         break;
       case 'i':
         this.remote.getCurrentWindow().setIgnoreMouseEvents(true);

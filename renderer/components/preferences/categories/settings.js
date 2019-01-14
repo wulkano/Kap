@@ -74,6 +74,7 @@ class Settings extends React.Component {
                   if (showCursor) {
                     toggleSetting('highlightClicks', false);
                   }
+
                   toggleSetting('showCursor');
                 }
               }/>

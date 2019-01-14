@@ -89,8 +89,6 @@ Handle.propTypes = {
   ratioLocked: PropTypes.bool
 };
 
-/* eslint-disable react/no-array-index-key */
-
 class Handles extends React.Component {
   static defaultProps = {
     ratioLocked: false,
@@ -158,8 +156,6 @@ class Handles extends React.Component {
   }
 }
 
-/* eslint-enable react/no-array-index-key */
-
 Handles.propTypes = {
   isActive: PropTypes.bool,
   width: PropTypes.number,
@@ -184,12 +180,15 @@ export const getResizingCursor = ({top, bottom, right, left}) => {
   if ((top || bottom) && !left && !right) {
     return 'cursor: ns-resize;';
   }
+
   if ((left || right) && !top && !bottom) {
     return 'cursor: ew-resize;';
   }
+
   if ((top && left) || (bottom && right)) {
     return 'cursor: nwse-resize;';
   }
+
   if ((top && right) || (bottom && left)) {
     return 'cursor: nesw-resize;';
   }

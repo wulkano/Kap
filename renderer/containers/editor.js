@@ -121,6 +121,7 @@ export default class EditorContainer extends Container {
       } else {
         this.setState({lastValidFps: null, fps: lastValidFps});
       }
+
       return;
     }
 

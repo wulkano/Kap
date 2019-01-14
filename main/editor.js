@@ -46,6 +46,7 @@ const openEditorWindow = async (filePath, recordFps) => {
     editors.get(filePath).show();
     return;
   }
+
   const fps = recordFps || await getFps(filePath);
 
   editorWindow = new BrowserWindow({
