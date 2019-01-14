@@ -203,7 +203,7 @@ class ExportList {
     const exp = this.exports.find(exp => exp.createdAt === createdAt);
     if (exp) {
       exportsWindow.webContents.startDrag({
-        file: exp.context.targetFilePath,
+        file: exp.filePath,
         icon: fileIconPath
       });
     }
