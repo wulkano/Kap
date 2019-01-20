@@ -5,6 +5,7 @@ export default class VideoContainer extends Container {
     isReady: false,
     isPaused: false,
     isMuted: false,
+    hasAudio: false,
     startTime: 0,
     endTime: 0
   };
@@ -57,7 +58,10 @@ export default class VideoContainer extends Container {
     video.addEventListener('loadedmetadata', () => {
       const {videoWidth, videoHeight, duration} = video;
       this.editorContainer.setDimensions(videoWidth, videoHeight);
-      this.setState({duration, startTime: 0, endTime: duration});
+      const hasAudio = video.webkitAudioDecodedByteCount > 0 ||
+        Boolean(video.audioTracks && video.audioTracks.length > 0);
+      console.log(hasAudio);
+      this.setState({duration, startTime: 0, endTime: duration, hasAudio});
       this.mute();
     });
 
