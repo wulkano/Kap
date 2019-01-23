@@ -1,4 +1,5 @@
 node_modules
+.DS_Store
 /renderer/out
 /renderer/.next
 /app/dist
