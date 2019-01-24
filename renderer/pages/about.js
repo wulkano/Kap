@@ -24,7 +24,7 @@ export default class AboutPage extends React.Component {
 
   openGithub = () => electron.remote.shell.openExternal('https://github.com/wulkano/kap')
 
-  openLicense = () => electron.remote.shell.openExternal('https://github.com/wulkano/kap/blob/master/license.md')
+  openLicense = () => electron.remote.shell.openExternal('https://github.com/wulkano/kap/blob/master/LICENSE.md')
 
   openPrivacy = () => electron.remote.shell.openExternal('https://github.com/wulkano/kap/blob/master/PRIVACY.md')
 
