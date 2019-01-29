@@ -15,6 +15,7 @@ const {openCropperWindow} = require('./cropper');
 const {openEditorWindow} = require('./editor');
 const {track} = require('./common/analytics');
 const {initializeGlobalAccelerators} = require('./global-accelerators');
+const {setApplicationMenu} = require('./menus');
 
 require('./utils/sentry');
 
@@ -71,6 +72,7 @@ const checkForUpdates = () => {
   initializeTray();
   initializeExportList();
   initializeGlobalAccelerators();
+  setApplicationMenu();
 
   for (const file of filesToOpen) {
     track('editor/opened/startup');
@@ -86,4 +88,9 @@ const checkForUpdates = () => {
   checkForUpdates();
 })();
 
-app.on('window-all-closed', event => event.preventDefault());
+app.on('window-all-closed', event => {
+  app.dock.hide();
+  event.preventDefault();
+});
+
+app.on('browser-window-created', app.dock.show);
