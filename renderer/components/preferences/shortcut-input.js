@@ -25,7 +25,10 @@ const Key = ({children}) => (
 );
 
 Key.propTypes = {
-  children: PropTypes.element
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ]).isRequired
 };
 
 const noop = () => {};
