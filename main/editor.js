@@ -1,6 +1,7 @@
 'use strict';
 
 const {BrowserWindow, app, dialog} = require('electron');
+const path = require('path');
 const ipc = require('electron-better-ipc');
 const {is} = require('electron-util');
 
@@ -50,6 +51,7 @@ const openEditorWindow = async (filePath, recordFps) => {
   const fps = recordFps || await getFps(filePath);
 
   editorWindow = new BrowserWindow({
+    title: path.basename(filePath),
     minWidth: MIN_VIDEO_WIDTH,
     minHeight: MIN_WINDOW_HEIGHT,
     width: MIN_VIDEO_WIDTH,

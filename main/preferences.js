@@ -19,6 +19,7 @@ const openPrefsWindow = async () => {
   }
 
   prefsWindow = new BrowserWindow({
+    title: 'Preferences',
     width: 480,
     height: 480,
     resizable: false,
