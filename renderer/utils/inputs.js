@@ -191,9 +191,25 @@ const handleInputKeyPress = (onChange, min, max) => event => {
   }
 };
 
+const handleKeyboardActivation = onClick => event => {
+  console.log(event.key);
+  switch (event.key) {
+    case 'Enter':
+    case ' ':
+      if (onClick) {
+        onClick();
+      }
+
+      break;
+    default:
+      break;
+  }
+};
+
 export {
   handleWidthInput,
   handleHeightInput,
   buildAspectRatioMenu,
-  handleInputKeyPress
+  handleInputKeyPress,
+  handleKeyboardActivation
 };
