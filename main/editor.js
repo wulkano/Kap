@@ -1,6 +1,6 @@
 'use strict';
 
-const {BrowserWindow, app, dialog} = require('electron');
+const {BrowserWindow, dialog} = require('electron');
 const path = require('path');
 const ipc = require('electron-better-ipc');
 const {is} = require('electron-util');
@@ -10,39 +10,13 @@ const loadRoute = require('./utils/routes');
 
 const editors = new Map();
 let exportOptions;
-let editorWindow;
 const OPTIONS_BAR_HEIGHT = 48;
 const VIDEO_ASPECT = 9 / 16;
 const MIN_VIDEO_WIDTH = 768;
 const MIN_VIDEO_HEIGHT = MIN_VIDEO_WIDTH * VIDEO_ASPECT;
 const MIN_WINDOW_HEIGHT = MIN_VIDEO_HEIGHT + OPTIONS_BAR_HEIGHT;
 
-const discardVideo = event => {
-  if (!editorWindow) {
-    return;
-  }
-
-  event.preventDefault();
-
-  const buttonIndex = dialog.showMessageBox(editorWindow, {
-    type: 'question',
-    buttons: [
-      'Discard',
-      'Cancel'
-    ],
-    defaultId: 0,
-    cancelId: 1,
-    message: 'Are you sure that you want to discard this recording?',
-    detail: 'You will no longer be able to edit and export the original recording.'
-  });
-
-  if (buttonIndex === 0) {
-    editorWindow.removeListener('close', discardVideo);
-    editorWindow.close();
-  }
-};
-
-const openEditorWindow = async (filePath, recordFps) => {
+const openEditorWindow = async (filePath, recordFps, {isNewRecording} = {isNewRecording: false}) => {
   if (editors.has(filePath)) {
     editors.get(filePath).show();
     return;
@@ -50,7 +24,7 @@ const openEditorWindow = async (filePath, recordFps) => {
 
   const fps = recordFps || await getFps(filePath);
 
-  editorWindow = new BrowserWindow({
+  const editorWindow = new BrowserWindow({
     title: path.basename(filePath),
     minWidth: MIN_VIDEO_WIDTH,
     minHeight: MIN_WINDOW_HEIGHT,
@@ -65,18 +39,31 @@ const openEditorWindow = async (filePath, recordFps) => {
   });
 
   editors.set(filePath, editorWindow);
-  app.dock.show();
 
   loadRoute(editorWindow, 'editor');
 
-  editorWindow.on('close', discardVideo);
-  editorWindow.on('closed', () => {
-    editorWindow = null;
-    editors.delete(filePath);
-    if (editors.size === 0) {
-      app.dock.hide();
-    }
-  });
+  if (isNewRecording) {
+    editorWindow.setDocumentEdited(true);
+    editorWindow.on('close', event => {
+      const buttonIndex = dialog.showMessageBox(editorWindow, {
+        type: 'question',
+        buttons: [
+          'Discard',
+          'Cancel'
+        ],
+        defaultId: 0,
+        cancelId: 1,
+        message: 'Are you sure that you want to discard this recording?',
+        detail: 'You will no longer be able to edit and export the original recording.'
+      });
+
+      if (buttonIndex === 1) {
+        event.preventDefault();
+      } else {
+        editors.delete(filePath);
+      }
+    });
+  }
 
   editorWindow.webContents.on('did-finish-load', async () => {
     ipc.callRenderer(editorWindow, 'export-options', exportOptions);
