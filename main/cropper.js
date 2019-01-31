@@ -14,7 +14,7 @@ let isCropperOpen = false;
 
 const closeAllCroppers = () => {
   const {screen} = electron;
-  
+
   isCropperOpen = false;
   screen.removeAllListeners('display-removed');
   screen.removeAllListeners('display-added');
@@ -23,7 +23,7 @@ const closeAllCroppers = () => {
     cropper.destroy();
     croppers.delete(id);
   }
-  
+
   if (notificationId !== null) {
     systemPreferences.unsubscribeWorkspaceNotification(notificationId);
     notificationId = null;
