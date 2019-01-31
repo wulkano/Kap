@@ -13,6 +13,7 @@ function init(mainWindow) {
       for (const chunk of pendingMessages) {
         window.webContents.send('log', chunk);
       }
+
       pendingMessages = [];
     }
   });

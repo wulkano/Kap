@@ -48,6 +48,7 @@ const getWindowList = async () => {
     if (a.lastUsed === maxLastUsed) {
       return -1;
     }
+
     if (b.lastUsed === maxLastUsed) {
       return 1;
     }

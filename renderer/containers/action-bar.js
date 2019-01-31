@@ -86,6 +86,7 @@ export default class ActionBarContainer extends Container {
     } else {
       this.updateSettings({ratioLocked: !isLocked});
     }
+
     this.cropperContainer.setOriginal();
   }
 

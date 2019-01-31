@@ -11,6 +11,7 @@ const {initializeTray} = require('./tray');
 const plugins = require('./common/plugins');
 const {initializeAnalytics} = require('./common/analytics');
 const initializeExportList = require('./export-list');
+const {openCropperWindow} = require('./cropper');
 const {openEditorWindow} = require('./editor');
 const {track} = require('./common/analytics');
 const {initializeGlobalAccelerators} = require('./global-accelerators');
@@ -74,6 +75,12 @@ const checkForUpdates = () => {
   for (const file of filesToOpen) {
     track('editor/opened/startup');
     openEditorWindow(file);
+  }
+
+  const {wasOpenedAtLogin} = app.getLoginItemSettings();
+  const isOpeningFile = filesToOpen.length > 0;
+  if (!isOpeningFile && !wasOpenedAtLogin) {
+    openCropperWindow();
   }
 
   checkForUpdates();

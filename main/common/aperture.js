@@ -85,12 +85,14 @@ const startRecording = async options => {
 
   try {
     await aperture.startRecording(apertureOpts);
+
     const startTime = (Date.now() - past) / 1000;
     if (startTime > 3) {
       track(`recording/started/${startTime}`);
     } else {
       track('recording/started');
     }
+
     console.log(`Started recording after ${startTime}s`);
     setRecordingCroppers();
     setRecordingTray(stopRecording);

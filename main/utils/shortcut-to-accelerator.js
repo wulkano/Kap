@@ -3,6 +3,7 @@ const shortcutToAccelerator = shortcut => {
   if (!character) {
     throw new Error(`shortcut needs character ${JSON.stringify(shortcut)}`);
   }
+
   const keys = [
     metaKey && 'Command',
     altKey && 'Option',

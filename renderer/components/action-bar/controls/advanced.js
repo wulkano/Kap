@@ -15,9 +15,12 @@ import {
   handleWidthInput,
   handleHeightInput,
   buildAspectRatioMenu,
-  handleInputKeyPress,
+  minHeight,
+  minWidth,
   RATIOS
 } from '../../../utils/inputs';
+
+import KeyboardNumberInput from '../../keyboard-number-input';
 
 const advancedStyles = css`
   .advanced {
@@ -26,6 +29,25 @@ const advancedStyles = css`
     flex: 1;
     align-items: center;
     padding: 0 8px;
+  }
+`;
+
+const {className: keyboardInputClass, styles: keyboardInputStyles} = css.resolve`
+  height: 32px;
+  border: 1px solid #ddd;
+  background: white;
+  text-align: left;
+  font-size: 12px;
+  transition: border 0.12s ease-in-out;
+  box-sizing: border-box;
+  padding: 8px;
+  border-radius: 4px;
+  margin-right: 8px;
+  width: 64px;
+
+  :focus {
+    outline: none;
+    border: 1px solid #007aff;
   }
 `;
 
@@ -81,6 +103,7 @@ class Left extends React.Component {
         <div className="link">
           <LinkIcon active={ratioLocked} onClick={() => toggleRatioLock()}/>
         </div>
+        {keyboardInputStyles}
         <style jsx>{advancedStyles}</style>
         <style jsx>{`
           .back {
@@ -131,7 +154,8 @@ Left.propTypes = {
   toggleRatioLock: PropTypes.func.isRequired,
   ratioLocked: PropTypes.bool,
   isResizing: PropTypes.bool,
-  ratio: PropTypes.array
+  ratio: PropTypes.array,
+  setRatio: PropTypes.func.isRequired
 };
 
 AdvancedControls.Left = connect(
@@ -197,60 +221,45 @@ class Right extends React.Component {
   }
 
   render() {
-    const {swapDimensions, width, height} = this.props;
+    const {swapDimensions, width, height, screenWidth, screenHeight} = this.props;
 
     return (
       <div className="advanced">
-        <input
+        <KeyboardNumberInput
           ref={this.widthInput}
-          type="text"
+          className={keyboardInputClass}
           name="width"
           size="5"
+          min={minWidth}
+          max={screenWidth}
           maxLength="5"
           value={width}
           tabIndex={this.props.advanced ? 1 : -1}
           onChange={this.onWidthChange}
           onBlur={this.onWidthBlur}
-          onKeyDown={handleInputKeyPress(this.onWidthChange)}
+          onKeyDown={this.onWidthChange}
           onMouseDown={stopPropagation}
         />
         <div className="swap">
           <SwapIcon onClick={swapDimensions}/>
         </div>
-        <input
+        <KeyboardNumberInput
           ref={this.heightInput}
-          type="text"
+          className={keyboardInputClass}
           name="height"
           size="5"
+          min={minHeight}
+          max={screenHeight}
           maxLength="5"
           value={height}
           tabIndex={this.props.advanced ? 2 : -1}
           onChange={this.onHeightChange}
           onBlur={this.onHeightBlur}
-          onKeyDown={handleInputKeyPress(this.onHeightChange)}
+          onKeyDown={this.onHeightChange}
           onMouseDown={stopPropagation}
         />
         <style jsx>{advancedStyles}</style>
         <style jsx>{`
-          input {
-            height: 32px;
-            border: 1px solid #ddd;
-            background: white;
-            text-align: left;
-            font-size: 12px;
-            transition: border 0.12s ease-in-out;
-            box-sizing: border-box;
-            padding: 8px;
-            border-radius: 4px;
-            margin-right: 8px;
-            width: 64px;
-          }
-
-          input:focus {
-            outline: none;
-            border: 1px solid #007aff;
-          }
-
           .swap {
             width: 32px;
             height: 32px;
@@ -276,15 +285,19 @@ Right.propTypes = {
   setBounds: PropTypes.func.isRequired,
   swapDimensions: PropTypes.func.isRequired,
   setWidth: PropTypes.func.isRequired,
-  setHeight: PropTypes.func.isRequired
+  setHeight: PropTypes.func.isRequired,
+  screenWidth: PropTypes.number,
+  screenHeight: PropTypes.number
 };
 
 AdvancedControls.Right = connect(
   [CropperContainer, ActionBarContainer],
   (
-    {x, y, ratio, width, height},
+    {x, y, ratio, width, height, screenWidth, screenHeight},
     {cropperWidth, cropperHeight, ratioLocked, advanced}
   ) => ({
+    screenHeight,
+    screenWidth,
     bounds: {x, y, width, height},
     width: cropperWidth,
     height: cropperHeight,
