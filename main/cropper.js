@@ -14,13 +14,14 @@ let notificationId = null;
 const closeAllCroppers = () => {
   const {screen} = electron;
 
+  screen.removeAllListeners('display-removed');
+  screen.removeAllListeners('display-added');
+
   for (const [id, cropper] of croppers) {
     cropper.destroy();
     croppers.delete(id);
   }
 
-  screen.removeAllListeners('display-removed');
-  screen.removeAllListeners('display-added');
   if (notificationId !== null) {
     systemPreferences.unsubscribeWorkspaceNotification(notificationId);
     notificationId = null;
@@ -103,11 +104,13 @@ const openCropperWindow = () => {
 
     cropper.removeAllListeners('closed');
     cropper.destroy();
-    delete croppers[id];
+    croppers.delete(id);
 
     if (wasFocused) {
       const activeDisplayId = screen.getDisplayNearestPoint(screen.getCursorScreenPoint()).id;
-      croppers.get(activeDisplayId).focus();
+      if (croppers.has(activeDisplayId)) {
+        croppers.get(activeDisplayId).focus();
+      }
     }
   });
 
