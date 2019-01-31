@@ -1,7 +1,7 @@
 import electron from 'electron';
 import {Container} from 'unstated';
 import moment from 'moment';
-import {shake, minHeight, minWidth} from '../utils/inputs';
+import {shake} from '../utils/inputs';
 
 const isMuted = format => ['gif', 'apng'].includes(format);
 
@@ -42,9 +42,10 @@ export default class EditorContainer extends Container {
       const val = parseInt(value, 10);
 
       if (name === 'width') {
-        if (val < minWidth) {
+        const min = ignoreEmpty ? 0 : Math.max(1, Math.ceil(ratio));
+        if (val < min) {
           shake(currentTarget, {className: 'shake-left'});
-          updates.width = minWidth;
+          updates.width = min;
         } else if (val > original.width) {
           shake(currentTarget, {className: 'shake-left'});
           updates.width = original.width;
@@ -54,9 +55,10 @@ export default class EditorContainer extends Container {
 
         updates.height = Math.round(updates.width / ratio);
       } else {
-        if (val < minHeight) {
+        const min = ignoreEmpty ? 0 : Math.max(1, Math.ceil(1 / ratio));
+        if (val < min) {
           shake(currentTarget, {className: 'shake-right'});
-          updates.height = minHeight;
+          updates.height = min;
         } else if (val > original.height) {
           shake(currentTarget, {className: 'shake-right'});
           updates.height = original.height;

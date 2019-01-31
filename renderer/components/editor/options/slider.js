@@ -65,7 +65,7 @@ class Slider extends React.Component {
             position: relative;
           }
 
-          .value:hover {
+          .value:hover, .value:focus {
             background: hsla(0, 0%, 100%, 0.2);
           }
 
@@ -131,6 +131,10 @@ class Slider extends React.Component {
             box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.4);
             margin-top: -6px;
             z-index: 50;
+          }
+
+          .slider:focus::-webkit-slider-thumb {
+            border: 1px solid #007aff;
           }
         `}</style>
       </div>

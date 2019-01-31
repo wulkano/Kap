@@ -20,7 +20,7 @@ class RightOptions extends React.Component {
         <div className="plugin">
           <Select options={pluginOptions} selected={plugin} onChange={selectPlugin}/>
         </div>
-        <div className="button" onClick={startExport}>Export</div>
+        <button type="button" onClick={startExport}>Export</button>
         <style jsx>{`
           .container {
             height: 100%;
@@ -46,7 +46,7 @@ class RightOptions extends React.Component {
             margin-right: 8px;
           }
 
-          .button {
+          button {
             padding: 4px 8px;
             background: hsla(0, 0%, 100%, 0.1);
             font-size: 12px;
@@ -55,10 +55,12 @@ class RightOptions extends React.Component {
             border-radius: 4px;
             text-align: center;
             width: 72px;
+            border: none;
           }
 
-          .button:hover {
+          button:hover, button:focus {
             background: hsla(0, 0%, 100%, 0.2);
+            outline: none;
           }
         `}</style>
       </div>
