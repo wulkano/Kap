@@ -2,10 +2,10 @@
 
 const os = require('os');
 const {Menu, app, dialog} = require('electron');
-const {openNewGitHubIssue} = require('electron-util');
+const {openNewGitHubIssue, appMenu} = require('electron-util');
 const {supportedVideoExtensions} = require('./common/constants');
 const {openPrefsWindow} = require('./preferences');
-const {showExportsWindow} = require('./exports');
+const {openExportsWindow} = require('./exports');
 const {openAboutWindow} = require('./about');
 const {openEditorWindow} = require('./editor');
 const {closeAllCroppers} = require('./cropper');
@@ -36,61 +36,69 @@ Workaround:           A workaround for the issue if you've found on. (this will 
 <!-- If you have additional information, enter it below. -->
 `;
 
-const cogMenuTemplate = [
-  {
-    label: `About ${app.getName()}`,
-    click: openAboutWindow
-  },
-  {
-    type: 'separator'
-  },
-  {
-    label: 'Send Feedback…',
-    click() {
-      openNewGitHubIssue({
-        user: 'wulkano',
-        repo: 'kap',
-        body: issueBody
-      });
-    }
-  },
-  {
-    type: 'separator'
-  },
-  {
-    label: 'Open Video…',
-    accelerator: 'Command+O',
-    click: () => {
-      closeAllCroppers();
+const openFileItem = {
+  label: 'Open Video…',
+  accelerator: 'Command+O',
+  click: () => {
+    closeAllCroppers();
 
-      dialog.showOpenDialog({
-        filters: [
-          {name: 'Videos', extensions: supportedVideoExtensions}
-        ],
-        properties: ['openFile']
-      }, filePaths => {
-        if (filePaths) {
-          for (const file of filePaths) {
-            openEditorWindow(file);
-          }
+    dialog.showOpenDialog({
+      filters: [{name: 'Videos', extensions: supportedVideoExtensions}],
+      properties: ['openFile']
+    }, filePaths => {
+      if (filePaths) {
+        for (const file of filePaths) {
+          openEditorWindow(file);
         }
-      });
-    }
-  },
-  {
-    label: 'Export History…',
-    click: showExportsWindow,
-    enabled: false,
-    id: 'exports'
-  },
+      }
+    });
+  }
+};
+
+const sendFeedbackItem = {
+  label: 'Send Feedback…',
+  click() {
+    openNewGitHubIssue({
+      user: 'wulkano',
+      repo: 'kap',
+      body: issueBody
+    });
+  }
+};
+
+const aboutItem = {
+  label: `About ${app.getName()}`,
+  click: openAboutWindow
+};
+
+const exportHistoryItem = {
+  label: 'Export History',
+  click: openExportsWindow,
+  enabled: false,
+  id: 'exports'
+};
+
+const preferencesItem = {
+  label: 'Preferences…',
+  accelerator: 'Command+,',
+  click: openPrefsWindow
+};
+
+const cogMenuTemplate = [
+  aboutItem,
   {
     type: 'separator'
   },
+  sendFeedbackItem,
   {
-    label: 'Preferences…',
-    accelerator: 'Command+,',
-    click: openPrefsWindow
+    type: 'separator'
   },
+  openFileItem,
+  exportHistoryItem,
+  {
+    type: 'separator'
+  },
+  preferencesItem,
   {
     type: 'separator'
   },
@@ -100,14 +108,72 @@ const cogMenuTemplate = [
   }
 ];
 
+const appMenuItem = appMenu([preferencesItem]);
+
+appMenuItem.submenu[0] = aboutItem;
+
+const applicationMenuTemplate = [
+  appMenuItem,
+  {
+    label: 'File',
+    submenu: [
+      openFileItem,
+      {
+        type: 'separator'
+      },
+      {
+        role: 'close'
+      }
+    ]
+  },
+  {
+    role: 'editMenu'
+  },
+  {
+    role: 'window',
+    submenu: [
+      {
+        role: 'minimize'
+      },
+      {
+        role: 'zoom'
+      },
+      {
+        type: 'separator'
+      },
+      exportHistoryItem,
+      {
+        type: 'separator'
+      },
+      {
+        role: 'front'
+      }
+    ]
+  },
+  {
+    label: 'Help',
+    role: 'help',
+    submenu: [sendFeedbackItem]
+  }
+];
+
 const cogMenu = Menu.buildFromTemplate(cogMenuTemplate);
-const exportsItem = cogMenu.getMenuItemById('exports');
+const cogExportsItem = cogMenu.getMenuItemById('exports');
+
+const applicationMenu = Menu.buildFromTemplate(applicationMenuTemplate);
+const applicationExportsItem = applicationMenu.getMenuItemById('exports');
 
 const toggleExportMenuItem = enabled => {
-  exportsItem.enabled = enabled;
+  cogExportsItem.enabled = enabled;
+  applicationExportsItem.enabled = enabled;
+};
+
+const setApplicationMenu = () => {
+  Menu.setApplicationMenu(applicationMenu);
 };
 
 module.exports = {
   cogMenu,
-  toggleExportMenuItem
+  toggleExportMenuItem,
+  setApplicationMenu
 };

@@ -132,7 +132,7 @@ const stopRecording = async () => {
   }
 
   track('editor/opened/recording');
-  openEditorWindow(filePath, recordedFps);
+  openEditorWindow(filePath, recordedFps, {isNewRecording: true});
 };
 
 module.exports = {

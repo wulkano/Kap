@@ -1,20 +1,25 @@
 'use strict';
 
-const {BrowserWindow, app} = require('electron');
+const {BrowserWindow, ipcMain} = require('electron');
+const pEvent = require('p-event');
+
 const loadRoute = require('./utils/routes');
 
 let exportsWindow = null;
 
-const openExportsWindow = show => {
-  if (!exportsWindow) {
+const openExportsWindow = async () => {
+  if (exportsWindow) {
+    exportsWindow.focus();
+  } else {
     exportsWindow = new BrowserWindow({
+      title: 'Exports',
       width: 320,
       height: 360,
       resizable: false,
       maximizable: false,
       fullscreenable: false,
       titleBarStyle: 'hiddenInset',
-      show
+      show: false
     });
 
     const titlebarHeight = 37;
@@ -22,46 +27,20 @@ const openExportsWindow = show => {
 
     loadRoute(exportsWindow, 'exports');
 
-    exportsWindow.on('close', event => {
-      event.preventDefault();
-      exportsWindow.hide();
-    });
-
-    exportsWindow.on('closed', () => {
+    exportsWindow.on('close', () => {
       exportsWindow = null;
     });
-  }
-};
 
-const closeExportsWindow = () => {
-  if (exportsWindow) {
-    exportsWindow.close();
+    await pEvent(ipcMain, 'exports-ready');
+    exportsWindow.show();
   }
+
+  return exportsWindow;
 };
 
 const getExportsWindow = () => exportsWindow;
 
-const showExportsWindow = () => {
-  if (!exportsWindow) {
-    openExportsWindow(true);
-  }
-
-  if (exportsWindow.isVisible()) {
-    exportsWindow.focus();
-  } else {
-    exportsWindow.show();
-  }
-};
-
-app.on('before-quit', () => {
-  if (exportsWindow) {
-    exportsWindow.removeAllListeners('close');
-  }
-});
-
 module.exports = {
   openExportsWindow,
-  getExportsWindow,
-  closeExportsWindow,
-  showExportsWindow
+  getExportsWindow
 };

@@ -10,10 +10,12 @@ const {BrowserWindow, systemPreferences} = electron;
 
 const croppers = new Map();
 let notificationId = null;
+let isCropperOpen = false;
 
 const closeAllCroppers = () => {
   const {screen} = electron;
 
+  isCropperOpen = false;
   screen.removeAllListeners('display-removed');
   screen.removeAllListeners('display-added');
 
@@ -78,6 +80,7 @@ const openCropper = (display, activeDisplayId) => {
 
 const openCropperWindow = () => {
   closeAllCroppers();
+  isCropperOpen = true;
 
   const {screen} = electron;
   const displays = screen.getAllDisplays();
@@ -178,5 +181,6 @@ module.exports = {
   closeAllCroppers,
   selectApp,
   setRecordingCroppers,
-  disableCroppers
+  disableCroppers,
+  isCropperOpen: () => isCropperOpen
 };

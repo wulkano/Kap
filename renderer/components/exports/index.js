@@ -1,3 +1,4 @@
+import electron from 'electron';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -5,6 +6,12 @@ import {connect, ExportsContainer} from '../../containers';
 import Export from './export';
 
 class Exports extends React.Component {
+  componentDidUpdate(prevProps) {
+    if (!prevProps.isMounted && this.props.isMounted) {
+      electron.ipcRenderer.send('exports-ready');
+    }
+  }
+
   render() {
     const {exports, cancel, openInEditor} = this.props;
 
@@ -31,11 +38,12 @@ class Exports extends React.Component {
 Exports.propTypes = {
   exports: PropTypes.arrayOf(PropTypes.object),
   cancel: PropTypes.func,
-  openInEditor: PropTypes.func
+  openInEditor: PropTypes.func,
+  isMounted: PropTypes.bool
 };
 
 export default connect(
   [ExportsContainer],
-  ({exports}) => ({exports}),
+  ({exports, isMounted}) => ({exports, isMounted}),
   ({cancel, openInEditor}) => ({cancel, openInEditor})
 )(Exports);

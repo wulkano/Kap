@@ -13,7 +13,7 @@ const makeDir = require('make-dir');
 const settings = require('./common/settings');
 const {track} = require('./common/analytics');
 const {openPrefsWindow} = require('./preferences');
-const {showExportsWindow, getExportsWindow, openExportsWindow, closeExportsWindow} = require('./exports');
+const {getExportsWindow, openExportsWindow} = require('./exports');
 const {openEditorWindow} = require('./editor');
 const {toggleExportMenuItem} = require('./menus');
 const Export = require('./export');
@@ -101,20 +101,19 @@ class ExportList {
   }
 
   async addExport(options) {
-    const isExportsWindowVisible = getExportsWindow().isVisible();
-    toggleExportMenuItem(true);
     options.exportOptions.loop = settings.get('loopExports');
     const newExport = new Export(options);
     const createdAt = (new Date()).toISOString();
 
     if (options.isDefault) {
-      showExportsWindow();
+      const wasExportsWindowOpen = Boolean(getExportsWindow());
+      const exportsWindow = await openExportsWindow();
       const kapturesDir = settings.get('kapturesDir');
       await makeDir(kapturesDir);
 
       const filters = filterMap.get(options.format);
 
-      const filePath = dialog.showSaveDialog(getExportsWindow(), {
+      const filePath = dialog.showSaveDialog(exportsWindow, {
         title: newExport.defaultFileName,
         defaultPath: `${kapturesDir}/${newExport.defaultFileName}`,
         filters
@@ -123,8 +122,8 @@ class ExportList {
       if (filePath) {
         newExport.context.targetFilePath = filePath;
       } else {
-        if (!isExportsWindowVisible) {
-          closeExportsWindow();
+        if (!wasExportsWindowOpen) {
+          exportsWindow.close();
         }
 
         return;
@@ -151,6 +150,8 @@ class ExportList {
       return;
     }
 
+    toggleExportMenuItem(true);
+
     newExport.status = 'waiting';
     newExport.text = 'Waiting…';
     newExport.image = await getPreview(options.inputPath);
@@ -158,7 +159,7 @@ class ExportList {
     newExport.originalFps = options.originalFps;
 
     callExportsWindow('update-export', {...newExport.data, createdAt});
-    showExportsWindow();
+    openExportsWindow();
 
     newExport.updateExport = updates => {
       if (newExport.canceled) {
@@ -218,5 +219,4 @@ const callExportsWindow = (channel, data) => {
 
 module.exports = () => {
   exportList = new ExportList();
-  openExportsWindow(false);
 };
