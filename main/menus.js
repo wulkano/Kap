@@ -1,8 +1,8 @@
 'use strict';
 
 const os = require('os');
-const {Menu, app, dialog, BrowserWindow} = require('electron');
-const {openNewGitHubIssue} = require('electron-util');
+const {Menu, app, dialog} = require('electron');
+const {openNewGitHubIssue, appMenu} = require('electron-util');
 const {supportedVideoExtensions} = require('./common/constants');
 const {openPrefsWindow} = require('./preferences');
 const {openExportsWindow} = require('./exports');
@@ -36,32 +36,14 @@ Workaround:           A workaround for the issue if you've found on. (this will 
 <!-- If you have additional information, enter it below. -->
 `;
 
-const cogMenuTemplate = [{
-  label: `About ${app.getName()}`,
-  click: openAboutWindow
-}, {
-  type: 'separator'
-}, {
-  label: 'Send Feedback…',
-  click() {
-    openNewGitHubIssue({
-      user: 'wulkano',
-      repo: 'kap',
-      body: issueBody
-    });
-  }
-}, {
-  type: 'separator'
-}, {
+const openFileItem = {
   label: 'Open Video…',
   accelerator: 'Command+O',
   click: () => {
     closeAllCroppers();
 
     dialog.showOpenDialog({
-      filters: [
-        {name: 'Videos', extensions: supportedVideoExtensions}
-      ],
+      filters: [{name: 'Videos', extensions: supportedVideoExtensions}],
       properties: ['openFile']
     }, filePaths => {
       if (filePaths) {
@@ -71,152 +53,109 @@ const cogMenuTemplate = [{
       }
     });
   }
-}, {
-  label: 'Export History…',
+};
+
+const sendFeedbackItem = {
+  label: 'Send Feedback…',
+  click() {
+    openNewGitHubIssue({
+      user: 'wulkano',
+      repo: 'kap',
+      body: issueBody
+    });
+  }
+};
+
+const aboutItem = {
+  label: `About ${app.getName()}`,
+  click: openAboutWindow
+};
+
+const exportHistoryItem = {
+  label: 'Export History',
   click: openExportsWindow,
   enabled: false,
   id: 'exports'
-}, {
-  type: 'separator'
-}, {
+};
+
+const preferencesItem = {
   label: 'Preferences…',
   accelerator: 'Command+,',
   click: openPrefsWindow
-}, {
-  type: 'separator'
-}, {
-  role: 'quit',
-  accelerator: 'Command+Q'
-}];
+};
 
-const applicationMenuTemplate = [{
-  label: app.getName(),
-  submenu: [{
-    label: `About ${app.getName()}`,
-    click: openAboutWindow
-  }, {
+const cogMenuTemplate = [
+  aboutItem,
+  {
     type: 'separator'
-  }, {
-    label: 'Preferences…',
-    accelerator: 'Command+,',
-    click: openPrefsWindow
-  }, {
+  },
+  sendFeedbackItem,
+  {
     type: 'separator'
-  }, {
-    label: 'Services',
-    role: 'services',
-    submenu: []
-  }, {
+  },
+  openFileItem,
+  exportHistoryItem,
+  {
     type: 'separator'
-  }, {
-    label: 'Export History…',
-    click: openExportsWindow,
-    enabled: false,
-    id: 'exports'
-  }, {
+  },
+  preferencesItem,
+  {
     type: 'separator'
-  }, {
-    label: `Hide ${app.getName()}`,
-    accelerator: 'Command+H',
-    role: 'hide'
-  }, {
-    label: 'Hide Others',
-    accelerator: 'Command+Shift+H',
-    role: 'hideothers'
-  }, {
-    label: 'Show All',
-    role: 'unhide'
-  }, {
-    type: 'separator'
-  }, {
+  },
+  {
     role: 'quit',
     accelerator: 'Command+Q'
-  }]
-}, {
-  label: 'File',
-  submenu: [{
-    label: 'Open Video…',
-    accelerator: 'Command+O',
-    click: () => {
-      closeAllCroppers();
+  }
+];
 
-      dialog.showOpenDialog({
-        filters: [
-          {name: 'Videos', extensions: supportedVideoExtensions}
-        ],
-        properties: ['openFile']
-      }, filePaths => {
-        if (filePaths) {
-          for (const file of filePaths) {
-            openEditorWindow(file);
-          }
-        }
-      });
-    }
-  }, {
-    type: 'separator'
-  }, {
-    label: 'Close',
-    accelerator: 'Command+W',
-    click: () => {
-      BrowserWindow.getFocusedWindow().close();
-    }
-  }]
-}, {
-  label: 'Edit',
-  submenu: [{
-    label: 'Undo',
-    accelerator: 'CmdOrCtrl+Z',
-    role: 'undo'
-  }, {
-    label: 'Redo',
-    accelerator: 'Shift+CmdOrCtrl+Z',
-    role: 'redo'
-  }, {
-    type: 'separator'
-  }, {
-    label: 'Cut',
-    accelerator: 'CmdOrCtrl+X',
-    role: 'cut'
-  }, {
-    label: 'Copy',
-    accelerator: 'CmdOrCtrl+C',
-    role: 'copy'
-  }, {
-    label: 'Paste',
-    accelerator: 'CmdOrCtrl+V',
-    role: 'paste'
-  }, {
-    label: 'Select All',
-    accelerator: 'CmdOrCtrl+A',
-    role: 'selectall'
-  }]
-}, {
-  label: 'Window',
-  role: 'window',
-  submenu: [{
-    label: 'Minimize',
-    accelerator: 'CmdOrCtrl+M',
-    role: 'minimize'
-  }, {
-    label: 'Close',
-    accelerator: 'CmdOrCtrl+W',
-    role: 'close'
-  }]
-}, {
-  label: 'Help',
-  role: 'help',
-  submenu: [{
-    label: 'Send Feedback…',
-    click() {
-      openNewGitHubIssue({
-        user: 'wulkano',
-        repo: 'kap',
-        body: issueBody
-      });
-    }
-  }]
-}];
+const appMenuItem = appMenu([preferencesItem]);
+
+appMenuItem.submenu[0] = aboutItem;
+
+const applicationMenuTemplate = [
+  appMenuItem,
+  {
+    label: 'File',
+    submenu: [
+      openFileItem,
+      {
+        type: 'separator'
+      },
+      {
+        role: 'close'
+      }
+    ]
+  },
+  {
+    role: 'editMenu'
+  },
+  {
+    role: 'window',
+    submenu: [
+      {
+        role: 'minimize'
+      },
+      {
+        role: 'zoom'
+      },
+      {
+        type: 'separator'
+      },
+      exportHistoryItem,
+      {
+        type: 'separator'
+      },
+      {
+        role: 'front'
+      }
+    ]
+  },
+  {
+    label: 'Help',
+    role: 'help',
+    submenu: [sendFeedbackItem]
+  }
+];
 
 const cogMenu = Menu.buildFromTemplate(cogMenuTemplate);
 const cogExportsItem = cogMenu.getMenuItemById('exports');
