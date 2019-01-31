@@ -17,7 +17,7 @@ const MIN_VIDEO_WIDTH = 768;
 const MIN_VIDEO_HEIGHT = MIN_VIDEO_WIDTH * VIDEO_ASPECT;
 const MIN_WINDOW_HEIGHT = MIN_VIDEO_HEIGHT + OPTIONS_BAR_HEIGHT;
 
-const getEditorName = (filePath, isNewRecording) => isNewRecording ? `New Recording at ${moment().format('H.mm.ss')}` : path.basename(filePath);
+const getEditorName = (filePath, isNewRecording) => isNewRecording ? `New Recording ${moment().format('YYYY-MM-DD')} at ${moment().format('H.mm.ss')}` : path.basename(filePath);
 
 const openEditorWindow = async (filePath, recordFps, {isNewRecording} = {isNewRecording: false}) => {
   if (editors.has(filePath)) {
