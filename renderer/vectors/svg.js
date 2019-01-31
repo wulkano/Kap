@@ -11,7 +11,8 @@ class Svg extends React.Component {
     hoverFill: '#606060',
     size: '24px',
     active: false,
-    viewBox: '0 0 24 24'
+    viewBox: '0 0 24 24',
+    tabIndex: -1
   }
 
   onClick = () => {
