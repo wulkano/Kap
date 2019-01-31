@@ -15,8 +15,7 @@ export default class TrafficLights extends React.Component {
     electron.remote.systemPreferences.unsubscribeNotification(this.tintSubscription);
   }
 
-  getTintColor = () =>
-    electron.remote.systemPreferences.getUserDefault('AppleAquaColorVariant', 'string') === '1' ? 'blue' : 'graphite';
+  getTintColor = () => electron.remote.systemPreferences.getUserDefault('AppleAquaColorVariant', 'string') === '6' ? 'graphite' : 'blue';
 
   onTintChange = () => {
     this.setState({tint: this.getTintColor()});
