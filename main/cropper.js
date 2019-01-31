@@ -14,13 +14,14 @@ let notificationId = null;
 const closeAllCroppers = () => {
   const {screen} = electron;
 
+  screen.removeAllListeners('display-removed');
+  screen.removeAllListeners('display-added');
+
   for (const [id, cropper] of croppers) {
     cropper.destroy();
     croppers.delete(id);
   }
 
-  screen.removeAllListeners('display-removed');
-  screen.removeAllListeners('display-added');
   if (notificationId !== null) {
     systemPreferences.unsubscribeWorkspaceNotification(notificationId);
     notificationId = null;
