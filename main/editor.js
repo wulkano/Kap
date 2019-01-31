@@ -4,6 +4,7 @@ const {BrowserWindow, dialog} = require('electron');
 const path = require('path');
 const ipc = require('electron-better-ipc');
 const {is} = require('electron-util');
+const moment = require('moment');
 
 const getFps = require('./utils/fps');
 const loadRoute = require('./utils/routes');
@@ -16,6 +17,8 @@ const MIN_VIDEO_WIDTH = 768;
 const MIN_VIDEO_HEIGHT = MIN_VIDEO_WIDTH * VIDEO_ASPECT;
 const MIN_WINDOW_HEIGHT = MIN_VIDEO_HEIGHT + OPTIONS_BAR_HEIGHT;
 
+const getEditorName = (filePath, isNewRecording) => isNewRecording ? `New Recording at ${moment().format('H.mm.ss')}` : path.basename(filePath);
+
 const openEditorWindow = async (filePath, recordFps, {isNewRecording} = {isNewRecording: false}) => {
   if (editors.has(filePath)) {
     editors.get(filePath).show();
@@ -25,7 +28,7 @@ const openEditorWindow = async (filePath, recordFps, {isNewRecording} = {isNewRe
   const fps = recordFps || await getFps(filePath);
 
   const editorWindow = new BrowserWindow({
-    title: path.basename(filePath),
+    title: getEditorName(filePath, isNewRecording),
     minWidth: MIN_VIDEO_WIDTH,
     minHeight: MIN_WINDOW_HEIGHT,
     width: MIN_VIDEO_WIDTH,
