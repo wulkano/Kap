@@ -89,8 +89,6 @@ class ExportList {
     if (this.currentExport && this.currentExport.createdAt === createdAt) {
       track('export/canceled/current');
       this.currentExport.cancel();
-      delete this.currentExport;
-      this._startNext();
     } else {
       const exportToCancel = this.exports.find(exp => exp.createdAt === createdAt);
       if (exportToCancel) {

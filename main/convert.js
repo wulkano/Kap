@@ -64,21 +64,33 @@ const convert = (outputPath, opts, args) => {
   });
 };
 
-const mute = async inputPath => {
+const mute = PCancelable.fn(async (inputPath, onCancel) => {
   const mutedPath = tmp.tmpNameSync({postfix: path.extname(inputPath)});
-  await execa(ffmpegPath, [
+  const converter = execa(ffmpegPath, [
     '-i', inputPath,
     '-an',
     '-vcodec', 'copy',
     mutedPath
   ]);
-  return mutedPath;
-};
 
-const convertToMp4 = async opts => {
+  onCancel(() => {
+    converter.kill();
+  });
+
+  await converter;
+
+  return mutedPath;
+});
+
+const convertToMp4 = PCancelable.fn(async (opts, onCancel) => {
   if (opts.isMuted) {
-    // eslint-disable-next-line require-atomic-updates
-    opts.inputPath = await mute(opts.inputPath);
+    const muteProcess = mute(opts.inputPath);
+
+    onCancel(() => {
+      muteProcess.cancel();
+    });
+
+    opts.inputPath = await muteProcess;
   }
 
   return convert(opts.outputPath, opts, [
@@ -89,12 +101,17 @@ const convertToMp4 = async opts => {
     '-to', opts.endTime,
     opts.outputPath
   ]);
-};
+});
 
-const convertToWebm = async opts => {
+const convertToWebm = PCancelable.fn(async (opts, onCancel) => {
   if (opts.isMuted) {
-    // eslint-disable-next-line require-atomic-updates
-    opts.inputPath = await mute(opts.inputPath);
+    const muteProcess = mute(opts.inputPath);
+
+    onCancel(() => {
+      muteProcess.cancel();
+    });
+
+    opts.inputPath = await muteProcess;
   }
 
   return convert(opts.outputPath, opts, [
@@ -113,7 +130,7 @@ const convertToWebm = async opts => {
     '-to', opts.endTime,
     opts.outputPath
   ]);
-};
+});
 
 // Should be similiar to the Gif generation
 const convertToApng = opts => {
