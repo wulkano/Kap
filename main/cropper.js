@@ -103,11 +103,13 @@ const openCropperWindow = () => {
 
     cropper.removeAllListeners('closed');
     cropper.destroy();
-    delete croppers[id];
+    croppers.delete(id);
 
     if (wasFocused) {
       const activeDisplayId = screen.getDisplayNearestPoint(screen.getCursorScreenPoint()).id;
-      croppers.get(activeDisplayId).focus();
+      if (croppers.has(activeDisplayId)) {
+        croppers.get(activeDisplayId).focus();
+      }
     }
   });
 
