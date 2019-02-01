@@ -58,7 +58,8 @@ class RightOptions extends React.Component {
             border: none;
           }
 
-          button:hover, button:focus {
+          button:hover,
+          button:focus {
             background: hsla(0, 0%, 100%, 0.2);
             outline: none;
           }
