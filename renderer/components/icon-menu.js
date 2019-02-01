@@ -34,10 +34,7 @@ class IconMenu extends React.Component {
 
 IconMenu.propTypes = {
   onOpen: PropTypes.func,
-  icon: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
-  ]).isRequired
+  icon: PropTypes.func.isRequired
 };
 
 export default IconMenu;
