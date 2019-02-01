@@ -28,7 +28,6 @@ class Select extends React.Component {
             position: relative;
             border-radius: 4px;
             padding: 4px 8px;
-            background: hsla(0, 0%, 100%, 0.1);
             font-size: 12px;
             color: white;
             display: flex;
@@ -42,17 +41,21 @@ class Select extends React.Component {
             text-overflow: ellipsis;
           }
 
-          .container:hover {
-            background: hsla(0, 0%, 100%, 0.2);
-          }
-
           select {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            opacity: 0;
+            background: hsla(0, 0%, 100%, 0.1);
+            border: none;
+            outline: none;
+            color: transparent;
+          }
+
+          select:hover,
+          select:focus {
+            background: hsla(0, 0%, 100%, 0.2);
           }
 
           .dropdown {

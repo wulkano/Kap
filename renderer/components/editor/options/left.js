@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import css from 'styled-jsx/css';
 import {connect, EditorContainer} from '../../../containers';
-import {minHeight, minWidth} from '../../../utils/inputs';
 import KeyboardNumberInput from '../../keyboard-number-input';
 import Slider from './slider';
 
@@ -51,7 +50,7 @@ class LeftOptions extends React.Component {
           value={width || ''}
           size="5"
           maxLength="5"
-          min={minWidth}
+          min={1}
           max={original && original.width}
           name="width"
           onChange={changeDimension}
@@ -63,7 +62,7 @@ class LeftOptions extends React.Component {
           value={height || ''}
           size="5"
           maxLength="5"
-          min={minHeight}
+          min={1}
           max={original && original.height}
           name="height"
           onChange={changeDimension}
