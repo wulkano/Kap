@@ -32,7 +32,7 @@ export default class EditorContainer extends Container {
     const {name, value} = currentTarget;
     const updates = {...lastValid, lastValid: null};
 
-    if (value === '' && ignoreEmpty) {
+    if ((value === '' || value === '0') && ignoreEmpty) {
       const {width, height} = this.state;
       this.setState({width: null, height: null, lastValid: {width, height}});
       return;
@@ -42,7 +42,7 @@ export default class EditorContainer extends Container {
       const val = parseInt(value, 10);
 
       if (name === 'width') {
-        const min = ignoreEmpty ? 0 : Math.max(1, Math.ceil(ratio));
+        const min = Math.max(1, Math.ceil(ratio));
         if (val < min) {
           shake(currentTarget, {className: 'shake-left'});
           updates.width = min;
@@ -55,7 +55,7 @@ export default class EditorContainer extends Container {
 
         updates.height = Math.round(updates.width / ratio);
       } else {
-        const min = ignoreEmpty ? 0 : Math.max(1, Math.ceil(1 / ratio));
+        const min = Math.max(1, Math.ceil(1 / ratio));
         if (val < min) {
           shake(currentTarget, {className: 'shake-right'});
           updates.height = min;
