@@ -1,4 +1,3 @@
-import electron from 'electron';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -8,26 +7,17 @@ import {connect, VideoContainer, EditorContainer} from '../../../containers';
 import formatTime from '../../../utils/format-time';
 
 class RightControls extends React.Component {
-  state = {}
-
-  componentDidMount() {
-    const settings = electron.remote.require('./common/settings');
-    const recordAudio = settings.get('recordAudio');
-    this.setState({recordAudio});
-  }
-
   render() {
     const {isMuted, mute, unmute, format, duration, hasAudio} = this.props;
-    const {recordAudio} = this.state;
     const canUnmute = !['gif', 'apng'].includes(format);
-    const unmuteColor = canUnmute && recordAudio ? '#fff' : 'rgba(255, 255, 255, 0.40)';
+    const unmuteColor = canUnmute && hasAudio ? '#fff' : 'rgba(255, 255, 255, 0.40)';
     return (
       <div className="container">
         <div className="time">{formatTime(duration)}</div>
         <div className="mute">
           {
-            isMuted || !recordAudio || !hasAudio ?
-              <VolumeOffIcon shadow fill={unmuteColor} hoverFill={unmuteColor} onClick={canUnmute && recordAudio ? unmute : undefined}/> :
+            isMuted || !hasAudio ?
+              <VolumeOffIcon shadow fill={unmuteColor} hoverFill={unmuteColor} onClick={canUnmute && hasAudio ? unmute : undefined}/> :
               <VolumeHighIcon shadow fill="#fff" hoverFill="#fff" onClick={mute}/>
           }
         </div>
