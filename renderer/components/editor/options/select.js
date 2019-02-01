@@ -53,7 +53,8 @@ class Select extends React.Component {
             color: transparent;
           }
 
-          select:hover, select:focus {
+          select:hover,
+          select:focus {
             background: hsla(0, 0%, 100%, 0.2);
           }
 
