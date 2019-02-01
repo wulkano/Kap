@@ -65,7 +65,8 @@ class Slider extends React.Component {
             position: relative;
           }
 
-          .value:hover, .value:focus {
+          .value:hover,
+          .value:focus {
             background: hsla(0, 0%, 100%, 0.2);
           }
 
