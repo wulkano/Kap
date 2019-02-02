@@ -9,9 +9,11 @@ import {OpenOnGithubIcon, OpenConfigIcon} from '../../vectors';
 const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
   if (type === 'string') {
     const className = hasErrors ? 'has-errors' : '';
+    const password = name.match("password") ? "password" : "text";
+
     return (
       <div>
-        <input className={className} value={value || ''} onChange={e => onChange(name, e.target.value || undefined)}/>
+        <input type={password} className={className} value={value || ''} onChange={e => onChange(name, e.target.value || undefined)}/>
         <style jsx>{`
           input {
             outline: none;
