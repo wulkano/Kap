@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {connect, CropperContainer} from '../../containers';
+import {handleKeyboardActivation} from '../../utils/inputs';
 
 class RecordButton extends React.Component {
   state = {}
@@ -100,7 +101,11 @@ class RecordButton extends React.Component {
     const {cropperExists} = this.props;
 
     return (
-      <div className="container">
+      <div
+        className="container"
+        tabIndex={cropperExists ? 0 : -1}
+        onKeyDown={handleKeyboardActivation(this.startRecording)}
+      >
         <div className="outer" onMouseDown={this.startRecording}>
           <div className="inner">
             {!cropperExists && <div className="fill"/>}
@@ -115,6 +120,7 @@ class RecordButton extends React.Component {
               display: flex;
               align-items: center;
               justify-content: center;
+              outline: none;
             }
 
             .outer {
@@ -162,6 +168,19 @@ class RecordButton extends React.Component {
 
             .second {
               animation: ripple 1.8s linear 0.9s infinite;
+            }
+
+            .container:focus .outer {
+              border: 1px solid #ff5e57;
+              background: #fff;
+            }
+
+            .container:focus .inner {
+              background: #ff5e57;
+            }
+
+            .container:focus .fill {
+              background: #fff;
             }
 
             @keyframes ripple {
