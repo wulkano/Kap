@@ -47,9 +47,6 @@ class Overlay extends React.Component {
       'no-transition': isResizing || isMoving || !isActive
     });
 
-    const centerX = Math.round(x + (width / 2));
-    const centerY = Math.round(y + (height / 2));
-
     return (
       <div
         className={contentClassName}
@@ -62,31 +59,11 @@ class Overlay extends React.Component {
           <div id="left" className={className} onMouseDown={startPicking}/>
           <div id="center">
             { isReady && this.props.children }
-            <div className="center-point">{centerX}, {centerY}</div>
           </div>
           <div id="right" className={className} onMouseDown={startPicking}/>
         </div>
         <div id="bottom" className={className} onMouseDown={startPicking}/>
         <style jsx>{`
-          .center-point {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            color: white;
-            font-size: .8rem;
-          }
-
-          .center-point:before {
-            content: ' ';
-            left: -2px;
-            top: -2px;
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background: red;
-            position: absolute;
-          }
-
           .overlay {
             background-color: rgba(0, 0, 0, 0.5);
             transition: background-color 0.5s ease-in-out, width 0.2s ease-out, height 0.2s ease-out;
