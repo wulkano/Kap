@@ -54,6 +54,7 @@ export default class CropperContainer extends Container {
       isResizing: false,
       isMoving: false,
       isPicking: false,
+      resizeFromCenter: false,
       showHandles: true,
       selectedApp: '',
       screenWidth: 0,
@@ -204,6 +205,8 @@ export default class CropperContainer extends Container {
     }
   }
 
+  toggleResizeFromCenter = resizeFromCenter => this.setState({resizeFromCenter});
+
   enterFullscreen = () => {
     const {x, y, width, height, screenWidth, screenHeight} = this.state;
     this.unselectApp();
@@ -327,18 +330,27 @@ export default class CropperContainer extends Container {
   }
 
   resize = ({pageX, pageY}) => {
-    const {currentHandle, x, y, width, height, original, ratio, screenWidth, screenHeight} = this.state;
+    const {currentHandle, x, y, width, height, original, ratio, screenWidth, screenHeight, resizeFromCenter} = this.state;
     const {top, bottom, left, right} = currentHandle;
     const {ratioLocked} = this.actionBarContainer.state;
-
     const updates = {currentHandle: {top, bottom, right, left}};
 
     if (top) {
       updates.y = pageY;
       updates.height = height + y - pageY;
+
+      if (resizeFromCenter) {
+        updates.height = Math.min((2 * (screenHeight - y)) - height, updates.height + y - pageY);
+        updates.y = y - ((updates.height - height) / 2);
+      }
     } else if (bottom) {
       updates.height = pageY - y;
       updates.y = y;
+
+      if (resizeFromCenter) {
+        updates.y = Math.max(0, y + height - updates.height);
+        updates.height = height + (2 * (y - updates.y));
+      }
     }
 
     if (updates.height !== undefined && updates.height < 0 && !ratioLocked) {
@@ -351,9 +363,19 @@ export default class CropperContainer extends Container {
     if (left) {
       updates.x = pageX;
       updates.width = width + x - pageX;
+
+      if (resizeFromCenter) {
+        updates.width = Math.min((2 * (screenWidth - x)) - width, updates.width + x - pageX);
+        updates.x = x - ((updates.width - width) / 2);
+      }
     } else if (right) {
       updates.width = pageX - x;
       updates.x = x;
+
+      if (resizeFromCenter) {
+        updates.x = Math.max(0, x + width - updates.width);
+        updates.width = width + (2 * (x - updates.x));
+      }
     }
 
     if (updates.width !== undefined && updates.width < 0 && !ratioLocked) {
@@ -374,7 +396,24 @@ export default class CropperContainer extends Container {
       ) {
         let lockedHeight = Math.ceil(updates.width * ratio[1] / ratio[0]);
 
-        if (top) {
+        if (resizeFromCenter) {
+          updates.y += (updates.height - lockedHeight) / 2;
+
+          if (updates.y < 0 || updates.y + lockedHeight > screenHeight) {
+            if (updates.y < 0) {
+              lockedHeight += updates.y * 2;
+              updates.y = 0;
+            } else {
+              lockedHeight -= (lockedHeight - (screenHeight - updates.y)) * 2;
+              updates.y = screenHeight - lockedHeight;
+            }
+
+            const lockedWidth = Math.ceil(lockedHeight * ratio[0] / ratio[1]);
+
+            updates.x += (updates.width - lockedWidth) / 2;
+            updates.width = lockedWidth;
+          }
+        } else if (top) {
           updates.y += updates.height - lockedHeight;
 
           if (updates.y < 0) {
@@ -404,7 +443,24 @@ export default class CropperContainer extends Container {
       } else {
         let lockedWidth = Math.ceil(updates.height * ratio[0] / ratio[1]);
 
-        if (left) {
+        if (resizeFromCenter) {
+          updates.x += (updates.width - lockedWidth) / 2;
+
+          if (updates.x < 0 || updates.x + lockedWidth > screenWidth) {
+            if (updates.x < 0) {
+              lockedWidth += updates.x * 2;
+              updates.x = 0;
+            } else {
+              lockedWidth -= (lockedWidth - (screenWidth - updates.x)) * 2;
+              updates.x = screenWidth - lockedWidth;
+            }
+
+            const lockedHeight = Math.ceil(lockedWidth * ratio[1] / ratio[0]);
+
+            updates.y += (updates.height - lockedHeight) / 2;
+            updates.height = lockedHeight;
+          }
+        } else if (left) {
           updates.x += updates.width - lockedWidth;
 
           if (updates.x < 0) {

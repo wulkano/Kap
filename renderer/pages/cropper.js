@@ -89,6 +89,9 @@ export default class CropperPage extends React.Component {
         }
 
         break;
+      case 'Alt':
+        cropperContainer.toggleResizeFromCenter(event.type === 'keydown');
+        break;
       case 'i':
         this.remote.getCurrentWindow().setIgnoreMouseEvents(true);
         this.dev = !this.dev;
