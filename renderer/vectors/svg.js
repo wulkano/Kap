@@ -37,13 +37,14 @@ class Svg extends React.Component {
       children,
       viewBox,
       shadow,
-      tabIndex
+      tabIndex,
+      isMenu
     } = this.props;
 
     const className = classNames({active, shadow});
 
     return (
-      <div tabIndex={tabIndex} onKeyPress={tabIndex >= 0 ? handleKeyboardActivation(onClick) : undefined}>
+      <div tabIndex={tabIndex} onKeyDown={tabIndex >= 0 ? handleKeyboardActivation(onClick, {isMenu}) : undefined}>
         <svg
           viewBox={viewBox}
           className={className}
@@ -110,7 +111,8 @@ Svg.propTypes = {
   viewBox: PropTypes.string,
   onClick: PropTypes.func,
   shadow: PropTypes.bool,
-  tabIndex: PropTypes.number
+  tabIndex: PropTypes.number,
+  isMenu: PropTypes.bool
 };
 
 export default Svg;

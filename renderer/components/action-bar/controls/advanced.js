@@ -103,7 +103,7 @@ class Left extends React.Component {
           tabIndex={advanced ? 0 : -1}
           onClick={this.openMenu}
           onMouseDown={stopPropagation}
-          onKeyPress={handleKeyboardActivation(this.openMenu)}
+          onKeyDown={handleKeyboardActivation(this.openMenu, {isMenu: true})}
         >
           <span>{ratio[0]}:{ratio[1]}</span>
           <DropdownArrowIcon size="18px"/>
