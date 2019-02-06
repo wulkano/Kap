@@ -128,7 +128,8 @@ class RecordButton extends React.Component {
               height: 48px;
               padding: 8px;
               border-radius: 50%;
-              background: #ff5e57;
+              background: #ff6059 radial-gradient(ellipse 100% 0% at 50% 0%, #ff6159 0%, #ff5f52 50%, #ff3a30 100%);
+              border: 2px solid #ff3b30;
               display: flex;
               align-items: center;
               justify-content: center;
@@ -148,7 +149,7 @@ class RecordButton extends React.Component {
               width: 20px;
               height: 20px;
               border-radius: 50%;
-              background: #ff5e57;
+              background: #ff6059 radial-gradient(ellipse 100% 0% at 50% 0%, #ff6159 0%, #ff5f52 50%, #ff3a30 100%);
               margin: 2px;
             }
 
@@ -171,12 +172,12 @@ class RecordButton extends React.Component {
             }
 
             .container:focus .outer {
-              border: 1px solid #ff5e57;
               background: #fff;
             }
 
             .container:focus .inner {
-              background: #ff5e57;
+              border: 2px solid #ff3b30;
+              background: radial-gradient(ellipse 100% 0% at 50% 0%, #ff6159 0%, #ff5f52 50%, #ff3a30 100%);
             }
 
             .container:focus .fill {
