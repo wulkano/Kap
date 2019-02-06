@@ -14,11 +14,11 @@ export default class EditorContainer extends Container {
     this.videoContainer = videoContainer;
   }
 
-  mount = (filePath, fps = 15, resolve) => {
+  mount = (filePath, fps = 15, originalFilePath, resolve) => {
     const src = `file://${filePath}`;
     this.finishLoading = resolve;
 
-    this.setState({src, filePath, fps, originalFps: fps, wasMuted: false});
+    this.setState({src, filePath, originalFilePath, fps, originalFps: fps, wasMuted: false});
     this.videoContainer.setSrc(src);
   }
 
@@ -170,7 +170,7 @@ export default class EditorContainer extends Container {
   }
 
   startExport = () => {
-    const {width, height, fps, filePath, options, format, plugin: serviceTitle, originalFps} = this.state;
+    const {width, height, fps, filePath, originalFilePath, options, format, plugin: serviceTitle, originalFps} = this.state;
     const {startTime, endTime, isMuted} = this.videoContainer.state;
 
     const plugin = options.find(option => option.format === format).plugins.find(p => p.title === serviceTitle);
@@ -185,7 +185,8 @@ export default class EditorContainer extends Container {
         endTime,
         isMuted
       },
-      inputPath: filePath,
+      inputPath: originalFilePath || filePath,
+      previewPath: filePath,
       pluginName,
       isDefault,
       serviceTitle,

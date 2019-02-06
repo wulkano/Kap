@@ -12,6 +12,7 @@ class Export {
   constructor(options) {
     this.exportOptions = options.exportOptions;
     this.inputPath = options.inputPath;
+    this.previewPath = options.previewPath;
     this.pluginName = options.pluginName;
     this.plugin = new Plugin(options.pluginName);
     this.service = this.plugin.getSerivce(options.serviceTitle);

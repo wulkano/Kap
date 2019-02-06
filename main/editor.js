@@ -19,16 +19,16 @@ const MIN_WINDOW_HEIGHT = MIN_VIDEO_HEIGHT + OPTIONS_BAR_HEIGHT;
 
 const getEditorName = (filePath, isNewRecording) => isNewRecording ? `New Recording ${moment().format('YYYY-MM-DD')} at ${moment().format('H.mm.ss')}` : path.basename(filePath);
 
-const openEditorWindow = async (filePath, recordFps, {isNewRecording} = {isNewRecording: false}) => {
+const openEditorWindow = async (filePath, {recordedFps, isNewRecording, originalFilePath} = {}) => {
   if (editors.has(filePath)) {
     editors.get(filePath).show();
     return;
   }
 
-  const fps = recordFps || await getFps(filePath);
+  const fps = recordedFps || await getFps(filePath);
 
   const editorWindow = new BrowserWindow({
-    title: getEditorName(filePath, isNewRecording),
+    title: getEditorName(originalFilePath || filePath, isNewRecording),
     minWidth: MIN_VIDEO_WIDTH,
     minHeight: MIN_WINDOW_HEIGHT,
     width: MIN_VIDEO_WIDTH,
@@ -70,7 +70,7 @@ const openEditorWindow = async (filePath, recordFps, {isNewRecording} = {isNewRe
 
   editorWindow.webContents.on('did-finish-load', async () => {
     ipc.callRenderer(editorWindow, 'export-options', exportOptions);
-    await ipc.callRenderer(editorWindow, 'file', {filePath, fps});
+    await ipc.callRenderer(editorWindow, 'file', {filePath, fps, originalFilePath});
     editorWindow.show();
   });
 };

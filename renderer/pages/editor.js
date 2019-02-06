@@ -16,9 +16,9 @@ export default class EditorPage extends React.Component {
   componentDidMount() {
     const ipc = require('electron-better-ipc');
 
-    ipc.answerMain('file', async ({filePath, fps}) => {
+    ipc.answerMain('file', async ({filePath, fps, originalFilePath}) => {
       await new Promise((resolve, reject) => {
-        editorContainer.mount(filePath, parseInt(fps, 10), resolve, reject);
+        editorContainer.mount(filePath, parseInt(fps, 10), originalFilePath, resolve, reject);
       });
       return true;
     });

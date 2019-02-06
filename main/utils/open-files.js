@@ -13,8 +13,11 @@ const openFiles = (...filePaths) => {
       .filter(filePath => fileExtensions.includes(path.extname(filePath).toLowerCase()))
       .map(async filePath => {
         const encoding = await getEncoding(filePath);
-        const pathToOpen = encoding.toLowerCase() === 'hevc' ? await convertToH264(filePath) : filePath;
-        openEditorWindow(pathToOpen);
+        if (encoding.toLowerCase() === 'hevc') {
+          openEditorWindow(await convertToH264(filePath), {originalFilePath: filePath});
+        } else {
+          openEditorWindow(filePath);
+        }
       })
   );
 };
