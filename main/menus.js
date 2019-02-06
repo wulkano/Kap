@@ -7,8 +7,8 @@ const {supportedVideoExtensions} = require('./common/constants');
 const {openPrefsWindow} = require('./preferences');
 const {openExportsWindow} = require('./exports');
 const {openAboutWindow} = require('./about');
-const {openEditorWindow} = require('./editor');
 const {closeAllCroppers} = require('./cropper');
+const openFiles = require('./utils/open-files');
 
 const issueBody = `
 <!--
@@ -47,9 +47,7 @@ const openFileItem = {
       properties: ['openFile']
     }, filePaths => {
       if (filePaths) {
-        for (const file of filePaths) {
-          openEditorWindow(file);
-        }
+        openFiles(...filePaths);
       }
     });
   }
