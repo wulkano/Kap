@@ -47,14 +47,14 @@ class Left extends React.Component {
   }
 
   render() {
-    const {toggleAdvanced, selectedApp} = this.props;
+    const {toggleAdvanced, selectedApp, advanced} = this.props;
 
     return (
       <div className="main">
         <div className="crop">
-          <CropIcon onClick={toggleAdvanced}/>
+          <CropIcon tabIndex={advanced ? -1 : 0} onClick={toggleAdvanced}/>
         </div>
-        <IconMenu onOpen={menu && menu.popup}><ApplicationsIcon active={Boolean(selectedApp)}/></IconMenu>
+        <IconMenu isMenu icon={ApplicationsIcon} tabIndex={advanced ? -1 : 0} active={Boolean(selectedApp)} onOpen={menu && menu.popup}/>
         <style jsx>{mainStyle}</style>
         <style jsx>{`
           .crop {
@@ -75,29 +75,30 @@ class Left extends React.Component {
 Left.propTypes = {
   toggleAdvanced: PropTypes.func.isRequired,
   selectApp: PropTypes.func.isRequired,
-  selectedApp: PropTypes.string
+  selectedApp: PropTypes.string,
+  advanced: PropTypes.bool
 };
 
 MainControls.Left = connect(
   [CropperContainer, ActionBarContainer],
-  ({selectedApp}) => ({selectedApp}),
+  ({selectedApp}, {advanced}) => ({selectedApp, advanced}),
   ({selectApp}, {toggleAdvanced}) => ({selectApp, toggleAdvanced})
 )(Left);
 
 class Right extends React.Component {
   render() {
-    const {enterFullscreen, exitFullscreen, isFullscreen} = this.props;
+    const {enterFullscreen, exitFullscreen, isFullscreen, advanced} = this.props;
 
     return (
       <div className="main">
         <div className="fullscreen">
           {
             isFullscreen ?
-              <ExitFullscreenIcon active onClick={exitFullscreen}/> :
-              <FullscreenIcon onClick={enterFullscreen}/>
+              <ExitFullscreenIcon active tabIndex={advanced ? -1 : 0} onClick={exitFullscreen}/> :
+              <FullscreenIcon tabIndex={advanced ? -1 : 0} onClick={enterFullscreen}/>
           }
         </div>
-        <IconMenu onOpen={electron.remote.require('./menus').cogMenu.popup}><MoreIcon/></IconMenu>
+        <IconMenu isMenu icon={MoreIcon} tabIndex={advanced ? -1 : 0} onOpen={electron.remote.require('./menus').cogMenu.popup}/>
         <style jsx>{mainStyle}</style>
         <style jsx>{`
           .fullscreen {
@@ -114,12 +115,13 @@ class Right extends React.Component {
 Right.propTypes = {
   enterFullscreen: PropTypes.func.isRequired,
   exitFullscreen: PropTypes.func.isRequired,
-  isFullscreen: PropTypes.bool
+  isFullscreen: PropTypes.bool,
+  advanced: PropTypes.bool
 };
 
 MainControls.Right = connect(
-  [CropperContainer],
-  ({isFullscreen}) => ({isFullscreen}),
+  [CropperContainer, ActionBarContainer],
+  ({isFullscreen}, {advanced}) => ({isFullscreen, advanced}),
   ({enterFullscreen, exitFullscreen}) => ({enterFullscreen, exitFullscreen})
 )(Right);
 

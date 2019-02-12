@@ -191,9 +191,21 @@ const handleInputKeyPress = (onChange, min, max) => event => {
   }
 };
 
+const handleKeyboardActivation = (onClick, {isMenu} = {}) => event => {
+  if (
+    (isMenu && event.key === 'ArrowDown') ||
+    (!isMenu && ['Enter', ' '].includes(event.key))
+  ) {
+    if (onClick) {
+      onClick(event);
+    }
+  }
+};
+
 export {
   handleWidthInput,
   handleHeightInput,
   buildAspectRatioMenu,
-  handleInputKeyPress
+  handleInputKeyPress,
+  handleKeyboardActivation
 };

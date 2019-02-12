@@ -3,7 +3,7 @@ import Svg from './svg';
 
 const FullscrenIcon = props => (
   <Svg {...props}>
-    <path d="M5 5h5v2H7v3H5V5m9 0h5v5h-2V7h-3V5m3 9h2v5h-5v-2h3v-3m-7 3v2H5v-5h2v3h3z"/>
+    <path d="M3 5v4h2V5h4V3H5a2 2 0 0 0-2 2zm2 10H3v4c0 1.1.9 2 2 2h4v-2H5v-4zm14 4h-4v2h4a2 2 0 0 0 2-2v-4h-2v4zm0-16h-4v2h4v4h2V5a2 2 0 0 0-2-2z"/>
   </Svg>
 );
 

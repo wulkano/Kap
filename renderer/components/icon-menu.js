@@ -4,11 +4,10 @@ import PropTypes from 'prop-types';
 class IconMenu extends React.Component {
   container = React.createRef();
 
-  openMenu = event => {
+  openMenu = () => {
     const boundingRect = this.container.current.getBoundingClientRect();
     const {bottom, left} = boundingRect;
     const {onOpen} = this.props;
-    event.stopPropagation();
 
     if (onOpen) {
       onOpen({
@@ -19,10 +18,10 @@ class IconMenu extends React.Component {
   }
 
   render() {
-    const {children} = this.props;
+    const {icon: Icon, ...iconProps} = this.props;
     return (
-      <div ref={this.container} onClick={this.openMenu}>
-        {children}
+      <div ref={this.container}>
+        <Icon {...iconProps} onClick={this.openMenu}/>
         <style jsx>{`
           display: flex;
           align-items: center;
@@ -35,10 +34,7 @@ class IconMenu extends React.Component {
 
 IconMenu.propTypes = {
   onOpen: PropTypes.func,
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
-  ]).isRequired
+  icon: PropTypes.func.isRequired
 };
 
 export default IconMenu;

@@ -17,6 +17,7 @@ import {
   buildAspectRatioMenu,
   minHeight,
   minWidth,
+  handleKeyboardActivation,
   RATIOS
 } from '../../../utils/inputs';
 
@@ -89,21 +90,27 @@ class Left extends React.Component {
   }
 
   render() {
-    const {toggleAdvanced, toggleRatioLock, ratioLocked, ratio = []} = this.props;
+    const {advanced, toggleAdvanced, toggleRatioLock, ratioLocked, ratio = []} = this.props;
 
     return (
       <div className="advanced">
         <div className="back">
-          <BackIcon onClick={toggleAdvanced}/>
+          <BackIcon tabIndex={advanced ? 0 : -1} onClick={toggleAdvanced}/>
         </div>
-        <div ref={this.select} className="select" onClick={this.openMenu} onMouseDown={stopPropagation}>
+        <div
+          ref={this.select}
+          className="select"
+          tabIndex={advanced ? 0 : -1}
+          onClick={this.openMenu}
+          onMouseDown={stopPropagation}
+          onKeyDown={handleKeyboardActivation(this.openMenu, {isMenu: true})}
+        >
           <span>{ratio[0]}:{ratio[1]}</span>
           <DropdownArrowIcon size="18px"/>
         </div>
-        <div className="link">
+        <div className="link" tabIndex={advanced ? 0 : -1} onKeyPress={handleKeyboardActivation(toggleRatioLock)}>
           <LinkIcon active={ratioLocked} onClick={() => toggleRatioLock()}/>
         </div>
-        {keyboardInputStyles}
         <style jsx>{advancedStyles}</style>
         <style jsx>{`
           .back {
@@ -122,6 +129,11 @@ class Left extends React.Component {
             padding: 8px;
             height: 32px;
             box-sizing: border-box;
+          }
+
+          .select:focus {
+            outline: none;
+            border: 1px solid #007aff;
           }
 
           .select span {
@@ -143,6 +155,11 @@ class Left extends React.Component {
             border: 1px solid #dbdbdb;
             border-radius: 4px;
           }
+
+          .link:focus {
+            outline: none;
+            border: 1px solid #007aff;
+          }
         `}</style>
       </div>
     );
@@ -155,12 +172,13 @@ Left.propTypes = {
   ratioLocked: PropTypes.bool,
   isResizing: PropTypes.bool,
   ratio: PropTypes.array,
-  setRatio: PropTypes.func.isRequired
+  setRatio: PropTypes.func.isRequired,
+  advanced: PropTypes.bool
 };
 
 AdvancedControls.Left = connect(
   [ActionBarContainer, CropperContainer],
-  ({ratioLocked}, {ratio, isResizing}) => ({ratio, ratioLocked, isResizing}),
+  ({ratioLocked, advanced}, {ratio, isResizing}) => ({advanced, ratio, ratioLocked, isResizing}),
   ({toggleAdvanced, toggleRatioLock}, {setRatio}) => ({toggleAdvanced, toggleRatioLock, setRatio})
 )(Left);
 
@@ -185,8 +203,8 @@ class Right extends React.Component {
       ratioLocked,
       ratio,
       value,
-      widthInput,
-      heightInput,
+      widthInput: widthInput.current.getRef(),
+      heightInput: heightInput.current.getRef(),
       ignoreEmpty
     });
   }
@@ -204,8 +222,8 @@ class Right extends React.Component {
       ratioLocked,
       ratio,
       value,
-      widthInput,
-      heightInput,
+      widthInput: widthInput.current.getRef(),
+      heightInput: heightInput.current.getRef(),
       ignoreEmpty
     });
   }
@@ -221,7 +239,7 @@ class Right extends React.Component {
   }
 
   render() {
-    const {swapDimensions, width, height, screenWidth, screenHeight} = this.props;
+    const {swapDimensions, width, height, screenWidth, screenHeight, advanced} = this.props;
 
     return (
       <div className="advanced">
@@ -234,11 +252,13 @@ class Right extends React.Component {
           max={screenWidth}
           maxLength="5"
           value={width}
+          tabIndex={advanced ? 0 : -1}
           onChange={this.onWidthChange}
           onBlur={this.onWidthBlur}
           onKeyDown={this.onWidthChange}
-          onMouseDown={stopPropagation}/>
-        <div className="swap">
+          onMouseDown={stopPropagation}
+        />
+        <div className="swap" tabIndex={advanced ? 0 : -1} onKeyPress={handleKeyboardActivation(swapDimensions)}>
           <SwapIcon onClick={swapDimensions}/>
         </div>
         <KeyboardNumberInput
@@ -250,10 +270,13 @@ class Right extends React.Component {
           max={screenHeight}
           maxLength="5"
           value={height}
+          tabIndex={advanced ? 0 : -1}
           onChange={this.onHeightChange}
           onBlur={this.onHeightBlur}
           onKeyDown={this.onHeightChange}
-          onMouseDown={stopPropagation}/>
+          onMouseDown={stopPropagation}
+        />
+        {keyboardInputStyles}
         <style jsx>{advancedStyles}</style>
         <style jsx>{`
           .swap {
@@ -264,6 +287,11 @@ class Right extends React.Component {
             border: 1px solid #dbdbdb;
             border-radius: 4px;
             margin-right: 8px;
+          }
+
+          .swap:focus {
+            outline: none;
+            border: 1px solid #007aff;
           }
         `}</style>
       </div>
@@ -277,6 +305,7 @@ Right.propTypes = {
   height: PropTypes.string,
   ratio: PropTypes.array,
   ratioLocked: PropTypes.bool,
+  advanced: PropTypes.bool,
   setBounds: PropTypes.func.isRequired,
   swapDimensions: PropTypes.func.isRequired,
   setWidth: PropTypes.func.isRequired,
@@ -289,7 +318,7 @@ AdvancedControls.Right = connect(
   [CropperContainer, ActionBarContainer],
   (
     {x, y, ratio, width, height, screenWidth, screenHeight},
-    {cropperWidth, cropperHeight, ratioLocked}
+    {cropperWidth, cropperHeight, ratioLocked, advanced}
   ) => ({
     screenHeight,
     screenWidth,
@@ -297,7 +326,8 @@ AdvancedControls.Right = connect(
     width: cropperWidth,
     height: cropperHeight,
     ratio,
-    ratioLocked
+    ratioLocked,
+    advanced
   }),
   (
     {setBounds, swapDimensions},

@@ -1,8 +1,10 @@
 import electron from 'electron';
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
 import {connect, CropperContainer} from '../../containers';
+import {handleKeyboardActivation} from '../../utils/inputs';
 
 class RecordButton extends React.Component {
   state = {}
@@ -100,7 +102,11 @@ class RecordButton extends React.Component {
     const {cropperExists} = this.props;
 
     return (
-      <div className="container">
+      <div
+        className={classNames('container', {'cropper-exists': cropperExists})}
+        tabIndex={cropperExists ? 0 : -1}
+        onKeyDown={handleKeyboardActivation(this.startRecording)}
+      >
         <div className="outer" onMouseDown={this.startRecording}>
           <div className="inner">
             {!cropperExists && <div className="fill"/>}
@@ -115,6 +121,7 @@ class RecordButton extends React.Component {
               display: flex;
               align-items: center;
               justify-content: center;
+              outline: none;
             }
 
             .outer {
@@ -122,7 +129,8 @@ class RecordButton extends React.Component {
               height: 48px;
               padding: 8px;
               border-radius: 50%;
-              background: #ff5e57;
+              background: #ff6059 radial-gradient(ellipse 100% 0% at 50% 0%, #ff6159 0%, #ff5f52 50%, #ff3a30 100%);
+              border: 2px solid #ff3b30;
               display: flex;
               align-items: center;
               justify-content: center;
@@ -142,7 +150,7 @@ class RecordButton extends React.Component {
               width: 20px;
               height: 20px;
               border-radius: 50%;
-              background: #ff5e57;
+              background: #ff6059 radial-gradient(ellipse 100% 0% at 50% 0%, #ff6159 0%, #ff5f52 50%, #ff3a30 100%);
               margin: 2px;
             }
 
@@ -162,6 +170,19 @@ class RecordButton extends React.Component {
 
             .second {
               animation: ripple 1.8s linear 0.9s infinite;
+            }
+
+            .container.cropper-exists:focus .outer {
+              background: #fff;
+            }
+
+            .container.cropper-exists:focus .inner {
+              border: 2px solid #ff3b30;
+              background: radial-gradient(ellipse 100% 0% at 50% 0%, #ff6159 0%, #ff5f52 50%, #ff3a30 100%);
+            }
+
+            .container.cropper-exists:focus .fill {
+              background: #fff;
             }
 
             @keyframes ripple {
