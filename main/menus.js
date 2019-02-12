@@ -22,7 +22,7 @@ Expected behavior:    How you expected Kap to behave.
 Workaround:           A workaround for the issue if you've found on. (this will help others experiencing the same issue!)
 -->
 
-**macOS version:**    ${process.platform} ${process.arch} ${os.release()}
+**macOS version:**    ${os.release()} (darwin)
 **Kap version:**      ${app.getVersion()}
 
 #### Steps to reproduce
