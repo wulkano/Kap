@@ -1,6 +1,7 @@
 import electron from 'electron';
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
 import {connect, CropperContainer} from '../../containers';
 import {handleKeyboardActivation} from '../../utils/inputs';
@@ -102,7 +103,7 @@ class RecordButton extends React.Component {
 
     return (
       <div
-        className="container"
+        className={classNames('container', {'cropper-exists': cropperExists})}
         tabIndex={cropperExists ? 0 : -1}
         onKeyDown={handleKeyboardActivation(this.startRecording)}
       >
@@ -171,16 +172,16 @@ class RecordButton extends React.Component {
               animation: ripple 1.8s linear 0.9s infinite;
             }
 
-            .container:focus .outer {
+            .container.cropper-exists:focus .outer {
               background: #fff;
             }
 
-            .container:focus .inner {
+            .container.cropper-exists:focus .inner {
               border: 2px solid #ff3b30;
               background: radial-gradient(ellipse 100% 0% at 50% 0%, #ff6159 0%, #ff5f52 50%, #ff3a30 100%);
             }
 
-            .container:focus .fill {
+            .container.cropper-exists:focus .fill {
               background: #fff;
             }
 
