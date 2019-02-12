@@ -34,7 +34,6 @@
     "aperture": "^5.1.0",
     "base64-img": "^1.0.4",
     "classnames": "^2.2.6",
-    "cp-file": "^6.0.0",
     "delay": "^4.1.0",
     "electron-better-ipc": "^0.1.1",
     "electron-log": "^2.2.17",

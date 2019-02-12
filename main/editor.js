@@ -2,11 +2,12 @@
 
 const {BrowserWindow, dialog} = require('electron');
 const path = require('path');
+const {promisify} = require('util');
+const fs = require('fs');
 const EventEmitter = require('events');
 const ipc = require('electron-better-ipc');
 const {is} = require('electron-util');
 const moment = require('moment');
-const cpFile = require('cp-file');
 
 const getFps = require('./utils/fps');
 const loadRoute = require('./utils/routes');
@@ -87,9 +88,7 @@ const setOptions = options => {
 
 const getEditors = () => editors.values();
 
-ipc.answerRenderer('save-original', ({inputPath, outputPath}) => {
-  cpFile(inputPath, outputPath);
-});
+ipc.answerRenderer('save-original', ({inputPath, outputPath}) => promisify(fs.copyFile)(inputPath, outputPath, fs.constants.COPYFILE_FICLONE));
 
 module.exports = {
   openEditorWindow,
