@@ -2,9 +2,11 @@
 
 const {BrowserWindow, dialog} = require('electron');
 const path = require('path');
+const EventEmitter = require('events');
 const ipc = require('electron-better-ipc');
 const {is} = require('electron-util');
 const moment = require('moment');
+const cpFile = require('cp-file');
 
 const getFps = require('./utils/fps');
 const loadRoute = require('./utils/routes');
@@ -16,6 +18,7 @@ const VIDEO_ASPECT = 9 / 16;
 const MIN_VIDEO_WIDTH = 768;
 const MIN_VIDEO_HEIGHT = MIN_VIDEO_WIDTH * VIDEO_ASPECT;
 const MIN_WINDOW_HEIGHT = MIN_VIDEO_HEIGHT + OPTIONS_BAR_HEIGHT;
+const editorEmitter = new EventEmitter();
 
 const getEditorName = (filePath, isNewRecording) => isNewRecording ? `New Recording ${moment().format('YYYY-MM-DD')} at ${moment().format('H.mm.ss')}` : path.basename(filePath);
 
@@ -68,6 +71,9 @@ const openEditorWindow = async (filePath, {recordedFps, isNewRecording, original
     });
   }
 
+  editorWindow.on('blur', () => editorEmitter.emit('blur'));
+  editorWindow.on('focus', () => editorEmitter.emit('focus'));
+
   editorWindow.webContents.on('did-finish-load', async () => {
     ipc.callRenderer(editorWindow, 'export-options', exportOptions);
     await ipc.callRenderer(editorWindow, 'file', {filePath, fps, originalFilePath});
@@ -81,8 +87,13 @@ const setOptions = options => {
 
 const getEditors = () => editors.values();
 
+ipc.answerRenderer('save-original', ({inputPath, outputPath}) => {
+  cpFile(inputPath, outputPath);
+});
+
 module.exports = {
   openEditorWindow,
   setOptions,
-  getEditors
+  getEditors,
+  editorEmitter
 };

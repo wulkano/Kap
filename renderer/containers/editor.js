@@ -98,6 +98,24 @@ export default class EditorContainer extends Container {
     this.setState(updates);
   }
 
+  saveOriginal = () => {
+    const {filePath, originalFilePath} = this.state;
+    const {remote} = electron;
+
+    const now = moment();
+
+    const path = remote.dialog.showSaveDialog(remote.BrowserWindow.getFocusedWindow(), {
+      defaultPath: `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.mp4`
+    });
+
+    const ipc = require('electron-better-ipc');
+
+    ipc.callMain('save-original', {
+      inputPath: originalFilePath || filePath,
+      outputPath: path
+    });
+  }
+
   selectFormat = format => {
     const {plugin, options, wasMuted} = this.state;
     const {plugins} = options.find(option => option.format === format);
