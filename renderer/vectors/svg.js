@@ -69,9 +69,6 @@ class Svg extends React.Component {
               position: relative;
               width: ${size};
               height: ${size};
-            }
-
-            div:focus {
               outline: none;
             }
 
