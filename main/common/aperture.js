@@ -9,11 +9,13 @@ const {openEditorWindow} = require('../editor');
 const {closePrefsWindow} = require('../preferences');
 const {setRecordingTray, disableTray} = require('../tray');
 const {disableCroppers, setRecordingCroppers, closeAllCroppers} = require('../cropper');
+const {convertToH264} = require('../utils/encoding');
 const settings = require('./settings');
 const {track} = require('./analytics');
 
 const aperture = createAperture();
-const {audioDevices} = createAperture;
+const {audioDevices, videoCodecs} = createAperture;
+const recordHevc = videoCodecs.has('hevc');
 
 let wasDoNotDisturbAlreadyEnabled;
 let lastUsedSettings;
@@ -63,6 +65,10 @@ const startRecording = async options => {
       const [defaultAudioDevice] = await audioDevices();
       apertureOpts.audioDeviceId = defaultAudioDevice && defaultAudioDevice.id;
     }
+  }
+
+  if (recordHevc) {
+    apertureOpts.videoCodec = 'hevc';
   }
 
   console.log(`Collected settings after ${(Date.now() - past) / 1000}s`);
@@ -132,7 +138,12 @@ const stopRecording = async () => {
   }
 
   track('editor/opened/recording');
-  openEditorWindow(filePath, recordedFps, {isNewRecording: true});
+
+  if (recordHevc) {
+    openEditorWindow(await convertToH264(filePath), {recordedFps, isNewRecording: true, originalFilePath: filePath});
+  } else {
+    openEditorWindow(filePath, {recordedFps, isNewRecording: true});
+  }
 };
 
 module.exports = {

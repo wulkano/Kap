@@ -14,11 +14,11 @@ export default class EditorContainer extends Container {
     this.videoContainer = videoContainer;
   }
 
-  mount = (filePath, fps = 15, resolve) => {
+  mount = (filePath, fps = 15, originalFilePath, resolve) => {
     const src = `file://${filePath}`;
     this.finishLoading = resolve;
 
-    this.setState({src, filePath, fps, originalFps: fps, wasMuted: false});
+    this.setState({src, filePath, originalFilePath, fps, originalFps: fps, wasMuted: false});
     this.videoContainer.setSrc(src);
   }
 
@@ -98,6 +98,24 @@ export default class EditorContainer extends Container {
     this.setState(updates);
   }
 
+  saveOriginal = () => {
+    const {filePath, originalFilePath} = this.state;
+    const {remote} = electron;
+
+    const now = moment();
+
+    const path = remote.dialog.showSaveDialog(remote.BrowserWindow.getFocusedWindow(), {
+      defaultPath: `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.mp4`
+    });
+
+    const ipc = require('electron-better-ipc');
+
+    ipc.callMain('save-original', {
+      inputPath: originalFilePath || filePath,
+      outputPath: path
+    });
+  }
+
   selectFormat = format => {
     const {plugin, options, wasMuted} = this.state;
     const {plugins} = options.find(option => option.format === format);
@@ -170,7 +188,7 @@ export default class EditorContainer extends Container {
   }
 
   startExport = () => {
-    const {width, height, fps, filePath, options, format, plugin: serviceTitle, originalFps} = this.state;
+    const {width, height, fps, filePath, originalFilePath, options, format, plugin: serviceTitle, originalFps} = this.state;
     const {startTime, endTime, isMuted} = this.videoContainer.state;
 
     const plugin = options.find(option => option.format === format).plugins.find(p => p.title === serviceTitle);
@@ -185,7 +203,8 @@ export default class EditorContainer extends Container {
         endTime,
         isMuted
       },
-      inputPath: filePath,
+      inputPath: originalFilePath || filePath,
+      previewPath: filePath,
       pluginName,
       isDefault,
       serviceTitle,

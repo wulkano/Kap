@@ -1,14 +1,17 @@
 'use strict';
 
 const os = require('os');
-const {Menu, app, dialog} = require('electron');
+const {Menu, app, dialog, BrowserWindow} = require('electron');
 const {openNewGitHubIssue, appMenu} = require('electron-util');
+const ipc = require('electron-better-ipc');
+
 const {supportedVideoExtensions} = require('./common/constants');
 const {openPrefsWindow} = require('./preferences');
 const {openExportsWindow} = require('./exports');
 const {openAboutWindow} = require('./about');
-const {openEditorWindow} = require('./editor');
 const {closeAllCroppers} = require('./cropper');
+const {editorEmitter} = require('./editor');
+const openFiles = require('./utils/open-files');
 
 const issueBody = `
 <!--
@@ -47,9 +50,7 @@ const openFileItem = {
       properties: ['openFile']
     }, filePaths => {
       if (filePaths) {
-        for (const file of filePaths) {
-          openEditorWindow(file);
-        }
+        openFiles(...filePaths);
       }
     });
   }
@@ -122,6 +123,17 @@ const applicationMenuTemplate = [
         type: 'separator'
       },
       {
+        label: 'Save Original…',
+        id: 'saveOriginal',
+        accelerator: 'Command+S',
+        click: () => {
+          ipc.callRenderer(BrowserWindow.getFocusedWindow(), 'save-original');
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
         role: 'close'
       }
     ]
@@ -162,6 +174,7 @@ const cogExportsItem = cogMenu.getMenuItemById('exports');
 
 const applicationMenu = Menu.buildFromTemplate(applicationMenuTemplate);
 const applicationExportsItem = applicationMenu.getMenuItemById('exports');
+const applicationSaveOriginalItem = applicationMenu.getMenuItemById('saveOriginal');
 
 const toggleExportMenuItem = enabled => {
   cogExportsItem.enabled = enabled;
@@ -171,6 +184,14 @@ const toggleExportMenuItem = enabled => {
 const setApplicationMenu = () => {
   Menu.setApplicationMenu(applicationMenu);
 };
+
+editorEmitter.on('blur', () => {
+  applicationSaveOriginalItem.visible = false;
+});
+
+editorEmitter.on('focus', () => {
+  applicationSaveOriginalItem.visible = true;
+});
 
 module.exports = {
   cogMenu,
