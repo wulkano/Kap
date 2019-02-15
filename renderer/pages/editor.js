@@ -24,8 +24,9 @@ export default class EditorPage extends React.Component {
     });
 
     ipc.answerMain('export-options', editorContainer.setOptions);
-
     ipc.answerMain('save-original', editorContainer.saveOriginal);
+    ipc.answerMain('blur', videoContainer.pause);
+    ipc.answerMain('focus', videoContainer.play);
   }
 
   render() {

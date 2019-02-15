@@ -72,8 +72,14 @@ const openEditorWindow = async (filePath, {recordedFps, isNewRecording, original
     });
   }
 
-  editorWindow.on('blur', () => editorEmitter.emit('blur'));
-  editorWindow.on('focus', () => editorEmitter.emit('focus'));
+  editorWindow.on('blur', () => {
+    editorEmitter.emit('blur');
+    ipc.callRenderer(editorWindow, 'blur');
+  });
+  editorWindow.on('focus', () => {
+    editorEmitter.emit('focus');
+    ipc.callRenderer(editorWindow, 'focus');
+  });
 
   editorWindow.webContents.on('did-finish-load', async () => {
     ipc.callRenderer(editorWindow, 'export-options', exportOptions);
