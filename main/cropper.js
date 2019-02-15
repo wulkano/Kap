@@ -79,6 +79,10 @@ const openCropper = (display, activeDisplayId) => {
 };
 
 const openCropperWindow = () => {
+  if (isCropperOpen) {
+    return;
+  }
+
   closeAllCroppers();
   isCropperOpen = true;
 

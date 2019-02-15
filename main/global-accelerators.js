@@ -6,8 +6,22 @@ const store = require('./common/settings');
 const {openCropperWindow} = require('./cropper');
 
 // All settings that should be loaded and handled as global accelerators
-const handlers = {
-  cropperShortcut: openCropperWindow
+const handlers = new Map([
+  ['cropperShortcut', openCropperWindow]
+]);
+
+// If no action is passed, it resets
+const setCropperShortcutAction = (action = openCropperWindow) => {
+  if (store.get('recordKeyboardShortcut') && store.has('cropperShortcut')) {
+    handlers.set('cropperShortcut', action);
+
+    const shortcut = shortcutToAccelerator(store.get('cropperShortcut'));
+    if (globalShortcut.isRegistered(shortcut)) {
+      globalShortcut.unregister(shortcut);
+    }
+
+    globalShortcut.register(shortcut, action);
+  }
 };
 
 const registerShortcut = (shortcut, action) => {
@@ -21,7 +35,7 @@ const registerShortcut = (shortcut, action) => {
 
 const registrerFromStore = () => {
   if (store.get('recordKeyboardShortcut')) {
-    for (const [setting, action] of Object.entries(handlers)) {
+    for (const [setting, action] of handlers.entries()) {
       const shortcut = store.get(setting);
       if (shortcut) {
         registerShortcut(shortcut, action);
@@ -49,7 +63,7 @@ const initializeGlobalAccelerators = () => {
     store.set(setting, shortcut);
 
     if (shortcut) {
-      registerShortcut(shortcut, handlers[setting]);
+      registerShortcut(shortcut, handlers.get(setting));
     }
   });
 
@@ -66,5 +80,6 @@ const initializeGlobalAccelerators = () => {
 };
 
 module.exports = {
-  initializeGlobalAccelerators
+  initializeGlobalAccelerators,
+  setCropperShortcutAction
 };
