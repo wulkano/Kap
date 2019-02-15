@@ -13,6 +13,8 @@ videoContainer.setEditorContainer(editorContainer);
 editorContainer.setVideoContainer(videoContainer);
 
 export default class EditorPage extends React.Component {
+  wasPaused = false;
+
   componentDidMount() {
     const ipc = require('electron-better-ipc');
 
@@ -25,8 +27,16 @@ export default class EditorPage extends React.Component {
 
     ipc.answerMain('export-options', editorContainer.setOptions);
     ipc.answerMain('save-original', editorContainer.saveOriginal);
-    ipc.answerMain('blur', videoContainer.pause);
-    ipc.answerMain('focus', videoContainer.play);
+
+    ipc.answerMain('blur', () => {
+      this.wasPaused = videoContainer.state.isPaused;
+      videoContainer.pause();
+    });
+    ipc.answerMain('focus', () => {
+      if (!this.wasPaused) {
+        videoContainer.play();
+      }
+    });
   }
 
   render() {
