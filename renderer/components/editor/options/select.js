@@ -63,6 +63,7 @@ class Select extends React.Component {
             justify-content: center;
             align-items: center;
             width: 18px;
+            pointer-events: none;
           }
         `}</style>
       </div>
