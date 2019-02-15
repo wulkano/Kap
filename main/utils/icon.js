@@ -1,3 +1,5 @@
+'use strict';
+
 const fileIcon = require('file-icon');
 
 const getAppIcon = async () => {

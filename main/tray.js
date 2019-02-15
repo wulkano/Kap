@@ -3,14 +3,12 @@
 const {Tray} = require('electron');
 const path = require('path');
 
-const {supportedVideoExtensions} = require('./common/constants');
 const {openCropperWindow} = require('./cropper');
-const {openEditorWindow} = require('./editor');
 const {cogMenu} = require('./menus');
 const {track} = require('./common/analytics');
+const openFiles = require('./utils/open-files');
 
 let tray = null;
-const fileExtensions = supportedVideoExtensions.map(ext => `.${ext}`);
 
 const openContextMenu = () => {
   tray.popUpContextMenu(cogMenu);
@@ -20,14 +18,9 @@ const initializeTray = () => {
   tray = new Tray(path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'));
   tray.on('click', openCropperWindow);
   tray.on('right-click', openContextMenu);
-  tray.on('drop-files', (event, files) => {
-    for (const file of files) {
-      const extension = path.extname(file).toLowerCase();
-      if (fileExtensions.includes(extension)) {
-        track('editor/opened/tray');
-        openEditorWindow(file);
-      }
-    }
+  tray.on('drop-files', (_, files) => {
+    track('editor/opened/tray');
+    openFiles(...files);
   });
 
   return tray;
