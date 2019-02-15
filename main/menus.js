@@ -125,6 +125,7 @@ const applicationMenuTemplate = [
       {
         label: 'Save Original…',
         id: 'saveOriginal',
+        accelerator: 'Command+S',
         click: () => {
           ipc.callRenderer(BrowserWindow.getFocusedWindow(), 'save-original');
         }
