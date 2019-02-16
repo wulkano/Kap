@@ -7,8 +7,9 @@ const createAperture = require('aperture');
 
 const {openEditorWindow} = require('../editor');
 const {closePrefsWindow} = require('../preferences');
-const {setRecordingTray, disableTray} = require('../tray');
+const {setRecordingTray, disableTray, resetTray} = require('../tray');
 const {disableCroppers, setRecordingCroppers, closeAllCroppers} = require('../cropper');
+const {setCropperShortcutAction} = require('../global-accelerators');
 const {convertToH264} = require('../utils/encoding');
 const settings = require('./settings');
 const {track} = require('./analytics');
@@ -102,6 +103,7 @@ const startRecording = async options => {
     console.log(`Started recording after ${startTime}s`);
     setRecordingCroppers();
     setRecordingTray(stopRecording);
+    setCropperShortcutAction(stopRecording);
     past = Date.now();
   } catch (error) {
     track('recording/stopped/error');
@@ -120,6 +122,8 @@ const stopRecording = async () => {
   console.log(`Stopped recording after ${(Date.now() - past) / 1000}s`);
   track('recording/stopped');
   closeAllCroppers();
+  setCropperShortcutAction();
+  resetTray();
 
   const filePath = await aperture.stopRecording();
 

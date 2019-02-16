@@ -31,15 +31,15 @@ const disableTray = () => {
   tray.removeListener('right-click', openContextMenu);
 };
 
+const resetTray = () => {
+  tray.setImage(path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'));
+  tray.on('click', openCropperWindow);
+  tray.on('right-click', openContextMenu);
+};
+
 const setRecordingTray = stopRecording => {
   animateIcon();
-
-  tray.once('click', () => {
-    stopRecording();
-    tray.setImage(path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'));
-    tray.on('click', openCropperWindow);
-    tray.on('right-click', openContextMenu);
-  });
+  tray.once('click', stopRecording);
 };
 
 const animateIcon = () => new Promise(resolve => {
@@ -66,5 +66,6 @@ const animateIcon = () => new Promise(resolve => {
 module.exports = {
   initializeTray,
   disableTray,
-  setRecordingTray
+  setRecordingTray,
+  resetTray
 };
