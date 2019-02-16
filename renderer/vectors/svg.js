@@ -89,7 +89,9 @@ class Svg extends React.Component {
               filter: drop-shadow(0 1px 2px rgba(0,0,0,.1));
             }
 
-            .active, .active:hover {
+            .active,
+            .active:hover,
+            div:focus svg {
               fill: ${activeFill};
             }
         `}</style>
