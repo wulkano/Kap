@@ -1262,14 +1262,15 @@ anymatch@^2.0.0:
     micromatch "^3.1.4"
     normalize-path "^2.1.1"
 
-aperture@^5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/aperture/-/aperture-5.1.0.tgz#0009b17ab42345434d714596847f10e808aca350"
+aperture@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/aperture/-/aperture-5.2.0.tgz#17279ca05a080539b6ccba040d0a92d06fa35ebd"
+  integrity sha512-zxiybYquTrxugnl8UcKnItNlwKiOdmc5e9xoBQnG8OLSrria7AVcEwAbin4tE/+sunUOPbLWg0AV5c/yGT0iFw==
   dependencies:
-    electron-util "^0.9.1"
+    electron-util "^0.11.0"
     execa "^1.0.0"
     file-url "^2.0.2"
-    macos-version "^4.0.1"
+    macos-version "^5.0.0"
     tempy "^0.2.1"
 
 app-builder-bin@2.6.3:
@@ -2882,12 +2883,6 @@ electron-util@^0.4.1:
 electron-util@^0.7.0:
   version "0.7.0"
   resolved "http://registry.npmjs.org/electron-util/-/electron-util-0.7.0.tgz#6cc94ae4f4280725ac10e05b54ecfae6033be045"
-  dependencies:
-    electron-is-dev "^0.3.0"
-
-electron-util@^0.9.1:
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/electron-util/-/electron-util-0.9.1.tgz#b69a0615375808ef08b89cadb82804fbcf205997"
   dependencies:
     electron-is-dev "^0.3.0"
 
@@ -5165,12 +5160,6 @@ mac-windows@^0.7.1:
 macos-release@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/macos-release/-/macos-release-1.1.0.tgz#831945e29365b470aa8724b0ab36c8f8959d10fb"
-
-macos-version@^4.0.1:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/macos-version/-/macos-version-4.1.0.tgz#028e44adb28037e50395e2285bef054ef9b08ffa"
-  dependencies:
-    semver "^5.3.0"
 
 macos-version@^5.0.0:
   version "5.0.0"
