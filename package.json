@@ -31,7 +31,7 @@
     "@sindresorhus/do-not-disturb": "^0.2.0",
     "@sindresorhus/to-milliseconds": "^1.0.0",
     "ajv": "^6.9.1",
-    "aperture": "^5.1.0",
+    "aperture": "^5.2.0",
     "base64-img": "^1.0.4",
     "classnames": "^2.2.6",
     "delay": "^4.1.0",
