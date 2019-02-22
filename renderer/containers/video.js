@@ -60,7 +60,6 @@ export default class VideoContainer extends Container {
       this.editorContainer.setDimensions(videoWidth, videoHeight);
       const hasAudio = video.webkitAudioDecodedByteCount > 0 ||
         Boolean(video.audioTracks && video.audioTracks.length > 0);
-      console.log(hasAudio);
       this.setState({duration, startTime: 0, endTime: duration, hasAudio});
       this.mute();
     });
