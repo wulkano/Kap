@@ -71,8 +71,8 @@ class Video extends React.Component {
 
 Video.propTypes = {
   src: PropTypes.string,
-  setVideo: PropTypes.func,
-  getSnapshot: PropTypes.func
+  setVideo: PropTypes.elementType,
+  getSnapshot: PropTypes.elementType
 };
 
 export default connect(

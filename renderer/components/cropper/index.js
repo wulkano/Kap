@@ -28,7 +28,7 @@ class Cropper extends React.Component {
 }
 
 Cropper.propTypes = {
-  startMoving: PropTypes.func.isRequired,
+  startMoving: PropTypes.elementType.isRequired,
   width: PropTypes.number,
   height: PropTypes.number,
   isResizing: PropTypes.bool

@@ -97,7 +97,7 @@ class ActionBar extends React.Component {
 }
 
 ActionBar.propTypes = {
-  startMoving: PropTypes.func.isRequired,
+  startMoving: PropTypes.elementType.isRequired,
   x: PropTypes.number,
   y: PropTypes.number,
   width: PropTypes.number,

@@ -157,14 +157,14 @@ class Config extends React.Component {
 }
 
 Config.propTypes = {
-  validators: PropTypes.arrayOf(PropTypes.func),
+  validators: PropTypes.arrayOf(PropTypes.elementType),
   values: PropTypes.object,
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.elementType.isRequired,
   selectedTab: PropTypes.number,
-  selectTab: PropTypes.func.isRequired,
-  closeWindow: PropTypes.func.isRequired,
-  openConfig: PropTypes.func.isRequired,
-  viewOnGithub: PropTypes.func.isRequired
+  selectTab: PropTypes.elementType.isRequired,
+  closeWindow: PropTypes.elementType.isRequired,
+  openConfig: PropTypes.elementType.isRequired,
+  viewOnGithub: PropTypes.elementType.isRequired
 };
 
 export default connect(

@@ -51,8 +51,8 @@ class RightControls extends React.Component {
 
 RightControls.propTypes = {
   isMuted: PropTypes.bool,
-  mute: PropTypes.func,
-  unmute: PropTypes.func,
+  mute: PropTypes.elementType,
+  unmute: PropTypes.elementType,
   format: PropTypes.string,
   duration: PropTypes.number
 };

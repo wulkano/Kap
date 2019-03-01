@@ -159,14 +159,14 @@ Plugins.propTypes = {
   pluginsFromNpm: PropTypes.array,
   pluginBeingInstalled: PropTypes.string,
   pluginBeingUninstalled: PropTypes.string,
-  install: PropTypes.func.isRequired,
-  uninstall: PropTypes.func.isRequired,
-  onTransitionEnd: PropTypes.func,
+  install: PropTypes.elementType.isRequired,
+  uninstall: PropTypes.elementType.isRequired,
+  onTransitionEnd: PropTypes.elementType,
   tab: PropTypes.string,
-  selectTab: PropTypes.func.isRequired,
+  selectTab: PropTypes.elementType.isRequired,
   npmError: PropTypes.bool,
-  fetchFromNpm: PropTypes.func.isRequired,
-  openPluginsConfig: PropTypes.func.isRequired
+  fetchFromNpm: PropTypes.elementType.isRequired,
+  openPluginsConfig: PropTypes.elementType.isRequired
 };
 
 export default connect(

@@ -148,7 +148,7 @@ Export.propTypes = {
   text: PropTypes.string,
   percentage: PropTypes.number,
   image: PropTypes.string,
-  cancel: PropTypes.func,
-  openInEditor: PropTypes.func,
+  cancel: PropTypes.elementType,
+  openInEditor: PropTypes.elementType,
   filePath: PropTypes.string
 };

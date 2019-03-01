@@ -218,14 +218,14 @@ class PlayBar extends React.Component {
 PlayBar.propTypes = {
   startTime: PropTypes.number,
   endTime: PropTypes.number,
-  seek: PropTypes.func,
+  seek: PropTypes.elementType,
   currentTime: PropTypes.number,
   duration: PropTypes.number,
   src: PropTypes.string,
-  setStartTime: PropTypes.func,
-  setEndTime: PropTypes.func,
-  pause: PropTypes.func,
-  play: PropTypes.func,
+  setStartTime: PropTypes.elementType,
+  setEndTime: PropTypes.elementType,
+  pause: PropTypes.elementType,
+  play: PropTypes.elementType,
   hover: PropTypes.bool
 };
 

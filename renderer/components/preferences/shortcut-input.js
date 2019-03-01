@@ -39,7 +39,7 @@ export default class ShortcutInput extends React.Component {
     ctrlKey: PropTypes.bool.isRequired,
     shiftKey: PropTypes.bool.isRequired,
     character: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.elementType.isRequired
   }
 
   state = {

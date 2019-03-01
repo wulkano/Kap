@@ -55,7 +55,7 @@ ConfigInput.propTypes = {
     PropTypes.string,
     PropTypes.bool
   ]),
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.elementType.isRequired,
   hasErrors: PropTypes.bool
 };
 
@@ -123,11 +123,11 @@ class Tab extends React.Component {
 }
 
 Tab.propTypes = {
-  validator: PropTypes.func,
+  validator: PropTypes.elementType,
   values: PropTypes.object,
-  onChange: PropTypes.func.isRequired,
-  openConfig: PropTypes.func.isRequired,
-  viewOnGithub: PropTypes.func.isRequired
+  onChange: PropTypes.elementType.isRequired,
+  openConfig: PropTypes.elementType.isRequired,
+  viewOnGithub: PropTypes.elementType.isRequired
 };
 
 export default Tab;

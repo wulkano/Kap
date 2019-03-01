@@ -87,8 +87,8 @@ Switch.propTypes = {
   checked: PropTypes.bool,
   disabled: PropTypes.bool,
   loading: PropTypes.bool,
-  onClick: PropTypes.func.isRequired,
-  onTransitionEnd: PropTypes.func
+  onClick: PropTypes.elementType.isRequired,
+  onTransitionEnd: PropTypes.elementType
 };
 
 export default Switch;

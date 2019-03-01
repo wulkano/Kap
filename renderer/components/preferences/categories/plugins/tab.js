@@ -75,7 +75,7 @@ EmptyTab.propTypes = {
   title: PropTypes.string,
   subtitle: PropTypes.string,
   link: PropTypes.string,
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.elementType.isRequired,
   showIcon: PropTypes.bool,
   image: PropTypes.string
 };
@@ -102,9 +102,9 @@ Tab.propTypes = {
   current: PropTypes.string,
   plugins: PropTypes.array,
   disabled: PropTypes.bool,
-  onClick: PropTypes.func.isRequired,
-  onTransitionEnd: PropTypes.func,
-  openConfig: PropTypes.func
+  onClick: PropTypes.elementType.isRequired,
+  onTransitionEnd: PropTypes.elementType,
+  openConfig: PropTypes.elementType
 };
 
 export default Tab;
