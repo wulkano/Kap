@@ -93,7 +93,8 @@
       "react/jsx-closing-tag-location": "off",
       "react/require-default-props": "off",
       "react/no-unused-prop-types": "off",
-      "react/jsx-curly-brace-presence": "off"
+      "react/jsx-curly-brace-presence": "off",
+      "react/no-typos": "off"
     },
     "ignores": [
       "dist",
