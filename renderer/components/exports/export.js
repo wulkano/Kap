@@ -6,6 +6,8 @@ import IconMenu from '../icon-menu';
 import {CancelIcon, MoreIcon} from '../../vectors';
 import {Progress, ProgressSpinner} from './progress';
 
+const stopPropagation = event => event.stopPropagation();
+
 export default class Export extends React.Component {
   static defaultProps = {
     percentage: 0
@@ -53,11 +55,11 @@ export default class Export extends React.Component {
       <div draggable className="export-container" onClick={this.openFile} onDragStart={this.onDragStart}>
         <div className="thumbnail">
           <div className="overlay"/>
-          <div className="icon">
+          <div className="icon" onClick={stopPropagation}>
             {
               cancelable ?
-                <CancelIcon fill="white" hoverFill="white" onClick={cancel}/> :
-                <IconMenu icon={MoreIcon} fill="white" hoverFill="white" onOpen={menu && menu.popup}/>
+                <CancelIcon fill="white" hoverFill="white" activeFill="white" onClick={cancel}/> :
+                <IconMenu icon={MoreIcon} fill="white" hoverFill="white" activeFill="white" onOpen={menu && menu.popup}/>
             }
           </div>
           <div className="progress">
