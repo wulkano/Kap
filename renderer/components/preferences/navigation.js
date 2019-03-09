@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -6,7 +7,7 @@ import {SettingsIcon, PluginsIcon} from '../../vectors';
 
 const CATEGORIES = [
   {
-    name: 'settings',
+    name: 'general',
     icon: SettingsIcon
   }, {
     name: 'plugins',
@@ -16,7 +17,7 @@ const CATEGORIES = [
 
 class PreferencesNavigation extends React.Component {
   static defaultProps = {
-    category: 'settings'
+    category: 'general'
   }
 
   render() {
@@ -27,13 +28,18 @@ class PreferencesNavigation extends React.Component {
         {
           CATEGORIES.map(
             ({name, icon: Icon}) => (
-              <span key={name}>
+              <div
+                key={name}
+                className={classNames('nav-item', {active: category === name})}
+                onClick={() => selectCategory(name)}
+              >
                 <Icon
                   size="2.4rem"
                   active={category === name}
-                  onClick={() => selectCategory(name)}
+                  hoverFill="#808080"
                 />
-              </span>
+                <span>{name}</span>
+              </div>
             )
           )
         }
@@ -45,8 +51,29 @@ class PreferencesNavigation extends React.Component {
             align-items: center;
           }
 
+          .nav-item {
+            display: flex;
+            align-items: center;
+            margin-right: 24px;
+            width: 89px;
+            height: 24px;
+            color: #808080;
+            border-radius: 2px 2px 2px 2px;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 16px;
+            text-transform: capitalize;
+            border: 1px solid transparent;
+          }
+
+          .nav-item.active {
+            color: #000000;
+            border-color: rgba(0, 0, 0, 0.1);
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+          }
+
           span {
-            margin-right: 16px;
+            margin-left: 8px;
           }
         `}</style>
       </nav>

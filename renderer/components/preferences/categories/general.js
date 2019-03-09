@@ -13,7 +13,7 @@ import ShortcutInput from '../shortcut-input';
 
 import Category from './category';
 
-class Settings extends React.Component {
+class General extends React.Component {
   static defaultProps = {
     audioDevices: [],
     kapturesDir: ''
@@ -190,7 +190,7 @@ class Settings extends React.Component {
   }
 }
 
-Settings.propTypes = {
+General.propTypes = {
   showCursor: PropTypes.bool,
   highlightClicks: PropTypes.bool,
   hideDesktopIcons: PropTypes.bool,
@@ -267,4 +267,4 @@ export default connect(
     updateShortcut,
     toggleShortcuts
   })
-)(Settings);
+)(General);
