@@ -10,7 +10,6 @@ const util = require('electron-util');
 const execa = require('execa');
 const makeDir = require('make-dir');
 
-const Sentry = require('./utils/sentry');
 const settings = require('./common/settings');
 const {track} = require('./common/analytics');
 const {openPrefsWindow} = require('./preferences');
@@ -86,7 +85,6 @@ class ExportList {
         delete this.currentExport;
         this._startNext();
       } catch (error) {
-        Sentry.captureException(error);
         console.log(error);
         this.currentExport.updateExport({
           status: 'failed',

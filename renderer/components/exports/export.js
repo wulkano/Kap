@@ -32,9 +32,7 @@ export default class Export extends React.Component {
 
   onDragStart = event => {
     const {createdAt} = this.props;
-    event.dataTransfer.effectAllowed = 'copy';
     event.preventDefault();
-    console.log('calling with', createdAt);
     electron.ipcRenderer.send('drag-export', createdAt);
   }
 
