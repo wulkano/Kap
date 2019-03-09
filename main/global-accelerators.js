@@ -60,10 +60,11 @@ const initializeGlobalAccelerators = () => {
       console.error('Error unregestering old shortcutAccelerator', error);
     }
 
-    store.set(setting, shortcut);
-
     if (shortcut) {
+      store.set(setting, shortcut);
       registerShortcut(shortcut, handlers.get(setting));
+    } else {
+      store.delete(setting);
     }
   });
 
