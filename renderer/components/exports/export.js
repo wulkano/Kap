@@ -30,6 +30,14 @@ export default class Export extends React.Component {
     }
   }
 
+  onDragStart = event => {
+    const {createdAt} = this.props;
+    event.dataTransfer.effectAllowed = 'copy';
+    event.preventDefault();
+    console.log('calling with', createdAt);
+    electron.ipcRenderer.send('drag-export', createdAt);
+  }
+
   render() {
     const {
       defaultFileName,
@@ -44,7 +52,7 @@ export default class Export extends React.Component {
     const cancelable = status === 'waiting' || status === 'processing';
 
     return (
-      <div className="export-container" onClick={this.openFile}>
+      <div draggable className="export-container" onClick={this.openFile} onDragStart={this.onDragStart}>
         <div className="thumbnail">
           <div className="overlay"/>
           <div className="icon">
@@ -150,5 +158,6 @@ Export.propTypes = {
   image: PropTypes.string,
   cancel: PropTypes.func,
   openInEditor: PropTypes.func,
-  filePath: PropTypes.string
+  filePath: PropTypes.string,
+  createdAt: PropTypes.string
 };

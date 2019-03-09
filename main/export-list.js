@@ -1,7 +1,7 @@
 /* eslint-disable array-element-newline */
 'use strict';
-
-const {dialog} = require('electron');
+const {dialog, ipcMain} = require('electron');
+const fs = require('fs');
 const ipc = require('electron-better-ipc');
 const base64Img = require('base64-img');
 const tmp = require('tmp');
@@ -10,6 +10,7 @@ const util = require('electron-util');
 const execa = require('execa');
 const makeDir = require('make-dir');
 
+const Sentry = require('./utils/sentry');
 const settings = require('./common/settings');
 const {track} = require('./common/analytics');
 const {openPrefsWindow} = require('./preferences');
@@ -38,7 +39,19 @@ const getPreview = async inputPath => {
     previewPath
   ]);
 
-  return base64Img.base64Sync(previewPath);
+  return previewPath;
+};
+
+const getDragIcon = async inputPath => {
+  const iconPath = tmp.tmpNameSync({postfix: '.jpg'});
+  await execa(ffmpegPath, [
+    '-i', inputPath,
+    // Scale the largest dimension to 64px maintaining aspect ratio
+    '-vf', 'scale=if(gte(iw\\,ih)\\,min(64\\,iw)\\,-2):if(lt(iw\\,ih)\\,min(64\\,ih)\\,-2)',
+    iconPath
+  ]);
+
+  return iconPath;
 };
 
 const saveSnapshot = async ({inputPath, outputPath, time}) => {
@@ -73,6 +86,7 @@ class ExportList {
         delete this.currentExport;
         this._startNext();
       } catch (error) {
+        Sentry.captureException(error);
         console.log(error);
         this.currentExport.updateExport({
           status: 'failed',
@@ -152,7 +166,8 @@ class ExportList {
 
     newExport.status = 'waiting';
     newExport.text = 'Waiting…';
-    newExport.image = await getPreview(options.inputPath);
+    newExport.imagePath = await getPreview(options.inputPath);
+    newExport.image = base64Img.base64Sync(newExport.imagePath);
     newExport.createdAt = createdAt;
     newExport.originalFps = options.originalFps;
 
@@ -186,9 +201,13 @@ class ExportList {
     return this.exports.map(exp => exp.data);
   }
 
+  getExport(createdAt) {
+    return this.exports.find(exp => exp.createdAt === createdAt);
+  }
+
   openExport(createdAt) {
     track('export/history/opened/recording');
-    const exp = this.exports.find(exp => exp.createdAt === createdAt);
+    const exp = this.getExport(createdAt);
     if (exp) {
       openEditorWindow(exp.previewPath, {recordedFps: exp.originalFps, originalFilePath: exp.inputPath});
     }
@@ -206,6 +225,18 @@ ipc.answerRenderer('cancel-export', createdAt => exportList.cancelExport(created
 ipc.answerRenderer('open-export', createdAt => exportList.openExport(createdAt));
 
 ipc.answerRenderer('export-snapshot', saveSnapshot);
+
+ipcMain.on('drag-export', async (event, createdAt) => {
+  const exportItem = exportList.getExport(createdAt);
+  const file = exportItem && exportItem.data.filePath;
+
+  if (file && fs.existsSync(file)) {
+    event.sender.startDrag({
+      file,
+      icon: await getDragIcon(exportItem.imagePath)
+    });
+  }
+});
 
 const callExportsWindow = (channel, data) => {
   const exportsWindow = getExportsWindow();
