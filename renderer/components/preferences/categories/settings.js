@@ -2,7 +2,6 @@ import electron from 'electron';
 import React from 'react';
 import PropTypes from 'prop-types';
 import tildify from 'tildify';
-import macosVersion from 'macos-version';
 
 import {connect, PreferencesContainer} from '../../../containers';
 
@@ -14,12 +13,19 @@ import ShortcutInput from '../shortcut-input';
 
 import Category from './category';
 
-const showCursorSupported = macosVersion.isGreaterThanOrEqualTo('10.14');
-
 class Settings extends React.Component {
   static defaultProps = {
     audioDevices: [],
     kapturesDir: ''
+  }
+
+  state = {}
+
+  componentDidMount() {
+    console.log(electron.remote.require('./utils/macos-version').isGreaterThanOrEqualTo('10.14'));
+    this.setState({
+      showCursorSupported: electron.remote.require('./utils/macos-version').isGreaterThanOrEqualTo('10.14')
+    });
   }
 
   openKapturesDir = () => {
@@ -49,6 +55,8 @@ class Settings extends React.Component {
       updateShortcut,
       toggleShortcuts
     } = this.props;
+
+    const {showCursorSupported} = this.state;
 
     const devices = audioDevices.map(device => ({
       label: device.name,

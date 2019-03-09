@@ -60,7 +60,7 @@ export const EmptyTab = ({title, subtitle, link, onClick, showIcon, image}) => {
         footer {
           display: flex;
           width: 100%;
-          background-image: url(${image});
+          ${image ? `background-image: url(${image});` : ''}
           background-size: contain;
           background-repeat: no-repeat;
           background-position: center bottom;
