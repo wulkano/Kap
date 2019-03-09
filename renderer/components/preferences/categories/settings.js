@@ -22,7 +22,6 @@ class Settings extends React.Component {
   state = {}
 
   componentDidMount() {
-    console.log(electron.remote.require('./utils/macos-version').isGreaterThanOrEqualTo('10.14'));
     this.setState({
       showCursorSupported: electron.remote.require('./utils/macos-version').isGreaterThanOrEqualTo('10.14')
     });
