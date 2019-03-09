@@ -68,62 +68,74 @@ class Settings extends React.Component {
 
     return (
       <Category>
-        {showCursorSupported && (
-          <Item
-            parentItem
-            title="Show cursor"
-            subtitle="Display the mouse cursor in your Kaptures"
-          >
-            <Switch
-              checked={showCursor}
-              onClick={
-                () => {
-                  if (showCursor) {
-                    toggleSetting('highlightClicks', false);
-                  }
+        {
+          showCursorSupported &&
+            <Item
+              key="showCursor"
+              parentItem
+              title="Show cursor"
+              subtitle="Display the mouse cursor in your Kaptures"
+            >
+              <Switch
+                checked={showCursor}
+                onClick={
+                  () => {
+                    if (showCursor) {
+                      toggleSetting('highlightClicks', false);
+                    }
 
-                  toggleSetting('showCursor');
-                }
-              }/>
-          </Item>)}
-        <Item subtitle="Highlight clicks">
-          <Switch
-            checked={highlightClicks}
-            disabled={!showCursor}
-            onClick={() => toggleSetting('highlightClicks')}
-          />
-        </Item>
+                    toggleSetting('showCursor');
+                  }
+                }/>
+            </Item>
+        }
+        {
+          showCursorSupported &&
+            <Item key="highlightClicks" subtitle="Highlight clicks">
+              <Switch
+                checked={highlightClicks}
+                disabled={!showCursor}
+                onClick={() => toggleSetting('highlightClicks')}
+              />
+            </Item>
+        }
         <Item
+          key="recordKeyboardShortcut"
           parentItem
           title="Keyboard shortcuts"
           subtitle="Toggle and customise keyboard shortcuts"
         >
           <Switch checked={recordKeyboardShortcut} onClick={toggleShortcuts}/>
         </Item>
-        {recordKeyboardShortcut && (
-          <Item subtitle="Trigger Kap">
-            <ShortcutInput {...cropperShortcut} onChange={shortcut => updateShortcut('cropperShortcut', shortcut)}/>
-          </Item>
-        )}
+        {
+          recordKeyboardShortcut &&
+            <Item key="cropperShortcut" subtitle="Trigger Kap">
+              <ShortcutInput {...cropperShortcut} onChange={shortcut => updateShortcut('cropperShortcut', shortcut)}/>
+            </Item>
+        }
         <Item
+          key="hideDesktopIcons"
           title="Hide desktop icons"
           subtitle="Temporarily hide desktop icons while recording"
         >
           <Switch checked={hideDesktopIcons} onClick={() => toggleSetting('hideDesktopIcons')}/>
         </Item>
         <Item
+          key="doNotDisturb"
           title="Silence notifications"
           subtitle="Activate “Do Not Disturb” while recording"
         >
           <Switch checked={doNotDisturb} onClick={() => toggleSetting('doNotDisturb')}/>
         </Item>
         <Item
+          key="loopExports"
           title="Loop exports"
           subtitle="Infinitely loop exports when supported"
         >
           <Switch checked={loopExports} onClick={() => toggleSetting('loopExports')}/>
         </Item>
         <Item
+          key="recordAudio"
           parentItem
           title="Audio recording"
           subtitle="Record audio from input device"
@@ -132,7 +144,7 @@ class Settings extends React.Component {
             checked={recordAudio}
             onClick={() => toggleSetting('recordAudio')}/>
         </Item>
-        <Item subtitle="Select input device">
+        <Item key="audioInputDeviceId" subtitle="Select input device">
           <Select
             options={devices}
             selected={audioInputDeviceId}
@@ -141,6 +153,7 @@ class Settings extends React.Component {
             onSelect={setAudioInputDeviceId}/>
         </Item>
         <Item
+          key="record60fps"
           title="Capture frame rate"
           subtitle="Increased FPS impacts performance and file size"
         >
@@ -149,13 +162,27 @@ class Settings extends React.Component {
             selected={record60fps}
             onSelect={value => toggleSetting('record60fps', value)}/>
         </Item>
-        <Item title="Allow analytics" subtitle="Help us improve Kap by sending anonymous usage stats">
+        <Item
+          key="allowAnalytics"
+          title="Allow analytics"
+          subtitle="Help us improve Kap by sending anonymous usage stats"
+        >
           <Switch checked={allowAnalytics} onClick={() => toggleSetting('allowAnalytics')}/>
         </Item>
-        <Item title="Start automatically" subtitle="Launch Kap on system startup">
+        <Item
+          key="openOnStartup"
+          title="Start automatically"
+          subtitle="Launch Kap on system startup"
+        >
           <Switch checked={openOnStartup} onClick={setOpenOnStartup}/>
         </Item>
-        <Item title="Save to…" subtitle={kapturesDirPath} tooltip={kapturesDir} onSubtitleClick={this.openKapturesDir}>
+        <Item
+          key="pickKapturesDir"
+          title="Save to…"
+          subtitle={kapturesDirPath}
+          tooltip={kapturesDir}
+          onSubtitleClick={this.openKapturesDir}
+        >
           <Button title="Choose" onClick={pickKapturesDir}/>
         </Item>
       </Category>
