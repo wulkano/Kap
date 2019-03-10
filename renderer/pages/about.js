@@ -92,7 +92,7 @@ export default class AboutPage extends React.Component {
 
           footer {
             margin-top: 8px;
-            color: #007aff;
+            color: var(--kap);
             font-weight: 500;
             display: flex;
           }

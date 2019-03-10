@@ -55,9 +55,12 @@ export default class Kap extends App {
           <Component {...pageProps}/>
           <style jsx global>{`
             :root {
-              --kap-blue: #007aff;
+              --kap-blue: var(--kap);
               --kap-blue-dark: #006be0;
               --kap-blue-light: #3287ff;
+
+              --kap: var(--kap-blue);
+
               --red: #ff3b30;
               --black: #000000;
               --dust: #606060;
@@ -73,7 +76,7 @@ export default class Kap extends App {
 
               --title-color: var(--black);
               --subtitle-color: var(--dust);
-              --link-color: var(--kap-blue);
+              --link-color: var(--kap);
 
               --row-divider-color: #f1f1f1;
               --input-background-color: var(--white);
@@ -84,6 +87,7 @@ export default class Kap extends App {
             }
 
             .dark {
+              --kap: var(--kap-blue-light);
               --window-background-color: rgba(0, 0, 0, 0.3);
 
               --window-header-background: linear-gradient(-180deg, rgba(68, 68, 68, 0.8) 0%, rgba(51, 51, 51, 0.8) 100%);

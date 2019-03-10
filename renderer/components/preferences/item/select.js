@@ -92,7 +92,7 @@ class Select extends React.Component {
           }
 
           .select:focus {
-            border-color: #007aff;
+            border-color: var(--kap);
           }
 
           .select span {

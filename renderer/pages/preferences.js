@@ -106,6 +106,17 @@ export default class PreferencesPage extends React.Component {
               animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
             }
 
+            :root {
+              --navigation-item-border-color: rgba(0, 0, 0, 0.1);
+              --navigation-item-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+              --navigation-item-background: transparent;
+            }
+
+            .dark {
+              --navigation-item-border-color: transparent;
+              --navigation-item-background: var(--input-background-color);
+            }
+
         `}</style>
       </div>
     );

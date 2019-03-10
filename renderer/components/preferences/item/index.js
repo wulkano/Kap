@@ -8,7 +8,7 @@ const Link = ({href, children}) => (
   <span onClick={() => electron.shell.openExternal(href)}>
     {children}
     <style jsx>{`
-      color: #007aff;
+      color: var(--kap);
       text-decoration: none;
       cursor: pointer;
 
@@ -134,7 +134,7 @@ class Item extends React.Component {
           }
 
           .link {
-            color: #007aff;
+            color: var(--kap);
             cursor: pointer;
           }
 

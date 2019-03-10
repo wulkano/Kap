@@ -135,7 +135,7 @@ class Slider extends React.Component {
           }
 
           .slider:focus::-webkit-slider-thumb {
-            border: 1px solid #007aff;
+            border: 1px solid var(--kap);
           }
         `}</style>
       </div>

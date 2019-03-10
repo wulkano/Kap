@@ -49,7 +49,7 @@ const {className: keyboardInputClass, styles: keyboardInputStyles} = css.resolve
 
   :focus {
     outline: none;
-    border: 1px solid #007aff;
+    border: 1px solid var(--kap);
   }
 `;
 
@@ -136,7 +136,7 @@ class Left extends React.Component {
 
           .select:focus {
             outline: none;
-            border: 1px solid #007aff;
+            border: 1px solid var(--kap);
           }
 
           .select span {
@@ -161,7 +161,7 @@ class Left extends React.Component {
 
           .link:focus {
             outline: none;
-            border: 1px solid #007aff;
+            border: 1px solid var(--kap);
           }
         `}</style>
       </div>
@@ -294,7 +294,7 @@ class Right extends React.Component {
 
           .swap:focus {
             outline: none;
-            border: 1px solid #007aff;
+            border: 1px solid var(--kap);
           }
         `}</style>
       </div>

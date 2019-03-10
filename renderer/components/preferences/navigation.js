@@ -61,8 +61,8 @@ class PreferencesNavigation extends React.Component {
             margin-right: 24px;
             width: 89px;
             height: 24px;
-            color: #808080;
-            border-radius: 2px 2px 2px 2px;
+            color: var(--subtitle-color);
+            border-radius: 2px;
             font-size: 12px;
             font-weight: 500;
             line-height: 16px;
@@ -72,14 +72,16 @@ class PreferencesNavigation extends React.Component {
           }
 
           .nav-item.active {
-            color: #000000;
-            border-color: rgba(0, 0, 0, 0.1);
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+            color: var(--title-color);
+            border-color: var(--navigation-item-border-color);
+            box-shadow: var(--navigation-item-box-shadow);
+            background: var(--navigation-item-background);
           }
 
           .nav-item:focus {
-            border-color: rgba(0, 0, 0, 0.1);
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+            border-color: var(--navigation-item-border-color);
+            box-shadow: var(--navigation-item-box-shadow);
+            background: var(--navigation-item-background);
           }
 
           .nav-item.active:focus {

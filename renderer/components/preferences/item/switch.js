@@ -35,7 +35,7 @@ class Switch extends React.Component {
           }
 
           .switch:focus {
-            border-color: #007aff;
+            border-color: var(--kap);
           }
 
           .toggle {
@@ -55,7 +55,7 @@ class Switch extends React.Component {
 
           .checked .toggle {
             left: calc(100% - 2.2rem);
-            background: #007aff;
+            background: var(--kap);
           }
 
           .disabled {

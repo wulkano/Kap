@@ -91,7 +91,7 @@ class Config extends React.Component {
             justify-content: center;
             padding-bottom: 2px;
             font-size: 1.2rem;
-            color: #007aff;
+            color: var(--kap);
             font-weight: 500;
             width: 64px;
           }
@@ -101,7 +101,7 @@ class Config extends React.Component {
           }
 
           .service-nav .selected {
-            border-bottom: 2px solid #007aff;
+            border-bottom: 2px solid var(--kap);
             padding-bottom: 0;
           }
 
@@ -142,7 +142,7 @@ class Config extends React.Component {
             height: 32px;
             line-height: 16px;
             margin: 0 16px 16px 16px;
-            background: #007aff;
+            background: var(--kap);
             border-radius: 3px;
             color: #fff;
             display: flex;

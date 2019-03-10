@@ -31,7 +31,7 @@ export const EmptyTab = ({title, subtitle, link, onClick, showIcon, image}) => {
 
         .title {
           height: 24px;
-          color: #111111;
+          color: var(--title-color);
           font-size: 1.6rem;
           font-weight: 500;
           margin-top: 36px;
@@ -45,7 +45,7 @@ export const EmptyTab = ({title, subtitle, link, onClick, showIcon, image}) => {
         }
 
         .link {
-          color: #007AFF;
+          color: var(--kap);
           font-size: 1.2rem;
           font-weight: 500;
         }

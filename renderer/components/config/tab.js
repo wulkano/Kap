@@ -35,7 +35,7 @@ const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
           }
 
           input:focus {
-            border-color: #007aff;
+            border-color: var(--kap);
           }
 
           div {
@@ -104,10 +104,10 @@ class Tab extends React.Component {
           })
         }
         <Item subtitle="Open config file" onClick={openConfig}>
-          <div className="icon-container"><OpenConfigIcon fill="#007aff" hoverFill="#007aff" onClick={openConfig}/></div>
+          <div className="icon-container"><OpenConfigIcon fill="var(--kap)" hoverFill="var(--kap)" onClick={openConfig}/></div>
         </Item>
         <Item last subtitle="View plugin on GitHub" onClick={viewOnGithub}>
-          <div className="icon-container"><OpenOnGithubIcon size="20px" fill="#007aff" hoverFill="#007aff" onClick={viewOnGithub}/></div>
+          <div className="icon-container"><OpenOnGithubIcon size="20px" fill="var(--kap)" hoverFill="var(--kap)" onClick={viewOnGithub}/></div>
         </Item>
         <style jsx>{`
           .container {

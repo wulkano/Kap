@@ -19,7 +19,7 @@ const Button = ({title, onClick, tabIndex}) => (
 
       :hover,
       :focus {
-        border-color: #007aff;
+        border-color: var(--kap);
       }
     `}</style>
   </button>

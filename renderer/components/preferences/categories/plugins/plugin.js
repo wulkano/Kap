@@ -18,7 +18,7 @@ const PluginTitle = ({title, label, onClick}) => (
     <style jsx>{`
       .plugin-title {
         display: inline-block;
-        color: #007aff;
+        color: var(--kap);
         cursor: pointer;
       }
 
