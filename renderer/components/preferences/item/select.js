@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {DropdownArrowIcon} from '../../../vectors';
+import {handleKeyboardActivation} from '../../../utils/inputs';
 
 class Select extends React.Component {
   static defaultProps = {
@@ -54,7 +55,7 @@ class Select extends React.Component {
   }
 
   render() {
-    const {options, selected, placeholder, noOptionsMessage} = this.props;
+    const {options, selected, placeholder, noOptionsMessage, tabIndex} = this.props;
 
     const selectedLabel = options.length === 0 ? noOptionsMessage : (
       selected === undefined ? placeholder : options.find(option => option.value === selected).label
@@ -63,8 +64,10 @@ class Select extends React.Component {
     return (
       <div
         ref={this.select}
+        tabIndex={tabIndex}
         className="select"
         onClick={this.handleClick}
+        onKeyDown={handleKeyboardActivation(this.handleClick, {isMenu: true})}
       >
         <span>{selectedLabel}</span>
         <div className="dropdown">
@@ -83,6 +86,11 @@ class Select extends React.Component {
             line-height: 2.4rem;
             position: relative;
             width: 92px;
+            outline: none;
+          }
+
+          .select:focus {
+            border-color: #007aff;
           }
 
           .select span {
@@ -120,7 +128,8 @@ Select.propTypes = {
   onSelect: PropTypes.func.isRequired,
   selected: PropTypes.any,
   placeholder: PropTypes.string,
-  noOptionsMessage: PropTypes.string
+  noOptionsMessage: PropTypes.string,
+  tabIndex: PropTypes.number.isRequired
 };
 
 export default Select;

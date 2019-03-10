@@ -62,7 +62,7 @@ class Config extends React.Component {
         </div>
         <footer>
           <div className="fade"/>
-          <div className="button" onClick={closeWindow}>Done</div>
+          <button type="button" onClick={closeWindow}>Done</button>
         </footer>
         <style jsx>{`
           .container {
@@ -138,7 +138,7 @@ class Config extends React.Component {
             transform: translateY(-100%);
           }
 
-          footer .button {
+          footer button {
             height: 32px;
             line-height: 16px;
             margin: 0 16px 16px 16px;
@@ -149,6 +149,7 @@ class Config extends React.Component {
             align-items: center;
             justify-content: center;
             flex: 1;
+            outline: none;
           }
         `}</style>
       </div>

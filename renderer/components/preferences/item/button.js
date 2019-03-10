@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Button = ({title, onClick}) => (
-  <button type="button" onClick={onClick}>
+const Button = ({title, onClick, tabIndex}) => (
+  <button type="button" tabIndex={tabIndex} onClick={onClick}>
     {title}
     <style jsx>{`
       border: 1px solid #ddd;
@@ -17,7 +17,8 @@ const Button = ({title, onClick}) => (
       line-height: 2.4rem;
       outline: none;
 
-      :hover {
+      :hover,
+      :focus {
         border-color: #007aff;
       }
     `}</style>
@@ -26,7 +27,8 @@ const Button = ({title, onClick}) => (
 
 Button.propTypes = {
   title: PropTypes.string,
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
+  tabIndex: PropTypes.number.isRequired
 };
 
 export default Button;

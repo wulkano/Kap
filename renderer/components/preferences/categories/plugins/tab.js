@@ -60,7 +60,7 @@ export const EmptyTab = ({title, subtitle, link, onClick, showIcon, image}) => {
         footer {
           display: flex;
           width: 100%;
-          background-image: url(${image});
+          ${image ? `background-image: url(${image});` : ''}
           background-size: contain;
           background-repeat: no-repeat;
           background-position: center bottom;
@@ -80,11 +80,12 @@ EmptyTab.propTypes = {
   image: PropTypes.string
 };
 
-const Tab = ({checked, current, plugins, disabled, onClick, onTransitionEnd, openConfig}) => {
+const Tab = ({checked, current, plugins, disabled, onClick, onTransitionEnd, openConfig, tabIndex}) => {
   return plugins.map(plugin => {
     return (
       <Plugin
         key={plugin.name}
+        tabIndex={tabIndex}
         plugin={plugin}
         disabled={disabled}
         loading={current === plugin.name}
@@ -104,7 +105,8 @@ Tab.propTypes = {
   disabled: PropTypes.bool,
   onClick: PropTypes.func.isRequired,
   onTransitionEnd: PropTypes.func,
-  openConfig: PropTypes.func
+  openConfig: PropTypes.func,
+  tabIndex: PropTypes.number.isRequired
 };
 
 export default Tab;
