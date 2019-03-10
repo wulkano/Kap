@@ -119,34 +119,43 @@ const startRecording = async options => {
 };
 
 const stopRecording = async () => {
+  // Ensure we only stop recording once
+  if (!past) {
+    return;
+  }
+
   console.log(`Stopped recording after ${(Date.now() - past) / 1000}s`);
-  track('recording/stopped');
-  closeAllCroppers();
-  setCropperShortcutAction();
-  resetTray();
+  past = null;
 
-  const filePath = await aperture.stopRecording();
+  try {
+    track('recording/stopped');
+    closeAllCroppers();
+    setCropperShortcutAction();
+    resetTray();
+  } finally {
+    const filePath = await aperture.stopRecording();
 
-  const {
-    recordedFps,
-    hideDesktopIcons,
-    doNotDisturb
-  } = lastUsedSettings;
+    const {
+      recordedFps,
+      hideDesktopIcons,
+      doNotDisturb
+    } = lastUsedSettings;
 
-  if (hideDesktopIcons) {
-    desktopIcons.show();
-  }
+    if (hideDesktopIcons) {
+      desktopIcons.show();
+    }
 
-  if (doNotDisturb && !wasDoNotDisturbAlreadyEnabled) {
-    dnd.disable();
-  }
+    if (doNotDisturb && !wasDoNotDisturbAlreadyEnabled) {
+      dnd.disable();
+    }
 
-  track('editor/opened/recording');
+    track('editor/opened/recording');
 
-  if (recordHevc) {
-    openEditorWindow(await convertToH264(filePath), {recordedFps, isNewRecording: true, originalFilePath: filePath});
-  } else {
-    openEditorWindow(filePath, {recordedFps, isNewRecording: true});
+    if (recordHevc) {
+      openEditorWindow(await convertToH264(filePath), {recordedFps, isNewRecording: true, originalFilePath: filePath});
+    } else {
+      openEditorWindow(filePath, {recordedFps, isNewRecording: true});
+    }
   }
 };
 

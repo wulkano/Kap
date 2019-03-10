@@ -32,6 +32,7 @@ const disableTray = () => {
 };
 
 const resetTray = () => {
+  tray.removeAllListeners('click');
   tray.setImage(path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'));
   tray.on('click', openCropperWindow);
   tray.on('right-click', openContextMenu);
