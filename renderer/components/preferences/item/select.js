@@ -72,7 +72,8 @@ class Select extends React.Component {
         </div>
         <style jsx>{`
           .select {
-            border: 1px solid #ddd;
+            background: var(--input-background-color);
+            border: 1px solid var(--input-border-color);
             border-radius: 4px;
             height: 2.4rem;
             transition: border 0.12s ease-in-out;
@@ -83,6 +84,7 @@ class Select extends React.Component {
             line-height: 2.4rem;
             position: relative;
             width: 92px;
+            color: var(--title-color);
           }
 
           .select span {

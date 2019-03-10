@@ -19,10 +19,10 @@ class Switch extends React.Component {
             display: inline-block;
             width: 4.8rem;
             height: 2.4rem;
-            border: 1px solid #ddd;
+            border: 1px solid var(--input-border-color);
             border-radius: 2.625em;
             position: relative;
-            background-color: #fff;
+            background-color: var(--input-background-color);
             transition: 0.2s ease-in-out;
             box-sizing: border-box;
           }
@@ -54,7 +54,7 @@ class Switch extends React.Component {
           .disabled .toggle {
             margin-top: 0.2rem;
             border: 1px solid #ccc;
-            background-color: #fff;
+            background-color: transparent;
           }
 
           .loading .toggle {

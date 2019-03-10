@@ -80,7 +80,7 @@ class Svg extends React.Component {
               width: 100%;
               height: 100%;
               transform: scale(${1 / 0.75});
-              background: #f1f1f1;
+              background: var(--icon-focus-background-color);
               z-index: -1;
               border-radius: 2px;
             }

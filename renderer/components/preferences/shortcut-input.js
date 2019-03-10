@@ -12,7 +12,7 @@ const Key = ({children}) => (
       justify-content: center;
       align-items: center;
       font-size: 12px;
-      background: #FFFFFF;
+      background: #ffffff;
       border-radius: 4px 4px 4px 4px;
       border: 1px solid #DDDDDD;
       height: 20px;
@@ -127,9 +127,9 @@ export default class ShortcutInput extends React.Component {
           .box {
             position: relative;
             padding: 1px 1px;
-            background: #F9F9F9;
+            background: var(--input-background-color);
             border-radius: 3px 3px 3px 3px;
-            border: 1px solid #DDDDDD;
+            border: 1px solid var(--input-border-color);
             width: 96px;
             cursor: text;
             display: flex;
@@ -150,10 +150,10 @@ export default class ShortcutInput extends React.Component {
             display: inline-flex;
             justify-content: center;
             align-items: center;
-            background: #FFFFFF;
+            background: var(--input-background-color);
             border-radius: 3px 3px 3px 3px;
             padding: 1px 3px;
-            border: 1px solid #DDDDDD;
+            border: 1px solid var(--input-border-color);
             margin-left: 8px;
             width: 24px;
             height: 24px;

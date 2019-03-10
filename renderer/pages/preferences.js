@@ -49,7 +49,7 @@ export default class PreferencesPage extends React.Component {
             }
 
             .cover-window {
-              background-color: white;
+              background-color: var(--window-background-color);
               z-index: -2;
               display: flex;
               flex-direction: column;

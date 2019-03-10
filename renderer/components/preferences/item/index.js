@@ -79,7 +79,7 @@ class Item extends React.Component {
             max-width: 100%;
             padding: ${onClick ? '16px' : '32px'} 16px;
             margin-bottom: ${last ? '16px' : '0'};
-            border-bottom: 1px solid #f1f1f1;
+            border-bottom: 1px solid var(--row-divider-color);
             flex-direction: column;
           }
 
@@ -99,6 +99,7 @@ class Item extends React.Component {
             font-size: 1.2rem;
             line-height: 1.6rem;
             font-weight: 500;
+            color: var(--title-color);
           }
 
           .content {
@@ -109,7 +110,7 @@ class Item extends React.Component {
           }
 
           .subtitle {
-            color: ${onClick ? '#007aff' : '#606060'};
+            color: var(--${onClick ? 'link-color' : 'subtitle-color'});
             font-weight: ${onClick ? '500' : 'normal'};
             font-size: 1.2rem;
           }

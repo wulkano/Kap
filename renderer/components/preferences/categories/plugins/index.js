@@ -109,7 +109,7 @@ class Plugins extends React.Component {
             padding: 0 16px;
             display: flex;
             align-items: center;
-            box-shadow: 0 1px 0 0 #ddd, inset 0 1px 0 0 #fff;
+            box-shadow: 0 1px 0 0 var(--row-divider-color), inset 0 1px 0 0 #fff;
             z-index: 10;
           }
 
