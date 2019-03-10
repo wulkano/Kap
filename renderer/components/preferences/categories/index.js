@@ -4,13 +4,13 @@ import PropTypes from 'prop-types';
 
 import {connect, PreferencesContainer} from '../../../containers';
 
-import Settings from './settings';
+import General from './general';
 import Plugins from './plugins';
 
 const CATEGORIES = [
   {
-    name: 'settings',
-    Component: Settings
+    name: 'general',
+    Component: General
   }, {
     name: 'plugins',
     Component: Plugins

@@ -3,14 +3,20 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import {SpinnerIcon} from '../../../vectors';
+import {handleKeyboardActivation} from '../../../utils/inputs';
 
 class Switch extends React.Component {
   render() {
-    const {checked, onClick, disabled, loading, onTransitionEnd} = this.props;
+    const {checked, onClick, disabled, loading, onTransitionEnd, tabIndex} = this.props;
     const className = classNames('switch', {checked, disabled, loading});
 
     return (
-      <div className={className} onClick={disabled ? undefined : onClick}>
+      <div
+        tabIndex={disabled ? -1 : tabIndex}
+        className={className}
+        onClick={disabled ? undefined : onClick}
+        onKeyDown={disabled ? undefined : handleKeyboardActivation(onClick)}
+      >
         <div className="toggle" onTransitionEnd={onTransitionEnd}>
           {loading && <SpinnerIcon/>}
         </div>
@@ -25,6 +31,11 @@ class Switch extends React.Component {
             background-color: var(--input-background-color);
             transition: 0.2s ease-in-out;
             box-sizing: border-box;
+            outline: none;
+          }
+
+          .switch:focus {
+            border-color: #007aff;
           }
 
           .toggle {
@@ -88,7 +99,8 @@ Switch.propTypes = {
   disabled: PropTypes.bool,
   loading: PropTypes.bool,
   onClick: PropTypes.func.isRequired,
-  onTransitionEnd: PropTypes.func
+  onTransitionEnd: PropTypes.func,
+  tabIndex: PropTypes.number.isRequired
 };
 
 export default Switch;

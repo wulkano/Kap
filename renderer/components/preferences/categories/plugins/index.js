@@ -2,13 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {connect, PreferencesContainer} from '../../../../containers';
+import {handleKeyboardActivation} from '../../../../utils/inputs';
 import Category from '../category';
 import Tab, {EmptyTab} from './tab';
 
 class Plugins extends React.Component {
   static defaultProps = {
     pluginsInstalled: [],
-    pluginsFromNpm: []
+    pluginsFromNpm: [],
+    category: 'general'
   }
 
   render() {
@@ -24,22 +26,29 @@ class Plugins extends React.Component {
       selectTab,
       npmError,
       fetchFromNpm,
-      openPluginsConfig
+      openPluginsConfig,
+      category
     } = this.props;
+
+    const tabIndex = category === 'plugins' ? 0 : -1;
 
     return (
       <Category>
         <div className="container">
           <nav className="plugins-nav">
             <div
+              tabIndex={tabIndex}
               className={tab === 'discover' ? 'selected' : ''}
               onClick={() => selectTab('discover')}
+              onKeyDown={handleKeyboardActivation(() => selectTab('discover'))}
             >
               Discover
             </div>
             <div
+              tabIndex={tabIndex}
               className={tab === 'installed' ? 'selected' : ''}
               onClick={() => selectTab('installed')}
+              onKeyDown={handleKeyboardActivation(() => selectTab('installed'))}
             >
               Installed
             </div>
@@ -65,6 +74,7 @@ class Plugins extends React.Component {
                       onClick={() => selectTab('installed')}/>
                   ) : (
                     <Tab
+                      tabIndex={tabIndex === 0 && tab === 'discover' ? 0 : -1}
                       current={pluginBeingInstalled}
                       plugins={pluginsFromNpm}
                       disabled={Boolean(pluginBeingInstalled)}
@@ -85,6 +95,7 @@ class Plugins extends React.Component {
                 ) : (
                   <Tab
                     checked
+                    tabIndex={tabIndex === 0 && tab === 'installed' ? 0 : -1}
                     disabled={Boolean(pluginBeingInstalled)}
                     current={pluginBeingUninstalled}
                     plugins={pluginsInstalled}
@@ -124,9 +135,20 @@ class Plugins extends React.Component {
             color: #007aff;
             font-weight: 500;
             width: 64px;
+            outline: none;
+          }
+
+          .plugins-nav div:focus {
+            border-bottom: 2px solid rgba(0, 0, 0, 0.3);
+            padding-bottom: 0;
           }
 
           .plugins-nav .selected {
+            border-bottom: 2px solid #007aff;
+            padding-bottom: 0;
+          }
+
+          .plugins-nav .selected:focus {
             border-bottom: 2px solid #007aff;
             padding-bottom: 0;
           }
@@ -166,7 +188,8 @@ Plugins.propTypes = {
   selectTab: PropTypes.func.isRequired,
   npmError: PropTypes.bool,
   fetchFromNpm: PropTypes.func.isRequired,
-  openPluginsConfig: PropTypes.func.isRequired
+  openPluginsConfig: PropTypes.func.isRequired,
+  category: PropTypes.string
 };
 
 export default connect(
@@ -178,7 +201,8 @@ export default connect(
     pluginBeingUninstalled,
     onTransitionEnd,
     tab,
-    npmError
+    npmError,
+    category
   }) => ({
     pluginsInstalled,
     pluginsFromNpm,
@@ -186,7 +210,8 @@ export default connect(
     pluginBeingUninstalled,
     onTransitionEnd,
     tab,
-    npmError
+    npmError,
+    category
   }), ({
     install,
     uninstall,

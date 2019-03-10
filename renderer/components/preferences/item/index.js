@@ -113,6 +113,7 @@ class Item extends React.Component {
             color: var(--${onClick ? 'link-color' : 'subtitle-color'});
             font-weight: ${onClick ? '500' : 'normal'};
             font-size: 1.2rem;
+            width: max-content;
           }
 
           .input {
