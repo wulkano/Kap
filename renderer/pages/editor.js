@@ -89,7 +89,7 @@ export default class EditorPage extends React.Component {
             height: 48px;
             z-index: 50;
             display: flex;
-            background: rgba(32,33,37,0.98);
+            background: rgba(0, 0, 0, 0.3);
           }
 
           @keyframes shake-left {
