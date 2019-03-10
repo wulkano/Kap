@@ -80,6 +80,7 @@ export default class Kap extends App {
               --input-border-color: var(--cloud);
 
               --icon-focus-background-color: var(--smoke);
+              --icon-color: var(--storm);
             }
 
             .dark {

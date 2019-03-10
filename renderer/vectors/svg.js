@@ -6,7 +6,7 @@ import {handleKeyboardActivation} from '../utils/inputs';
 
 class Svg extends React.Component {
   static defaultProps = {
-    fill: '#808080',
+    fill: 'var(--icon-color)',
     activeFill: '#007aff',
     hoverFill: '#606060',
     size: '24px',
