@@ -77,7 +77,7 @@ const Plugin = ({plugin, checked, disabled, onTransitionEnd, onClick, loading, o
       {
         openConfig && (
           <div className="config-icon">
-            <EditIcon size="18px" onClick={openConfig}/>
+            <EditIcon size="18px" tabIndex={tabIndex} onClick={openConfig}/>
             <style jsx>{`
               .config-icon {
                 margin-right: 16px;
