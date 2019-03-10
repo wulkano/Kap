@@ -42,7 +42,7 @@ PluginTitle.propTypes = {
 
 const getLink = ({homepage, links}) => homepage || (links && links.homepage);
 
-const Plugin = ({plugin, checked, disabled, onTransitionEnd, onClick, loading, openConfig}) => {
+const Plugin = ({plugin, checked, disabled, onTransitionEnd, onClick, loading, openConfig, tabIndex}) => {
   const warning = plugin.hasConfig && !plugin.isValid && (
     <div className="invalid" title="This plugin requires configuration">
       <ErrorIcon fill="#ff6059" hoverFill="#ff6059" onClick={openConfig}/>
@@ -88,6 +88,7 @@ const Plugin = ({plugin, checked, disabled, onTransitionEnd, onClick, loading, o
         )
       }
       <Switch
+        tabIndex={tabIndex}
         checked={checked}
         disabled={disabled}
         loading={loading}
@@ -104,7 +105,8 @@ Plugin.propTypes = {
   onTransitionEnd: PropTypes.func,
   onClick: PropTypes.func,
   loading: PropTypes.bool,
-  openConfig: PropTypes.func
+  openConfig: PropTypes.func,
+  tabIndex: PropTypes.number.isRequired
 };
 
 export default Plugin;

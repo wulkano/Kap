@@ -16,7 +16,8 @@ import Category from './category';
 class General extends React.Component {
   static defaultProps = {
     audioDevices: [],
-    kapturesDir: ''
+    kapturesDir: '',
+    category: 'general'
   }
 
   state = {}
@@ -52,7 +53,8 @@ class General extends React.Component {
       setOpenOnStartup,
       cropperShortcut,
       updateShortcut,
-      toggleShortcuts
+      toggleShortcuts,
+      category
     } = this.props;
 
     const {showCursorSupported} = this.state;
@@ -63,7 +65,7 @@ class General extends React.Component {
     }));
 
     const kapturesDirPath = tildify(kapturesDir);
-
+    const tabIndex = category === 'general' ? 0 : -1;
     const fpsOptions = [{label: '30 FPS', value: false}, {label: '60 FPS', value: true}];
 
     return (
@@ -77,6 +79,7 @@ class General extends React.Component {
               subtitle="Display the mouse cursor in your Kaptures"
             >
               <Switch
+                tabIndex={tabIndex}
                 checked={showCursor}
                 onClick={
                   () => {
@@ -93,6 +96,7 @@ class General extends React.Component {
           showCursorSupported &&
             <Item key="highlightClicks" subtitle="Highlight clicks">
               <Switch
+                tabIndex={tabIndex}
                 checked={highlightClicks}
                 disabled={!showCursor}
                 onClick={() => toggleSetting('highlightClicks')}
@@ -105,12 +109,16 @@ class General extends React.Component {
           title="Keyboard shortcuts"
           subtitle="Toggle and customise keyboard shortcuts"
         >
-          <Switch checked={recordKeyboardShortcut} onClick={toggleShortcuts}/>
+          <Switch tabIndex={tabIndex} checked={recordKeyboardShortcut} onClick={toggleShortcuts}/>
         </Item>
         {
           recordKeyboardShortcut &&
             <Item key="cropperShortcut" subtitle="Trigger Kap">
-              <ShortcutInput {...cropperShortcut} onChange={shortcut => updateShortcut('cropperShortcut', shortcut)}/>
+              <ShortcutInput
+                shortcut={cropperShortcut}
+                tabIndex={tabIndex}
+                onChange={shortcut => updateShortcut('cropperShortcut', shortcut)}
+              />
             </Item>
         }
         <Item
@@ -118,21 +126,21 @@ class General extends React.Component {
           title="Hide desktop icons"
           subtitle="Temporarily hide desktop icons while recording"
         >
-          <Switch checked={hideDesktopIcons} onClick={() => toggleSetting('hideDesktopIcons')}/>
+          <Switch tabIndex={tabIndex} checked={hideDesktopIcons} onClick={() => toggleSetting('hideDesktopIcons')}/>
         </Item>
         <Item
           key="doNotDisturb"
           title="Silence notifications"
           subtitle="Activate “Do Not Disturb” while recording"
         >
-          <Switch checked={doNotDisturb} onClick={() => toggleSetting('doNotDisturb')}/>
+          <Switch tabIndex={tabIndex} checked={doNotDisturb} onClick={() => toggleSetting('doNotDisturb')}/>
         </Item>
         <Item
           key="loopExports"
           title="Loop exports"
           subtitle="Infinitely loop exports when supported"
         >
-          <Switch checked={loopExports} onClick={() => toggleSetting('loopExports')}/>
+          <Switch tabIndex={tabIndex} checked={loopExports} onClick={() => toggleSetting('loopExports')}/>
         </Item>
         <Item
           key="recordAudio"
@@ -141,11 +149,13 @@ class General extends React.Component {
           subtitle="Record audio from input device"
         >
           <Switch
+            tabIndex={tabIndex}
             checked={recordAudio}
             onClick={() => toggleSetting('recordAudio')}/>
         </Item>
         <Item key="audioInputDeviceId" subtitle="Select input device">
           <Select
+            tabIndex={tabIndex}
             options={devices}
             selected={audioInputDeviceId}
             placeholder="Select Device"
@@ -158,6 +168,7 @@ class General extends React.Component {
           subtitle="Increased FPS impacts performance and file size"
         >
           <Select
+            tabIndex={tabIndex}
             options={fpsOptions}
             selected={record60fps}
             onSelect={value => toggleSetting('record60fps', value)}/>
@@ -167,14 +178,14 @@ class General extends React.Component {
           title="Allow analytics"
           subtitle="Help us improve Kap by sending anonymous usage stats"
         >
-          <Switch checked={allowAnalytics} onClick={() => toggleSetting('allowAnalytics')}/>
+          <Switch tabIndex={tabIndex} checked={allowAnalytics} onClick={() => toggleSetting('allowAnalytics')}/>
         </Item>
         <Item
           key="openOnStartup"
           title="Start automatically"
           subtitle="Launch Kap on system startup"
         >
-          <Switch checked={openOnStartup} onClick={setOpenOnStartup}/>
+          <Switch tabIndex={tabIndex} checked={openOnStartup} onClick={setOpenOnStartup}/>
         </Item>
         <Item
           key="pickKapturesDir"
@@ -183,7 +194,7 @@ class General extends React.Component {
           tooltip={kapturesDir}
           onSubtitleClick={this.openKapturesDir}
         >
-          <Button title="Choose" onClick={pickKapturesDir}/>
+          <Button tabIndex={tabIndex} title="Choose" onClick={pickKapturesDir}/>
         </Item>
       </Category>
     );
@@ -210,6 +221,7 @@ General.propTypes = {
   setOpenOnStartup: PropTypes.func.isRequired,
   updateShortcut: PropTypes.func.isRequired,
   toggleShortcuts: PropTypes.func.isRequired,
+  category: PropTypes.string,
   cropperShortcut: PropTypes.shape({
     metaKey: PropTypes.bool.isRequired,
     altKey: PropTypes.bool.isRequired,
@@ -235,7 +247,8 @@ export default connect(
     openOnStartup,
     allowAnalytics,
     loopExports,
-    cropperShortcut
+    cropperShortcut,
+    category
   }) => ({
     showCursor,
     highlightClicks,
@@ -250,7 +263,8 @@ export default connect(
     openOnStartup,
     allowAnalytics,
     loopExports,
-    cropperShortcut
+    cropperShortcut,
+    category
   }),
   ({
     toggleSetting,

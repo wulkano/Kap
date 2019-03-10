@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import {connect, PreferencesContainer} from '../../containers';
 import {SettingsIcon, PluginsIcon} from '../../vectors';
 
+import {handleKeyboardActivation} from '../../utils/inputs';
+
 const CATEGORIES = [
   {
     name: 'general',
@@ -30,8 +32,10 @@ class PreferencesNavigation extends React.Component {
             ({name, icon: Icon}) => (
               <div
                 key={name}
+                tabIndex={0}
                 className={classNames('nav-item', {active: category === name})}
                 onClick={() => selectCategory(name)}
+                onKeyDown={handleKeyboardActivation(() => selectCategory(name))}
               >
                 <Icon
                   size="2.4rem"
@@ -64,12 +68,22 @@ class PreferencesNavigation extends React.Component {
             line-height: 16px;
             text-transform: capitalize;
             border: 1px solid transparent;
+            outline: none;
           }
 
           .nav-item.active {
             color: #000000;
             border-color: rgba(0, 0, 0, 0.1);
             box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+          }
+
+          .nav-item:focus {
+            border-color: rgba(0, 0, 0, 0.1);
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+          }
+
+          .nav-item.active:focus {
+            border-color: rgba(0, 0, 0, 0.2);
           }
 
           span {
