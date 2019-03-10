@@ -131,7 +131,7 @@ class Config extends React.Component {
 
           footer .fade {
             position: absolute;
-            background: linear-gradient(-180deg, rgba(255,255,255,0) 0%, #fff 100%);
+            background: linear-gradient(-180deg, rgba(255,255,255,0) 0%, var(--background-color) 100%);
             width: 100%;
             height: 16px;
             top: 0;

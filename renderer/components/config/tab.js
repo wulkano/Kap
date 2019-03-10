@@ -16,7 +16,9 @@ const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
           input {
             outline: none;
             width: 100%;
-            border: 1px solid #ddd;
+            border: 1px solid var(--input-border-color);
+            background: var(--input-background-color);
+            color: var(--title-color);
             border-radius: 3px;
             box-sizing: border-box;
             height: 32px;
