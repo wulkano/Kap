@@ -67,6 +67,11 @@ export default class AboutPage extends React.Component {
             background-color: #ececec;
           }
 
+          .dark .container {
+            background-color: #313234;
+            color: #fff;
+          }
+
           .icon {
             width: 64px;
             height: 64px;
