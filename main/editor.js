@@ -94,7 +94,18 @@ const setOptions = options => {
 
 const getEditors = () => editors.values();
 
-ipc.answerRenderer('save-original', ({inputPath, outputPath}) => promisify(fs.copyFile)(inputPath, outputPath, fs.constants.COPYFILE_FICLONE));
+ipc.answerRenderer('save-original', async ({inputPath}) => {
+  const now = moment();
+
+  try {
+    await promisify(dialog.showSaveDialog)(BrowserWindow.getFocusedWindow(), {
+      defaultPath: `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.mp4`
+    });
+    // eslint-disable-next-line unicorn/catch-error-name
+  } catch (path) {
+    return promisify(fs.copyFile)(inputPath, path, fs.constants.COPYFILE_FICLONE);
+  }
+});
 
 module.exports = {
   openEditorWindow,

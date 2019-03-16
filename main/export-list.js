@@ -1,7 +1,8 @@
 /* eslint-disable array-element-newline */
 'use strict';
-const {dialog, ipcMain} = require('electron');
+const {dialog, ipcMain, BrowserWindow} = require('electron');
 const fs = require('fs');
+const {promisify} = require('util');
 const ipc = require('electron-better-ipc');
 const base64Img = require('base64-img');
 const tmp = require('tmp');
@@ -9,6 +10,7 @@ const ffmpeg = require('@ffmpeg-installer/ffmpeg');
 const util = require('electron-util');
 const execa = require('execa');
 const makeDir = require('make-dir');
+const moment = require('moment');
 
 const settings = require('./common/settings');
 const {track} = require('./common/analytics');
@@ -19,6 +21,7 @@ const {toggleExportMenuItem} = require('./menus');
 const Export = require('./export');
 
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
+const showSaveDialog = promisify(dialog.showSaveDialog);
 
 const filterMap = new Map([
   ['mp4', [{name: 'Movies', extensions: ['mp4']}]],
@@ -53,13 +56,23 @@ const getDragIcon = async inputPath => {
   return iconPath;
 };
 
-const saveSnapshot = async ({inputPath, outputPath, time}) => {
-  await execa(ffmpegPath, [
-    '-i', inputPath,
-    '-ss', time,
-    '-vframes', 1,
-    outputPath
-  ]);
+const saveSnapshot = async ({inputPath, time}) => {
+  const now = moment();
+
+  try {
+    await showSaveDialog(BrowserWindow.getFocusedWindow(), {
+      defaultPath: `Snapshot ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.jpg`
+    });
+    // Node's promisify expects an error-first callback, while electorn's showSaveDialog calls it with the file path
+    // eslint-disable-next-line unicorn/catch-error-name
+  } catch (outputPath) {
+    await execa(ffmpegPath, [
+      '-i', inputPath,
+      '-ss', time,
+      '-vframes', 1,
+      outputPath
+    ]);
+  }
 };
 
 class ExportList {
@@ -123,20 +136,21 @@ class ExportList {
 
       const filters = filterMap.get(options.format);
 
-      const filePath = dialog.showSaveDialog(exportsWindow, {
-        title: newExport.defaultFileName,
-        defaultPath: `${kapturesDir}/${newExport.defaultFileName}`,
-        filters
-      });
+      try {
+        await showSaveDialog(exportsWindow, {
+          title: newExport.defaultFileName,
+          defaultPath: `${kapturesDir}/${newExport.defaultFileName}`,
+          filters
+        });
 
-      if (filePath) {
-        newExport.context.targetFilePath = filePath;
-      } else {
         if (!wasExportsWindowOpen) {
           exportsWindow.close();
         }
 
         return;
+        // eslint-disable-next-line unicorn/catch-error-name
+      } catch (filePath) {
+        newExport.context.targetFilePath = filePath;
       }
     }
 
