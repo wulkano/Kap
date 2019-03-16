@@ -55,7 +55,7 @@ export default class Kap extends App {
           <Component {...pageProps}/>
           <style jsx global>{`
             :root {
-              --kap-blue: var(--kap);
+              --kap-blue: #007aff;
               --kap-blue-dark: #006be0;
               --kap-blue-light: #3287ff;
 
