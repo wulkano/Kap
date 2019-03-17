@@ -2,7 +2,7 @@
 'use strict';
 const {dialog, ipcMain, BrowserWindow} = require('electron');
 const fs = require('fs');
-const {promisify} = require('util');
+const pify = require('pify');
 const ipc = require('electron-better-ipc');
 const base64Img = require('base64-img');
 const tmp = require('tmp');
@@ -21,7 +21,7 @@ const {toggleExportMenuItem} = require('./menus');
 const Export = require('./export');
 
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
-const showSaveDialog = promisify(dialog.showSaveDialog);
+const showSaveDialog = pify(dialog.showSaveDialog, {errorFirst: false});
 
 const filterMap = new Map([
   ['mp4', [{name: 'Movies', extensions: ['mp4']}]],
@@ -59,13 +59,11 @@ const getDragIcon = async inputPath => {
 const saveSnapshot = async ({inputPath, time}) => {
   const now = moment();
 
-  try {
-    await showSaveDialog(BrowserWindow.getFocusedWindow(), {
-      defaultPath: `Snapshot ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.jpg`
-    });
-    // Node's promisify expects an error-first callback, while electorn's showSaveDialog calls it with the file path
-    // eslint-disable-next-line unicorn/catch-error-name
-  } catch (outputPath) {
+  const outputPath = await showSaveDialog(BrowserWindow.getFocusedWindow(), {
+    defaultPath: `Snapshot ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.jpg`
+  });
+
+  if (outputPath) {
     await execa(ffmpegPath, [
       '-i', inputPath,
       '-ss', time,
@@ -136,21 +134,20 @@ class ExportList {
 
       const filters = filterMap.get(options.format);
 
-      try {
-        await showSaveDialog(exportsWindow, {
-          title: newExport.defaultFileName,
-          defaultPath: `${kapturesDir}/${newExport.defaultFileName}`,
-          filters
-        });
+      const filePath = await showSaveDialog(exportsWindow, {
+        title: newExport.defaultFileName,
+        defaultPath: `${kapturesDir}/${newExport.defaultFileName}`,
+        filters
+      });
 
+      if (filePath) {
+        newExport.context.targetFilePath = filePath;
+      } else {
         if (!wasExportsWindowOpen) {
           exportsWindow.close();
         }
 
         return;
-        // eslint-disable-next-line unicorn/catch-error-name
-      } catch (filePath) {
-        newExport.context.targetFilePath = filePath;
       }
     }
 

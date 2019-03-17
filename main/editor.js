@@ -2,9 +2,9 @@
 
 const {BrowserWindow, dialog} = require('electron');
 const path = require('path');
-const {promisify} = require('util');
 const fs = require('fs');
 const EventEmitter = require('events');
+const pify = require('pify');
 const ipc = require('electron-better-ipc');
 const {is} = require('electron-util');
 const moment = require('moment');
@@ -97,13 +97,12 @@ const getEditors = () => editors.values();
 ipc.answerRenderer('save-original', async ({inputPath}) => {
   const now = moment();
 
-  try {
-    await promisify(dialog.showSaveDialog)(BrowserWindow.getFocusedWindow(), {
-      defaultPath: `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.mp4`
-    });
-    // eslint-disable-next-line unicorn/catch-error-name
-  } catch (path) {
-    return promisify(fs.copyFile)(inputPath, path, fs.constants.COPYFILE_FICLONE);
+  const path = await pify(dialog.showSaveDialog, {errorFirst: false})(BrowserWindow.getFocusedWindow(), {
+    defaultPath: `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.mp4`
+  });
+
+  if (path) {
+    return pify(fs.copyFile)(inputPath, path, fs.constants.COPYFILE_FICLONE);
   }
 });
 
