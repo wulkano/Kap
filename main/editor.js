@@ -21,6 +21,7 @@ const MIN_VIDEO_HEIGHT = MIN_VIDEO_WIDTH * VIDEO_ASPECT;
 const MIN_WINDOW_HEIGHT = MIN_VIDEO_HEIGHT + OPTIONS_BAR_HEIGHT;
 const editorEmitter = new EventEmitter();
 
+const showSaveDialog = pify(dialog.showSaveDialog, {errorFirst: false});
 const getEditorName = (filePath, isNewRecording) => isNewRecording ? `New Recording ${moment().format('YYYY-MM-DD')} at ${moment().format('H.mm.ss')}` : path.basename(filePath);
 
 const openEditorWindow = async (filePath, {recordedFps, isNewRecording, originalFilePath} = {}) => {
@@ -97,12 +98,12 @@ const getEditors = () => editors.values();
 ipc.answerRenderer('save-original', async ({inputPath}) => {
   const now = moment();
 
-  const path = await pify(dialog.showSaveDialog, {errorFirst: false})(BrowserWindow.getFocusedWindow(), {
+  const path = await showSaveDialog(BrowserWindow.getFocusedWindow(), {
     defaultPath: `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.mp4`
   });
 
   if (path) {
-    return pify(fs.copyFile)(inputPath, path, fs.constants.COPYFILE_FICLONE);
+    await pify(fs.copyFile)(inputPath, path, fs.constants.COPYFILE_FICLONE);
   }
 });
 
