@@ -38,7 +38,7 @@ class Export {
 
   get data() {
     return {
-      defaultFileName: this.defaultFileName,
+      defaultFileName: this.defaultFileName && (this.isDefault ? this.context.targetFilePath.replace(/^.*[\\\/]/, '') : this.defaultFileName),
       text: this.text,
       status: this.status,
       percentage: this.percentage,
