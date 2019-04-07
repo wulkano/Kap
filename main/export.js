@@ -7,6 +7,7 @@ const {track} = require('./common/analytics');
 const {convertTo} = require('./convert');
 const ShareServiceContext = require('./share-service-context');
 const Plugin = require('./plugin');
+const path = require('path');
 
 class Export {
   constructor(options) {
@@ -38,7 +39,7 @@ class Export {
 
   get data() {
     return {
-      defaultFileName: this.defaultFileName && (this.isDefault ? this.context.targetFilePath.replace(/^.*[\\/]/, '') : this.defaultFileName),
+      defaultFileName: this.defaultFileName && (this.isDefault ? path.basename(this.context.targetFilePath) : this.defaultFileName),
       text: this.text,
       status: this.status,
       percentage: this.percentage,
