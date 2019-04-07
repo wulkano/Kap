@@ -1,5 +1,6 @@
 'use strict';
 
+const path = require('path');
 const PCancelable = require('p-cancelable');
 const moment = require('moment');
 
@@ -7,7 +8,6 @@ const {track} = require('./common/analytics');
 const {convertTo} = require('./convert');
 const ShareServiceContext = require('./share-service-context');
 const Plugin = require('./plugin');
-const path = require('path');
 
 class Export {
   constructor(options) {
