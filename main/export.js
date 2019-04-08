@@ -39,7 +39,7 @@ class Export {
 
   get data() {
     return {
-      defaultFileName: this.defaultFileName && (this.isDefault ? path.basename(this.context.targetFilePath) : this.defaultFileName),
+      defaultFileName: this.isDefault ? path.basename(this.context.targetFilePath) : this.defaultFileName,
       text: this.text,
       status: this.status,
       percentage: this.percentage,
