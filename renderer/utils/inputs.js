@@ -196,6 +196,7 @@ const handleKeyboardActivation = (onClick, {isMenu} = {}) => event => {
     (isMenu && event.key === 'ArrowDown') ||
     (!isMenu && ['Enter', ' '].includes(event.key))
   ) {
+    event.preventDefault();
     if (onClick) {
       onClick(event);
     }

@@ -8,16 +8,16 @@ import formatTime from '../../../utils/format-time';
 
 class RightControls extends React.Component {
   render() {
-    const {isMuted, mute, unmute, format, duration} = this.props;
+    const {isMuted, mute, unmute, format, duration, hasAudio} = this.props;
     const canUnmute = !['gif', 'apng'].includes(format);
-
+    const unmuteColor = canUnmute && hasAudio ? '#fff' : 'rgba(255, 255, 255, 0.40)';
     return (
       <div className="container">
         <div className="time">{formatTime(duration)}</div>
         <div className="mute">
           {
-            isMuted ?
-              <VolumeOffIcon shadow fill="#fff" hoverFill="#fff" onClick={canUnmute ? unmute : undefined}/> :
+            isMuted || !hasAudio ?
+              <VolumeOffIcon shadow fill={unmuteColor} hoverFill={unmuteColor} onClick={canUnmute && hasAudio ? unmute : undefined}/> :
               <VolumeHighIcon shadow fill="#fff" hoverFill="#fff" onClick={mute}/>
           }
         </div>
@@ -50,6 +50,7 @@ class RightControls extends React.Component {
 }
 
 RightControls.propTypes = {
+  hasAudio: PropTypes.bool,
   isMuted: PropTypes.bool,
   mute: PropTypes.elementType,
   unmute: PropTypes.elementType,
@@ -59,6 +60,6 @@ RightControls.propTypes = {
 
 export default connect(
   [VideoContainer, EditorContainer],
-  ({isMuted, duration}, {format}) => ({isMuted, format, duration}),
+  ({isMuted, duration, hasAudio}, {format}) => ({hasAudio, isMuted, format, duration}),
   ({mute, unmute}) => ({mute, unmute})
 )(RightControls);

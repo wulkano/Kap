@@ -2,7 +2,7 @@
 
 const {app} = require('electron');
 const prepareNext = require('electron-next');
-const {is} = require('electron-util');
+const {is, enforceMacOSAppLocation} = require('electron-util');
 const log = require('electron-log');
 const {autoUpdater} = require('electron-updater');
 const toMilliseconds = require('@sindresorhus/to-milliseconds');
@@ -62,6 +62,9 @@ const checkForUpdates = () => {
   await app.whenReady();
 
   app.dock.hide();
+
+  // Ensure the app is in the Applications folder
+  enforceMacOSAppLocation();
 
   // Ensure all plugins are up to date
   initializePlugins();

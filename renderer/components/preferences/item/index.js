@@ -112,6 +112,7 @@ class Item extends React.Component {
             color: ${onClick ? '#007aff' : '#606060'};
             font-weight: ${onClick ? '500' : 'normal'};
             font-size: 1.2rem;
+            width: max-content;
           }
 
           .input {

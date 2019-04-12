@@ -3,15 +3,21 @@ const {globalShortcut} = require('electron');
 const ipc = require('electron-better-ipc');
 const shortcutToAccelerator = require('./utils/shortcut-to-accelerator');
 const store = require('./common/settings');
-const {openCropperWindow} = require('./cropper');
+const {openCropperWindow, isCropperOpen} = require('./cropper');
+
+const openCropper = () => {
+  if (!isCropperOpen()) {
+    openCropperWindow();
+  }
+};
 
 // All settings that should be loaded and handled as global accelerators
 const handlers = new Map([
-  ['cropperShortcut', openCropperWindow]
+  ['cropperShortcut', openCropper]
 ]);
 
 // If no action is passed, it resets
-const setCropperShortcutAction = (action = openCropperWindow) => {
+const setCropperShortcutAction = (action = openCropper) => {
   if (store.get('recordKeyboardShortcut') && store.has('cropperShortcut')) {
     handlers.set('cropperShortcut', action);
 
@@ -60,10 +66,11 @@ const initializeGlobalAccelerators = () => {
       console.error('Error unregestering old shortcutAccelerator', error);
     }
 
-    store.set(setting, shortcut);
-
     if (shortcut) {
+      store.set(setting, shortcut);
       registerShortcut(shortcut, handlers.get(setting));
+    } else {
+      store.delete(setting);
     }
   });
 

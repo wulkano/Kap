@@ -24,11 +24,16 @@ const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
             line-height: 32px;
             font-size: 12px;
             margin-top: 16px;
+            outline: none;
           }
 
           .has-errors {
             background: rgba(255,59,48,0.10);
             border-color: rgba(255,59,48,0.20);
+          }
+
+          input:focus {
+            border-color: #007aff;
           }
 
           div {
@@ -41,10 +46,10 @@ const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
 
   if (type === 'select') {
     const options = schema.enum.map(value => ({label: value, value}));
-    return <Select options={options} selected={value} onSelect={value => onChange(name, value)}/>;
+    return <Select tabIndex={0} options={options} selected={value} onSelect={value => onChange(name, value)}/>;
   }
 
-  return <Switch checked={value} onClick={() => onChange(name, !value)}/>;
+  return <Switch tabIndex={0} checked={value} onClick={() => onChange(name, !value)}/>;
 };
 
 ConfigInput.propTypes = {
