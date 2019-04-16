@@ -73,9 +73,9 @@ RightOptions.propTypes = {
   options: PropTypes.arrayOf(PropTypes.object),
   format: PropTypes.string,
   plugin: PropTypes.string,
-  selectFormat: PropTypes.func,
-  selectPlugin: PropTypes.func,
-  startExport: PropTypes.func
+  selectFormat: PropTypes.elementType,
+  selectPlugin: PropTypes.elementType,
+  startExport: PropTypes.elementType
 };
 
 export default connect(

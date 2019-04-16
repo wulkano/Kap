@@ -37,8 +37,8 @@ class Exports extends React.Component {
 
 Exports.propTypes = {
   exports: PropTypes.arrayOf(PropTypes.object),
-  cancel: PropTypes.func,
-  openInEditor: PropTypes.func,
+  cancel: PropTypes.elementType,
+  openInEditor: PropTypes.elementType,
   isMounted: PropTypes.bool
 };
 

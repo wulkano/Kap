@@ -75,7 +75,7 @@ EmptyTab.propTypes = {
   title: PropTypes.string,
   subtitle: PropTypes.string,
   link: PropTypes.string,
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.elementType.isRequired,
   showIcon: PropTypes.bool,
   image: PropTypes.string
 };

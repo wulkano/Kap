@@ -176,12 +176,12 @@ Item.propTypes = {
   ]),
   vertical: PropTypes.bool,
   errors: PropTypes.arrayOf(PropTypes.string),
-  onSubtitleClick: PropTypes.func,
+  onSubtitleClick: PropTypes.elementType,
   warning: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
   ]),
-  onClick: PropTypes.func,
+  onClick: PropTypes.elementType,
   last: PropTypes.bool,
   parentItem: PropTypes.bool
 };

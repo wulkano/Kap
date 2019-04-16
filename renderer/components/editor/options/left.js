@@ -121,9 +121,9 @@ class LeftOptions extends React.Component {
 LeftOptions.propTypes = {
   width: PropTypes.number,
   height: PropTypes.number,
-  changeDimension: PropTypes.func,
+  changeDimension: PropTypes.elementType,
   fps: PropTypes.number,
-  setFps: PropTypes.func,
+  setFps: PropTypes.elementType,
   originalFps: PropTypes.number,
   original: PropTypes.shape({
     width: PropTypes.number,

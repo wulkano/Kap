@@ -85,7 +85,7 @@ Handle.propTypes = {
   bottom: PropTypes.bool,
   left: PropTypes.bool,
   right: PropTypes.bool,
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.elementType.isRequired,
   ratioLocked: PropTypes.bool
 };
 
@@ -160,7 +160,7 @@ Handles.propTypes = {
   isActive: PropTypes.bool,
   width: PropTypes.number,
   height: PropTypes.number,
-  startResizing: PropTypes.func.isRequired,
+  startResizing: PropTypes.elementType.isRequired,
   showHandles: PropTypes.bool,
   ratioLocked: PropTypes.bool,
   willStartRecording: PropTypes.bool,

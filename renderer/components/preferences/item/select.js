@@ -125,7 +125,7 @@ Select.propTypes = {
     label: PropTypes.string,
     value: PropTypes.any
   })),
-  onSelect: PropTypes.func.isRequired,
+  onSelect: PropTypes.elementType.isRequired,
   selected: PropTypes.any,
   placeholder: PropTypes.string,
   noOptionsMessage: PropTypes.string,

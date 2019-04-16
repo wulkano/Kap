@@ -72,7 +72,7 @@ class Select extends React.Component {
 }
 
 Select.propTypes = {
-  onChange: PropTypes.func,
+  onChange: PropTypes.elementType,
   options: PropTypes.arrayOf(PropTypes.object),
   selected: PropTypes.any
 };
