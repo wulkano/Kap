@@ -157,7 +157,7 @@ class Plugins {
   }
 
   async getFromNpm() {
-    const url = 'https://api.npms.io/v2/search?q=keywords:kap-plugin';
+    const url = 'https://api.npms.io/v2/search?q=keywords:kap-plugin+not:deprecated';
     const response = await got(url, {json: true});
     const installed = this._pluginNames();
 
