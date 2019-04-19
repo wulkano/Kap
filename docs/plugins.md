@@ -123,10 +123,10 @@ config: {
 
 [Read more about JSON Schema](https://spacetelescope.github.io/understanding-json-schema/)
 
-## Removing your Kap Plugin
+## Removing your Kap plugin
 
-Since npm doesn't allow you to remove packages from the registery, Kap looks for non-deprecated packages to indicate that the plugin is maintained and should be used.
+Since npm doesn't allow you to remove packages from the registery, Kap filters out deprecated packages in the plugin list.
 
-When you are ready to retire your Kap plugin, simply run `npm deprecate kap-plugin "Not maintained"`
+When you are ready to retire your Kap plugin, simply run `npm deprecate kap-plugin "Deprecated"`.
 
 [Read more about the `npm-deprecate` command](https://docs.npmjs.com/cli/deprecate)
