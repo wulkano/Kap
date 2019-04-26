@@ -3,7 +3,7 @@
 const os = require('os');
 const {Menu, app, dialog, BrowserWindow} = require('electron');
 const {openNewGitHubIssue, appMenu} = require('electron-util');
-const ipc = require('electron-better-ipc');
+const {ipcMain: ipc} = require('electron-better-ipc');
 
 const {supportedVideoExtensions} = require('./common/constants');
 const {openPrefsWindow} = require('./preferences');
@@ -116,7 +116,7 @@ appMenuItem.submenu[0] = aboutItem;
 const applicationMenuTemplate = [
   appMenuItem,
   {
-    label: 'File',
+    role: 'fileMenu',
     submenu: [
       openFileItem,
       {
@@ -142,7 +142,7 @@ const applicationMenuTemplate = [
     role: 'editMenu'
   },
   {
-    role: 'window',
+    role: 'windowMenu',
     submenu: [
       {
         role: 'minimize'

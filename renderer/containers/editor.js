@@ -98,7 +98,7 @@ export default class EditorContainer extends Container {
 
   saveOriginal = () => {
     const {filePath, originalFilePath} = this.state;
-    const ipc = require('electron-better-ipc');
+    const {ipcRenderer: ipc} = require('electron-better-ipc');
     ipc.callMain('save-original', {inputPath: originalFilePath || filePath});
   }
 
@@ -157,7 +157,7 @@ export default class EditorContainer extends Container {
     const time = this.videoContainer.state.currentTime;
     const {filePath} = this.state;
 
-    const ipc = require('electron-better-ipc');
+    const {ipcRenderer: ipc} = require('electron-better-ipc');
 
     ipc.callMain('export-snapshot', {
       inputPath: filePath,
@@ -190,7 +190,7 @@ export default class EditorContainer extends Container {
       originalFps
     };
 
-    const ipc = require('electron-better-ipc');
+    const {ipcRenderer: ipc} = require('electron-better-ipc');
 
     ipc.callMain('export', data);
     ipc.callMain('update-usage', {format, plugin: pluginName});

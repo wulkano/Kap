@@ -27,7 +27,10 @@ const openPrefsWindow = async () => {
     maximizable: false,
     fullscreenable: false,
     titleBarStyle: 'hiddenInset',
-    show: false
+    show: false,
+    webPreferences: {
+      nodeIntegration: true
+    }
   });
 
   const titlebarHeight = 85;

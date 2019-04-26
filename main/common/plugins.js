@@ -4,7 +4,7 @@ const electron = require('electron');
 const got = require('got');
 const execa = require('execa');
 const makeDir = require('make-dir');
-const ipc = require('electron-better-ipc');
+const {ipcMain: ipc} = require('electron-better-ipc');
 
 const {app, Notification} = electron;
 

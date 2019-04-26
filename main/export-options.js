@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const electron = require('electron');
 const Store = require('electron-store');
-const ipc = require('electron-better-ipc');
+const {ipcMain: ipc} = require('electron-better-ipc');
 const makeDir = require('make-dir');
 
 const {app} = electron;

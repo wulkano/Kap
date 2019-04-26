@@ -1,7 +1,7 @@
 'use strict';
 
 const {BrowserWindow} = require('electron');
-const ipc = require('electron-better-ipc');
+const {ipcMain: ipc} = require('electron-better-ipc');
 const pEvent = require('p-event');
 
 const loadRoute = require('./utils/routes');
@@ -19,7 +19,10 @@ const openConfigWindow = async pluginName => {
     titleBarStyle: 'hiddenInset',
     show: false,
     parent: prefsWindow,
-    modal: true
+    modal: true,
+    webPreferences: {
+      nodeIntegration: true
+    }
   });
 
   loadRoute(configWindow, 'config');

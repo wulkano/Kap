@@ -18,7 +18,7 @@ export default class AboutPage extends React.Component {
   }
 
   componentDidUpdate() {
-    const ipc = require('electron-better-ipc');
+    const {ipcRenderer: ipc} = require('electron-better-ipc');
     ipc.callMain('about-ready');
   }
 

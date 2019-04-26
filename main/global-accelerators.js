@@ -1,6 +1,6 @@
 'use strict';
 const {globalShortcut} = require('electron');
-const ipc = require('electron-better-ipc');
+const {ipcMain: ipc} = require('electron-better-ipc');
 const shortcutToAccelerator = require('./utils/shortcut-to-accelerator');
 const store = require('./common/settings');
 const {openCropperWindow, isCropperOpen} = require('./cropper');
