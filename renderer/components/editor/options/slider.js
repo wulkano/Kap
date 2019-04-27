@@ -52,7 +52,7 @@ class Slider extends React.Component {
           .value {
             width: 100%;
             height: 100%;
-            background: hsla(0, 0%, 100%, 0.1);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 4px;
             padding: 4px 8px;
             text-align: center;
@@ -63,6 +63,7 @@ class Slider extends React.Component {
             border: none;
             z-index: 50;
             position: relative;
+            box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.2);
           }
 
           .value:hover,
