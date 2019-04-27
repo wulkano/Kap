@@ -17,7 +17,10 @@ const Button = ({title, onClick, tabIndex}) => (
       line-height: 2.4rem;
       outline: none;
 
-      :hover,
+      :hover {
+        border-color: var(--input-hover-border-color);
+      }
+
       :focus {
         border-color: var(--kap);
       }

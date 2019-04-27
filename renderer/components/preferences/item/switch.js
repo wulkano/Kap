@@ -32,6 +32,7 @@ class Switch extends React.Component {
             transition: 0.2s ease-in-out;
             box-sizing: border-box;
             outline: none;
+            box-shadow: var(--switch-box-shadow);
           }
 
           .switch:focus {
@@ -64,7 +65,7 @@ class Switch extends React.Component {
 
           .disabled .toggle {
             margin-top: 0.2rem;
-            border: 1px solid #ccc;
+            border: 1px solid var(--switch-disabled-color);
             background-color: transparent;
           }
 

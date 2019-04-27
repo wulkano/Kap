@@ -8,17 +8,21 @@ const Key = ({children}) => (
     {children}
     <style jsx>{`
     span {
+      color: var(--title-color);
       display: flex;
       justify-content: center;
       align-items: center;
+      font-weight: 500;
       font-size: 12px;
-      background: #ffffff;
+      background: var(--shortcut-key-background);
       border-radius: 4px 4px 4px 4px;
-      border: 1px solid #DDDDDD;
+      border: 1px solid var(--shortcut-key-border);
       height: 20px;
       width: 20px;
       margin-right: 2px;
       box-sizing: border-box;
+      box-shadow: var(--shortcut-box-shadow);
+      test-transform: uppercase;
     }
   `}</style>
   </span>
@@ -130,7 +134,7 @@ export default class ShortcutInput extends React.Component {
         </div>
         <button type="button" tabIndex={tabIndex} onClick={this.clearShortcut}>
           <svg style={{width: '20px', height: '20px'}} viewBox="0 0 24 24">
-            <path fill="#808080" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+            <path fill="var(--icon-color)" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
           </svg>
         </button>
         <style jsx>{`
@@ -187,6 +191,10 @@ export default class ShortcutInput extends React.Component {
 
           button:focus {
             border-color: var(--kap);
+          }
+
+          button:hover {
+            --icon-color: var(--navigation-item-hover-color);
           }
         `}</style>
       </div>

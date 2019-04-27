@@ -81,13 +81,21 @@ export default class Kap extends App {
               --row-divider-color: #f1f1f1;
               --input-background-color: var(--white);
               --input-border-color: var(--cloud);
+              --input-hover-border-color: #ccc;
+              --input-shadow: none;
 
               --icon-focus-background-color: var(--smoke);
               --icon-color: var(--storm);
+              --icon-hover-color: var(--dust);
+              --switch-box-shadow: none;
+              --switch-disabled-color: #ccc;
+              --shortcut-key-background: #fff;
+              --shortcut-key-border: #dddddd;
+              --shortcut-box-shadow: none;
             }
 
             .dark {
-              --kap: var(--kap-blue-light);
+              --kap: #2182f0;
               --window-background-color: rgba(0, 0, 0, 0.3);
 
               --window-header-background: linear-gradient(-180deg, rgba(68, 68, 68, 0.8) 0%, rgba(51, 51, 51, 0.8) 100%);
@@ -99,8 +107,16 @@ export default class Kap extends App {
               --row-divider-color: rgba(0, 0, 0, 0.2);
               --input-background-color: rgba(255, 255, 255, 0.1);
               --input-border-color: transparent;
+              --input-shadow: 0 0 1px 0 rgba(0,0,0,0.40), 0 1px 1px 0 rgba(0,0,0,0.10), inset 0 1px 0 0 rgba(255,255,255,0.10);
 
               --icon-focus-background-color: rgba(255, 255, 255, 0.1);
+              --icon-hover-color: var(--cloud);
+              --switch-box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.2), 0px 1px 0px 0px rgba(0, 0, 0, 0.1);
+              --switch-disabled-color: #666;
+              --shortcut-key-border: transparent;
+              --shortcut-key-background: #606060;
+              --shortcut-box-shadow: 0 0 1px 0 rgba(0,0,0,0.40), 0 1px 1px 0 rgba(0,0,0,0.10), inset 0 1px 0 0 rgba(255,255,255,0.10);
+              --input-hover-border-color: #666;
             }
           `}</style>
         </div>

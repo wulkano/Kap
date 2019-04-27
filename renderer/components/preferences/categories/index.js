@@ -45,6 +45,7 @@ class Categories extends React.Component {
               flex: 1;
               display: flex;
               overflow-x: hidden;
+              background: var(--background-color);
             }
 
             .switcher {

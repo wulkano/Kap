@@ -8,7 +8,7 @@ class Svg extends React.Component {
   static defaultProps = {
     fill: 'var(--icon-color)',
     activeFill: 'var(--kap)',
-    hoverFill: '#606060',
+    hoverFill: 'var(--icon-hover-color)',
     size: '24px',
     active: false,
     viewBox: '0 0 24 24',
