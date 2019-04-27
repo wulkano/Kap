@@ -147,7 +147,7 @@ Slider.propTypes = {
   value: PropTypes.number,
   max: PropTypes.number,
   min: PropTypes.number,
-  onChange: PropTypes.func
+  onChange: PropTypes.elementType
 };
 
 export default Slider;

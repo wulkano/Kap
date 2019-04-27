@@ -1,6 +1,4 @@
-import electron from 'electron';
 import {Container} from 'unstated';
-import moment from 'moment';
 import {shake} from '../utils/inputs';
 
 const isMuted = format => ['gif', 'apng'].includes(format);
@@ -100,20 +98,8 @@ export default class EditorContainer extends Container {
 
   saveOriginal = () => {
     const {filePath, originalFilePath} = this.state;
-    const {remote} = electron;
-
-    const now = moment();
-
-    const path = remote.dialog.showSaveDialog(remote.BrowserWindow.getFocusedWindow(), {
-      defaultPath: `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.mp4`
-    });
-
     const ipc = require('electron-better-ipc');
-
-    ipc.callMain('save-original', {
-      inputPath: originalFilePath || filePath,
-      outputPath: path
-    });
+    ipc.callMain('save-original', {inputPath: originalFilePath || filePath});
   }
 
   selectFormat = format => {
@@ -170,19 +156,11 @@ export default class EditorContainer extends Container {
   getSnapshot = () => {
     const time = this.videoContainer.state.currentTime;
     const {filePath} = this.state;
-    const {remote} = electron;
-
-    const now = moment();
-
-    const path = remote.dialog.showSaveDialog(remote.BrowserWindow.getFocusedWindow(), {
-      defaultPath: `Snapshot ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.jpg`
-    });
 
     const ipc = require('electron-better-ipc');
 
     ipc.callMain('export-snapshot', {
       inputPath: filePath,
-      outputPath: path,
       time
     });
   }

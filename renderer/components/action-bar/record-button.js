@@ -211,7 +211,7 @@ RecordButton.propTypes = {
   screenWidth: PropTypes.number,
   screenHeight: PropTypes.number,
   displayId: PropTypes.number,
-  willStartRecording: PropTypes.func
+  willStartRecording: PropTypes.elementType
 };
 
 export default connect(

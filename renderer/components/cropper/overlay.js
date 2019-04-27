@@ -134,9 +134,9 @@ class Overlay extends React.Component {
 }
 
 Overlay.propTypes = {
-  onMouseUp: PropTypes.func.isRequired,
-  setCursor: PropTypes.func.isRequired,
-  startPicking: PropTypes.func.isRequired,
+  onMouseUp: PropTypes.elementType.isRequired,
+  setCursor: PropTypes.elementType.isRequired,
+  startPicking: PropTypes.elementType.isRequired,
   x: PropTypes.number,
   y: PropTypes.number,
   width: PropTypes.number,

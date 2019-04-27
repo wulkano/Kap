@@ -48,8 +48,8 @@ class LeftControls extends React.Component {
 }
 
 LeftControls.propTypes = {
-  play: PropTypes.func,
-  pause: PropTypes.func,
+  play: PropTypes.elementType,
+  pause: PropTypes.elementType,
   isPaused: PropTypes.bool,
   currentTime: PropTypes.number
 };

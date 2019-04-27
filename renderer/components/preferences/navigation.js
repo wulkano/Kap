@@ -99,7 +99,7 @@ class PreferencesNavigation extends React.Component {
 
 PreferencesNavigation.propTypes = {
   category: PropTypes.string,
-  selectCategory: PropTypes.func.isRequired
+  selectCategory: PropTypes.elementType.isRequired
 };
 
 export default connect(

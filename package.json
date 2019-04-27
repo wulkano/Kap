@@ -58,6 +58,7 @@
     "npm": "^6.8.0",
     "p-cancelable": "^1.0.0",
     "p-event": "^2.3.1",
+    "pify": "^4.0.1",
     "prop-types": "^15.7.2",
     "react": "^16.8.2",
     "react-dom": "^16.8.2",

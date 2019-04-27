@@ -22,7 +22,7 @@ class KeyboardNumberInput extends React.Component {
 }
 
 KeyboardNumberInput.propTypes = {
-  onKeyDown: PropTypes.func,
+  onKeyDown: PropTypes.elementType,
   min: PropTypes.number,
   max: PropTypes.number
 };

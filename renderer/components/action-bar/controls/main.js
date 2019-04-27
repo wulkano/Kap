@@ -73,8 +73,8 @@ class Left extends React.Component {
 }
 
 Left.propTypes = {
-  toggleAdvanced: PropTypes.func.isRequired,
-  selectApp: PropTypes.func.isRequired,
+  toggleAdvanced: PropTypes.elementType.isRequired,
+  selectApp: PropTypes.elementType.isRequired,
   selectedApp: PropTypes.string,
   advanced: PropTypes.bool
 };
@@ -113,8 +113,8 @@ class Right extends React.Component {
 }
 
 Right.propTypes = {
-  enterFullscreen: PropTypes.func.isRequired,
-  exitFullscreen: PropTypes.func.isRequired,
+  enterFullscreen: PropTypes.elementType.isRequired,
+  exitFullscreen: PropTypes.elementType.isRequired,
   isFullscreen: PropTypes.bool,
   advanced: PropTypes.bool
 };

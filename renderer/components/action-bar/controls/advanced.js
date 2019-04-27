@@ -170,12 +170,12 @@ class Left extends React.Component {
 }
 
 Left.propTypes = {
-  toggleAdvanced: PropTypes.func.isRequired,
-  toggleRatioLock: PropTypes.func.isRequired,
+  toggleAdvanced: PropTypes.elementType.isRequired,
+  toggleRatioLock: PropTypes.elementType.isRequired,
   ratioLocked: PropTypes.bool,
   isResizing: PropTypes.bool,
   ratio: PropTypes.array,
-  setRatio: PropTypes.func.isRequired,
+  setRatio: PropTypes.elementType.isRequired,
   advanced: PropTypes.bool
 };
 
@@ -309,10 +309,10 @@ Right.propTypes = {
   ratio: PropTypes.array,
   ratioLocked: PropTypes.bool,
   advanced: PropTypes.bool,
-  setBounds: PropTypes.func.isRequired,
-  swapDimensions: PropTypes.func.isRequired,
-  setWidth: PropTypes.func.isRequired,
-  setHeight: PropTypes.func.isRequired,
+  setBounds: PropTypes.elementType.isRequired,
+  swapDimensions: PropTypes.elementType.isRequired,
+  setWidth: PropTypes.elementType.isRequired,
+  setHeight: PropTypes.elementType.isRequired,
   screenWidth: PropTypes.number,
   screenHeight: PropTypes.number
 };

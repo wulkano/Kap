@@ -37,7 +37,7 @@ const PluginTitle = ({title, label, onClick}) => (
 PluginTitle.propTypes = {
   title: PropTypes.string,
   label: PropTypes.string,
-  onClick: PropTypes.func
+  onClick: PropTypes.elementType
 };
 
 const getLink = ({homepage, links}) => homepage || (links && links.homepage);
@@ -102,8 +102,8 @@ Plugin.propTypes = {
   plugin: PropTypes.object,
   checked: PropTypes.bool,
   disabled: PropTypes.bool,
-  onTransitionEnd: PropTypes.func,
-  onClick: PropTypes.func,
+  onTransitionEnd: PropTypes.elementType,
+  onClick: PropTypes.elementType,
   loading: PropTypes.bool,
   openConfig: PropTypes.func,
   tabIndex: PropTypes.number.isRequired

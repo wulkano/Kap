@@ -108,7 +108,7 @@ Svg.propTypes = {
   active: PropTypes.bool,
   children: PropTypes.any,
   viewBox: PropTypes.string,
-  onClick: PropTypes.func,
+  onClick: PropTypes.elementType,
   shadow: PropTypes.bool,
   tabIndex: PropTypes.number,
   isMenu: PropTypes.bool
