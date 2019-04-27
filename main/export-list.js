@@ -1,9 +1,9 @@
 /* eslint-disable array-element-newline */
 'use strict';
-const {dialog, ipcMain, BrowserWindow} = require('electron');
+const {dialog, BrowserWindow} = require('electron');
 const fs = require('fs');
 const pify = require('pify');
-const ipc = require('electron-better-ipc');
+const {ipcMain: ipc} = require('electron-better-ipc');
 const base64Img = require('base64-img');
 const tmp = require('tmp');
 const ffmpeg = require('@ffmpeg-installer/ffmpeg');
@@ -235,7 +235,7 @@ ipc.answerRenderer('open-export', createdAt => exportList.openExport(createdAt))
 
 ipc.answerRenderer('export-snapshot', saveSnapshot);
 
-ipcMain.on('drag-export', async (event, createdAt) => {
+ipc.on('drag-export', async (event, createdAt) => {
   const exportItem = exportList.getExport(createdAt);
   const file = exportItem && exportItem.data.filePath;
 

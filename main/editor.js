@@ -5,7 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const EventEmitter = require('events');
 const pify = require('pify');
-const ipc = require('electron-better-ipc');
+const {ipcMain: ipc} = require('electron-better-ipc');
 const {is} = require('electron-util');
 const moment = require('moment');
 
@@ -40,6 +40,7 @@ const openEditorWindow = async (filePath, {recordedFps, isNewRecording, original
     height: MIN_WINDOW_HEIGHT,
     frame: false,
     webPreferences: {
+      nodeIntegration: true,
       webSecurity: !is.development // Disable webSecurity in dev to load video over file:// protocol while serving over insecure http, this is not needed in production where we use file:// protocol for html serving.
     },
     transparent: true,

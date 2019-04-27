@@ -16,7 +16,7 @@ export default class EditorPage extends React.Component {
   wasPaused = false;
 
   componentDidMount() {
-    const ipc = require('electron-better-ipc');
+    const {ipcRenderer: ipc} = require('electron-better-ipc');
 
     ipc.answerMain('file', async ({filePath, fps, originalFilePath}) => {
       await new Promise((resolve, reject) => {

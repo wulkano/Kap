@@ -43,7 +43,10 @@ const openCropper = (display, activeDisplayId) => {
     moveable: false,
     frame: false,
     transparent: true,
-    show: false
+    show: false,
+    webPreferences: {
+      nodeIntegration: true
+    }
   });
 
   loadRoute(cropper, 'cropper');

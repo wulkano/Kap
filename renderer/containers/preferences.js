@@ -14,7 +14,7 @@ export default class PreferencesContainer extends Container {
     this.settings = this.remote.require('./common/settings');
     this.plugins = this.remote.require('./common/plugins');
     this.track = this.remote.require('./common/analytics').track;
-    this.ipc = require('electron-better-ipc');
+    this.ipc = require('electron-better-ipc').ipcRenderer;
 
     const pluginsInstalled = this.plugins.getInstalled().sort((a, b) => a.prettyName.localeCompare(b.prettyName));
 
