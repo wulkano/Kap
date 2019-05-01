@@ -6,24 +6,75 @@ const Store = require('electron-store');
 const {audioDevices} = require('aperture');
 
 const store = new Store({
-  defaults: {
-    kapturesDir: `${homedir()}/Movies/Kaptures`,
-    allowAnalytics: true,
-    showCursor: true,
-    highlightClicks: false,
-    hideDesktopIcons: false,
-    record60fps: false,
-    loopExports: true,
-    recordKeyboardShortcut: true,
-    doNotDisturb: false,
-    recordAudio: false,
-    audioInputDeviceId: null,
+  schema: {
+    kapturesDir: {
+      type: 'string',
+      default: `${homedir()}/Movies/Kaptures`
+    },
+    allowAnalytics: {
+      type: 'boolean',
+      default: true
+    },
+    showCursor: {
+      type: 'boolean',
+      default: true
+    },
+    highlightClicks: {
+      type: 'boolean',
+      default: false
+    },
+    hideDesktopIcons: {
+      type: 'boolean',
+      default: false
+    },
+    record60fps: {
+      type: 'boolean',
+      default: false
+    },
+    loopExports: {
+      type: 'boolean',
+      default: true
+    },
+    recordKeyboardShortcut: {
+      type: 'boolean',
+      default: true
+    },
+    doNotDisturb: {
+      type: 'boolean',
+      default: false
+    },
+    recordAudio: {
+      type: 'boolean',
+      default: false
+    },
+    audioInputDeviceId: {
+      type: ['string', 'null'],
+      default: null
+    },
     cropperShortcut: {
-      metaKey: true,
-      altKey: false,
-      ctrlKey: false,
-      shiftKey: true,
-      character: '5'
+      type: 'object',
+      properties: {
+        metaKey: {
+          type: 'boolean',
+          default: true
+        },
+        altKey: {
+          type: 'boolean',
+          default: false
+        },
+        ctrlKey: {
+          type: 'boolean',
+          default: false
+        },
+        shiftKey: {
+          type: 'boolean',
+          default: true
+        },
+        character: {
+          type: 'string',
+          default: '5'
+        }
+      }
     }
   }
 });
