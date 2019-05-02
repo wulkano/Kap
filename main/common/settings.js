@@ -48,7 +48,10 @@ const store = new Store({
       default: false
     },
     audioInputDeviceId: {
-      type: ['string', 'null'],
+      type: [
+        'string',
+        'null'
+      ],
       default: null
     },
     cropperShortcut: {
