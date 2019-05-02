@@ -251,7 +251,7 @@ const callExportsWindow = (channel, data) => {
   const exportsWindow = getExportsWindow();
 
   if (exportsWindow) {
-    ipc.callRenderer(exportsWindow, channel, data);
+    exportsWindow.webContents.send(channel, data);
   }
 };
 
