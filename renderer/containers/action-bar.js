@@ -94,9 +94,11 @@ export default class ActionBarContainer extends Container {
       const {advanced, screenWidth, screenHeight} = this.state;
       this.updateSettings({advanced: !advanced});
       if (!advanced) {
+        const width = screenWidth * 0.2;
+        const height = width * 0.75; // 4:3
         this.cropperContainer.setSize({
-          width: screenWidth * 0.2,
-          height: screenHeight * 0.2
+          width,
+          height
         });
       }
     }
