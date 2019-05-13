@@ -91,7 +91,7 @@ export default class ActionBarContainer extends Container {
 
   toggleAdvanced = () => {
     if (!this.cropperContainer.state.isFullscreen) {
-      const {advanced, screenWidth, screenHeight} = this.state;
+      const {advanced, screenWidth} = this.state;
       this.updateSettings({advanced: !advanced});
       if (!advanced) {
         const width = screenWidth * 0.2;
