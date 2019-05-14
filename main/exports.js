@@ -22,7 +22,10 @@ const openExportsWindow = async () => {
       show: false,
       frame: false,
       transparent: true,
-      vibrancy: 'ultra-dark'
+      vibrancy: 'ultra-dark',
+      webPreferences: {
+        nodeIntegration: true
+      }
     });
 
     const titlebarHeight = 37;

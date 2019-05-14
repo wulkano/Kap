@@ -11,7 +11,7 @@ export default class ConfigPage extends React.Component {
   state = {pluginName: ''}
 
   componentDidMount() {
-    const ipc = require('electron-better-ipc');
+    const {ipcRenderer: ipc} = require('electron-better-ipc');
 
     ipc.answerMain('plugin', pluginName => {
       configContainer.setPlugin(pluginName);

@@ -15,7 +15,7 @@ export default class PreferencesPage extends React.Component {
 
   componentDidMount() {
     preferencesContainer.mount(this.setOverlay);
-    const ipc = require('electron-better-ipc');
+    const {ipcRenderer: ipc} = require('electron-better-ipc');
     ipc.answerMain('open-plugin-config', preferencesContainer.openPluginsConfig);
   }
 

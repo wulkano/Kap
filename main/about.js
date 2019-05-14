@@ -1,6 +1,6 @@
 const electron = require('electron');
 const {is} = require('electron-util');
-const ipc = require('electron-better-ipc');
+const {ipcMain: ipc} = require('electron-better-ipc');
 const delay = require('delay');
 
 const loadRoute = require('./utils/routes');
@@ -28,6 +28,7 @@ const openAboutWindow = () => {
     title: '',
     center: true,
     webPreferences: {
+      nodeIntegration: true,
       webSecurity: !is.development // Disable webSecurity in dev to load video over file:// protocol while serving over insecure http, this is not needed in production where we use file:// protocol for html serving.
     },
     show: false
