@@ -150,6 +150,7 @@ class Config extends React.Component {
             justify-content: center;
             flex: 1;
             outline: none;
+            border: none;
           }
         `}</style>
       </div>

@@ -27,6 +27,7 @@ const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
             font-size: 12px;
             margin-top: 16px;
             outline: none;
+            box-shadow: var(--input-shadow);
           }
 
           .has-errors {

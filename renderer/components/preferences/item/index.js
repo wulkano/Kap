@@ -119,6 +119,7 @@ class Item extends React.Component {
           .input {
             display: flex;
             align-items: center;
+            margin-left: ${vertical ? '0px' : '8px'};
           }
 
           .experimental {
