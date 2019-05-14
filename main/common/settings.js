@@ -90,7 +90,7 @@ const audioInputDeviceId = store.get('audioInputDeviceId');
 (async () => {
   const devices = await audioDevices();
 
-  if (!devices.some(device => device.id === audioInputDeviceId)) {
+  if (devices && !devices.some(device => device.id === audioInputDeviceId)) {
     const [device] = devices;
     if (device) {
       store.set('audioInputDeviceId', device.id);
