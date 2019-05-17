@@ -16,7 +16,8 @@ export default class ExportsContainer extends Container {
       isMounted: true
     });
 
-    ipc.answerMain('update-export', this.update);
+    const {ipcRenderer} = require('electron');
+    ipcRenderer.on('update-export', (_, updates) => this.update(updates));
   }
 
   update = updates => {
