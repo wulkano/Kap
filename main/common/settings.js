@@ -94,7 +94,7 @@ const audioInputDeviceId = store.get('audioInputDeviceId');
 
   if (!Array.isArray(devices)) {
     const Sentry = require('../utils/sentry');
-    Sentry.captureMessage(`devices is not an array: ${JSON.stringify(devices)}`);
+    Sentry.captureException(new Error(`devices is not an array: ${JSON.stringify(devices)}`));
     return;
   }
 
