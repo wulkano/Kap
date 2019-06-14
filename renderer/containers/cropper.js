@@ -66,7 +66,7 @@ export default class CropperContainer extends Container {
 
   setDisplay = display => {
     const {width: screenWidth, height: screenHeight, isActive, id, cropper = {}} = display;
-    const {x, y, width, height, ratio} = cropper;
+    const {x, y, width, height, ratio = [4, 3]} = cropper;
 
     setScreenSize(screenWidth, screenHeight);
     this.setState({
@@ -79,7 +79,7 @@ export default class CropperContainer extends Container {
       y: y || screenHeight / 2,
       width,
       height,
-      ratio: ratio || [4, 3]
+      ratio
     });
     this.actionBarContainer.setInputValues({width, height});
   }
