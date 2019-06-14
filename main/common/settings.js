@@ -82,6 +82,8 @@ const store = new Store({
   }
 });
 
+module.exports = store;
+
 store.set('cropper', {});
 store.set('actionBar', {});
 
@@ -90,6 +92,12 @@ const audioInputDeviceId = store.get('audioInputDeviceId');
 (async () => {
   const devices = await audioDevices();
 
+  if (!Array.isArray(devices)) {
+    const Sentry = require('../utils/sentry');
+    Sentry.captureException(new Error(`devices is not an array: ${JSON.stringify(devices)}`));
+    return;
+  }
+
   if (!devices.some(device => device.id === audioInputDeviceId)) {
     const [device] = devices;
     if (device) {
@@ -97,5 +105,3 @@ const audioInputDeviceId = store.get('audioInputDeviceId');
     }
   }
 })();
-
-module.exports = store;
