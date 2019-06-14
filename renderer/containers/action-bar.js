@@ -93,6 +93,7 @@ export default class ActionBarContainer extends Container {
     if (!this.cropperContainer.state.isFullscreen) {
       const {advanced, screenWidth} = this.state;
       this.updateSettings({advanced: !advanced});
+
       if (!advanced) {
         const width = screenWidth * 0.2;
         const height = width * 0.75; // 4:3
