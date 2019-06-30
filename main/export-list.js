@@ -251,7 +251,8 @@ const callExportsWindow = (channel, data) => {
   const exportsWindow = getExportsWindow();
 
   if (exportsWindow) {
-    ipc.callRenderer(exportsWindow, channel, data);
+    // TODO(karaggeorge): Investigate why `ipc.callRenderer(exportsWindow, channel, data);` is not working here.
+    exportsWindow.webContents.send(channel, data);
   }
 };
 
