@@ -67,7 +67,7 @@ export default class CropperContainer extends Container {
 
   setDisplay = display => {
     const {width: screenWidth, height: screenHeight, isActive, id, cropper = {}} = display;
-    const {x, y, width, height, ratio} = cropper;
+    const {x, y, width, height, ratio = [4, 3]} = cropper;
 
     setScreenSize(screenWidth, screenHeight);
     this.setState({
@@ -78,9 +78,9 @@ export default class CropperContainer extends Container {
       displayId: id,
       x: x || screenWidth / 2,
       y: y || screenHeight / 2,
-      width: width || 0,
-      height: height || 0,
-      ratio: ratio || [1, 1]
+      width,
+      height,
+      ratio
     });
     this.actionBarContainer.setInputValues({width, height});
   }
@@ -122,6 +122,16 @@ export default class CropperContainer extends Container {
       displayId
     });
     this.setState(updates);
+  }
+
+  setSize = ({width: defaultWidth, height: defaultHeight}) => {
+    let {width, height} = this.state;
+    width = width || defaultWidth;
+    height = height || defaultHeight;
+    const updates = {width, height};
+    this.settings.set('cropper', updates);
+    this.setState(updates);
+    this.actionBarContainer.setInputValues(updates);
   }
 
   bindCursor = cursorContainer => {
