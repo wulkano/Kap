@@ -41,7 +41,10 @@ export default class EditorContainer extends Container {
 
       if (name === 'width') {
         const min = Math.max(1, Math.ceil(ratio));
-        if (val < min) {
+
+        if (ignoreEmpty) {
+          updates.width = val;
+        } else if (val < min) {
           shake(currentTarget, {className: 'shake-left'});
           updates.width = min;
         } else if (val > original.width) {
@@ -54,7 +57,10 @@ export default class EditorContainer extends Container {
         updates.height = Math.round(updates.width / ratio);
       } else {
         const min = Math.max(1, Math.ceil(1 / ratio));
-        if (val < min) {
+
+        if (ignoreEmpty) {
+          updates.height = val;
+        } else if (val < min) {
           shake(currentTarget, {className: 'shake-right'});
           updates.height = min;
         } else if (val > original.height) {
