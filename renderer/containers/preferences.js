@@ -12,7 +12,7 @@ export default class PreferencesContainer extends Container {
     tab: 'discover'
   }
 
-  mount = setOverlay => {
+  mount = async setOverlay => {
     this.setOverlay = setOverlay;
     this.settings = this.remote.require('./common/settings');
     this.plugins = this.remote.require('./common/plugins');
@@ -24,14 +24,14 @@ export default class PreferencesContainer extends Container {
     const {getAudioDevices} = this.remote.require('./common/aperture');
     const {audioInputDeviceId} = this.settings.store;
 
+    await this.fetchFromNpm();
+
     this.setState({
       ...this.settings.store,
       openOnStartup: this.remote.app.getLoginItemSettings().openAtLogin,
       pluginsInstalled,
       isMounted: true
     });
-
-    this.fetchFromNpm();
 
     (async () => {
       const audioDevices = await getAudioDevices();
