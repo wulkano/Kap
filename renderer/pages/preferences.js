@@ -14,9 +14,10 @@ export default class PreferencesPage extends React.Component {
   state = {overlay: false}
 
   componentDidMount() {
-    preferencesContainer.mount(this.setOverlay);
     const {ipcRenderer: ipc} = require('electron-better-ipc');
     ipc.answerMain('open-plugin-config', preferencesContainer.openPluginsConfig);
+    ipc.answerMain('options', preferencesContainer.setNavigation);
+    ipc.answerMain('mount', () => preferencesContainer.mount(this.setOverlay));
   }
 
   setOverlay = overlay => this.setState({overlay});

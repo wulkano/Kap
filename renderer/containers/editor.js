@@ -123,7 +123,15 @@ export default class EditorContainer extends Container {
     this.setState({format, plugin: newPlugin});
   }
 
-  selectPlugin = plugin => this.setState({plugin})
+  selectPlugin = plugin => {
+    if (plugin === 'open-plugins') {
+      const {ipcRenderer: ipc} = require('electron-better-ipc');
+
+      ipc.callMain('open-preferences', {category: 'plugins', tab: 'discover'});
+    } else {
+      this.setState({plugin});
+    }
+  }
 
   setFps = (value, target, {ignoreEmpty = true} = {}) => {
     const {fps, lastValidFps} = this.state;
