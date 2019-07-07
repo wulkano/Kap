@@ -165,29 +165,39 @@ export default class CropperPage extends React.Component {
             --record-button-border-color: var(--red);
             --record-button-background: #ff6059 radial-gradient(ellipse 100% 0% at 50% 0%, #ff6159 0%, #ff5f52 50%, #ff3a30 100%);
             --record-button-focus-background: #ff6059 radial-gradient(ellipse 100% 0% at 50% 0%, #ff6159 0%, #ff5f52 50%, #ff3a30 100%);
+            --record-button-focus-background-cropper: var(--record-button-focus-background);
             --record-button-focus-outter-background: #ffffff;
             --record-button-focus-outter-border: var(--record-button-border-color);
             --record-button-ripple-color: var(--red);
             --record-button-fill-background: var(--record-button-background);
+            --record-button-inner-background: #fff;
+            --record-button-inner-background-cropper: #fff;
+            --record-button-inner-border-width: 0px;
 
             --input-hover-border-color: #ccc;
             --input-border-color: #dbdbdb;
             --button-active-color: #f7f7f7;
+            --record-button-inner-border: transparent;
           }
 
           .dark {
             --action-bar-box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.4);
             --action-bar-background: #222222;
             --action-bar-border: 1px solid rgba(0, 0, 0, 0.8);
+            --record-button-inner-border-width: 2px;
 
             --icon-color: rgba(255, 255, 255, 0.6);
 
-            --record-button-border-color: rgba(255, 255, 255, 0.3);
-            --record-button-background: transparent;
-            --record-button-focus-background: var(--action-bar-background);
-            --record-button-focus-outter-background: var(--record-button-border-color);
-            --record-button-focus-outter-border: transparent;
-            --record-button-fill-background: rgba(255, 255, 255, 0.4);
+            --record-button-border-color: transparent;
+            --record-button-inner-background: transparent;
+            --record-button-inner-border: rgba(255, 255, 255, 0.8);
+            --record-button-background: rgba(255, 255, 255, 0.4);
+            --record-button-focus-background: transparent;
+            --record-button-focus-background-cropper: #fff;
+            --record-button-focus-outter-background: transparent;
+            --record-button-focus-outter-border: rgba(255, 255, 255, 0.4);
+            --record-button-fill-background: transparent;
+            --record-button-inner-background-cropper: rgba(255, 255, 255, 0.8);
             --record-button-ripple-color: rgba(255, 255, 255, 0.7);
 
             --input-hover-border-color: transparent;
