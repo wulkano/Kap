@@ -159,7 +159,7 @@ export default class ShortcutInput extends React.Component {
           }
 
           .box:focus-within {
-            border-color: var(--kap);
+            border-color: var(--input-focus-border-color);
           }
 
           input {
@@ -168,6 +168,7 @@ export default class ShortcutInput extends React.Component {
             outline: none !important;
             border: none;
             background: transparent;
+            color: var(--title-color);
           }
 
           .invalid:focus-within {
