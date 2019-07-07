@@ -92,10 +92,12 @@ export default class Kap extends App {
               --shortcut-key-background: #fff;
               --shortcut-key-border: #dddddd;
               --shortcut-box-shadow: none;
+              --input-focus-border-color: #ccc;
+              --cropper-button-background-color: transparent;
             }
 
             .dark {
-              --kap: #2182f0;
+              --kap: #fff;
               --window-background-color: rgba(0, 0, 0, 0.3);
 
               --window-header-background: linear-gradient(-180deg, rgba(68, 68, 68, 0.8) 0%, rgba(51, 51, 51, 0.8) 100%);
@@ -104,6 +106,7 @@ export default class Kap extends App {
               --title-color: var(--white);
               --subtitle-color: #ffffff99;
 
+              --cropper-button-background-color: var(--input-background-color);
               --row-divider-color: rgba(0, 0, 0, 0.2);
               --input-background-color: rgba(255, 255, 255, 0.1);
               --input-border-color: transparent;
@@ -117,6 +120,7 @@ export default class Kap extends App {
               --shortcut-key-background: #606060;
               --shortcut-box-shadow: 0 0 1px 0 rgba(0,0,0,0.40), 0 1px 1px 0 rgba(0,0,0,0.10), inset 0 1px 0 0 rgba(255,255,255,0.10);
               --input-hover-border-color: #666;
+              --input-focus-border-color: rgba(255, 255, 255, 0.2);
             }
           `}</style>
         </div>

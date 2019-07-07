@@ -49,7 +49,11 @@ const {className: keyboardInputClass, styles: keyboardInputStyles} = css.resolve
 
   :focus {
     outline: none;
-    border: 1px solid var(--kap);
+    border: 1px solid var(--input-focus-border-color);
+  }
+
+  :hover {
+    border-color: var(--input-hover-border-color);
   }
 `;
 
@@ -136,7 +140,7 @@ class Left extends React.Component {
 
           .select:focus {
             outline: none;
-            border: 1px solid var(--kap);
+            border: 1px solid var(--input-focus-border-color);
           }
 
           .select span {
@@ -154,14 +158,14 @@ class Left extends React.Component {
             height: 32px;
             padding: 3px 3px;
             box-sizing: border-box;
-            background: ${ratioLocked ? 'var(--button-active-color)' : 'transparent'};
+            background: ${ratioLocked ? 'var(--button-active-color)' : 'var(--cropper-button-background-color)'};
             border: 1px solid var(--input-border-color);
             border-radius: 4px;
           }
 
           .link:focus {
             outline: none;
-            border: 1px solid var(--kap);
+            border: 1px solid var(--input-focus-border-color);
           }
         `}</style>
       </div>
@@ -286,6 +290,7 @@ class Right extends React.Component {
             width: 32px;
             height: 32px;
             padding: 3px 3px;
+            background: var(--cropper-button-background-color);
             box-sizing: border-box;
             border: 1px solid var(--input-border-color);
             border-radius: 4px;
@@ -294,7 +299,7 @@ class Right extends React.Component {
 
           .swap:focus {
             outline: none;
-            border: 1px solid var(--kap);
+            border: 1px solid var(--input-focus-border-color);
           }
         `}</style>
       </div>
