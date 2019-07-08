@@ -11,6 +11,7 @@ const util = require('electron-util');
 const execa = require('execa');
 const makeDir = require('make-dir');
 const moment = require('moment');
+const {dirname} = require('path');
 
 const settings = require('./common/settings');
 const {track} = require('./common/analytics');
@@ -22,6 +23,7 @@ const Export = require('./export');
 
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
 const showSaveDialog = pify(dialog.showSaveDialog, {errorFirst: false});
+let lastSavedDir = null;
 
 const filterMap = new Map([
   ['mp4', [{name: 'Movies', extensions: ['mp4']}]],
@@ -136,12 +138,13 @@ class ExportList {
 
       const filePath = await showSaveDialog(exportsWindow, {
         title: newExport.defaultFileName,
-        defaultPath: `${kapturesDir}/${newExport.defaultFileName}`,
+        defaultPath: `${lastSavedDir || kapturesDir}/${newExport.defaultFileName}`,
         filters
       });
 
       if (filePath) {
         newExport.context.targetFilePath = filePath;
+        lastSavedDir = dirname(filePath);
       } else {
         if (!wasExportsWindowOpen) {
           exportsWindow.close();
