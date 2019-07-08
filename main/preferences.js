@@ -43,8 +43,8 @@ const openPrefsWindow = async options => {
 
   loadRoute(prefsWindow, 'preferences');
 
+  await pEvent(prefsWindow.webContents, 'did-finish-load');
   if (options) {
-    await pEvent(prefsWindow.webContents, 'did-finish-load');
     ipc.callRenderer(prefsWindow, 'options', options);
   }
 
