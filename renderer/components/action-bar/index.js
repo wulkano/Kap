@@ -8,6 +8,8 @@ import MainControls from './controls/main';
 import AdvancedControls from './controls/advanced';
 import RecordButton from './record-button';
 
+const TRANSITION_DURATION = 0.2;
+
 class ActionBar extends React.Component {
   static defaultProps = {
     cropperWidth: 0,
@@ -32,7 +34,7 @@ class ActionBar extends React.Component {
       cropperHeight
     } = this.props;
 
-    const className = classNames('action-bar', {moving: isMoving, hidden, advanced});
+    const className = classNames('action-bar', {moving: isMoving, hidden, 'is-advanced': advanced});
 
     return (
       <div
@@ -40,14 +42,14 @@ class ActionBar extends React.Component {
         onMouseDown={startMoving}
       >
         <div className="actions">
-          <MainControls.Left/>
-          <AdvancedControls.Left/>
+          <div className="main"><MainControls.Left/></div>
+          <div className="advanced"><AdvancedControls.Left/></div>
         </div>
         <RecordButton
           cropperExists={Boolean(cropperWidth && cropperHeight)}/>
         <div className="actions">
-          <MainControls.Right/>
-          <AdvancedControls.Right/>
+          <div className="main"><MainControls.Right/></div>
+          <div className="advanced"><AdvancedControls.Right/></div>
         </div>
 
         <style jsx>{`
@@ -78,17 +80,43 @@ class ActionBar extends React.Component {
             }
 
             .actions {
+              position: relative;
               flex: 1;
-              display: flex;
-              flex-direction: column;
-              height: 128px;
+              height: 64px;
               width: 200px;
-              margin-top: 64px;
-              transition: margin 0.25s ease-in-out;
             }
 
-            .action-bar.advanced .actions {
-              margin-top: -64px;
+            .main,
+            .advanced {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              transition: opacity ${TRANSITION_DURATION}s ease-in-out;
+            }
+
+            .main {
+              transition-delay: ${TRANSITION_DURATION}s;
+              z-index: 15;
+            }
+
+            .action-bar.is-advanced .main {
+              transition-delay: 0s;
+              opacity: 0;
+              z-index: 12;
+            }
+
+            .advanced {
+              transition-delay: 0s;
+              z-index: 12;
+              opacity: 0;
+            }
+
+            .action-bar.is-advanced .advanced {
+              transition-delay: ${TRANSITION_DURATION}s;
+              opacity: 1;
+              z-index: 15;
             }
         `}</style>
       </div>
