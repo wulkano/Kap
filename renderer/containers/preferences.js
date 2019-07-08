@@ -7,9 +7,12 @@ const SETTINGS_ANALYTICS_BLACKLIST = ['kapturesDir'];
 export default class PreferencesContainer extends Container {
   remote = electron.remote || false;
 
-  state = {}
+  state = {
+    category: 'general',
+    tab: 'discover'
+  }
 
-  mount = setOverlay => {
+  mount = async setOverlay => {
     this.setOverlay = setOverlay;
     this.settings = this.remote.require('./common/settings');
     this.plugins = this.remote.require('./common/plugins');
@@ -21,16 +24,14 @@ export default class PreferencesContainer extends Container {
     const {getAudioDevices} = this.remote.require('./common/aperture');
     const {audioInputDeviceId} = this.settings.store;
 
+    await this.fetchFromNpm();
+
     this.setState({
       ...this.settings.store,
-      category: 'general',
-      tab: 'discover',
       openOnStartup: this.remote.app.getLoginItemSettings().openAtLogin,
       pluginsInstalled,
       isMounted: true
     });
-
-    this.fetchFromNpm();
 
     (async () => {
       const audioDevices = await getAudioDevices();
@@ -47,6 +48,8 @@ export default class PreferencesContainer extends Container {
       this.setState(updates);
     })();
   }
+
+  setNavigation = ({category, tab}) => this.setState({category, tab})
 
   fetchFromNpm = async () => {
     try {

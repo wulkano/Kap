@@ -3,13 +3,14 @@
 const {BrowserWindow, ipcMain} = require('electron');
 const pEvent = require('p-event');
 
+const {ipcMain: ipc} = require('electron-better-ipc');
 const {closeAllCroppers} = require('./cropper');
 const loadRoute = require('./utils/routes');
 const {track} = require('./common/analytics');
 
 let prefsWindow = null;
 
-const openPrefsWindow = async () => {
+const openPrefsWindow = async options => {
   track('preferences/opened');
   closeAllCroppers();
 
@@ -42,6 +43,12 @@ const openPrefsWindow = async () => {
 
   loadRoute(prefsWindow, 'preferences');
 
+  await pEvent(prefsWindow.webContents, 'did-finish-load');
+  if (options) {
+    ipc.callRenderer(prefsWindow, 'options', options);
+  }
+
+  ipc.callRenderer(prefsWindow, 'mount');
   await pEvent(ipcMain, 'preferences-ready');
   prefsWindow.show();
   return prefsWindow;
@@ -52,6 +59,8 @@ const closePrefsWindow = () => {
     prefsWindow.close();
   }
 };
+
+ipc.answerRenderer('open-preferences', openPrefsWindow);
 
 module.exports = {
   openPrefsWindow,

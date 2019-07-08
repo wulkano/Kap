@@ -82,7 +82,7 @@ const exportHistoryItem = {
 const preferencesItem = {
   label: 'Preferences…',
   accelerator: 'Command+,',
-  click: openPrefsWindow
+  click: () => openPrefsWindow()
 };
 
 const cogMenuTemplate = [
