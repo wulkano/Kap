@@ -1,6 +1,6 @@
 'use strict';
 
-const path = require('path');
+const {basename, parse} = require('path');
 const PCancelable = require('p-cancelable');
 const moment = require('moment');
 
@@ -22,7 +22,7 @@ class Export {
     this.isDefault = options.isDefault;
 
     const now = moment();
-    this.defaultFileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.${this.format}`;
+    this.defaultFileName = options.isNewRecording ? `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.${this.format}` : `${parse(this.inputPath).name}.${this.format}`;
 
     this.context = new ShareServiceContext({
       format: this.format,
@@ -39,7 +39,7 @@ class Export {
 
   get data() {
     return {
-      defaultFileName: this.isDefault ? path.basename(this.context.targetFilePath) : this.defaultFileName,
+      defaultFileName: this.isDefault ? basename(this.context.targetFilePath) : this.defaultFileName,
       text: this.text,
       status: this.status,
       percentage: this.percentage,
