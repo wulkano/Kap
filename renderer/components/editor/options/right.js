@@ -11,6 +11,13 @@ class RightOptions extends React.Component {
     const formatOptions = options ? options.map(({format, prettyFormat}) => ({value: format, label: prettyFormat})) : [];
     const pluginOptions = options ? options.find(option => option.format === format).plugins.map(plugin => ({value: plugin.title, label: plugin.title})) : [];
 
+    if (pluginOptions.length < 2) {
+      pluginOptions.push({
+        label: 'Get plugins…',
+        value: 'open-plugins'
+      });
+    }
+
     return (
       <div className="container">
         <div className="label">Destination</div>

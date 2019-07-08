@@ -2,6 +2,7 @@
 'use strict';
 const {dialog, BrowserWindow} = require('electron');
 const fs = require('fs');
+const {dirname} = require('path');
 const pify = require('pify');
 const {ipcMain: ipc} = require('electron-better-ipc');
 const base64Img = require('base64-img');
@@ -22,6 +23,7 @@ const Export = require('./export');
 
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
 const showSaveDialog = pify(dialog.showSaveDialog, {errorFirst: false});
+let lastSavedDirectory;
 
 const filterMap = new Map([
   ['mp4', [{name: 'Movies', extensions: ['mp4']}]],
@@ -136,12 +138,13 @@ class ExportList {
 
       const filePath = await showSaveDialog(exportsWindow, {
         title: newExport.defaultFileName,
-        defaultPath: `${kapturesDir}/${newExport.defaultFileName}`,
+        defaultPath: `${lastSavedDirectory || kapturesDir}/${newExport.defaultFileName}`,
         filters
       });
 
       if (filePath) {
         newExport.context.targetFilePath = filePath;
+        lastSavedDirectory = dirname(filePath);
       } else {
         if (!wasExportsWindowOpen) {
           exportsWindow.close();

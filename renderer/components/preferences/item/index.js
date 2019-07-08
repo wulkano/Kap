@@ -70,9 +70,9 @@ class Item extends React.Component {
             {children}
           </div>
         </div>
-        {
-          errors && errors.length > 0 && <div className="errors">{ errors.map(e => <div key={e}>{e}</div>) }</div>
-        }
+        {errors && errors.length > 0 && (
+          <div className="errors">{errors.map(e => <div key={e}>{e}</div>)}</div>
+        )}
         <style jsx>{`
           .container {
             display: flex;

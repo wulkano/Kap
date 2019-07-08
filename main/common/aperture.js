@@ -10,12 +10,17 @@ const {closePrefsWindow} = require('../preferences');
 const {setRecordingTray, disableTray, resetTray} = require('../tray');
 const {disableCroppers, setRecordingCroppers, closeAllCroppers} = require('../cropper');
 const {setCropperShortcutAction} = require('../global-accelerators');
+
+// eslint-disable-next-line no-unused-vars
 const {convertToH264} = require('../utils/encoding');
+
 const settings = require('./settings');
 const {track} = require('./analytics');
 
 const aperture = createAperture();
 const {audioDevices, videoCodecs} = createAperture;
+
+// eslint-disable-next-line no-unused-vars
 const recordHevc = videoCodecs.has('hevc');
 
 let wasDoNotDisturbAlreadyEnabled;
@@ -23,13 +28,38 @@ let lastUsedSettings;
 
 let past;
 
+const cleanup = () => {
+  const {
+    hideDesktopIcons,
+    doNotDisturb
+  } = lastUsedSettings;
+
+  closeAllCroppers();
+  resetTray();
+
+  if (hideDesktopIcons) {
+    desktopIcons.show();
+  }
+
+  if (doNotDisturb && !wasDoNotDisturbAlreadyEnabled) {
+    dnd.disable();
+  }
+
+  setCropperShortcutAction();
+};
+
 const startRecording = async options => {
+  if (past) {
+    return;
+  }
+
+  past = Date.now();
+
   closePrefsWindow();
   disableTray();
   disableCroppers();
 
   const {cropperBounds, screenBounds, displayId} = options;
-  past = Date.now();
 
   cropperBounds.y = screenBounds.height - (cropperBounds.y + cropperBounds.height);
 
@@ -68,9 +98,10 @@ const startRecording = async options => {
     }
   }
 
-  if (recordHevc) {
-    apertureOpts.videoCodec = 'hevc';
-  }
+  // TODO: figure out how to correctly process hevc videos with ffmpeg
+  // if (recordHevc) {
+  //   apertureOpts.videoCodec = 'hevc';
+  // }
 
   console.log(`Collected settings after ${(Date.now() - past) / 1000}s`);
 
@@ -92,30 +123,36 @@ const startRecording = async options => {
 
   try {
     await aperture.startRecording(apertureOpts);
-
-    const startTime = (Date.now() - past) / 1000;
-    if (startTime > 3) {
-      track(`recording/started/${startTime}`);
-    } else {
-      track('recording/started');
-    }
-
-    console.log(`Started recording after ${startTime}s`);
-    setRecordingCroppers();
-    setRecordingTray(stopRecording);
-    setCropperShortcutAction(stopRecording);
-    past = Date.now();
   } catch (error) {
     track('recording/stopped/error');
-    // This prevents the button from being reset, since the recording has not yet started
-    // This delay is due to internal framework delays in aperture native code
-    if (error.message.includes('stopRecording')) {
-      console.log('Recording not yet started, can\'t stop recording before it actually started');
-      return;
-    }
-
     dialog.showErrorBox('Recording error', error.message);
+    past = null;
+    return;
   }
+
+  const startTime = (Date.now() - past) / 1000;
+  if (startTime > 3) {
+    track(`recording/started/${startTime}`);
+  } else {
+    track('recording/started');
+  }
+
+  console.log(`Started recording after ${startTime}s`);
+  setRecordingCroppers();
+  setRecordingTray(stopRecording);
+  setCropperShortcutAction(stopRecording);
+  past = Date.now();
+
+  // Track aperture errors after recording has started, to avoid kap freezing if something goes wrong
+  aperture.recorder.catch(error => {
+    // Make sure it doesn't catch the error of ending the recording
+    if (past) {
+      track('recording/stopped/error');
+      dialog.showErrorBox('Recording error', error.message);
+      past = null;
+      cleanup();
+    }
+  });
 };
 
 const stopRecording = async () => {
@@ -127,35 +164,29 @@ const stopRecording = async () => {
   console.log(`Stopped recording after ${(Date.now() - past) / 1000}s`);
   past = null;
 
+  let filePath;
+
   try {
-    track('recording/stopped');
-    closeAllCroppers();
-    setCropperShortcutAction();
-    resetTray();
+    filePath = await aperture.stopRecording();
+  } catch (error) {
+    track('recording/stopped/error');
+    dialog.showErrorBox('Recording error', error.message);
+    return;
+  }
+
+  const {recordedFps} = lastUsedSettings;
+
+  try {
+    cleanup();
   } finally {
-    const filePath = await aperture.stopRecording();
-
-    const {
-      recordedFps,
-      hideDesktopIcons,
-      doNotDisturb
-    } = lastUsedSettings;
-
-    if (hideDesktopIcons) {
-      desktopIcons.show();
-    }
-
-    if (doNotDisturb && !wasDoNotDisturbAlreadyEnabled) {
-      dnd.disable();
-    }
-
     track('editor/opened/recording');
 
-    if (recordHevc) {
-      openEditorWindow(await convertToH264(filePath), {recordedFps, isNewRecording: true, originalFilePath: filePath});
-    } else {
-      openEditorWindow(filePath, {recordedFps, isNewRecording: true});
-    }
+    // TODO: bring this back when we figure out how to convert hevc files
+    // if (recordHevc) {
+    //   openEditorWindow(await convertToH264(filePath), {recordedFps, isNewRecording: true, originalFilePath: filePath});
+    // } else {
+    openEditorWindow(filePath, {recordedFps, isNewRecording: true});
+    // }
   }
 };
 
