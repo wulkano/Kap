@@ -2,6 +2,7 @@
 'use strict';
 const {dialog, BrowserWindow} = require('electron');
 const fs = require('fs');
+const {dirname} = require('path');
 const pify = require('pify');
 const {ipcMain: ipc} = require('electron-better-ipc');
 const base64Img = require('base64-img');
@@ -11,7 +12,6 @@ const util = require('electron-util');
 const execa = require('execa');
 const makeDir = require('make-dir');
 const moment = require('moment');
-const {dirname} = require('path');
 
 const settings = require('./common/settings');
 const {track} = require('./common/analytics');
