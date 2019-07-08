@@ -74,7 +74,6 @@ class Left extends React.Component {
 
 Left.propTypes = {
   toggleAdvanced: PropTypes.elementType.isRequired,
-  selectApp: PropTypes.elementType.isRequired,
   selectedApp: PropTypes.string,
   advanced: PropTypes.bool
 };
@@ -82,7 +81,7 @@ Left.propTypes = {
 MainControls.Left = connect(
   [CropperContainer, ActionBarContainer],
   ({selectedApp}, {advanced}) => ({selectedApp, advanced}),
-  ({selectApp}, {toggleAdvanced}) => ({selectApp, toggleAdvanced})
+  (_, {toggleAdvanced}) => ({toggleAdvanced})
 )(Left);
 
 class Right extends React.Component {
