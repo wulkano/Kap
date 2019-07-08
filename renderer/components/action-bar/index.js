@@ -133,7 +133,6 @@ ActionBar.propTypes = {
   hidden: PropTypes.bool,
   advanced: PropTypes.bool,
   isMoving: PropTypes.bool,
-  isRecording: PropTypes.bool,
   cropperWidth: PropTypes.number,
   cropperHeight: PropTypes.number
 };

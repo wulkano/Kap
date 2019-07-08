@@ -6,11 +6,11 @@ import {connect, VideoContainer} from '../../../containers';
 import Preview from './preview';
 
 class PlayBar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {hoverTime: 0};
-    this.progress = React.createRef();
-  }
+  state = {
+    hoverTime: 0
+  };
+
+  progress = React.createRef();
 
   getTimeFromEvent = event => {
     const {startTime, endTime} = this.props;

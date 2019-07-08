@@ -74,7 +74,8 @@ class Left extends React.Component {
 
 Left.propTypes = {
   toggleAdvanced: PropTypes.elementType.isRequired,
-  selectApp: PropTypes.elementType.isRequired,
+  // TODO: Is this actuall unused? If so, remove it.
+  selectApp: PropTypes.elementType.isRequired, // eslint-disable-line react/no-unused-prop-types
   selectedApp: PropTypes.string,
   advanced: PropTypes.bool
 };
