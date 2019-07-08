@@ -46,10 +46,12 @@ export default class ConfigPage extends React.Component {
 
           :root {
             --background-color: #ffffff;
+            --button-color: var(--kap);
           }
 
           .dark .cover-window {
             --background-color: #313234;
+            --button-color: #2182f0;
           }
 
           .cover-window {

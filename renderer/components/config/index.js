@@ -142,7 +142,7 @@ class Config extends React.Component {
             height: 32px;
             line-height: 16px;
             margin: 0 16px 16px 16px;
-            background: var(--kap);
+            background: var(--button-color);
             border-radius: 3px;
             color: #fff;
             display: flex;
