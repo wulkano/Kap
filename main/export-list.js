@@ -23,7 +23,7 @@ const Export = require('./export');
 
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
 const showSaveDialog = pify(dialog.showSaveDialog, {errorFirst: false});
-let lastSavedDirectory = null;
+let lastSavedDirectory;
 
 const filterMap = new Map([
   ['mp4', [{name: 'Movies', extensions: ['mp4']}]],
