@@ -23,7 +23,7 @@ const Export = require('./export');
 
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
 const showSaveDialog = pify(dialog.showSaveDialog, {errorFirst: false});
-let lastSavedDir = null;
+let lastSavedDirectory = null;
 
 const filterMap = new Map([
   ['mp4', [{name: 'Movies', extensions: ['mp4']}]],
@@ -138,13 +138,13 @@ class ExportList {
 
       const filePath = await showSaveDialog(exportsWindow, {
         title: newExport.defaultFileName,
-        defaultPath: `${lastSavedDir || kapturesDir}/${newExport.defaultFileName}`,
+        defaultPath: `${lastSavedDirectory || kapturesDir}/${newExport.defaultFileName}`,
         filters
       });
 
       if (filePath) {
         newExport.context.targetFilePath = filePath;
-        lastSavedDir = dirname(filePath);
+        lastSavedDirectory = dirname(filePath);
       } else {
         if (!wasExportsWindowOpen) {
           exportsWindow.close();
