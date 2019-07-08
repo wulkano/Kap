@@ -12,11 +12,11 @@ export default class EditorContainer extends Container {
     this.videoContainer = videoContainer;
   }
 
-  mount = (filePath, fps = 15, originalFilePath, resolve) => {
+  mount = (filePath, fps = 15, originalFilePath, isNewRecording, resolve) => {
     const src = `file://${filePath}`;
     this.finishLoading = resolve;
 
-    this.setState({src, filePath, originalFilePath, fps, originalFps: fps, wasMuted: false});
+    this.setState({src, filePath, originalFilePath, fps, originalFps: fps, wasMuted: false, isNewRecording});
     this.videoContainer.setSrc(src);
   }
 
@@ -172,7 +172,7 @@ export default class EditorContainer extends Container {
   }
 
   startExport = () => {
-    const {width, height, fps, filePath, originalFilePath, options, format, plugin: serviceTitle, originalFps} = this.state;
+    const {width, height, fps, filePath, originalFilePath, options, format, plugin: serviceTitle, originalFps, isNewRecording} = this.state;
     const {startTime, endTime, isMuted} = this.videoContainer.state;
 
     const plugin = options.find(option => option.format === format).plugins.find(p => p.title === serviceTitle);
@@ -193,7 +193,8 @@ export default class EditorContainer extends Container {
       isDefault,
       serviceTitle,
       format,
-      originalFps
+      originalFps,
+      isNewRecording
     };
 
     const {ipcRenderer: ipc} = require('electron-better-ipc');

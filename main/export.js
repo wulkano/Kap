@@ -22,7 +22,7 @@ class Export {
     this.isDefault = options.isDefault;
 
     const now = moment();
-    this.defaultFileName = `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.${this.format}`;
+    this.defaultFileName = options.isNewRecording ? `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.${this.format}` : `${path.parse(this.inputPath).name}.${this.format}`;
 
     this.context = new ShareServiceContext({
       format: this.format,
