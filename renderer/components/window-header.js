@@ -13,9 +13,8 @@ class WindowHeader extends React.Component {
             position: relative;
             display: flex;
             flex-direction: column;
-            background-color: #f9f9f9;
-            background-image: linear-gradient(-180deg, #f9f9f9 0%, #f1f1f1 100%);
-            box-shadow: 0 1px 0 0 #ddd, inset 0 1px 0 0 #fff;
+            background: var(--window-header-background);
+            box-shadow: var(--window-header-box-shadow);
             -webkit-app-region: drag;
             user-select: none;
             z-index: 11;
@@ -26,6 +25,7 @@ class WindowHeader extends React.Component {
             font-size: 1.4rem;
             text-align: center;
             width: 100%;
+            color: var(--subtitle-color);
           }
         `}</style>
       </header>

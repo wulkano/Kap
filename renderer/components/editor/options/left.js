@@ -7,7 +7,7 @@ import Slider from './slider';
 
 const {className: keyboardInputClass, styles: keyboardInputStyles} = css.resolve`
   height: 24px;
-  background: hsla(0, 0%, 100%, 0.1);
+  background: rgba(255, 255, 255, 0.1);
   text-align: center;
   font-size: 12px;
   box-sizing: border-box;
@@ -17,6 +17,7 @@ const {className: keyboardInputClass, styles: keyboardInputStyles} = css.resolve
   border-top-left-radius: 4px;
   width: 48px;
   color: white;
+  box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.2);
 
   input + input {
     border-bottom-left-radius: 0;

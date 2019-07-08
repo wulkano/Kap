@@ -40,7 +40,6 @@ class PreferencesNavigation extends React.Component {
                 <Icon
                   size="2.4rem"
                   active={category === name}
-                  hoverFill="#808080"
                 />
                 <span>{name}</span>
               </div>
@@ -59,31 +58,39 @@ class PreferencesNavigation extends React.Component {
             display: flex;
             align-items: center;
             margin-right: 24px;
-            width: 89px;
             height: 24px;
-            color: #808080;
-            border-radius: 2px 2px 2px 2px;
+            color: var(--subtitle-color);
+            border-radius: 4px;
             font-size: 12px;
             font-weight: 500;
             line-height: 16px;
             text-transform: capitalize;
             border: 1px solid transparent;
             outline: none;
+            padding-right: 8px;
           }
 
           .nav-item.active {
-            color: #000000;
-            border-color: rgba(0, 0, 0, 0.1);
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+            color: var(--title-color);
+            border-color: var(--navigation-item-border-color);
+            outline: var(--navigation-item-outline-active);
+            box-shadow: var(--navigation-item-box-shadow-active);
+            background: var(--navigation-item-background);
           }
 
           .nav-item:focus {
-            border-color: rgba(0, 0, 0, 0.1);
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+            border-color: var(--navigation-item-border-color);
+            box-shadow: var(--navigation-item-box-shadow);
+            background: var(--navigation-item-background);
           }
 
           .nav-item.active:focus {
-            border-color: rgba(0, 0, 0, 0.2);
+            border-color: var(--navigation-item-active-border-color);
+          }
+
+          .nav-item:hover {
+            --icon-color: var(--icon-hover-color);
+            color: var(--navigation-item-hover-color);
           }
 
           span {

@@ -35,7 +35,7 @@ class Slider extends React.Component {
             <div className="popup" onClick={event => event.stopPropagation()}>
               <input type="range" className="slider" min={min} max={max} step={1} value={value || min} onChange={this.handleChange}/>
               <div className="arrow">
-                <TooltipIcon fill="rgba(255, 255, 255, 0.85)" hoverFill="rgba(255, 255, 255, 0.85)"/>
+                <TooltipIcon fill="var(--slider-popup-background)" hoverFill="var(--slider-popup-background)"/>
               </div>
             </div>
           )
@@ -52,7 +52,7 @@ class Slider extends React.Component {
           .value {
             width: 100%;
             height: 100%;
-            background: hsla(0, 0%, 100%, 0.1);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 4px;
             padding: 4px 8px;
             text-align: center;
@@ -63,6 +63,7 @@ class Slider extends React.Component {
             border: none;
             z-index: 50;
             position: relative;
+            box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.2);
           }
 
           .value:hover,
@@ -87,7 +88,7 @@ class Slider extends React.Component {
             left: 50%;
             transform: translateX(-50%);
             margin-bottom: 16px;
-            background: rgba(255, 255, 255, 0.85);
+            background: var(--slider-popup-background);
             box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.40);
             z-index: 50;
             border-radius: 2px;
@@ -118,7 +119,7 @@ class Slider extends React.Component {
             width: 100%;
             height: 4px;
             border-color: transparent;
-            background: #fff;
+            background: var(--slider-background-color);
             border-radius: 4px;
             box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.4);
           }
@@ -128,14 +129,14 @@ class Slider extends React.Component {
             height: 16px;
             width: 16px;
             border-radius: 50%;
-            background: #fff;
+            background: var(--slider-thumb-color);
             box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.4);
             margin-top: -6px;
             z-index: 50;
           }
 
           .slider:focus::-webkit-slider-thumb {
-            border: 1px solid #007aff;
+            border: 1px solid var(--kap);
           }
         `}</style>
       </div>

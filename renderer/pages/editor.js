@@ -74,6 +74,18 @@ export default class EditorPage extends React.Component {
             text-shadow: 0 1px 2px rgba(0,0,0,.1);
           }
 
+          :root {
+            --slider-popup-background: rgba(255, 255, 255, 0.85);
+            --slider-background-color: #ffffff;
+            --slider-thumb-color: #ffffff;
+          }
+
+          .dark {
+            --slider-popup-background: #222222;
+            --slider-background-color: var(--input-background-color);
+            --slider-thumb-color: var(--storm);
+          }
+
           .cover-window {
             display: flex;
             flex-direction: column;
@@ -89,7 +101,7 @@ export default class EditorPage extends React.Component {
             height: 48px;
             z-index: 50;
             display: flex;
-            background: rgba(32,33,37,0.98);
+            background: rgba(0, 0, 0, 0.3);
           }
 
           @keyframes shake-left {

@@ -79,7 +79,7 @@ export default class Export extends React.Component {
         <style jsx>{`
           .export-container {
             height: 80px;
-            border-bottom: 1px solid #f1f1f1;
+            border-bottom: 1px solid var(--row-divider-color);
             padding: 16px;
             display: flex;
             align-items: center;
@@ -101,7 +101,7 @@ export default class Export extends React.Component {
             position: absolute;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.4);
+            background: var(--thumbnail-overlay-color);
           }
 
           .icon, .progress {
@@ -125,16 +125,17 @@ export default class Export extends React.Component {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            color: var(--title-color);
           }
 
           .subtitle {
             font-size: 12px;
-            color: #808080;
+            color: var(--subtitle-color);
             user-select: none;
           }
 
           .export-container:hover {
-            background: #f9f9f9;
+            background: var(--row-hover-color);
           }
 
           .export-container:hover .progress {

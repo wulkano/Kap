@@ -18,7 +18,7 @@ const PluginTitle = ({title, label, onClick}) => (
     <style jsx>{`
       .plugin-title {
         display: inline-block;
-        color: #007aff;
+        color: var(--kap);
         cursor: pointer;
       }
 
@@ -51,7 +51,7 @@ const Plugin = ({plugin, checked, disabled, onTransitionEnd, onClick, loading, o
           height: 36px;
           padding-right: 16px;
           margin-right: 16px;
-          border-right: 1px solid #f1f1f1;
+          border-right: 1px solid var(--row-divider-color);
           display: flex;
           align-items: center;
           justify-content: center;

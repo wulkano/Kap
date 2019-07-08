@@ -29,6 +29,9 @@ const openPrefsWindow = async options => {
     fullscreenable: false,
     titleBarStyle: 'hiddenInset',
     show: false,
+    frame: false,
+    transparent: true,
+    vibrancy: 'ultra-dark',
     webPreferences: {
       nodeIntegration: true
     }

@@ -21,6 +21,8 @@ require('./utils/sentry');
 
 const filesToOpen = [];
 
+app.commandLine.appendSwitch('--enable-features', 'OverlayScrollbar');
+
 app.on('open-file', (event, path) => {
   event.preventDefault();
 

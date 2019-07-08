@@ -129,8 +129,8 @@ class RecordButton extends React.Component {
               height: 48px;
               padding: 8px;
               border-radius: 50%;
-              background: #ff6059 radial-gradient(ellipse 100% 0% at 50% 0%, #ff6159 0%, #ff5f52 50%, #ff3a30 100%);
-              border: 2px solid #ff3b30;
+              background: var(--record-button-background);
+              border: 2px solid var(--record-button-border-color);
               display: flex;
               align-items: center;
               justify-content: center;
@@ -142,7 +142,8 @@ class RecordButton extends React.Component {
               width: 24px;
               height: 24px;
               border-radius: 50%;
-              background: #fff;
+              background: var(--record-button-inner-background${cropperExists ? '-cropper' : ''});
+              ${cropperExists ? '' : 'border: var(--record-button-inner-border-width) solid var(--record-button-inner-border);'}
               box-sizing: border-box;
             }
 
@@ -150,14 +151,14 @@ class RecordButton extends React.Component {
               width: 20px;
               height: 20px;
               border-radius: 50%;
-              background: #ff6059 radial-gradient(ellipse 100% 0% at 50% 0%, #ff6159 0%, #ff5f52 50%, #ff3a30 100%);
+              background: var(--record-button-fill-background);
               margin: 2px;
             }
 
             .ripple {
               box-sizing: border-box;
               border-radius: 50%;
-              border: 1px solid #ff5e57;
+              border: 1px solid var(--record-button-ripple-color);
               background: transparent;
               position: absolute;
               width: 100%;
@@ -173,16 +174,17 @@ class RecordButton extends React.Component {
             }
 
             .container.cropper-exists:focus .outer {
-              background: #fff;
+              border: 2px solid var(--record-button-focus-outter-border);
+              background: var(--record-button-focus-outter-background);
             }
 
             .container.cropper-exists:focus .inner {
-              border: 2px solid #ff3b30;
-              background: radial-gradient(ellipse 100% 0% at 50% 0%, #ff6159 0%, #ff5f52 50%, #ff3a30 100%);
+              border-color: var(--record-button-border-color);
+              background: var(--record-button-focus-background${cropperExists ? '-cropper' : ''});
             }
 
             .container.cropper-exists:focus .fill {
-              background: #fff;
+              background: var(--record-button-fill-background);
             }
 
             @keyframes ripple {

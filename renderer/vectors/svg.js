@@ -6,9 +6,9 @@ import {handleKeyboardActivation} from '../utils/inputs';
 
 class Svg extends React.Component {
   static defaultProps = {
-    fill: '#808080',
-    activeFill: '#007aff',
-    hoverFill: '#606060',
+    fill: 'var(--icon-color)',
+    activeFill: 'var(--kap)',
+    hoverFill: 'var(--icon-hover-color)',
     size: '24px',
     active: false,
     viewBox: '0 0 24 24',
@@ -41,7 +41,7 @@ class Svg extends React.Component {
       isMenu
     } = this.props;
 
-    const className = classNames({active, shadow});
+    const className = classNames({active, shadow, focusable: tabIndex >= 0});
 
     return (
       <div tabIndex={tabIndex} onKeyDown={tabIndex >= 0 ? handleKeyboardActivation(onClick, {isMenu}) : undefined}>
@@ -72,7 +72,7 @@ class Svg extends React.Component {
               outline: none;
             }
 
-            div:focus::before {
+            div.focusable:focus::before {
               content: '';
               position: absolute;
               left: 0;
@@ -80,7 +80,7 @@ class Svg extends React.Component {
               width: 100%;
               height: 100%;
               transform: scale(${1 / 0.75});
-              background: #f1f1f1;
+              background: var(--icon-focus-background-color);
               z-index: -1;
               border-radius: 2px;
             }

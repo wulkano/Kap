@@ -16,7 +16,9 @@ const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
           input {
             outline: none;
             width: 100%;
-            border: 1px solid #ddd;
+            border: 1px solid var(--input-border-color);
+            background: var(--input-background-color);
+            color: var(--title-color);
             border-radius: 3px;
             box-sizing: border-box;
             height: 32px;
@@ -25,6 +27,7 @@ const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
             font-size: 12px;
             margin-top: 16px;
             outline: none;
+            box-shadow: var(--input-shadow);
           }
 
           .has-errors {
@@ -33,7 +36,7 @@ const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
           }
 
           input:focus {
-            border-color: #007aff;
+            border-color: var(--kap);
           }
 
           div {
@@ -102,10 +105,10 @@ class Tab extends React.Component {
           })
         }
         <Item subtitle="Open config file" onClick={openConfig}>
-          <div className="icon-container"><OpenConfigIcon fill="#007aff" hoverFill="#007aff" onClick={openConfig}/></div>
+          <div className="icon-container"><OpenConfigIcon fill="var(--kap)" hoverFill="var(--kap)" onClick={openConfig}/></div>
         </Item>
         <Item last subtitle="View plugin on GitHub" onClick={viewOnGithub}>
-          <div className="icon-container"><OpenOnGithubIcon size="20px" fill="#007aff" hoverFill="#007aff" onClick={viewOnGithub}/></div>
+          <div className="icon-container"><OpenOnGithubIcon size="20px" fill="var(--kap)" hoverFill="var(--kap)" onClick={viewOnGithub}/></div>
         </Item>
         <style jsx>{`
           .container {

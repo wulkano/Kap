@@ -47,10 +47,11 @@ class Select extends React.Component {
             left: 0;
             width: 100%;
             height: 100%;
-            background: hsla(0, 0%, 100%, 0.1);
+            background: rgba(255, 255, 255, 0.1);
             border: none;
             outline: none;
             color: transparent;
+            box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.2);
           }
 
           select:hover,

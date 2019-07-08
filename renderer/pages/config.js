@@ -44,8 +44,18 @@ export default class ConfigPage extends React.Component {
             font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
           }
 
+          :root {
+            --background-color: #ffffff;
+            --button-color: var(--kap);
+          }
+
+          .dark .cover-window {
+            --background-color: #313234;
+            --button-color: #2182f0;
+          }
+
           .cover-window {
-            background-color: white;
+            background-color: var(--background-color);
             z-index: -2;
             display: flex;
             flex-direction: column;

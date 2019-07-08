@@ -38,12 +38,13 @@ const openEditorWindow = async (filePath, {recordedFps, isNewRecording, original
     minHeight: MIN_WINDOW_HEIGHT,
     width: MIN_VIDEO_WIDTH,
     height: MIN_WINDOW_HEIGHT,
-    frame: false,
     webPreferences: {
       nodeIntegration: true,
       webSecurity: !is.development // Disable webSecurity in dev to load video over file:// protocol while serving over insecure http, this is not needed in production where we use file:// protocol for html serving.
     },
+    frame: false,
     transparent: true,
+    vibrancy: 'dark',
     show: false
   });
 
@@ -68,11 +69,13 @@ const openEditorWindow = async (filePath, {recordedFps, isNewRecording, original
 
       if (buttonIndex === 1) {
         event.preventDefault();
-      } else {
-        editors.delete(filePath);
       }
     });
   }
+
+  editorWindow.on('closed', () => {
+    editors.delete(filePath);
+  });
 
   editorWindow.on('blur', () => {
     editorEmitter.emit('blur');

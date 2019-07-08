@@ -55,7 +55,7 @@ class RightOptions extends React.Component {
 
           button {
             padding: 4px 8px;
-            background: hsla(0, 0%, 100%, 0.1);
+            background: rgba(255, 255, 255, 0.1);
             font-size: 12px;
             color: white;
             height: 24px;
@@ -63,6 +63,7 @@ class RightOptions extends React.Component {
             text-align: center;
             width: 72px;
             border: none;
+            box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.2);
           }
 
           button:hover,

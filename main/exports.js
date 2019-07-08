@@ -20,6 +20,9 @@ const openExportsWindow = async () => {
       fullscreenable: false,
       titleBarStyle: 'hiddenInset',
       show: false,
+      frame: false,
+      transparent: true,
+      vibrancy: 'ultra-dark',
       webPreferences: {
         nodeIntegration: true
       }

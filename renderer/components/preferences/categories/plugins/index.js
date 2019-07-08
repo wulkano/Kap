@@ -120,7 +120,7 @@ class Plugins extends React.Component {
             padding: 0 16px;
             display: flex;
             align-items: center;
-            box-shadow: 0 1px 0 0 #ddd, inset 0 1px 0 0 #fff;
+            box-shadow: 0 1px 0 0 var(--row-divider-color), inset 0 1px 0 0 #fff;
             z-index: 10;
           }
 
@@ -132,7 +132,7 @@ class Plugins extends React.Component {
             justify-content: center;
             padding-bottom: 2px;
             font-size: 1.2rem;
-            color: #007aff;
+            color: var(--kap);
             font-weight: 500;
             width: 64px;
             outline: none;
@@ -144,12 +144,12 @@ class Plugins extends React.Component {
           }
 
           .plugins-nav .selected {
-            border-bottom: 2px solid #007aff;
+            border-bottom: 2px solid var(--kap);
             padding-bottom: 0;
           }
 
           .plugins-nav .selected:focus {
-            border-bottom: 2px solid #007aff;
+            border-bottom: 2px solid var(--kap);
             padding-bottom: 0;
           }
 

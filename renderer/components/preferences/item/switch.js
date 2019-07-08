@@ -25,17 +25,18 @@ class Switch extends React.Component {
             display: inline-block;
             width: 4.8rem;
             height: 2.4rem;
-            border: 1px solid #ddd;
+            border: 1px solid var(--input-border-color);
             border-radius: 2.625em;
             position: relative;
-            background-color: #fff;
+            background-color: var(--input-background-color);
             transition: 0.2s ease-in-out;
             box-sizing: border-box;
             outline: none;
+            box-shadow: var(--switch-box-shadow);
           }
 
           .switch:focus {
-            border-color: #007aff;
+            border-color: var(--kap);
           }
 
           .toggle {
@@ -55,7 +56,7 @@ class Switch extends React.Component {
 
           .checked .toggle {
             left: calc(100% - 2.2rem);
-            background: #007aff;
+            background: var(--kap);
           }
 
           .disabled {
@@ -64,8 +65,8 @@ class Switch extends React.Component {
 
           .disabled .toggle {
             margin-top: 0.2rem;
-            border: 1px solid #ccc;
-            background-color: #fff;
+            border: 1px solid var(--switch-disabled-color);
+            background-color: transparent;
           }
 
           .loading .toggle {
