@@ -97,6 +97,10 @@ export default class AboutPage extends React.Component {
             display: flex;
           }
 
+          .dark footer {
+            color: #2182f0;
+          }
+
           .link {
             cursor: pointer;
           }
