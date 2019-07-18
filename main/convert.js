@@ -150,6 +150,8 @@ const convertToApng = opts => {
 const convertToGif = PCancelable.fn(async (opts, onCancel) => {
   const palettePath = tmp.tmpNameSync({postfix: '.png'});
   const paletteProcessor = execa(ffmpegPath, [
+    '-ss', opts.startTime,
+    '-to', opts.endTime,
     '-i', opts.inputPath,
     '-vf', `fps=${opts.fps},scale=${opts.width}:${opts.height}:flags=lanczos,palettegen`,
     palettePath
