@@ -3,7 +3,6 @@
 const {dialog, BrowserWindow} = require('electron');
 const fs = require('fs');
 const {dirname} = require('path');
-const pify = require('pify');
 const {ipcMain: ipc} = require('electron-better-ipc');
 const base64Img = require('base64-img');
 const tmp = require('tmp');
@@ -22,7 +21,6 @@ const {toggleExportMenuItem} = require('./menus');
 const Export = require('./export');
 
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
-const showSaveDialog = pify(dialog.showSaveDialog, {errorFirst: false});
 let lastSavedDirectory;
 
 const filterMap = new Map([
@@ -61,7 +59,7 @@ const getDragIcon = async inputPath => {
 const saveSnapshot = async ({inputPath, time}) => {
   const now = moment();
 
-  const outputPath = await showSaveDialog(BrowserWindow.getFocusedWindow(), {
+  const {filePath: outputPath} = await dialog.showSaveDialog(BrowserWindow.getFocusedWindow(), {
     defaultPath: `Snapshot ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.jpg`
   });
 
@@ -136,7 +134,7 @@ class ExportList {
 
       const filters = filterMap.get(options.format);
 
-      const filePath = await showSaveDialog(exportsWindow, {
+      const {filePath} = await dialog.showSaveDialog(exportsWindow, {
         title: newExport.defaultFileName,
         defaultPath: `${lastSavedDirectory || kapturesDir}/${newExport.defaultFileName}`,
         filters
@@ -155,7 +153,7 @@ class ExportList {
     }
 
     if (!newExport.plugin.isConfigValid()) {
-      const result = dialog.showMessageBox({
+      const result = dialog.showMessageBoxSync({
         type: 'error',
         buttons: ['Configure', 'Cancel'],
         defaultId: 0,

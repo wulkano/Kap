@@ -45,7 +45,7 @@ const openFileItem = {
   click: () => {
     closeAllCroppers();
 
-    dialog.showOpenDialog({
+    dialog.showOpenDialogSync({
       filters: [{name: 'Videos', extensions: supportedVideoExtensions}],
       properties: ['openFile']
     }, filePaths => {
