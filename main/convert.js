@@ -184,6 +184,11 @@ const converters = new Map([
 const convertTo = (opts, format) => {
   const outputPath = path.join(tempy.directory(), opts.defaultFileName);
   const converter = converters.get(format);
+
+  if (!converter) {
+    throw new Error('Invalid file format');
+  }
+
   opts.onProgress(0);
   track(`file/export/format/${format}`);
 

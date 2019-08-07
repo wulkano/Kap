@@ -100,15 +100,15 @@ class Export {
     });
   }
 
-  async convert() {
+  async convert({fileType}) {
     this.convertProcess = convertTo(
       {
         ...this.exportOptions,
-        defaultFileName: this.defaultFileName,
+        defaultFileName: fileType ? `${path.parse(this.defaultFileName).name}.${fileType}` : this.defaultFileName,
         inputPath: this.inputPath,
         onProgress: percentage => this.setProgress('Converting…', percentage)
       },
-      this.format
+      fileType || this.format
     );
 
     this.filePath = await this.convertProcess;
