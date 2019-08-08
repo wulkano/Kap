@@ -26,16 +26,18 @@ export default class Export extends React.Component {
   }
 
   openFile = () => {
-    const {filePath} = this.props;
-    if (filePath) {
+    const {filePath, disableOutputActions} = this.props;
+    if (filePath && !disableOutputActions) {
       electron.remote.shell.showItemInFolder(filePath);
     }
   }
 
   onDragStart = event => {
-    const {createdAt} = this.props;
+    const {createdAt, disableOutputActions} = this.props;
     event.preventDefault();
-    electron.ipcRenderer.send('drag-export', createdAt);
+    if (!disableOutputActions) {
+      electron.ipcRenderer.send('drag-export', createdAt);
+    }
   }
 
   render() {
@@ -153,6 +155,7 @@ export default class Export extends React.Component {
 
 Export.propTypes = {
   defaultFileName: PropTypes.string,
+  disableOutputActions: PropTypes.bool,
   status: PropTypes.string,
   text: PropTypes.string,
   percentage: PropTypes.number,
