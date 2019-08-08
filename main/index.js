@@ -16,6 +16,7 @@ const {track} = require('./common/analytics');
 const {initializeGlobalAccelerators} = require('./global-accelerators');
 const {setApplicationMenu} = require('./menus');
 const openFiles = require('./utils/open-files');
+const {initializeExportOptions} = require('./export-options');
 
 require('./utils/sentry');
 
@@ -35,11 +36,13 @@ app.on('open-file', (event, path) => {
 });
 
 const initializePlugins = async () => {
-  try {
-    await plugins.prune();
-    await plugins.upgrade();
-  } catch (error) {
-    console.log(error);
+  if (!is.development) {
+    try {
+      await plugins.prune();
+      await plugins.upgrade();
+    } catch (error) {
+      console.log(error);
+    }
   }
 };
 
@@ -77,6 +80,7 @@ const checkForUpdates = () => {
   initializeTray();
   initializeExportList();
   initializeGlobalAccelerators();
+  initializeExportOptions();
   setApplicationMenu();
 
   if (filesToOpen.length > 0) {
