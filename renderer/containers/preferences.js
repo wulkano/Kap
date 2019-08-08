@@ -56,7 +56,13 @@ export default class PreferencesContainer extends Container {
       const plugins = await this.plugins.getFromNpm();
       this.setState({
         npmError: false,
-        pluginsFromNpm: plugins.sort((a, b) => a.prettyName.localeCompare(b.prettyName))
+        pluginsFromNpm: plugins.sort((a, b) => {
+          if (a.isCompatible !== b.isCompatible) {
+            return b.isCompatible - a.isCompatible;
+          }
+
+          return a.prettyName.localeCompare(b.prettyName);
+        })
       });
     } catch (error) {
       this.setState({npmError: true});

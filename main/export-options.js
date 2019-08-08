@@ -1,12 +1,11 @@
 
 const path = require('path');
-const fs = require('fs');
 const electron = require('electron');
 const Store = require('electron-store');
 const {ipcMain: ipc} = require('electron-better-ipc');
-const makeDir = require('make-dir');
 
 const {app} = electron;
+const plugins = require('./common/plugins');
 const {converters} = require('./convert');
 const {setOptions, getEditors} = require('./editor');
 
@@ -33,15 +32,7 @@ const prettifyFormat = format => {
 
 const getExportOptions = () => {
   const cwd = path.join(app.getPath('userData'), 'plugins');
-  const packageJsonPath = path.join(cwd, 'package.json');
-
-  if (!fs.existsSync(packageJsonPath)) {
-    makeDir.sync(cwd);
-    fs.writeFileSync(packageJsonPath, '{"dependencies":{}}');
-  }
-
-  const pkg = fs.readFileSync(packageJsonPath, 'utf8');
-  const pluginNames = Object.keys(JSON.parse(pkg).dependencies);
+  const installed = plugins.getInstalled();
 
   const options = [];
   for (const format of converters.keys()) {
@@ -56,11 +47,15 @@ const getExportOptions = () => {
     });
   }
 
-  for (const pluginName of pluginNames) {
-    const plugin = require(path.join(cwd, 'node_modules', pluginName));
+  for (const json of installed) {
+    if (!json.isCompatible) {
+      continue;
+    }
+
+    const plugin = require(path.join(cwd, 'node_modules', json.name));
     for (const service of plugin.shareServices) {
       for (const format of service.formats) {
-        options.find(option => option.format === format).plugins.push({title: service.title, pluginName});
+        options.find(option => option.format === format).plugins.push({title: service.title, pluginName: json.name});
       }
     }
   }
@@ -86,6 +81,8 @@ const updateExportOptions = () => {
   setOptions(exportOptions);
 };
 
+plugins.setUpdateExportOptions(updateExportOptions);
+
 ipc.answerRenderer('update-usage', ({format, plugin}) => {
   const usage = exportUsageHistory.get(format);
   const now = Date.now();
@@ -96,9 +93,12 @@ ipc.answerRenderer('update-usage', ({format, plugin}) => {
   updateExportOptions();
 });
 
-setOptions(getExportOptions());
+const initializeExportOptions = () => {
+  setOptions(getExportOptions());
+};
 
 module.exports = {
   getExportOptions,
-  updateExportOptions
+  updateExportOptions,
+  initializeExportOptions
 };

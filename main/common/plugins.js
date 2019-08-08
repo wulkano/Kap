@@ -5,11 +5,12 @@ const got = require('got');
 const execa = require('execa');
 const makeDir = require('make-dir');
 const {ipcMain: ipc} = require('electron-better-ipc');
+const packageJson = require('package-json');
+const {satisfies} = require('semver');
 
 const {app, Notification} = electron;
 
 const Plugin = require('../plugin');
-const {updateExportOptions} = require('../export-options');
 const {openConfigWindow} = require('../config');
 const {openPrefsWindow} = require('../preferences');
 const {notify} = require('./notifications');
@@ -19,6 +20,11 @@ class Plugins {
   constructor() {
     this.npmBin = path.join(__dirname, '../../node_modules/npm/bin/npm-cli.js');
     this._makePluginsDir();
+    this.appVersion = app.getVersion();
+  }
+
+  setUpdateExportOptions(updateExportOptions) {
+    this.updateExportOptions = updateExportOptions;
   }
 
   _makePluginsDir() {
@@ -110,7 +116,7 @@ class Plugins {
       }
 
       notification.show();
-      updateExportOptions();
+      this.updateExportOptions();
 
       return {hasConfig, isValid};
     } catch (error) {
@@ -133,7 +139,7 @@ class Plugins {
     });
     const plugin = new Plugin(name);
     plugin.config.clear();
-    updateExportOptions();
+    this.updateExportOptions();
   }
 
   async prune() {
@@ -149,10 +155,16 @@ class Plugins {
       const pluginPath = this._pluginPath(name, 'package.json');
       const json = JSON.parse(fs.readFileSync(pluginPath, 'utf8'));
       const plugin = new Plugin(name);
-      json.prettyName = this._getPrettyName(name);
-      json.hasConfig = this.getServices(name).some(({config = {}}) => Object.keys(config).length > 0);
-      json.isValid = plugin.isConfigValid();
-      return json;
+      return {
+        ...json,
+        prettyName: this._getPrettyName(name),
+        hasConfig: this.getServices(name).some(({config = {}}) => Object.keys(config).length > 0),
+        isValid: plugin.isConfigValid(),
+        kapVersion: json.kapVersion || '*',
+        isCompatible: satisfies(this.appVersion, json.kapVersion || '*'),
+        isInstalled: true,
+        isSymlink: fs.lstatSync(this._pluginPath(name)).isSymbolicLink()
+      };
     });
   }
 
@@ -161,11 +173,19 @@ class Plugins {
     const response = await got(url, {json: true});
     const installed = this._pluginNames();
 
-    return response.body.results
+    return Promise.all(response.body.results
       .map(x => x.package)
       .filter(x => x.name.startsWith('kap-'))
       .filter(x => !installed.includes(x.name)) // Filter out installed plugins
-      .map(x => ({...x, prettyName: this._getPrettyName(x.name)}));
+      .map(async x => {
+        const {kapVersion = '*'} = await packageJson(x.name, {fullMetadata: true});
+        return {
+          ...x,
+          kapVersion,
+          prettyName: this._getPrettyName(x.name),
+          isCompatible: satisfies(this.appVersion, kapVersion)
+        };
+      }));
   }
 
   getPluginService(pluginName, serviceTitle) {

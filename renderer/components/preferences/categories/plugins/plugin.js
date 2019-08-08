@@ -43,6 +43,24 @@ PluginTitle.propTypes = {
 const getLink = ({homepage, links}) => homepage || (links && links.homepage);
 
 const Plugin = ({plugin, checked, disabled, onTransitionEnd, onClick, loading, openConfig, tabIndex}) => {
+  const error = !plugin.isCompatible && (
+    <div className="invalid" title={`This plugin is not supported by the current Kap version. Requires ${plugin.kapVersion}`}>
+      <ErrorIcon fill="#ff6059" hoverFill="#ff6059" onClick={openConfig}/>
+      <style jsx>{`
+        .invalid {
+          height: 36px;
+          padding-right: 16px;
+          margin-right: 16px;
+          border-right: 1px solid var(--row-divider-color);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          align-self: center;
+        }
+      `}</style>
+    </div>
+  );
+
   const warning = plugin.hasConfig && !plugin.isValid && (
     <div className="invalid" title="This plugin requires configuration">
       <ErrorIcon fill="#ff6059" hoverFill="#ff6059" onClick={openConfig}/>
@@ -64,7 +82,7 @@ const Plugin = ({plugin, checked, disabled, onTransitionEnd, onClick, loading, o
   return (
     <Item
       key={plugin.name}
-      warning={warning}
+      warning={error || warning}
       id={plugin.name}
       title={
         <PluginTitle
@@ -75,7 +93,7 @@ const Plugin = ({plugin, checked, disabled, onTransitionEnd, onClick, loading, o
       subtitle={plugin.description}
     >
       {
-        openConfig && (
+        openConfig && plugin.isCompatible && (
           <div className="config-icon">
             <EditIcon size="18px" tabIndex={tabIndex} onClick={openConfig}/>
             <style jsx>{`
@@ -90,7 +108,7 @@ const Plugin = ({plugin, checked, disabled, onTransitionEnd, onClick, loading, o
       <Switch
         tabIndex={tabIndex}
         checked={checked}
-        disabled={disabled}
+        disabled={disabled || (!plugin.isCompatible && !plugin.isInstalled) || plugin.isSymlink}
         loading={loading}
         onTransitionEnd={onTransitionEnd}
         onClick={onClick}/>

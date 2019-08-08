@@ -20,6 +20,7 @@ class Export {
     this.format = options.format;
     this.image = '';
     this.isDefault = options.isDefault;
+    this.disableOutputActions = false;
 
     const now = moment();
     this.defaultFileName = options.isNewRecording ? `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.${this.format}` : `${path.parse(this.inputPath).name}.${this.format}`;
@@ -46,7 +47,8 @@ class Export {
       image: this.image,
       createdAt: this.createdAt,
       filePath: this.filePath && (this.isDefault ? this.context.targetFilePath : this.filePath),
-      error: this.error
+      error: this.error,
+      disableOutputActions: this.disableOutputActions
     };
   }
 
@@ -100,15 +102,19 @@ class Export {
     });
   }
 
-  async convert() {
+  async convert({fileType}) {
+    if (fileType) {
+      this.disableOutputActions = true;
+    }
+
     this.convertProcess = convertTo(
       {
         ...this.exportOptions,
-        defaultFileName: this.defaultFileName,
+        defaultFileName: fileType ? `${path.parse(this.defaultFileName).name}.${fileType}` : this.defaultFileName,
         inputPath: this.inputPath,
         onProgress: percentage => this.setProgress('Converting…', percentage)
       },
-      this.format
+      fileType || this.format
     );
 
     this.filePath = await this.convertProcess;

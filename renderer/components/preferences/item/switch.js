@@ -35,7 +35,7 @@ class Switch extends React.Component {
             box-shadow: var(--switch-box-shadow);
           }
 
-          .switch:focus {
+          .switch:not(.disabled):focus {
             border-color: var(--kap);
           }
 
