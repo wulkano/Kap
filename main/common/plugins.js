@@ -182,7 +182,7 @@ class Plugins {
           ...x,
           kapVersion,
           prettyName: this._getPrettyName(x.name),
-          isCompatible: this._getPrettyName(x.name).startsWith('s') ? false : satisfies(this.appVersion, kapVersion)
+          isCompatible: satisfies(this.appVersion, kapVersion)
         };
       }));
   }
