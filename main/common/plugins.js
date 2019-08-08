@@ -162,7 +162,8 @@ class Plugins {
         isValid: plugin.isConfigValid(),
         kapVersion: json.kapVersion || '*',
         isCompatible: satisfies(this.appVersion, json.kapVersion || '*'),
-        installed: true
+        isInstalled: true,
+        isSymlink: fs.lstatSync(this._pluginPath(name)).isSymbolicLink()
       };
     });
   }

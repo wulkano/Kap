@@ -108,7 +108,7 @@ const Plugin = ({plugin, checked, disabled, onTransitionEnd, onClick, loading, o
       <Switch
         tabIndex={tabIndex}
         checked={checked}
-        disabled={disabled || (!plugin.isCompatible && !plugin.installed)}
+        disabled={disabled || (!plugin.isCompatible && !plugin.isInstalled) || plugin.isSymlink}
         loading={loading}
         onTransitionEnd={onTransitionEnd}
         onClick={onClick}/>
