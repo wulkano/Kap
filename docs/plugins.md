@@ -21,6 +21,7 @@ Tip: You can use modern JavaScript features like async/await in your plugin.
 - Use `context.setProgress()` whenever possible to keep the user updated on what's happening. The `.filePath()` method sets its own progress, so you should not do it for that step.
 - The readme should follow the style of [`kap-giphy`](https://github.com/wulkano/kap-giphy).
 - Your plugin must be tested, preferably using [`kap-plugin-test`](https://github.com/SamVerschueren/kap-plugin-test) and [`kap-plugin-mock-context`](https://github.com/samverschueren/kap-plugin-mock-context). [Example](https://github.com/wulkano/kap-giphy/blob/master/test/test.js).
+- If your plugin only supports specific versions of Kap, include a `kapVersion` field in the package.json with a [semver range](https://nodesource.com/blog/semver-a-primer/).
 
 ## Development
 
