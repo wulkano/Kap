@@ -172,7 +172,7 @@ export default class PreferencesContainer extends Container {
   pickKapturesDir = () => {
     const {dialog, getCurrentWindow} = this.remote;
 
-    const directories = dialog.showOpenDialog(getCurrentWindow(), {
+    const directories = dialog.showOpenDialogSync(getCurrentWindow(), {
       properties: [
         'openDirectory',
         'createDirectory'
