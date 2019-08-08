@@ -186,7 +186,7 @@ const convertTo = (opts, format) => {
   const converter = converters.get(format);
 
   if (!converter) {
-    throw new Error('Invalid file format');
+    throw new Error(`Unsupported file format: ${format}`);
   }
 
   opts.onProgress(0);
