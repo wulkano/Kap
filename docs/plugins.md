@@ -34,16 +34,16 @@ A share service lets you add an entry to the export menu in the Kap editor windo
 <img src="https://cloud.githubusercontent.com/assets/170270/26560296/8ac42740-44df-11e7-88f5-46f8483ffea1.jpg" width="1024">
 
 ```
-[GIF] → |Save to Disk     |
-        |Upload to Dropbox|
-        |Share on GIPHY   |
+| Save to Disk      |
+| Upload to Dropbox |
+| Share on GIPHY    |
 ```
 
 In the above case, the second and third item are added by two different share services.
 
 The share service is a plain object defining some metadata:
 
-- `title`: The title used in the export menu. For example: `Share to GIPHY`
+- `title`: The title used in the export menu. For example: `Share to GIPHY`.<br>The text should be in [title case](https://capitalizemytitle.com), for example, `Save to Disk`, not `Save to disk`.
 - `formats`: The file formats you support. Can be: `gif`, `mp4`, `webm`, `apng`
 - `action`: The function that is run when the user clicks the menu item. Read more below.
 - `config`: Definition of the config the plugins needs. Read more below.
@@ -59,19 +59,23 @@ const action = async context => {
 	context.notify('Notify about something');
 };
 
+const config = {
+  apiKey: {
+    title: 'API key',
+    type: 'string',
+    minLength: 13,
+    default: '',
+    required: true
+  }
+};
+
 const giphy = {
-	title: 'Share to GIPHY',
-	formats: ['gif'],
-	action,
-	config: {
-		apiKey: {
-			title: 'API key',
-			type: 'string',
-			minLength: 13,
-			default: '',
-			required: true
-		}
-	}
+  title: 'Share to GIPHY',
+  formats: [
+    'gif'
+  ],
+  action,
+  config
 };
 
 exports.shareServices = [giphy];

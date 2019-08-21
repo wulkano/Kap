@@ -13,7 +13,7 @@ class RightOptions extends React.Component {
 
     if (pluginOptions.length < 2) {
       pluginOptions.push({
-        label: 'Get plugins…',
+        label: 'Get Plugins…',
         value: 'open-plugins'
       });
     }
