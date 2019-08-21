@@ -6,6 +6,7 @@ const fs = require('fs');
 const Store = require('electron-store');
 const Ajv = require('ajv');
 const saveFilePlugin = require('./save-file-service');
+const copyToClipboardPlugin = require('./copy-to-clipboard-plugin');
 
 const {app, shell} = electron;
 
@@ -13,8 +14,12 @@ class Plugin {
   constructor(pluginName) {
     this.pluginName = pluginName;
 
-    if (pluginName === 'default') {
+    if (pluginName === '_saveToDisk') {
       this.plugin = saveFilePlugin;
+      this._isBuiltin = true;
+    } else if (pluginName === '_copyToClipboard') {
+      this.plugin = copyToClipboardPlugin;
+      this._isBuiltin = true;
     } else {
       const cwd = path.join(app.getPath('userData'), 'plugins');
       const pluginPath = path.join(cwd, 'node_modules', pluginName);
