@@ -26,6 +26,7 @@ class Export {
     this.defaultFileName = options.isNewRecording ? `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.${this.format}` : `${path.parse(this.inputPath).name}.${this.format}`;
 
     this.context = new ShareServiceContext({
+      _isBuiltin: this.plugin._isBuiltin,
       format: this.format,
       defaultFileName: this.defaultFileName,
       config: this.plugin.config,
@@ -102,7 +103,7 @@ class Export {
     });
   }
 
-  async convert({fileType}) {
+  async convert({fileType} = {}) {
     if (fileType) {
       this.disableOutputActions = true;
     }

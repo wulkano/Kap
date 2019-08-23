@@ -1,9 +1,6 @@
 'use strict';
-
-const electron = require('electron');
+const {Notification, clipboard} = require('electron');
 const got = require('got');
-
-const {Notification} = electron;
 
 const prettifyFormat = format => {
   const formats = new Map([
@@ -18,6 +15,8 @@ const prettifyFormat = format => {
 
 class ShareServiceContext {
   constructor(options) {
+    this._isBuiltin = options._isBuiltin;
+
     this.format = options.format;
     this.prettyFormat = prettifyFormat(this.format);
     this.defaultFileName = options.defaultFileName;
@@ -71,7 +70,7 @@ class ShareServiceContext {
       return;
     }
 
-    electron.clipboard.writeText(text);
+    clipboard.writeText(text);
   }
 
   notify(text) {
@@ -79,11 +78,18 @@ class ShareServiceContext {
       return;
     }
 
-    const notification = new Notification({
+    let options = {
       title: this.pluginName,
       body: text
-    });
+    };
 
+    if (this._isBuiltin) {
+      options = {
+        title: text
+      };
+    }
+
+    const notification = new Notification(options);
     notification.show();
   }
 

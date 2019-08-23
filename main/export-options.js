@@ -36,14 +36,27 @@ const getExportOptions = () => {
 
   const options = [];
   for (const format of converters.keys()) {
+    const plugins = [
+      {
+        title: 'Save to Disk',
+        pluginName: '_saveToDisk',
+        isDefault: true // TODO: This needs a clearer name
+      }
+    ];
+
+    // TODO: Handle built-in plugins better. They should be added automatically
+    // just like third-party ones and should also take into account `.formats`.
+    if (['gif', 'apng'].includes(format)) {
+      plugins.push({
+        title: 'Copy to Clipboard',
+        pluginName: '_copyToClipboard'
+      });
+    }
+
     options.push({
       format,
       prettyFormat: prettifyFormat(format),
-      plugins: [{
-        title: 'Save to Disk',
-        pluginName: 'default',
-        isDefault: true
-      }]
+      plugins
     });
   }
 
