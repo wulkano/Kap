@@ -19,7 +19,7 @@ const getEncoding = async filePath => {
 };
 
 // `ffmpeg -i original.mp4 -vcodec libx264 -crf 27 -preset veryfast -c:a copy output.mp4`
-const convertToH264 = async inputPath => {
+const convertHEVCToH264 = async inputPath => {
   const outputPath = tmp.tmpNameSync({postfix: path.extname(inputPath)});
   track('encoding/converted/hevc');
 
@@ -35,7 +35,25 @@ const convertToH264 = async inputPath => {
   return outputPath;
 };
 
+// `ffmpeg -i original.mp4 -vcodec libx264 -crf 27 -preset veryfast -pix_fmt yuv420p output.mp4`
+const convertProResToH264 = async inputPath => {
+  const outputPath = tmp.tmpNameSync({postfix: path.extname(inputPath)});
+  track('encoding/converted/prores');
+
+  await execa(ffmpegPath, [
+    '-i', inputPath,
+    '-vcodec', 'libx264',
+    '-crf', '27',
+    '-preset', 'veryfast',
+    '-pix_fmt', 'yuv420p',
+    outputPath
+  ]);
+
+  return outputPath;
+};
+
 module.exports = {
   getEncoding,
-  convertToH264
+  convertHEVCToH264,
+  convertProResToH264
 };

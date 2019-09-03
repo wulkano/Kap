@@ -3,7 +3,7 @@ const path = require('path');
 
 const {supportedVideoExtensions} = require('../common/constants');
 const {openEditorWindow} = require('../editor');
-const {getEncoding, convertToH264} = require('./encoding');
+const {getEncoding, convertHEVCToH264, convertProResToH264} = require('./encoding');
 
 const fileExtensions = supportedVideoExtensions.map(ext => `.${ext}`);
 
@@ -13,10 +13,15 @@ const openFiles = (...filePaths) => {
       .filter(filePath => fileExtensions.includes(path.extname(filePath).toLowerCase()))
       .map(async filePath => {
         const encoding = await getEncoding(filePath);
-        if (encoding.toLowerCase() === 'hevc') {
-          openEditorWindow(await convertToH264(filePath), {originalFilePath: filePath});
-        } else {
-          openEditorWindow(filePath);
+        switch (encoding.toLowerCase()) {
+          case 'hevc':
+            openEditorWindow(await convertHEVCToH264(filePath), {originalFilePath: filePath});
+            break;
+          case 'prores':
+            openEditorWindow(await convertProResToH264(filePath), {originalFilePath: filePath});
+            break;
+          default:
+            openEditorWindow(filePath);
         }
       })
   );
