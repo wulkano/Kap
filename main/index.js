@@ -17,6 +17,8 @@ const {initializeGlobalAccelerators} = require('./global-accelerators');
 const {setApplicationMenu} = require('./menus');
 const openFiles = require('./utils/open-files');
 const {initializeExportOptions} = require('./export-options');
+const settings = require('./common/settings');
+const {hasMicrophoneAccess} = require('./common/system-permissions');
 
 require('./utils/sentry');
 
@@ -86,7 +88,10 @@ const checkForUpdates = () => {
   if (filesToOpen.length > 0) {
     track('editor/opened/startup');
     openFiles(...filesToOpen);
-  } else if (!app.getLoginItemSettings().wasOpenedAtLogin) {
+  } else if (
+    !app.getLoginItemSettings().wasOpenedAtLogin &&
+    (!settings.get('recordAudio') || hasMicrophoneAccess())
+  ) {
     openCropperWindow();
   }
 
