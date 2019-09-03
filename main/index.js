@@ -11,7 +11,7 @@ const {initializeTray} = require('./tray');
 const plugins = require('./common/plugins');
 const {initializeAnalytics} = require('./common/analytics');
 const initializeExportList = require('./export-list');
-const {openCropperWindow, isCropperOpen} = require('./cropper');
+const {openCropperWindow, isCropperOpen, closeAllCroppers} = require('./cropper');
 const {track} = require('./common/analytics');
 const {initializeGlobalAccelerators} = require('./global-accelerators');
 const {setApplicationMenu} = require('./menus');
@@ -92,6 +92,8 @@ const checkForUpdates = () => {
 
   checkForUpdates();
 })();
+
+app.on('before-quit', closeAllCroppers);
 
 app.on('window-all-closed', event => {
   app.dock.hide();
