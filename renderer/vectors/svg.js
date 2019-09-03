@@ -91,7 +91,7 @@ class Svg extends React.Component {
 
             .active,
             .active:hover,
-            div:focus svg {
+            div.focusable:focus svg {
               fill: ${activeFill};
             }
         `}</style>
