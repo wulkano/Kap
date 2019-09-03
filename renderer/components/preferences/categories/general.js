@@ -45,6 +45,7 @@ class General extends React.Component {
       recordKeyboardShortcut,
       loopExports,
       toggleSetting,
+      toggleRecordAudio,
       audioInputDeviceId,
       setAudioInputDeviceId,
       audioDevices,
@@ -151,7 +152,7 @@ class General extends React.Component {
           <Switch
             tabIndex={tabIndex}
             checked={recordAudio}
-            onClick={() => toggleSetting('recordAudio')}/>
+            onClick={toggleRecordAudio}/>
         </Item>
         <Item key="audioInputDeviceId" subtitle="Select input device">
           <Select
@@ -209,6 +210,7 @@ General.propTypes = {
   record60fps: PropTypes.bool,
   recordKeyboardShortcut: PropTypes.bool,
   toggleSetting: PropTypes.elementType.isRequired,
+  toggleRecordAudio: PropTypes.elementType.isRequired,
   audioInputDeviceId: PropTypes.string,
   setAudioInputDeviceId: PropTypes.elementType.isRequired,
   audioDevices: PropTypes.array,
@@ -268,6 +270,7 @@ export default connect(
   }),
   ({
     toggleSetting,
+    toggleRecordAudio,
     setAudioInputDeviceId,
     pickKapturesDir,
     setOpenOnStartup,
@@ -275,6 +278,7 @@ export default connect(
     toggleShortcuts
   }) => ({
     toggleSetting,
+    toggleRecordAudio,
     setAudioInputDeviceId,
     pickKapturesDir,
     setOpenOnStartup,

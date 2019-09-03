@@ -15,6 +15,7 @@ export default class PreferencesContainer extends Container {
   mount = async setOverlay => {
     this.setOverlay = setOverlay;
     this.settings = this.remote.require('./common/settings');
+    this.systemPermissions = this.remote.require('./common/system-permissions');
     this.plugins = this.remote.require('./common/plugins');
     this.track = this.remote.require('./common/analytics').track;
     this.ipc = require('electron-better-ipc').ipcRenderer;
@@ -143,6 +144,16 @@ export default class PreferencesContainer extends Container {
 
     this.setState({[setting]: newVal});
     this.settings.set(setting, newVal);
+  }
+
+  toggleRecordAudio = async () => {
+    const newVal = !this.state.recordAudio;
+    this.track(`preferences/setting/recordAudio/${newVal}`);
+
+    if (!newVal || await this.systemPermissions.ensureMicrophonePermissions()) {
+      this.setState({recordAudio: newVal});
+      this.settings.set('recordAudio', newVal);
+    }
   }
 
   toggleShortcuts = async () => {
