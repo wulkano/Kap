@@ -58,10 +58,18 @@ export default class VideoContainer extends Container {
     video.addEventListener('loadedmetadata', () => {
       const {videoWidth, videoHeight, duration} = video;
       this.editorContainer.setDimensions(videoWidth, videoHeight);
+      this.setState({duration, startTime: 0, endTime: duration});
+    });
+
+    video.addEventListener('loadeddata', () => {
       const hasAudio = video.webkitAudioDecodedByteCount > 0 ||
         Boolean(video.audioTracks && video.audioTracks.length > 0);
-      this.setState({duration, startTime: 0, endTime: duration, hasAudio});
-      this.mute();
+
+      if (!hasAudio) {
+        this.mute();
+      }
+
+      this.setState({hasAudio});
     });
 
     video.addEventListener('canplaythrough', () => {
@@ -90,14 +98,14 @@ export default class VideoContainer extends Container {
     });
   }
 
-  play = () => {
+  play = async () => {
+    await this.video.play();
     this.setState({isPaused: false});
-    this.video.play();
   }
 
   pause = () => {
-    this.setState({isPaused: true});
     this.video.pause();
+    this.setState({isPaused: true});
   }
 
   mute = () => {
