@@ -2,20 +2,22 @@ const {systemPreferences, shell, dialog} = require('electron');
 
 const getMicrophoneAccess = () => systemPreferences.getMediaAccessStatus('microphone');
 
-const promptSystemPreferences = async ({asked} = {}) => {
-  if (!asked) {
-    const {response} = await dialog.showMessageBox({
-      type: 'warning',
-      buttons: ['Open System Preferences', 'Cancel'],
-      defaultId: 0,
-      message: 'Kap cannot access the microphone.',
-      detail: 'Kap requires microphone access to be able to record audio. You can grant this in the System Preferences. Afterwards, relaunch Kap for the changes to take effect.',
-      cancelId: 1
-    });
+const promptSystemPreferences = async ({hasAsked} = {}) => {
+  if (hasAsked) {
+    return false;
+  }
 
-    if (response === 0) {
-      openSystemPreferences();
-    }
+  const {response} = await dialog.showMessageBox({
+    type: 'warning',
+    buttons: ['Open System Preferences', 'Cancel'],
+    defaultId: 0,
+    message: 'Kap cannot access the microphone.',
+    detail: 'Kap requires microphone access to be able to record audio. You can grant this in the System Preferences. Afterwards, relaunch Kap for the changes to take effect.',
+    cancelId: 1
+  });
+
+  if (response === 0) {
+    openSystemPreferences();
   }
 
   return false;
@@ -35,7 +37,7 @@ const ensureMicrophonePermissions = async (fallback = promptSystemPreferences) =
       return true;
     }
 
-    return fallback({asked: true});
+    return fallback({hasAsked: true});
   }
 
   return fallback();
