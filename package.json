@@ -124,7 +124,7 @@
       "minimumSystemVersion": "10.12.0",
       "darkModeSupport": true,
       "extendInfo": {
-        "NSMicrophoneUsageDescription": "Enable sound recording by giving Kap access to your audio input devices.",
+        "NSMicrophoneUsageDescription": "Kap needs access to the microphone to be able to record audio for screen recordings.",
         "NSUserNotificationAlertStyle": "alert",
         "CFBundleDocumentTypes": [
           {

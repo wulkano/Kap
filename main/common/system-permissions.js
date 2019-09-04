@@ -6,10 +6,10 @@ const promptSystemPreferences = async ({asked} = {}) => {
   if (!asked) {
     const {response} = await dialog.showMessageBox({
       type: 'warning',
-      buttons: ['System Prefernces', 'Cancel'],
+      buttons: ['Open System Preferences', 'Cancel'],
       defaultId: 0,
-      message: 'Can not access audio input device',
-      detail: 'Enable sound recording by giving Kap access to your audio input devices in your system settings. Quit and re-open Kap for the changes to take effect.',
+      message: 'Kap cannot access the microphone.',
+      detail: 'Kap requires microphone access to be able to record audio. You can grant this in the System Preferences. Afterwards, relaunch Kap for the changes to take effect.',
       cancelId: 1
     });
 
