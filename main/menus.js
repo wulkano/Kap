@@ -45,12 +45,12 @@ const openFileItem = {
   click: async () => {
     closeAllCroppers();
 
-    const filePaths = await dialog.showOpenDialogSync({
+    const {canceled, filePaths} = await dialog.showOpenDialog({
       filters: [{name: 'Videos', extensions: supportedVideoExtensions}],
       properties: ['openFile', 'multiSelections']
     });
 
-    if (filePaths) {
+    if (!canceled && filePaths) {
       openFiles(...filePaths);
     }
   }
