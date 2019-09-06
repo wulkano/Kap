@@ -113,11 +113,13 @@ export default class EditorContainer extends Container {
     const {plugins} = options.find(option => option.format === format);
     const newPlugin = plugins.find(p => p.title === plugin) ? plugin : plugins[0].title;
 
-    if (isMuted(format) && !isMuted(this.state.format)) {
-      this.setState({wasMuted: this.videoContainer.state.isMuted});
-      this.videoContainer.mute();
-    } else if (!isMuted(format) && isMuted(this.state.format) && !wasMuted) {
-      this.videoContainer.unmute();
+    if (this.videoContainer.state.hasAudio) {
+      if (isMuted(format) && !isMuted(this.state.format)) {
+        this.setState({wasMuted: this.videoContainer.state.isMuted});
+        this.videoContainer.mute();
+      } else if (!isMuted(format) && isMuted(this.state.format) && !wasMuted) {
+        this.videoContainer.unmute();
+      }
     }
 
     this.setState({format, plugin: newPlugin});

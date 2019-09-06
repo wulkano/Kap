@@ -9,15 +9,15 @@ import formatTime from '../../../utils/format-time';
 class RightControls extends React.Component {
   render() {
     const {isMuted, mute, unmute, format, duration, hasAudio} = this.props;
-    const canUnmute = !['gif', 'apng'].includes(format);
-    const unmuteColor = canUnmute && hasAudio ? '#fff' : 'rgba(255, 255, 255, 0.40)';
+    const canUnmute = !['gif', 'apng'].includes(format) && hasAudio;
+    const unmuteColor = canUnmute ? '#fff' : 'rgba(255, 255, 255, 0.40)';
     return (
       <div className="container">
         <div className="time">{formatTime(duration)}</div>
         <div className="mute">
           {
             isMuted || !hasAudio ?
-              <VolumeOffIcon shadow fill={unmuteColor} hoverFill={unmuteColor} onClick={canUnmute && hasAudio ? unmute : undefined}/> :
+              <VolumeOffIcon shadow fill={unmuteColor} hoverFill={unmuteColor} tabIndex={canUnmute ? undefined : -1} onClick={canUnmute ? unmute : undefined}/> :
               <VolumeHighIcon shadow fill="#fff" hoverFill="#fff" onClick={mute}/>
           }
         </div>
