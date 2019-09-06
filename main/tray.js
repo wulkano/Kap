@@ -9,6 +9,7 @@ const {track} = require('./common/analytics');
 const openFiles = require('./utils/open-files');
 
 let tray = null;
+let trayAnimation = null;
 
 const openContextMenu = () => {
   tray.popUpContextMenu(cogMenu);
@@ -32,6 +33,10 @@ const disableTray = () => {
 };
 
 const resetTray = () => {
+  if (trayAnimation) {
+    clearTimeout(trayAnimation);
+  }
+
   tray.removeAllListeners('click');
   tray.setImage(path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'));
   tray.on('click', openCropperWindow);
@@ -48,7 +53,7 @@ const animateIcon = () => new Promise(resolve => {
   let i = 0;
 
   const next = () => {
-    setTimeout(() => {
+    trayAnimation = setTimeout(() => {
       const number = String(i++).padStart(5, '0');
       const filename = `loading_${number}Template.png`;
 
@@ -56,6 +61,7 @@ const animateIcon = () => new Promise(resolve => {
         tray.setImage(path.join(__dirname, '..', 'static', 'menubar-loading', filename));
         next();
       } catch (_) {
+        trayAnimation = null;
         resolve();
       }
     }, interval);

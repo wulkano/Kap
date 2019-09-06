@@ -171,6 +171,7 @@ const stopRecording = async () => {
   } catch (error) {
     track('recording/stopped/error');
     dialog.showErrorBox('Recording error', error.message);
+    cleanup();
     return;
   }
 
