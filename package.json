@@ -61,6 +61,7 @@
     "package-json": "^6.5.0",
     "pify": "^4.0.1",
     "plist": "^3.0.1",
+    "pretty-ms": "^5.0.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
