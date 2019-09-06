@@ -184,21 +184,8 @@ export default class CropperPage extends React.Component {
             --action-bar-box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.4);
             --action-bar-background: #222222;
             --action-bar-border: 1px solid rgba(0, 0, 0, 0.8);
-            --record-button-inner-border-width: 2px;
 
             --icon-color: rgba(255, 255, 255, 0.6);
-
-            --record-button-border-color: transparent;
-            --record-button-inner-background: transparent;
-            --record-button-inner-border: rgba(255, 255, 255, 0.8);
-            --record-button-background: rgba(255, 255, 255, 0.4);
-            --record-button-focus-background: transparent;
-            --record-button-focus-background-cropper: #fff;
-            --record-button-focus-outter-background: transparent;
-            --record-button-focus-outter-border: rgba(255, 255, 255, 0.4);
-            --record-button-fill-background: transparent;
-            --record-button-inner-background-cropper: rgba(255, 255, 255, 0.8);
-            --record-button-ripple-color: rgba(255, 255, 255, 0.7);
 
             --input-hover-border-color: transparent;
             --button-active-color: var(--input-background-color);
