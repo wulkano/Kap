@@ -13,6 +13,7 @@ const openConfigWindow = async pluginName => {
     width: 320,
     height: 436,
     resizable: false,
+    movable: false,
     minimizable: false,
     maximizable: false,
     fullscreenable: false,
