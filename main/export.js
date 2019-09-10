@@ -113,7 +113,7 @@ class Export {
         ...this.exportOptions,
         defaultFileName: fileType ? `${path.parse(this.defaultFileName).name}.${fileType}` : this.defaultFileName,
         inputPath: this.inputPath,
-        onProgress: (percentage, estimate) => this.setProgress(estimate ? `Converting (${estimate} remaining)` : 'Converting…', percentage)
+        onProgress: (percentage, estimate) => this.setProgress(estimate ? `Converting — ${estimate} remaining` : 'Converting…', percentage)
       },
       fileType || this.format
     );
