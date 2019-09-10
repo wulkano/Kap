@@ -44,7 +44,7 @@ class Export {
       defaultFileName: this.isDefault ? path.basename(this.context.targetFilePath) : this.defaultFileName,
       text: this.text,
       status: this.status,
-      percentage: this.percentage,
+      percentage: this.percentage || 0,
       image: this.image,
       createdAt: this.createdAt,
       filePath: this.filePath && (this.isDefault ? this.context.targetFilePath : this.filePath),
@@ -113,7 +113,7 @@ class Export {
         ...this.exportOptions,
         defaultFileName: fileType ? `${path.parse(this.defaultFileName).name}.${fileType}` : this.defaultFileName,
         inputPath: this.inputPath,
-        onProgress: percentage => this.setProgress('Converting…', percentage)
+        onProgress: (percentage, estimate) => this.setProgress(estimate ? `Converting — ${estimate} remaining` : 'Converting…', percentage)
       },
       fileType || this.format
     );
