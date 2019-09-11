@@ -85,7 +85,7 @@ class ShareServiceContext {
 
     if (this._isBuiltin) {
       options = {
-        title: text
+        body: text
       };
     }
 
