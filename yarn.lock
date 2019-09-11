@@ -3315,6 +3315,21 @@ execa@^2.0.1, execa@^2.0.3:
     signal-exit "^3.0.2"
     strip-final-newline "^2.0.0"
 
+execa@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/execa/-/execa-2.0.4.tgz#2f5cc589c81db316628627004ea4e37b93391d8e"
+  integrity sha512-VcQfhuGD51vQUQtKIq2fjGDLDbL6N1DTQVpYzxZ7LPIXw3HqTuIz6uxRmpV1qf8i31LHf2kjiaGI+GdHwRgbnQ==
+  dependencies:
+    cross-spawn "^6.0.5"
+    get-stream "^5.0.0"
+    is-stream "^2.0.0"
+    merge-stream "^2.0.0"
+    npm-run-path "^3.0.0"
+    onetime "^5.1.0"
+    p-finally "^2.0.0"
+    signal-exit "^3.0.2"
+    strip-final-newline "^2.0.0"
+
 expand-brackets@^2.1.4:
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/expand-brackets/-/expand-brackets-2.1.4.tgz#b77735e315ce30f6b6eff0f83b04151a22449622"
@@ -5087,6 +5102,14 @@ lru_map@0.3.3:
 lsmod@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/lsmod/-/lsmod-1.0.0.tgz#9a00f76dca36eb23fa05350afe1b585d4299e64b"
+
+mac-open-with@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/mac-open-with/-/mac-open-with-1.1.3.tgz#6bfacf10a5d3a2628c74656c8224e756831da930"
+  integrity sha512-iQbQOrY5CrQYcum0Nw57u9ox5AnDb2KOL4AGHYBxynvWa0dUTn2s3MwNvtPLU6Vli/7z68CvTmPpS1U9gRCFcg==
+  dependencies:
+    electron-util "^0.12.1"
+    execa "^2.0.4"
 
 mac-windows@^0.7.1:
   version "0.7.1"
