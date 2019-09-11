@@ -1,13 +1,11 @@
 
-const path = require('path');
-const electron = require('electron');
 const Store = require('electron-store');
 const {ipcMain: ipc} = require('electron-better-ipc');
 
-const {app} = electron;
 const plugins = require('./common/plugins');
 const {converters} = require('./convert');
 const {setOptions, getEditors} = require('./editor');
+const {apps} = require('./plugins/open-with-plugin');
 
 const exportUsageHistory = new Store({
   name: 'export-usage-history',
@@ -31,44 +29,33 @@ const prettifyFormat = format => {
 };
 
 const getExportOptions = () => {
-  const cwd = path.join(app.getPath('userData'), 'plugins');
   const installed = plugins.getInstalled();
+  const builtIn = plugins.getBuiltIn();
 
   const options = [];
   for (const format of converters.keys()) {
-    const plugins = [
-      {
-        title: 'Save to Disk',
-        pluginName: '_saveToDisk',
-        isDefault: true // TODO: This needs a clearer name
-      }
-    ];
-
-    // TODO: Handle built-in plugins better. They should be added automatically
-    // just like third-party ones and should also take into account `.formats`.
-    if (['gif', 'apng'].includes(format)) {
-      plugins.push({
-        title: 'Copy to Clipboard',
-        pluginName: '_copyToClipboard'
-      });
-    }
-
     options.push({
       format,
       prettyFormat: prettifyFormat(format),
-      plugins
+      plugins: []
     });
   }
 
-  for (const json of installed) {
+  for (const json of [...installed, ...builtIn]) {
     if (!json.isCompatible) {
       continue;
     }
 
-    const plugin = require(path.join(cwd, 'node_modules', json.name));
+    const plugin = require(json.pluginPath);
+
     for (const service of plugin.shareServices) {
       for (const format of service.formats) {
-        options.find(option => option.format === format).plugins.push({title: service.title, pluginName: json.name});
+        options.find(option => option.format === format).plugins.push({
+          title: service.title,
+          pluginName: json.name,
+          pluginPath: json.pluginPath,
+          apps: json.name === '_openWith' ? apps.get(format) : undefined
+        });
       }
     }
   }
