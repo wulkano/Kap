@@ -1,3 +1,4 @@
+import electron from 'electron';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -6,13 +7,44 @@ import Select from './select';
 
 class RightOptions extends React.Component {
   render() {
-    const {options, format, plugin, selectFormat, selectPlugin, startExport} = this.props;
+    const {options, format, plugin, selectFormat, selectPlugin, startExport, openWithApp, selectOpenWithApp} = this.props;
 
     const formatOptions = options ? options.map(({format, prettyFormat}) => ({value: format, label: prettyFormat})) : [];
-    const pluginOptions = options ? options.find(option => option.format === format).plugins.map(plugin => ({value: plugin.title, label: plugin.title})) : [];
+    const pluginOptions = options ? options.find(option => option.format === format).plugins.map(plugin => {
+      if (plugin.apps) {
+        const submenu = plugin.apps.map(app => ({
+          label: app.isDefault ? `${app.name} (Default)` : app.name,
+          type: 'radio',
+          checked: openWithApp && app.url === openWithApp.url,
+          click: () => selectOpenWithApp(app),
+          icon: electron.remote.nativeImage.createFromDataURL(app.icon).resize({width: 16, height: 16})
+        }));
 
-    if (pluginOptions.length < 2) {
+        if (plugin.apps[0].isDefault) {
+          submenu.splice(1, 0, {type: 'separator'});
+        }
+
+        return {
+          isBuiltIn: false,
+          submenu,
+          value: plugin.title,
+          label: openWithApp ? openWithApp.name : ''
+        };
+      }
+
+      return {
+        type: openWithApp ? 'normal' : 'radio',
+        value: plugin.title,
+        label: plugin.title,
+        isBuiltIn: plugin.pluginName.startsWith('_')
+      };
+    }) : [];
+
+    if (pluginOptions.every(opt => opt.isBuiltIn)) {
       pluginOptions.push({
+        separator: true
+      }, {
+        type: 'normal',
         label: 'Get Plugins…',
         value: 'open-plugins'
       });
@@ -83,11 +115,13 @@ RightOptions.propTypes = {
   plugin: PropTypes.string,
   selectFormat: PropTypes.elementType,
   selectPlugin: PropTypes.elementType,
-  startExport: PropTypes.elementType
+  startExport: PropTypes.elementType,
+  openWithApp: PropTypes.object,
+  selectOpenWithApp: PropTypes.elementType
 };
 
 export default connect(
   [EditorContainer],
-  ({options, format, plugin}) => ({options, format, plugin}),
-  ({selectFormat, selectPlugin, startExport}) => ({selectFormat, selectPlugin, startExport})
+  ({options, format, plugin, openWithApp}) => ({options, format, plugin, openWithApp}),
+  ({selectFormat, selectPlugin, startExport, selectOpenWithApp}) => ({selectFormat, selectPlugin, startExport, selectOpenWithApp})
 )(RightOptions);

@@ -111,7 +111,7 @@ export default class EditorContainer extends Container {
   selectFormat = format => {
     const {plugin, options, wasMuted} = this.state;
     const {plugins} = options.find(option => option.format === format);
-    const newPlugin = plugins.find(p => p.title === plugin) ? plugin : plugins[0].title;
+    const newPlugin = plugin !== 'Open With' && plugins.find(p => p.title === plugin) ? plugin : plugins[0].title;
 
     if (isMuted(format) && !isMuted(this.state.format)) {
       this.setState({wasMuted: this.videoContainer.state.isMuted});
@@ -120,7 +120,7 @@ export default class EditorContainer extends Container {
       this.videoContainer.unmute();
     }
 
-    this.setState({format, plugin: newPlugin});
+    this.setState({format, plugin: newPlugin, openWithApp: null});
   }
 
   selectPlugin = plugin => {
@@ -129,8 +129,12 @@ export default class EditorContainer extends Container {
 
       ipc.callMain('open-preferences', {category: 'plugins', tab: 'discover'});
     } else {
-      this.setState({plugin});
+      this.setState({plugin, openWithApp: null});
     }
+  }
+
+  selectOpenWithApp = openWithApp => {
+    this.setState({plugin: 'Open With', openWithApp});
   }
 
   setFps = (value, target, {ignoreEmpty = true} = {}) => {
@@ -180,11 +184,10 @@ export default class EditorContainer extends Container {
   }
 
   startExport = () => {
-    const {width, height, fps, filePath, originalFilePath, options, format, plugin: serviceTitle, originalFps, isNewRecording} = this.state;
+    const {width, height, fps, openWithApp, filePath, originalFilePath, options, format, plugin: serviceTitle, originalFps, isNewRecording} = this.state;
     const {startTime, endTime, isMuted} = this.videoContainer.state;
 
     const plugin = options.find(option => option.format === format).plugins.find(p => p.title === serviceTitle);
-    const {pluginName, isDefault} = plugin;
 
     const data = {
       exportOptions: {
@@ -197,17 +200,17 @@ export default class EditorContainer extends Container {
       },
       inputPath: originalFilePath || filePath,
       previewPath: filePath,
-      pluginName,
-      isDefault,
+      plugin,
       serviceTitle,
       format,
       originalFps,
-      isNewRecording
+      isNewRecording,
+      openWithApp
     };
 
     const {ipcRenderer: ipc} = require('electron-better-ipc');
 
     ipc.callMain('export', data);
-    ipc.callMain('update-usage', {format, plugin: pluginName});
+    ipc.callMain('update-usage', {format, plugin: plugin.name});
   }
 }
