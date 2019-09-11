@@ -29,6 +29,7 @@ class Exports extends React.Component {
         <style jsx>{`
             flex: 1;
             overflow-y: auto;
+            background: var(--background-color);
         `}</style>
       </div>
     );

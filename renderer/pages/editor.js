@@ -78,6 +78,7 @@ export default class EditorPage extends React.Component {
             --slider-popup-background: rgba(255, 255, 255, 0.85);
             --slider-background-color: #ffffff;
             --slider-thumb-color: #ffffff;
+            --background-color: #222222;
           }
 
           .dark {

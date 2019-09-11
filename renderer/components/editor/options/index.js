@@ -13,10 +13,11 @@ export default class Options extends React.Component {
           .container {
             display: flex;
             flex: 1;
-            margin: 0 16px;
+            padding: 0 16px;
             align-items: center;
             justify-content: space-between;
             width: 100%;
+            background: var(--background-color);
           }
         `}</style>
       </div>
