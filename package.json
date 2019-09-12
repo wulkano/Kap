@@ -14,7 +14,7 @@
   "private": true,
   "main": "main/index.js",
   "scripts": {
-    "test": "xo",
+    "test": "xo && ava --verbose",
     "start": "yarn && electron .",
     "build": "next build renderer && next export renderer",
     "dist": "npm run build && electron-builder",
@@ -35,10 +35,11 @@
     "base64-img": "^1.0.4",
     "classnames": "^2.2.6",
     "delay": "^4.3.0",
-    "electron-better-ipc": "^0.3.0",
+    "electron": "^6.0.9",
+    "electron-better-ipc": "^0.5.0",
     "electron-log": "^3.0.7",
     "electron-next": "^3.1.5",
-    "electron-store": "^4.0.0",
+    "electron-store": "^5.0.0",
     "electron-updater": "^4.1.2",
     "electron-util": "^0.12.1",
     "execa": "^2.0.3",
@@ -73,14 +74,15 @@
     "unstated": "^1.2.0"
   },
   "devDependencies": {
+    "ava": "^2.3.0",
     "babel-eslint": "^10.0.2",
-    "electron": "6.0.1",
     "electron-builder": "^21.2.0",
     "eslint-config-xo-react": "^0.20.0",
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "^1.6.1",
     "husky": "^3.0.2",
     "next": "^8.1.0",
+    "spectron": "^8.0.0",
     "xo": "^0.24.0"
   },
   "xo": {
@@ -105,6 +107,16 @@
       "renderer/.next",
       "renderer/out"
     ]
+  },
+  "ava": {
+    "require": [
+      "spectron"
+    ],
+    "files": [
+      "test/test.js",
+      "!test/editor.js"
+    ],
+    "spectron": "inherit"
   },
   "husky": {
     "hooks": {
