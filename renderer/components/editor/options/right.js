@@ -13,7 +13,7 @@ class RightOptions extends React.Component {
     const pluginOptions = options ? options.find(option => option.format === format).plugins.map(plugin => {
       if (plugin.apps) {
         const submenu = plugin.apps.map(app => ({
-          label: app.isDefault ? `${app.name} (Default)` : app.name,
+          label: app.isDefault ? `${app.name} (default)` : app.name,
           type: 'radio',
           checked: openWithApp && app.url === openWithApp.url,
           click: () => selectOpenWithApp(app),
