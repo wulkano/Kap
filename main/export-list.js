@@ -1,6 +1,6 @@
 /* eslint-disable array-element-newline */
 'use strict';
-const {dialog, BrowserWindow} = require('electron');
+const {dialog, BrowserWindow, app} = require('electron');
 const fs = require('fs');
 const {dirname} = require('path');
 const {ipcMain: ipc} = require('electron-better-ipc');
@@ -86,6 +86,7 @@ class ExportList {
 
     this.currentExport = this.queue.shift();
     if (this.currentExport.canceled) {
+      delete this.currentExport;
       this._startNext();
       return;
     }
@@ -261,4 +262,27 @@ const callExportsWindow = (channel, data) => {
 
 module.exports = () => {
   exportList = new ExportList();
+
+  app.on('before-quit', event => {
+    if (exportList.currentExport) {
+      openExportsWindow();
+      const exportsWindow = getExportsWindow();
+
+      const buttonIndex = dialog.showMessageBoxSync(exportsWindow, {
+        type: 'question',
+        buttons: [
+          'Quit',
+          'Continue'
+        ],
+        defaultId: 1,
+        cancelId: 0,
+        message: 'Do you want to continue exporting?',
+        detail: 'Kap is currently exporting files. If you quit, the export task will be cancelled.'
+      });
+
+      if (buttonIndex === 1) {
+        event.preventDefault();
+      }
+    }
+  });
 };
