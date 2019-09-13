@@ -5103,10 +5103,10 @@ lsmod@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/lsmod/-/lsmod-1.0.0.tgz#9a00f76dca36eb23fa05350afe1b585d4299e64b"
 
-mac-open-with@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/mac-open-with/-/mac-open-with-1.2.1.tgz#0e2e206f8c63222333c842a30f058a89ebdc7db6"
-  integrity sha512-IKvl/zO20GBlvNzrFIJAmgu5cmqN8p+Vdl0MhAvGGwmKz8Lh/eZu+U8MAA/5yF034G0R5kXwB/EzRzFwUyjlkw==
+mac-open-with@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/mac-open-with/-/mac-open-with-1.2.2.tgz#b61871c19828f71c2d84a858c8925df0173d58ee"
+  integrity sha512-cOViRm94bVssaBUSZcnf4zpZekgNNvdQzbzaKXE4w+Mv0xPpyauoO0ernJo9J1GPdQ7ob0ifLO4Fqje2sOTtZg==
   dependencies:
     electron-util "^0.12.1"
     execa "^2.0.4"
