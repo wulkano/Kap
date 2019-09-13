@@ -126,7 +126,7 @@ class ExportList {
     const newExport = new Export(options);
     const createdAt = (new Date()).toISOString();
 
-    if (options.isDefault) {
+    if (options.plugin.pluginName === '_saveToDisk') {
       const wasExportsWindowOpen = Boolean(getExportsWindow());
       const exportsWindow = await openExportsWindow();
       const kapturesDir = settings.get('kapturesDir');
@@ -150,9 +150,11 @@ class ExportList {
 
         return;
       }
+    } else if (options.plugin.pluginName === '_openWith') {
+      newExport.context.appUrl = options.openWithApp.url;
     }
 
-    if (!newExport.plugin.isConfigValid()) {
+    if (!newExport.config.isConfigValid()) {
       const result = dialog.showMessageBoxSync({
         type: 'error',
         buttons: ['Configure', 'Cancel'],

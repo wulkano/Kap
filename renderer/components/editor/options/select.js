@@ -1,12 +1,43 @@
+import electron from 'electron';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import {DropdownArrowIcon} from '../../../vectors';
 
 class Select extends React.Component {
-  handleChange = event => {
-    const {onChange} = this.props;
-    onChange(event.target.value);
+  select = React.createRef();
+
+  handleClick = () => {
+    const {options, onChange, selected} = this.props;
+    if (options.length > 0) {
+      const boundingRect = this.select.current.getBoundingClientRect();
+
+      const {Menu} = electron.remote;
+      const menu = Menu.buildFromTemplate(options.map(option => {
+        if (option.submenu) {
+          return {
+            label: option.value,
+            submenu: option.submenu
+          };
+        }
+
+        if (option.separator) {
+          return {type: 'separator'};
+        }
+
+        return {
+          label: option.label,
+          type: option.type || 'radio',
+          checked: option.value === selected,
+          click: () => onChange(option.value)
+        };
+      }));
+
+      menu.popup({
+        x: Math.round(boundingRect.left),
+        y: Math.round(boundingRect.top)
+      });
+    }
   }
 
   render() {
@@ -15,10 +46,7 @@ class Select extends React.Component {
     const label = selectedOption && selectedOption.label;
 
     return (
-      <div className="container">
-        <select value={selected} onChange={this.handleChange}>
-          {options.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
-        </select>
+      <div ref={this.select} className="container" onClick={this.handleClick}>
         <div className="label">{label}</div>
         <div className="dropdown"><DropdownArrowIcon/></div>
         <style jsx>{`
@@ -32,6 +60,8 @@ class Select extends React.Component {
             color: white;
             display: flex;
             justify-content: space-between;
+            box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.1);
           }
 
           .label {
@@ -41,21 +71,8 @@ class Select extends React.Component {
             text-overflow: ellipsis;
           }
 
-          select {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            outline: none;
-            color: transparent;
-            box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.2);
-          }
-
-          select:hover,
-          select:focus {
+          .container:hover,
+          .container:focus {
             background: hsla(0, 0%, 100%, 0.2);
           }
 

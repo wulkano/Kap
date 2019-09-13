@@ -157,6 +157,7 @@ class Plugins {
       const plugin = new Plugin(name);
       return {
         ...json,
+        pluginPath: this._pluginPath(name),
         prettyName: this._getPrettyName(name),
         hasConfig: this.getServices(name).some(({config = {}}) => Object.keys(config).length > 0),
         isValid: plugin.isConfigValid(),
@@ -166,6 +167,22 @@ class Plugins {
         isSymlink: fs.lstatSync(this._pluginPath(name)).isSymbolicLink()
       };
     });
+  }
+
+  getBuiltIn() {
+    return [{
+      pluginPath: './plugins/copy-to-clipboard-plugin',
+      isCompatible: true,
+      name: '_copyToClipboard'
+    }, {
+      pluginPath: './plugins/save-file-plugin',
+      isCompatible: true,
+      name: '_saveToDisk'
+    }, {
+      pluginPath: './plugins/open-with-plugin',
+      isCompatible: true,
+      name: '_openWith'
+    }];
   }
 
   async getFromNpm() {

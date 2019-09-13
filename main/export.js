@@ -7,29 +7,32 @@ const moment = require('moment');
 const {track} = require('./common/analytics');
 const {convertTo} = require('./convert');
 const ShareServiceContext = require('./share-service-context');
-const Plugin = require('./plugin');
+const PluginConfig = require('./utils/plugin-config');
 
 class Export {
   constructor(options) {
     this.exportOptions = options.exportOptions;
     this.inputPath = options.inputPath;
     this.previewPath = options.previewPath;
-    this.pluginName = options.pluginName;
-    this.plugin = new Plugin(options.pluginName);
-    this.service = this.plugin.getSerivce(options.serviceTitle);
+    this.pluginName = options.plugin.pluginName;
+
+    this.plugin = require(options.plugin.pluginPath);
+    this.service = this.plugin.shareServices.find(shareService => shareService.title === options.serviceTitle);
+
     this.format = options.format;
     this.image = '';
-    this.isDefault = options.isDefault;
+    this.isSaveFileService = options.plugin.pluginName === '_saveToDisk';
     this.disableOutputActions = false;
 
     const now = moment();
     this.defaultFileName = options.isNewRecording ? `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.${this.format}` : `${path.parse(this.inputPath).name}.${this.format}`;
+    this.config = new PluginConfig(this.pluginName, this.plugin);
 
     this.context = new ShareServiceContext({
-      _isBuiltin: this.plugin._isBuiltin,
+      _isBuiltin: options.plugin.pluginName.startsWith('_'),
       format: this.format,
       defaultFileName: this.defaultFileName,
-      config: this.plugin.config,
+      config: this.config,
       onCancel: this.cancel.bind(this),
       onProgress: this.setProgress.bind(this),
       convert: this.convert.bind(this),
@@ -41,13 +44,13 @@ class Export {
 
   get data() {
     return {
-      defaultFileName: this.isDefault ? path.basename(this.context.targetFilePath) : this.defaultFileName,
+      defaultFileName: this.isSaveFileService ? path.basename(this.context.targetFilePath) : this.defaultFileName,
       text: this.text,
       status: this.status,
       percentage: this.percentage || 0,
       image: this.image,
       createdAt: this.createdAt,
-      filePath: this.filePath && (this.isDefault ? this.context.targetFilePath : this.filePath),
+      filePath: this.filePath && (this.isSaveFileService ? this.context.targetFilePath : this.filePath),
       error: this.error,
       disableOutputActions: this.disableOutputActions
     };
