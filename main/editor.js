@@ -20,6 +20,7 @@ const MIN_VIDEO_WIDTH = 768;
 const MIN_VIDEO_HEIGHT = MIN_VIDEO_WIDTH * VIDEO_ASPECT;
 const MIN_WINDOW_HEIGHT = MIN_VIDEO_HEIGHT + OPTIONS_BAR_HEIGHT;
 const editorEmitter = new EventEmitter();
+const editorsWithNotSavedDialogs = new Map();
 
 const getEditorName = (filePath, isNewRecording) => isNewRecording ? `New Recording ${moment().format('YYYY-MM-DD')} at ${moment().format('H.mm.ss')}` : path.basename(filePath);
 
@@ -54,6 +55,7 @@ const openEditorWindow = async (filePath, {recordedFps, isNewRecording, original
   if (isNewRecording) {
     editorWindow.setDocumentEdited(true);
     editorWindow.on('close', event => {
+      editorsWithNotSavedDialogs.set(filePath, true);
       const buttonIndex = dialog.showMessageBoxSync(editorWindow, {
         type: 'question',
         buttons: [
@@ -69,6 +71,8 @@ const openEditorWindow = async (filePath, {recordedFps, isNewRecording, original
       if (buttonIndex === 1) {
         event.preventDefault();
       }
+
+      editorsWithNotSavedDialogs.delete(filePath);
     });
   }
 
@@ -110,9 +114,20 @@ ipc.answerRenderer('save-original', async ({inputPath}) => {
   }
 });
 
+const checkForAnyBlockingEditors = () => {
+  if (editorsWithNotSavedDialogs.size > 0) {
+    const [path] = editorsWithNotSavedDialogs.keys();
+    editors.get(path).focus();
+    return true;
+  }
+
+  return false;
+};
+
 module.exports = {
   openEditorWindow,
   setOptions,
   getEditors,
-  editorEmitter
+  editorEmitter,
+  checkForAnyBlockingEditors
 };

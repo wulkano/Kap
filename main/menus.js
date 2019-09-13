@@ -42,17 +42,17 @@ Workaround:           A workaround for the issue if you've found on. (this will 
 const openFileItem = {
   label: 'Open Video…',
   accelerator: 'Command+O',
-  click: () => {
+  click: async () => {
     closeAllCroppers();
 
-    dialog.showOpenDialogSync({
+    const {canceled, filePaths} = await dialog.showOpenDialog({
       filters: [{name: 'Videos', extensions: supportedVideoExtensions}],
-      properties: ['openFile']
-    }, filePaths => {
-      if (filePaths) {
-        openFiles(...filePaths);
-      }
+      properties: ['openFile', 'multiSelections']
     });
+
+    if (!canceled && filePaths) {
+      openFiles(...filePaths);
+    }
   }
 };
 

@@ -6,6 +6,7 @@ const delay = require('delay');
 const settings = require('./common/settings');
 const {hasMicrophoneAccess, ensureMicrophonePermissions, openSystemPreferences} = require('./common/system-permissions');
 const loadRoute = require('./utils/routes');
+const {checkForAnyBlockingEditors} = require('./editor');
 
 const {BrowserWindow, systemPreferences, dialog} = electron;
 
@@ -82,6 +83,9 @@ const openCropper = (display, activeDisplayId) => {
 
 const openCropperWindow = async () => {
   closeAllCroppers();
+  if (checkForAnyBlockingEditors()) {
+    return;
+  }
 
   const recordAudio = settings.get('recordAudio');
 
