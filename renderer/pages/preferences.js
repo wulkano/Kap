@@ -1,6 +1,7 @@
 import React from 'react';
 import {Provider} from 'unstated';
 import classNames from 'classnames';
+import {ipcRenderer as ipc} from 'electron-better-ipc';
 
 import PreferencesNavigation from '../components/preferences/navigation';
 import WindowHeader from '../components/window-header';
@@ -14,7 +15,6 @@ export default class PreferencesPage extends React.Component {
   state = {overlay: false}
 
   componentDidMount() {
-    const {ipcRenderer: ipc} = require('electron-better-ipc');
     ipc.answerMain('open-plugin-config', preferencesContainer.openPluginsConfig);
     ipc.answerMain('options', preferencesContainer.setNavigation);
     ipc.answerMain('mount', () => preferencesContainer.mount(this.setOverlay));

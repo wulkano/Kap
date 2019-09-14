@@ -1,5 +1,6 @@
 import React from 'react';
 import {Provider} from 'unstated';
+import {ipcRenderer as ipc} from 'electron-better-ipc';
 
 import {ConfigContainer} from '../containers';
 import Config from '../components/config';
@@ -11,8 +12,6 @@ export default class ConfigPage extends React.Component {
   state = {pluginName: ''}
 
   componentDidMount() {
-    const {ipcRenderer: ipc} = require('electron-better-ipc');
-
     ipc.answerMain('plugin', pluginName => {
       configContainer.setPlugin(pluginName);
       this.setState({pluginName: pluginName.replace(/^kap-/, '')});
