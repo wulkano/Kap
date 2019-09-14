@@ -271,8 +271,8 @@ module.exports = () => {
       const buttonIndex = dialog.showMessageBoxSync(exportsWindow, {
         type: 'question',
         buttons: [
-          'Quit',
-          'Continue'
+          'Continue',
+          'Quit'
         ],
         defaultId: 1,
         cancelId: 0,
