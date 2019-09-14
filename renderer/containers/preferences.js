@@ -1,6 +1,7 @@
 import electron from 'electron';
 import {Container} from 'unstated';
 import delay from 'delay';
+import {ipcRenderer as ipc} from 'electron-better-ipc';
 
 const SETTINGS_ANALYTICS_BLACKLIST = ['kapturesDir'];
 
@@ -18,7 +19,6 @@ export default class PreferencesContainer extends Container {
     this.systemPermissions = this.remote.require('./common/system-permissions');
     this.plugins = this.remote.require('./common/plugins');
     this.track = this.remote.require('./common/analytics').track;
-    this.ipc = require('electron-better-ipc').ipcRenderer;
 
     const pluginsInstalled = this.plugins.getInstalled().sort((a, b) => a.prettyName.localeCompare(b.prettyName));
 
@@ -160,12 +160,12 @@ export default class PreferencesContainer extends Container {
     const setting = 'recordKeyboardShortcut';
     const newVal = !this.state[setting];
     this.toggleSetting(setting, newVal);
-    await this.ipc.callMain('toggle-shortcuts', {enabled: newVal});
+    await ipc.callMain('toggle-shortcuts', {enabled: newVal});
   }
 
   updateShortcut = async (setting, shortcut) => {
     try {
-      await this.ipc.callMain('update-shortcut', {setting, shortcut});
+      await ipc.callMain('update-shortcut', {setting, shortcut});
       this.setState({[setting]: shortcut});
     } catch (error) {
       console.warn('Error updating shortcut', error);

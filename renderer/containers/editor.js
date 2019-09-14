@@ -1,4 +1,5 @@
 import {Container} from 'unstated';
+import {ipcRenderer as ipc} from 'electron-better-ipc';
 import {shake} from '../utils/inputs';
 
 const isMuted = format => ['gif', 'apng'].includes(format);
@@ -104,7 +105,6 @@ export default class EditorContainer extends Container {
 
   saveOriginal = () => {
     const {filePath, originalFilePath} = this.state;
-    const {ipcRenderer: ipc} = require('electron-better-ipc');
     ipc.callMain('save-original', {inputPath: originalFilePath || filePath});
   }
 
@@ -127,8 +127,6 @@ export default class EditorContainer extends Container {
 
   selectPlugin = plugin => {
     if (plugin === 'open-plugins') {
-      const {ipcRenderer: ipc} = require('electron-better-ipc');
-
       ipc.callMain('open-preferences', {category: 'plugins', tab: 'discover'});
     } else {
       this.setState({plugin, openWithApp: null});
@@ -177,8 +175,6 @@ export default class EditorContainer extends Container {
     const time = this.videoContainer.state.currentTime;
     const {filePath} = this.state;
 
-    const {ipcRenderer: ipc} = require('electron-better-ipc');
-
     ipc.callMain('export-snapshot', {
       inputPath: filePath,
       time
@@ -209,8 +205,6 @@ export default class EditorContainer extends Container {
       isNewRecording,
       openWithApp
     };
-
-    const {ipcRenderer: ipc} = require('electron-better-ipc');
 
     ipc.callMain('export', data);
     ipc.callMain('update-usage', {format, plugin: plugin.name});

@@ -1,5 +1,6 @@
 import electron from 'electron';
 import React from 'react';
+import {ipcRenderer as ipc} from 'electron-better-ipc';
 
 export default class AboutPage extends React.Component {
   state = {}
@@ -18,7 +19,6 @@ export default class AboutPage extends React.Component {
   }
 
   componentDidUpdate() {
-    const {ipcRenderer: ipc} = require('electron-better-ipc');
     ipc.callMain('about-ready');
   }
 

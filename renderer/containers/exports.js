@@ -1,6 +1,5 @@
 import {Container} from 'unstated';
-
-let ipc;
+import {ipcRenderer as ipc} from 'electron-better-ipc';
 
 export default class ExportsContainer extends Container {
   state = {
@@ -8,7 +7,6 @@ export default class ExportsContainer extends Container {
   }
 
   mount = async () => {
-    ipc = require('electron-better-ipc').ipcRenderer;
     const exports = await ipc.callMain('get-exports');
 
     this.setState({
