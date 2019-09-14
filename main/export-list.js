@@ -277,7 +277,7 @@ module.exports = () => {
         defaultId: 1,
         cancelId: 0,
         message: 'Do you want to continue exporting?',
-        detail: 'Kap is currently exporting files. If you quit, the export task will be cancelled.'
+        detail: 'Kap is currently exporting files. If you quit, the export task will be canceled.'
       });
 
       if (buttonIndex === 1) {
