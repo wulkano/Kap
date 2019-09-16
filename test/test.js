@@ -3,12 +3,13 @@ const test = require('ava');
 const {Application} = require('spectron');
 
 const electronPath = path.join(__dirname, '..', 'node_modules', '.bin', 'electron');
-const appPath = path.join(__dirname, '..');
+const appPath = path.join(__dirname, '../main/index.js');
 test.beforeEach(async t => {
   t.context.app = new Application({
     path: electronPath,
     args: [appPath],
-    env: {ELECTRON_ENABLE_LOGGING: true, ELECTRON_ENABLE_STACK_DUMPING: true, NODE_ENV: 'development'},
+    chromeDriverArgs: ['no-sandbox'],
+    env: {ELECTRON_ENABLE_LOGGING: true, ELECTRON_ENABLE_STACK_DUMPING: true, NODE_ENV: 'test'},
     startTimeout: 2000,
     waitTimeout: 5000,
     chromeDriverLogPath: '../chromedriverlog.txt'
