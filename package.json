@@ -14,7 +14,7 @@
   "private": true,
   "main": "main/index.js",
   "scripts": {
-    "test": "xo",
+    "test": "xo && ava --verbose",
     "start": "yarn && electron .",
     "build": "next build renderer && next export renderer",
     "dist": "npm run build && electron-builder",
@@ -74,6 +74,7 @@
     "unstated": "^1.2.0"
   },
   "devDependencies": {
+    "ava": "^2.4.0",
     "babel-eslint": "^10.0.3",
     "electron": "6.0.9",
     "electron-builder": "^21.2.0",
@@ -82,6 +83,7 @@
     "eslint-plugin-react-hooks": "^2.0.1",
     "husky": "^3.0.5",
     "next": "^8.1.0",
+    "spectron": "^8.0.0",
     "xo": "^0.24.0"
   },
   "xo": {
@@ -106,6 +108,22 @@
       "renderer/.next",
       "renderer/out"
     ]
+  },
+  "ava": {
+    "require": [
+      "spectron"
+    ],
+    "files": [
+      "test/test.js",
+      "!test/editor.js"
+    ],
+    "babel": {
+      "extensions": [
+        "js",
+        "jsx"
+      ]
+    },
+    "spectron": "inherit"
   },
   "husky": {
     "hooks": {
