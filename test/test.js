@@ -1,5 +1,6 @@
 const path = require('path');
 let electronPath = require('electron');
+const BrowserWindow = require('electron');
 const test = require('ava');
 const {Application} = require('spectron');
 
@@ -8,6 +9,11 @@ const appPath = path.join(__dirname, '..');
 if (process.platform === 'win32') {
   electronPath += '.cmd';
 }
+
+const setupApp = async () => {
+  const mainWindow = BrowserWindow;
+  await mainWindow.waitUntilWindowLoaded();
+};
 
 const app = new Application({
 
@@ -20,7 +26,7 @@ const app = new Application({
 });
 
 test.beforeEach(async () => {
-  await app.start();
+  await app.start(setupApp);
 });
 
 test.afterEach.always(async () => {
@@ -28,7 +34,6 @@ test.afterEach.always(async () => {
 });
 
 test('launch app and get information', async t => {
-  console.log(app.getSettings());
   const {client} = app;
   // Needs 2 windows because of dev tools
   t.is(await client.getWindowCount(), 2);
