@@ -11,7 +11,11 @@ if (process.platform === 'win32') {
 }
 
 const setupApp = async () => {
-  const mainWindow = BrowserWindow;
+  const mainWindow = new BrowserWindow({
+    width: 1400,
+    height: 900
+  });
+  await mainWindow.loadFile(path.join(__dirname, '../pages/_app.js'));
   await mainWindow.waitUntilWindowLoaded();
 };
 
