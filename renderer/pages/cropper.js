@@ -190,6 +190,7 @@ export default class CropperPage extends React.Component {
 
             --input-hover-border-color: transparent;
             --button-active-color: var(--input-background-color);
+            --record-button-focus-outter-background: #222222;
           }
         `}</style>
       </div>
