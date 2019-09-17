@@ -41,7 +41,8 @@ export default class Editor extends React.Component {
             left: 0;
             width: 100%;
             height: 36px;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(20px);
             transition: top 0.12s ease-in-out;
             display: flex;
             z-index: 10;
