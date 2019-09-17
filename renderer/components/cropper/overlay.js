@@ -36,7 +36,8 @@ class Overlay extends React.Component {
       isReady,
       screenWidth,
       screenHeight,
-      isRecording
+      isRecording,
+      selectedApp
     } = this.props;
 
     const contentClassName = classNames('content', {'not-ready': !isReady});
@@ -44,7 +45,7 @@ class Overlay extends React.Component {
     const className = classNames('overlay', {
       recording: isRecording,
       picking: !isRecording && !isResizing && !isMoving,
-      'no-transition': isResizing || isMoving || !isActive
+      'no-transition': isResizing || isMoving || !isActive || Boolean(selectedApp)
     });
 
     return (
@@ -139,6 +140,7 @@ Overlay.propTypes = {
   startPicking: PropTypes.elementType.isRequired,
   x: PropTypes.number,
   y: PropTypes.number,
+  selectedApp: PropTypes.string,
   width: PropTypes.number,
   height: PropTypes.number,
   isMoving: PropTypes.bool,
@@ -157,8 +159,8 @@ Overlay.propTypes = {
 
 export default connect(
   [CropperContainer, ActionBarContainer, CursorContainer],
-  ({x, y, width, height, isMoving, isResizing, currentHandle, screenWidth, screenHeight, isReady, isActive, isRecording}, actionBar) => ({
-    x, y, width, height, isResizing, currentHandle, screenWidth, screenHeight, isReady, isActive, isRecording, isMoving: isMoving || actionBar.isMoving
+  ({x, y, width, height, isMoving, isResizing, currentHandle, screenWidth, screenHeight, isReady, isActive, isRecording, selectedApp}, actionBar) => ({
+    x, y, width, height, isResizing, currentHandle, screenWidth, screenHeight, isReady, isActive, isRecording, isMoving: isMoving || actionBar.isMoving, selectedApp
   }),
   ({stopMoving, stopResizing, stopPicking, startPicking}, actionBar, {setCursor}) => ({
     onMouseUp: () => {

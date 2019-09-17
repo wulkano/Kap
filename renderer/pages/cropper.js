@@ -42,6 +42,7 @@ export default class CropperPage extends React.Component {
 
     ipcRenderer.on('select-app', (_, app) => {
       cropperContainer.selectApp(app);
+      cropperContainer.setActive(true);
     });
 
     ipcRenderer.on('blur', () => {
