@@ -46,17 +46,21 @@ const getExportOptions = () => {
       continue;
     }
 
-    const plugin = require(json.pluginPath);
+    try {
+      const plugin = require(json.pluginPath);
 
-    for (const service of plugin.shareServices) {
-      for (const format of service.formats) {
-        options.find(option => option.format === format).plugins.push({
-          title: service.title,
-          pluginName: json.name,
-          pluginPath: json.pluginPath,
-          apps: json.name === '_openWith' ? apps.get(format) : undefined
-        });
+      for (const service of plugin.shareServices) {
+        for (const format of service.formats) {
+          options.find(option => option.format === format).plugins.push({
+            title: service.title,
+            pluginName: json.name,
+            pluginPath: json.pluginPath,
+            apps: json.name === '_openWith' ? apps.get(format) : undefined
+          });
+        }
       }
+    } catch (error) {
+      console.log(error);
     }
   }
 
