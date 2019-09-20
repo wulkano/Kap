@@ -86,6 +86,10 @@ export default class PreferencesContainer extends Container {
         pluginsFromNpm: pluginsFromNpm.filter(p => p.name !== name),
         pluginsInstalled: [plugin, ...pluginsInstalled].sort((a, b) => a.prettyName.localeCompare(b.prettyName))
       });
+    } else {
+      this.setState({
+        pluginBeingInstalled: null
+      });
     }
   }
 
