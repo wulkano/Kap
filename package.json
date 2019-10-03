@@ -14,7 +14,7 @@
   "private": true,
   "main": "main/index.js",
   "scripts": {
-    "test": "xo",
+    "test": "xo && ava --verbose",
     "start": "yarn && electron .",
     "build": "next build renderer && next export renderer",
     "dist": "npm run build && electron-builder",
@@ -25,6 +25,8 @@
     "name": "Kap"
   },
   "dependencies": {
+    "@babel/preset-react": "^7.0.0",
+    "@babel/runtime": "^7.6.2",
     "@ffmpeg-installer/ffmpeg": "^1.0.20",
     "@sentry/browser": "^5.6.3",
     "@sentry/electron": "^0.17.3",
@@ -68,15 +70,25 @@
     "react-dom": "^16.9.0",
     "react-linkify": "^0.2.2",
     "semver": "^6.3.0",
+    "styled-jsx": "^3.2.2",
     "tempy": "^0.3.0",
     "tildify": "^2.0.0",
     "tmp": "^0.1.0",
     "unstated": "^1.2.0"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
+    "@babel/plugin-transform-runtime": "^7.6.2",
+    "@babel/preset-env": "^7.6.2",
+    "@babel/register": "^7.6.2",
+    "ava": "^1.0.0-beta.8",
     "babel-eslint": "^10.0.3",
+    "browser-env": "^3.2.6",
     "electron": "6.0.9",
     "electron-builder": "^21.2.0",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
     "eslint-config-xo-react": "^0.20.0",
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "^2.0.1",
@@ -105,6 +117,22 @@
       "dist",
       "renderer/.next",
       "renderer/out"
+    ]
+  },
+  "ava": {
+    "files": [
+      "test/window-header.js",
+      "test/keyboard-number-input.js",
+      "test/open-files.js",
+      "test/encoding.js",
+      "!/test/editor"
+    ],
+    "require": [
+      "@babel/register",
+      "@babel/preset-react",
+      "./test/helpers/browser-env.js",
+      "@babel/plugin-proposal-class-properties",
+      "@babel/plugin-proposal-object-rest-spread"
     ]
   },
   "husky": {
