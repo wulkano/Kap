@@ -66,7 +66,8 @@ class PlayBar extends React.Component {
     const total = endTime - startTime;
     const current = currentTime - startTime;
 
-    const previewTime = resizing ? currentTime : (startTime <= hoverTime && hoverTime <= endTime ? hoverTime - startTime : hoverTime);
+    const previewTime = resizing ? currentTime : hoverTime;
+    const previewLabelTime = resizing ? currentTime : (startTime <= hoverTime && hoverTime <= endTime ? hoverTime - startTime : hoverTime);
     const previewDuration = resizing ? total : (startTime <= hoverTime && hoverTime <= endTime ? total : undefined);
 
     const className = classNames('progress-bar-container', {hover});
@@ -77,7 +78,7 @@ class PlayBar extends React.Component {
           <div className="progress-bar">
             <progress ref={this.progress} max={total} value={current}/>
             <div className="preview">
-              <Preview src={src} time={previewTime} duration={previewDuration} hidePreview={resizing}/>
+              <Preview src={src} time={previewTime} labelTime={previewLabelTime} duration={previewDuration} hidePreview={resizing}/>
             </div>
             <input
               type="range"

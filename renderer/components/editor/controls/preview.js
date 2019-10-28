@@ -20,12 +20,12 @@ class Preview extends React.Component {
   }
 
   render() {
-    const {time, duration, hidePreview, src} = this.props;
+    const {labelTime, duration, hidePreview, src} = this.props;
 
     return (
       <div className="container" onMouseMove={event => event.stopPropagation()}>
         <video ref={this.videoRef} preload="auto" src={src}/>
-        <div className="time">{formatTime(time, {extra: duration})}</div>
+        <div className="time">{formatTime(labelTime, {extra: duration})}</div>
         <style jsx>{`
           .container {
             flex: 1;
@@ -64,6 +64,7 @@ class Preview extends React.Component {
 
 Preview.propTypes = {
   time: PropTypes.number,
+  labelTime: PropTypes.number,
   duration: PropTypes.number,
   hidePreview: PropTypes.bool,
   src: PropTypes.string
