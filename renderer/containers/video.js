@@ -120,5 +120,6 @@ export default class VideoContainer extends Container {
 
   seek = time => {
     this.video.currentTime = time;
+    this.updateTime(time);
   }
 }
