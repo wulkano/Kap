@@ -60,8 +60,13 @@ export default class Export extends React.Component {
           <div className="icon" onClick={stopPropagation}>
             {
               cancelable ?
-                <CancelIcon fill="white" hoverFill="white" activeFill="white" onClick={cancel}/> :
-                <IconMenu icon={MoreIcon} fill="white" hoverFill="white" activeFill="white" onOpen={menu && menu.popup}/>
+                <div className="icon" onClick={cancel}>
+                  <CancelIcon className="icon" fill="white"
+                    hoverFill="white" activeFill="white"/>
+                </div> :
+                <IconMenu fillParent icon={MoreIcon} fill="white"
+                  hoverFill="white" activeFill="white"
+                  onOpen={menu && menu.popup}/>
             }
           </div>
           <div className="progress">
@@ -75,7 +80,9 @@ export default class Export extends React.Component {
           </div>
         </div>
         <div className="details">
-          <div className="title">{defaultFileName}</div>
+          <div className={'title ' + (status === 'processing' ? 'title-color-disabled' : 'title-color')}>
+            {defaultFileName}
+          </div>
           <div className="subtitle">{text}</div>
         </div>
         <style jsx>{`
@@ -127,7 +134,14 @@ export default class Export extends React.Component {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+          }
+
+          .title-color {
             color: var(--title-color);
+          }
+
+          .title-color-disabled {
+            color: var(--switch-disabled-color);
           }
 
           .subtitle {
