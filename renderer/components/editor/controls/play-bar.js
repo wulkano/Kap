@@ -21,7 +21,7 @@ class PlayBar extends React.Component {
     const percent = (cursorX - x) / width;
     const time = startTime + ((endTime - startTime) * percent);
 
-    return time;
+    return Math.max(0, time);
   }
 
   seek = event => {
