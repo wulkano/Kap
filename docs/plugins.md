@@ -44,6 +44,7 @@ In the above case, the second and third item are added by two different share se
 The share service is a plain object defining some metadata:
 
 - `title`: The title used in the export menu. For example: `Share to GIPHY`.<br>The text should be in [title case](https://capitalizemytitle.com), for example, `Save to Disk`, not `Save to disk`.
+- `description`: A description that shows up at the top of the configuration window. You can use this to explain the config options or link to API docs. Any links in this description will be parsed into clickable links automatically.
 - `formats`: The file formats you support. Can be: `gif`, `mp4`, `webm`, `apng`
 - `action`: The function that is run when the user clicks the menu item. Read more below.
 - `config`: Definition of the config the plugins needs. Read more below.
