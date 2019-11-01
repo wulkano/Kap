@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Linkify from 'react-linkify';
 
-import Item from '../preferences/item';
+import Item, {Link} from '../preferences/item';
 import Select from '../preferences/item/select';
 import Switch from '../preferences/item/switch';
 import {OpenOnGithubIcon, OpenConfigIcon} from '../../vectors';
@@ -76,6 +77,9 @@ class Tab extends React.Component {
 
     return (
       <div className="container">
+        <div className="description">
+          <Linkify component={Link}>{validator.description}</Linkify>
+        </div>
         {
           [...Object.keys(config)].map(key => {
             const schema = config[key];
@@ -115,6 +119,15 @@ class Tab extends React.Component {
             width: 100%;
             height: 100%;
             overflow-y: auto;
+          }
+
+          .description {
+            color: var(--subtitle-color);
+            font-weight: normal;
+            font-size: 1.2rem;
+            width: 100%;
+            padding: 32px 16px 0 16px;
+            box-sizing: border-box;
           }
 
           .icon-container {

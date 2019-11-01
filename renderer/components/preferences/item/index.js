@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Linkify from 'react-linkify';
 
-const Link = ({href, children}) => (
+export const Link = ({href, children}) => (
   <span onClick={() => electron.shell.openExternal(href)}>
     {children}
     <style jsx>{`
