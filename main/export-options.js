@@ -60,7 +60,8 @@ const getExportOptions = () => {
         }
       }
     } catch (error) {
-      console.log(error);
+      const Sentry = require('../utils/sentry');
+      Sentry.captureException(error);
     }
   }
 
