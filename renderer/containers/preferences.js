@@ -82,9 +82,13 @@ export default class PreferencesContainer extends Container {
       plugin.isValid = isValid;
       plugin.hasConfig = hasConfig;
       this.setState({
-        pluginBeingInstalled: null,
+        pluginBeingInstalled: undefined,
         pluginsFromNpm: pluginsFromNpm.filter(p => p.name !== name),
         pluginsInstalled: [plugin, ...pluginsInstalled].sort((a, b) => a.prettyName.localeCompare(b.prettyName))
+      });
+    } else {
+      this.setState({
+        pluginBeingInstalled: undefined
       });
     }
   }

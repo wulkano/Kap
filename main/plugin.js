@@ -18,6 +18,7 @@ class Plugin {
     this.link = homepage || (links && links.homepage);
 
     this.config = new PluginConfig(pluginName, this.plugin);
+    this.validators = this.config.validators;
   }
 
   isConfigValid() {
