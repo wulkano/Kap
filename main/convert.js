@@ -11,8 +11,11 @@ const ffmpeg = require('@ffmpeg-installer/ffmpeg');
 const util = require('electron-util');
 const PCancelable = require('p-cancelable');
 const tempy = require('tempy');
+const gifsicle = require('gifsicle');
+const giflossy = require('giflossy');
 const {track} = require('./common/analytics');
 const {EditServiceContext} = require('./service-context');
+const settings = require('./common/settings');
 
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
 const timeRegex = /time=\s*(\d\d:\d\d:\d\d.\d\d)/gm;
@@ -21,14 +24,17 @@ const speedRegex = /speed=\s*(-?\d+(,\d+)*(\.\d+(e\d+)?)?)/gm;
 // https://trac.ffmpeg.org/ticket/309
 const makeEven = n => 2 * Math.round(n / 2);
 
-const getConvertFunction = shouldTrack => (outputPath, options, args) => {
-  if (shouldTrack) {
-    track(`file/export/fps/${options.fps}`);
-  }
+const getRunFunction = (shouldTrack, mode = 'convert') => (outputPath, opts, args) => {
+  const modes = new Map([
+    ['convert', ffmpegPath],
+    ['compress', gifsicle],
+    ['compress-lossy', giflossy]
+  ]);
+  const program = modes.get(mode);
 
   return new PCancelable((resolve, reject, onCancel) => {
-    const converter = execa(ffmpegPath, args);
-    const durationMs = moment.duration(options.endTime - options.startTime, 'seconds').asMilliseconds();
+    const runner = execa(program, args);
+    const durationMs = moment.duration(opts.endTime - opts.startTime, 'seconds').asMilliseconds();
     let speed;
 
     onCancel(() => {
@@ -40,8 +46,8 @@ const getConvertFunction = shouldTrack => (outputPath, options, args) => {
     });
 
     let stderr = '';
-    converter.stderr.setEncoding('utf8');
-    converter.stderr.on('data', data => {
+    runner.stderr.setEncoding('utf8');
+    runner.stderr.on('data', data => {
       stderr += data;
 
       data = data.trim();
@@ -68,25 +74,25 @@ const getConvertFunction = shouldTrack => (outputPath, options, args) => {
       }
     });
 
-    converter.on('error', reject);
+    runner.on('error', reject);
 
-    converter.on('exit', code => {
+    runner.on('exit', code => {
       if (code === 0) {
         if (shouldTrack) {
-          track('file/export/convert/completed');
+          track(`file/export/${mode}/completed`);
         }
 
         resolve(outputPath);
       } else {
         if (shouldTrack) {
-          track('file/export/convert/failed');
+          track(`file/export/${mode}/failed`);
         }
 
-        reject(new Error(`ffmpeg exited with code: ${code}\n\n${stderr}`));
+        reject(new Error(`${program} exited with code: ${code}\n\n${stderr}`));
       }
     });
 
-    converter.catch(reject);
+    runner.catch(reject);
   });
 };
 
@@ -108,7 +114,17 @@ const mute = PCancelable.fn(async (inputPath, onCancel) => {
   return mutedPath;
 });
 
-const convert = getConvertFunction(true);
+const convert = getRunFunction(true);
+const compress = (outputPath, opts, args) => {
+  let mode = 'compress';
+
+  if (settings.get('lossyCompression')) {
+    mode = 'compress-lossy';
+    args.unshift('--lossy=80');
+  }
+
+  return getRunFunction(true, mode)(outputPath, opts, args);
+};
 
 const convertToMp4 = PCancelable.fn(async (options, onCancel) => {
   if (options.isMuted) {
@@ -208,8 +224,8 @@ const convertToGif = PCancelable.fn(async (options, onCancel) => {
 
   await paletteProcessor;
 
-  return convert(options.outputPath, options, [
-    '-i', options.inputPath,
+  await convert(opts.outputPath, opts, [
+    '-i', opts.inputPath,
     '-i', palettePath,
     '-filter_complex', `fps=${options.fps}${options.shouldCrop ? `,scale=${options.width}:${options.height}:flags=lanczos` : ''}[x]; [x][1:v]paletteuse`,
     '-loop', options.loop === true ? '0' : '-1', // 0 == forever; -1 == no loop
@@ -220,6 +236,12 @@ const convertToGif = PCancelable.fn(async (options, onCancel) => {
       ] : []
     ),
     options.outputPath
+  ]);
+
+  return compress(opts.outputPath, opts, [
+    '-i',
+    '-O3',
+    opts.outputPath
   ]);
 });
 

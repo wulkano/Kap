@@ -72,6 +72,10 @@ const store = new Store({
           default: '5'
         }
       }
+    },
+    lossyCompression: {
+      type: 'boolean',
+      default: false
     }
   }
 });

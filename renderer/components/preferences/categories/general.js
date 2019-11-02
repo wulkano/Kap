@@ -53,7 +53,8 @@ class General extends React.Component {
       cropperShortcut,
       updateShortcut,
       toggleShortcuts,
-      category
+      category,
+      lossyCompression
     } = this.props;
 
     const {showCursorSupported} = this.state;
@@ -184,6 +185,18 @@ class General extends React.Component {
         >
           <Button tabIndex={tabIndex} title="Choose" onClick={pickKapturesDir}/>
         </Item>
+        <Item
+          key="lossyCompression"
+          parentItem
+          title="Lossy compression"
+          subtitle="Use lossy compression for gifs"
+        >
+          <Switch
+            tabIndex={tabIndex}
+            checked={lossyCompression}
+            onClick={() => toggleSetting('lossyCompression')}
+          />
+        </Item>
       </Category>
     );
   }
@@ -215,7 +228,8 @@ General.propTypes = {
     ctrlKey: PropTypes.bool.isRequired,
     shiftKey: PropTypes.bool.isRequired,
     character: PropTypes.string.isRequired
-  })
+  }),
+  lossyCompression: PropTypes.bool
 };
 
 export default connect(
@@ -233,7 +247,8 @@ export default connect(
     allowAnalytics,
     loopExports,
     cropperShortcut,
-    category
+    category,
+    lossyCompression
   }) => ({
     showCursor,
     highlightClicks,
@@ -247,7 +262,8 @@ export default connect(
     allowAnalytics,
     loopExports,
     cropperShortcut,
-    category
+    category,
+    lossyCompression
   }),
   ({
     toggleSetting,
