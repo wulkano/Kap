@@ -1,6 +1,7 @@
 import electron from 'electron';
 import PropTypes from 'prop-types';
 import React from 'react';
+import classNames from 'classnames';
 
 import IconMenu from '../icon-menu';
 import {CancelIcon, MoreIcon} from '../../vectors';
@@ -52,7 +53,11 @@ export default class Export extends React.Component {
     const {menu} = this.state;
 
     const cancelable = status === 'waiting' || status === 'processing';
-
+    const fileNameClassName = classNames({
+      title: true,
+      'title-color': !cancelable,
+      'title-color-disabled': cancelable
+    });
     return (
       <div draggable className="export-container" onClick={this.openFile} onDragStart={this.onDragStart}>
         <div className="thumbnail">
@@ -80,7 +85,7 @@ export default class Export extends React.Component {
           </div>
         </div>
         <div className="details">
-          <div className={'title ' + (status === 'processing' ? 'title-color-disabled' : 'title-color')}>
+          <div className={fileNameClassName}>
             {defaultFileName}
           </div>
           <div className="subtitle">{text}</div>
