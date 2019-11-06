@@ -5169,6 +5169,15 @@ mac-open-with@^1.2.2:
     execa "^2.0.4"
     macos-version "^5.2.0"
 
+mac-screen-capture-permissions@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/mac-screen-capture-permissions/-/mac-screen-capture-permissions-1.0.2.tgz#d85f6041bec0910e12694e65de00205484a0734f"
+  integrity sha512-foz6w6ZGJbAHfHrd56xawt3WvswfmUK4PurWlXH4LsUMq69P0XY523YJ3srR0okpUivUhVQmzIk0LOOO/u7agQ==
+  dependencies:
+    electron-util "^0.12.1"
+    execa "^2.0.4"
+    macos-version "^5.2.0"
+
 mac-windows@^0.7.1:
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/mac-windows/-/mac-windows-0.7.1.tgz#3309ef0c7c508725cc3e17a3ea1687de0680c78b"

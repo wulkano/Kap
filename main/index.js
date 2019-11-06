@@ -18,7 +18,7 @@ const {setApplicationMenu} = require('./menus');
 const openFiles = require('./utils/open-files');
 const {initializeExportOptions} = require('./export-options');
 const settings = require('./common/settings');
-const {hasMicrophoneAccess} = require('./common/system-permissions');
+const {hasMicrophoneAccess, ensureScreenCapturePermissions} = require('./common/system-permissions');
 
 require('./utils/sentry');
 
@@ -90,6 +90,7 @@ const checkForUpdates = () => {
     openFiles(...filesToOpen);
   } else if (
     !app.getLoginItemSettings().wasOpenedAtLogin &&
+    ensureScreenCapturePermissions() &&
     (!settings.get('recordAudio') || hasMicrophoneAccess())
   ) {
     openCropperWindow();
