@@ -27,18 +27,23 @@ export default class Export extends React.Component {
   }
 
   openFile = () => {
-    const {filePath, disableOutputActions} = this.props;
-    if (filePath && !disableOutputActions) {
+    const {filePath} = this.props;
+    if (this.isActionable) {
       electron.remote.shell.showItemInFolder(filePath);
     }
   }
 
   onDragStart = event => {
-    const {createdAt, disableOutputActions} = this.props;
+    const {createdAt} = this.props;
     event.preventDefault();
-    if (!disableOutputActions) {
+    if (this.isActionable) {
       electron.ipcRenderer.send('drag-export', createdAt);
     }
+  }
+
+  get isActionable() {
+    const {filePath, disableOutputActions} = this.props;
+    return filePath && !disableOutputActions;
   }
 
   render() {
@@ -55,8 +60,7 @@ export default class Export extends React.Component {
     const cancelable = status === 'waiting' || status === 'processing';
     const fileNameClassName = classNames({
       title: true,
-      'title-color': !cancelable,
-      'title-color-disabled': cancelable
+      disabled: !this.isActionable
     });
     return (
       <div draggable className="export-container" onClick={this.openFile} onDragStart={this.onDragStart}>
@@ -66,8 +70,7 @@ export default class Export extends React.Component {
             {
               cancelable ?
                 <div className="icon" onClick={cancel}>
-                  <CancelIcon className="icon" fill="white"
-                    hoverFill="white" activeFill="white"/>
+                  <CancelIcon fill="white" hoverFill="white" activeFill="white"/>
                 </div> :
                 <IconMenu fillParent icon={MoreIcon} fill="white"
                   hoverFill="white" activeFill="white"
@@ -139,13 +142,10 @@ export default class Export extends React.Component {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-          }
-
-          .title-color {
             color: var(--title-color);
           }
 
-          .title-color-disabled {
+          .disabled {
             color: var(--switch-disabled-color);
           }
 
