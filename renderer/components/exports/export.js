@@ -1,6 +1,7 @@
 import electron from 'electron';
 import PropTypes from 'prop-types';
 import React from 'react';
+import classNames from 'classnames';
 
 import IconMenu from '../icon-menu';
 import {CancelIcon, MoreIcon} from '../../vectors';
@@ -26,18 +27,23 @@ export default class Export extends React.Component {
   }
 
   openFile = () => {
-    const {filePath, disableOutputActions} = this.props;
-    if (filePath && !disableOutputActions) {
+    const {filePath} = this.props;
+    if (this.isActionable) {
       electron.remote.shell.showItemInFolder(filePath);
     }
   }
 
   onDragStart = event => {
-    const {createdAt, disableOutputActions} = this.props;
+    const {createdAt} = this.props;
     event.preventDefault();
-    if (!disableOutputActions) {
+    if (this.isActionable) {
       electron.ipcRenderer.send('drag-export', createdAt);
     }
+  }
+
+  get isActionable() {
+    const {filePath, disableOutputActions} = this.props;
+    return filePath && !disableOutputActions;
   }
 
   render() {
@@ -52,7 +58,10 @@ export default class Export extends React.Component {
     const {menu} = this.state;
 
     const cancelable = status === 'waiting' || status === 'processing';
-
+    const fileNameClassName = classNames({
+      title: true,
+      disabled: !this.isActionable
+    });
     return (
       <div draggable className="export-container" onClick={this.openFile} onDragStart={this.onDragStart}>
         <div className="thumbnail">
@@ -60,8 +69,12 @@ export default class Export extends React.Component {
           <div className="icon" onClick={stopPropagation}>
             {
               cancelable ?
-                <CancelIcon fill="white" hoverFill="white" activeFill="white" onClick={cancel}/> :
-                <IconMenu icon={MoreIcon} fill="white" hoverFill="white" activeFill="white" onOpen={menu && menu.popup}/>
+                <div className="icon" onClick={cancel}>
+                  <CancelIcon fill="white" hoverFill="white" activeFill="white"/>
+                </div> :
+                <IconMenu fillParent icon={MoreIcon} fill="white"
+                  hoverFill="white" activeFill="white"
+                  onOpen={menu && menu.popup}/>
             }
           </div>
           <div className="progress">
@@ -75,7 +88,9 @@ export default class Export extends React.Component {
           </div>
         </div>
         <div className="details">
-          <div className="title">{defaultFileName}</div>
+          <div className={fileNameClassName}>
+            {defaultFileName}
+          </div>
           <div className="subtitle">{text}</div>
         </div>
         <style jsx>{`
@@ -128,6 +143,10 @@ export default class Export extends React.Component {
             overflow: hidden;
             text-overflow: ellipsis;
             color: var(--title-color);
+          }
+
+          .disabled {
+            color: var(--switch-disabled-color);
           }
 
           .subtitle {

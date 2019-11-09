@@ -5,7 +5,7 @@ class IconMenu extends React.Component {
   container = React.createRef();
 
   openMenu = () => {
-    const boundingRect = this.container.current.getBoundingClientRect();
+    const boundingRect = this.container.current.children[0].getBoundingClientRect();
     const {bottom, left} = boundingRect;
     const {onOpen} = this.props;
 
@@ -20,12 +20,14 @@ class IconMenu extends React.Component {
   render() {
     const {icon: Icon, ...iconProps} = this.props;
     return (
-      <div ref={this.container}>
-        <Icon {...iconProps} onClick={this.openMenu}/>
+      <div ref={this.container} onClick={this.openMenu}>
+        <Icon {...iconProps}/>
         <style jsx>{`
           display: flex;
           align-items: center;
           justify-content: center;
+          width: ${this.props.fillParent ? '100%' : 'none'};
+          height: ${this.props.fillParent ? '100%' : 'none'}
         `}</style>
       </div>
     );
@@ -34,7 +36,8 @@ class IconMenu extends React.Component {
 
 IconMenu.propTypes = {
   onOpen: PropTypes.elementType,
-  icon: PropTypes.elementType.isRequired
+  icon: PropTypes.elementType.isRequired,
+  fillParent: PropTypes.bool
 };
 
 export default IconMenu;
