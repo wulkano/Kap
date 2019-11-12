@@ -1,7 +1,7 @@
-const {systemPreferences, shell, dialog} = require('electron');
+const {systemPreferences, shell, dialog, app} = require('electron');
 const {hasScreenCapturePermission, hasPromptedForPermission} = require('mac-screen-capture-permissions');
 
-const promptSystemPreferences = opts => async ({hasAsked} = {}) => {
+const promptSystemPreferences = options => async ({hasAsked} = {}) => {
   if (hasAsked) {
     return false;
   }
@@ -10,13 +10,14 @@ const promptSystemPreferences = opts => async ({hasAsked} = {}) => {
     type: 'warning',
     buttons: ['Open System Preferences', 'Cancel'],
     defaultId: 0,
-    message: opts.message,
-    detail: opts.detail,
+    message: options.message,
+    detail: options.detail,
     cancelId: 1
   });
 
   if (response === 0) {
-    openSystemPreferences(opts.systemPreferencesPath);
+    await openSystemPreferences(options.systemPreferencesPath);
+    app.quit();
   }
 
   return false;
@@ -30,7 +31,7 @@ const getMicrophoneAccess = () => systemPreferences.getMediaAccessStatus('microp
 
 const microphoneFallback = promptSystemPreferences({
   message: 'Kap cannot access the microphone.',
-  detail: 'Kap requires microphone access to be able to record audio. You can grant this in the System Preferences. Afterwards, relaunch Kap for the changes to take effect.',
+  detail: 'Kap requires microphone access to be able to record audio. You can grant this in the System Preferences. Afterwards, launch Kap for the changes to take effect.',
   systemPreferencesPath: 'Privacy_Microphone'
 });
 
@@ -60,7 +61,7 @@ const hasMicrophoneAccess = () => getMicrophoneAccess() === 'granted';
 
 const screenCaptureFallback = promptSystemPreferences({
   message: 'Kap cannot record the screen.',
-  detail: 'Kap requires screen capture access to be able to record the screen. You can grant this in the System Preferences. Afterwards, relaunch Kap for the changes to take effect.',
+  detail: 'Kap requires screen capture access to be able to record the screen. You can grant this in the System Preferences. Afterwards, launch Kap for the changes to take effect.',
   systemPreferencesPath: 'Privacy_ScreenCapture'
 });
 
