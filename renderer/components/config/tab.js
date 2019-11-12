@@ -72,14 +72,18 @@ class Tab extends React.Component {
   render() {
     const {validator, values, onChange, openConfig, viewOnGithub} = this.props;
 
-    const {config, errors} = validator;
+    const {config, errors, description} = validator;
     const allErrors = errors || [];
 
     return (
       <div className="container">
-        <div className="description">
-          <Linkify component={Link}>{validator.description}</Linkify>
-        </div>
+        {
+          description && (
+            <div className="description">
+              <Linkify component={Link}>{description}</Linkify>
+            </div>
+          )
+        }
         {
           [...Object.keys(config)].map(key => {
             const schema = config[key];
@@ -91,6 +95,7 @@ class Tab extends React.Component {
             return (
               <Item
                 key={key}
+                small
                 title={schema.title}
                 subtitle={schema.description}
                 vertical={type === 'string'}
@@ -126,7 +131,7 @@ class Tab extends React.Component {
             font-weight: normal;
             font-size: 1.2rem;
             width: 100%;
-            padding: 32px 16px 0 16px;
+            padding: 16px 16px 0 16px;
             box-sizing: border-box;
           }
 
