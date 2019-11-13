@@ -26,7 +26,7 @@ const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
             padding: 4px 8px;
             line-height: 32px;
             font-size: 12px;
-            margin-top: 16px;
+            margin-top: 8px;
             outline: none;
             box-shadow: var(--input-shadow);
           }
@@ -129,7 +129,7 @@ class Tab extends React.Component {
           .description {
             color: var(--subtitle-color);
             font-weight: normal;
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             width: 100%;
             padding: 16px 16px 0 16px;
             box-sizing: border-box;
