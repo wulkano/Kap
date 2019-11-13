@@ -4,7 +4,7 @@ const electron = require('electron');
 const delay = require('delay');
 
 const settings = require('./common/settings');
-const {hasMicrophoneAccess, ensureMicrophonePermissions, openSystemPreferences} = require('./common/system-permissions');
+const {hasMicrophoneAccess, ensureMicrophonePermissions, openSystemPreferences, ensureScreenCapturePermissions} = require('./common/system-permissions');
 const loadRoute = require('./utils/routes');
 const {checkForAnyBlockingEditors} = require('./editor');
 
@@ -84,6 +84,10 @@ const openCropper = (display, activeDisplayId) => {
 const openCropperWindow = async () => {
   closeAllCroppers();
   if (checkForAnyBlockingEditors()) {
+    return;
+  }
+
+  if (!ensureScreenCapturePermissions()) {
     return;
   }
 
