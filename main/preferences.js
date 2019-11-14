@@ -31,7 +31,7 @@ const openPrefsWindow = async options => {
     show: false,
     frame: false,
     transparent: true,
-    vibrancy: 'ultra-dark',
+    vibrancy: 'window',
     webPreferences: {
       nodeIntegration: true
     }

@@ -68,7 +68,7 @@ const sendFeedbackItem = {
 };
 
 const aboutItem = {
-  label: `About ${app.getName()}`,
+  label: `About ${app.name}`,
   click: openAboutWindow
 };
 

@@ -22,7 +22,7 @@ const openExportsWindow = async () => {
       show: false,
       frame: false,
       transparent: true,
-      vibrancy: 'ultra-dark',
+      vibrancy: 'window',
       webPreferences: {
         nodeIntegration: true
       }

@@ -13,6 +13,8 @@ export default class EditorContainer extends Container {
     this.videoContainer = videoContainer;
   }
 
+  // TODO: Fix the below lint violation.
+  // eslint-disable-next-line default-param-last
   mount = (filePath, fps = 15, originalFilePath, isNewRecording, resolve) => {
     const src = `file://${filePath}`;
     this.finishLoading = resolve;
