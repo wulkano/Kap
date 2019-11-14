@@ -1,11 +1,19 @@
-const {systemPreferences, shell, dialog, app} = require('electron');
-const {hasScreenCapturePermission, hasPromptedForPermission} = require('mac-screen-capture-permissions');
+const {systemPreferences, dialog, app} = require('electron');
+const {openSystemPreferences} = require('electron-util');
+const {
+  hasScreenCapturePermission,
+  hasPromptedForPermission,
+  openSystemPreferences: openScreenCapturePreferences
+} = require('mac-screen-capture-permissions');
+
+let dialogShowing = false;
 
 const promptSystemPreferences = options => async ({hasAsked} = {}) => {
-  if (hasAsked) {
+  if (hasAsked || dialogShowing) {
     return false;
   }
 
+  dialogShowing = true;
   const {response} = await dialog.showMessageBox({
     type: 'warning',
     buttons: ['Open System Preferences', 'Cancel'],
@@ -14,16 +22,15 @@ const promptSystemPreferences = options => async ({hasAsked} = {}) => {
     detail: options.detail,
     cancelId: 1
   });
+  dialogShowing = false;
 
   if (response === 0) {
-    await openSystemPreferences(options.systemPreferencesPath);
+    await options.action();
     app.quit();
   }
 
   return false;
 };
-
-const openSystemPreferences = path => shell.openExternal(`x-apple.systempreferences:com.apple.preference.security?${path}`);
 
 // Microphone
 
@@ -32,7 +39,7 @@ const getMicrophoneAccess = () => systemPreferences.getMediaAccessStatus('microp
 const microphoneFallback = promptSystemPreferences({
   message: 'Kap cannot access the microphone.',
   detail: 'Kap requires microphone access to be able to record audio. You can grant this in the System Preferences. Afterwards, launch Kap for the changes to take effect.',
-  systemPreferencesPath: 'Privacy_Microphone'
+  action: () => openSystemPreferences('security', 'Privacy_Microphone')
 });
 
 const ensureMicrophonePermissions = async (fallback = microphoneFallback) => {
@@ -62,7 +69,7 @@ const hasMicrophoneAccess = () => getMicrophoneAccess() === 'granted';
 const screenCaptureFallback = promptSystemPreferences({
   message: 'Kap cannot record the screen.',
   detail: 'Kap requires screen capture access to be able to record the screen. You can grant this in the System Preferences. Afterwards, launch Kap for the changes to take effect.',
-  systemPreferencesPath: 'Privacy_ScreenCapture'
+  action: openScreenCapturePreferences
 });
 
 const ensureScreenCapturePermissions = (fallback = screenCaptureFallback) => {

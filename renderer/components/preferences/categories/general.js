@@ -154,15 +154,18 @@ class General extends React.Component {
             checked={recordAudio}
             onClick={toggleRecordAudio}/>
         </Item>
-        <Item key="audioInputDeviceId" subtitle="Select input device">
-          <Select
-            tabIndex={tabIndex}
-            options={devices}
-            selected={audioInputDeviceId}
-            placeholder="Select Device"
-            noOptionsMessage="No input devices"
-            onSelect={setAudioInputDeviceId}/>
-        </Item>
+        {
+          recordAudio &&
+            <Item key="audioInputDeviceId" subtitle="Select input device">
+              <Select
+                tabIndex={tabIndex}
+                options={devices}
+                selected={audioInputDeviceId}
+                placeholder="Select Device"
+                noOptionsMessage="No input devices"
+                onSelect={setAudioInputDeviceId}/>
+            </Item>
+        }
         <Item
           key="record60fps"
           title="Capture frame rate"

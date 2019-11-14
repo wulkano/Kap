@@ -22,9 +22,6 @@ export default class PreferencesContainer extends Container {
 
     const pluginsInstalled = this.plugins.getInstalled().sort((a, b) => a.prettyName.localeCompare(b.prettyName));
 
-    const {getAudioDevices} = this.remote.require('./common/aperture');
-    const {audioInputDeviceId} = this.settings.store;
-
     await this.fetchFromNpm();
 
     this.setState({
@@ -34,20 +31,32 @@ export default class PreferencesContainer extends Container {
       isMounted: true
     });
 
-    (async () => {
-      const audioDevices = await getAudioDevices();
-      const updates = {audioDevices};
+    this.fetchAudioDevices();
+  }
 
-      if (!audioDevices.some(device => device.id === audioInputDeviceId)) {
-        const [device] = audioDevices;
-        if (device) {
-          this.settings.set('audioInputDeviceId', device.id);
-          updates.audioInputDeviceId = device.id;
-        }
+  fetchAudioDevices = async () => {
+    const {audioInputDeviceId} = this.settings.store;
+    const {getAudioDevices} = this.remote.require('./common/aperture');
+
+    let audioDevices;
+    try {
+      audioDevices = await getAudioDevices();
+    } catch (error) {
+      console.log(error);
+      audioDevices = [];
+    }
+
+    const updates = {audioDevices};
+
+    if (!audioDevices.some(device => device.id === audioInputDeviceId)) {
+      const [device] = audioDevices;
+      if (device) {
+        this.settings.set('audioInputDeviceId', device.id);
+        updates.audioInputDeviceId = device.id;
       }
+    }
 
-      this.setState(updates);
-    })();
+    this.setState(updates);
   }
 
   setNavigation = ({category, tab}) => this.setState({category, tab})
@@ -65,7 +74,8 @@ export default class PreferencesContainer extends Container {
           return a.prettyName.localeCompare(b.prettyName);
         })
       });
-    } catch (_) {
+    } catch (error) {
+      console.log(error);
       this.setState({npmError: true});
     }
   }
@@ -155,6 +165,10 @@ export default class PreferencesContainer extends Container {
     this.track(`preferences/setting/recordAudio/${newVal}`);
 
     if (!newVal || await this.systemPermissions.ensureMicrophonePermissions()) {
+      if (newVal) {
+        await this.fetchAudioDevices();
+      }
+
       this.setState({recordAudio: newVal});
       this.settings.set('recordAudio', newVal);
     }
