@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Linkify from 'react-linkify';
 
-const Link = ({href, children}) => (
+export const Link = ({href, children}) => (
   <span onClick={() => electron.shell.openExternal(href)}>
     {children}
     <style jsx>{`
@@ -47,7 +47,8 @@ class Item extends React.Component {
       warning,
       onClick,
       last,
-      parentItem
+      parentItem,
+      small
     } = this.props;
 
     const subtitleArray = Array.isArray(subtitle) ? subtitle : [subtitle];
@@ -77,7 +78,7 @@ class Item extends React.Component {
           .container {
             display: flex;
             max-width: 100%;
-            padding: ${onClick ? '16px' : '32px'} 16px;
+            padding: ${small || onClick ? '16px' : '32px'} 16px;
             margin-bottom: ${last ? '16px' : '0'};
             border-bottom: 1px solid var(--row-divider-color);
             flex-direction: column;
@@ -187,7 +188,8 @@ Item.propTypes = {
   ]),
   onClick: PropTypes.elementType,
   last: PropTypes.bool,
-  parentItem: PropTypes.bool
+  parentItem: PropTypes.bool,
+  small: PropTypes.bool
 };
 
 export default Item;

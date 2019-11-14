@@ -35,6 +35,7 @@ class PluginConfig extends Store {
       const validator = ajv.compile(schema);
       validator(defaults);
       validator.title = service.title;
+      validator.description = service.configDescription;
       validator.config = service.config;
 
       return validator;
