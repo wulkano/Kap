@@ -2,7 +2,7 @@
   "name": "kap",
   "productName": "Kap",
   "version": "3.0.0",
-  "description": "The best way to record your screen",
+  "description": "An open-source screen recorder built with web technology",
   "license": "MIT",
   "repository": "wulkano/kap",
   "homepage": "https://getkap.co",
