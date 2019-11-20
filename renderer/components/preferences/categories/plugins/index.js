@@ -89,7 +89,7 @@ class Plugins extends React.Component {
                   <EmptyTab
                     showIcon
                     title="No plugins yet"
-                    subtitle="Customize Kap your liking with plugins."
+                    subtitle="Customize Kap to your liking with plugins."
                     link="Discover"
                     onClick={() => selectTab('discover')}/>
                 ) : (
