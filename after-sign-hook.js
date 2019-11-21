@@ -10,7 +10,10 @@ module.exports = async function (params) {
     return;
   }
 
-  console.log('afterSign hook triggered', params);
+  // Only notarize the app on the master branch
+  if (process.env.CIRCLE_BRANCH !== 'master') {
+    return;
+  }
 
   // Same appId in electron-builder.
   const appId = 'com.wulkano.kap';
