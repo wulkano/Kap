@@ -38,6 +38,7 @@
     "electron-better-ipc": "^0.5.0",
     "electron-log": "^3.0.7",
     "electron-next": "^3.1.5",
+    "electron-notarize": "^0.2.0",
     "electron-store": "^5.0.0",
     "electron-updater": "^4.1.2",
     "electron-util": "^0.12.1",
@@ -116,6 +117,7 @@
   },
   "build": {
     "appId": "com.wulkano.kap",
+    "afterSign": "./after-sign-hook.js",
     "files": [
       "**/*",
       "!renderer",
@@ -126,6 +128,8 @@
       "category": "public.app-category.productivity",
       "minimumSystemVersion": "10.12.0",
       "darkModeSupport": true,
+      "hardenedRuntime": true,
+      "entitlements": "./build/entitlements.mac.inherit.plist",
       "extendInfo": {
         "NSMicrophoneUsageDescription": "Kap needs access to the microphone to be able to record audio for screen recordings.",
         "NSUserNotificationAlertStyle": "alert",
