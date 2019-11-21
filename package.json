@@ -72,7 +72,8 @@
     "tempy": "^0.3.0",
     "tildify": "^2.0.0",
     "tmp": "^0.1.0",
-    "unstated": "^1.2.0"
+    "unstated": "^1.2.0",
+    "yarn": "^1.19.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.3",

@@ -19,6 +19,7 @@ const {track} = require('./analytics');
 class Plugins {
   constructor() {
     this.npmBin = path.join(__dirname, '../../node_modules/npm/bin/npm-cli.js');
+    this.yarnBin = path.join(__dirname, '../../node_modules/yarn/bin/yarn.js');
     this._makePluginsDir();
     this.appVersion = app.getVersion();
   }
@@ -55,6 +56,15 @@ class Plugins {
     });
   }
 
+  async _runYarn(...commands) {
+    await execa(process.execPath, [this.yarnBin, ...commands], {
+      cwd: this.cwd,
+      env: {
+        ELECTRON_RUN_AS_NODE: 1
+      }
+    });
+  }
+
   _getPrettyName(name) {
     return name.replace(/^kap-/, '');
   }
@@ -68,8 +78,8 @@ class Plugins {
     return Object.keys(JSON.parse(pkg).dependencies);
   }
 
-  async _npmInstall() {
-    await this._runNpm('install', '--no-package-lock', '--registry', 'https://registry.npmjs.org');
+  async _yarnInstall() {
+    await this._runYarn('install', '--no-lockfile', '--registry', 'https://registry.npmjs.org');
   }
 
   async install(name) {
@@ -81,7 +91,7 @@ class Plugins {
     });
 
     try {
-      await this._npmInstall();
+      await this._yarnInstall();
 
       const plugin = new Plugin(name);
       const isValid = plugin.isConfigValid();
@@ -129,7 +139,7 @@ class Plugins {
   }
 
   async upgrade() {
-    await this._npmInstall();
+    await this._yarnInstall();
   }
 
   uninstall(name) {
