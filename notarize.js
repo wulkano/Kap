@@ -15,7 +15,7 @@ module.exports = async params => {
   //   return;
   // }
 
-  const packageJson = JSON.parse(fs.readFileSync('./package.json'));
+  const packageJson = require('./package.json');
   const {appId} = packageJson.build;
 
   const appPath = path.join(params.appOutDir, `${params.packager.appInfo.productFilename}.app`);
