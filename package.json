@@ -117,7 +117,7 @@
   },
   "build": {
     "appId": "com.wulkano.kap",
-    "afterSign": "./after-sign-hook.js",
+    "afterSign": "./notarize.js",
     "files": [
       "**/*",
       "!renderer",
