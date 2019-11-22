@@ -2726,10 +2726,10 @@ electron-better-ipc@^0.5.0:
   resolved "https://registry.yarnpkg.com/electron-better-ipc/-/electron-better-ipc-0.5.0.tgz#0a97776f1bb4640da46c006ca94de55052a9c4b5"
   integrity sha512-u67I8YI084macI8iAB64VTDLwkvVDQnZ5ang/GRPBfeqjZvXlsBqrzIJSKzi88ZDfgfSXk9U1YGpW4qPEGXK9Q==
 
-electron-builder-notarize@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/electron-builder-notarize/-/electron-builder-notarize-1.0.1.tgz#bb52538db42bf0f86c7d027117cdfb1d708d16ec"
-  integrity sha512-3x9DYjPUQU4PYvsxuMOvdOkybmki87cHDVouPR/Rgo+yCqvUnuYPoRtx8kbUh3CpfdGiQ9Km+coHaMs5KQEAjA==
+electron-builder-notarize@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/electron-builder-notarize/-/electron-builder-notarize-1.0.3.tgz#ba9b4bc26f0bcdeef61be8f8b4c62da0e6d1b6ee"
+  integrity sha512-KaFf2h3uZoSGoNLzjScm0PN9UKFASAoN697c8yh306C68zczuU8uiIcDEY4JtO4eXZ75cuyxL7cPlGwMzhKaHg==
   dependencies:
     electron-notarize "^0.2.0"
 
