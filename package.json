@@ -80,6 +80,7 @@
     "babel-eslint": "^10.0.3",
     "electron": "6.0.9",
     "electron-builder": "^21.2.0",
+    "electron-builder-notarize": "^1.0.1",
     "eslint-config-xo-react": "^0.20.0",
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "^2.0.1",
@@ -118,7 +119,7 @@
   },
   "build": {
     "appId": "com.wulkano.kap",
-    "afterSign": "./notarize.js",
+    "afterSign": "electron-builder-notarize",
     "files": [
       "**/*",
       "!renderer",
@@ -130,7 +131,7 @@
       "minimumSystemVersion": "10.12.0",
       "darkModeSupport": true,
       "hardenedRuntime": true,
-      "entitlements": "./build/entitlements.mac.inherit.plist",
+      "entitlements": "./node_modules/electron-builder-notarize/entitlements.mac.inherit.plist",
       "extendInfo": {
         "NSMicrophoneUsageDescription": "Kap needs access to the microphone to be able to record audio for screen recordings.",
         "NSUserNotificationAlertStyle": "alert",
