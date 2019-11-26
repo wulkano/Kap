@@ -18,7 +18,6 @@ const {track} = require('./analytics');
 
 class Plugins {
   constructor() {
-    this.npmBin = path.join(__dirname, '../../node_modules/npm/bin/npm-cli.js');
     this.yarnBin = path.join(__dirname, '../../node_modules/yarn/bin/yarn.js');
     this._makePluginsDir();
     this.appVersion = app.getVersion();
@@ -45,15 +44,6 @@ class Plugins {
     const pkg = JSON.parse(fs.readFileSync(this.pkgPath, 'utf8'));
     modifier(pkg);
     fs.writeFileSync(this.pkgPath, JSON.stringify(pkg));
-  }
-
-  async _runNpm(...commands) {
-    await execa(process.execPath, [this.npmBin, ...commands], {
-      cwd: this.cwd,
-      env: {
-        ELECTRON_RUN_AS_NODE: 1
-      }
-    });
   }
 
   async _runYarn(...commands) {
@@ -153,7 +143,7 @@ class Plugins {
   }
 
   async prune() {
-    await this._runNpm('prune');
+    await this._yarnInstall();
   }
 
   getServices(pluginName) {
