@@ -151,22 +151,28 @@ class Plugins {
   }
 
   getInstalled() {
-    return this._pluginNames().map(name => {
-      const pluginPath = this._pluginPath(name, 'package.json');
-      const json = JSON.parse(fs.readFileSync(pluginPath, 'utf8'));
-      const plugin = new Plugin(name);
-      return {
-        ...json,
-        pluginPath: this._pluginPath(name),
-        prettyName: this._getPrettyName(name),
-        hasConfig: this.getServices(name).some(({config = {}}) => Object.keys(config).length > 0),
-        isValid: plugin.isConfigValid(),
-        kapVersion: json.kapVersion || '*',
-        isCompatible: satisfies(this.appVersion, json.kapVersion || '*'),
-        isInstalled: true,
-        isSymlink: fs.lstatSync(this._pluginPath(name)).isSymbolicLink()
-      };
-    });
+    try {
+      return this._pluginNames().map(name => {
+        const pluginPath = this._pluginPath(name, 'package.json');
+        const json = JSON.parse(fs.readFileSync(pluginPath, 'utf8'));
+        const plugin = new Plugin(name);
+        return {
+          ...json,
+          pluginPath: this._pluginPath(name),
+          prettyName: this._getPrettyName(name),
+          hasConfig: this.getServices(name).some(({config = {}}) => Object.keys(config).length > 0),
+          isValid: plugin.isConfigValid(),
+          kapVersion: json.kapVersion || '*',
+          isCompatible: satisfies(this.appVersion, json.kapVersion || '*'),
+          isInstalled: true,
+          isSymlink: fs.lstatSync(this._pluginPath(name)).isSymbolicLink()
+        };
+      });
+    } catch (error) {
+      const Sentry = require('../utils/sentry');
+      Sentry.captureException(error);
+      return [];
+    }
   }
 
   getBuiltIn() {
