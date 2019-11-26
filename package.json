@@ -58,7 +58,6 @@
     "move-file": "^1.2.0",
     "nearest-normal-aspect-ratio": "^1.2.1",
     "node-mac-app-icon": "^1.4.0",
-    "npm": "^6.11.3",
     "p-cancelable": "^2.0.0",
     "p-event": "^4.1.0",
     "package-json": "^6.5.0",

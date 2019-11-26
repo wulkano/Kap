@@ -4,6 +4,7 @@ const {homedir} = require('os');
 const Store = require('electron-store');
 
 const {audioDevices} = require('aperture');
+const {hasMicrophoneAccess} = require('./system-permissions');
 
 const store = new Store({
   schema: {
@@ -89,19 +90,21 @@ store.set('actionBar', {});
 
 const audioInputDeviceId = store.get('audioInputDeviceId');
 
-(async () => {
-  const devices = await audioDevices();
+if (hasMicrophoneAccess()) {
+  (async () => {
+    const devices = await audioDevices();
 
-  if (!Array.isArray(devices)) {
-    const Sentry = require('../utils/sentry');
-    Sentry.captureException(new Error(`devices is not an array: ${JSON.stringify(devices)}`));
-    return;
-  }
-
-  if (!devices.some(device => device.id === audioInputDeviceId)) {
-    const [device] = devices;
-    if (device) {
-      store.set('audioInputDeviceId', device.id);
+    if (!Array.isArray(devices)) {
+      const Sentry = require('../utils/sentry');
+      Sentry.captureException(new Error(`devices is not an array: ${JSON.stringify(devices)}`));
+      return;
     }
-  }
-})();
+
+    if (!devices.some(device => device.id === audioInputDeviceId)) {
+      const [device] = devices;
+      if (device) {
+        store.set('audioInputDeviceId', device.id);
+      }
+    }
+  })();
+}
