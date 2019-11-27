@@ -46,7 +46,7 @@ const openFileItem = {
   click: async () => {
     closeAllCroppers();
 
-    ensureDockIsShowing(async () => {
+    await ensureDockIsShowing(async () => {
       const {canceled, filePaths} = await dialog.showOpenDialog({
         filters: [{name: 'Videos', extensions: supportedVideoExtensions}],
         properties: ['openFile', 'multiSelections']
