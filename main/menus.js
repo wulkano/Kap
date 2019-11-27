@@ -4,6 +4,7 @@ const os = require('os');
 const {Menu, app, dialog, BrowserWindow} = require('electron');
 const {openNewGitHubIssue, appMenu} = require('electron-util');
 const {ipcMain: ipc} = require('electron-better-ipc');
+const delay = require('delay');
 
 const {supportedVideoExtensions} = require('./common/constants');
 const {ensureDockIsShowing} = require('./utils/dock');
@@ -45,6 +46,8 @@ const openFileItem = {
   accelerator: 'Command+O',
   click: async () => {
     closeAllCroppers();
+
+    await delay(200);
 
     await ensureDockIsShowing(async () => {
       const {canceled, filePaths} = await dialog.showOpenDialog({
