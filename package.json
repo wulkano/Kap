@@ -79,7 +79,7 @@
     "babel-eslint": "^10.0.3",
     "electron": "6.0.9",
     "electron-builder": "^21.2.0",
-    "electron-builder-notarize": "^1.0.4",
+    "electron-builder-notarize": "^1.0.6",
     "eslint-config-xo-react": "^0.20.0",
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "^2.0.1",
