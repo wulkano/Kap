@@ -1,5 +1,6 @@
 import {Container} from 'unstated';
 import {ipcRenderer as ipc} from 'electron-better-ipc';
+import * as stringMath from 'string-math';
 import {shake} from '../utils/inputs';
 
 const isMuted = format => ['gif', 'apng'].includes(format);
@@ -37,8 +38,21 @@ export default class EditorContainer extends Container {
       return;
     }
 
-    if (value.match(/^\d+$/)) {
-      const val = parseInt(value, 10);
+    if (!value.match(/^\d+$/) && ignoreEmpty) {
+      const {width, height, lastValid = {}} = this.state;
+      this.setState({[name]: value, lastValid: {width, height, ...lastValid}});
+      return;
+    }
+
+    let parsedValue;
+    try {
+      parsedValue = stringMath(value);
+    } catch {
+      parsedValue = null;
+    }
+
+    if (parsedValue) {
+      const val = Math.round(parsedValue);
 
       if (name === 'width') {
         const min = Math.max(1, Math.ceil(ratio));
