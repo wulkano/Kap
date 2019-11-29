@@ -207,6 +207,6 @@ export default class EditorContainer extends Container {
     };
 
     ipc.callMain('export', data);
-    ipc.callMain('update-usage', {format, plugin: plugin.name});
+    ipc.callMain('update-usage', {format, plugin: plugin.pluginName});
   }
 }
