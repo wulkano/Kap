@@ -4,8 +4,10 @@ const os = require('os');
 const {Menu, app, dialog, BrowserWindow} = require('electron');
 const {openNewGitHubIssue, appMenu} = require('electron-util');
 const {ipcMain: ipc} = require('electron-better-ipc');
+const delay = require('delay');
 
 const {supportedVideoExtensions} = require('./common/constants');
+const {ensureDockIsShowing} = require('./utils/dock');
 const {openPrefsWindow} = require('./preferences');
 const {openExportsWindow} = require('./exports');
 const {openAboutWindow} = require('./about');
@@ -45,14 +47,18 @@ const openFileItem = {
   click: async () => {
     closeAllCroppers();
 
-    const {canceled, filePaths} = await dialog.showOpenDialog({
-      filters: [{name: 'Videos', extensions: supportedVideoExtensions}],
-      properties: ['openFile', 'multiSelections']
-    });
+    await delay(200);
 
-    if (!canceled && filePaths) {
-      openFiles(...filePaths);
-    }
+    await ensureDockIsShowing(async () => {
+      const {canceled, filePaths} = await dialog.showOpenDialog({
+        filters: [{name: 'Videos', extensions: supportedVideoExtensions}],
+        properties: ['openFile', 'multiSelections']
+      });
+
+      if (!canceled && filePaths) {
+        openFiles(...filePaths);
+      }
+    });
   }
 };
 
