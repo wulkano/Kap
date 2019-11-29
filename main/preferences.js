@@ -1,6 +1,7 @@
 'use strict';
 
 const {BrowserWindow} = require('electron');
+const {promisify} = require('util');
 const pEvent = require('p-event');
 
 const {ipcMain: ipc} = require('electron-better-ipc');
@@ -47,18 +48,17 @@ const openPrefsWindow = async options => {
   loadRoute(prefsWindow, 'preferences');
 
   await pEvent(prefsWindow.webContents, 'did-finish-load');
+
   if (options) {
     ipc.callRenderer(prefsWindow, 'options', options);
   }
 
   ipc.callRenderer(prefsWindow, 'mount');
 
-  return new Promise(resolve => {
-    ipc.answerRenderer('preferences-ready', () => {
-      prefsWindow.show();
-      resolve(prefsWindow);
-    });
-  });
+  await promisify(ipc.answerRenderer)('preferences-ready');
+
+  prefsWindow.show();
+  return prefsWindow;
 };
 
 const closePrefsWindow = () => {
