@@ -67,7 +67,7 @@ export default class EditorContainer extends Container {
           updates.width = val;
         }
 
-        updates.height = Math.round(updates.width / ratio);
+        updates.height = Math.floor(updates.width / ratio);
       } else {
         const min = Math.max(1, Math.ceil(1 / ratio));
 
@@ -83,7 +83,7 @@ export default class EditorContainer extends Container {
           updates.height = val;
         }
 
-        updates.width = Math.round(updates.height * ratio);
+        updates.width = Math.ceil(updates.height * ratio);
       }
     } else if (name === 'width') {
       shake(currentTarget, {className: 'shake-left'});
