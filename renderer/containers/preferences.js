@@ -10,7 +10,8 @@ export default class PreferencesContainer extends Container {
 
   state = {
     category: 'general',
-    tab: 'discover'
+    tab: 'discover',
+    isMounted: false
   }
 
   mount = async setOverlay => {
@@ -22,9 +23,6 @@ export default class PreferencesContainer extends Container {
 
     const pluginsInstalled = this.plugins.getInstalled().sort((a, b) => a.prettyName.localeCompare(b.prettyName));
 
-    const {getAudioDevices} = this.remote.require('./common/aperture');
-    const {audioInputDeviceId} = this.settings.store;
-
     await this.fetchFromNpm();
 
     this.setState({
@@ -34,20 +32,27 @@ export default class PreferencesContainer extends Container {
       isMounted: true
     });
 
-    (async () => {
-      const audioDevices = await getAudioDevices();
-      const updates = {audioDevices};
+    if (this.settings.store.recordAudio) {
+      this.getAudioDevices();
+    }
+  }
 
-      if (!audioDevices.some(device => device.id === audioInputDeviceId)) {
-        const [device] = audioDevices;
-        if (device) {
-          this.settings.set('audioInputDeviceId', device.id);
-          updates.audioInputDeviceId = device.id;
-        }
+  getAudioDevices = async () => {
+    const {getAudioDevices} = this.remote.require('./common/aperture');
+    const {audioInputDeviceId} = this.settings.store;
+
+    const audioDevices = await getAudioDevices();
+    const updates = {audioDevices};
+
+    if (!audioDevices.some(device => device.id === audioInputDeviceId)) {
+      const [device] = audioDevices;
+      if (device) {
+        this.settings.set('audioInputDeviceId', device.id);
+        updates.audioInputDeviceId = device.id;
       }
+    }
 
-      this.setState(updates);
-    })();
+    this.setState(updates);
   }
 
   setNavigation = ({category, tab}) => this.setState({category, tab})
@@ -155,6 +160,10 @@ export default class PreferencesContainer extends Container {
     this.track(`preferences/setting/recordAudio/${newVal}`);
 
     if (!newVal || await this.systemPermissions.ensureMicrophonePermissions()) {
+      if (newVal) {
+        await this.getAudioDevices();
+      }
+
       this.setState({recordAudio: newVal});
       this.settings.set('recordAudio', newVal);
     }

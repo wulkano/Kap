@@ -14,6 +14,8 @@ const {setCropperShortcutAction} = require('../global-accelerators');
 // eslint-disable-next-line no-unused-vars
 const {convertToH264} = require('../utils/encoding');
 
+const {hasMicrophoneAccess} = require('./system-permissions');
+
 const settings = require('./settings');
 const {track} = require('./analytics');
 
@@ -194,5 +196,11 @@ const stopRecording = async () => {
 module.exports = {
   startRecording,
   stopRecording,
-  getAudioDevices: audioDevices
+  getAudioDevices: () => {
+    if (hasMicrophoneAccess()) {
+      return audioDevices();
+    }
+
+    return [];
+  }
 };

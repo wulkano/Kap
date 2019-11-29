@@ -58,7 +58,6 @@
     "move-file": "^1.2.0",
     "nearest-normal-aspect-ratio": "^1.2.1",
     "node-mac-app-icon": "^1.4.0",
-    "npm": "^6.11.3",
     "p-cancelable": "^2.0.0",
     "p-event": "^4.1.0",
     "package-json": "^6.5.0",
@@ -131,7 +130,7 @@
       "minimumSystemVersion": "10.12.0",
       "darkModeSupport": true,
       "hardenedRuntime": true,
-      "entitlements": "./node_modules/electron-builder-notarize/entitlements.mac.inherit.plist",
+      "entitlements": "./build/entitlements.mac.inherit.plist",
       "extendInfo": {
         "NSMicrophoneUsageDescription": "Kap needs access to the microphone to be able to record audio for screen recordings.",
         "NSUserNotificationAlertStyle": "alert",
