@@ -47,9 +47,7 @@ export default class EditorContainer extends Container {
     let parsedValue;
     try {
       parsedValue = stringMath(value);
-    } catch {
-      parsedValue = null;
-    }
+    } catch {}
 
     if (parsedValue) {
       const val = Math.round(parsedValue);
