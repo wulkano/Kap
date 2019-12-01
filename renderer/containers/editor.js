@@ -1,5 +1,6 @@
 import {Container} from 'unstated';
 import {ipcRenderer as ipc} from 'electron-better-ipc';
+import * as stringMath from 'string-math';
 import {shake} from '../utils/inputs';
 
 const isMuted = format => ['gif', 'apng'].includes(format);
@@ -37,8 +38,19 @@ export default class EditorContainer extends Container {
       return;
     }
 
-    if (value.match(/^\d+$/)) {
-      const val = parseInt(value, 10);
+    if (!value.match(/^\d+$/) && ignoreEmpty) {
+      const {width, height, lastValid = {}} = this.state;
+      this.setState({[name]: value, lastValid: {width, height, ...lastValid}});
+      return;
+    }
+
+    let parsedValue;
+    try {
+      parsedValue = stringMath(value);
+    } catch {}
+
+    if (parsedValue) {
+      const val = Math.round(parsedValue);
 
       if (name === 'width') {
         const min = Math.max(1, Math.ceil(ratio));
@@ -55,7 +67,7 @@ export default class EditorContainer extends Container {
           updates.width = val;
         }
 
-        updates.height = Math.round(updates.width / ratio);
+        updates.height = Math.floor(updates.width / ratio);
       } else {
         const min = Math.max(1, Math.ceil(1 / ratio));
 
@@ -71,7 +83,7 @@ export default class EditorContainer extends Container {
           updates.height = val;
         }
 
-        updates.width = Math.round(updates.height * ratio);
+        updates.width = Math.ceil(updates.height * ratio);
       }
     } else if (name === 'width') {
       shake(currentTarget, {className: 'shake-left'});

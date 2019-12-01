@@ -69,6 +69,7 @@
     "react-dom": "^16.9.0",
     "react-linkify": "^0.2.2",
     "semver": "^6.3.0",
+    "string-math": "^1.2.1",
     "tempy": "^0.3.0",
     "tildify": "^2.0.0",
     "tmp": "^0.1.0",

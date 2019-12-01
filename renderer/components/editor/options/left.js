@@ -50,7 +50,6 @@ class LeftOptions extends React.Component {
           className={keyboardInputClass}
           value={width || ''}
           size="5"
-          maxLength="5"
           min={1}
           max={original && original.width}
           name="width"
@@ -62,7 +61,6 @@ class LeftOptions extends React.Component {
           className={keyboardInputClass}
           value={height || ''}
           size="5"
-          maxLength="5"
           min={1}
           max={original && original.height}
           name="height"
