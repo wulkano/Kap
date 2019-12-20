@@ -50,11 +50,13 @@ class General extends React.Component {
       setAudioInputDeviceId,
       audioDevices,
       recordAudio,
+      keyCast,
       pickKapturesDir,
       setOpenOnStartup,
       cropperShortcut,
       updateShortcut,
       toggleShortcuts,
+      toggleKeyCast,
       category
     } = this.props;
 
@@ -137,6 +139,14 @@ class General extends React.Component {
           <Switch tabIndex={tabIndex} checked={doNotDisturb} onClick={() => toggleSetting('doNotDisturb')}/>
         </Item>
         <Item
+          key="keyCast"
+          title="Key Cast"
+          subtitle="Show keys pressed while recording"
+          badge="Accessibility"
+        >
+          <Switch tabIndex={tabIndex} checked={keyCast} onClick={toggleKeyCast}/>
+        </Item>
+        <Item
           key="loopExports"
           title="Loop exports"
           subtitle="Infinitely loop exports when supported"
@@ -212,6 +222,7 @@ General.propTypes = {
   doNotDisturb: PropTypes.bool,
   record60fps: PropTypes.bool,
   recordKeyboardShortcut: PropTypes.bool,
+  keyCast: PropTypes.bool,
   toggleSetting: PropTypes.elementType.isRequired,
   toggleRecordAudio: PropTypes.elementType.isRequired,
   audioInputDeviceId: PropTypes.string,
@@ -226,6 +237,7 @@ General.propTypes = {
   setOpenOnStartup: PropTypes.elementType.isRequired,
   updateShortcut: PropTypes.elementType.isRequired,
   toggleShortcuts: PropTypes.elementType.isRequired,
+  toggleKeyCast: PropTypes.elementType.isRequired,
   category: PropTypes.string,
   cropperShortcut: PropTypes.shape({
     metaKey: PropTypes.bool.isRequired,
@@ -253,6 +265,7 @@ export default connect(
     allowAnalytics,
     loopExports,
     cropperShortcut,
+    keyCast,
     category
   }) => ({
     showCursor,
@@ -269,6 +282,7 @@ export default connect(
     allowAnalytics,
     loopExports,
     cropperShortcut,
+    keyCast,
     category
   }),
   ({
@@ -278,6 +292,7 @@ export default connect(
     pickKapturesDir,
     setOpenOnStartup,
     updateShortcut,
+    toggleKeyCast,
     toggleShortcuts
   }) => ({
     toggleSetting,
@@ -286,6 +301,7 @@ export default connect(
     pickKapturesDir,
     setOpenOnStartup,
     updateShortcut,
+    toggleKeyCast,
     toggleShortcuts
   })
 )(General);

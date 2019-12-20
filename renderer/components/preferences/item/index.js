@@ -37,7 +37,7 @@ class Item extends React.Component {
     const {
       title,
       subtitle,
-      experimental,
+      badge,
       tooltip,
       children,
       id,
@@ -53,7 +53,7 @@ class Item extends React.Component {
 
     const subtitleArray = Array.isArray(subtitle) ? subtitle : [subtitle];
 
-    const className = classNames('title', {experimental});
+    const className = classNames('title', {badge: Boolean(badge)});
     const containerClassName = classNames('container', {parent: parentItem});
     const subtitleClassName = classNames('subtitle', {link: Boolean(onSubtitleClick)});
 
@@ -125,7 +125,7 @@ class Item extends React.Component {
             margin-left: ${vertical ? '0px' : '8px'};
           }
 
-          .experimental {
+          .badge {
             display: flex;
             align-items: center;
           }
@@ -142,10 +142,10 @@ class Item extends React.Component {
             cursor: pointer;
           }
 
-          .experimental:after {
+          .badge:after {
             border: 1px solid #ddd;
-            color: gray;
-            content: 'experimental';
+            color: var(--subtitle-color);
+            content: '${badge}';
             display: inline-block;
             font-size: 0.8rem;
             font-weight: 500;
@@ -169,7 +169,7 @@ Item.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
   ]),
-  experimental: PropTypes.bool,
+  badge: PropTypes.string,
   tooltip: PropTypes.string,
   subtitle: PropTypes.oneOfType([
     PropTypes.string,

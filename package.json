@@ -52,6 +52,7 @@
     "mac-open-with": "^1.2.2",
     "mac-screen-capture-permissions": "^1.0.2",
     "mac-windows": "^0.7.1",
+    "macos-key-cast": "^1.1.5",
     "macos-version": "^5.2.0",
     "make-dir": "^3.0.0",
     "moment": "^2.24.0",

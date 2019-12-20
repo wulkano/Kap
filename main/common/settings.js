@@ -55,6 +55,10 @@ const store = new Store({
       ],
       default: null
     },
+    keyCast: {
+      type: 'boolean',
+      default: false
+    },
     cropperShortcut: {
       type: 'object',
       properties: {

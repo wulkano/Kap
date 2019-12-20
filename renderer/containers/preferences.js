@@ -157,15 +157,24 @@ export default class PreferencesContainer extends Container {
 
   toggleRecordAudio = async () => {
     const newVal = !this.state.recordAudio;
-    this.track(`preferences/setting/recordAudio/${newVal}`);
 
     if (!newVal || await this.systemPermissions.ensureMicrophonePermissions()) {
       if (newVal) {
         await this.getAudioDevices();
       }
 
+      this.track(`preferences/setting/recordAudio/${newVal}`);
       this.setState({recordAudio: newVal});
       this.settings.set('recordAudio', newVal);
+    }
+  }
+
+  toggleKeyCast = async () => {
+    const newVal = !this.state.keyCast;
+    if (!newVal || await this.systemPermissions.ensureAccessibilityPermissions()) {
+      this.track(`preferences/setting/keyCast/${newVal}`);
+      this.setState({keyCast: newVal});
+      this.settings.set('keyCast', newVal);
     }
   }
 

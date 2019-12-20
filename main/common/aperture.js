@@ -4,6 +4,7 @@ const {dialog} = require('electron');
 const desktopIcons = require('hide-desktop-icons');
 const dnd = require('@sindresorhus/do-not-disturb');
 const createAperture = require('aperture');
+const keyCast = require('macos-key-cast');
 
 const {openEditorWindow} = require('../editor');
 const {closePrefsWindow} = require('../preferences');
@@ -27,6 +28,7 @@ const recordHevc = videoCodecs.has('hevc');
 
 let wasDoNotDisturbAlreadyEnabled;
 let lastUsedSettings;
+let keyCastProcess;
 
 let past;
 
@@ -45,6 +47,11 @@ const cleanup = () => {
 
   if (doNotDisturb && !wasDoNotDisturbAlreadyEnabled) {
     dnd.disable();
+  }
+
+  if (keyCastProcess) {
+    keyCastProcess.cancel();
+    keyCastProcess = undefined;
   }
 
   setCropperShortcutAction();
@@ -72,7 +79,8 @@ const startRecording = async options => {
     recordAudio,
     audioInputDeviceId,
     hideDesktopIcons,
-    doNotDisturb
+    doNotDisturb,
+    keyCast: isKeyCastEnabled
   } = settings.store;
 
   const apertureOpts = {
@@ -109,9 +117,9 @@ const startRecording = async options => {
 
   if (hideDesktopIcons) {
     await desktopIcons.hide();
-  }
 
-  console.log(`Hide desktop icons after ${(Date.now() - past) / 1000}s`);
+    console.log(`Hide desktop icons after ${(Date.now() - past) / 1000}s`);
+  }
 
   if (doNotDisturb) {
     wasDoNotDisturbAlreadyEnabled = await dnd.isEnabled();
@@ -119,9 +127,15 @@ const startRecording = async options => {
     if (!wasDoNotDisturbAlreadyEnabled) {
       dnd.enable();
     }
+
+    console.log(`Took care of DND after ${(Date.now() - past) / 1000}s`);
   }
 
-  console.log(`Took care of DND after ${(Date.now() - past) / 1000}s`);
+  if (isKeyCastEnabled && keyCast.hasPermissions()) {
+    keyCastProcess = keyCast({display: displayId});
+
+    console.log(`Took care of key cast after ${(Date.now() - past) / 1000}s`);
+  }
 
   try {
     await aperture.startRecording(apertureOpts);
@@ -129,6 +143,7 @@ const startRecording = async options => {
     track('recording/stopped/error');
     dialog.showErrorBox('Recording error', error.message);
     past = null;
+    cleanup();
     return;
   }
 

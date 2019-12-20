@@ -1,5 +1,6 @@
 const {systemPreferences, shell, dialog, app} = require('electron');
 const {hasScreenCapturePermission, hasPromptedForPermission} = require('mac-screen-capture-permissions');
+const {hasPermissions: hasAccessibilityPermissions} = require('macos-key-cast');
 const {ensureDockIsShowing} = require('../utils/dock');
 
 const promptSystemPreferences = options => async ({hasAsked} = {}) => {
@@ -83,10 +84,16 @@ const ensureScreenCapturePermissions = (fallback = screenCaptureFallback) => {
 
 const hasScreenCaptureAccess = () => hasScreenCapturePermission();
 
+// Accessibility
+
+const ensureAccessibilityPermissions = () => hasAccessibilityPermissions({ask: true});
+
 module.exports = {
   ensureMicrophonePermissions,
   hasMicrophoneAccess,
   openSystemPreferences,
   ensureScreenCapturePermissions,
-  hasScreenCaptureAccess
+  hasScreenCaptureAccess,
+  ensureAccessibilityPermissions,
+  hasAccessibilityPermissions
 };
