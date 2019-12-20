@@ -2,11 +2,14 @@ const {systemPreferences, shell, dialog, app} = require('electron');
 const {hasScreenCapturePermission, hasPromptedForPermission} = require('mac-screen-capture-permissions');
 const {ensureDockIsShowing} = require('../utils/dock');
 
+let isDialogShowing = false;
+
 const promptSystemPreferences = options => async ({hasAsked} = {}) => {
-  if (hasAsked) {
+  if (hasAsked || isDialogShowing) {
     return false;
   }
 
+  isDialogShowing = true;
   await ensureDockIsShowing(async () => {
     const {response} = await dialog.showMessageBox({
       type: 'warning',
@@ -16,6 +19,7 @@ const promptSystemPreferences = options => async ({hasAsked} = {}) => {
       detail: options.detail,
       cancelId: 1
     });
+    isDialogShowing = false;
 
     if (response === 0) {
       await openSystemPreferences(options.systemPreferencesPath);
