@@ -13,6 +13,20 @@ const ensureDockIsShowing = async action => {
   }
 };
 
+const ensureDockIsShowingSync = action => {
+  const wasDockShowing = app.dock.isVisible();
+  if (!wasDockShowing) {
+    app.dock.show();
+  }
+
+  action();
+
+  if (!wasDockShowing) {
+    app.dock.hide();
+  }
+};
+
 module.exports = {
-  ensureDockIsShowing
+  ensureDockIsShowing,
+  ensureDockIsShowingSync
 };

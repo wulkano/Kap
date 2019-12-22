@@ -19,6 +19,7 @@ const {getExportsWindow, openExportsWindow} = require('./exports');
 const {openEditorWindow} = require('./editor');
 const {toggleExportMenuItem} = require('./menus');
 const Export = require('./export');
+const {ensureDockIsShowingSync} = require('./utils/dock');
 
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
 let lastSavedDirectory;
@@ -266,23 +267,24 @@ module.exports = () => {
   app.on('before-quit', event => {
     if (exportList.currentExport) {
       openExportsWindow();
-      const exportsWindow = getExportsWindow();
 
-      const buttonIndex = dialog.showMessageBoxSync(exportsWindow, {
-        type: 'question',
-        buttons: [
-          'Continue',
-          'Quit'
-        ],
-        defaultId: 0,
-        cancelId: 1,
-        message: 'Do you want to continue exporting?',
-        detail: 'Kap is currently exporting files. If you quit, the export task will be canceled.'
+      ensureDockIsShowingSync(() => {
+        const buttonIndex = dialog.showMessageBoxSync({
+          type: 'question',
+          buttons: [
+            'Continue',
+            'Quit'
+          ],
+          defaultId: 0,
+          cancelId: 1,
+          message: 'Do you want to continue exporting?',
+          detail: 'Kap is currently exporting files. If you quit, the export task will be canceled.'
+        });
+
+        if (buttonIndex === 0) {
+          event.preventDefault();
+        }
       });
-
-      if (buttonIndex === 0) {
-        event.preventDefault();
-      }
     }
   });
 };
