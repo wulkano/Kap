@@ -141,7 +141,7 @@ class General extends React.Component {
         <Item
           key="keyCast"
           title="Key Cast"
-          subtitle="Show keys pressed while recording"
+          subtitle="Show pressed keys while recording"
           badge="Accessibility"
         >
           <Switch tabIndex={tabIndex} checked={keyCast} onClick={toggleKeyCast}/>
