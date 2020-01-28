@@ -27,6 +27,8 @@ Tip: You can use modern JavaScript features like async/await in your plugin.
 
 When you develop a plugin it’s useful to be able to try it out in Kap. In the directory of your plugin, run `$ npm link`, go to `~/Library/Application Support/Kap/plugins` and run `$ npm link plugin-name `, and then add `"plugin-name": "latest"` to the `"dependencies"` in the package.json there. Your plugin should now be shown in Kap.
 
+When Kap is built for production, it prunes dependencies at start time. In order to avoid any issues, make sure to run `$ npm link` after starting Kap, and make sure to re-run it if you restart the app. Alternatively, you can run Kap on dev mode by downloading the source and running `$ yarn start`.
+
 ## Share service
 
 A share service lets you add an entry to the export menu in the Kap editor window and control what happens when the user clicks it.
