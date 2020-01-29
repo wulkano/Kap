@@ -21,7 +21,7 @@ Read the [contribution guide](contributing.md).
 
 ## Plugins
 
-For more info on how to create plugins, read the [plugins docs](docs/plugins.md)
+For more info on how to create plugins, read the [plugins docs](docs/plugins.md).
 
 ## Dev builds
 
