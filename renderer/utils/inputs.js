@@ -173,6 +173,10 @@ const buildAspectRatioMenu = ({setRatio, ratio}) => {
 };
 
 const handleInputKeyPress = (onChange, min, max) => event => {
+  if (event.key === 'Enter') {
+    return onChange(event, {ignoreEmpty: false});
+  }
+
   const multiplier = event.shiftKey ? 10 : 1;
   const parsedValue = parseInt(event.currentTarget.value, 10);
 
