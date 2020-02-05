@@ -4,7 +4,7 @@ const {app, Notification} = electron;
 
 const notify = text => {
   const notification = new Notification({
-    title: app.getName(),
+    title: app.name,
     body: text
   });
 
