@@ -65,8 +65,8 @@
     "plist": "^3.0.1",
     "pretty-ms": "^5.1.0",
     "prop-types": "^15.7.2",
-    "react": "^16.11.0",
-    "react-dom": "^16.11.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
     "react-linkify": "^0.2.2",
     "semver": "^7.1.2",
     "string-math": "^1.2.1",
@@ -74,7 +74,7 @@
     "tildify": "^2.0.0",
     "tmp": "^0.1.0",
     "unstated": "^1.2.0",
-    "yarn": "^1.19.1"
+    "yarn": "^1.21.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.3",
@@ -84,7 +84,7 @@
     "eslint-config-xo-react": "^0.22.0",
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-react-hooks": "^2.3.0",
-    "husky": "^3.0.9",
+    "husky": "^4.2.1",
     "next": "^9.1.3",
     "xo": "^0.25.3"
   },
