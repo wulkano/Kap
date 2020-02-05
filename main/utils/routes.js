@@ -9,7 +9,6 @@ const loadRoute = (win, routeName) => {
     win.openDevTools({mode: 'detach'});
   } else {
     win.loadFile(`${app.getAppPath()}/renderer/out/${routeName}.html`);
-    win.openDevTools({mode: 'detach'});
   }
 };
 
