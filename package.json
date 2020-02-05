@@ -78,8 +78,8 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.0.3",
-    "electron": "7.1.3",
-    "electron-builder": "^21.2.0",
+    "electron": "8.0.0",
+    "electron-builder": "^22.3.2",
     "electron-builder-notarize": "^1.1.2",
     "eslint-config-xo-react": "^0.22.0",
     "eslint-plugin-react": "^7.18.3",
