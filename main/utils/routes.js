@@ -8,7 +8,7 @@ const loadRoute = (win, routeName) => {
     win.loadURL(`http://localhost:8000/${routeName}`);
     win.openDevTools({mode: 'detach'});
   } else {
-    win.loadFile(`${app.getAppPath()}/renderer/out/${routeName}/index.html`);
+    win.loadFile(`${app.getAppPath()}/renderer/out/${routeName}.html`);
   }
 };
 

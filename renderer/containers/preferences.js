@@ -70,7 +70,7 @@ export default class PreferencesContainer extends Container {
           return a.prettyName.localeCompare(b.prettyName);
         })
       });
-    } catch (error) {
+    } catch (_) {
       this.setState({npmError: true});
     }
   }

@@ -44,7 +44,7 @@ const openEditorWindow = async (filePath, {recordedFps, isNewRecording, original
     },
     frame: false,
     transparent: true,
-    vibrancy: 'dark',
+    vibrancy: 'window',
     show: false
   });
 
