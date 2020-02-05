@@ -85,7 +85,7 @@
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-react-hooks": "^2.3.0",
     "husky": "^4.2.1",
-    "next": "^9.1.3",
+    "next": "^9.2.1",
     "xo": "^0.25.3"
   },
   "xo": {
