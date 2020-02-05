@@ -55,7 +55,7 @@ const convert = (outputPath, opts, args) => {
         // Wait 2 second in the conversion for the speed to be stable
         if (processedMs > 2 * 1000) {
           const msRemaining = (durationMs - processedMs) / speed;
-          opts.onProgress(progress, prettyMs(Math.max(msRemaining, 1000), {compact: true}).substr(1));
+          opts.onProgress(progress, prettyMs(Math.max(msRemaining, 1000), {compact: true}).slice(1));
         } else {
           opts.onProgress(progress);
         }

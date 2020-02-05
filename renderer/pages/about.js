@@ -12,7 +12,7 @@ export default class AboutPage extends React.Component {
     const icon = await getAppIcon();
 
     this.setState({
-      name: app.getName(),
+      name: app.name,
       version: app.getVersion(),
       icon
     });

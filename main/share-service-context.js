@@ -26,7 +26,7 @@ class ShareServiceContext {
     this.onProgress = options.onProgress;
     this.pluginName = options.pluginName;
 
-    this.canceled = false;
+    this.isCanceled = false;
     this.requests = [];
 
     this.request = this.request.bind(this);
@@ -38,7 +38,7 @@ class ShareServiceContext {
   }
 
   request(url, options) {
-    if (this.canceled) {
+    if (this.isCanceled) {
       return;
     }
 
@@ -50,7 +50,7 @@ class ShareServiceContext {
   }
 
   cancel() {
-    this.canceled = true;
+    this.isCanceled = true;
     this.onCancel();
 
     for (const request of this.requests) {
@@ -59,14 +59,15 @@ class ShareServiceContext {
   }
 
   clear() {
-    this.canceled = true;
-    for (const req of this.requests) {
-      req.cancel();
+    this.isCanceled = true;
+
+    for (const request of this.requests) {
+      request.cancel();
     }
   }
 
   copyToClipboard(text) {
-    if (this.canceled) {
+    if (this.isCanceled) {
       return;
     }
 
@@ -74,7 +75,7 @@ class ShareServiceContext {
   }
 
   notify(text) {
-    if (this.canceled) {
+    if (this.isCanceled) {
       return;
     }
 
@@ -94,7 +95,7 @@ class ShareServiceContext {
   }
 
   setProgress(text, percentage) {
-    if (this.canceled) {
+    if (this.isCanceled) {
       return;
     }
 
@@ -102,7 +103,7 @@ class ShareServiceContext {
   }
 
   openConfigFile() {
-    if (this.canceled) {
+    if (this.isCanceled) {
       return;
     }
 
