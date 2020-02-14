@@ -74,7 +74,7 @@ class ShareServiceContext {
     clipboard.writeText(text);
   }
 
-  notify(text) {
+  notify(text, action) {
     if (this.isCanceled) {
       return;
     }
@@ -91,6 +91,11 @@ class ShareServiceContext {
     }
 
     const notification = new Notification(options);
+
+    if (action) {
+      notification.on('click', action);
+    }
+
     notification.show();
   }
 
