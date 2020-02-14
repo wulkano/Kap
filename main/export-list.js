@@ -104,6 +104,13 @@ class ExportList {
           text: 'Export failed',
           error: {stack: error.stack, message: error.message}
         });
+
+        const notification = new Notification({
+          title: this.currentExport.pluginName,
+          body: error.message
+        });
+        notification.show();
+
         delete this.currentExport;
         this._startNext();
       }
