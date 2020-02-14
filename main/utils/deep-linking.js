@@ -29,7 +29,7 @@ const handleDeepLink = url => {
     return routes.get(host)(pathname.slice(1));
   }
 
-  console.log(`Route not recognized: ${host} (${url}).`);
+  console.error(`Route not recognized: ${host} (${url}).`);
 };
 
 module.exports = {
