@@ -111,7 +111,7 @@ class ShareServiceContext {
     this.config.openInEditor();
   }
 
-  waitForDeepLink() {
+  async waitForDeepLink() {
     return new Promise(resolve => {
       addPluginPromise(this.pluginName, resolve);
     });

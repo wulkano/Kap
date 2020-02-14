@@ -1,5 +1,4 @@
 'use strict';
-const {URL} = require('url');
 
 const pluginPromises = new Map();
 
@@ -12,10 +11,10 @@ const handlePluginsDeepLink = path => {
     return;
   }
 
-  console.log(`Received link for plugin ${plugin} but there was no registered listener.`);
+  console.error(`Received link for plugin ${plugin} but there was no registered listener.`);
 };
 
-const addPluginPromise = (plugin, resolveFunc) => {
+const addPluginPromise = (plugin, resolveFunction) => {
   pluginPromises.set(plugin, resolveFunc);
 };
 
