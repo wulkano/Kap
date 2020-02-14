@@ -13,9 +13,14 @@ class Plugin {
 
     const cwd = path.join(app.getPath('userData'), 'plugins');
     const pluginPath = path.join(cwd, 'node_modules', pluginName);
-    this.plugin = require(pluginPath);
     const {homepage, links} = JSON.parse(fs.readFileSync(path.join(pluginPath, 'package.json'), 'utf8'));
     this.link = homepage || (links && links.homepage);
+
+    try {
+      this.plugin = require(pluginPath);
+    } catch (_) {
+      this.plugin = {shareServices: []};
+    }
 
     this.config = new PluginConfig(pluginName, this.plugin);
     this.validators = this.config.validators;
