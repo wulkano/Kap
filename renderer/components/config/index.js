@@ -70,6 +70,7 @@ class Config extends React.Component {
             width: 100%;
             display: flex;
             flex-direction: column;
+            word-break: break-word;
           }
 
           .service-nav {
