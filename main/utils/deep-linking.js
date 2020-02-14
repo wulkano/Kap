@@ -11,7 +11,7 @@ const handlePluginsDeepLink = path => {
     return;
   }
 
-  console.error(`Received link for plugin ${plugin} but there was no registered listener.`);
+  console.error(`Received link for plugin “${plugin}” but there was no registered listener.`);
 };
 
 const addPluginPromise = (plugin, resolveFunction) => {
