@@ -1,6 +1,5 @@
 'use strict';
 
-const {dialog} = require('electron');
 const Store = require('electron-store');
 const {ipcMain: ipc} = require('electron-better-ipc');
 
@@ -8,6 +7,7 @@ const plugins = require('./common/plugins');
 const {converters} = require('./convert');
 const {setOptions, getEditors} = require('./editor');
 const {apps} = require('./plugins/open-with-plugin');
+const {showError} = require('./utils/errors');
 
 const exportUsageHistory = new Store({
   name: 'export-usage-history',
@@ -62,7 +62,7 @@ const getExportOptions = () => {
         }
       }
     } catch (error) {
-      dialog.showErrorBox(`Something went wrong while loading ${json.pluginName}`, error.stack);
+      showError(error, {title: `Something went wrong while loading “${json.pluginName}”`});
       const Sentry = require('./utils/sentry');
       Sentry.captureException(error);
     }
