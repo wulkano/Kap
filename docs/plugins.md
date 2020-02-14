@@ -135,18 +135,18 @@ config: {
 
 ## OAuth
 
-Sometimes services require and OAuth flow to retrieve a token, and those often require to be completed in the browser, and not in a webview. For this reason, Kap provides deep linking support. In order to support OAuth for your plugin, you can follow these steps:
+Sometimes services require an [OAuth](https://oauth.net/2/) flow to retrieve a token. These flows are often required to be completed in the browser and not in a webview. For this reason, Kap provides deep linking support. Follow these steps to support OAuth in your plugin:
 
-- When the export starts, check if the `accessToken` is available (if you have already authenticated) in the plugin config (this should not be listed in the JSON Schema options mentioned above, unless the user is meant to edit it).
-- If it's not available, [open an external link](https://www.electronjs.org/docs/api/shell#shellopenexternalurl-options) to the OAuth provider's page with the right parameters (usually client ID)
-- When registering the app, provide something like `kap://plugins/{pluginName}/auth` as the callback URI
-- Call `context.waitForDeepLink()` and wait for the user to go through the process
-- When the above call resolves, you'll have the remaining path, along with any extra info the API added (In the above example something like `auth?code=###`)
-- You can now exchange the code for a token, and then store that in the config, so you can use it for future exports
+- When the export starts, check if the `accessToken` is available (if you have already authenticated) in the plugin config. This should not be listed in the JSON Schema options mentioned above unless the user is meant to edit them.
+- If it's not available, [open an external link](https://www.electronjs.org/docs/api/shell#shellopenexternalurl-options) to the OAuth provider's page with the correct parameters. Usually client ID.
+- When registering the app, provide something like `kap://plugins/{pluginName}/auth` as the callback URL.
+- Call `context.waitForDeepLink()` and wait for the user to go through the process.
+- When the above call resolves, you'll have the remaining path, along with any extra info the API added. In the above example, it would be something like `auth?code=###`.
+- You can now exchange the code for a token, and then store that in the config, so you can use it for future exports.
 
-For an example of this flow in action, check [kap-dropbox](https://github.com/karaggeorge/kap-dropbox).
+For an example of this flow in action, check out [kap-dropbox](https://github.com/karaggeorge/kap-dropbox).
 
-If the API provider only allows http/https urls, or if you don't want to do the code exchange in the plugin (to avoid having the secret in the code), you might need to create a proxy similar to the [one used for kap-dropbox](https://github.com/karaggeorge/kap-dropbox/tree/master/oauth-proxy) to trigger the deep link.
+If the API provider only allows HTTP/HTTPS URLs, or if you don't want to do the code exchange in the plugin (to avoid having the secret in the code), you might need to create a proxy, similar to the [one used for kap-dropbox](https://github.com/karaggeorge/kap-dropbox/tree/master/oauth-proxy), to trigger the deep link.
 
 ## Removing your Kap plugin
 
