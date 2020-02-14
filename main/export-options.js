@@ -1,4 +1,6 @@
+'use strict';
 
+const {dialog} = require('electron');
 const Store = require('electron-store');
 const {ipcMain: ipc} = require('electron-better-ipc');
 
@@ -60,6 +62,7 @@ const getExportOptions = () => {
         }
       }
     } catch (error) {
+      dialog.showErrorBox(`Something went wrong while loading ${json.pluginName}`, error.stack);
       const Sentry = require('./utils/sentry');
       Sentry.captureException(error);
     }

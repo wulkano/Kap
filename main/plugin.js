@@ -1,11 +1,9 @@
 'use strict';
 
-const electron = require('electron');
+const {app, shell, dialog} = require('electron');
 const path = require('path');
 const fs = require('fs');
 const PluginConfig = require('./utils/plugin-config');
-
-const {app, shell} = electron;
 
 class Plugin {
   constructor(pluginName) {
@@ -18,7 +16,8 @@ class Plugin {
 
     try {
       this.plugin = require(pluginPath);
-    } catch (_) {
+    } catch (error) {
+      dialog.showErrorBox(`Something went wrong while loading ${this.pluginName}`, error.stack);
       this.plugin = {shareServices: []};
     }
 
