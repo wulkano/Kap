@@ -100,6 +100,7 @@ The `action` function is where you implement the behavior of your service. The f
 - `.setProgress(text, percentage)`: Update progress information in the Kap export window. Use this whenever you have long-running jobs, like uploading. The `percentage` should be a number between `0` and `1`.
 - `.openConfigFile()`: Open the plugin config file in the user’s editor.
 - `.cancel()`: Indicate that the plugin operation canceled for some reason. [Example.](https://github.com/wulkano/kap/blob/efc32d12f381615c9fcfc41065d9c2ee200e8975/app/src/main/save-file-service.js#L28-L31) This closes the Kap export window. If the cancelation was not the result of a user gesture, use `.notify()` to inform the user why it was canceled.
+- `.waitForDeepLink()`: Returns a Promise that resolves when a deep link for this plugin is opened. The link should be of the format `kap://plugins/{pluginName}/{rest}`, where `pluginName` is the npm module name and `rest` is the string the Promise will resolve with.
 
 
 ### Config
