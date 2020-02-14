@@ -15,7 +15,7 @@ const handlePluginsDeepLink = path => {
 };
 
 const addPluginPromise = (plugin, resolveFunction) => {
-  pluginPromises.set(plugin, resolveFunc);
+  pluginPromises.set(plugin, resolveFunction);
 };
 
 const routes = new Map([
