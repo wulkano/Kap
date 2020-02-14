@@ -1,6 +1,7 @@
 'use strict';
 const {Notification, clipboard} = require('electron');
 const got = require('got');
+const {addPluginPromise} = require('./utils/deep-linking');
 
 const prettifyFormat = format => {
   const formats = new Map([
@@ -108,6 +109,12 @@ class ShareServiceContext {
     }
 
     this.config.openInEditor();
+  }
+
+  waitForDeepLink() {
+    return new Promise(resolve => {
+      addPluginPromise(this.pluginName, resolve);
+    });
   }
 }
 

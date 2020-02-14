@@ -19,6 +19,7 @@ const openFiles = require('./utils/open-files');
 const {initializeExportOptions} = require('./export-options');
 const settings = require('./common/settings');
 const {hasMicrophoneAccess, ensureScreenCapturePermissions} = require('./common/system-permissions');
+const {handleDeepLink} = require('./utils/deep-linking');
 
 require('./utils/sentry');
 
@@ -96,6 +97,10 @@ const checkForUpdates = () => {
     openCropperWindow();
   }
 
+  if (!app.isDefaultProtocolClient('kap')) {
+    app.setAsDefaultProtocolClient('kap');
+  }
+
   checkForUpdates();
 })();
 
@@ -110,4 +115,11 @@ app.on('browser-window-created', () => {
   if (!isCropperOpen()) {
     app.dock.show();
   }
+});
+
+app.on('will-finish-launching', () => {
+  app.on('open-url', (event, url) => {
+    event.preventDefault();
+    handleDeepLink(url);
+  });
 });
