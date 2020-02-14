@@ -102,7 +102,7 @@ class ExportList {
         this.currentExport.updateExport({
           status: 'failed',
           text: 'Export failed',
-          error: error.stack
+          error: {stack: error.stack, message: error.message}
         });
         delete this.currentExport;
         this._startNext();
