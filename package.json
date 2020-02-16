@@ -42,6 +42,7 @@
     "electron-store": "^5.1.0",
     "electron-updater": "^4.2.0",
     "electron-util": "^0.13.1",
+    "ensure-error": "^2.0.0",
     "execa": "4.0.0",
     "file-icon": "^3.0.0",
     "first-run": "^2.0.0",
