@@ -11,7 +11,7 @@ const handlePluginsDeepLink = path => {
     return;
   }
 
-  console.error(`Received link for plugin ${plugin} but there was no registered listener.`);
+  console.error(`Received link for plugin “${plugin}” but there was no registered listener.`);
 };
 
 const addPluginPromise = (plugin, resolveFunction) => {
@@ -29,7 +29,7 @@ const handleDeepLink = url => {
     return routes.get(host)(pathname.slice(1));
   }
 
-  console.log(`Route not recognized: ${host} (${url}).`);
+  console.error(`Route not recognized: ${host} (${url}).`);
 };
 
 module.exports = {
