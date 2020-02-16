@@ -96,7 +96,7 @@ The `action` function is where you implement the behavior of your service. The f
 - `.config`: Get and set config for you plugin. It’s an instance of [`electron-store`](https://github.com/sindresorhus/electron-store#instance).
 - `.request()`: Do a network request, like uploading. It’s a wrapper around [`got`](https://github.com/sindresorhus/got).
 - `.copyToClipboard(text)`: Copy text to the clipboard. If you for example copy a link to the uploaded recording to the clipboard, don’t forget to `.notify()` the user about it.
-- `.notify(text)`: Show a notification.
+- `.notify(text, action)`: Show a notification. Optionally pass in a function that is called with the event when the notification is clicked.
 - `.setProgress(text, percentage)`: Update progress information in the Kap export window. Use this whenever you have long-running jobs, like uploading. The `percentage` should be a number between `0` and `1`.
 - `.openConfigFile()`: Open the plugin config file in the user’s editor.
 - `.cancel()`: Indicate that the plugin operation canceled for some reason. [Example.](https://github.com/wulkano/kap/blob/efc32d12f381615c9fcfc41065d9c2ee200e8975/app/src/main/save-file-service.js#L28-L31) This closes the Kap export window. If the cancelation was not the result of a user gesture, use `.notify()` to inform the user why it was canceled.

@@ -3514,9 +3514,9 @@ electron-store@^5.1.0:
     type-fest "^0.7.1"
 
 electron-to-chromium@^1.3.322, electron-to-chromium@^1.3.349:
-  version "1.3.349"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.349.tgz#663f26a69d348a462df47b4d7ab162a2f29bbcb7"
-  integrity sha512-uEb2zs6EJ6OZIqaMsCSliYVgzE/f7/s1fLWqtvRtHg/v5KBF2xds974fUnyatfxIDgkqzQVwFtam5KExqywx0Q==
+  version "1.3.352"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.352.tgz#f0fc1e561104dbfba55cb3d45cad3626dc75d7e9"
+  integrity sha512-dL/RyoueFG3UMhG0q3weAQvr+Tbqx/axAnOXYIIOsoYnV+2i+nRvX2S6msEo2+JARbBP8MFkkSYQ8AoY9Bh4Og==
 
 electron-updater@^4.2.0:
   version "4.2.0"
@@ -3641,6 +3641,11 @@ enhanced-resolve@^4.1.0:
     graceful-fs "^4.1.2"
     memory-fs "^0.5.0"
     tapable "^1.0.0"
+
+ensure-error@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/ensure-error/-/ensure-error-2.0.0.tgz#b8359a992601601b3541af9472f6a49d9dca1458"
+  integrity sha512-1ela4oR5A+TdtFpfiQrZKFUbsOi4JuIYmz2qSGFar6pEdRa54E15mKHVVYrAq1OQhd6b6nVrCaQxQlo6kYwhaw==
 
 env-editor@^0.4.0:
   version "0.4.1"
@@ -3939,9 +3944,9 @@ eslint-plugin-unicorn@^12.0.0:
     semver "^6.3.0"
 
 eslint-rule-docs@^1.1.5:
-  version "1.1.177"
-  resolved "https://registry.yarnpkg.com/eslint-rule-docs/-/eslint-rule-docs-1.1.177.tgz#39bef46dc56e657d6037a69f91f192e4573a6170"
-  integrity sha512-2+jKfNwexDLqYStEOXQrfEs7ck2ZzL0SC/uEjGHp1sFvzQbaPyvfsr8FWWeVrd4WUZGHkm2XQ5YUu+71e3iv6Q==
+  version "1.1.178"
+  resolved "https://registry.yarnpkg.com/eslint-rule-docs/-/eslint-rule-docs-1.1.178.tgz#81ac730cd008a8cb248ee407734fe7a06942750f"
+  integrity sha512-XgNPg4/61ENOdK+a/+SfXEWeY2Y48aPXDHilPYb+xnRwp7Y0fktICgUrL9SBgOio2CJlSK8mVRpJlHzVisXghw==
 
 eslint-scope@^4.0.3:
   version "4.0.3"
@@ -4323,9 +4328,9 @@ figures@^2.0.0:
     escape-string-regexp "^1.0.5"
 
 figures@^3.0.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/figures/-/figures-3.1.0.tgz#4b198dd07d8d71530642864af2d45dd9e459c4ec"
-  integrity sha512-ravh8VRXqHuMvZt/d8GblBeqDMkdJMBdv/2KntFH+ra5MXkO7nxNKpzQ3n6QD/2da1kH0aWmNISdvhM7gl2gVg==
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/figures/-/figures-3.2.0.tgz#625c18bd293c604dc4a8ddb2febf0c88341746af"
+  integrity sha512-yaduQFRKLXYOGgEn6AZau90j3ggSOyiqXU0F9JZfeXYhNa+Jk4X+s45A2zg5jns87GAFa34BBm2kXw4XpNcbdg==
   dependencies:
     escape-string-regexp "^1.0.5"
 
