@@ -100,7 +100,7 @@ The `action` function is where you implement the behavior of your service. The f
 - `.setProgress(text, percentage)`: Update progress information in the Kap export window. Use this whenever you have long-running jobs, like uploading. The `percentage` should be a number between `0` and `1`.
 - `.openConfigFile()`: Open the plugin config file in the user’s editor.
 - `.cancel()`: Indicate that the plugin operation canceled for some reason. [Example.](https://github.com/wulkano/kap/blob/efc32d12f381615c9fcfc41065d9c2ee200e8975/app/src/main/save-file-service.js#L28-L31) This closes the Kap export window. If the cancelation was not the result of a user gesture, use `.notify()` to inform the user why it was canceled.
-
+- `.waitForDeepLink()`: Returns a Promise that resolves when a deep link for this plugin is opened. The link should be in the format `kap://plugins/{pluginName}/{rest}`, where `pluginName` is the npm package name and `rest` is the string the Promise will resolve with. This is useful for [OAuth flows](#oauth).
 
 ### Config
 
@@ -131,6 +131,21 @@ config: {
 ```
 
 [Read more about JSON Schema](https://spacetelescope.github.io/understanding-json-schema/)
+
+## OAuth
+
+Sometimes services require an [OAuth](https://oauth.net/2/) flow to retrieve a token. These flows are often required to be completed in the browser and not in a webview. For this reason, Kap provides deep linking support. Follow these steps to support OAuth in your plugin:
+
+- When the export starts, check if the `accessToken` is available (if you have already authenticated) in the plugin config. This should not be listed in the JSON Schema options mentioned above unless the user is meant to edit them.
+- If it's not available, [open an external link](https://www.electronjs.org/docs/api/shell#shellopenexternalurl-options) to the OAuth provider's page with the correct parameters. Usually client ID.
+- When registering the app, provide something like `kap://plugins/{pluginName}/auth` as the callback URL.
+- Call `context.waitForDeepLink()` and wait for the user to go through the process.
+- When the above call resolves, you'll have the remaining path, along with any extra info the API added. In the above example, it would be something like `auth?code=###`.
+- You can now exchange the code for a token, and then store that in the config, so you can use it for future exports.
+
+For an example of this flow in action, check out [kap-dropbox](https://github.com/karaggeorge/kap-dropbox).
+
+If the API provider only allows HTTP/HTTPS URLs, or if you don't want to do the code exchange in the plugin (to avoid having the secret in the code), you might need to create a proxy, similar to the [one used for kap-dropbox](https://github.com/karaggeorge/kap-dropbox/tree/master/oauth-proxy), to trigger the deep link.
 
 ## Removing your Kap plugin
 

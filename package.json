@@ -121,6 +121,12 @@
   "build": {
     "appId": "com.wulkano.kap",
     "afterSign": "electron-builder-notarize",
+    "protocols": {
+      "name": "kap",
+      "schemes": [
+        "kap"
+      ]
+    },
     "files": [
       "**/*",
       "!renderer",
