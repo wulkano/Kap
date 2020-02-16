@@ -53,7 +53,8 @@ export default class Export extends React.Component {
       text,
       percentage,
       image,
-      cancel
+      cancel,
+      error
     } = this.props;
     const {menu} = this.state;
 
@@ -96,7 +97,7 @@ export default class Export extends React.Component {
           <div className={fileNameClassName}>
             {defaultFileName}
           </div>
-          <div className="subtitle">{text}</div>
+          <div className="subtitle" title={error && error.message}>{text}{error && ` - ${error.message}`}</div>
         </div>
         <style jsx>{`
           .export-container {
@@ -139,6 +140,7 @@ export default class Export extends React.Component {
 
           .details {
             flex: 1;
+            width: 234px;
           }
 
           .title {
@@ -158,6 +160,10 @@ export default class Export extends React.Component {
             font-size: 12px;
             color: var(--subtitle-color);
             user-select: none;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
 
           .export-container:hover {
@@ -187,5 +193,8 @@ Export.propTypes = {
   cancel: PropTypes.elementType,
   openInEditor: PropTypes.elementType,
   filePath: PropTypes.string,
-  createdAt: PropTypes.string
+  createdAt: PropTypes.string,
+  error: PropTypes.objectOf({
+    message: PropTypes.string
+  })
 };
