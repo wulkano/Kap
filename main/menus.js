@@ -10,7 +10,6 @@ const {supportedVideoExtensions} = require('./common/constants');
 const {ensureDockIsShowing} = require('./utils/dock');
 const {openPrefsWindow} = require('./preferences');
 const {openExportsWindow} = require('./exports');
-const {openAboutWindow} = require('./about');
 const {closeAllCroppers} = require('./cropper');
 const {editorEmitter} = require('./editor');
 const openFiles = require('./utils/open-files');
@@ -75,7 +74,12 @@ const sendFeedbackItem = {
 
 const aboutItem = {
   label: `About ${app.name}`,
-  click: openAboutWindow
+  click: () => {
+    closeAllCroppers();
+    ensureDockIsShowing(() => {
+      app.showAboutPanel();
+    });
+  }
 };
 
 const exportHistoryItem = {
