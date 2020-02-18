@@ -7,7 +7,7 @@ const isMuted = format => ['gif', 'apng'].includes(format);
 
 export default class EditorContainer extends Container {
   state = {
-    fps: 15
+    fps: 60
   }
 
   setVideoContainer = videoContainer => {
@@ -20,7 +20,17 @@ export default class EditorContainer extends Container {
     const src = `file://${filePath}`;
     this.finishLoading = resolve;
 
-    this.setState({src, filePath, originalFilePath, fps, originalFps: fps, wasMuted: false, isNewRecording});
+    this.setState({
+      src,
+      filePath,
+      originalFilePath,
+      // TODO: Fix this ESLint violation
+      // eslint-disable-next-line react/no-access-state-in-setstate
+      fps: Math.min(fps, this.state.fps),
+      originalFps: fps,
+      wasMuted: false,
+      isNewRecording
+    });
     this.videoContainer.setSrc(src);
   }
 
@@ -96,9 +106,9 @@ export default class EditorContainer extends Container {
     this.setState(updates);
   }
 
-  setOptions = options => {
+  setOptions = ({exportOptions: options, fps}) => {
     const {format, plugin} = this.state;
-    const updates = {options};
+    const updates = {options, fps: Math.min(fps, this.state.fps)};
 
     if (format) {
       const option = options.find(option => option.format === format);
@@ -221,6 +231,6 @@ export default class EditorContainer extends Container {
     };
 
     ipc.callMain('export', data);
-    ipc.callMain('update-usage', {format, plugin: plugin.pluginName});
+    ipc.callMain('update-usage', {format, plugin: plugin.pluginName, fps});
   }
 }
