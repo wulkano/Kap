@@ -21,8 +21,12 @@ const exportUsageHistory = new Store({
 
 const fpsUsageHistory = new Store({
   name: 'fps-usage-history',
-  defaults: {
-    fps: 60
+  schema: {
+    fps: {
+      type: 'number',
+      minimum: 0,
+      default: 60
+    }
   }
 });
 
