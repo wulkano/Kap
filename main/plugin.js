@@ -19,7 +19,7 @@ class Plugin {
       this.plugin = require(pluginPath);
     } catch (error) {
       showError(error, {title: `Something went wrong while loading “${pluginName}”`});
-      this.plugin = {shareServices: []};
+      this.plugin = {shareServices: [], recordServices: []};
     }
 
     this.config = new PluginConfig(pluginName, this.plugin);
@@ -30,8 +30,20 @@ class Plugin {
     return this.config.isConfigValid();
   }
 
-  getSerivce(serviceTitle) {
-    return this.plugin.shareServices.find(shareService => shareService.title === serviceTitle);
+  get isSharePlugin() {
+    return this.shareServices.length > 0;
+  }
+
+  get isRecordingPlugin() {
+    return this.recordServices.length > 0;
+  }
+
+  get recordServices() {
+    return this.plugin.recordServices || [];
+  }
+
+  get shareServices() {
+    return this.plugin.shareServices || [];
   }
 
   openConfig() {

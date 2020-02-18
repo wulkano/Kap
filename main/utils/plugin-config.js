@@ -5,7 +5,10 @@ class PluginConfig extends Store {
   constructor(pluginName, plugin) {
     const defaults = {};
 
-    const validators = plugin.shareServices.filter(({config}) => Boolean(config)).map(service => {
+    const validators = [
+      ...(plugin.shareServices || []),
+      ...(plugin.recordServices || [])
+    ].filter(({config}) => Boolean(config)).map(service => {
       const schemaProps = JSON.parse(JSON.stringify(service.config));
       const requiredKeys = [];
       for (const key of Object.keys(schemaProps)) {
@@ -52,6 +55,10 @@ class PluginConfig extends Store {
 
   isConfigValid() {
     return this.validators.reduce((isValid, validator) => isValid && validator(this.store), true);
+  }
+
+  get validServices() {
+    return this.validators.filter(validator => validator(this.store)).map(validator => validator.title);
   }
 }
 

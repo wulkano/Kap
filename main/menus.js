@@ -5,6 +5,7 @@ const {Menu, app, dialog, BrowserWindow} = require('electron');
 const {openNewGitHubIssue, appMenu} = require('electron-util');
 const {ipcMain: ipc} = require('electron-better-ipc');
 const delay = require('delay');
+const Store = require('electron-store');
 
 const {supportedVideoExtensions} = require('./common/constants');
 const {ensureDockIsShowing} = require('./utils/dock');
@@ -91,11 +92,21 @@ const preferencesItem = {
   click: () => openPrefsWindow()
 };
 
-const cogMenuTemplate = [
+let pluginsItems = [];
+
+const getPluginsItem = () => ({
+  id: 'plugins',
+  label: 'Plugins',
+  submenu: pluginsItems,
+  visible: pluginsItems.length > 0
+});
+
+const getCogMenuTemplate = () => [
   aboutItem,
   {
     type: 'separator'
   },
+  getPluginsItem(),
   sendFeedbackItem,
   {
     type: 'separator'
@@ -175,8 +186,27 @@ const applicationMenuTemplate = [
   }
 ];
 
-const cogMenu = Menu.buildFromTemplate(cogMenuTemplate);
+let cogMenu = Menu.buildFromTemplate(getCogMenuTemplate());
 const cogExportsItem = cogMenu.getMenuItemById('exports');
+
+const recordPluginState = new Store({
+  name: 'record-plugin-state',
+  defaults: {}
+});
+
+const refreshRecordPluginItems = services => {
+  pluginsItems = services.map(service => ({
+    label: service.title,
+    type: 'checkbox',
+    checked: recordPluginState.get(service.title) || false,
+    click: () => {
+      recordPluginState.set(service.title, !recordPluginState.get(service.title));
+      refreshRecordPluginItems(services);
+    }
+  }));
+
+  cogMenu = Menu.buildFromTemplate(getCogMenuTemplate());
+};
 
 const applicationMenu = Menu.buildFromTemplate(applicationMenuTemplate);
 const applicationExportsItem = applicationMenu.getMenuItemById('exports');
@@ -199,8 +229,12 @@ editorEmitter.on('focus', () => {
   applicationSaveOriginalItem.visible = true;
 });
 
+const getCogMenu = () => cogMenu;
+
 module.exports = {
-  cogMenu,
+  getCogMenu,
   toggleExportMenuItem,
-  setApplicationMenu
+  setApplicationMenu,
+  refreshRecordPluginItems,
+  recordPluginState
 };

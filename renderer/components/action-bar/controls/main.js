@@ -97,7 +97,7 @@ class Right extends React.Component {
               <FullscreenIcon tabIndex={advanced ? -1 : 0} onClick={enterFullscreen}/>
           }
         </div>
-        <IconMenu isMenu icon={MoreIcon} tabIndex={advanced ? -1 : 0} onOpen={electron.remote.require('./menus').cogMenu.popup}/>
+        <IconMenu isMenu icon={MoreIcon} tabIndex={advanced ? -1 : 0} onOpen={electron.remote.require('./menus').getCogMenu().popup}/>
         <style jsx>{mainStyle}</style>
         <style jsx>{`
           .fullscreen {

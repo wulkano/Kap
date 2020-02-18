@@ -10,6 +10,7 @@ const {satisfies} = require('semver');
 
 const {app, Notification} = electron;
 
+const {refreshRecordPluginItems, recordPluginState} = require('../menus');
 const Plugin = require('../plugin');
 const {openConfigWindow} = require('../config');
 const {openPrefsWindow} = require('../preferences');
@@ -21,10 +22,15 @@ class Plugins {
     this.yarnBin = path.join(__dirname, '../../node_modules/yarn/bin/yarn.js');
     this._makePluginsDir();
     this.appVersion = app.getVersion();
+    this.refreshRecordPluginItems();
   }
 
   setUpdateExportOptions(updateExportOptions) {
     this.updateExportOptions = updateExportOptions;
+  }
+
+  refreshRecordPluginItems = () => {
+    refreshRecordPluginItems(this.getRecordingPlugins().flatMap(({plugin}) => plugin.recordServices));
   }
 
   _makePluginsDir() {
@@ -115,8 +121,13 @@ class Plugins {
         });
       }
 
+      for (const service of plugin.config.validServices) {
+        recordPluginState.set(service, true);
+      }
+
       notification.show();
       this.updateExportOptions();
+      this.refreshRecordPluginItems();
 
       return {hasConfig, isValid};
     } catch (error) {
@@ -147,7 +158,12 @@ class Plugins {
   }
 
   getServices(pluginName) {
-    return require(path.join(this.cwd, 'node_modules', pluginName)).shareServices;
+    const {
+      shareServices = [],
+      recordServices = []
+    } = require(path.join(this.cwd, 'node_modules', pluginName));
+
+    return [...shareServices, ...recordServices];
   }
 
   getInstalled() {
@@ -165,7 +181,8 @@ class Plugins {
           kapVersion: json.kapVersion || '*',
           isCompatible: satisfies(this.appVersion, json.kapVersion || '*'),
           isInstalled: true,
-          isSymlink: fs.lstatSync(this._pluginPath(name)).isSymbolicLink()
+          isSymlink: fs.lstatSync(this._pluginPath(name)).isSymbolicLink(),
+          plugin
         };
       });
     } catch (error) {
@@ -173,6 +190,14 @@ class Plugins {
       Sentry.captureException(error);
       return [];
     }
+  }
+
+  getSharePlugins() {
+    return this.getInstalled().filter(({plugin}) => plugin.isSharePlugin);
+  }
+
+  getRecordingPlugins() {
+    return this.getInstalled().filter(({plugin}) => plugin.isRecordingPlugin);
   }
 
   getBuiltIn() {

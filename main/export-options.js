@@ -31,7 +31,7 @@ const prettifyFormat = format => {
 };
 
 const getExportOptions = () => {
-  const installed = plugins.getInstalled();
+  const installed = plugins.getSharePlugins();
   const builtIn = plugins.getBuiltIn();
 
   const options = [];
