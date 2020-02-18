@@ -2,7 +2,7 @@
 
 const os = require('os');
 const {Menu, app, dialog, BrowserWindow} = require('electron');
-const {openNewGitHubIssue, appMenu, showAboutWindow} = require('electron-util');
+const {openNewGitHubIssue, appMenu} = require('electron-util');
 const {ipcMain: ipc} = require('electron-better-ipc');
 const delay = require('delay');
 
@@ -77,7 +77,7 @@ const aboutItem = {
   click: () => {
     closeAllCroppers();
     ensureDockIsShowing(() => {
-      showAboutWindow({copyright: 'Copyright © Wulkano'});
+      app.showAboutPanel();
     });
   }
 };
