@@ -23,7 +23,7 @@ export default class PreferencesContainer extends Container {
 
     const pluginsInstalled = this.plugins.getInstalled().sort((a, b) => a.prettyName.localeCompare(b.prettyName));
 
-    await this.fetchFromNpm();
+    this.fetchFromNpm();
 
     this.setState({
       ...this.settings.store,
@@ -75,21 +75,25 @@ export default class PreferencesContainer extends Container {
     }
   }
 
+  togglePlugin = plugin => {
+    if (plugin.isInstalled) {
+      this.uninstall(plugin.name);
+    } else {
+      this.install(plugin.name);
+    }
+  }
+
   install = async name => {
     const {pluginsInstalled, pluginsFromNpm} = this.state;
-    const plugin = pluginsFromNpm.find(p => p.name === name);
 
     this.setState({pluginBeingInstalled: name});
     const result = await this.plugins.install(name);
 
     if (result) {
-      const {isValid, hasConfig} = result;
-      plugin.isValid = isValid;
-      plugin.hasConfig = hasConfig;
       this.setState({
         pluginBeingInstalled: undefined,
         pluginsFromNpm: pluginsFromNpm.filter(p => p.name !== name),
-        pluginsInstalled: [plugin, ...pluginsInstalled].sort((a, b) => a.prettyName.localeCompare(b.prettyName))
+        pluginsInstalled: [result, ...pluginsInstalled].sort((a, b) => a.prettyName.localeCompare(b.prettyName))
       });
     } else {
       this.setState({
@@ -100,11 +104,10 @@ export default class PreferencesContainer extends Container {
 
   uninstall = name => {
     const {pluginsInstalled, pluginsFromNpm} = this.state;
-    const plugin = pluginsInstalled.find(p => p.name === name);
+    const plugin = this.plugins.uninstall(name);
 
     const onTransitionEnd = async () => {
       await delay(500);
-      plugin.hasConfig = false;
       this.setState({
         pluginsInstalled: pluginsInstalled.filter(p => p.name !== name),
         pluginsFromNpm: [plugin, ...pluginsFromNpm].sort((a, b) => a.prettyName.localeCompare(b.prettyName)),
@@ -114,22 +117,14 @@ export default class PreferencesContainer extends Container {
     };
 
     this.setState({pluginBeingUninstalled: name, onTransitionEnd});
-
-    this.plugins.uninstall(name);
   }
 
   openPluginsConfig = async name => {
     this.track(`plugin/config/${name}`);
-    const {pluginsInstalled} = this.state;
-    this.setState({category: 'plugins', tab: 'installed'});
-    const index = pluginsInstalled.findIndex(p => p.name === name);
+    this.setState({category: 'plugins'});
     this.setOverlay(true);
-
-    const isValid = await this.plugins.openPluginConfig(name);
-
+    await this.plugins.openPluginConfig(name);
     this.setOverlay(false);
-    pluginsInstalled[index].isValid = isValid;
-    this.setState({pluginsInstalled});
   }
 
   openPluginsFolder = () => electron.shell.openItem(this.plugins.cwd);

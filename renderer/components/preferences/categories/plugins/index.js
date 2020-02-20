@@ -19,8 +19,7 @@ class Plugins extends React.Component {
       pluginsFromNpm,
       pluginBeingInstalled,
       pluginBeingUninstalled,
-      install,
-      uninstall,
+      togglePlugin,
       onTransitionEnd,
       tab,
       selectTab,
@@ -31,6 +30,10 @@ class Plugins extends React.Component {
     } = this.props;
 
     const tabIndex = category === 'plugins' ? 0 : -1;
+    const allPlugins = [
+      ...pluginsInstalled,
+      ...pluginsFromNpm
+    ].sort((a, b) => a.prettyName.localeCompare(b.prettyName));
 
     return (
       <Category>
@@ -65,21 +68,14 @@ class Plugins extends React.Component {
                     link="Refresh"
                     onClick={fetchFromNpm}/>
                 ) : (
-                  pluginsFromNpm.length === 0 ? (
-                    <EmptyTab
-                      title="So, you really like plugins?"
-                      subtitle="You have all the plugins."
-                      link="Marvel at them"
-                      image="/static/all-the-things.png"
-                      onClick={() => selectTab('installed')}/>
-                  ) : (
-                    <Tab
-                      tabIndex={tabIndex === 0 && tab === 'discover' ? 0 : -1}
-                      current={pluginBeingInstalled}
-                      plugins={pluginsFromNpm}
-                      disabled={Boolean(pluginBeingInstalled)}
-                      onClick={install}/>
-                  )
+                  <Tab
+                    tabIndex={tabIndex === 0 && tab === 'discover' ? 0 : -1}
+                    current={pluginBeingInstalled || pluginBeingUninstalled}
+                    plugins={allPlugins}
+                    openConfig={openPluginsConfig}
+                    disabled={Boolean(pluginBeingInstalled || pluginBeingUninstalled)}
+                    onTransitionEnd={onTransitionEnd}
+                    onClick={togglePlugin}/>
                 )
               }
             </div>
@@ -90,17 +86,16 @@ class Plugins extends React.Component {
                     showIcon
                     title="No plugins yet"
                     subtitle="Customize Kap to your liking with plugins."
-                    link="Discover"
+                    link="Browse"
                     onClick={() => selectTab('discover')}/>
                 ) : (
                   <Tab
-                    checked
                     tabIndex={tabIndex === 0 && tab === 'installed' ? 0 : -1}
                     disabled={Boolean(pluginBeingInstalled)}
                     current={pluginBeingUninstalled}
                     plugins={pluginsInstalled}
                     openConfig={openPluginsConfig}
-                    onClick={uninstall}
+                    onClick={togglePlugin}
                     onTransitionEnd={onTransitionEnd}/>
                 )
               }
@@ -181,8 +176,7 @@ Plugins.propTypes = {
   pluginsFromNpm: PropTypes.array,
   pluginBeingInstalled: PropTypes.string,
   pluginBeingUninstalled: PropTypes.string,
-  install: PropTypes.elementType.isRequired,
-  uninstall: PropTypes.elementType.isRequired,
+  togglePlugin: PropTypes.elementType.isRequired,
   onTransitionEnd: PropTypes.elementType,
   tab: PropTypes.string,
   selectTab: PropTypes.elementType.isRequired,
@@ -213,14 +207,12 @@ export default connect(
     npmError,
     category
   }), ({
-    install,
-    uninstall,
+    togglePlugin,
     selectTab,
     fetchFromNpm,
     openPluginsConfig
   }) => ({
-    install,
-    uninstall,
+    togglePlugin,
     selectTab,
     fetchFromNpm,
     openPluginsConfig

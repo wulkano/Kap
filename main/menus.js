@@ -5,7 +5,6 @@ const {Menu, app, dialog, BrowserWindow} = require('electron');
 const {openNewGitHubIssue, appMenu} = require('electron-util');
 const {ipcMain: ipc} = require('electron-better-ipc');
 const delay = require('delay');
-const Store = require('electron-store');
 
 const {supportedVideoExtensions} = require('./common/constants');
 const {ensureDockIsShowing} = require('./utils/dock');
@@ -189,20 +188,12 @@ const applicationMenuTemplate = [
 let cogMenu = Menu.buildFromTemplate(getCogMenuTemplate());
 const cogExportsItem = cogMenu.getMenuItemById('exports');
 
-const recordPluginState = new Store({
-  name: 'record-plugin-state',
-  defaults: {}
-});
-
 const refreshRecordPluginItems = services => {
   pluginsItems = services.map(service => ({
     label: service.title,
     type: 'checkbox',
-    checked: recordPluginState.get(service.title) || false,
-    click: () => {
-      recordPluginState.set(service.title, !recordPluginState.get(service.title));
-      refreshRecordPluginItems(services);
-    }
+    checked: service.isEnabled,
+    click: service.toggleEnbaled
   }));
 
   cogMenu = Menu.buildFromTemplate(getCogMenuTemplate());
@@ -235,6 +226,5 @@ module.exports = {
   getCogMenu,
   toggleExportMenuItem,
   setApplicationMenu,
-  refreshRecordPluginItems,
-  recordPluginState
+  refreshRecordPluginItems
 };

@@ -26,7 +26,10 @@ class Export {
 
     const now = moment();
     this.defaultFileName = options.isNewRecording ? `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.${this.format}` : `${path.parse(this.inputPath).name}.${this.format}`;
-    this.config = new PluginConfig(this.pluginName, this.plugin);
+    this.config = new PluginConfig({
+      allServices: [this.service],
+      name: this.pluginName
+    });
 
     this.context = new ShareServiceContext({
       _isBuiltin: options.plugin.pluginName.startsWith('_'),

@@ -2,13 +2,10 @@ const Store = require('electron-store');
 const Ajv = require('ajv');
 
 class PluginConfig extends Store {
-  constructor(pluginName, plugin) {
+  constructor(plugin) {
     const defaults = {};
 
-    const validators = [
-      ...(plugin.shareServices || []),
-      ...(plugin.recordServices || [])
-    ].filter(({config}) => Boolean(config)).map(service => {
+    const validators = plugin.allServices.filter(({config}) => Boolean(config)).map(service => {
       const schemaProps = JSON.parse(JSON.stringify(service.config));
       const requiredKeys = [];
       for (const key of Object.keys(schemaProps)) {
@@ -45,11 +42,12 @@ class PluginConfig extends Store {
     });
 
     super({
-      name: pluginName,
+      name: plugin.name,
       cwd: 'plugins',
       defaults
     });
 
+    this.servicesWithNoConfig = plugin.allServices.filter(({config}) => !config);
     this.validators = validators;
   }
 
@@ -58,7 +56,10 @@ class PluginConfig extends Store {
   }
 
   get validServices() {
-    return this.validators.filter(validator => validator(this.store)).map(validator => validator.title);
+    return [
+      ...this.validators.filter(validator => validator(this.store)),
+      ...this.servicesWithNoConfig
+    ].map(service => service.title);
   }
 }
 

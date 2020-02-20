@@ -8,11 +8,21 @@ import Switch from '../preferences/item/switch';
 import {OpenOnGithubIcon, OpenConfigIcon} from '../../vectors';
 
 const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
-  if (type === 'string') {
+  if (type === 'string' || type === 'number') {
     const className = hasErrors ? 'has-errors' : '';
+    const handleChange = e => {
+      const value = type === 'string' ? e.target.value : parseFloat(e.target.value);
+      onChange(name, value);
+    };
+
     return (
       <div>
-        <input className={className} value={value || ''} onChange={e => onChange(name, e.target.value || undefined)}/>
+        <input
+          className={className}
+          value={value || ''}
+          type={type === 'string' ? 'text' : 'number'}
+          onChange={handleChange}
+        />
         <style jsx>{`
           input {
             outline: none;
@@ -50,7 +60,7 @@ const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
 
   if (type === 'select') {
     const options = schema.enum.map(value => ({label: value, value}));
-    return <Select tabIndex={0} options={options} selected={value} onSelect={value => onChange(name, value)}/>;
+    return <Select full tabIndex={0} options={options} selected={value} onSelect={value => onChange(name, value)}/>;
   }
 
   return <Switch tabIndex={0} checked={value} onClick={() => onChange(name, !value)}/>;
@@ -62,7 +72,8 @@ ConfigInput.propTypes = {
   schema: PropTypes.object,
   value: PropTypes.oneOfType([
     PropTypes.string,
-    PropTypes.bool
+    PropTypes.bool,
+    PropTypes.number
   ]),
   onChange: PropTypes.elementType.isRequired,
   hasErrors: PropTypes.bool
@@ -98,7 +109,7 @@ class Tab extends React.Component {
                 small
                 title={schema.title}
                 subtitle={schema.description}
-                vertical={type === 'string'}
+                vertical={type !== 'boolean'}
                 errors={itemErrors}
               >
                 <ConfigInput

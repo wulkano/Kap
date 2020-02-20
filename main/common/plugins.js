@@ -1,3 +1,5 @@
+'use strict';
+
 const path = require('path');
 const fs = require('fs');
 const electron = require('electron');
@@ -6,31 +8,68 @@ const execa = require('execa');
 const makeDir = require('make-dir');
 const {ipcMain: ipc} = require('electron-better-ipc');
 const packageJson = require('package-json');
-const {satisfies} = require('semver');
 
 const {app, Notification} = electron;
 
-const {refreshRecordPluginItems, recordPluginState} = require('../menus');
-const Plugin = require('../plugin');
+const {refreshRecordPluginItems} = require('../menus');
 const {openConfigWindow} = require('../config');
 const {openPrefsWindow} = require('../preferences');
 const {notify} = require('./notifications');
 const {track} = require('./analytics');
+const {InstalledPlugin, NpmPlugin, recordPluginServiceState} = require('../plugin');
+const {showError} = require('../utils/errors');
 
 class Plugins {
   constructor() {
     this.yarnBin = path.join(__dirname, '../../node_modules/yarn/bin/yarn.js');
     this._makePluginsDir();
     this.appVersion = app.getVersion();
-    this.refreshRecordPluginItems();
+    this.refreshRecordPluginServices();
   }
 
   setUpdateExportOptions(updateExportOptions) {
     this.updateExportOptions = updateExportOptions;
   }
 
-  refreshRecordPluginItems = () => {
-    refreshRecordPluginItems(this.getRecordingPlugins().flatMap(({plugin}) => plugin.recordServices));
+  async enableService(service) {
+    const wasEnabled = recordPluginServiceState.get(service.title) || false;
+
+    if (wasEnabled) {
+      recordPluginServiceState.set(service.title, false);
+      return this.refreshRecordPluginServices();
+    }
+
+    if (service.willEnable) {
+      try {
+        const canEnable = await service.willEnable();
+
+        if (canEnable) {
+          recordPluginServiceState.set(service.title, true);
+        }
+      } catch (error) {
+        showError(error, {title: `Something went wrong while enabling “${service.title}”`});
+        const Sentry = require('./utils/sentry');
+        Sentry.captureException(error);
+      }
+
+      this.refreshRecordPluginServices();
+      return;
+    }
+
+    recordPluginServiceState.set(service.title, true);
+    this.refreshRecordPluginServices();
+  }
+
+  refreshRecordPluginServices = () => {
+    refreshRecordPluginItems(
+      this.getRecordingPlugins().flatMap(
+        plugin => plugin.recordServices.map(service => ({
+          ...service,
+          isEnabled: recordPluginServiceState.get(service.title) || false,
+          toggleEnbaled: () => this.enableService(service)
+        }))
+      )
+    );
   }
 
   _makePluginsDir() {
@@ -61,14 +100,6 @@ class Plugins {
     });
   }
 
-  _getPrettyName(name) {
-    return name.replace(/^kap-/, '');
-  }
-
-  _pluginPath(name, subPath = '') {
-    return path.join(this.cwd, 'node_modules', name, subPath);
-  }
-
   _pluginNames() {
     const pkg = fs.readFileSync(path.join(this.cwd, 'package.json'), 'utf8');
     return Object.keys(JSON.parse(pkg).dependencies);
@@ -79,7 +110,6 @@ class Plugins {
   }
 
   async install(name) {
-    const prettyName = this._getPrettyName(name);
     track(`plugin/installed/${name}`);
     // We manually add it to the package.json here so we're able to set the version to `latest`
     this._modifyMainPackageJson(pkg => {
@@ -89,16 +119,15 @@ class Plugins {
     try {
       await this._yarnInstall();
 
-      const plugin = new Plugin(name);
-      const isValid = plugin.isConfigValid();
-      const hasConfig = this.getServices(name).some(({config = {}}) => Object.keys(config).length > 0);
+      const plugin = new InstalledPlugin(name);
+      const {isValid} = plugin;
 
       const options = isValid ? {
         title: 'Plugin installed',
-        body: `"${prettyName}" is ready for use`
+        body: `"${plugin.prettyName}" is ready for use`
       } : {
         title: 'Configure plugin',
-        body: `"${prettyName}" requires configuration`,
+        body: `"${plugin.prettyName}" requires configuration`,
         actions: [{type: 'button', text: 'Configure'}]
       };
 
@@ -122,16 +151,18 @@ class Plugins {
       }
 
       for (const service of plugin.config.validServices) {
-        recordPluginState.set(service, true);
+        if (!service.willEnable) {
+          recordPluginServiceState.set(service, true);
+        }
       }
 
       notification.show();
       this.updateExportOptions();
-      this.refreshRecordPluginItems();
+      this.refreshRecordPluginServices();
 
-      return {hasConfig, isValid};
+      return plugin;
     } catch (error) {
-      notify(`Something went wrong while installing ${prettyName}`);
+      notify(`Something went wrong while installing ${name}`);
       this._modifyMainPackageJson(pkg => {
         delete pkg.dependencies[name];
       });
@@ -148,9 +179,10 @@ class Plugins {
     this._modifyMainPackageJson(pkg => {
       delete pkg.dependencies[name];
     });
-    const plugin = new Plugin(name);
+    const plugin = new InstalledPlugin(name);
     plugin.config.clear();
     this.updateExportOptions();
+    return new NpmPlugin(plugin.json, plugin.json.kapVersion);
   }
 
   async prune() {
@@ -168,24 +200,9 @@ class Plugins {
 
   getInstalled() {
     try {
-      return this._pluginNames().map(name => {
-        const pluginPath = this._pluginPath(name, 'package.json');
-        const json = JSON.parse(fs.readFileSync(pluginPath, 'utf8'));
-        const plugin = new Plugin(name);
-        return {
-          ...json,
-          pluginPath: this._pluginPath(name),
-          prettyName: this._getPrettyName(name),
-          hasConfig: this.getServices(name).some(({config = {}}) => Object.keys(config).length > 0),
-          isValid: plugin.isConfigValid(),
-          kapVersion: json.kapVersion || '*',
-          isCompatible: satisfies(this.appVersion, json.kapVersion || '*'),
-          isInstalled: true,
-          isSymlink: fs.lstatSync(this._pluginPath(name)).isSymbolicLink(),
-          plugin
-        };
-      });
+      return this._pluginNames().map(name => new InstalledPlugin(name));
     } catch (error) {
+      showError(error);
       const Sentry = require('../utils/sentry');
       Sentry.captureException(error);
       return [];
@@ -193,11 +210,11 @@ class Plugins {
   }
 
   getSharePlugins() {
-    return this.getInstalled().filter(({plugin}) => plugin.isSharePlugin);
+    return this.getInstalled().filter(plugin => plugin.shareServices.length > 0);
   }
 
   getRecordingPlugins() {
-    return this.getInstalled().filter(({plugin}) => plugin.isRecordingPlugin);
+    return this.getInstalled().filter(plugin => plugin.recordServices.length > 0);
   }
 
   getBuiltIn() {
@@ -227,12 +244,7 @@ class Plugins {
       .filter(x => !installed.includes(x.name)) // Filter out installed plugins
       .map(async x => {
         const {kapVersion = '*'} = await packageJson(x.name, {fullMetadata: true});
-        return {
-          ...x,
-          kapVersion,
-          prettyName: this._getPrettyName(x.name),
-          isCompatible: satisfies(this.appVersion, kapVersion)
-        };
+        return new NpmPlugin(x, kapVersion);
       }));
   }
 
@@ -242,8 +254,8 @@ class Plugins {
 
   async openPluginConfig(name) {
     await openConfigWindow(name);
-    const plugin = new Plugin(name);
-    return plugin.isConfigValid();
+    const plugin = new InstalledPlugin(name);
+    return plugin.isValid;
   }
 }
 

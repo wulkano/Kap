@@ -1,49 +1,104 @@
 'use strict';
 
-const {app, shell} = require('electron');
 const path = require('path');
 const fs = require('fs');
+const electron = require('electron');
+const {satisfies} = require('semver');
+const Store = require('electron-store');
+
 const PluginConfig = require('./utils/plugin-config');
 const {showError} = require('./utils/errors');
 
-class Plugin {
+const {app, shell} = electron;
+
+const recordPluginServiceState = new Store({
+  name: 'record-plugin-state',
+  defaults: {}
+});
+
+class BasePlugin {
   constructor(pluginName) {
-    this.pluginName = pluginName;
-
-    const cwd = path.join(app.getPath('userData'), 'plugins');
-    const pluginPath = path.join(cwd, 'node_modules', pluginName);
-    const {homepage, links} = JSON.parse(fs.readFileSync(path.join(pluginPath, 'package.json'), 'utf8'));
-    this.link = homepage || (links && links.homepage);
-
-    try {
-      this.plugin = require(pluginPath);
-    } catch (error) {
-      showError(error, {title: `Something went wrong while loading “${pluginName}”`});
-      this.plugin = {shareServices: [], recordServices: []};
-    }
-
-    this.config = new PluginConfig(pluginName, this.plugin);
-    this.validators = this.config.validators;
+    this.name = pluginName;
   }
 
-  isConfigValid() {
+  get prettyName() {
+    return this.name.replace(/^kap-/, '');
+  }
+}
+
+class InstalledPlugin extends BasePlugin {
+  constructor(pluginName) {
+    super(pluginName);
+
+    this.isInstalled = true;
+    this.cwd = path.join(app.getPath('userData'), 'plugins');
+    this.pkgPath = path.join(this.cwd, 'package.json');
+    this.isSymlink = fs.lstatSync(this.pluginPath).isSymbolicLink();
+
+    this.json = JSON.parse(fs.readFileSync(this.packageJsonPath, 'utf8'));
+
+    const {homepage, links} = this.json;
+    this.link = homepage || (links && links.homepage);
+    this.isCompatible = satisfies(app.getVersion(), this.json.kapVersion || '*');
+
+    try {
+      this.plugin = require(this.pluginPath);
+    } catch (error) {
+      showError(error, {title: `Something went wrong while loading “${pluginName}”`});
+      this.plugin = {};
+    }
+
+    this.config = new PluginConfig(this);
+  }
+
+  getPath(subPath = '') {
+    return path.join(this.cwd, 'node_modules', this.name, subPath);
+  }
+
+  get version() {
+    return this.json.version;
+  }
+
+  get description() {
+    return this.json.description;
+  }
+
+  get pluginPath() {
+    return this.getPath();
+  }
+
+  get packageJsonPath() {
+    return this.getPath('package.json');
+  }
+
+  get isValid() {
     return this.config.isConfigValid();
   }
 
-  get isSharePlugin() {
-    return this.shareServices.length > 0;
-  }
-
-  get isRecordingPlugin() {
-    return this.recordServices.length > 0;
+  get hasConfig() {
+    return this.allServices.some(({config = {}}) => Object.keys(config).length > 0);
   }
 
   get recordServices() {
     return this.plugin.recordServices || [];
   }
 
+  get recordServicesWithStatus() {
+    return this.recordServices.map(service => ({
+      ...service,
+      isEnabled: recordPluginServiceState.get(service.title) || false
+    }));
+  }
+
   get shareServices() {
     return this.plugin.shareServices || [];
+  }
+
+  get allServices() {
+    return [
+      ...this.recordServices,
+      ...this.shareServices
+    ];
   }
 
   openConfig() {
@@ -55,4 +110,29 @@ class Plugin {
   }
 }
 
-module.exports = Plugin;
+class NpmPlugin extends BasePlugin {
+  constructor(json, kapVersion) {
+    super(json.name);
+
+    this.kapVersion = kapVersion;
+    this.isInstalled = false;
+
+    this.version = json.version;
+    this.description = json.description;
+
+    const {homepage, links} = json;
+    this.link = homepage || (links && links.homepage);
+
+    this.isCompatible = satisfies(app.getVersion(), kapVersion || '*');
+  }
+
+  viewOnGithub() {
+    shell.openExternal(this.link);
+  }
+}
+
+module.exports = {
+  InstalledPlugin,
+  NpmPlugin,
+  recordPluginServiceState
+};

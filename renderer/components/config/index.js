@@ -110,6 +110,7 @@ class Config extends React.Component {
             flex: 1;
             display: flex;
             overflow-x: hidden;
+            height: 272px;
           }
 
           .tab {

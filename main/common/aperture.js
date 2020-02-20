@@ -1,8 +1,6 @@
 'use strict';
 
 const {dialog} = require('electron');
-const desktopIcons = require('hide-desktop-icons');
-const dnd = require('@sindresorhus/do-not-disturb');
 const createAperture = require('aperture');
 
 const {openEditorWindow} = require('../editor');
@@ -18,6 +16,7 @@ const {hasMicrophoneAccess} = require('./system-permissions');
 
 const settings = require('./settings');
 const {track} = require('./analytics');
+const plugins = require('./plugins');
 
 const aperture = createAperture();
 const {audioDevices, videoCodecs} = createAperture;
@@ -25,27 +24,33 @@ const {audioDevices, videoCodecs} = createAperture;
 // eslint-disable-next-line no-unused-vars
 const recordHevc = videoCodecs.has('hevc');
 
-let wasDoNotDisturbAlreadyEnabled;
 let lastUsedSettings;
+let recordingPlugins = [];
+const serviceState = new Map();
+let apertureOpts;
 
 let past;
 
-const cleanup = () => {
-  const {
-    hideDesktopIcons,
-    doNotDisturb
-  } = lastUsedSettings;
+const callPlugins = async method => Promise.all(recordingPlugins.map(async ({plugin, service}) => {
+  if (service[method] && typeof service[method] === 'function') {
+    try {
+      await service[method]({
+        options: apertureOpts,
+        state: serviceState.get(service.title),
+        config: plugin.config
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+}));
 
+const cleanup = async () => {
   closeAllCroppers();
   resetTray();
 
-  if (hideDesktopIcons) {
-    desktopIcons.show();
-  }
-
-  if (doNotDisturb && !wasDoNotDisturbAlreadyEnabled) {
-    dnd.disable();
-  }
+  await callPlugins('didStopRecording');
+  serviceState.clear();
 
   setCropperShortcutAction();
 };
@@ -70,12 +75,10 @@ const startRecording = async options => {
     showCursor,
     highlightClicks,
     recordAudio,
-    audioInputDeviceId,
-    hideDesktopIcons,
-    doNotDisturb
+    audioInputDeviceId
   } = settings.store;
 
-  const apertureOpts = {
+  apertureOpts = {
     fps: record60fps ? 60 : 30,
     cropArea: cropperBounds,
     showCursor,
@@ -84,9 +87,7 @@ const startRecording = async options => {
   };
 
   lastUsedSettings = {
-    recordedFps: apertureOpts.fps,
-    hideDesktopIcons,
-    doNotDisturb
+    recordedFps: apertureOpts.fps
   };
 
   if (recordAudio === true) {
@@ -107,21 +108,20 @@ const startRecording = async options => {
 
   console.log(`Collected settings after ${(Date.now() - past) / 1000}s`);
 
-  if (hideDesktopIcons) {
-    await desktopIcons.hide();
+  recordingPlugins = plugins
+    .getRecordingPlugins()
+    .flatMap(
+      plugin => plugin.recordServicesWithStatus
+        // Make sure service is valid and enabled
+        .filter(({title, isEnabled}) => isEnabled && plugin.config.validServices.includes(title))
+        .map(service => ({plugin, service}))
+    );
+
+  for (const {service} of recordingPlugins) {
+    serviceState.set(service.title, {});
   }
 
-  console.log(`Hide desktop icons after ${(Date.now() - past) / 1000}s`);
-
-  if (doNotDisturb) {
-    wasDoNotDisturbAlreadyEnabled = await dnd.isEnabled();
-
-    if (!wasDoNotDisturbAlreadyEnabled) {
-      dnd.enable();
-    }
-  }
-
-  console.log(`Took care of DND after ${(Date.now() - past) / 1000}s`);
+  await callPlugins('willStartRecording');
 
   try {
     await aperture.startRecording(apertureOpts);
@@ -155,6 +155,8 @@ const startRecording = async options => {
       cleanup();
     }
   });
+
+  await callPlugins('didStartRecording');
 };
 
 const stopRecording = async () => {
@@ -162,6 +164,8 @@ const stopRecording = async () => {
   if (!past) {
     return;
   }
+
+  await callPlugins('willStopRecording');
 
   console.log(`Stopped recording after ${(Date.now() - past) / 1000}s`);
   past = null;
