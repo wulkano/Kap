@@ -13,7 +13,7 @@ const getFps = require('./utils/fps');
 const loadRoute = require('./utils/routes');
 
 const editors = new Map();
-let exportOptions;
+let allOptions;
 const OPTIONS_BAR_HEIGHT = 48;
 const VIDEO_ASPECT = 9 / 16;
 const MIN_VIDEO_WIDTH = 768;
@@ -90,14 +90,14 @@ const openEditorWindow = async (filePath, {recordedFps, isNewRecording, original
   });
 
   editorWindow.webContents.on('did-finish-load', async () => {
-    ipc.callRenderer(editorWindow, 'export-options', exportOptions);
+    ipc.callRenderer(editorWindow, 'export-options', allOptions);
     await ipc.callRenderer(editorWindow, 'file', {filePath, fps, originalFilePath, isNewRecording});
     editorWindow.show();
   });
 };
 
 const setOptions = options => {
-  exportOptions = options;
+  allOptions = options;
 };
 
 const getEditors = () => editors.values();

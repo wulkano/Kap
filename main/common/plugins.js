@@ -217,6 +217,10 @@ class Plugins {
     return this.getInstalled().filter(plugin => plugin.recordServices.length > 0);
   }
 
+  getEditPlugins() {
+    return this.getInstalled().filter(plugin => plugin.editServices.length > 0);
+  }
+
   getBuiltIn() {
     return [{
       pluginPath: './plugins/copy-to-clipboard-plugin',

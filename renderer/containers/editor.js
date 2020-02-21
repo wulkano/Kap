@@ -96,19 +96,20 @@ export default class EditorContainer extends Container {
     this.setState(updates);
   }
 
-  setOptions = options => {
+  setOptions = ({exportOptions, editOptions}) => {
+    console.log(exportOptions, editOptions);
     const {format, plugin} = this.state;
-    const updates = {options};
+    const updates = {options: exportOptions, editOptions};
 
     if (format) {
-      const option = options.find(option => option.format === format);
+      const option = exportOptions.find(option => option.format === format);
 
       if (!option.plugins.find(p => p.title === plugin)) {
         const [{title}] = option.plugins;
         updates.plugin = title;
       }
     } else {
-      const [option] = options;
+      const [option] = exportOptions;
       const [{title}] = option.plugins;
       updates.format = option.format;
       updates.plugin = title;
@@ -145,6 +146,11 @@ export default class EditorContainer extends Container {
     } else {
       this.setState({plugin, openWithApp: null});
     }
+  }
+
+  selectEditPlugin = editPlugin => {
+    console.log(editPlugin);
+    this.setState({editPlugin});
   }
 
   selectOpenWithApp = openWithApp => {
@@ -196,7 +202,7 @@ export default class EditorContainer extends Container {
   }
 
   startExport = () => {
-    const {width, height, fps, openWithApp, filePath, originalFilePath, options, format, plugin: serviceTitle, originalFps, isNewRecording} = this.state;
+    const {width, height, fps, openWithApp, filePath, originalFilePath, options, format, plugin: serviceTitle, originalFps, isNewRecording, editPlugin} = this.state;
     const {startTime, endTime, isMuted} = this.videoContainer.state;
 
     const plugin = options.find(option => option.format === format).plugins.find(p => p.title === serviceTitle);
@@ -212,8 +218,11 @@ export default class EditorContainer extends Container {
       },
       inputPath: originalFilePath || filePath,
       previewPath: filePath,
-      plugin,
-      serviceTitle,
+      sharePlugin: {
+        ...plugin,
+        serviceTitle
+      },
+      editPlugin,
       format,
       originalFps,
       isNewRecording,

@@ -7,7 +7,19 @@ import Select from './select';
 
 class RightOptions extends React.Component {
   render() {
-    const {options, format, plugin, selectFormat, selectPlugin, startExport, openWithApp, selectOpenWithApp} = this.props;
+    const {
+      options,
+      format,
+      plugin,
+      selectFormat,
+      selectPlugin,
+      startExport,
+      openWithApp,
+      selectOpenWithApp,
+      selectEditPlugin,
+      editOptions,
+      editPlugin
+    } = this.props;
 
     const formatOptions = options ? options.map(({format, prettyFormat}) => ({value: format, label: prettyFormat})) : [];
     const pluginOptions = options ? options.find(option => option.format === format).plugins.map(plugin => {
@@ -50,16 +62,29 @@ class RightOptions extends React.Component {
       });
     }
 
+    const editPluginOptions = editOptions && editOptions.map(option => ({label: option.title, value: option}));
+
     return (
       <div className="container">
         <div className="label">Destination</div>
+        {
+          editPluginOptions && (
+            editPlugin ? (
+              <div className="edit-plugin">
+                <Select options={editPluginOptions} selected={editPlugin} onChange={selectEditPlugin}/>
+              </div>
+            ) : (
+              <button type="button" className="add-edit-plugin" onClick={() => selectEditPlugin(editOptions[0])}>+</button>
+            )
+          )
+        }
         <div className="format">
           <Select options={formatOptions} selected={format} onChange={selectFormat}/>
         </div>
         <div className="plugin">
           <Select options={pluginOptions} selected={plugin} onChange={selectPlugin}/>
         </div>
-        <button type="button" onClick={startExport}>Export</button>
+        <button type="button" className="start-export" onClick={startExport}>Export</button>
         <style jsx>{`
           .container {
             height: 100%;
@@ -79,6 +104,12 @@ class RightOptions extends React.Component {
             margin-right: 8px;
           }
 
+          .edit-plugin {
+            height: 24px;
+            margin-right: 8px;
+            width: 128px;
+          }
+
           .plugin {
             height: 24px;
             width: 128px;
@@ -89,11 +120,11 @@ class RightOptions extends React.Component {
             padding: 4px 8px;
             background: rgba(255, 255, 255, 0.1);
             font-size: 12px;
+            line-height: 12px;
             color: white;
             height: 24px;
             border-radius: 4px;
             text-align: center;
-            width: 72px;
             border: none;
             box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.2);
           }
@@ -102,6 +133,15 @@ class RightOptions extends React.Component {
           button:focus {
             background: hsla(0, 0%, 100%, 0.2);
             outline: none;
+          }
+
+          .start-export {
+            width: 72px;
+          }
+
+          .add-edit-plugin {
+            width: max-content;
+            margin-right: 8px;
           }
         `}</style>
       </div>
@@ -122,6 +162,6 @@ RightOptions.propTypes = {
 
 export default connect(
   [EditorContainer],
-  ({options, format, plugin, openWithApp}) => ({options, format, plugin, openWithApp}),
-  ({selectFormat, selectPlugin, startExport, selectOpenWithApp}) => ({selectFormat, selectPlugin, startExport, selectOpenWithApp})
+  ({options, format, plugin, openWithApp, editOptions, editPlugin}) => ({options, format, plugin, openWithApp, editOptions, editPlugin}),
+  ({selectFormat, selectPlugin, startExport, selectOpenWithApp, selectEditPlugin}) => ({selectFormat, selectPlugin, startExport, selectOpenWithApp, selectEditPlugin})
 )(RightOptions);

@@ -135,7 +135,7 @@ class ExportList {
     const newExport = new Export(options);
     const createdAt = (new Date()).toISOString();
 
-    if (options.plugin.pluginName === '_saveToDisk') {
+    if (options.sharePlugin.pluginName === '_saveToDisk') {
       const wasExportsWindowOpen = Boolean(getExportsWindow());
       const exportsWindow = await openExportsWindow();
       const kapturesDir = settings.get('kapturesDir');
@@ -159,25 +159,25 @@ class ExportList {
 
         return;
       }
-    } else if (options.plugin.pluginName === '_openWith') {
+    } else if (options.sharePlugin.pluginName === '_openWith') {
       newExport.context.appUrl = options.openWithApp.url;
     }
 
-    if (!newExport.config.isConfigValid()) {
+    if (!newExport.shareConfig.isConfigValid()) {
       const result = dialog.showMessageBoxSync({
         type: 'error',
         buttons: ['Configure', 'Cancel'],
         defaultId: 0,
         message: 'Error in plugin config',
-        detail: `Review the config for the "${options.pluginName}" plugin to continue exporting`,
+        detail: `Review the config for the "${options.sharePlugin.pluginName}" plugin to continue exporting`,
         cancelId: 1
       });
 
-      track(`export/plugin/invalid/${options.pluginName}`);
+      track(`export/plugin/invalid/${options.sharePlugin.pluginName}`);
 
       if (result === 0) {
         const prefsWindow = await openPrefsWindow();
-        ipc.callRenderer(prefsWindow, 'open-plugin-config', options.pluginName);
+        ipc.callRenderer(prefsWindow, 'open-plugin-config', options.sharePlugin.pluginName);
       }
 
       return;

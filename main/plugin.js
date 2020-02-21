@@ -91,10 +91,15 @@ class InstalledPlugin extends BasePlugin {
     return this.plugin.shareServices || [];
   }
 
+  get editServices() {
+    return this.plugin.editServices || [];
+  }
+
   get allServices() {
     return [
       ...this.recordServices,
-      ...this.shareServices
+      ...this.shareServices,
+      ...this.editServices
     ];
   }
 

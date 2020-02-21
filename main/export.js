@@ -14,35 +14,50 @@ class Export {
     this.exportOptions = options.exportOptions;
     this.inputPath = options.inputPath;
     this.previewPath = options.previewPath;
-    this.pluginName = options.plugin.pluginName;
 
-    this.plugin = require(options.plugin.pluginPath);
-    this.service = this.plugin.shareServices.find(shareService => shareService.title === options.serviceTitle);
+    this.sharePluginName = options.sharePlugin.pluginName;
+    this.sharePlugin = require(options.sharePlugin.pluginPath);
+    this.shareService = this.sharePlugin.shareServices.find(shareService => shareService.title === options.sharePlugin.serviceTitle);
+
+    this.shareConfig = new PluginConfig({
+      allServices: [this.shareService],
+      name: this.sharePluginName
+    });
+
+    if (options.editPlugin) {
+      this.editPluginName = options.editPlugin.pluginName;
+      this.editPlugin = require(options.editPlugin.pluginPath);
+      this.editService = this.editPlugin.editServices.find(editService => editService.title === options.editPlugin.title);
+
+      this.editConfig = new PluginConfig({
+        allServices: [this.editService],
+        name: this.editPluginName
+      });
+    }
 
     this.format = options.format;
     this.image = '';
-    this.isSaveFileService = options.plugin.pluginName === '_saveToDisk';
+    this.isSaveFileService = options.sharePlugin.pluginName === '_saveToDisk';
     this.disableOutputActions = false;
 
     const now = moment();
     this.defaultFileName = options.isNewRecording ? `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.${this.format}` : `${path.parse(this.inputPath).name}.${this.format}`;
-    this.config = new PluginConfig({
-      allServices: [this.service],
-      name: this.pluginName
-    });
 
     this.context = new ShareServiceContext({
-      _isBuiltin: options.plugin.pluginName.startsWith('_'),
+      _isBuiltin: options.sharePlugin.pluginName.startsWith('_'),
       format: this.format,
       defaultFileName: this.defaultFileName,
       config: this.config,
       onCancel: this.cancel.bind(this),
       onProgress: this.setProgress.bind(this),
       convert: this.convert.bind(this),
-      pluginName: this.pluginName
+      pluginName: this.sharePluginName
     });
 
     this.run = this.run.bind(this);
+
+    this.setProgress = this.setProgress.bind(this);
+    this.cancel = this.cancel.bind(this);
   }
 
   get data() {
@@ -60,14 +75,14 @@ class Export {
   }
 
   run() {
-    track(`export/started/${this.pluginName}`);
+    track(`export/started/${this.sharePluginName}`);
     return new PCancelable(async (resolve, reject, onCancel) => {
       this.resolve = resolve;
       this.reject = reject;
 
       onCancel(() => this.context.clear());
       try {
-        await this.service.action(this.context);
+        await this.shareService.action(this.context);
         if (!this.canceled) {
           this.updateExport({
             text: 'Export completed',
@@ -119,7 +134,13 @@ class Export {
         ...this.exportOptions,
         defaultFileName: fileType ? `${path.parse(this.defaultFileName).name}.${fileType}` : this.defaultFileName,
         inputPath: this.inputPath,
-        onProgress: (percentage, estimate) => this.setProgress(estimate ? `Converting — ${estimate} remaining` : 'Converting…', percentage)
+        onProgress: (percentage, estimate) => this.setProgress(estimate ? `Converting — ${estimate} remaining` : 'Converting…', percentage),
+        editService: this.editService ? {
+          service: this.editService,
+          config: this.editConfig,
+          cancel: this.cancel,
+          setProgress: this.setProgress
+        } : undefined
       },
       fileType || this.format
     );

@@ -30,6 +30,20 @@ const prettifyFormat = format => {
   return formats.get(format);
 };
 
+const getEditOptions = () => {
+  const installed = plugins.getEditPlugins();
+
+  return installed.flatMap(
+    plugin => plugin.editServices
+      .filter(service => plugin.config.validServices.includes(service.title))
+      .map(service => ({
+        title: service.title,
+        pluginName: plugin.name,
+        pluginPath: plugin.pluginPath
+      }))
+  );
+};
+
 const getExportOptions = () => {
   const installed = plugins.getSharePlugins();
   const builtIn = plugins.getBuiltIn();
@@ -82,11 +96,12 @@ const getExportOptions = () => {
 const updateExportOptions = () => {
   const editors = getEditors();
   const exportOptions = getExportOptions();
+  const editOptions = getEditOptions();
   for (const editor of editors) {
-    ipc.callRenderer(editor, 'export-options', exportOptions);
+    ipc.callRenderer(editor, 'export-options', {exportOptions, editOptions});
   }
 
-  setOptions(exportOptions);
+  setOptions({exportOptions, editOptions});
 };
 
 plugins.setUpdateExportOptions(updateExportOptions);
@@ -102,7 +117,10 @@ ipc.answerRenderer('update-usage', ({format, plugin}) => {
 });
 
 const initializeExportOptions = () => {
-  setOptions(getExportOptions());
+  setOptions({
+    exportOptions: getExportOptions(),
+    editOptions: getEditOptions()
+  });
 };
 
 module.exports = {

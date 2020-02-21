@@ -41,6 +41,17 @@ class ServiceContext {
     return request;
   }
 
+  cancel() {
+    this.isCanceled = true;
+    if (this.onCancel) {
+      this.onCancel();
+    }
+
+    for (const request of this.requests) {
+      request.cancel();
+    }
+  }
+
   copyToClipboard(text) {
     if (this.isCanceled) {
       return;
@@ -107,15 +118,6 @@ class ShareServiceContext extends ServiceContext {
     this.setProgress = this.setProgress.bind(this);
   }
 
-  cancel() {
-    this.isCanceled = true;
-    this.onCancel();
-
-    for (const request of this.requests) {
-      request.cancel();
-    }
-  }
-
   clear() {
     this.isCanceled = true;
 
@@ -142,7 +144,17 @@ class RecordServiceContext extends ServiceContext {
   }
 }
 
+class EditServiceContext extends ServiceContext {
+  constructor(options) {
+    super(options);
+
+    this.exportOptions = options.exportOptions;
+    this.convert = options.convert;
+  }
+}
+
 module.exports = {
   ShareServiceContext,
-  RecordServiceContext
+  RecordServiceContext,
+  EditServiceContext
 };
