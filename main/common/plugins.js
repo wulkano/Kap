@@ -47,7 +47,7 @@ class Plugins {
           recordPluginServiceState.set(service.title, true);
         }
       } catch (error) {
-        showError(error, {title: `Something went wrong while enabling “${service.title}”`});
+        showError(error, {title: `Something went wrong while enabling “${service.title}”`, reportToSentry: true});
         const Sentry = require('./utils/sentry');
         Sentry.captureException(error);
       }
