@@ -96,9 +96,20 @@ export default class EditorContainer extends Container {
     this.setState(updates);
   }
 
+  openEditPluginConfig = async () => {
+    const {editPlugin, filePath} = this.state;
+
+    await ipc.callMain('open-edit-config', {
+      pluginName: editPlugin.pluginName,
+      serviceTitle: editPlugin.title,
+      filePath
+    });
+
+    ipc.callMain('refresh-usage');
+  }
+
   setOptions = ({exportOptions, editOptions}) => {
-    console.log(exportOptions, editOptions);
-    const {format, plugin} = this.state;
+    const {format, plugin, editPlugin} = this.state;
     const updates = {options: exportOptions, editOptions};
 
     if (format) {
@@ -113,6 +124,10 @@ export default class EditorContainer extends Container {
       const [{title}] = option.plugins;
       updates.format = option.format;
       updates.plugin = title;
+    }
+
+    if (editPlugin) {
+      updates.editPlugin = editOptions.find(({title, pluginName}) => title === editPlugin.title && pluginName === editPlugin.pluginName);
     }
 
     this.setState(updates);
@@ -149,7 +164,6 @@ export default class EditorContainer extends Container {
   }
 
   selectEditPlugin = editPlugin => {
-    console.log(editPlugin);
     this.setState({editPlugin});
   }
 

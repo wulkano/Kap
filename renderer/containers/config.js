@@ -19,6 +19,20 @@ export default class ConfigContainer extends Container {
     });
   }
 
+  setEditService = (pluginName, serviceTitle) => {
+    const {InstalledPlugin} = this.remote.require('./plugin');
+    this.plugin = new InstalledPlugin(pluginName);
+    this.config = this.plugin.config;
+    this.validators = this.config.validators.filter(({title}) => title === serviceTitle);
+    this.validate();
+    this.setState({
+      validators: this.validators,
+      values: this.config.store,
+      pluginName,
+      serviceTitle
+    });
+  }
+
   validate = () => {
     for (const validator of this.validators) {
       validator(this.config.store);

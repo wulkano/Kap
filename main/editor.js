@@ -102,6 +102,8 @@ const setOptions = options => {
 
 const getEditors = () => editors.values();
 
+const getEditor = path => editors.get(path);
+
 ipc.answerRenderer('save-original', async ({inputPath}) => {
   const now = moment();
 
@@ -128,6 +130,7 @@ module.exports = {
   openEditorWindow,
   setOptions,
   getEditors,
+  getEditor,
   editorEmitter,
   checkForAnyBlockingEditors
 };

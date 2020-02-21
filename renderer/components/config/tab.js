@@ -81,7 +81,7 @@ ConfigInput.propTypes = {
 
 class Tab extends React.Component {
   render() {
-    const {validator, values, onChange, openConfig, viewOnGithub} = this.props;
+    const {validator, values, onChange, openConfig, viewOnGithub, serviceTitle} = this.props;
 
     const {config, errors, description} = validator;
     const allErrors = errors || [];
@@ -124,9 +124,13 @@ class Tab extends React.Component {
             );
           })
         }
-        <Item subtitle="Open config file" onClick={openConfig}>
-          <div className="icon-container"><OpenConfigIcon fill="var(--kap)" hoverFill="var(--kap)" onClick={openConfig}/></div>
-        </Item>
+        {
+          !serviceTitle && (
+            <Item subtitle="Open config file" onClick={openConfig}>
+              <div className="icon-container"><OpenConfigIcon fill="var(--kap)" hoverFill="var(--kap)" onClick={openConfig}/></div>
+            </Item>
+          )
+        }
         <Item last subtitle="View plugin on GitHub" onClick={viewOnGithub}>
           <div className="icon-container"><OpenOnGithubIcon size="20px" fill="var(--kap)" hoverFill="var(--kap)" onClick={viewOnGithub}/></div>
         </Item>
@@ -164,7 +168,8 @@ Tab.propTypes = {
   values: PropTypes.object,
   onChange: PropTypes.elementType.isRequired,
   openConfig: PropTypes.elementType.isRequired,
-  viewOnGithub: PropTypes.elementType.isRequired
+  viewOnGithub: PropTypes.elementType.isRequired,
+  serviceTitle: PropTypes.string
 };
 
 export default Tab;

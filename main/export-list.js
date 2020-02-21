@@ -1,6 +1,6 @@
 /* eslint-disable array-element-newline */
 'use strict';
-const {dialog, BrowserWindow, app} = require('electron');
+const {dialog, BrowserWindow, app, Notification} = require('electron');
 const fs = require('fs');
 const {dirname} = require('path');
 const {ipcMain: ipc} = require('electron-better-ipc');

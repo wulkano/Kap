@@ -47,7 +47,7 @@ class Export {
       _isBuiltin: options.sharePlugin.pluginName.startsWith('_'),
       format: this.format,
       defaultFileName: this.defaultFileName,
-      config: this.config,
+      config: this.shareConfig,
       onCancel: this.cancel.bind(this),
       onProgress: this.setProgress.bind(this),
       convert: this.convert.bind(this),

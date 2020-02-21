@@ -9,23 +9,28 @@ import WindowHeader from '../components/window-header';
 const configContainer = new ConfigContainer();
 
 export default class ConfigPage extends React.Component {
-  state = {pluginName: ''}
+  state = {title: ''}
 
   componentDidMount() {
     ipc.answerMain('plugin', pluginName => {
       configContainer.setPlugin(pluginName);
-      this.setState({pluginName: pluginName.replace(/^kap-/, '')});
+      this.setState({title: pluginName.replace(/^kap-/, '')});
+    });
+
+    ipc.answerMain('edit-service', ({pluginName, serviceTitle}) => {
+      configContainer.setEditService(pluginName, serviceTitle);
+      this.setState({title: serviceTitle});
     });
   }
 
   render() {
-    const {pluginName} = this.state;
+    const {title} = this.state;
 
     return (
       <div className="root">
         <div className="cover-window">
           <Provider inject={[configContainer]}>
-            <WindowHeader title={pluginName}/>
+            <WindowHeader title={title}/>
             <Config/>
           </Provider>
         </div>

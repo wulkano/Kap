@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import {connect, EditorContainer} from '../../../containers';
 import Select from './select';
+import {GearIcon} from '../../../vectors';
 
 class RightOptions extends React.Component {
   render() {
@@ -18,7 +19,8 @@ class RightOptions extends React.Component {
       selectOpenWithApp,
       selectEditPlugin,
       editOptions,
-      editPlugin
+      editPlugin,
+      openEditPluginConfig
     } = this.props;
 
     const formatOptions = options ? options.map(({format, prettyFormat}) => ({value: format, label: prettyFormat})) : [];
@@ -63,19 +65,28 @@ class RightOptions extends React.Component {
     }
 
     const editPluginOptions = editOptions && editOptions.map(option => ({label: option.title, value: option}));
+    const buttonAction = editPlugin ? openEditPluginConfig : () => selectEditPlugin(editOptions[0]);
 
     return (
       <div className="container">
-        <div className="label">Destination</div>
         {
-          editPluginOptions && (
-            editPlugin ? (
-              <div className="edit-plugin">
-                <Select options={editPluginOptions} selected={editPlugin} onChange={selectEditPlugin}/>
-              </div>
-            ) : (
-              <button type="button" className="add-edit-plugin" onClick={() => selectEditPlugin(editOptions[0])}>+</button>
-            )
+          editPluginOptions && editPluginOptions.length > 0 && (
+            <>
+              {
+                (!editPlugin || editPlugin.hasConfig) && (
+                  <button key={editPlugin} type="button" className="add-edit-plugin" onClick={buttonAction}>
+                    {editPlugin ? <GearIcon fill="#fff" hoverFill="#fff" size="12px"/> : '+'}
+                  </button>
+                )
+              }
+              {
+                editPlugin && (
+                  <div className="edit-plugin">
+                    <Select clearable options={editPluginOptions} selected={editPlugin} onChange={selectEditPlugin}/>
+                  </div>
+                )
+              }
+            </>
           )
         }
         <div className="format">
@@ -157,11 +168,15 @@ RightOptions.propTypes = {
   selectPlugin: PropTypes.elementType,
   startExport: PropTypes.elementType,
   openWithApp: PropTypes.object,
-  selectOpenWithApp: PropTypes.elementType
+  selectOpenWithApp: PropTypes.elementType,
+  editPlugin: PropTypes.object,
+  editOptions: PropTypes.arrayOf(PropTypes.object),
+  selectEditPlugin: PropTypes.elementType,
+  openEditPluginConfig: PropTypes.elementType
 };
 
 export default connect(
   [EditorContainer],
   ({options, format, plugin, openWithApp, editOptions, editPlugin}) => ({options, format, plugin, openWithApp, editOptions, editPlugin}),
-  ({selectFormat, selectPlugin, startExport, selectOpenWithApp, selectEditPlugin}) => ({selectFormat, selectPlugin, startExport, selectOpenWithApp, selectEditPlugin})
+  ({selectFormat, selectPlugin, startExport, selectOpenWithApp, selectEditPlugin, openEditPluginConfig}) => ({selectFormat, selectPlugin, startExport, selectOpenWithApp, selectEditPlugin, openEditPluginConfig})
 )(RightOptions);

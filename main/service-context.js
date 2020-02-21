@@ -148,7 +148,31 @@ class EditServiceContext extends ServiceContext {
   constructor(options) {
     super(options);
 
-    this.exportOptions = options.exportOptions;
+    const {
+      inputPath,
+      outputPath,
+      width,
+      height,
+      format,
+      fps,
+      startTime,
+      endTime,
+      isMuted,
+      loop
+    } = options.exportOptions;
+
+    this.inputPath = inputPath;
+    this.outputPath = outputPath;
+
+    this.exportOptions = {
+      width,
+      height,
+      format,
+      fps,
+      duration: endTime - startTime,
+      isMuted,
+      loop
+    };
     this.convert = options.convert;
   }
 }

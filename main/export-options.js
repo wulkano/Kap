@@ -39,7 +39,8 @@ const getEditOptions = () => {
       .map(service => ({
         title: service.title,
         pluginName: plugin.name,
-        pluginPath: plugin.pluginPath
+        pluginPath: plugin.pluginPath,
+        hasConfig: Object.keys(service.config || {}).length > 0
       }))
   );
 };
@@ -115,6 +116,8 @@ ipc.answerRenderer('update-usage', ({format, plugin}) => {
   exportUsageHistory.set(format, usage);
   updateExportOptions();
 });
+
+ipc.answerRenderer('refresh-usage', updateExportOptions);
 
 const initializeExportOptions = () => {
   setOptions({

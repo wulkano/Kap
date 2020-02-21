@@ -14,7 +14,8 @@ class Config extends React.Component {
       selectTab,
       closeWindow,
       openConfig,
-      viewOnGithub
+      viewOnGithub,
+      serviceTitle
     } = this.props;
 
     if (!validators) {
@@ -53,6 +54,7 @@ class Config extends React.Component {
                     values={values}
                     openConfig={openConfig}
                     viewOnGithub={viewOnGithub}
+                    serviceTitle={serviceTitle}
                     onChange={onChange}
                   />
                 </div>
@@ -168,11 +170,12 @@ Config.propTypes = {
   selectTab: PropTypes.elementType.isRequired,
   closeWindow: PropTypes.elementType.isRequired,
   openConfig: PropTypes.elementType.isRequired,
-  viewOnGithub: PropTypes.elementType.isRequired
+  viewOnGithub: PropTypes.elementType.isRequired,
+  serviceTitle: PropTypes.string
 };
 
 export default connect(
   [ConfigContainer],
-  ({validators, values, selectedTab}) => ({validators, values, selectedTab}),
+  ({validators, values, selectedTab, serviceTitle}) => ({validators, values, selectedTab, serviceTitle}),
   ({onChange, selectTab, closeWindow, openConfig, viewOnGithub}) => ({onChange, selectTab, closeWindow, openConfig, viewOnGithub})
 )(Config);
