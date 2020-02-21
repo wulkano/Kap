@@ -67,6 +67,7 @@
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-linkify": "^0.2.2",
+    "read-pkg": "^5.2.0",
     "semver": "^7.1.2",
     "string-math": "^1.2.1",
     "tempy": "^0.3.0",

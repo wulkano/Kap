@@ -5,6 +5,7 @@ const fs = require('fs');
 const electron = require('electron');
 const semver = require('semver');
 const Store = require('electron-store');
+const readPkg = require('read-pkg');
 
 const PluginConfig = require('./utils/plugin-config');
 const {showError} = require('./utils/errors');
@@ -35,7 +36,7 @@ class InstalledPlugin extends BasePlugin {
     this.pkgPath = path.join(this.cwd, 'package.json');
     this.isSymlink = fs.lstatSync(this.pluginPath).isSymbolicLink();
 
-    this.json = JSON.parse(fs.readFileSync(this.packageJsonPath, 'utf8'));
+    this.json = readPkg.sync({cwd: this.pluginPath});
 
     const {homepage, links} = this.json;
     this.link = homepage || (links && links.homepage);
@@ -65,10 +66,6 @@ class InstalledPlugin extends BasePlugin {
 
   get pluginPath() {
     return this.getPath();
-  }
-
-  get packageJsonPath() {
-    return this.getPath('package.json');
   }
 
   get isValid() {
