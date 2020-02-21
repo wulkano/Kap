@@ -308,6 +308,8 @@ const convertUsingPlugin = PCancelable.fn(async ({editService, converter, ...opt
     return;
   }
 
+  track(`plugins/used/edit/${editService.pluginName}`);
+
   return converter({
     ...options,
     crop: false,

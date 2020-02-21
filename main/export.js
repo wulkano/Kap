@@ -76,6 +76,7 @@ class Export {
 
   run() {
     track(`export/started/${this.sharePluginName}`);
+    track(`plugins/used/share/${this.sharePluginName}`);
     return new PCancelable(async (resolve, reject, onCancel) => {
       this.resolve = resolve;
       this.reject = reject;
@@ -139,7 +140,8 @@ class Export {
           service: this.editService,
           config: this.editConfig,
           cancel: this.cancel,
-          setProgress: this.setProgress
+          setProgress: this.setProgress,
+          pluginName: this.editPluginName
         } : undefined
       },
       fileType || this.format

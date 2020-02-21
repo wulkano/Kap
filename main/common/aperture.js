@@ -121,8 +121,9 @@ const startRecording = async options => {
         .map(service => ({plugin, service}))
     );
 
-  for (const {service} of recordingPlugins) {
+  for (const {service, plugin} of recordingPlugins) {
     serviceState.set(service.title, {});
+    track(`plugins/used/record/${plugin.name}`);
   }
 
   await callPlugins('willStartRecording');
