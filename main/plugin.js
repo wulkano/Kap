@@ -50,6 +50,10 @@ class InstalledPlugin extends BasePlugin {
     }
 
     this.config = new PluginConfig(this);
+
+    if (this.plugin.didConfigChange && typeof this.plugin.didConfigChange === 'function') {
+      this.config.onDidAnyChange(this.plugin.didConfigChange);
+    }
   }
 
   getPath(subPath = '') {

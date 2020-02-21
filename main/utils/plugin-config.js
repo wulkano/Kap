@@ -44,7 +44,8 @@ class PluginConfig extends Store {
     super({
       name: plugin.name,
       cwd: 'plugins',
-      defaults
+      defaults,
+      watch: Boolean(plugin.plugin.didConfigChange && typeof plugin.plugin.didConfigChange === 'function')
     });
 
     this.servicesWithNoConfig = plugin.allServices.filter(({config}) => !config);
