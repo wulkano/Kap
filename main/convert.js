@@ -150,7 +150,7 @@ const convertToWebm = PCancelable.fn(async (opts, onCancel) => {
 const convertToApng = opts => {
   return convert(opts.outputPath, opts, [
     '-i', opts.inputPath,
-    '-vf', `fps=${opts.fps},scale=${opts.width}:${opts.height}:flags=lanczos[x]`,
+    '-vf', `fps=${opts.fps},scale=${opts.width}:${opts.height}:flags=lanczos`,
     // Strange for APNG instead of -loop it uses -plays see: https://stackoverflow.com/questions/43795518/using-ffmpeg-to-create-looping-apng
     '-plays', opts.loop === true ? '0' : '1', // 0 == forever; 1 == no loop
     '-ss', opts.startTime,

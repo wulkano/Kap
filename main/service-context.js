@@ -139,7 +139,6 @@ class RecordServiceContext extends ServiceContext {
 
     this.apertureOptions = options.apertureOptions;
     this.state = options.state;
-    this.config = options.config;
   }
 }
 
