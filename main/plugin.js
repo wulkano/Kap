@@ -3,7 +3,7 @@
 const path = require('path');
 const fs = require('fs');
 const electron = require('electron');
-const {satisfies} = require('semver');
+const semver = require('semver');
 const Store = require('electron-store');
 
 const PluginConfig = require('./utils/plugin-config');
@@ -39,7 +39,7 @@ class InstalledPlugin extends BasePlugin {
 
     const {homepage, links} = this.json;
     this.link = homepage || (links && links.homepage);
-    this.isCompatible = satisfies(app.getVersion(), this.json.kapVersion || '*');
+    this.isCompatible = semver.satisfies(app.getVersion(), this.json.kapVersion || '*');
 
     try {
       this.plugin = require(this.pluginPath);
@@ -123,7 +123,7 @@ class NpmPlugin extends BasePlugin {
     const {homepage, links} = json;
     this.link = homepage || (links && links.homepage);
 
-    this.isCompatible = satisfies(app.getVersion(), kapVersion || '*');
+    this.isCompatible = semver.satisfies(app.getVersion(), kapVersion || '*');
   }
 
   viewOnGithub() {

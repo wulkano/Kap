@@ -14,28 +14,19 @@ const prettifyFormat = format => {
   return formats.get(format);
 };
 
-class ShareServiceContext {
+class ServiceContext {
   constructor(options) {
     this._isBuiltin = options._isBuiltin;
-
-    this.format = options.format;
-    this.prettyFormat = prettifyFormat(this.format);
-    this.defaultFileName = options.defaultFileName;
-    this.filePath = options.convert;
     this.config = options.config;
-    this.onCancel = options.onCancel;
-    this.onProgress = options.onProgress;
-    this.pluginName = options.pluginName;
 
-    this.isCanceled = false;
     this.requests = [];
+    this.isCanceled = false;
 
     this.request = this.request.bind(this);
-    this.cancel = this.cancel.bind(this);
     this.copyToClipboard = this.copyToClipboard.bind(this);
     this.notify = this.notify.bind(this);
-    this.setProgress = this.setProgress.bind(this);
     this.openConfigFile = this.openConfigFile.bind(this);
+    this.waitForDeepLink = this.waitForDeepLink.bind(this);
   }
 
   request(url, options) {
@@ -48,23 +39,6 @@ class ShareServiceContext {
     this.requests.push(request);
 
     return request;
-  }
-
-  cancel() {
-    this.isCanceled = true;
-    this.onCancel();
-
-    for (const request of this.requests) {
-      request.cancel();
-    }
-  }
-
-  clear() {
-    this.isCanceled = true;
-
-    for (const request of this.requests) {
-      request.cancel();
-    }
   }
 
   copyToClipboard(text) {
@@ -100,14 +74,6 @@ class ShareServiceContext {
     notification.show();
   }
 
-  setProgress(text, percentage) {
-    if (this.isCanceled) {
-      return;
-    }
-
-    this.onProgress(text, percentage);
-  }
-
   openConfigFile() {
     if (this.isCanceled) {
       return;
@@ -123,4 +89,61 @@ class ShareServiceContext {
   }
 }
 
-module.exports = ShareServiceContext;
+class ShareServiceContext extends ServiceContext {
+  constructor(options) {
+    super(options);
+
+    this.format = options.format;
+    this.prettyFormat = prettifyFormat(this.format);
+    this.defaultFileName = options.defaultFileName;
+    this.filePath = options.convert;
+    this.onCancel = options.onCancel;
+    this.onProgress = options.onProgress;
+    this.pluginName = options.pluginName;
+
+    this.isCanceled = false;
+
+    this.cancel = this.cancel.bind(this);
+    this.setProgress = this.setProgress.bind(this);
+  }
+
+  cancel() {
+    this.isCanceled = true;
+    this.onCancel();
+
+    for (const request of this.requests) {
+      request.cancel();
+    }
+  }
+
+  clear() {
+    this.isCanceled = true;
+
+    for (const request of this.requests) {
+      request.cancel();
+    }
+  }
+
+  setProgress(text, percentage) {
+    if (this.isCanceled) {
+      return;
+    }
+
+    this.onProgress(text, percentage);
+  }
+}
+
+class RecordServiceContext extends ServiceContext {
+  constructor(options) {
+    super(options);
+
+    this.apertureOptions = options.apertureOptions;
+    this.state = options.state;
+    this.config = options.config;
+  }
+}
+
+module.exports = {
+  ShareServiceContext,
+  RecordServiceContext
+};

@@ -17,6 +17,8 @@ const {hasMicrophoneAccess} = require('./system-permissions');
 const settings = require('./settings');
 const {track} = require('./analytics');
 const plugins = require('./plugins');
+const {showError} = require('../utils/errors');
+const {RecordServiceContext} = require('../service-context');
 
 const aperture = createAperture();
 const {audioDevices, videoCodecs} = createAperture;
@@ -27,20 +29,22 @@ const recordHevc = videoCodecs.has('hevc');
 let lastUsedSettings;
 let recordingPlugins = [];
 const serviceState = new Map();
-let apertureOpts;
+let apertureOptions;
 
 let past;
 
 const callPlugins = async method => Promise.all(recordingPlugins.map(async ({plugin, service}) => {
   if (service[method] && typeof service[method] === 'function') {
     try {
-      await service[method]({
-        options: apertureOpts,
-        state: serviceState.get(service.title),
-        config: plugin.config
-      });
+      await service[method](
+        new RecordServiceContext({
+          apertureOptions,
+          state: serviceState.get(service.title),
+          config: plugin.config
+        })
+      );
     } catch (error) {
-      console.error(error);
+      showError(error);
     }
   }
 }));
@@ -78,7 +82,7 @@ const startRecording = async options => {
     audioInputDeviceId
   } = settings.store;
 
-  apertureOpts = {
+  apertureOptions = {
     fps: record60fps ? 60 : 30,
     cropArea: cropperBounds,
     showCursor,
@@ -87,23 +91,23 @@ const startRecording = async options => {
   };
 
   lastUsedSettings = {
-    recordedFps: apertureOpts.fps
+    recordedFps: apertureOptions.fps
   };
 
   if (recordAudio === true) {
     // In case for some reason the default audio device is not set
     // use the first available device for recording
     if (audioInputDeviceId) {
-      apertureOpts.audioDeviceId = audioInputDeviceId;
+      apertureOptions.audioDeviceId = audioInputDeviceId;
     } else {
       const [defaultAudioDevice] = await audioDevices();
-      apertureOpts.audioDeviceId = defaultAudioDevice && defaultAudioDevice.id;
+      apertureOptions.audioDeviceId = defaultAudioDevice && defaultAudioDevice.id;
     }
   }
 
   // TODO: figure out how to correctly process hevc videos with ffmpeg
   // if (recordHevc) {
-  //   apertureOpts.videoCodec = 'hevc';
+  //   apertureOptions.videoCodec = 'hevc';
   // }
 
   console.log(`Collected settings after ${(Date.now() - past) / 1000}s`);
@@ -124,10 +128,10 @@ const startRecording = async options => {
   await callPlugins('willStartRecording');
 
   try {
-    await aperture.startRecording(apertureOpts);
+    await aperture.startRecording(apertureOptions);
   } catch (error) {
     track('recording/stopped/error');
-    dialog.showErrorBox('Recording error', error.message);
+    showError(error, {title: 'Recording error', reportToSentry: true});
     past = null;
     return;
   }
@@ -150,7 +154,7 @@ const startRecording = async options => {
     // Make sure it doesn't catch the error of ending the recording
     if (past) {
       track('recording/stopped/error');
-      dialog.showErrorBox('Recording error', error.message);
+      showError(error, {title: 'Recording error', reportToSentry: true});
       past = null;
       cleanup();
     }
@@ -164,8 +168,6 @@ const stopRecording = async () => {
   if (!past) {
     return;
   }
-
-  await callPlugins('willStopRecording');
 
   console.log(`Stopped recording after ${(Date.now() - past) / 1000}s`);
   past = null;

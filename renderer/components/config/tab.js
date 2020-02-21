@@ -11,7 +11,7 @@ const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
   if (type === 'string' || type === 'number') {
     const className = hasErrors ? 'has-errors' : '';
     const handleChange = event => {
-      const value = type === 'string' ? e.currentTarget.value : Number.parseFloat(e.target.value);
+      const value = type === 'string' ? event.currentTarget.value : Number.parseFloat(event.target.value);
       onChange(name, value);
     };
 

@@ -105,8 +105,11 @@ const getCogMenuTemplate = () => [
   {
     type: 'separator'
   },
-  getPluginsItem(),
   sendFeedbackItem,
+  {
+    type: 'separator'
+  },
+  getPluginsItem(),
   {
     type: 'separator'
   },

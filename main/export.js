@@ -6,7 +6,7 @@ const moment = require('moment');
 
 const {track} = require('./common/analytics');
 const {convertTo} = require('./convert');
-const ShareServiceContext = require('./share-service-context');
+const {ShareServiceContext} = require('./service-context');
 const PluginConfig = require('./utils/plugin-config');
 
 class Export {
