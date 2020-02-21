@@ -62,6 +62,7 @@
     "p-cancelable": "^2.0.0",
     "p-event": "^4.1.0",
     "package-json": "^6.5.0",
+    "parse-ms": "^2.1.0",
     "pify": "^4.0.1",
     "plist": "^3.0.1",
     "pretty-ms": "^5.1.0",
