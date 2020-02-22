@@ -50,7 +50,7 @@ The share service is a plain object defining some metadata:
 - `title`: The title used in the export menu. For example: `Share to GIPHY`.<br>The text should be in [title case](https://capitalizemytitle.com), for example, `Save to Disk`, not `Save to disk`.
 - `configDescription`: A description displayed at the top of the configuration window. You can use this to explain the config options or link to API docs. Any links in this description will be parsed into clickable links automatically.
 - `formats`: The file formats you support. Can be: `gif`, `mp4`, `webm`, `apng`
-- `action`: The function that is run when the user clicks the menu item. Read more below.
+- `action`: The function that is run when the user clicks the menu item. [Read more below.](#action)
 - `config`: Definition of the config the plugins needs. [Read more below](#config).
 
 The `config` and `configDescription` properties are optional.
@@ -120,7 +120,7 @@ The edit service is a plain object defining some metadata:
 
 - `title`: The title used in the export menu. For example: `Reverse`.<br>The text should be in [title case](https://capitalizemytitle.com), for example, `Slow Down`, not `Slow down`.
 - `configDescription`: A description displayed at the top of the configuration window. You can use this to explain the config options or link to API docs. Any links in this description will be parsed into clickable links automatically.
-- `action`: The function that is run when the user clicks the menu item. Read more below.
+- `action`: The function that is run when the user clicks the menu item. [Read more below.](#action)
 - `config`: Definition of the config the plugins needs. [Read more below](#config).
 
 The `config` and `configDescription` properties are optional.
@@ -229,10 +229,10 @@ The record service is a plain object defining some metadata and hooks:
 - `title`: The title used in the export menu. For example: `Share to GIPHY`.<br>The text should be in [title case](https://capitalizemytitle.com), for example, `Save to Disk`, not `Save to disk`.
 - `configDescription`: A description displayed at the top of the configuration window. You can use this to explain the config options or link to API docs. Any links in this description will be parsed into clickable links automatically.
 - `config`: Definition of the config the plugins needs. [Read more below](#config).
-- `willStartRecording`: Function that is called before the recording starts. Read more below.
-- `didStartRecording`: Function that is called after the recording starts. Read more below.
-- `didStopRecording`: Function that is called after the recording stops. Read more below.
-- `willEnable`: Function that is called when the user enables the service. Read more below.
+- `willStartRecording`: Function that is called before the recording starts. [Read more below.](#hooks)
+- `didStartRecording`: Function that is called after the recording starts. [Read more below.](#hooks)
+- `didStopRecording`: Function that is called after the recording stops. [Read more below.](#hooks)
+- `willEnable`: Function that is called when the user enables the service. [Read more below.](#hooks)
 
 The `config`, `configDescription` and hook properties are optional.
 
