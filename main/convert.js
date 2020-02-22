@@ -125,7 +125,7 @@ const convertToMp4 = PCancelable.fn(async (opts, onCancel) => {
     '-i', opts.inputPath,
     '-r', opts.fps,
     ...(
-      opts.crop ? [
+      opts.shouldCrop ? [
         '-s', `${makeEven(opts.width)}x${makeEven(opts.height)}`,
         '-ss', opts.startTime,
         '-to', opts.endTime
@@ -158,7 +158,7 @@ const convertToWebm = PCancelable.fn(async (opts, onCancel) => {
     '-strict', '-2', // Needed because `vorbis` is experimental
     '-r', opts.fps,
     ...(
-      opts.crop ? [
+      opts.shouldCrop ? [
         '-s', `${opts.width}x${opts.height}`,
         '-ss', opts.startTime,
         '-to', opts.endTime
@@ -172,11 +172,11 @@ const convertToWebm = PCancelable.fn(async (opts, onCancel) => {
 const convertToApng = opts => {
   return convert(opts.outputPath, opts, [
     '-i', opts.inputPath,
-    '-vf', `fps=${opts.fps}${opts.crop ? `,scale=${opts.width}:${opts.height}:flags=lanczos` : ''}`,
+    '-vf', `fps=${opts.fps}${opts.shouldCrop ? `,scale=${opts.width}:${opts.height}:flags=lanczos` : ''}`,
     // Strange for APNG instead of -loop it uses -plays see: https://stackoverflow.com/questions/43795518/using-ffmpeg-to-create-looping-apng
     '-plays', opts.loop === true ? '0' : '1', // 0 == forever; 1 == no loop
     ...(
-      opts.crop ? [
+      opts.shouldCrop ? [
         '-ss', opts.startTime,
         '-to', opts.endTime
       ] : []
@@ -191,13 +191,13 @@ const convertToGif = PCancelable.fn(async (opts, onCancel) => {
   const palettePath = tmp.tmpNameSync({postfix: '.png'});
   const paletteProcessor = execa(ffmpegPath, [
     ...(
-      opts.crop ? [
+      opts.shouldCrop ? [
         '-ss', opts.startTime,
         '-to', opts.endTime
       ] : []
     ),
     '-i', opts.inputPath,
-    '-vf', `fps=${opts.fps}${opts.crop ? `,scale=${opts.width}:${opts.height}:flags=lanczos` : ''},palettegen`,
+    '-vf', `fps=${opts.fps}${opts.shouldCrop ? `,scale=${opts.width}:${opts.height}:flags=lanczos` : ''},palettegen`,
     palettePath
   ]);
 
@@ -210,10 +210,10 @@ const convertToGif = PCancelable.fn(async (opts, onCancel) => {
   return convert(opts.outputPath, opts, [
     '-i', opts.inputPath,
     '-i', palettePath,
-    '-filter_complex', `fps=${opts.fps}${opts.crop ? `,scale=${opts.width}:${opts.height}:flags=lanczos` : ''}[x]; [x][1:v]paletteuse`,
+    '-filter_complex', `fps=${opts.fps}${opts.shouldCrop ? `,scale=${opts.width}:${opts.height}:flags=lanczos` : ''}[x]; [x][1:v]paletteuse`,
     '-loop', opts.loop === true ? '0' : '-1', // 0 == forever; -1 == no loop
     ...(
-      opts.crop ? [
+      opts.shouldCrop ? [
         '-ss', opts.startTime,
         '-to', opts.endTime
       ] : []
@@ -244,27 +244,33 @@ const convertTo = (opts, format) => {
     return convertUsingPlugin({outputPath, format, converter, ...opts});
   }
 
-  return converter({outputPath, crop: true, ...opts});
+  return converter({outputPath, ...opts});
 };
 
 const convertUsingPlugin = PCancelable.fn(async ({editService, converter, ...options}, onCancel) => {
-  const croppedPath = tmp.tmpNameSync({postfix: path.extname(options.inputPath)});
+  let croppedPath;
 
-  editService.setProgress('Cropping…');
+  if (options.shouldCrop) {
+    croppedPath = tmp.tmpNameSync({postfix: path.extname(options.inputPath)});
 
-  const cropProcess = execa(ffmpegPath, [
-    '-i', options.inputPath,
-    '-s', `${makeEven(options.width)}x${makeEven(options.height)}`,
-    '-ss', options.startTime,
-    '-to', options.endTime,
-    croppedPath
-  ]);
+    editService.setProgress('Cropping…');
 
-  onCancel(() => {
-    cropProcess.kill();
-  });
+    const cropProcess = execa(ffmpegPath, [
+      '-i', options.inputPath,
+      '-s', `${makeEven(options.width)}x${makeEven(options.height)}`,
+      '-ss', options.startTime,
+      '-to', options.endTime,
+      croppedPath
+    ]);
 
-  await cropProcess;
+    onCancel(() => {
+      cropProcess.kill();
+    });
+
+    await cropProcess;
+  } else {
+    croppedPath = options.inputPath;
+  }
 
   let canceled = false;
   const convertFunction = getConvertFunction(false);
@@ -312,7 +318,7 @@ const convertUsingPlugin = PCancelable.fn(async ({editService, converter, ...opt
 
   return converter({
     ...options,
-    crop: false,
+    shouldCrop: false,
     inputPath: editPath
   });
 });

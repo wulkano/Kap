@@ -216,8 +216,24 @@ export default class EditorContainer extends Container {
   }
 
   startExport = () => {
-    const {width, height, fps, openWithApp, filePath, originalFilePath, options, format, plugin: serviceTitle, originalFps, isNewRecording, editPlugin} = this.state;
-    const {startTime, endTime, isMuted} = this.videoContainer.state;
+    const {
+      width,
+      height,
+      fps,
+      openWithApp,
+      filePath,
+      originalFilePath,
+      options,
+      format,
+      plugin: serviceTitle,
+      originalFps,
+      isNewRecording,
+      editPlugin,
+      original
+    } = this.state;
+    const {startTime, endTime, isMuted, duration} = this.videoContainer.state;
+
+    const shouldCrop = original.width !== width || original.height !== height || startTime !== 0 || endTime !== duration;
 
     const plugin = options.find(option => option.format === format).plugins.find(p => p.title === serviceTitle);
 
@@ -228,7 +244,8 @@ export default class EditorContainer extends Container {
         fps,
         startTime,
         endTime,
-        isMuted
+        isMuted,
+        shouldCrop
       },
       inputPath: originalFilePath || filePath,
       previewPath: filePath,
