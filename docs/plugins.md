@@ -1,6 +1,6 @@
 # Plugins
 
-The Kap plugin system lets you create custom share targets that appear in the editor export menu. You could for example create a plugin to share a screen recording on YouTube.
+The Kap plugin system lets you create custom share targets that appear in the editor export menu. You could, for example, create a plugin to share a screen recording on YouTube.
 
 You can discover plugins or view installed ones by clicking the `Kap` menu, `Preferences…`, and selecting the `Plugins` pane.
 
@@ -29,7 +29,7 @@ When Kap is built for production, it prunes dependencies at launch time. In orde
 
 ## Services
 
-Kap currently supports three different types of services and each plugin can have multiple of each, altough each plugin should focus on a specific area.
+Kap currently supports three different types of services and each plugin can have multiple of each, although each plugin should focus on a specific area.
 
 ### Share services
 
@@ -94,8 +94,8 @@ The `action` function is where you implement the behavior of your service. The f
 - `.prettyFormat`: Prettified version of `.format` for use in notifications. Can be: `GIF`, `MP4`, `WebM`, `APNG`
 - `.defaultFileName`: Default file name for the recording. For example: `Kapture 2017-05-30 at 1.03.49.gif`
 - `.filePath()`: Convert the screen recording to the user chosen format and return a Promise for the file path.
-  - If you want to overwrite the format that the user selected, you can pass a `fileType` option: `.filePath({fileType: 'mp4'})`. Can be one of `mp4`, `gif`, `apng`, `webm`. This can be useful if you, for example, need to handle the GIF conversion yourself.
-- `.config`: Get and set config for you plugin. It’s an instance of [`electron-store`](https://github.com/sindresorhus/electron-store#instance).
+  - If you want to overwrite the format that the user selected, you can pass a `fileType` option: `.filePath({fileType: 'mp4'})`. It can be one of `mp4`, `gif`, `apng`, `webm`. This can be useful if you, for example, need to handle the GIF conversion yourself.
+- `.config`: Get and set config for your plugin. It’s an instance of [`electron-store`](https://github.com/sindresorhus/electron-store#instance).
 - `.request()`: Do a network request, like uploading. It’s a wrapper around [`got`](https://github.com/sindresorhus/got).
 - `.copyToClipboard(text)`: Copy text to the clipboard. If you for example copy a link to the uploaded recording to the clipboard, don’t forget to `.notify()` the user about it.
 - `.notify(text, action)`: Show a notification. Optionally pass in a function that is called with the event when the notification is clicked.
@@ -185,7 +185,7 @@ const reverseAction = async context => {
 	// Will call ffmpeg -i {inputPath} -vf reverse {outputPath}
 };
 ```
-- `.config`: Get and set config for you plugin. It’s an instance of [`electron-store`](https://github.com/sindresorhus/electron-store#instance).
+- `.config`: Get and set config for your plugin. It’s an instance of [`electron-store`](https://github.com/sindresorhus/electron-store#instance).
 - `.request()`: Do a network request, like uploading. It’s a wrapper around [`got`](https://github.com/sindresorhus/got).
 - `.copyToClipboard(text)`: Copy text to the clipboard. If you for example copy a link to the uploaded recording to the clipboard, don’t forget to `.notify()` the user about it.
 - `.notify(text, action)`: Show a notification. Optionally pass in a function that is called with the event when the notification is clicked.
@@ -282,9 +282,9 @@ You can use this to check if you have enough permissions for the service to work
 
 The hook functions receive a `context` argument with some metadata and utility methods.
 
-- `.state`: An plain empty object that will be shared and passed to all hooks in the same recording process. Can be useful to persist data between the different hooks.
+- `.state`: A plain empty object that will be shared and passed to all hooks in the same recording process. It can be useful to persist data between the different hooks.
 - `.apertureOptions`: An object with the options passed to [Aperture](https://github.com/wulkano/aperture-node). The API is described [here](https://github.com/wulkano/aperture-node#options).
-- `.config`: Get and set config for you plugin. It’s an instance of [`electron-store`](https://github.com/sindresorhus/electron-store#instance).
+- `.config`: Get and set config for your plugin. It’s an instance of [`electron-store`](https://github.com/sindresorhus/electron-store#instance).
 - `.request()`: Do a network request, like uploading. It’s a wrapper around [`got`](https://github.com/sindresorhus/got).
 - `.copyToClipboard(text)`: Copy text to the clipboard. If you for example copy a link to the uploaded recording to the clipboard, don’t forget to `.notify()` the user about it.
 - `.notify(text, action)`: Show a notification. Optionally pass in a function that is called with the event when the notification is clicked.
@@ -296,7 +296,7 @@ Example plugins: [`kap-do-not-disturb`](https://github.com/karaggeorge/kap-do-no
 
 ## Config
 
-The config system uses [JSON Schema](http://json-schema.org) which lets you describe the config your plugin supports and have it validated and enforced. For example, you can define that some config key is required, or that it should be a string with minimum length of 10. Kap will notify the user of invalid config. If you define required config, Kap will open the config file automatically on install so the user can fill out the required fields.
+The config system uses [JSON Schema](http://json-schema.org) which lets you describe the config your plugin supports and have it validated and enforced. For example, you can define that some config key is required, or that it should be a string with a minimum length of 10. Kap will notify the user of invalid config. If you define required config, Kap will open the config file automatically on install so the user can fill out the required fields.
 
 It’s recommended to set an empty `default` property for required config keys, so the user can just fill them out.
 
@@ -329,7 +329,7 @@ config: {
 Every type of plugin and service can additionally export the following:
 - `didInstall(config)`: A hook that will be called when the plugin is first installed.
 - `didConfigChange(newValues, oldValues, config)`: A hook that will be called whenever the config of the plugin is changed.
-- `willUninstall(config)`: A hook that will be called when a plugin is being uninstalled. Can be used to clean up artifacts.
+- `willUninstall(config)`: A hook that will be called when a plugin is being uninstalled. It can be used to clean up artifacts.
 
 In addition to these, each plugin needs to export at least one of the following:
 - `shareServices`: an array of share services and described above
@@ -353,7 +353,7 @@ If the API provider only allows HTTP/HTTPS URLs, or if you don't want to do the 
 
 ## Removing your Kap plugin
 
-Since npm doesn't allow you to remove packages from the registery, Kap filters out deprecated packages in the plugin list.
+Since npm doesn't allow you to remove packages from the registry, Kap filters out deprecated packages in the plugin list.
 
 When you are ready to retire your Kap plugin, simply run `npm deprecate kap-plugin "Deprecated"`.
 
