@@ -88,7 +88,7 @@ class Plugins {
   _modifyMainPackageJson(modifier) {
     const pkg = JSON.parse(fs.readFileSync(this.pkgPath, 'utf8'));
     modifier(pkg);
-    fs.writeFileSync(this.pkgPath, JSON.stringify(pkg));
+    fs.writeFileSync(this.pkgPath, JSON.stringify(pkg, null, 2));
   }
 
   async _runYarn(...commands) {
