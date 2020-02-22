@@ -120,6 +120,15 @@ class Plugins {
       await this._yarnInstall();
 
       const plugin = new InstalledPlugin(name);
+
+      if (plugin.plugin.didInstall && typeof plugin.plugin.didInstall === 'function') {
+        try {
+          plugin.plugin.didInstall(plugin.config);
+        } catch (error) {
+          showError(error);
+        }
+      }
+
       const {isValid} = plugin;
 
       const options = isValid ? {
@@ -180,6 +189,15 @@ class Plugins {
       delete pkg.dependencies[name];
     });
     const plugin = new InstalledPlugin(name);
+
+    if (plugin.plugin.willUninstall && typeof plugin.plugin.willUninstall === 'function') {
+      try {
+        plugin.plugin.willUninstall(plugin.config);
+      } catch (error) {
+        showError(error);
+      }
+    }
+
     plugin.config.clear();
     this.updateExportOptions();
     return new NpmPlugin(plugin.json, plugin.json.kapVersion);
