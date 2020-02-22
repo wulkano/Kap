@@ -9,6 +9,5 @@ exports.exportPathMap = () => ({
   '/editor': {page: '/editor'},
   '/preferences': {page: '/preferences'},
   '/exports': {page: '/exports'},
-  '/config': {page: '/config'},
-  '/about': {page: '/about'}
+  '/config': {page: '/config'}
 });

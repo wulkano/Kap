@@ -19,6 +19,17 @@ const exportUsageHistory = new Store({
   }
 });
 
+const fpsUsageHistory = new Store({
+  name: 'fps-usage-history',
+  schema: {
+    fps: {
+      type: 'number',
+      minimum: 0,
+      default: 60
+    }
+  }
+});
+
 const prettifyFormat = format => {
   const formats = new Map([
     ['apng', 'APNG'],
@@ -102,18 +113,19 @@ const updateExportOptions = () => {
     ipc.callRenderer(editor, 'export-options', {exportOptions, editOptions});
   }
 
-  setOptions({exportOptions, editOptions});
+  setOptions({exportOptions, editOptions, fps: fpsUsageHistory.get('fps')});
 };
 
 plugins.setUpdateExportOptions(updateExportOptions);
 
-ipc.answerRenderer('update-usage', ({format, plugin}) => {
+ipc.answerRenderer('update-usage', ({format, plugin, fps}) => {
   const usage = exportUsageHistory.get(format);
   const now = Date.now();
 
   usage.plugins[plugin] = now;
   usage.lastUsed = now;
   exportUsageHistory.set(format, usage);
+  fpsUsageHistory.set('fps', fps);
   updateExportOptions();
 });
 
@@ -122,7 +134,8 @@ ipc.answerRenderer('refresh-usage', updateExportOptions);
 const initializeExportOptions = () => {
   setOptions({
     exportOptions: getExportOptions(),
-    editOptions: getEditOptions()
+    editOptions: getEditOptions(),
+    fps: fpsUsageHistory.get('fps')
   });
 };
 

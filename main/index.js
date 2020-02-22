@@ -70,6 +70,7 @@ const checkForUpdates = () => {
   await app.whenReady();
 
   app.dock.hide();
+  app.setAboutPanelOptions({copyright: 'Copyright © Wulkano'});
 
   // Ensure the app is in the Applications folder
   enforceMacOSAppLocation();
