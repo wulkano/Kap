@@ -112,13 +112,14 @@ Example plugins: [`kap-giphy`](https://github.com/wulkano/kap-giphy/blob/master/
 
 ### Edit services
 
-Only supported in Kap versions >= 3.2.0
+Only supported in Kap >= 3.2.0.
 
-An edit service lets you add an entry to the edit menu in the Kap editor window and process the recording before it gets converted and exported. The edit service receives an `mp4` file which is generated from the recording after triming the duration and adjusting the size. It's expecrted to produce another `mp4` file at the given output location, which will then get passed on to the appropriate share service.
+An edit service lets you add an entry to the edit menu in the Kap editor window and process the recording before it gets converted and exported. The edit service receives an `mp4` file which is generated from the recording after trimming the duration and adjusting the size. It's expected to produce another `mp4` file at the given output location, which will then be passed to the appropriate share service.
 
 The edit service is a plain object defining some metadata:
 
-- `title`: The title used in the export menu. For example: `Reverse`.<br>The text should be in [title case](https://capitalizemytitle.com), for example, `Slow Down`, not `Slow down`.
+- `title`: The title used in the export menu. For example: `Reverse`.\
+  The text should be in [title case](https://capitalizemytitle.com), for example, `Slow Down`, not `Slow down`.
 - `configDescription`: A description displayed at the top of the configuration window. You can use this to explain the config options or link to API docs. Any links in this description will be parsed into clickable links automatically.
 - `action`: The function that is run when the user clicks the menu item. [Read more below.](#action)
 - `config`: Definition of the config the plugins needs. [Read more below](#config).
@@ -136,7 +137,7 @@ const action = async context => {
 
 const config = {
   percent: {
-    title: 'Percent by which to slow down',
+    title: 'Slow Down Percentage',
 	type: 'number',
 	maximum: 1,
 	minimum: 0,
@@ -146,7 +147,7 @@ const config = {
 };
 
 const slowDown = {
-  title: 'Slow down',
+  title: 'Slow Down',
   action,
   config
 };
@@ -158,17 +159,17 @@ exports.editServices = [slowDown];
 
 The `action` function is where you implement the behavior of your service. The function receives a `context` argument with some metadata and utility methods.
 
-- `.inputPath`: The path to the input trimmed `mp4` file
-- `.outputPath`: The path where the resulting `mp4` file should be by the end of the action
+- `.inputPath`: The path to the input trimmed `mp4` file.
+- `.outputPath`: The path where the resulting `mp4` file should be by the end of the action.
 - `.exportOptions`: An object containing info about the recording (note that the input video has already been resized and trimmed):
-	- `.width`: Width of the input file
-	- `.height`: Height of the input file
-	- `.format`: The selected format in which the video will be converted to later on
-	- `.fps`: The selected fps that will be used for the final conversion
-	- `.duration`: Duration of the trimmed input file
-	- `.isMuted`: Whether the video is muted or not
-	- `.loop`: Whether the resulting GIF or APNG file will be looped or not
-- `.convert(args, text)`: A utility function which accepts an array of ffmpeg arguments and handles executing the command, parsing the progress, generating time estimate and showing it to the user. The second argument is optional and defaults to `Converting`. Can be something more descriptive to your service like `Reversing` and will be used for the status reporting.
+	- `.width`: Width of the input file.
+	- `.height`: Height of the input file.
+	- `.format`: The selected format in which the video will be converted to later on.
+	- `.fps`: The selected FPS that will be used for the final conversion.
+	- `.duration`: Duration of the trimmed input file.
+	- `.isMuted`: Whether the video is muted or not.
+	- `.loop`: Whether the resulting GIF or APNG file will be looped or not.
+- `.convert(args, text)`: A utility function which accepts an array of `ffmpeg` arguments and handles executing the command, parsing the progress, generating time estimate and showing it to the user. The second argument is optional and defaults to `Converting`. It can be something more descriptive to your service like `Reversing` and will be used for the status reporting.
 
 Example (reversing a video):
 
@@ -197,6 +198,7 @@ const reverseAction = async context => {
 It is highly recomended that an edit service uses a [PCancelable](https://github.com/sindresorhus/p-cancelable) function as the action, so Kap can cancel it in case the user decides to cancel the export.
 
 Example:
+
 ```js
 const PCancelable = require('p-cancelable');
 
@@ -220,13 +222,14 @@ Example plugins: [`kap-playback-speed`](https://github.com/karaggeorge/kap-playb
 
 ### Record services
 
-A record service lets you add an entry to the Plugins submenu of the main context menu of the cropper. A user can enable or disable the service and when enabled, the service can take action in different stages of the recording process.
+A record service lets you add an entry to the “Plugins” submenu of the main context menu of the cropper. A user can enable or disable the service and when enabled, the service can take action in different stages of the recording process.
 
 Record services are different from share and edit services, since they don't have one action but many hooks.
 
 The record service is a plain object defining some metadata and hooks:
 
-- `title`: The title used in the export menu. For example: `Share to GIPHY`.<br>The text should be in [title case](https://capitalizemytitle.com), for example, `Save to Disk`, not `Save to disk`.
+- `title`: The title used in the export menu. For example: `Share to GIPHY`.\
+  The text should be in [title case](https://capitalizemytitle.com), for example, `Save to Disk`, not `Save to disk`.
 - `configDescription`: A description displayed at the top of the configuration window. You can use this to explain the config options or link to API docs. Any links in this description will be parsed into clickable links automatically.
 - `config`: Definition of the config the plugins needs. [Read more below](#config).
 - `willStartRecording`: Function that is called before the recording starts. [Read more below.](#hooks)
@@ -251,7 +254,7 @@ const didStopRecording = async context => {
 
 const config = {
   apiKey: {
-    title: 'API key',
+    title: 'API Key',
     type: 'string',
     minLength: 13,
     default: '',
