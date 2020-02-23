@@ -24,7 +24,7 @@ class General extends React.Component {
 
   componentDidMount() {
     this.setState({
-      showCursorSupported: electron.remote.require('./utils/macos-version').isGreaterThanOrEqualTo('10.14')
+      showCursorSupported: electron.remote.require('./utils/macos-version').isGreaterThanOrEqualTo('10.13')
     });
   }
 
