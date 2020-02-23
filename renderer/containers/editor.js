@@ -120,7 +120,11 @@ export default class EditorContainer extends Container {
 
   setOptions = ({exportOptions, editOptions, fps}) => {
     const {format, plugin, editPlugin} = this.state;
-    const updates = {options: exportOptions, editOptions, fps: Math.min(fps, this.state.fps)};
+    const updates = {options: exportOptions, editOptions};
+
+    if (fps) {
+      updates.fps = Math.min(fps, this.state.fps);
+    }
 
     if (format) {
       const option = exportOptions.find(option => option.format === format);

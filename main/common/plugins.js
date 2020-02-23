@@ -102,7 +102,7 @@ class Plugins {
 
   _pluginNames() {
     const pkg = fs.readFileSync(path.join(this.cwd, 'package.json'), 'utf8');
-    return Object.keys(JSON.parse(pkg).dependencies);
+    return Object.keys(JSON.parse(pkg).dependencies || {});
   }
 
   async _yarnInstall() {
@@ -113,6 +113,10 @@ class Plugins {
     track(`plugin/installed/${name}`);
     // We manually add it to the package.json here so we're able to set the version to `latest`
     this._modifyMainPackageJson(pkg => {
+      if (!pkg.dependencies) {
+        pkg.dependencies = {};
+      }
+
       pkg.dependencies[name] = 'latest';
     });
 

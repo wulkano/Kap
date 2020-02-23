@@ -90,8 +90,8 @@ const openEditorWindow = async (filePath, {recordedFps, isNewRecording, original
   });
 
   editorWindow.webContents.on('did-finish-load', async () => {
-    ipc.callRenderer(editorWindow, 'export-options', allOptions);
     await ipc.callRenderer(editorWindow, 'file', {filePath, fps, originalFilePath, isNewRecording});
+    ipc.callRenderer(editorWindow, 'export-options', allOptions);
     editorWindow.show();
   });
 };
