@@ -1,6 +1,6 @@
 # Plugins
 
-The Kap plugin system lets you create custom share targets that appear in the editor export menu. You could for example create a plugin to share a screen recording on YouTube.
+The Kap plugin system lets you create custom share targets that appear in the editor export menu. You could, for example, create a plugin to share a screen recording on YouTube.
 
 You can discover plugins or view installed ones by clicking the `Kap` menu, `Preferences…`, and selecting the `Plugins` pane.
 
@@ -29,7 +29,7 @@ When Kap is built for production, it prunes dependencies at launch time. In orde
 
 ## Services
 
-Kap currently supports three different types of services and each plugin can have multiple of each, altough each plugin should focus on a specific area.
+Kap currently supports three different types of services and each plugin can have multiple of each, although each plugin should focus on a specific area.
 
 ### Share services
 
@@ -94,8 +94,8 @@ The `action` function is where you implement the behavior of your service. The f
 - `.prettyFormat`: Prettified version of `.format` for use in notifications. Can be: `GIF`, `MP4`, `WebM`, `APNG`
 - `.defaultFileName`: Default file name for the recording. For example: `Kapture 2017-05-30 at 1.03.49.gif`
 - `.filePath()`: Convert the screen recording to the user chosen format and return a Promise for the file path.
-  - If you want to overwrite the format that the user selected, you can pass a `fileType` option: `.filePath({fileType: 'mp4'})`. Can be one of `mp4`, `gif`, `apng`, `webm`. This can be useful if you, for example, need to handle the GIF conversion yourself.
-- `.config`: Get and set config for you plugin. It’s an instance of [`electron-store`](https://github.com/sindresorhus/electron-store#instance).
+  - If you want to overwrite the format that the user selected, you can pass a `fileType` option: `.filePath({fileType: 'mp4'})`. It can be one of `mp4`, `gif`, `apng`, `webm`. This can be useful if you, for example, need to handle the GIF conversion yourself.
+- `.config`: Get and set config for your plugin. It’s an instance of [`electron-store`](https://github.com/sindresorhus/electron-store#instance).
 - `.request()`: Do a network request, like uploading. It’s a wrapper around [`got`](https://github.com/sindresorhus/got).
 - `.copyToClipboard(text)`: Copy text to the clipboard. If you for example copy a link to the uploaded recording to the clipboard, don’t forget to `.notify()` the user about it.
 - `.notify(text, action)`: Show a notification. Optionally pass in a function that is called with the event when the notification is clicked.
@@ -112,13 +112,14 @@ Example plugins: [`kap-giphy`](https://github.com/wulkano/kap-giphy/blob/master/
 
 ### Edit services
 
-Only supported in Kap versions >= 3.2.0
+Only supported in Kap >= 3.2.0.
 
-An edit service lets you add an entry to the edit menu in the Kap editor window and process the recording before it gets converted and exported. The edit service receives an `mp4` file which is generated from the recording after triming the duration and adjusting the size. It's expecrted to produce another `mp4` file at the given output location, which will then get passed on to the appropriate share service.
+An edit service lets you add an entry to the edit menu in the Kap editor window and process the recording before it gets converted and exported. The edit service receives an `mp4` file which is generated from the recording after trimming the duration and adjusting the size. It's expected to produce another `mp4` file at the given output location, which will then be passed to the appropriate share service.
 
 The edit service is a plain object defining some metadata:
 
-- `title`: The title used in the export menu. For example: `Reverse`.<br>The text should be in [title case](https://capitalizemytitle.com), for example, `Slow Down`, not `Slow down`.
+- `title`: The title used in the export menu. For example: `Reverse`.\
+  The text should be in [title case](https://capitalizemytitle.com), for example, `Slow Down`, not `Slow down`.
 - `configDescription`: A description displayed at the top of the configuration window. You can use this to explain the config options or link to API docs. Any links in this description will be parsed into clickable links automatically.
 - `action`: The function that is run when the user clicks the menu item. [Read more below.](#action)
 - `config`: Definition of the config the plugins needs. [Read more below](#config).
@@ -136,7 +137,7 @@ const action = async context => {
 
 const config = {
   percent: {
-    title: 'Percent by which to slow down',
+    title: 'Slow Down Percentage',
 	type: 'number',
 	maximum: 1,
 	minimum: 0,
@@ -146,7 +147,7 @@ const config = {
 };
 
 const slowDown = {
-  title: 'Slow down',
+  title: 'Slow Down',
   action,
   config
 };
@@ -158,17 +159,17 @@ exports.editServices = [slowDown];
 
 The `action` function is where you implement the behavior of your service. The function receives a `context` argument with some metadata and utility methods.
 
-- `.inputPath`: The path to the input trimmed `mp4` file
-- `.outputPath`: The path where the resulting `mp4` file should be by the end of the action
+- `.inputPath`: The path to the input trimmed `mp4` file.
+- `.outputPath`: The path where the resulting `mp4` file should be by the end of the action.
 - `.exportOptions`: An object containing info about the recording (note that the input video has already been resized and trimmed):
-	- `.width`: Width of the input file
-	- `.height`: Height of the input file
-	- `.format`: The selected format in which the video will be converted to later on
-	- `.fps`: The selected fps that will be used for the final conversion
-	- `.duration`: Duration of the trimmed input file
-	- `.isMuted`: Whether the video is muted or not
-	- `.loop`: Whether the resulting GIF or APNG file will be looped or not
-- `.convert(args, text)`: A utility function which accepts an array of ffmpeg arguments and handles executing the command, parsing the progress, generating time estimate and showing it to the user. The second argument is optional and defaults to `Converting`. Can be something more descriptive to your service like `Reversing` and will be used for the status reporting.
+	- `.width`: Width of the input file.
+	- `.height`: Height of the input file.
+	- `.format`: The selected format in which the video will be converted to later on.
+	- `.fps`: The selected FPS that will be used for the final conversion.
+	- `.duration`: Duration of the trimmed input file.
+	- `.isMuted`: Whether the video is muted or not.
+	- `.loop`: Whether the resulting GIF or APNG file will be looped or not.
+- `.convert(args, text)`: A utility function which accepts an array of `ffmpeg` arguments and handles executing the command, parsing the progress, generating time estimate and showing it to the user. The second argument is optional and defaults to `Converting`. It can be something more descriptive to your service like `Reversing` and will be used for the status reporting.
 
 Example (reversing a video):
 
@@ -184,7 +185,7 @@ const reverseAction = async context => {
 	// Will call ffmpeg -i {inputPath} -vf reverse {outputPath}
 };
 ```
-- `.config`: Get and set config for you plugin. It’s an instance of [`electron-store`](https://github.com/sindresorhus/electron-store#instance).
+- `.config`: Get and set config for your plugin. It’s an instance of [`electron-store`](https://github.com/sindresorhus/electron-store#instance).
 - `.request()`: Do a network request, like uploading. It’s a wrapper around [`got`](https://github.com/sindresorhus/got).
 - `.copyToClipboard(text)`: Copy text to the clipboard. If you for example copy a link to the uploaded recording to the clipboard, don’t forget to `.notify()` the user about it.
 - `.notify(text, action)`: Show a notification. Optionally pass in a function that is called with the event when the notification is clicked.
@@ -197,6 +198,7 @@ const reverseAction = async context => {
 It is highly recomended that an edit service uses a [PCancelable](https://github.com/sindresorhus/p-cancelable) function as the action, so Kap can cancel it in case the user decides to cancel the export.
 
 Example:
+
 ```js
 const PCancelable = require('p-cancelable');
 
@@ -220,13 +222,14 @@ Example plugins: [`kap-playback-speed`](https://github.com/karaggeorge/kap-playb
 
 ### Record services
 
-A record service lets you add an entry to the Plugins submenu of the main context menu of the cropper. A user can enable or disable the service and when enabled, the service can take action in different stages of the recording process.
+A record service lets you add an entry to the “Plugins” submenu of the main context menu of the cropper. A user can enable or disable the service and when enabled, the service can take action in different stages of the recording process.
 
 Record services are different from share and edit services, since they don't have one action but many hooks.
 
 The record service is a plain object defining some metadata and hooks:
 
-- `title`: The title used in the export menu. For example: `Share to GIPHY`.<br>The text should be in [title case](https://capitalizemytitle.com), for example, `Save to Disk`, not `Save to disk`.
+- `title`: The title used in the export menu. For example: `Share to GIPHY`.\
+  The text should be in [title case](https://capitalizemytitle.com), for example, `Save to Disk`, not `Save to disk`.
 - `configDescription`: A description displayed at the top of the configuration window. You can use this to explain the config options or link to API docs. Any links in this description will be parsed into clickable links automatically.
 - `config`: Definition of the config the plugins needs. [Read more below](#config).
 - `willStartRecording`: Function that is called before the recording starts. [Read more below.](#hooks)
@@ -251,7 +254,7 @@ const didStopRecording = async context => {
 
 const config = {
   apiKey: {
-    title: 'API key',
+    title: 'API Key',
     type: 'string',
     minLength: 13,
     default: '',
@@ -279,9 +282,9 @@ You can use this to check if you have enough permissions for the service to work
 
 The hook functions receive a `context` argument with some metadata and utility methods.
 
-- `.state`: An plain empty object that will be shared and passed to all hooks in the same recording process. Can be useful to persist data between the different hooks.
+- `.state`: A plain empty object that will be shared and passed to all hooks in the same recording process. It can be useful to persist data between the different hooks.
 - `.apertureOptions`: An object with the options passed to [Aperture](https://github.com/wulkano/aperture-node). The API is described [here](https://github.com/wulkano/aperture-node#options).
-- `.config`: Get and set config for you plugin. It’s an instance of [`electron-store`](https://github.com/sindresorhus/electron-store#instance).
+- `.config`: Get and set config for your plugin. It’s an instance of [`electron-store`](https://github.com/sindresorhus/electron-store#instance).
 - `.request()`: Do a network request, like uploading. It’s a wrapper around [`got`](https://github.com/sindresorhus/got).
 - `.copyToClipboard(text)`: Copy text to the clipboard. If you for example copy a link to the uploaded recording to the clipboard, don’t forget to `.notify()` the user about it.
 - `.notify(text, action)`: Show a notification. Optionally pass in a function that is called with the event when the notification is clicked.
@@ -293,7 +296,7 @@ Example plugins: [`kap-do-not-disturb`](https://github.com/karaggeorge/kap-do-no
 
 ## Config
 
-The config system uses [JSON Schema](http://json-schema.org) which lets you describe the config your plugin supports and have it validated and enforced. For example, you can define that some config key is required, or that it should be a string with minimum length of 10. Kap will notify the user of invalid config. If you define required config, Kap will open the config file automatically on install so the user can fill out the required fields.
+The config system uses [JSON Schema](http://json-schema.org) which lets you describe the config your plugin supports and have it validated and enforced. For example, you can define that some config key is required, or that it should be a string with a minimum length of 10. Kap will notify the user of invalid config. If you define required config, Kap will open the config file automatically on install so the user can fill out the required fields.
 
 It’s recommended to set an empty `default` property for required config keys, so the user can just fill them out.
 
@@ -326,7 +329,7 @@ config: {
 Every type of plugin and service can additionally export the following:
 - `didInstall(config)`: A hook that will be called when the plugin is first installed.
 - `didConfigChange(newValues, oldValues, config)`: A hook that will be called whenever the config of the plugin is changed.
-- `willUninstall(config)`: A hook that will be called when a plugin is being uninstalled. Can be used to clean up artifacts.
+- `willUninstall(config)`: A hook that will be called when a plugin is being uninstalled. It can be used to clean up artifacts.
 
 In addition to these, each plugin needs to export at least one of the following:
 - `shareServices`: an array of share services and described above
@@ -350,7 +353,7 @@ If the API provider only allows HTTP/HTTPS URLs, or if you don't want to do the 
 
 ## Removing your Kap plugin
 
-Since npm doesn't allow you to remove packages from the registery, Kap filters out deprecated packages in the plugin list.
+Since npm doesn't allow you to remove packages from the registry, Kap filters out deprecated packages in the plugin list.
 
 When you are ready to retire your Kap plugin, simply run `npm deprecate kap-plugin "Deprecated"`.
 
