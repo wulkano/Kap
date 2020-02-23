@@ -112,6 +112,7 @@ export default class Export extends React.Component {
           .thumbnail {
             width: 48px;
             height: 48px;
+            flex-shrink: 0;
             background: url(${image}) no-repeat center;
             background-size: cover;
             border-radius: 4px;
