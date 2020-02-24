@@ -29,7 +29,7 @@ When Kap is built for production, it prunes dependencies at launch time. In orde
 
 ## Services
 
-Kap currently supports three different types of services and each plugin can have multiple of each, although each plugin should focus on a specific area.
+Kap currently supports three different types of services and a plugin can have multiple of each, although each plugin should focus on a specific area.
 
 ### Share services
 
