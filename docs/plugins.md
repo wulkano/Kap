@@ -59,9 +59,9 @@ Example:
 
 ```js
 const action = async context => {
-	// Do something
+  // Do something
 
-	context.notify('Notify about something');
+  context.notify('Notify about something');
 };
 
 const config = {
@@ -130,17 +130,17 @@ Example:
 
 ```js
 const action = async context => {
-	// Do something
+  // Do something
 
-	context.notify('Notify about something');
+  context.notify('Notify about something');
 };
 
 const config = {
   percent: {
     title: 'Slow Down Percentage',
-	type: 'number',
-	maximum: 1,
-	minimum: 0,
+  type: 'number',
+  maximum: 1,
+  minimum: 0,
     default: 0.5,
     required: true
   }
@@ -162,27 +162,27 @@ The `action` function is where you implement the behavior of your service. The f
 - `.inputPath`: The path to the input trimmed `mp4` file.
 - `.outputPath`: The path where the resulting `mp4` file should be by the end of the action.
 - `.exportOptions`: An object containing info about the recording (note that the input video has already been resized and trimmed):
-	- `.width`: Width of the input file.
-	- `.height`: Height of the input file.
-	- `.format`: The selected format in which the video will be converted to later on.
-	- `.fps`: The selected FPS that will be used for the final conversion.
-	- `.duration`: Duration of the trimmed input file.
-	- `.isMuted`: Whether the video is muted or not.
-	- `.loop`: Whether the resulting GIF or APNG file will be looped or not.
+  - `.width`: Width of the input file.
+  - `.height`: Height of the input file.
+  - `.format`: The selected format in which the video will be converted to later on.
+  - `.fps`: The selected FPS that will be used for the final conversion.
+  - `.duration`: Duration of the trimmed input file.
+  - `.isMuted`: Whether the video is muted or not.
+  - `.loop`: Whether the resulting GIF or APNG file will be looped or not.
 - `.convert(args, text)`: A utility function which accepts an array of `ffmpeg` arguments and handles executing the command, parsing the progress, generating time estimate and showing it to the user. The second argument is optional and defaults to `Converting`. It can be something more descriptive to your service like `Reversing` and will be used for the status reporting.
 
 Example (reversing a video):
 
 ```js
 const reverseAction = async context => {
-	return context.convert([
-		'-i',
-		context.inputPath,
-		'-vf', 'reverse',
-		context.outputPath
-	], 'Reversing');
+  return context.convert([
+    '-i',
+    context.inputPath,
+    '-vf', 'reverse',
+    context.outputPath
+  ], 'Reversing');
 
-	// Will call ffmpeg -i {inputPath} -vf reverse {outputPath}
+  // Will call ffmpeg -i {inputPath} -vf reverse {outputPath}
 };
 ```
 - `.config`: Get and set config for your plugin. It’s an instance of [`electron-store`](https://github.com/sindresorhus/electron-store#instance).
@@ -203,18 +203,18 @@ Example:
 const PCancelable = require('p-cancelable');
 
 const action = PCancelable.fn(async (context, onCancel) => {
-	const process = context.convert([
-		'-i',
-		context.inputPath,
-		'-vf', 'reverse',
-		context.outputPath
-	], 'Reversing');
+  const process = context.convert([
+    '-i',
+    context.inputPath,
+    '-vf', 'reverse',
+    context.outputPath
+  ], 'Reversing');
 
-	onCancel(() => {
-		process.cancel();
-	});
+  onCancel(() => {
+    process.cancel();
+  });
 
-	await process;
+  await process;
 });
 ```
 
@@ -243,13 +243,13 @@ Example:
 
 ```js
 const willStartRecording = async context => {
-	// Do something
-	context.notify('Recording will start now!');
+  // Do something
+  context.notify('Recording will start now!');
 };
 
 const didStopRecording = async context => {
-	// Do something
-	context.notify('Recording stopped!');
+  // Do something
+  context.notify('Recording stopped!');
 };
 
 const config = {
@@ -306,19 +306,19 @@ Example:
 
 ```js
 config: {
-	username: {
-		title: 'Username',
-		type: 'string',
-		minLength: 5,
-		default: '',
-		required: true
-	},
-	hasUnicorn: {
-		title: 'Do you have a unicorn?',
-		type: 'boolean',
-		default: false,
-		required: true
-	}
+  username: {
+    title: 'Username',
+    type: 'string',
+    minLength: 5,
+    default: '',
+    required: true
+  },
+  hasUnicorn: {
+    title: 'Do you have a unicorn?',
+    type: 'boolean',
+    default: false,
+    required: true
+  }
 }
 ```
 
