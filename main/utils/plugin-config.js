@@ -1,5 +1,5 @@
 const Store = require('electron-store');
-const Ajv = require('ajv');
+const Ajv = require('./ajv');
 
 class PluginConfig extends Store {
   constructor(plugin) {
@@ -33,6 +33,7 @@ class PluginConfig extends Store {
       });
 
       const validator = ajv.compile(schema);
+
       validator(defaults);
       validator.title = service.title;
       validator.description = service.configDescription;
