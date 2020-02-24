@@ -127,7 +127,7 @@ class Plugins {
 
       if (plugin.plugin.didInstall && typeof plugin.plugin.didInstall === 'function') {
         try {
-          plugin.plugin.didInstall(plugin.config);
+          await plugin.plugin.didInstall(plugin.config);
         } catch (error) {
           showError(error);
         }
@@ -187,7 +187,7 @@ class Plugins {
     await this._yarnInstall();
   }
 
-  uninstall(name) {
+  async uninstall(name) {
     track(`plugin/uninstalled/${name}`);
     this._modifyMainPackageJson(pkg => {
       delete pkg.dependencies[name];
@@ -196,7 +196,7 @@ class Plugins {
 
     if (plugin.plugin.willUninstall && typeof plugin.plugin.willUninstall === 'function') {
       try {
-        plugin.plugin.willUninstall(plugin.config);
+        await plugin.plugin.willUninstall(plugin.config);
       } catch (error) {
         showError(error);
       }

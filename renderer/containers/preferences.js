@@ -1,6 +1,5 @@
 import electron from 'electron';
 import {Container} from 'unstated';
-import delay from 'delay';
 import {ipcRenderer as ipc} from 'electron-better-ipc';
 
 const SETTINGS_ANALYTICS_BLACKLIST = ['kapturesDir'];
@@ -102,12 +101,11 @@ export default class PreferencesContainer extends Container {
     }
   }
 
-  uninstall = name => {
+  uninstall = async name => {
     const {pluginsInstalled, pluginsFromNpm} = this.state;
-    const plugin = this.plugins.uninstall(name);
 
     const onTransitionEnd = async () => {
-      await delay(500);
+      const plugin = await this.plugins.uninstall(name);
       this.setState({
         pluginsInstalled: pluginsInstalled.filter(p => p.name !== name),
         pluginsFromNpm: [plugin, ...pluginsFromNpm].sort((a, b) => a.prettyName.localeCompare(b.prettyName)),
