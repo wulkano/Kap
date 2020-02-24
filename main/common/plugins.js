@@ -133,15 +133,18 @@ class Plugins {
         }
       }
 
-      const {isValid} = plugin;
+      const {isValid, hasConfig} = plugin;
 
-      const options = isValid ? {
+      const options = (isValid && !hasConfig) ? {
         title: 'Plugin installed',
         body: `"${plugin.prettyName}" is ready for use`
       } : {
-        title: 'Configure plugin',
-        body: `"${plugin.prettyName}" requires configuration`,
-        actions: [{type: 'button', text: 'Configure'}]
+        title: plugin.isValid ? 'Plugin installed' : 'Configure plugin',
+        body: `"${plugin.prettyName}" ${plugin.isValid ? 'can be configured' : 'requires configuration'}`,
+        actions: [
+          {type: 'button', text: 'Configure'},
+          {type: 'button', text: 'Later'}
+        ]
       };
 
       const notification = new Notification(options);
