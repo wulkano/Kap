@@ -12,7 +12,6 @@ const util = require('electron-util');
 const PCancelable = require('p-cancelable');
 const tempy = require('tempy');
 const gifsicle = require('gifsicle');
-const giflossy = require('giflossy');
 const {track} = require('./common/analytics');
 const {EditServiceContext} = require('./service-context');
 const settings = require('./common/settings');
@@ -28,7 +27,7 @@ const getRunFunction = (shouldTrack, mode = 'convert') => (outputPath, opts, arg
   const modes = new Map([
     ['convert', ffmpegPath],
     ['compress', gifsicle],
-    ['compress-lossy', giflossy]
+    ['compress-lossy', gifsicle]
   ]);
   const program = modes.get(mode);
 
