@@ -26,8 +26,7 @@ const makeEven = n => 2 * Math.round(n / 2);
 const getRunFunction = (shouldTrack, mode = 'convert') => (outputPath, opts, args) => {
   const modes = new Map([
     ['convert', ffmpegPath],
-    ['compress', gifsicle],
-    ['compress-lossy', gifsicle]
+    ['compress', gifsicle]
   ]);
   const program = modes.get(mode);
 
@@ -115,14 +114,16 @@ const mute = PCancelable.fn(async (inputPath, onCancel) => {
 
 const convert = getRunFunction(true);
 const compress = (outputPath, opts, args) => {
-  let mode = 'compress';
+  opts.onProgress(0, 0, 'Compressing');
 
   if (settings.get('lossyCompression')) {
-    mode = 'compress-lossy';
-    args.unshift('--lossy=80');
+    args = [
+      '--lossy=100',
+      ...args
+    ];
   }
 
-  return getRunFunction(true, mode)(outputPath, opts, args);
+  return getRunFunction(true, 'compress')(outputPath, opts, args);
 };
 
 const convertToMp4 = PCancelable.fn(async (options, onCancel) => {
@@ -238,8 +239,7 @@ const convertToGif = PCancelable.fn(async (options, onCancel) => {
   ]);
 
   return compress(opts.outputPath, opts, [
-    '-i',
-    '-O3',
+    '-b',
     opts.outputPath
   ]);
 });
