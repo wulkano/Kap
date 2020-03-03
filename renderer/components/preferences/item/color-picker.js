@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-const ColorPicker = ({hasErrors, value, onChange, name}) => {
+const ColorPicker = ({hasErrors, value, onChange}) => {
   const className = classNames('container', {'has-errors': hasErrors});
   const handleChange = event => {
     const value = event.currentTarget.value.toUpperCase();
-    onChange(name, value.startsWith('#') ? value : `#${value}`);
+    onChange(value.startsWith('#') ? value : `#${value}`);
   };
 
   return (
@@ -85,7 +85,6 @@ const ColorPicker = ({hasErrors, value, onChange, name}) => {
 };
 
 ColorPicker.propTypes = {
-  name: PropTypes.string,
   value: PropTypes.string,
   onChange: PropTypes.elementType,
   hasErrors: PropTypes.bool

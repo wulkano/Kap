@@ -15,7 +15,7 @@ const horizontalTypes = [
 
 const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
   if (type === 'hexColor') {
-    return <ColorPicker value={value} name={name} hasErrors={hasErrors} onChange={onChange}/>;
+    return <ColorPicker value={value} name={name} hasErrors={hasErrors} onChange={value => onChange(name, value)}/>;
   }
 
   if (type === 'select') {
