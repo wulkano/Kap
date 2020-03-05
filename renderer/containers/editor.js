@@ -130,14 +130,14 @@ export default class EditorContainer extends Container {
       const option = exportOptions.find(option => option.format === format);
 
       if (!option.plugins.find(p => p.title === plugin)) {
-        const [{title}] = option.plugins;
-        updates.plugin = title;
+        const [{title}, {title: secondTitle}] = option.plugins;
+        updates.plugin = title === 'Open With' ? secondTitle : title;
       }
     } else {
       const [option] = exportOptions;
-      const [{title}] = option.plugins;
+      const [{title}, {title: secondTitle}] = option.plugins;
       updates.format = option.format;
-      updates.plugin = title;
+      updates.plugin = title === 'Open With' ? secondTitle : title;
     }
 
     if (editPlugin) {
