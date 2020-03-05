@@ -274,7 +274,7 @@ exports.recordServices = [doNotDisturb];
 
 #### Hooks
 
-Each hook is called as described above. Each function can be asynchronous and will be called with a context object described below. The only hook that behaves differently is `willEnable`. This hook will be called when a service is about to be enabled (including after installing the plugin if the config is valid). The hook can be an asynchronous function and if it returns or resolves with `false`, the hook will not be enabled. 
+Each hook is called as described above. Each function can be asynchronous and will be called with a context object described below. The only hook that behaves differently is `willEnable`. This hook will be called when a service is about to be enabled (including after installing the plugin if the config is valid). The hook can be an asynchronous function and if it returns or resolves with `false`, the hook will not be enabled.
 
 You can use this to check if you have enough permissions for the service to work, and if not you can request the missing permissions and return `false`. This ensures that your other plugin hooks will not be called until `willEnable` returns `true`.
 
@@ -323,6 +323,25 @@ config: {
 ```
 
 [Read more about JSON Schema](https://spacetelescope.github.io/understanding-json-schema/)
+
+### Custom Types
+
+Kap offers a few custom types which can be displayed in a better way to the user
+
+#### `hexColor`
+
+```js
+const config = {
+  barColor: {
+		title: 'Color',
+		customType: 'hexColor',
+		required: true,
+		default: '#007aff'
+  }
+}
+```
+
+<img src="../media/plugins/hexColor.png">
 
 ## General APIs
 
