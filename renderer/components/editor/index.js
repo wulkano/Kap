@@ -1,9 +1,11 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
+import {connect, EditorContainer} from '../../containers';
 import TrafficLights from '../traffic-lights';
 import VideoPlayer from './video-player';
 
-export default class Editor extends React.Component {
+class Editor extends React.Component {
   state = {
     hover: false
   }
@@ -18,13 +20,14 @@ export default class Editor extends React.Component {
 
   render() {
     const {hover} = this.state;
+    const {title = 'Editor'} = this.props;
 
     return (
       <div className="container" onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
         <div className="title-bar">
           <div className="title-bar-container">
             <TrafficLights/>
-            <div className="title">Editor</div>
+            <div className="title">{title}</div>
           </div>
         </div>
         <VideoPlayer hover={hover}/>
@@ -74,3 +77,12 @@ export default class Editor extends React.Component {
     );
   }
 }
+
+Editor.propTypes = {
+  title: PropTypes.string
+};
+
+export default connect(
+  [EditorContainer],
+  ({title}) => ({title})
+)(Editor);

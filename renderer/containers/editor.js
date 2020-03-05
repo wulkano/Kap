@@ -14,9 +14,7 @@ export default class EditorContainer extends Container {
     this.videoContainer = videoContainer;
   }
 
-  // TODO: Fix the below lint violation.
-  // eslint-disable-next-line default-param-last
-  mount = (filePath, fps = 15, originalFilePath, isNewRecording, resolve) => {
+  mount = ({filePath, fps = 15, originalFilePath, isNewRecording, recordingName, title}, resolve) => {
     const src = `file://${filePath}`;
     this.finishLoading = resolve;
 
@@ -24,6 +22,8 @@ export default class EditorContainer extends Container {
       src,
       filePath,
       originalFilePath,
+      recordingName,
+      title,
       // TODO: Fix this ESLint violation
       // eslint-disable-next-line react/no-access-state-in-setstate
       fps: Math.min(fps, this.state.fps),
@@ -243,7 +243,8 @@ export default class EditorContainer extends Container {
       originalFps,
       isNewRecording,
       editPlugin,
-      original
+      original,
+      recordingName
     } = this.state;
     const {startTime, endTime, isMuted, duration} = this.videoContainer.state;
 
@@ -261,6 +262,7 @@ export default class EditorContainer extends Container {
         isMuted,
         shouldCrop
       },
+      recordingName,
       inputPath: originalFilePath || filePath,
       previewPath: filePath,
       sharePlugin: {

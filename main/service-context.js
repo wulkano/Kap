@@ -141,6 +141,7 @@ class RecordServiceContext extends ServiceContext {
 
     this.apertureOptions = options.apertureOptions;
     this.state = options.state;
+    this.setRecordingName = options.setRecordingName;
   }
 }
 

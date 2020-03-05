@@ -24,16 +24,25 @@ const editorsWithNotSavedDialogs = new Map();
 
 const getEditorName = (filePath, isNewRecording) => isNewRecording ? `New Recording ${moment().format('YYYY-MM-DD')} at ${moment().format('H.mm.ss')}` : path.basename(filePath);
 
-const openEditorWindow = async (filePath, {recordedFps, isNewRecording, originalFilePath} = {}) => {
+const openEditorWindow = async (
+  filePath,
+  {
+    recordedFps,
+    isNewRecording,
+    originalFilePath,
+    recordingName
+  } = {}
+) => {
   if (editors.has(filePath)) {
     editors.get(filePath).show();
     return;
   }
 
   const fps = recordedFps || await getFps(filePath);
+  const title = recordingName || getEditorName(originalFilePath || filePath, isNewRecording);
 
   const editorWindow = new BrowserWindow({
-    title: getEditorName(originalFilePath || filePath, isNewRecording),
+    title,
     minWidth: MIN_VIDEO_WIDTH,
     minHeight: MIN_WINDOW_HEIGHT,
     width: MIN_VIDEO_WIDTH,
@@ -90,7 +99,14 @@ const openEditorWindow = async (filePath, {recordedFps, isNewRecording, original
   });
 
   editorWindow.webContents.on('did-finish-load', async () => {
-    await ipc.callRenderer(editorWindow, 'file', {filePath, fps, originalFilePath, isNewRecording});
+    await ipc.callRenderer(editorWindow, 'file', {
+      filePath,
+      fps,
+      originalFilePath,
+      isNewRecording,
+      recordingName,
+      title
+    });
     ipc.callRenderer(editorWindow, 'export-options', allOptions);
     editorWindow.show();
   });

@@ -30,8 +30,12 @@ let lastUsedSettings;
 let recordingPlugins = [];
 const serviceState = new Map();
 let apertureOptions;
-
+let recordingName;
 let past;
+
+const setRecordingName = name => {
+  recordingName = name;
+};
 
 const callPlugins = async method => Promise.all(recordingPlugins.map(async ({plugin, service}) => {
   if (service[method] && typeof service[method] === 'function') {
@@ -40,7 +44,8 @@ const callPlugins = async method => Promise.all(recordingPlugins.map(async ({plu
         new RecordServiceContext({
           apertureOptions,
           state: serviceState.get(service.title),
-          config: plugin.config
+          config: plugin.config,
+          setRecordingName
         })
       );
     } catch (error) {
@@ -65,6 +70,7 @@ const startRecording = async options => {
   }
 
   past = Date.now();
+  recordingName = undefined;
 
   closePrefsWindow();
   disableTray();
@@ -195,7 +201,7 @@ const stopRecording = async () => {
     // if (recordHevc) {
     //   openEditorWindow(await convertToH264(filePath), {recordedFps, isNewRecording: true, originalFilePath: filePath});
     // } else {
-    openEditorWindow(filePath, {recordedFps, isNewRecording: true});
+    openEditorWindow(filePath, {recordedFps, isNewRecording: true, recordingName});
     // }
   }
 };
