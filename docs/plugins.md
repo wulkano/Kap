@@ -326,22 +326,22 @@ config: {
 
 ### Custom Types
 
-Kap offers a few custom types which can be displayed in a better way to the user
+Kap offers a few custom types which can be displayed in a better way to the user.
 
 #### `hexColor`
 
 ```js
 const config = {
   barColor: {
-		title: 'Color',
-		customType: 'hexColor',
-		required: true,
-		default: '#007aff'
+    title: 'Color',
+    customType: 'hexColor',
+    required: true,
+    default: '#007aff'
   }
-}
+};
 ```
 
-<img src="../media/plugins/hexColor.png">
+<img src="../media/plugins/hexColor.png" width="319">
 
 ## General APIs
 
