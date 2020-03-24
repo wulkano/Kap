@@ -1,8 +1,9 @@
 import electron from 'electron';
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
-import {DropdownArrowIcon} from '../../../vectors';
+import {DropdownArrowIcon, CancelIcon} from '../../../vectors';
 
 class Select extends React.Component {
   select = React.createRef();
@@ -40,15 +41,30 @@ class Select extends React.Component {
     }
   }
 
+  handleDropdownClick = event => {
+    const {clearable, selected, onChange} = this.props;
+
+    if (clearable && selected) {
+      event.stopPropagation();
+      onChange();
+    }
+  }
+
   render() {
-    const {options, selected} = this.props;
+    const {options, selected, clearable} = this.props;
     const selectedOption = options.find(opt => opt.value === selected);
     const label = selectedOption && selectedOption.label;
 
     return (
       <div ref={this.select} className="container" onClick={this.handleClick}>
         <div className="label">{label}</div>
-        <div className="dropdown"><DropdownArrowIcon/></div>
+        <div className={classNames({dropdown: true, clearable: clearable && selected})} onClick={this.handleDropdownClick}>
+          {
+            clearable && selected ?
+              <CancelIcon size="16px"/> :
+              <DropdownArrowIcon/>
+          }
+        </div>
         <style jsx>{`
           .container {
             width: 100%;
@@ -83,6 +99,10 @@ class Select extends React.Component {
             width: 18px;
             pointer-events: none;
           }
+
+          .clearable {
+            pointer-events: auto;
+          }
         `}</style>
       </div>
     );
@@ -90,6 +110,7 @@ class Select extends React.Component {
 }
 
 Select.propTypes = {
+  clearable: PropTypes.bool,
   onChange: PropTypes.elementType,
   options: PropTypes.arrayOf(PropTypes.object),
   selected: PropTypes.any

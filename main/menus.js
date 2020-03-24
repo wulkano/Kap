@@ -95,12 +95,25 @@ const preferencesItem = {
   click: () => openPrefsWindow()
 };
 
-const cogMenuTemplate = [
+let pluginsItems = [];
+
+const getPluginsItem = () => ({
+  id: 'plugins',
+  label: 'Plugins',
+  submenu: pluginsItems,
+  visible: pluginsItems.length > 0
+});
+
+const getCogMenuTemplate = () => [
   aboutItem,
   {
     type: 'separator'
   },
   sendFeedbackItem,
+  {
+    type: 'separator'
+  },
+  getPluginsItem(),
   {
     type: 'separator'
   },
@@ -179,8 +192,19 @@ const applicationMenuTemplate = [
   }
 ];
 
-const cogMenu = Menu.buildFromTemplate(cogMenuTemplate);
+let cogMenu = Menu.buildFromTemplate(getCogMenuTemplate());
 const cogExportsItem = cogMenu.getMenuItemById('exports');
+
+const refreshRecordPluginItems = services => {
+  pluginsItems = services.map(service => ({
+    label: service.title,
+    type: 'checkbox',
+    checked: service.isEnabled,
+    click: service.toggleEnbaled
+  }));
+
+  cogMenu = Menu.buildFromTemplate(getCogMenuTemplate());
+};
 
 const applicationMenu = Menu.buildFromTemplate(applicationMenuTemplate);
 const applicationExportsItem = applicationMenu.getMenuItemById('exports');
@@ -203,8 +227,11 @@ editorEmitter.on('focus', () => {
   applicationSaveOriginalItem.visible = true;
 });
 
+const getCogMenu = () => cogMenu;
+
 module.exports = {
-  cogMenu,
+  getCogMenu,
   toggleExportMenuItem,
-  setApplicationMenu
+  setApplicationMenu,
+  refreshRecordPluginItems
 };

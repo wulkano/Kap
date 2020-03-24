@@ -41,8 +41,23 @@ const prettifyFormat = format => {
   return formats.get(format);
 };
 
+const getEditOptions = () => {
+  const installed = plugins.getEditPlugins();
+
+  return installed.flatMap(
+    plugin => plugin.editServices
+      .filter(service => plugin.config.validServices.includes(service.title))
+      .map(service => ({
+        title: service.title,
+        pluginName: plugin.name,
+        pluginPath: plugin.pluginPath,
+        hasConfig: Object.keys(service.config || {}).length > 0
+      }))
+  );
+};
+
 const getExportOptions = () => {
-  const installed = plugins.getInstalled();
+  const installed = plugins.getSharePlugins();
   const builtIn = plugins.getBuiltIn();
 
   const options = [];
@@ -73,7 +88,7 @@ const getExportOptions = () => {
         }
       }
     } catch (error) {
-      showError(error, {title: `Something went wrong while loading “${json.pluginName}”`});
+      showError(error, {title: `Something went wrong while loading “${json.name}”`});
       const Sentry = require('./utils/sentry');
       Sentry.captureException(error);
     }
@@ -93,11 +108,12 @@ const getExportOptions = () => {
 const updateExportOptions = () => {
   const editors = getEditors();
   const exportOptions = getExportOptions();
+  const editOptions = getEditOptions();
   for (const editor of editors) {
-    ipc.callRenderer(editor, 'export-options', exportOptions);
+    ipc.callRenderer(editor, 'export-options', {exportOptions, editOptions});
   }
 
-  setOptions({options: exportOptions, fps: fpsUsageHistory.get('fps')});
+  setOptions({exportOptions, editOptions, fps: fpsUsageHistory.get('fps')});
 };
 
 plugins.setUpdateExportOptions(updateExportOptions);
@@ -113,8 +129,14 @@ ipc.answerRenderer('update-usage', ({format, plugin, fps}) => {
   updateExportOptions();
 });
 
+ipc.answerRenderer('refresh-usage', updateExportOptions);
+
 const initializeExportOptions = () => {
-  setOptions({options: getExportOptions(), fps: fpsUsageHistory.get('fps')});
+  setOptions({
+    exportOptions: getExportOptions(),
+    editOptions: getEditOptions(),
+    fps: fpsUsageHistory.get('fps')
+  });
 };
 
 module.exports = {

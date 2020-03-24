@@ -14,9 +14,7 @@ export default class EditorContainer extends Container {
     this.videoContainer = videoContainer;
   }
 
-  // TODO: Fix the below lint violation.
-  // eslint-disable-next-line default-param-last
-  mount = (filePath, fps = 15, originalFilePath, isNewRecording, resolve) => {
+  mount = ({filePath, fps = 15, originalFilePath, isNewRecording, recordingName, title}, resolve) => {
     const src = `file://${filePath}`;
     this.finishLoading = resolve;
 
@@ -24,6 +22,8 @@ export default class EditorContainer extends Container {
       src,
       filePath,
       originalFilePath,
+      recordingName,
+      title,
       // TODO: Fix this ESLint violation
       // eslint-disable-next-line react/no-access-state-in-setstate
       fps: Math.min(fps, this.state.fps),
@@ -106,22 +106,42 @@ export default class EditorContainer extends Container {
     this.setState(updates);
   }
 
-  setOptions = ({exportOptions: options, fps}) => {
-    const {format, plugin} = this.state;
-    const updates = {options, fps: Math.min(fps, this.state.fps)};
+  openEditPluginConfig = async () => {
+    const {editPlugin, filePath} = this.state;
+
+    await ipc.callMain('open-edit-config', {
+      pluginName: editPlugin.pluginName,
+      serviceTitle: editPlugin.title,
+      filePath
+    });
+
+    ipc.callMain('refresh-usage');
+  }
+
+  setOptions = ({exportOptions, editOptions, fps}) => {
+    const {format, plugin, editPlugin} = this.state;
+    const updates = {options: exportOptions, editOptions};
+
+    if (fps) {
+      updates.fps = Math.min(fps, this.state.fps);
+    }
 
     if (format) {
-      const option = options.find(option => option.format === format);
+      const option = exportOptions.find(option => option.format === format);
 
       if (!option.plugins.find(p => p.title === plugin)) {
-        const [{title}] = option.plugins;
-        updates.plugin = title;
+        const [{title}, {title: secondTitle}] = option.plugins;
+        updates.plugin = title === 'Open With' ? secondTitle : title;
       }
     } else {
-      const [option] = options;
-      const [{title}] = option.plugins;
+      const [option] = exportOptions;
+      const [{title}, {title: secondTitle}] = option.plugins;
       updates.format = option.format;
-      updates.plugin = title;
+      updates.plugin = title === 'Open With' ? secondTitle : title;
+    }
+
+    if (editPlugin) {
+      updates.editPlugin = editOptions.find(({title, pluginName}) => title === editPlugin.title && pluginName === editPlugin.pluginName);
     }
 
     this.setState(updates);
@@ -155,6 +175,10 @@ export default class EditorContainer extends Container {
     } else {
       this.setState({plugin, openWithApp: null});
     }
+  }
+
+  selectEditPlugin = editPlugin => {
+    this.setState({editPlugin});
   }
 
   selectOpenWithApp = openWithApp => {
@@ -206,8 +230,25 @@ export default class EditorContainer extends Container {
   }
 
   startExport = () => {
-    const {width, height, fps, openWithApp, filePath, originalFilePath, options, format, plugin: serviceTitle, originalFps, isNewRecording} = this.state;
-    const {startTime, endTime, isMuted} = this.videoContainer.state;
+    const {
+      width,
+      height,
+      fps,
+      openWithApp,
+      filePath,
+      originalFilePath,
+      options,
+      format,
+      plugin: serviceTitle,
+      originalFps,
+      isNewRecording,
+      editPlugin,
+      original,
+      recordingName
+    } = this.state;
+    const {startTime, endTime, isMuted, duration} = this.videoContainer.state;
+
+    const shouldCrop = original.width !== width || original.height !== height || startTime !== 0 || endTime !== duration;
 
     const plugin = options.find(option => option.format === format).plugins.find(p => p.title === serviceTitle);
 
@@ -218,12 +259,17 @@ export default class EditorContainer extends Container {
         fps,
         startTime,
         endTime,
-        isMuted
+        isMuted,
+        shouldCrop
       },
+      recordingName,
       inputPath: originalFilePath || filePath,
       previewPath: filePath,
-      plugin,
-      serviceTitle,
+      sharePlugin: {
+        ...plugin,
+        serviceTitle
+      },
+      editPlugin,
       format,
       originalFps,
       isNewRecording,

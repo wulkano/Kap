@@ -40,8 +40,6 @@ PluginTitle.propTypes = {
   onClick: PropTypes.elementType
 };
 
-const getLink = ({homepage, links}) => homepage || (links && links.homepage);
-
 const Plugin = ({plugin, checked, disabled, onTransitionEnd, onClick, loading, openConfig, tabIndex}) => {
   const error = !plugin.isCompatible && (
     <div className="invalid" title={`This plugin is not supported by the current Kap version. Requires ${plugin.kapVersion}`}>
@@ -79,6 +77,12 @@ const Plugin = ({plugin, checked, disabled, onTransitionEnd, onClick, loading, o
     </div>
   );
 
+  const onTitleClick = () => {
+    if (plugin.link) {
+      electron.shell.openExternal(plugin.link);
+    }
+  };
+
   return (
     <Item
       key={plugin.name}
@@ -88,7 +92,7 @@ const Plugin = ({plugin, checked, disabled, onTransitionEnd, onClick, loading, o
         <PluginTitle
           title={plugin.prettyName}
           label={plugin.version}
-          onClick={() => electron.shell.openExternal(getLink(plugin))}/>
+          onClick={onTitleClick}/>
       }
       subtitle={plugin.description}
     >

@@ -17,9 +17,9 @@ export default class EditorPage extends React.Component {
   wasPaused = false;
 
   componentDidMount() {
-    ipc.answerMain('file', async ({filePath, fps, originalFilePath, isNewRecording}) => {
+    ipc.answerMain('file', async ({filePath, fps, originalFilePath, isNewRecording, recordingName, title}) => {
       await new Promise((resolve, reject) => {
-        editorContainer.mount(filePath, parseInt(fps, 10), originalFilePath, isNewRecording, resolve, reject);
+        editorContainer.mount({filePath, fps: parseInt(fps, 10), originalFilePath, isNewRecording, recordingName, title}, resolve, reject);
       });
       return true;
     });

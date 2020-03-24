@@ -4,7 +4,7 @@ const {Tray} = require('electron');
 const path = require('path');
 
 const {openCropperWindow} = require('./cropper');
-const {cogMenu} = require('./menus');
+const {getCogMenu} = require('./menus');
 const {track} = require('./common/analytics');
 const openFiles = require('./utils/open-files');
 
@@ -12,7 +12,7 @@ let tray = null;
 let trayAnimation = null;
 
 const openContextMenu = () => {
-  tray.popUpContextMenu(cogMenu);
+  tray.popUpContextMenu(getCogMenu());
 };
 
 const initializeTray = () => {

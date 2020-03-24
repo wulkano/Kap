@@ -114,6 +114,8 @@ class Item extends React.Component {
             color: var(--${onClick ? 'link-color' : 'subtitle-color'});
             font-weight: ${onClick ? '500' : 'normal'};
             font-size: 1.2rem;
+            line-height: 1.6rem;
+            margin-top: 4px;
             width: 100%;
             padding-right: 16px;
             box-sizing: border-box;

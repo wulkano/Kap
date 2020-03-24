@@ -14,7 +14,8 @@ class Config extends React.Component {
       selectTab,
       closeWindow,
       openConfig,
-      viewOnGithub
+      viewOnGithub,
+      serviceTitle
     } = this.props;
 
     if (!validators) {
@@ -53,6 +54,7 @@ class Config extends React.Component {
                     values={values}
                     openConfig={openConfig}
                     viewOnGithub={viewOnGithub}
+                    serviceTitle={serviceTitle}
                     onChange={onChange}
                   />
                 </div>
@@ -78,7 +80,7 @@ class Config extends React.Component {
             padding: 0 16px;
             display: flex;
             align-items: center;
-            box-shadow: 0 1px 0 0 #ddd, inset 0 1px 0 0 #fff;
+            box-shadow: 0 1px 0 0 var(--row-divider-color), inset 0 1px 0 0 #fff;
             z-index: 10;
             max-width: 100%;
             overflow-x: auto;
@@ -110,6 +112,7 @@ class Config extends React.Component {
             flex: 1;
             display: flex;
             overflow-x: hidden;
+            height: 272px;
           }
 
           .tab {
@@ -167,11 +170,12 @@ Config.propTypes = {
   selectTab: PropTypes.elementType.isRequired,
   closeWindow: PropTypes.elementType.isRequired,
   openConfig: PropTypes.elementType.isRequired,
-  viewOnGithub: PropTypes.elementType.isRequired
+  viewOnGithub: PropTypes.elementType.isRequired,
+  serviceTitle: PropTypes.string
 };
 
 export default connect(
   [ConfigContainer],
-  ({validators, values, selectedTab}) => ({validators, values, selectedTab}),
+  ({validators, values, selectedTab, serviceTitle}) => ({validators, values, selectedTab, serviceTitle}),
   ({onChange, selectTab, closeWindow, openConfig, viewOnGithub}) => ({onChange, selectTab, closeWindow, openConfig, viewOnGithub})
 )(Config);

@@ -80,7 +80,7 @@ EmptyTab.propTypes = {
   image: PropTypes.string
 };
 
-const Tab = ({checked, current, plugins, disabled, onClick, onTransitionEnd, openConfig, tabIndex}) => {
+const Tab = ({current, plugins, disabled, onClick, onTransitionEnd, openConfig, tabIndex}) => {
   return plugins.map(plugin => {
     return (
       <Plugin
@@ -89,9 +89,9 @@ const Tab = ({checked, current, plugins, disabled, onClick, onTransitionEnd, ope
         plugin={plugin}
         disabled={disabled}
         loading={current === plugin.name}
-        checked={current === plugin.name ? !checked : checked}
+        checked={plugin.isInstalled ? (current !== plugin.name) : (current === plugin.name)}
         openConfig={plugin.hasConfig ? (() => openConfig(plugin.name)) : undefined}
-        onClick={() => onClick(plugin.name)}
+        onClick={() => onClick(plugin)}
         onTransitionEnd={onTransitionEnd}
       />
     );

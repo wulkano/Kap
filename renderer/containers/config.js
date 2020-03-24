@@ -7,15 +7,29 @@ export default class ConfigContainer extends Container {
   state = {selectedTab: 0}
 
   setPlugin(pluginName) {
-    const Plugin = this.remote.require('./plugin');
-    this.plugin = new Plugin(pluginName);
+    const {InstalledPlugin} = this.remote.require('./plugin');
+    this.plugin = new InstalledPlugin(pluginName);
     this.config = this.plugin.config;
-    this.validators = this.plugin.validators;
+    this.validators = this.config.validators;
     this.validate();
     this.setState({
       validators: this.validators,
       values: this.config.store,
       pluginName
+    });
+  }
+
+  setEditService = (pluginName, serviceTitle) => {
+    const {InstalledPlugin} = this.remote.require('./plugin');
+    this.plugin = new InstalledPlugin(pluginName);
+    this.config = this.plugin.config;
+    this.validators = this.config.validators.filter(({title}) => title === serviceTitle);
+    this.validate();
+    this.setState({
+      validators: this.validators,
+      values: this.config.store,
+      pluginName,
+      serviceTitle
     });
   }
 

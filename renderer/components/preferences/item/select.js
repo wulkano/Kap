@@ -55,7 +55,7 @@ class Select extends React.Component {
   }
 
   render() {
-    const {options, selected, placeholder, noOptionsMessage, tabIndex} = this.props;
+    const {options, selected, placeholder, noOptionsMessage, tabIndex, full} = this.props;
 
     const selectedLabel = options.length === 0 ? noOptionsMessage : (
       selected === undefined ? placeholder : options.find(option => option.value === selected).label
@@ -78,7 +78,7 @@ class Select extends React.Component {
             background: var(--input-background-color);
             border: 1px solid var(--input-border-color);
             border-radius: 4px;
-            height: 2.4rem;
+            height: ${full ? '32px' : '2.4rem'};
             transition: border 0.12s ease-in-out;
             display: flex;
             align-items: center;
@@ -86,7 +86,8 @@ class Select extends React.Component {
             user-select: none;
             line-height: 2.4rem;
             position: relative;
-            width: 92px;
+            width: ${full ? '100%' : '92px'};
+            margin-top: ${full ? '8px' : '0px'};
             color: var(--title-color);
             outline: none;
             box-shadow: var(--input-shadow);
@@ -133,7 +134,8 @@ Select.propTypes = {
   selected: PropTypes.any,
   placeholder: PropTypes.string,
   noOptionsMessage: PropTypes.string,
-  tabIndex: PropTypes.number.isRequired
+  tabIndex: PropTypes.number.isRequired,
+  full: PropTypes.bool
 };
 
 export default Select;

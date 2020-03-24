@@ -1,8 +1,6 @@
 'use strict';
 
 const {dialog} = require('electron');
-const desktopIcons = require('hide-desktop-icons');
-const dnd = require('@sindresorhus/do-not-disturb');
 const createAperture = require('aperture');
 
 const {openEditorWindow} = require('../editor');
@@ -18,6 +16,9 @@ const {hasMicrophoneAccess} = require('./system-permissions');
 
 const settings = require('./settings');
 const {track} = require('./analytics');
+const plugins = require('./plugins');
+const {showError} = require('../utils/errors');
+const {RecordServiceContext} = require('../service-context');
 
 const aperture = createAperture();
 const {audioDevices, videoCodecs} = createAperture;
@@ -25,27 +26,40 @@ const {audioDevices, videoCodecs} = createAperture;
 // eslint-disable-next-line no-unused-vars
 const recordHevc = videoCodecs.has('hevc');
 
-let wasDoNotDisturbAlreadyEnabled;
 let lastUsedSettings;
-
+let recordingPlugins = [];
+const serviceState = new Map();
+let apertureOptions;
+let recordingName;
 let past;
 
-const cleanup = () => {
-  const {
-    hideDesktopIcons,
-    doNotDisturb
-  } = lastUsedSettings;
+const setRecordingName = name => {
+  recordingName = name;
+};
 
+const callPlugins = async method => Promise.all(recordingPlugins.map(async ({plugin, service}) => {
+  if (service[method] && typeof service[method] === 'function') {
+    try {
+      await service[method](
+        new RecordServiceContext({
+          apertureOptions,
+          state: serviceState.get(service.title),
+          config: plugin.config,
+          setRecordingName
+        })
+      );
+    } catch (error) {
+      showError(error);
+    }
+  }
+}));
+
+const cleanup = async () => {
   closeAllCroppers();
   resetTray();
 
-  if (hideDesktopIcons) {
-    desktopIcons.show();
-  }
-
-  if (doNotDisturb && !wasDoNotDisturbAlreadyEnabled) {
-    dnd.disable();
-  }
+  await callPlugins('didStopRecording');
+  serviceState.clear();
 
   setCropperShortcutAction();
 };
@@ -56,6 +70,7 @@ const startRecording = async options => {
   }
 
   past = Date.now();
+  recordingName = undefined;
 
   closePrefsWindow();
   disableTray();
@@ -70,12 +85,10 @@ const startRecording = async options => {
     showCursor,
     highlightClicks,
     recordAudio,
-    audioInputDeviceId,
-    hideDesktopIcons,
-    doNotDisturb
+    audioInputDeviceId
   } = settings.store;
 
-  const apertureOpts = {
+  apertureOptions = {
     fps: record60fps ? 60 : 30,
     cropArea: cropperBounds,
     showCursor,
@@ -84,50 +97,48 @@ const startRecording = async options => {
   };
 
   lastUsedSettings = {
-    recordedFps: apertureOpts.fps,
-    hideDesktopIcons,
-    doNotDisturb
+    recordedFps: apertureOptions.fps
   };
 
   if (recordAudio === true) {
     // In case for some reason the default audio device is not set
     // use the first available device for recording
     if (audioInputDeviceId) {
-      apertureOpts.audioDeviceId = audioInputDeviceId;
+      apertureOptions.audioDeviceId = audioInputDeviceId;
     } else {
       const [defaultAudioDevice] = await audioDevices();
-      apertureOpts.audioDeviceId = defaultAudioDevice && defaultAudioDevice.id;
+      apertureOptions.audioDeviceId = defaultAudioDevice && defaultAudioDevice.id;
     }
   }
 
   // TODO: figure out how to correctly process hevc videos with ffmpeg
   // if (recordHevc) {
-  //   apertureOpts.videoCodec = 'hevc';
+  //   apertureOptions.videoCodec = 'hevc';
   // }
 
   console.log(`Collected settings after ${(Date.now() - past) / 1000}s`);
 
-  if (hideDesktopIcons) {
-    await desktopIcons.hide();
+  recordingPlugins = plugins
+    .getRecordingPlugins()
+    .flatMap(
+      plugin => plugin.recordServicesWithStatus
+        // Make sure service is valid and enabled
+        .filter(({title, isEnabled}) => isEnabled && plugin.config.validServices.includes(title))
+        .map(service => ({plugin, service}))
+    );
+
+  for (const {service, plugin} of recordingPlugins) {
+    serviceState.set(service.title, {});
+    track(`plugins/used/record/${plugin.name}`);
   }
 
-  console.log(`Hide desktop icons after ${(Date.now() - past) / 1000}s`);
-
-  if (doNotDisturb) {
-    wasDoNotDisturbAlreadyEnabled = await dnd.isEnabled();
-
-    if (!wasDoNotDisturbAlreadyEnabled) {
-      dnd.enable();
-    }
-  }
-
-  console.log(`Took care of DND after ${(Date.now() - past) / 1000}s`);
+  await callPlugins('willStartRecording');
 
   try {
-    await aperture.startRecording(apertureOpts);
+    await aperture.startRecording(apertureOptions);
   } catch (error) {
     track('recording/stopped/error');
-    dialog.showErrorBox('Recording error', error.message);
+    showError(error, {title: 'Recording error', reportToSentry: true});
     past = null;
     return;
   }
@@ -150,11 +161,13 @@ const startRecording = async options => {
     // Make sure it doesn't catch the error of ending the recording
     if (past) {
       track('recording/stopped/error');
-      dialog.showErrorBox('Recording error', error.message);
+      showError(error, {title: 'Recording error', reportToSentry: true});
       past = null;
       cleanup();
     }
   });
+
+  await callPlugins('didStartRecording');
 };
 
 const stopRecording = async () => {
@@ -188,7 +201,7 @@ const stopRecording = async () => {
     // if (recordHevc) {
     //   openEditorWindow(await convertToH264(filePath), {recordedFps, isNewRecording: true, originalFilePath: filePath});
     // } else {
-    openEditorWindow(filePath, {recordedFps, isNewRecording: true});
+    openEditorWindow(filePath, {recordedFps, isNewRecording: true, recordingName});
     // }
   }
 };

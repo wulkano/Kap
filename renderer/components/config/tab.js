@@ -5,55 +5,75 @@ import Linkify from 'react-linkify';
 import Item, {Link} from '../preferences/item';
 import Select from '../preferences/item/select';
 import Switch from '../preferences/item/switch';
+import ColorPicker from '../preferences/item/color-picker';
 import {OpenOnGithubIcon, OpenConfigIcon} from '../../vectors';
 
+const horizontalTypes = [
+  'boolean',
+  'hexColor'
+];
+
 const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
-  if (type === 'string') {
-    const className = hasErrors ? 'has-errors' : '';
-    return (
-      <div>
-        <input className={className} value={value || ''} onChange={e => onChange(name, e.target.value || undefined)}/>
-        <style jsx>{`
-          input {
-            outline: none;
-            width: 100%;
-            border: 1px solid var(--input-border-color);
-            background: var(--input-background-color);
-            color: var(--title-color);
-            border-radius: 3px;
-            box-sizing: border-box;
-            height: 32px;
-            padding: 4px 8px;
-            line-height: 32px;
-            font-size: 12px;
-            margin-top: 8px;
-            outline: none;
-            box-shadow: var(--input-shadow);
-          }
-
-          .has-errors {
-            background: rgba(255,59,48,0.10);
-            border-color: rgba(255,59,48,0.20);
-          }
-
-          input:focus {
-            border-color: var(--kap);
-          }
-
-          div {
-            width: 100%;
-          }
-        `}</style>
-      </div>
-    );
+  if (type === 'hexColor') {
+    return <ColorPicker value={value} name={name} hasErrors={hasErrors} onChange={value => onChange(name, value)}/>;
   }
 
   if (type === 'select') {
     const options = schema.enum.map(value => ({label: value, value}));
-    return <Select tabIndex={0} options={options} selected={value} onSelect={value => onChange(name, value)}/>;
+    return <Select full tabIndex={0} options={options} selected={value} onSelect={value => onChange(name, value)}/>;
   }
 
-  return <Switch tabIndex={0} checked={value} onClick={() => onChange(name, !value)}/>;
+  if (type === 'boolean') {
+    return <Switch tabIndex={0} checked={value} onClick={() => onChange(name, !value)}/>;
+  }
+
+  const className = hasErrors ? 'has-errors' : '';
+  const handleChange = event => {
+    const value = type === 'number' ? Number.parseFloat(event.target.value) : event.currentTarget.value;
+    onChange(name, value);
+  };
+
+  return (
+    <div>
+      <input
+        className={className}
+        value={value || ''}
+        type={type === 'number' ? 'number' : 'text'}
+        onChange={handleChange}
+      />
+      <style jsx>{`
+        input {
+          outline: none;
+          width: 100%;
+          border: 1px solid var(--input-border-color);
+          background: var(--input-background-color);
+          color: var(--title-color);
+          border-radius: 3px;
+          box-sizing: border-box;
+          height: 32px;
+          padding: 4px 8px;
+          line-height: 32px;
+          font-size: 12px;
+          margin-top: 8px;
+          outline: none;
+          box-shadow: var(--input-shadow);
+        }
+
+        .has-errors {
+          background: rgba(255,59,48,0.10);
+          border-color: rgba(255,59,48,0.20);
+        }
+
+        input:focus {
+          border-color: var(--kap);
+        }
+
+        div {
+          width: 100%;
+        }
+      `}</style>
+    </div>
+  );
 };
 
 ConfigInput.propTypes = {
@@ -62,7 +82,8 @@ ConfigInput.propTypes = {
   schema: PropTypes.object,
   value: PropTypes.oneOfType([
     PropTypes.string,
-    PropTypes.bool
+    PropTypes.bool,
+    PropTypes.number
   ]),
   onChange: PropTypes.elementType.isRequired,
   hasErrors: PropTypes.bool
@@ -70,7 +91,7 @@ ConfigInput.propTypes = {
 
 class Tab extends React.Component {
   render() {
-    const {validator, values, onChange, openConfig, viewOnGithub} = this.props;
+    const {validator, values, onChange, openConfig, viewOnGithub, serviceTitle} = this.props;
 
     const {config, errors, description} = validator;
     const allErrors = errors || [];
@@ -87,7 +108,7 @@ class Tab extends React.Component {
         {
           [...Object.keys(config)].map(key => {
             const schema = config[key];
-            const type = schema.enum ? 'select' : schema.type;
+            const type = schema.customType || (schema.enum ? 'select' : schema.type);
             const itemErrors = allErrors
               .filter(({dataPath}) => dataPath.endsWith(key))
               .map(({message}) => `This ${message}`);
@@ -98,7 +119,7 @@ class Tab extends React.Component {
                 small
                 title={schema.title}
                 subtitle={schema.description}
-                vertical={type === 'string'}
+                vertical={!horizontalTypes.includes(type)}
                 errors={itemErrors}
               >
                 <ConfigInput
@@ -113,9 +134,13 @@ class Tab extends React.Component {
             );
           })
         }
-        <Item subtitle="Open config file" onClick={openConfig}>
-          <div className="icon-container"><OpenConfigIcon fill="var(--kap)" hoverFill="var(--kap)" onClick={openConfig}/></div>
-        </Item>
+        {
+          !serviceTitle && (
+            <Item subtitle="Open config file" onClick={openConfig}>
+              <div className="icon-container"><OpenConfigIcon fill="var(--kap)" hoverFill="var(--kap)" onClick={openConfig}/></div>
+            </Item>
+          )
+        }
         <Item last subtitle="View plugin on GitHub" onClick={viewOnGithub}>
           <div className="icon-container"><OpenOnGithubIcon size="20px" fill="var(--kap)" hoverFill="var(--kap)" onClick={viewOnGithub}/></div>
         </Item>
@@ -153,7 +178,8 @@ Tab.propTypes = {
   values: PropTypes.object,
   onChange: PropTypes.elementType.isRequired,
   openConfig: PropTypes.elementType.isRequired,
-  viewOnGithub: PropTypes.elementType.isRequired
+  viewOnGithub: PropTypes.elementType.isRequired,
+  serviceTitle: PropTypes.string
 };
 
 export default Tab;
