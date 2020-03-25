@@ -41,8 +41,10 @@ PluginTitle.propTypes = {
 };
 
 const Plugin = ({plugin, checked, disabled, onTransitionEnd, onClick, loading, openConfig, tabIndex}) => {
+  const requiredVersion = !plugin.isCompatible && `Requires Kap version ${plugin.kapVersion}.`;
+
   const error = !plugin.isCompatible && (
-    <div className="invalid" title={`This plugin is not supported by the current Kap version. Requires ${plugin.kapVersion}`}>
+    <div className="invalid" title={`This plugin is not supported. ${requiredVersion}`}>
       <ErrorIcon fill="#ff6059" hoverFill="#ff6059" onClick={openConfig}/>
       <style jsx>{`
         .invalid {
@@ -94,7 +96,7 @@ const Plugin = ({plugin, checked, disabled, onTransitionEnd, onClick, loading, o
           label={plugin.version}
           onClick={onTitleClick}/>
       }
-      subtitle={plugin.description}
+      subtitle={[plugin.description, requiredVersion].filter(Boolean)}
     >
       {
         openConfig && plugin.isCompatible && (

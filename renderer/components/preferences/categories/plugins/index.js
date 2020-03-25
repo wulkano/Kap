@@ -33,7 +33,13 @@ class Plugins extends React.Component {
     const allPlugins = [
       ...pluginsInstalled,
       ...pluginsFromNpm
-    ].sort((a, b) => a.prettyName.localeCompare(b.prettyName));
+    ].sort((a, b) => {
+      if (a.isCompatible !== b.isCompatible) {
+        return b.isCompatible - a.isCompatible;
+      }
+
+      return a.prettyName.localeCompare(b.prettyName);
+    });
 
     return (
       <Category>
