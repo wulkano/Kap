@@ -76,7 +76,7 @@ export default class VideoContainer extends Container {
       const {isReady} = this.state;
       if (!isReady) {
         this.editorContainer.load();
-        video.play();
+        this.play();
         this.setState({isReady: true});
       }
     });
@@ -99,11 +99,22 @@ export default class VideoContainer extends Container {
   }
 
   play = async () => {
-    await this.video.play();
-    this.setState({isPaused: false});
+    try {
+      this.playPromise = this.video.play();
+      await this.playPromise;
+      this.setState({isPaused: false});
+    } catch {
+      this.setState({isPaused: true});
+    } finally {
+      this.playPromise = undefined;
+    }
   }
 
-  pause = () => {
+  pause = async () => {
+    if (this.playPromise) {
+      await this.playPromise;
+    }
+
     this.video.pause();
     this.setState({isPaused: true});
   }

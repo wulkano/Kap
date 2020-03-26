@@ -28,17 +28,18 @@ class Video extends React.Component {
   }
 
   contextMenu = () => {
+    const {play, pause} = this.props;
     const video = this.videoRef.current;
     const wasPaused = video.paused;
 
     if (!wasPaused) {
-      video.pause();
+      pause();
     }
 
     this.menu.popup({
       callback: () => {
         if (!wasPaused) {
-          video.play();
+          play();
         }
       }
     });
@@ -73,11 +74,13 @@ class Video extends React.Component {
 Video.propTypes = {
   src: PropTypes.string,
   setVideo: PropTypes.elementType,
-  getSnapshot: PropTypes.elementType
+  getSnapshot: PropTypes.elementType,
+  play: PropTypes.elementType,
+  pause: PropTypes.elementType
 };
 
 export default connect(
   [VideoContainer, EditorContainer],
   ({src}) => ({src}),
-  ({setVideo}, {getSnapshot}) => ({setVideo, getSnapshot})
+  ({setVideo, play, pause}, {getSnapshot}) => ({setVideo, getSnapshot, play, pause})
 )(Video);
