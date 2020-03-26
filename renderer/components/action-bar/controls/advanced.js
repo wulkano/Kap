@@ -66,10 +66,10 @@ class Left extends React.Component {
 
   select = React.createRef();
 
-  static getDerivedStateFromProps(nextProps, prevState) {
+  static getDerivedStateFromProps(nextProps, previousState) {
     const {ratio, isResizing, setRatio} = nextProps;
 
-    if (ratio !== prevState.ratio && !isResizing) {
+    if (ratio !== previousState.ratio && !isResizing) {
       return {
         ratio,
         menu: buildAspectRatioMenu({setRatio, ratio})

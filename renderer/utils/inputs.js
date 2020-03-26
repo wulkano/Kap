@@ -14,11 +14,11 @@ const debounceTimeout = 500;
 export const minWidth = 20;
 export const minHeight = 20;
 
-export const shake = (el, {className = 'shake'} = {}) => {
-  el.classList.add(className);
+export const shake = (element, {className = 'shake'} = {}) => {
+  element.classList.add(className);
 
-  el.addEventListener('animationend', () => {
-    el.classList.remove(className);
+  element.addEventListener('animationend', () => {
+    element.classList.remove(className);
   }, {once: true});
 
   return true;
@@ -51,10 +51,10 @@ const handleWidthInput = _.debounce(({
   }
 
   if (value.match(/^\d+$/)) {
-    const val = parseInt(value, 10);
+    const integer = parseInt(value, 10);
 
-    target.width = Math.max(minWidth, Math.min(screenWidth, val));
-    if (target.width !== val) {
+    target.width = Math.max(minWidth, Math.min(screenWidth, integer));
+    if (target.width !== integer) {
       shake(widthInput.current);
     }
 
@@ -98,10 +98,10 @@ const handleHeightInput = _.debounce(({
   }
 
   if (value.match(/^\d+$/)) {
-    const val = parseInt(value, 10);
+    const integer = parseInt(value, 10);
 
-    target.height = Math.max(minHeight, Math.min(screenHeight, val));
-    if (target.height !== val) {
+    target.height = Math.max(minHeight, Math.min(screenHeight, integer));
+    if (target.height !== integer) {
       shake(heightInput.current);
     }
 

@@ -6,8 +6,8 @@ import {connect, ExportsContainer} from '../../containers';
 import Export from './export';
 
 class Exports extends React.Component {
-  componentDidUpdate(prevProps) {
-    if (!prevProps.isMounted && this.props.isMounted) {
+  componentDidUpdate(previousProps) {
+    if (!previousProps.isMounted && this.props.isMounted) {
       electron.ipcRenderer.send('exports-ready');
     }
   }

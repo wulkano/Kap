@@ -140,34 +140,34 @@ export default class PreferencesContainer extends Container {
   toggleSetting = (setting, value) => {
     // TODO: Fix this ESLint violation
     // eslint-disable-next-line react/no-access-state-in-setstate
-    const newVal = value === undefined ? !this.state[setting] : value;
+    const newValue = value === undefined ? !this.state[setting] : value;
     if (!SETTINGS_ANALYTICS_BLACKLIST.includes(setting)) {
-      this.track(`preferences/setting/${setting}/${newVal}`);
+      this.track(`preferences/setting/${setting}/${newValue}`);
     }
 
-    this.setState({[setting]: newVal});
-    this.settings.set(setting, newVal);
+    this.setState({[setting]: newValue});
+    this.settings.set(setting, newValue);
   }
 
   toggleRecordAudio = async () => {
-    const newVal = !this.state.recordAudio;
-    this.track(`preferences/setting/recordAudio/${newVal}`);
+    const newValue = !this.state.recordAudio;
+    this.track(`preferences/setting/recordAudio/${newValue}`);
 
-    if (!newVal || await this.systemPermissions.ensureMicrophonePermissions()) {
-      if (newVal) {
+    if (!newValue || await this.systemPermissions.ensureMicrophonePermissions()) {
+      if (newValue) {
         await this.getAudioDevices();
       }
 
-      this.setState({recordAudio: newVal});
-      this.settings.set('recordAudio', newVal);
+      this.setState({recordAudio: newValue});
+      this.settings.set('recordAudio', newValue);
     }
   }
 
   toggleShortcuts = async () => {
     const setting = 'recordKeyboardShortcut';
-    const newVal = !this.state[setting];
-    this.toggleSetting(setting, newVal);
-    await ipc.callMain('toggle-shortcuts', {enabled: newVal});
+    const newValue = !this.state[setting];
+    this.toggleSetting(setting, newValue);
+    await ipc.callMain('toggle-shortcuts', {enabled: newValue});
   }
 
   updateShortcut = async (setting, shortcut) => {
