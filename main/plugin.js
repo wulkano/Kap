@@ -41,6 +41,7 @@ class InstalledPlugin extends BasePlugin {
     const {homepage, links} = this.json;
     this.link = homepage || (links && links.homepage);
     this.isCompatible = semver.satisfies(app.getVersion(), this.json.kapVersion || '*');
+    this.kapVersion = this.json.kapVersion;
 
     try {
       this.plugin = require(this.pluginPath);
