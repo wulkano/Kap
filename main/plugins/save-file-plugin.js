@@ -4,14 +4,14 @@ const {Notification, shell} = require('electron');
 const moveFile = require('move-file');
 
 const action = async context => {
-  const tempFilePath = await context.filePath();
+  const temporaryFilePath = await context.filePath();
 
   // Execution has been interrupted
   if (context.canceled) {
     return;
   }
 
-  await moveFile(tempFilePath, context.targetFilePath);
+  await moveFile(temporaryFilePath, context.targetFilePath);
 
   const notification = new Notification({
     title: 'File saved successfully!',

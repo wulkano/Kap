@@ -18,8 +18,8 @@ const CATEGORIES = [
 ];
 
 class Categories extends React.Component {
-  componentDidUpdate(prevProps) {
-    if (!prevProps.isMounted && this.props.isMounted) {
+  componentDidUpdate(previousProps) {
+    if (!previousProps.isMounted && this.props.isMounted) {
       // Wait for the transitions to end
       setTimeout(() => ipc.callMain('preferences-ready'), 300);
     }

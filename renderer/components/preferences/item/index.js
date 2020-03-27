@@ -72,7 +72,7 @@ class Item extends React.Component {
           </div>
         </div>
         {errors && errors.length > 0 && (
-          <div className="errors">{errors.map(e => <div key={e}>{e}</div>)}</div>
+          <div className="errors">{errors.map(error => <div key={error}>{error}</div>)}</div>
         )}
         <style jsx>{`
           .container {

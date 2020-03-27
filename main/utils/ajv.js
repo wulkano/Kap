@@ -3,7 +3,7 @@ const Ajv = require('ajv');
 const hexColorValidator = () => {
   return {
     type: 'string',
-    pattern: /^((0x)|#)([0-9A-Fa-f]{8}|[0-9A-Fa-f]{6})$/.source
+    pattern: /^((0x)|#)([\dA-Fa-f]{8}|[\dA-Fa-f]{6})$/.source
   };
 };
 

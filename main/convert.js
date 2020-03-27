@@ -21,14 +21,14 @@ const speedRegex = /speed=\s*(-?\d+(,\d+)*(\.\d+(e\d+)?)?)/gm;
 // https://trac.ffmpeg.org/ticket/309
 const makeEven = n => 2 * Math.round(n / 2);
 
-const getConvertFunction = shouldTrack => (outputPath, opts, args) => {
+const getConvertFunction = shouldTrack => (outputPath, options, args) => {
   if (shouldTrack) {
-    track(`file/export/fps/${opts.fps}`);
+    track(`file/export/fps/${options.fps}`);
   }
 
   return new PCancelable((resolve, reject, onCancel) => {
     const converter = execa(ffmpegPath, args);
-    const durationMs = moment.duration(opts.endTime - opts.startTime, 'seconds').asMilliseconds();
+    const durationMs = moment.duration(options.endTime - options.startTime, 'seconds').asMilliseconds();
     let speed;
 
     onCancel(() => {
@@ -61,9 +61,9 @@ const getConvertFunction = shouldTrack => (outputPath, opts, args) => {
         // Wait 2 second in the conversion for the speed to be stable
         if (processedMs > 2 * 1000) {
           const msRemaining = (durationMs - processedMs) / speed;
-          opts.onProgress(progress, prettyMs(Math.max(msRemaining, 1000), {compact: true}).slice(1));
+          options.onProgress(progress, prettyMs(Math.max(msRemaining, 1000), {compact: true}).slice(1));
         } else {
-          opts.onProgress(progress);
+          options.onProgress(progress);
         }
       }
     });
@@ -110,44 +110,44 @@ const mute = PCancelable.fn(async (inputPath, onCancel) => {
 
 const convert = getConvertFunction(true);
 
-const convertToMp4 = PCancelable.fn(async (opts, onCancel) => {
-  if (opts.isMuted) {
-    const muteProcess = mute(opts.inputPath);
+const convertToMp4 = PCancelable.fn(async (options, onCancel) => {
+  if (options.isMuted) {
+    const muteProcess = mute(options.inputPath);
 
     onCancel(() => {
       muteProcess.cancel();
     });
 
-    opts.inputPath = await muteProcess;
+    options.inputPath = await muteProcess;
   }
 
-  return convert(opts.outputPath, opts, [
-    '-i', opts.inputPath,
-    '-r', opts.fps,
+  return convert(options.outputPath, options, [
+    '-i', options.inputPath,
+    '-r', options.fps,
     ...(
-      opts.shouldCrop ? [
-        '-s', `${makeEven(opts.width)}x${makeEven(opts.height)}`,
-        '-ss', opts.startTime,
-        '-to', opts.endTime
+      options.shouldCrop ? [
+        '-s', `${makeEven(options.width)}x${makeEven(options.height)}`,
+        '-ss', options.startTime,
+        '-to', options.endTime
       ] : []
     ),
-    opts.outputPath
+    options.outputPath
   ]);
 });
 
-const convertToWebm = PCancelable.fn(async (opts, onCancel) => {
-  if (opts.isMuted) {
-    const muteProcess = mute(opts.inputPath);
+const convertToWebm = PCancelable.fn(async (options, onCancel) => {
+  if (options.isMuted) {
+    const muteProcess = mute(options.inputPath);
 
     onCancel(() => {
       muteProcess.cancel();
     });
 
-    opts.inputPath = await muteProcess;
+    options.inputPath = await muteProcess;
   }
 
-  return convert(opts.outputPath, opts, [
-    '-i', opts.inputPath,
+  return convert(options.outputPath, options, [
+    '-i', options.inputPath,
     // http://wiki.webmproject.org/ffmpeg
     // https://trac.ffmpeg.org/wiki/Encode/VP9
     '-threads', Math.max(os.cpus().length - 1, 1),
@@ -156,48 +156,48 @@ const convertToWebm = PCancelable.fn(async (opts, onCancel) => {
     '-codec:v', 'vp9',
     '-codec:a', 'vorbis',
     '-strict', '-2', // Needed because `vorbis` is experimental
-    '-r', opts.fps,
+    '-r', options.fps,
     ...(
-      opts.shouldCrop ? [
-        '-s', `${opts.width}x${opts.height}`,
-        '-ss', opts.startTime,
-        '-to', opts.endTime
+      options.shouldCrop ? [
+        '-s', `${options.width}x${options.height}`,
+        '-ss', options.startTime,
+        '-to', options.endTime
       ] : []
     ),
-    opts.outputPath
+    options.outputPath
   ]);
 });
 
 // Should be similiar to the Gif generation
-const convertToApng = opts => {
-  return convert(opts.outputPath, opts, [
-    '-i', opts.inputPath,
-    '-vf', `fps=${opts.fps}${opts.shouldCrop ? `,scale=${opts.width}:${opts.height}:flags=lanczos` : ''}`,
+const convertToApng = options => {
+  return convert(options.outputPath, options, [
+    '-i', options.inputPath,
+    '-vf', `fps=${options.fps}${options.shouldCrop ? `,scale=${options.width}:${options.height}:flags=lanczos` : ''}`,
     // Strange for APNG instead of -loop it uses -plays see: https://stackoverflow.com/questions/43795518/using-ffmpeg-to-create-looping-apng
-    '-plays', opts.loop === true ? '0' : '1', // 0 == forever; 1 == no loop
+    '-plays', options.loop === true ? '0' : '1', // 0 == forever; 1 == no loop
     ...(
-      opts.shouldCrop ? [
-        '-ss', opts.startTime,
-        '-to', opts.endTime
+      options.shouldCrop ? [
+        '-ss', options.startTime,
+        '-to', options.endTime
       ] : []
     ),
-    opts.outputPath
+    options.outputPath
   ]);
 };
 
 // `time ffmpeg -i original.mp4 -vf fps=30,scale=480:-1::flags=lanczos,palettegen palette.png`
 // `time ffmpeg -i original.mp4 -i palette.png -filter_complex 'fps=30,scale=-1:-1:flags=lanczos[x]; [x][1:v]paletteuse' palette.gif`
-const convertToGif = PCancelable.fn(async (opts, onCancel) => {
+const convertToGif = PCancelable.fn(async (options, onCancel) => {
   const palettePath = tmp.tmpNameSync({postfix: '.png'});
   const paletteProcessor = execa(ffmpegPath, [
     ...(
-      opts.shouldCrop ? [
-        '-ss', opts.startTime,
-        '-to', opts.endTime
+      options.shouldCrop ? [
+        '-ss', options.startTime,
+        '-to', options.endTime
       ] : []
     ),
-    '-i', opts.inputPath,
-    '-vf', `fps=${opts.fps}${opts.shouldCrop ? `,scale=${opts.width}:${opts.height}:flags=lanczos` : ''},palettegen`,
+    '-i', options.inputPath,
+    '-vf', `fps=${options.fps}${options.shouldCrop ? `,scale=${options.width}:${options.height}:flags=lanczos` : ''},palettegen`,
     palettePath
   ]);
 
@@ -207,18 +207,18 @@ const convertToGif = PCancelable.fn(async (opts, onCancel) => {
 
   await paletteProcessor;
 
-  return convert(opts.outputPath, opts, [
-    '-i', opts.inputPath,
+  return convert(options.outputPath, options, [
+    '-i', options.inputPath,
     '-i', palettePath,
-    '-filter_complex', `fps=${opts.fps}${opts.shouldCrop ? `,scale=${opts.width}:${opts.height}:flags=lanczos` : ''}[x]; [x][1:v]paletteuse`,
-    '-loop', opts.loop === true ? '0' : '-1', // 0 == forever; -1 == no loop
+    '-filter_complex', `fps=${options.fps}${options.shouldCrop ? `,scale=${options.width}:${options.height}:flags=lanczos` : ''}[x]; [x][1:v]paletteuse`,
+    '-loop', options.loop === true ? '0' : '-1', // 0 == forever; -1 == no loop
     ...(
-      opts.shouldCrop ? [
-        '-ss', opts.startTime,
-        '-to', opts.endTime
+      options.shouldCrop ? [
+        '-ss', options.startTime,
+        '-to', options.endTime
       ] : []
     ),
-    opts.outputPath
+    options.outputPath
   ]);
 });
 
@@ -229,22 +229,22 @@ const converters = new Map([
   ['apng', convertToApng]
 ]);
 
-const convertTo = (opts, format) => {
-  const outputPath = path.join(tempy.directory(), opts.defaultFileName);
+const convertTo = (options, format) => {
+  const outputPath = path.join(tempy.directory(), options.defaultFileName);
   const converter = converters.get(format);
 
   if (!converter) {
     throw new Error(`Unsupported file format: ${format}`);
   }
 
-  opts.onProgress(0);
+  options.onProgress(0);
   track(`file/export/format/${format}`);
 
-  if (opts.editService) {
-    return convertUsingPlugin({outputPath, format, converter, ...opts});
+  if (options.editService) {
+    return convertUsingPlugin({outputPath, format, converter, ...options});
   }
 
-  return converter({outputPath, ...opts});
+  return converter({outputPath, ...options});
 };
 
 const convertUsingPlugin = PCancelable.fn(async ({editService, converter, ...options}, onCancel) => {

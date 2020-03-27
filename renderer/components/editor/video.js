@@ -19,10 +19,10 @@ class Video extends React.Component {
     this.menu.append(new MenuItem({label: 'Snapshot', click: getSnapshot}));
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(previousProps) {
     const {setVideo, src} = this.props;
 
-    if (!prevProps.src && src) {
+    if (!previousProps.src && src) {
       setVideo(this.videoRef.current);
     }
   }

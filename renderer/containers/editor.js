@@ -62,21 +62,21 @@ export default class EditorContainer extends Container {
     } catch {}
 
     if (parsedValue) {
-      const val = Math.round(parsedValue);
+      const roundedValue = Math.round(parsedValue);
 
       if (name === 'width') {
         const min = Math.max(1, Math.ceil(ratio));
 
         if (ignoreEmpty) {
-          updates.width = val;
-        } else if (val < min) {
+          updates.width = roundedValue;
+        } else if (roundedValue < min) {
           shake(currentTarget, {className: 'shake-left'});
           updates.width = min;
-        } else if (val > original.width) {
+        } else if (roundedValue > original.width) {
           shake(currentTarget, {className: 'shake-left'});
           updates.width = original.width;
         } else {
-          updates.width = val;
+          updates.width = roundedValue;
         }
 
         updates.height = Math.floor(updates.width / ratio);
@@ -84,15 +84,15 @@ export default class EditorContainer extends Container {
         const min = Math.max(1, Math.ceil(1 / ratio));
 
         if (ignoreEmpty) {
-          updates.height = val;
-        } else if (val < min) {
+          updates.height = roundedValue;
+        } else if (roundedValue < min) {
           shake(currentTarget, {className: 'shake-right'});
           updates.height = min;
-        } else if (val > original.height) {
+        } else if (roundedValue > original.height) {
           shake(currentTarget, {className: 'shake-right'});
           updates.height = original.height;
         } else {
-          updates.height = val;
+          updates.height = roundedValue;
         }
 
         updates.width = Math.ceil(updates.height * ratio);

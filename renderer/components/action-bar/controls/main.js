@@ -35,10 +35,10 @@ const buildMenu = async ({selectedApp}) => {
 class Left extends React.Component {
   state = {};
 
-  static getDerivedStateFromProps(nextProps, prevState) {
+  static getDerivedStateFromProps(nextProps, previousState) {
     const {selectedApp} = nextProps;
 
-    if (selectedApp !== prevState.selectedApp) {
+    if (selectedApp !== previousState.selectedApp) {
       buildMenu({selectedApp});
       return {selectedApp};
     }

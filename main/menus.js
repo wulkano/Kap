@@ -136,7 +136,7 @@ const appMenuItem = appMenu([preferencesItem]);
 
 appMenuItem.submenu[0] = aboutItem;
 
-const applicationMenuTemplate = [
+const appMenuTemplate = [
   appMenuItem,
   {
     role: 'fileMenu',
@@ -206,25 +206,25 @@ const refreshRecordPluginItems = services => {
   cogMenu = Menu.buildFromTemplate(getCogMenuTemplate());
 };
 
-const applicationMenu = Menu.buildFromTemplate(applicationMenuTemplate);
-const applicationExportsItem = applicationMenu.getMenuItemById('exports');
-const applicationSaveOriginalItem = applicationMenu.getMenuItemById('saveOriginal');
+const appMenu_ = Menu.buildFromTemplate(appMenuTemplate);
+const appExportsItem = appMenu_.getMenuItemById('exports');
+const appSaveOriginalItem = appMenu_.getMenuItemById('saveOriginal');
 
 const toggleExportMenuItem = enabled => {
   cogExportsItem.enabled = enabled;
-  applicationExportsItem.enabled = enabled;
+  appExportsItem.enabled = enabled;
 };
 
-const setApplicationMenu = () => {
-  Menu.setApplicationMenu(applicationMenu);
+const setAppMenu = () => {
+  Menu.setApplicationMenu(appMenu_);
 };
 
 editorEmitter.on('blur', () => {
-  applicationSaveOriginalItem.visible = false;
+  appSaveOriginalItem.visible = false;
 });
 
 editorEmitter.on('focus', () => {
-  applicationSaveOriginalItem.visible = true;
+  appSaveOriginalItem.visible = true;
 });
 
 const getCogMenu = () => cogMenu;
@@ -232,6 +232,6 @@ const getCogMenu = () => cogMenu;
 module.exports = {
   getCogMenu,
   toggleExportMenuItem,
-  setApplicationMenu,
+  setApplicationMenu: setAppMenu,
   refreshRecordPluginItems
 };

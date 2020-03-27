@@ -13,8 +13,8 @@ class Preview extends React.Component {
     return nextProps.time !== this.props.time || nextProps.hidePreview !== this.props.hidePreview;
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.time !== this.props.time) {
+  componentDidUpdate(previousProps) {
+    if (previousProps.time !== this.props.time) {
       this.videoRef.current.currentTime = this.props.time;
     }
   }
