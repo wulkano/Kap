@@ -23,7 +23,7 @@ const speedRegex = /speed=\s*(-?\d+(,\d+)*(\.\d+(e\d+)?)?)/gm;
 // https://trac.ffmpeg.org/ticket/309
 const makeEven = n => 2 * Math.round(n / 2);
 
-const getRunFunction = (shouldTrack, mode = 'convert') => (outputPath, opts, args) => {
+const getRunFunction = (shouldTrack, mode = 'convert') => (outputPath, options, args) => {
   const modes = new Map([
     ['convert', ffmpegPath],
     ['compress', gifsicle]
@@ -32,7 +32,7 @@ const getRunFunction = (shouldTrack, mode = 'convert') => (outputPath, opts, arg
 
   return new PCancelable((resolve, reject, onCancel) => {
     const runner = execa(program, args);
-    const durationMs = moment.duration(opts.endTime - opts.startTime, 'seconds').asMilliseconds();
+    const durationMs = moment.duration(options.endTime - options.startTime, 'seconds').asMilliseconds();
     let speed;
 
     onCancel(() => {
@@ -40,7 +40,7 @@ const getRunFunction = (shouldTrack, mode = 'convert') => (outputPath, opts, arg
         track('file/export/convert/canceled');
       }
 
-      converter.kill();
+      runner.kill();
     });
 
     let stderr = '';
@@ -113,8 +113,8 @@ const mute = PCancelable.fn(async (inputPath, onCancel) => {
 });
 
 const convert = getRunFunction(true);
-const compress = (outputPath, opts, args) => {
-  opts.onProgress(0, 0, 'Compressing');
+const compress = (outputPath, options, args) => {
+  options.onProgress(0, 0, 'Compressing');
 
   if (settings.get('lossyCompression')) {
     args = [
@@ -123,7 +123,7 @@ const compress = (outputPath, opts, args) => {
     ];
   }
 
-  return getRunFunction(true, 'compress')(outputPath, opts, args);
+  return getRunFunction(true, 'compress')(outputPath, options, args);
 };
 
 const convertToMp4 = PCancelable.fn(async (options, onCancel) => {
@@ -224,8 +224,8 @@ const convertToGif = PCancelable.fn(async (options, onCancel) => {
 
   await paletteProcessor;
 
-  await convert(opts.outputPath, opts, [
-    '-i', opts.inputPath,
+  await convert(options.outputPath, options, [
+    '-i', options.inputPath,
     '-i', palettePath,
     '-filter_complex', `fps=${options.fps}${options.shouldCrop ? `,scale=${options.width}:${options.height}:flags=lanczos` : ''}[x]; [x][1:v]paletteuse`,
     '-loop', options.loop === true ? '0' : '-1', // 0 == forever; -1 == no loop
@@ -238,9 +238,9 @@ const convertToGif = PCancelable.fn(async (options, onCancel) => {
     options.outputPath
   ]);
 
-  return compress(opts.outputPath, opts, [
+  return compress(options.outputPath, options, [
     '-b',
-    opts.outputPath
+    options.outputPath
   ]);
 });
 
@@ -295,7 +295,7 @@ const convertUsingPlugin = PCancelable.fn(async ({editService, converter, ...opt
   }
 
   let canceled = false;
-  const convertFunction = getConvertFunction(false);
+  const convertFunction = getRunFunction(false);
 
   const editPath = tmp.tmpNameSync({postfix: path.extname(croppedPath)});
 
