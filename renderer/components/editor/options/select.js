@@ -51,7 +51,7 @@ class Select extends React.Component {
   }
 
   render() {
-    const {options, selected, clearable} = this.props;
+    const {options = [], selected, clearable} = this.props;
     const selectedOption = options.find(opt => opt.value === selected);
     const label = selectedOption && selectedOption.label;
 

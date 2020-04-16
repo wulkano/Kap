@@ -118,7 +118,7 @@ export default class EditorContainer extends Container {
     ipc.callMain('refresh-usage');
   }
 
-  setOptions = ({exportOptions, editOptions, fps}) => {
+  setOptions = ({exportOptions = [], editOptions = [], fps}) => {
     console.log('Got options from main', exportOptions, editOptions, fps);
     const {format, plugin, editPlugin} = this.state;
     const updates = {options: exportOptions, editOptions};
