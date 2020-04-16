@@ -59,7 +59,7 @@ const openEditorWindow = async (
 
   editors.set(filePath, editorWindow);
 
-  loadRoute(editorWindow, 'editor');
+  loadRoute(editorWindow, 'editor', {openDevTools: true});
 
   if (isNewRecording) {
     editorWindow.setDocumentEdited(true);
@@ -99,6 +99,7 @@ const openEditorWindow = async (
   });
 
   editorWindow.webContents.on('did-finish-load', async () => {
+    ipc.callRenderer(editorWindow, 'export-options', allOptions);
     await ipc.callRenderer(editorWindow, 'file', {
       filePath,
       fps,
@@ -107,7 +108,6 @@ const openEditorWindow = async (
       recordingName,
       title
     });
-    ipc.callRenderer(editorWindow, 'export-options', allOptions);
     editorWindow.show();
   });
 };

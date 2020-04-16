@@ -119,6 +119,7 @@ export default class EditorContainer extends Container {
   }
 
   setOptions = ({exportOptions, editOptions, fps}) => {
+    console.log('Got options from main', exportOptions, editOptions, fps);
     const {format, plugin, editPlugin} = this.state;
     const updates = {options: exportOptions, editOptions};
 
