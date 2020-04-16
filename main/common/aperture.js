@@ -209,9 +209,14 @@ const stopRecording = async () => {
 module.exports = {
   startRecording,
   stopRecording,
-  getAudioDevices: () => {
+  getAudioDevices: async () => {
     if (hasMicrophoneAccess()) {
-      return audioDevices();
+      try {
+        return await audioDevices();
+      } catch (error) {
+        showError(error, {reportToSentry: true});
+        return [];
+      }
     }
 
     return [];

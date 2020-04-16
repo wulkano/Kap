@@ -155,7 +155,11 @@ export default class PreferencesContainer extends Container {
 
     if (!newValue || await this.systemPermissions.ensureMicrophonePermissions()) {
       if (newValue) {
-        await this.getAudioDevices();
+        try {
+          await this.getAudioDevices();
+        } catch (error) {
+          console.log(error);
+        }
       }
 
       this.setState({recordAudio: newValue});

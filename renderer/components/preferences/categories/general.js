@@ -39,8 +39,6 @@ class General extends React.Component {
       allowAnalytics,
       showCursor,
       highlightClicks,
-      hideDesktopIcons,
-      doNotDisturb,
       record60fps,
       recordKeyboardShortcut,
       loopExports,
@@ -123,20 +121,6 @@ class General extends React.Component {
             </Item>
         }
         <Item
-          key="hideDesktopIcons"
-          title="Hide desktop icons"
-          subtitle="Temporarily hide desktop icons while recording"
-        >
-          <Switch tabIndex={tabIndex} checked={hideDesktopIcons} onClick={() => toggleSetting('hideDesktopIcons')}/>
-        </Item>
-        <Item
-          key="doNotDisturb"
-          title="Silence notifications"
-          subtitle="Activate “Do Not Disturb” while recording"
-        >
-          <Switch tabIndex={tabIndex} checked={doNotDisturb} onClick={() => toggleSetting('doNotDisturb')}/>
-        </Item>
-        <Item
           key="loopExports"
           title="Loop exports"
           subtitle="Infinitely loop exports when supported"
@@ -208,8 +192,6 @@ class General extends React.Component {
 General.propTypes = {
   showCursor: PropTypes.bool,
   highlightClicks: PropTypes.bool,
-  hideDesktopIcons: PropTypes.bool,
-  doNotDisturb: PropTypes.bool,
   record60fps: PropTypes.bool,
   recordKeyboardShortcut: PropTypes.bool,
   toggleSetting: PropTypes.elementType.isRequired,
@@ -241,8 +223,6 @@ export default connect(
   ({
     showCursor,
     highlightClicks,
-    hideDesktopIcons,
-    doNotDisturb,
     record60fps,
     recordAudio,
     recordKeyboardShortcut,
@@ -257,8 +237,6 @@ export default connect(
   }) => ({
     showCursor,
     highlightClicks,
-    hideDesktopIcons,
-    doNotDisturb,
     record60fps,
     recordAudio,
     recordKeyboardShortcut,

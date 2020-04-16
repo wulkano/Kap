@@ -24,10 +24,6 @@ const store = new Store({
       type: 'boolean',
       default: false
     },
-    hideDesktopIcons: {
-      type: 'boolean',
-      default: false
-    },
     record60fps: {
       type: 'boolean',
       default: false
@@ -39,10 +35,6 @@ const store = new Store({
     recordKeyboardShortcut: {
       type: 'boolean',
       default: true
-    },
-    doNotDisturb: {
-      type: 'boolean',
-      default: false
     },
     recordAudio: {
       type: 'boolean',
