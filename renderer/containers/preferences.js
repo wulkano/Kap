@@ -19,6 +19,7 @@ export default class PreferencesContainer extends Container {
     this.systemPermissions = this.remote.require('./common/system-permissions');
     this.plugins = this.remote.require('./common/plugins');
     this.track = this.remote.require('./common/analytics').track;
+    this.showError = this.remote.require('./utils/errors').showError;
 
     const pluginsInstalled = this.plugins.getInstalled().sort((a, b) => a.prettyName.localeCompare(b.prettyName));
 
@@ -158,6 +159,7 @@ export default class PreferencesContainer extends Container {
         try {
           await this.getAudioDevices();
         } catch (error) {
+          this.showError(error, {reportToSentry: true});
           console.log(error);
         }
       }
