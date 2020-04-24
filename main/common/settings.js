@@ -3,7 +3,7 @@
 const {homedir} = require('os');
 const Store = require('electron-store');
 
-const {audioDevices} = require('aperture');
+const {getInputDevices} = require('macos-audio-devices');
 const {hasMicrophoneAccess} = require('./system-permissions');
 
 const store = new Store({
@@ -84,7 +84,7 @@ const audioInputDeviceId = store.get('audioInputDeviceId');
 
 if (hasMicrophoneAccess()) {
   (async () => {
-    const devices = await audioDevices();
+    const devices = await getInputDevices();
 
     if (!Array.isArray(devices)) {
       const Sentry = require('../utils/sentry');
@@ -92,10 +92,10 @@ if (hasMicrophoneAccess()) {
       return;
     }
 
-    if (!devices.some(device => device.id === audioInputDeviceId)) {
+    if (!devices.some(device => device.uid === audioInputDeviceId)) {
       const [device] = devices;
       if (device) {
-        store.set('audioInputDeviceId', device.id);
+        store.set('audioInputDeviceId', device.uid);
       }
     }
   })();
