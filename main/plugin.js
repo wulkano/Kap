@@ -45,15 +45,14 @@ class InstalledPlugin extends BasePlugin {
 
     try {
       this.plugin = require(this.pluginPath);
+      this.config = new PluginConfig(this);
+
+      if (this.plugin.didConfigChange && typeof this.plugin.didConfigChange === 'function') {
+        this.config.onDidAnyChange((newValue, oldValue) => this.plugin.didConfigChange(newValue, oldValue, this.config));
+      }
     } catch (error) {
       showError(error, {title: `Something went wrong while loading “${pluginName}”`});
       this.plugin = {};
-    }
-
-    this.config = new PluginConfig(this);
-
-    if (this.plugin.didConfigChange && typeof this.plugin.didConfigChange === 'function') {
-      this.config.onDidAnyChange((newValue, oldValue) => this.plugin.didConfigChange(newValue, oldValue, this.config));
     }
   }
 
