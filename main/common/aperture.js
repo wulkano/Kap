@@ -213,8 +213,11 @@ module.exports = {
   getAudioDevices: async () => {
     if (hasMicrophoneAccess()) {
       try {
-        const devices = await getInputDevices();
-        return devices.map(({uid, name}) => ({id: uid, name}));
+        let devices = await audioDevices();
+        if (!Array.isArray(devices)) {
+          devices = await getInputDevices();
+          return devices.map(({uid, name}) => ({id: uid, name}));
+        }
       } catch (error) {
         showError(error, {reportToSentry: true});
         return [];
