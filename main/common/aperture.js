@@ -8,6 +8,7 @@ const {closePrefsWindow} = require('../preferences');
 const {setRecordingTray, disableTray, resetTray} = require('../tray');
 const {disableCroppers, setRecordingCroppers, closeAllCroppers} = require('../cropper');
 const {setCropperShortcutAction} = require('../global-accelerators');
+const {getInputDevices} = require('macos-audio-devices');
 
 // eslint-disable-next-line no-unused-vars
 const {convertToH264} = require('../utils/encoding');
@@ -209,9 +210,18 @@ const stopRecording = async () => {
 module.exports = {
   startRecording,
   stopRecording,
-  getAudioDevices: () => {
+  getAudioDevices: async () => {
     if (hasMicrophoneAccess()) {
-      return audioDevices();
+      try {
+        let devices = await audioDevices();
+        if (!Array.isArray(devices)) {
+          devices = await getInputDevices();
+          return devices.map(({uid, name}) => ({id: uid, name}));
+        }
+      } catch (error) {
+        showError(error, {reportToSentry: true});
+        return [];
+      }
     }
 
     return [];
