@@ -127,6 +127,8 @@ export default class EditorContainer extends Container {
       updates.fps = Math.min(fps, this.state.fps);
     }
 
+    console.log('Updates', updates);
+
     if (format) {
       const option = exportOptions.find(option => option.format === format);
 
@@ -141,10 +143,13 @@ export default class EditorContainer extends Container {
       updates.plugin = title === 'Open With' ? secondTitle : title;
     }
 
+    console.log('Updates', updates);
+
     if (editPlugin) {
       updates.editPlugin = editOptions.find(({title, pluginName}) => title === editPlugin.title && pluginName === editPlugin.pluginName);
     }
 
+    console.log('Made it to updates', updates);
     this.setState(updates);
   }
 
