@@ -3550,7 +3550,7 @@ electron-util@^0.12.1:
     electron-is-dev "^1.1.0"
     new-github-issue-url "^0.2.1"
 
-electron-util@^0.13.0:
+electron-util@^0.13.0, electron-util@^0.13.1:
   version "0.13.1"
   resolved "https://registry.yarnpkg.com/electron-util/-/electron-util-0.13.1.tgz#ba3b9cb7e5fdb6a51970a01e9070877cf7855ef8"
   integrity sha512-CvOuAyQPaPtnDp7SspwnT1yTb1yynw6yp4LrZCfEJ7TG/kJFiZW9RqMHlCEFWMn3QNoMkNhGVeCvWJV5NsYyuQ==
@@ -4143,7 +4143,7 @@ evp_bytestokey@^1.0.0, evp_bytestokey@^1.0.3:
     md5.js "^1.3.4"
     safe-buffer "^5.1.1"
 
-execa@4.0.0:
+execa@4.0.0, execa@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/execa/-/execa-4.0.0.tgz#7f37d6ec17f09e6b8fc53288611695b6d12b9daf"
   integrity sha512-JbDUxwV3BoT5ZVXQrSVbAiaXhXUkIwvbhPIwZ0N13kX+5yCzOhUNdocxB/UQRuYOHRYYwAxKYwJYc0T4D12pDA==
@@ -6076,6 +6076,15 @@ mac-windows@^0.7.1:
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/mac-windows/-/mac-windows-0.7.1.tgz#3309ef0c7c508725cc3e17a3ea1687de0680c78b"
   integrity sha512-tkjT1zWS46MM7xD131Rg3RDGTamP24/QIhYh7Zd4W1dZz3/72EOebm4fm1gBUJsrGvPluQqXjoEjoBClZ5TQJg==
+
+macos-audio-devices@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/macos-audio-devices/-/macos-audio-devices-1.3.1.tgz#35775b7daa3e33e6388bdacb240ab5a0f81f1264"
+  integrity sha512-I7r4nw1SpgkQRkXYhD3hKP5+AuiSlOUP/ueMaBdxurxSmyjPgq+NwK/cAcYsPb46R81QIsuPiZVSujcyPz8ryQ==
+  dependencies:
+    electron-util "^0.13.1"
+    execa "^4.0.0"
+    macos-version "^5.2.0"
 
 macos-release@^2.2.0:
   version "2.3.0"

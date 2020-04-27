@@ -12,6 +12,7 @@ const {BrowserWindow, systemPreferences, dialog} = electron;
 
 const croppers = new Map();
 let notificationId = null;
+let isOpen = false;
 
 const closeAllCroppers = () => {
   const {screen} = electron;
@@ -23,6 +24,8 @@ const closeAllCroppers = () => {
     cropper.destroy();
     croppers.delete(id);
   }
+
+  isOpen = false;
 
   if (notificationId !== null) {
     systemPreferences.unsubscribeWorkspaceNotification(notificationId);
@@ -122,6 +125,8 @@ const openCropperWindow = async () => {
     }
   }
 
+  isOpen = true;
+
   const {screen} = electron;
   const displays = screen.getAllDisplays();
   const activeDisplayId = screen.getDisplayNearestPoint(screen.getCursorScreenPoint()).id;
@@ -216,7 +221,7 @@ const setRecordingCroppers = () => {
   }
 };
 
-const isCropperOpen = () => croppers.size > 0;
+const isCropperOpen = () => isOpen;
 
 module.exports = {
   openCropperWindow,
