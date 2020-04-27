@@ -255,13 +255,12 @@ class Plugins {
       pluginPath: './plugins/save-file-plugin',
       isCompatible: true,
       name: '_saveToDisk'
-    }
+    }];
     // , {
     //   pluginPath: './plugins/open-with-plugin',
     //   isCompatible: true,
     //   name: '_openWith'
     // }
-    ];
   }
 
   async getFromNpm() {
