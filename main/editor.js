@@ -59,7 +59,7 @@ const openEditorWindow = async (
 
   editors.set(filePath, editorWindow);
 
-  loadRoute(editorWindow, 'editor', {openDevTools: true});
+  loadRoute(editorWindow, 'editor');
 
   if (isNewRecording) {
     editorWindow.setDocumentEdited(true);

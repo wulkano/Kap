@@ -119,7 +119,6 @@ export default class EditorContainer extends Container {
   }
 
   setOptions = ({exportOptions = [], editOptions = [], fps}) => {
-    console.log('Got options from main', exportOptions, editOptions, fps);
     const {format, plugin, editPlugin} = this.state;
     const updates = {options: exportOptions, editOptions};
 
@@ -127,29 +126,24 @@ export default class EditorContainer extends Container {
       updates.fps = Math.min(fps, this.state.fps);
     }
 
-    console.log('Updates', updates);
-
     if (format) {
       const option = exportOptions.find(option => option.format === format);
 
       if (!option.plugins.find(p => p.title === plugin)) {
-        const [{title}, {title: secondTitle}] = option.plugins;
+        const [{title}, {title: secondTitle} = {}] = option.plugins;
         updates.plugin = title === 'Open With' ? secondTitle : title;
       }
     } else {
       const [option] = exportOptions;
-      const [{title}, {title: secondTitle}] = option.plugins;
+      const [{title}, {title: secondTitle} = {}] = option.plugins;
       updates.format = option.format;
       updates.plugin = title === 'Open With' ? secondTitle : title;
     }
-
-    console.log('Updates', updates);
 
     if (editPlugin) {
       updates.editPlugin = editOptions.find(({title, pluginName}) => title === editPlugin.title && pluginName === editPlugin.pluginName);
     }
 
-    console.log('Made it to updates', updates);
     this.setState(updates);
   }
 
