@@ -135,8 +135,6 @@ const startRecording = async options => {
 
   await callPlugins('willStartRecording');
 
-  console.log('Here');
-
   try {
     await aperture.startRecording(apertureOptions);
   } catch (error) {
