@@ -51,7 +51,7 @@ const handleWidthInput = _.debounce(({
   }
 
   if (value.match(/^\d+$/)) {
-    const integer = parseInt(value, 10);
+    const integer = Number.parseInt(value, 10);
 
     target.width = Math.max(minWidth, Math.min(screenWidth, integer));
     if (target.width !== integer) {
@@ -98,7 +98,7 @@ const handleHeightInput = _.debounce(({
   }
 
   if (value.match(/^\d+$/)) {
-    const integer = parseInt(value, 10);
+    const integer = Number.parseInt(value, 10);
 
     target.height = Math.max(minHeight, Math.min(screenHeight, integer));
     if (target.height !== integer) {
@@ -152,7 +152,7 @@ const buildAspectRatioMenu = ({setRatio, ratio}) => {
         label: r,
         type: 'radio',
         checked: r === selectedRatio,
-        click: () => setRatio(r.split(':').map(d => parseInt(d, 10)))
+        click: () => setRatio(r.split(':').map(d => Number.parseInt(d, 10)))
       })
     );
   }
@@ -178,7 +178,7 @@ const handleInputKeyPress = (onChange, min, max) => event => {
   }
 
   const multiplier = event.shiftKey ? 10 : 1;
-  const parsedValue = parseInt(event.currentTarget.value, 10);
+  const parsedValue = Number.parseInt(event.currentTarget.value, 10);
 
   // Fake an onChange event
   if (event.key === 'ArrowUp') {

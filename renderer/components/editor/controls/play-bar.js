@@ -50,9 +50,9 @@ class PlayBar extends React.Component {
     play();
   }
 
-  setStartTime = event => this.props.setStartTime(parseFloat(event.target.value))
+  setStartTime = event => this.props.setStartTime(Number.parseFloat(event.target.value))
 
-  setEndTime = event => this.props.setEndTime(parseFloat(event.target.value))
+  setEndTime = event => this.props.setEndTime(Number.parseFloat(event.target.value))
 
   render() {
     const {currentTime = 0, duration, startTime, endTime, hover, src} = this.props;
