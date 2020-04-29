@@ -50,7 +50,7 @@ const callPlugins = async method => Promise.all(recordingPlugins.map(async ({plu
         })
       );
     } catch (error) {
-      showError(error);
+      showError(error, {title: `Something went wrong while using the plugin “${plugin.prettyName}”`});
     }
   }
 }));
@@ -141,6 +141,7 @@ const startRecording = async options => {
     track('recording/stopped/error');
     showError(error, {title: 'Recording error', reportToSentry: true});
     past = null;
+    cleanup();
     return;
   }
 
