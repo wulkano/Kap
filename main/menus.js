@@ -109,7 +109,7 @@ const getCogMenuTemplate = () => [
   {
     type: 'separator'
   },
-  sendFeedbackItem,
+  preferencesItem,
   {
     type: 'separator'
   },
@@ -122,7 +122,7 @@ const getCogMenuTemplate = () => [
   {
     type: 'separator'
   },
-  preferencesItem,
+  sendFeedbackItem,
   {
     type: 'separator'
   },
