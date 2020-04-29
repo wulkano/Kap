@@ -30,7 +30,7 @@ export const findRatioForSize = (width, height) => {
   const ratio = nearestNormalAspectRatio(width, height);
 
   if (ratio) {
-    return ratio.split(':').map(part => parseInt(part, 10));
+    return ratio.split(':').map(part => Number.parseInt(part, 10));
   }
 
   return getSimplestRatio(width, height);

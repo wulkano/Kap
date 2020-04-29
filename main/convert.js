@@ -49,7 +49,7 @@ const getConvertFunction = shouldTrack => (outputPath, options, args) => {
       const processingSpeed = speedRegex.exec(data);
 
       if (processingSpeed) {
-        speed = parseFloat(processingSpeed[1]);
+        speed = Number.parseFloat(processingSpeed[1]);
       }
 
       const timeProccessed = timeRegex.exec(data);

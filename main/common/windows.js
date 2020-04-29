@@ -29,7 +29,7 @@ const getWindowList = async () => {
 
   let maxLastUsed = 0;
 
-  return windows.filter(isValidApp).map(win => {
+  return windows.filter(window => isValidApp(window)).map(win => {
     const iconImage = images.find(img => img.pid === win.pid);
     const icon = iconImage.icon ? nativeImage.createFromBuffer(iconImage.icon) : null;
 

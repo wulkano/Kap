@@ -198,7 +198,7 @@ export default class EditorContainer extends Container {
     }
 
     if (value.match(/^\d+$/)) {
-      const fps = parseInt(value, 10);
+      const fps = Number.parseInt(value, 10);
       const {originalFps} = this.state;
 
       if (fps < 1) {
