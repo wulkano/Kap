@@ -107,7 +107,7 @@ const startRecording = async options => {
     if (audioInputDeviceId) {
       apertureOptions.audioDeviceId = audioInputDeviceId;
     } else {
-      const [defaultAudioDevice] = await audioDevices();
+      const [defaultAudioDevice] = await getAudioDevices();
       apertureOptions.audioDeviceId = defaultAudioDevice && defaultAudioDevice.id;
     }
   }
@@ -208,23 +208,28 @@ const stopRecording = async () => {
   }
 };
 
+const getAudioDevices = async () => {
+  if (hasMicrophoneAccess()) {
+    try {
+      let devices = await audioDevices();
+
+      if (Array.isArray(devices)) {
+        return devices;
+      }
+
+      devices = await getInputDevices();
+      return devices.map(({uid, name}) => ({id: uid, name}));
+    } catch (error) {
+      showError(error, {reportToSentry: true});
+      return [];
+    }
+  }
+
+  return [];
+};
+
 module.exports = {
   startRecording,
   stopRecording,
-  getAudioDevices: async () => {
-    if (hasMicrophoneAccess()) {
-      try {
-        let devices = await audioDevices();
-        if (!Array.isArray(devices)) {
-          devices = await getInputDevices();
-          return devices.map(({uid, name}) => ({id: uid, name}));
-        }
-      } catch (error) {
-        showError(error, {reportToSentry: true});
-        return [];
-      }
-    }
-
-    return [];
-  }
+  getAudioDevices
 };
