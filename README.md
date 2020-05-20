@@ -38,7 +38,7 @@ Download [`master`](https://kap-artifacts.now.sh/master) or builds for any other
 
 ## Thanks
 
-- [▲ Vercel](https://vercel.com/) for the README formatting and for hosting our downloads and updates.
-- [● CircleCI](https://circleci.com/) for supporting the Open Source community and making our builds fast and reliable.
+- [▲ Vercel](https://vercel.com/) for fast deployments served from the edge, hosting our website, downloads, and updates.
+- [● CircleCI](https://circleci.com/) for supporting the open source community and making our builds fast and reliable.
 - [△ Sentry](https://sentry.io/) for letting us know when Kap isn't behaving and helping us eradicate said behaviour.
 - Our [contributors](https://github.com/wulkano/kap/contributors) who help maintain Kap and make screen recording and sharing easy.
