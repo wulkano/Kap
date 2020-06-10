@@ -61,7 +61,7 @@ const getConvertFunction = shouldTrack => (outputPath, options, args) => {
         // Wait 2 second in the conversion for the speed to be stable
         if (processedMs > 2 * 1000) {
           const msRemaining = (durationMs - processedMs) / speed;
-          options.onProgress(progress, prettyMs(Math.max(msRemaining, 1000), {compact: true}).slice(1));
+          options.onProgress(progress, prettyMs(Math.max(msRemaining, 1000), {compact: true}));
         } else {
           options.onProgress(progress);
         }
