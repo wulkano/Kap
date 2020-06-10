@@ -1,79 +1,100 @@
 import electron from 'electron';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import {connect, CropperContainer} from '../../containers';
 import {handleKeyboardActivation} from '../../utils/inputs';
 
-class RecordButton extends React.Component {
-  state = {}
+const getMediaNode = deviceId => new Promise((resolve, reject) => {
+  navigator.getUserMedia({
+    audio: {deviceId}
+  }, stream => {
+    const audioContext = new AudioContext();
+    const analyser = audioContext.createAnalyser();
+    const microphone = audioContext.createMediaStreamSource(stream);
+    const javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
 
-  componentDidMount() {
-    const settings = electron.remote.require('./common/settings');
-    const recordAudio = settings.get('recordAudio');
-    const audioInputDeviceId = settings.get('audioInputDeviceId');
+    analyser.smoothingTimeConstant = 0.8;
+    analyser.fftSize = 1024;
 
-    if (recordAudio) {
-      navigator.getUserMedia({
-        audio: {
-          deviceId: audioInputDeviceId
-        }
-      }, stream => {
-        const audioContext = new AudioContext();
-        const analyser = audioContext.createAnalyser();
-        const microphone = audioContext.createMediaStreamSource(stream);
-        const javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
+    microphone.connect(analyser);
+    analyser.connect(javascriptNode);
+    javascriptNode.connect(audioContext.destination);
 
-        analyser.smoothingTimeConstant = 0.8;
-        analyser.fftSize = 1024;
+    resolve({javascriptNode, analyser});
+  }, reject);
+});
 
-        microphone.connect(analyser);
-        analyser.connect(javascriptNode);
+const RecordButton = ({
+  cropperExists,
+  x,
+  y,
+  width,
+  height,
+  screenWidth,
+  screenHeight,
+  displayId,
+  willStartRecording,
+  recordAudio,
+  audioInputDeviceId
+}) => {
+  const [showFirstRipple, setShowFirstRipple] = useState(false);
+  const [showSecondRipple, setShowSecondRipple] = useState(false);
+  const [shouldStop, setShouldStop] = useState(false);
 
-        javascriptNode.connect(audioContext.destination);
+  useEffect(() => {
+    let node;
+
+    const connectToDevice = async () => {
+      try {
+        const {javascriptNode, analyser} = await getMediaNode(audioInputDeviceId);
+
         javascriptNode.onaudioprocess = () => {
           const array = new Uint8Array(analyser.frequencyBinCount);
           analyser.getByteFrequencyData(array);
 
           const avg = array.reduce((p, c) => p + c) / array.length;
           if (avg >= 36) {
-            this.setState({showFirst: true, showSecond: true, shouldStop: false});
+            setShowFirstRipple(true);
+            setShowSecondRipple(true);
+            setShouldStop(false);
           } else {
-            this.setState({shouldStop: true});
+            setShouldStop(true);
           }
         };
-      }, error => {
+
+        node = javascriptNode;
+      } catch (error) {
         console.error('An error occurred when trying to get audio levels:', error);
-      });
-    }
-  }
+      }
+    };
 
-  shouldFirstStop = () => {
-    if (this.state.shouldStop) {
-      this.setState({showFirst: false});
+    if (recordAudio && audioInputDeviceId) {
+      connectToDevice();
     }
-  }
 
-  shouldSecondStop = () => {
-    if (this.state.shouldStop) {
-      this.setState({showSecond: false});
+    return () => {
+      if (node && typeof node.disconnect === 'function') {
+        node.disconnect();
+      }
+    };
+  }, [recordAudio, audioInputDeviceId]);
+
+  const shouldFirstStop = () => {
+    if (shouldStop) {
+      setShowFirstRipple(false);
     }
-  }
+  };
 
-  startRecording = event => {
+  const shouldSecondStop = () => {
+    if (shouldStop) {
+      setShowSecondRipple(false);
+    }
+  };
+
+  const startRecording = event => {
     event.stopPropagation();
-    const {
-      cropperExists,
-      x,
-      y,
-      width,
-      height,
-      screenWidth,
-      screenHeight,
-      displayId,
-      willStartRecording
-    } = this.props;
 
     if (cropperExists) {
       const {remote} = electron;
@@ -95,26 +116,22 @@ class RecordButton extends React.Component {
         displayId
       });
     }
-  }
+  };
 
-  render() {
-    const {showFirst, showSecond} = this.state;
-    const {cropperExists} = this.props;
-
-    return (
-      <div
-        className={classNames('container', {'cropper-exists': cropperExists})}
-        tabIndex={cropperExists ? 0 : -1}
-        onKeyDown={handleKeyboardActivation(this.startRecording)}
-      >
-        <div className="outer" onMouseDown={this.startRecording}>
-          <div className="inner">
-            {!cropperExists && <div className="fill"/>}
-          </div>
-          {showFirst && <div className="ripple first" onAnimationIteration={this.shouldFirstStop}/>}
-          {showSecond && <div className="ripple second" onAnimationIteration={this.shouldSecondStop}/>}
+  return (
+    <div
+      className={classNames('container', {'cropper-exists': cropperExists})}
+      tabIndex={cropperExists ? 0 : -1}
+      onKeyDown={handleKeyboardActivation(startRecording)}
+    >
+      <div className="outer" onMouseDown={startRecording}>
+        <div className="inner">
+          {!cropperExists && <div className="fill"/>}
         </div>
-        <style jsx>{`
+        {showFirstRipple && <div className="ripple first" onAnimationIteration={shouldFirstStop}/>}
+        {showSecondRipple && <div className="ripple second" onAnimationIteration={shouldSecondStop}/>}
+      </div>
+      <style jsx>{`
             .container {
               width: 64px;
               height: 64px;
@@ -198,10 +215,9 @@ class RecordButton extends React.Component {
               }
             }
         `}</style>
-      </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 RecordButton.propTypes = {
   cropperExists: PropTypes.bool,
@@ -212,11 +228,13 @@ RecordButton.propTypes = {
   screenWidth: PropTypes.number,
   screenHeight: PropTypes.number,
   displayId: PropTypes.number,
-  willStartRecording: PropTypes.elementType
+  willStartRecording: PropTypes.elementType,
+  recordAudio: PropTypes.bool,
+  audioInputDeviceId: PropTypes.string
 };
 
 export default connect(
   [CropperContainer],
-  ({x, y, width, height, screenWidth, screenHeight, displayId}) => ({x, y, width, height, screenWidth, screenHeight, displayId}),
+  ({x, y, width, height, screenWidth, screenHeight, displayId, recordAudio, audioInputDeviceId}) => ({x, y, width, height, screenWidth, screenHeight, displayId, recordAudio, audioInputDeviceId}),
   ({willStartRecording}) => ({willStartRecording})
 )(RecordButton);

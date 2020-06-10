@@ -11,8 +11,8 @@ const openFiles = require('./utils/open-files');
 let tray = null;
 let trayAnimation = null;
 
-const openContextMenu = () => {
-  tray.popUpContextMenu(getCogMenu());
+const openContextMenu = async () => {
+  tray.popUpContextMenu(await getCogMenu());
 };
 
 const initializeTray = () => {
