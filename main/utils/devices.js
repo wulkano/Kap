@@ -18,14 +18,26 @@ const getAudioDevices = async () => {
       const Sentry = require('./sentry');
       Sentry.captureException(new Error(`devices is not an array: ${JSON.stringify(devices)}`));
 
-      return (await audioDevices.getInputDevices()).map(device => ({id: device.uid, name: device.name}));
+      return (await audioDevices.getInputDevices()).map(device => ({id: device.uid, name: device.name})).sort(devicesSort);
     }
 
-    return devices;
+    return devices.sort(devicesSort);
   } catch (error) {
     showError(error, {reportToSentry: true});
     return [];
   }
+};
+
+const devicesSort = (a, b) => {
+  if (a.id === 'BuiltInMicrophoneDevice') {
+    return -1;
+  }
+
+  if (b.id === 'BuiltInMicrophoneDevice') {
+    return 1;
+  }
+
+  return 0;
 };
 
 const getDefaultInputDevice = () => {
