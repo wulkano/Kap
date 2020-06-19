@@ -1,6 +1,7 @@
 import electron from 'electron';
 import {Container} from 'unstated';
 import {ipcRenderer as ipc} from 'electron-better-ipc';
+import {defaultInputDevice} from '../../main/common/constants';
 
 const SETTINGS_ANALYTICS_BLACKLIST = ['kapturesDir'];
 
@@ -42,14 +43,14 @@ export default class PreferencesContainer extends Container {
     const {audioInputDeviceId} = this.settings.store;
 
     const audioDevices = await getAudioDevices();
-    const updates = {audioDevices};
+    const updates = {
+      audioDevices: [defaultInputDevice, ...audioDevices],
+      audioInputDeviceId
+    };
 
     if (!audioDevices.some(device => device.id === audioInputDeviceId)) {
-      const [device] = audioDevices;
-      if (device) {
-        this.settings.set('audioInputDeviceId', device.id);
-        updates.audioInputDeviceId = device.id;
-      }
+      updates.audioInputDeviceId = defaultInputDevice.id;
+      this.settings.set('audioInputDeviceId', defaultInputDevice.id);
     }
 
     this.setState(updates);

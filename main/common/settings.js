@@ -3,8 +3,9 @@
 const {homedir} = require('os');
 const Store = require('electron-store');
 
+const {defaultInputDevice} = require('./constants');
 const {hasMicrophoneAccess} = require('./system-permissions');
-const {getAudioDevices} = require('../utils/devices');
+const {getAudioDevices, getDefaultInputDevice} = require('../utils/devices');
 
 const store = new Store({
   schema: {
@@ -45,7 +46,7 @@ const store = new Store({
         'string',
         'null'
       ],
-      default: null
+      default: defaultInputDevice.id
     },
     cropperShortcut: {
       type: 'object',
@@ -87,10 +88,18 @@ if (hasMicrophoneAccess()) {
     const devices = await getAudioDevices();
 
     if (!devices.some(device => device.id === audioInputDeviceId)) {
-      const [device] = devices;
-      if (device) {
-        store.set('audioInputDeviceId', device.id);
-      }
+      store.set('audioInputDeviceId', defaultInputDevice.id);
     }
   })();
 }
+
+module.exports.getSelectedInputDeviceId = () => {
+  const audioInputDeviceId = store.get('audioInputDeviceId', defaultInputDevice.id);
+
+  if (audioInputDeviceId === defaultInputDevice.id) {
+    const device = getDefaultInputDevice();
+    return device.id;
+  }
+
+  return audioInputDeviceId;
+};

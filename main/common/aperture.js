@@ -83,8 +83,7 @@ const startRecording = async options => {
     record60fps,
     showCursor,
     highlightClicks,
-    recordAudio,
-    audioInputDeviceId
+    recordAudio
   } = settings.store;
 
   apertureOptions = {
@@ -102,6 +101,7 @@ const startRecording = async options => {
   if (recordAudio === true) {
     // In case for some reason the default audio device is not set
     // use the first available device for recording
+    const audioInputDeviceId = settings.getSelectedInputDeviceId();
     if (audioInputDeviceId) {
       apertureOptions.audioDeviceId = audioInputDeviceId;
     } else {

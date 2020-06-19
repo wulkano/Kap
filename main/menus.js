@@ -6,7 +6,7 @@ const {openNewGitHubIssue, appMenu} = require('electron-util');
 const {ipcMain: ipc} = require('electron-better-ipc');
 const delay = require('delay');
 
-const {supportedVideoExtensions} = require('./common/constants');
+const {supportedVideoExtensions, defaultInputDevice} = require('./common/constants');
 const settings = require('./common/settings');
 const {hasMicrophoneAccess} = require('./common/system-permissions');
 const {getAudioDevices} = require('./utils/devices');
@@ -113,6 +113,12 @@ const getMicrophoneItem = async () => {
   const devices = await getAudioDevices();
   const isRecordAudioEnabled = settings.get('recordAudio');
 
+  let audioInputDeviceId = settings.get('audioInputDeviceId');
+  if (!devices.some(device => device.id === audioInputDeviceId)) {
+    settings.set('audioInputDeviceId', defaultInputDevice.id);
+    audioInputDeviceId = defaultInputDevice.id;
+  }
+
   return {
     id: 'devices',
     label: 'Microphone',
@@ -123,10 +129,13 @@ const getMicrophoneItem = async () => {
         checked: !isRecordAudioEnabled,
         click: () => settings.set('recordAudio', false)
       },
-      ...devices.map(device => ({
+      ...[
+        defaultInputDevice,
+        ...devices
+      ].map(device => ({
         label: device.name,
         type: 'checkbox',
-        checked: isRecordAudioEnabled && settings.get('audioInputDeviceId') === device.id,
+        checked: isRecordAudioEnabled && audioInputDeviceId === device.id,
         click: () => {
           settings.set('recordAudio', true);
           settings.set('audioInputDeviceId', device.id);
