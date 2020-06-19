@@ -5,6 +5,7 @@ const aperture = require('aperture');
 
 const {showError} = require('./errors');
 const {hasMicrophoneAccess} = require('../common/system-permissions');
+const {builtInMicrophoneId} = require('../common/constants');
 
 const getAudioDevices = async () => {
   if (!hasMicrophoneAccess()) {
@@ -29,11 +30,11 @@ const getAudioDevices = async () => {
 };
 
 const devicesSort = (a, b) => {
-  if (a.id === 'BuiltInMicrophoneDevice') {
+  if (a.id === builtInMicrophoneId) {
     return -1;
   }
 
-  if (b.id === 'BuiltInMicrophoneDevice') {
+  if (b.id === builtInMicrophoneId) {
     return 1;
   }
 
