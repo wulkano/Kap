@@ -28,8 +28,8 @@ class General extends React.Component {
     });
   }
 
-  openKapturesDir = () => {
-    electron.shell.openItem(this.props.kapturesDir);
+  openKapturesDir = async () => {
+    await electron.shell.openPath(this.props.kapturesDir);
   }
 
   render() {

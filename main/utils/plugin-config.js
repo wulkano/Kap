@@ -53,6 +53,8 @@ class PluginConfig extends Store {
   }
 
   isConfigValid() {
+    // TODO: Remove `reduce` usage.
+    // eslint-disable-next-line unicorn/no-reduce
     return this.validators.reduce((isValid, validator) => isValid && validator(this.store), true);
   }
 

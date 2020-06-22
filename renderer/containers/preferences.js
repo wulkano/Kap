@@ -70,7 +70,7 @@ export default class PreferencesContainer extends Container {
           return a.prettyName.localeCompare(b.prettyName);
         })
       });
-    } catch (_) {
+    } catch {
       this.setState({npmError: true});
     }
   }
@@ -127,7 +127,9 @@ export default class PreferencesContainer extends Container {
     this.setOverlay(false);
   }
 
-  openPluginsFolder = () => electron.shell.openItem(this.plugins.cwd);
+  openPluginsFolder = async () => {
+    await electron.shell.openPath(this.plugins.cwd);
+  }
 
   selectCategory = category => {
     this.setState({category});

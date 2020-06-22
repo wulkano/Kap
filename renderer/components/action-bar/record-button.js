@@ -36,8 +36,9 @@ class RecordButton extends React.Component {
           const array = new Uint8Array(analyser.frequencyBinCount);
           analyser.getByteFrequencyData(array);
 
-          const avg = array.reduce((p, c) => p + c) / array.length;
-          if (avg >= 36) {
+          // eslint-disable-next-line unicorn/no-reduce
+          const average = array.reduce((p, c) => p + c) / array.length;
+          if (average >= 36) {
             this.setState({showFirst: true, showSecond: true, shouldStop: false});
           } else {
             this.setState({shouldStop: true});
