@@ -239,7 +239,7 @@ const convertToGif = PCancelable.fn(async (options, onCancel) => {
   ]);
 
   return compress(options.outputPath, options, [
-    '-b',
+    '--batch',
     options.outputPath
   ]);
 });
