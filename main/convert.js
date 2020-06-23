@@ -118,7 +118,7 @@ const compress = (outputPath, options, args) => {
 
   if (settings.get('lossyCompression')) {
     args = [
-      '--lossy=100',
+      '--lossy=50',
       ...args
     ];
   }
