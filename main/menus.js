@@ -6,10 +6,10 @@ const {openNewGitHubIssue, appMenu} = require('electron-util');
 const {ipcMain: ipc} = require('electron-better-ipc');
 const delay = require('delay');
 
-const {supportedVideoExtensions, defaultInputDevice} = require('./common/constants');
+const {supportedVideoExtensions, defaultInputDeviceId} = require('./common/constants');
 const settings = require('./common/settings');
 const {hasMicrophoneAccess} = require('./common/system-permissions');
-const {getAudioDevices} = require('./utils/devices');
+const {getAudioDevices, getDefaultInputDevice} = require('./utils/devices');
 const {ensureDockIsShowing} = require('./utils/dock');
 const {openPrefsWindow} = require('./preferences');
 const {openExportsWindow} = require('./exports');
@@ -112,11 +112,12 @@ const getPluginsItem = () => ({
 const getMicrophoneItem = async () => {
   const devices = await getAudioDevices();
   const isRecordAudioEnabled = settings.get('recordAudio');
+  const currentDefaultDevice = getDefaultInputDevice();
 
   let audioInputDeviceId = settings.get('audioInputDeviceId');
   if (!devices.some(device => device.id === audioInputDeviceId)) {
-    settings.set('audioInputDeviceId', defaultInputDevice.id);
-    audioInputDeviceId = defaultInputDevice.id;
+    settings.set('audioInputDeviceId', defaultInputDeviceId);
+    audioInputDeviceId = defaultInputDeviceId;
   }
 
   return {
@@ -130,7 +131,7 @@ const getMicrophoneItem = async () => {
         click: () => settings.set('recordAudio', false)
       },
       ...[
-        defaultInputDevice,
+        {name: `System Default (${currentDefaultDevice.name})`, id: defaultInputDeviceId},
         ...devices
       ].map(device => ({
         label: device.name,
