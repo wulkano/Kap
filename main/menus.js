@@ -6,7 +6,10 @@ const {openNewGitHubIssue, appMenu} = require('electron-util');
 const {ipcMain: ipc} = require('electron-better-ipc');
 const delay = require('delay');
 
-const {supportedVideoExtensions} = require('./common/constants');
+const {supportedVideoExtensions, defaultInputDeviceId} = require('./common/constants');
+const settings = require('./common/settings');
+const {hasMicrophoneAccess} = require('./common/system-permissions');
+const {getAudioDevices, getDefaultInputDevice} = require('./utils/devices');
 const {ensureDockIsShowing} = require('./utils/dock');
 const {openPrefsWindow} = require('./preferences');
 const {openExportsWindow} = require('./exports');
@@ -82,10 +85,12 @@ const aboutItem = {
   }
 };
 
+let isExportsItemEnabled = false;
+
 const exportHistoryItem = {
   label: 'Export History',
   click: openExportsWindow,
-  enabled: false,
+  enabled: isExportsItemEnabled,
   id: 'exports'
 };
 
@@ -104,7 +109,45 @@ const getPluginsItem = () => ({
   visible: pluginsItems.length > 0
 });
 
-const getCogMenuTemplate = () => [
+const getMicrophoneItem = async () => {
+  const devices = await getAudioDevices();
+  const isRecordAudioEnabled = settings.get('recordAudio');
+  const currentDefaultDevice = getDefaultInputDevice();
+
+  let audioInputDeviceId = settings.get('audioInputDeviceId');
+  if (!devices.some(device => device.id === audioInputDeviceId)) {
+    settings.set('audioInputDeviceId', defaultInputDeviceId);
+    audioInputDeviceId = defaultInputDeviceId;
+  }
+
+  return {
+    id: 'devices',
+    label: 'Microphone',
+    submenu: [
+      {
+        label: 'None',
+        type: 'checkbox',
+        checked: !isRecordAudioEnabled,
+        click: () => settings.set('recordAudio', false)
+      },
+      ...[
+        {name: `System Default (${currentDefaultDevice.name})`, id: defaultInputDeviceId},
+        ...devices
+      ].map(device => ({
+        label: device.name,
+        type: 'checkbox',
+        checked: isRecordAudioEnabled && audioInputDeviceId === device.id,
+        click: () => {
+          settings.set('recordAudio', true);
+          settings.set('audioInputDeviceId', device.id);
+        }
+      }))
+    ],
+    visible: hasMicrophoneAccess()
+  };
+};
+
+const getCogMenuTemplate = async () => [
   aboutItem,
   {
     type: 'separator'
@@ -114,6 +157,7 @@ const getCogMenuTemplate = () => [
     type: 'separator'
   },
   getPluginsItem(),
+  await getMicrophoneItem(),
   {
     type: 'separator'
   },
@@ -192,18 +236,13 @@ const appMenuTemplate = [
   }
 ];
 
-let cogMenu = Menu.buildFromTemplate(getCogMenuTemplate());
-const cogExportsItem = cogMenu.getMenuItemById('exports');
-
 const refreshRecordPluginItems = services => {
   pluginsItems = services.map(service => ({
     label: service.title,
     type: 'checkbox',
     checked: service.isEnabled,
-    click: service.toggleEnbaled
+    click: service.toggleEnabled
   }));
-
-  cogMenu = Menu.buildFromTemplate(getCogMenuTemplate());
 };
 
 const appMenu_ = Menu.buildFromTemplate(appMenuTemplate);
@@ -211,7 +250,7 @@ const appExportsItem = appMenu_.getMenuItemById('exports');
 const appSaveOriginalItem = appMenu_.getMenuItemById('saveOriginal');
 
 const toggleExportMenuItem = enabled => {
-  cogExportsItem.enabled = enabled;
+  isExportsItemEnabled = enabled;
   appExportsItem.enabled = enabled;
 };
 
@@ -227,7 +266,7 @@ editorEmitter.on('focus', () => {
   appSaveOriginalItem.visible = true;
 });
 
-const getCogMenu = () => cogMenu;
+const getCogMenu = async () => Menu.buildFromTemplate(await getCogMenuTemplate());
 
 module.exports = {
   getCogMenu,

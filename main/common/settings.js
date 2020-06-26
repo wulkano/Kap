@@ -3,9 +3,9 @@
 const {homedir} = require('os');
 const Store = require('electron-store');
 
-const {getInputDevices} = require('macos-audio-devices');
+const {defaultInputDeviceId} = require('./constants');
 const {hasMicrophoneAccess} = require('./system-permissions');
-const {audioDevices} = require('aperture');
+const {getAudioDevices, getDefaultInputDevice} = require('../utils/devices');
 
 const store = new Store({
   schema: {
@@ -46,7 +46,7 @@ const store = new Store({
         'string',
         'null'
       ],
-      default: null
+      default: defaultInputDeviceId
     },
     cropperShortcut: {
       type: 'object',
@@ -85,20 +85,21 @@ const audioInputDeviceId = store.get('audioInputDeviceId');
 
 if (hasMicrophoneAccess()) {
   (async () => {
-    let devices = await audioDevices();
-
-    if (!Array.isArray(devices)) {
-      const Sentry = require('../utils/sentry');
-      Sentry.captureException(new Error(`devices is not an array: ${JSON.stringify(devices)}`));
-
-      devices = (await getInputDevices()).map(device => ({id: device.uid}));
-    }
+    const devices = await getAudioDevices();
 
     if (!devices.some(device => device.id === audioInputDeviceId)) {
-      const [device] = devices;
-      if (device) {
-        store.set('audioInputDeviceId', device.id);
-      }
+      store.set('audioInputDeviceId', defaultInputDeviceId);
     }
   })();
 }
+
+module.exports.getSelectedInputDeviceId = () => {
+  const audioInputDeviceId = store.get('audioInputDeviceId', defaultInputDeviceId);
+
+  if (audioInputDeviceId === defaultInputDeviceId) {
+    const device = getDefaultInputDevice();
+    return device.id;
+  }
+
+  return audioInputDeviceId;
+};

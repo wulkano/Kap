@@ -2,4 +2,7 @@
 
 const supportedVideoExtensions = ['mp4', 'mov', 'm4v'];
 
-module.exports = {supportedVideoExtensions};
+module.exports = {
+  supportedVideoExtensions,
+  defaultInputDeviceId: 'SYSTEM_DEFAULT'
+};

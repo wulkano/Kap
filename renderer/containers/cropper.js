@@ -61,8 +61,18 @@ export default class CropperContainer extends Container {
       screenHeight: 0,
       isActive: false,
       isReady: false,
-      ratio: [1, 1]
+      ratio: [1, 1],
+      recordAudio: this.settings.get('recordAudio'),
+      audioInputDeviceId: this.settings.getSelectedInputDeviceId()
     };
+
+    this.settings.onDidChange('recordAudio', recordAudio => {
+      this.setState({recordAudio});
+    });
+
+    this.settings.onDidChange('audioInputDeviceId', async () => {
+      this.setState({audioInputDeviceId: this.settings.getSelectedInputDeviceId()});
+    });
   }
 
   setDisplay = display => {

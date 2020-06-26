@@ -8,21 +8,19 @@ const {closePrefsWindow} = require('../preferences');
 const {setRecordingTray, disableTray, resetTray} = require('../tray');
 const {disableCroppers, setRecordingCroppers, closeAllCroppers} = require('../cropper');
 const {setCropperShortcutAction} = require('../global-accelerators');
-const {getInputDevices} = require('macos-audio-devices');
 
 // eslint-disable-next-line no-unused-vars
 const {convertToH264} = require('../utils/encoding');
 
-const {hasMicrophoneAccess} = require('./system-permissions');
-
 const settings = require('./settings');
 const {track} = require('./analytics');
 const plugins = require('./plugins');
+const {getAudioDevices} = require('../utils/devices');
 const {showError} = require('../utils/errors');
 const {RecordServiceContext} = require('../service-context');
 
 const aperture = createAperture();
-const {audioDevices, videoCodecs} = createAperture;
+const {videoCodecs} = createAperture;
 
 // eslint-disable-next-line no-unused-vars
 const recordHevc = videoCodecs.has('hevc');
@@ -85,8 +83,7 @@ const startRecording = async options => {
     record60fps,
     showCursor,
     highlightClicks,
-    recordAudio,
-    audioInputDeviceId
+    recordAudio
   } = settings.store;
 
   apertureOptions = {
@@ -104,6 +101,7 @@ const startRecording = async options => {
   if (recordAudio === true) {
     // In case for some reason the default audio device is not set
     // use the first available device for recording
+    const audioInputDeviceId = settings.getSelectedInputDeviceId();
     if (audioInputDeviceId) {
       apertureOptions.audioDeviceId = audioInputDeviceId;
     } else {
@@ -206,26 +204,6 @@ const stopRecording = async () => {
     openEditorWindow(filePath, {recordedFps, isNewRecording: true, recordingName});
     // }
   }
-};
-
-const getAudioDevices = async () => {
-  if (hasMicrophoneAccess()) {
-    try {
-      let devices = await audioDevices();
-
-      if (Array.isArray(devices)) {
-        return devices;
-      }
-
-      devices = await getInputDevices();
-      return devices.map(({uid, name}) => ({id: uid, name}));
-    } catch (error) {
-      showError(error, {reportToSentry: true});
-      return [];
-    }
-  }
-
-  return [];
 };
 
 module.exports = {

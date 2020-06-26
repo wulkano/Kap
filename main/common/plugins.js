@@ -66,7 +66,7 @@ class Plugins {
         plugin => plugin.recordServices.map(service => ({
           ...service,
           isEnabled: recordPluginServiceState.get(service.title) || false,
-          toggleEnbaled: () => this.enableService(service)
+          toggleEnabled: () => this.enableService(service)
         }))
       )
     );

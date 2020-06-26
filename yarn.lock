@@ -5864,10 +5864,10 @@ mac-windows@^0.7.1:
   resolved "https://registry.yarnpkg.com/mac-windows/-/mac-windows-0.7.1.tgz#3309ef0c7c508725cc3e17a3ea1687de0680c78b"
   integrity sha512-tkjT1zWS46MM7xD131Rg3RDGTamP24/QIhYh7Zd4W1dZz3/72EOebm4fm1gBUJsrGvPluQqXjoEjoBClZ5TQJg==
 
-macos-audio-devices@^1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/macos-audio-devices/-/macos-audio-devices-1.3.1.tgz#35775b7daa3e33e6388bdacb240ab5a0f81f1264"
-  integrity sha512-I7r4nw1SpgkQRkXYhD3hKP5+AuiSlOUP/ueMaBdxurxSmyjPgq+NwK/cAcYsPb46R81QIsuPiZVSujcyPz8ryQ==
+macos-audio-devices@^1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/macos-audio-devices/-/macos-audio-devices-1.3.2.tgz#babd9cf57958732084b5136f9127610fc23f9c21"
+  integrity sha512-7fTJk9UzLeFgkhL1xoXiHCVnPAavD4oMRiI/c3QF04427dLGA8PMgNO71/JR7hHRneVlixk4+P0iQxSlqy0L0A==
   dependencies:
     electron-util "^0.13.1"
     execa "^4.0.0"

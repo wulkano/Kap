@@ -1,6 +1,7 @@
 import electron from 'electron';
 import {Container} from 'unstated';
 import {ipcRenderer as ipc} from 'electron-better-ipc';
+import {defaultInputDeviceId} from '../../main/common/constants';
 
 const SETTINGS_ANALYTICS_BLACKLIST = ['kapturesDir'];
 
@@ -38,18 +39,22 @@ export default class PreferencesContainer extends Container {
   }
 
   getAudioDevices = async () => {
-    const {getAudioDevices} = this.remote.require('./common/aperture');
+    const {getAudioDevices, getDefaultInputDevice} = this.remote.require('./utils/devices');
     const {audioInputDeviceId} = this.settings.store;
+    const {name: currentDefaultName} = getDefaultInputDevice();
 
     const audioDevices = await getAudioDevices();
-    const updates = {audioDevices};
+    const updates = {
+      audioDevices: [
+        {name: `System Default (${currentDefaultName})`, id: defaultInputDeviceId},
+        ...audioDevices
+      ],
+      audioInputDeviceId
+    };
 
     if (!audioDevices.some(device => device.id === audioInputDeviceId)) {
-      const [device] = audioDevices;
-      if (device) {
-        this.settings.set('audioInputDeviceId', device.id);
-        updates.audioInputDeviceId = device.id;
-      }
+      updates.audioInputDeviceId = defaultInputDeviceId;
+      this.settings.set('audioInputDeviceId', defaultInputDeviceId);
     }
 
     this.setState(updates);

@@ -85,6 +85,11 @@ MainControls.Left = connect(
 )(Left);
 
 class Right extends React.Component {
+  onCogMenuClick = async () => {
+    const cogMenu = await electron.remote.require('./menus').getCogMenu();
+    cogMenu.popup();
+  }
+
   render() {
     const {enterFullscreen, exitFullscreen, isFullscreen, advanced} = this.props;
 
@@ -97,7 +102,7 @@ class Right extends React.Component {
               <FullscreenIcon tabIndex={advanced ? -1 : 0} onClick={enterFullscreen}/>
           }
         </div>
-        <IconMenu isMenu icon={MoreIcon} tabIndex={advanced ? -1 : 0} onOpen={electron.remote.require('./menus').getCogMenu().popup}/>
+        <IconMenu isMenu icon={MoreIcon} tabIndex={advanced ? -1 : 0} onOpen={this.onCogMenuClick}/>
         <style jsx>{mainStyle}</style>
         <style jsx>{`
           .fullscreen {
