@@ -1,4 +1,5 @@
 import {Container} from 'unstated';
+import electron from 'electron';
 
 export default class VideoContainer extends Container {
   state = {
@@ -76,7 +77,11 @@ export default class VideoContainer extends Container {
       const {isReady} = this.state;
       if (!isReady) {
         this.editorContainer.load();
-        this.play();
+
+        if (electron.remote.getCurrentWindow().isFocused()) {
+          this.play();
+        }
+
         this.setState({isReady: true});
       }
     });
