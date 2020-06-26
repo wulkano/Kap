@@ -207,7 +207,11 @@ class Plugins {
 
     plugin.config.clear();
     this.updateExportOptions();
-    return new NpmPlugin(plugin.json, plugin.json.kapVersion);
+    return new NpmPlugin(plugin.json, {
+      // Keeping for backwards compatibility
+      version: plugin.json.kapVersion,
+      ...plugin.json.kap
+    });
   }
 
   async prune() {
@@ -272,8 +276,12 @@ class Plugins {
       .filter(x => x.name.startsWith('kap-'))
       .filter(x => !installed.includes(x.name)) // Filter out installed plugins
       .map(async x => {
-        const {kapVersion = '*'} = await packageJson(x.name, {fullMetadata: true});
-        return new NpmPlugin(x, kapVersion);
+        const {kap, kapVersion} = await packageJson(x.name, {fullMetadata: true});
+        return new NpmPlugin(x, {
+          // Keeping for backwards compatibility
+          version: kapVersion,
+          ...kap
+        });
       }));
   }
 

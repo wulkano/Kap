@@ -6,6 +6,7 @@ const electron = require('electron');
 const semver = require('semver');
 const Store = require('electron-store');
 const readPkg = require('read-pkg');
+const macosVersion = require('macos-version');
 
 const PluginConfig = require('./utils/plugin-config');
 const {showError} = require('./utils/errors');
@@ -25,6 +26,10 @@ class BasePlugin {
   get prettyName() {
     return this.name.replace(/^kap-/, '');
   }
+
+  get isCompatible() {
+    return semver.satisfies(app.getVersion(), this.kapVersion || '*') && macosVersion.is(this.macosVersion || '*');
+  }
 }
 
 class InstalledPlugin extends BasePlugin {
@@ -38,10 +43,12 @@ class InstalledPlugin extends BasePlugin {
 
     this.json = readPkg.sync({cwd: this.pluginPath});
 
-    const {homepage, links} = this.json;
+    const {homepage, links, kap = {}} = this.json;
     this.link = homepage || (links && links.homepage);
-    this.isCompatible = semver.satisfies(app.getVersion(), this.json.kapVersion || '*');
-    this.kapVersion = this.json.kapVersion;
+
+    // Keeping for backwards compatibility
+    this.kapVersion = kap.version || this.json.kapVersion;
+    this.macosVersion = kap.macosVersion;
 
     try {
       this.plugin = require(this.pluginPath);
@@ -117,10 +124,11 @@ class InstalledPlugin extends BasePlugin {
 }
 
 class NpmPlugin extends BasePlugin {
-  constructor(json, kapVersion) {
+  constructor(json, kap = {}) {
     super(json.name);
 
-    this.kapVersion = kapVersion;
+    this.kapVersion = kap.version;
+    this.macosVersion = kap.macosVersion;
     this.isInstalled = false;
 
     this.version = json.version;
@@ -128,8 +136,6 @@ class NpmPlugin extends BasePlugin {
 
     const {homepage, links} = json;
     this.link = homepage || (links && links.homepage);
-
-    this.isCompatible = semver.satisfies(app.getVersion(), kapVersion || '*');
   }
 
   viewOnGithub() {

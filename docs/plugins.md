@@ -19,7 +19,11 @@ Tip: You can use modern JavaScript features like async/await in your plugin.
 - The `"description"` in package.json should succinctly describe what you can do with it. For example: `Share GIFs on GIPHY`. Not something like this: `Kap plugin that uploads GIFs to GIPHY`.
 - The readme should follow the style of [`kap-giphy`](https://github.com/wulkano/kap-giphy).
 - Your plugin must be tested, preferably using [`kap-plugin-test`](https://github.com/SamVerschueren/kap-plugin-test) and [`kap-plugin-mock-context`](https://github.com/samverschueren/kap-plugin-mock-context). [Example](https://github.com/wulkano/kap-giphy/blob/master/test/test.js).
-- If your plugin only supports specific versions of Kap, include a `kapVersion` field in the package.json with a [semver range](https://nodesource.com/blog/semver-a-primer/).
+- The package.json file can include a `kap` object with the following options:
+    - `version`: a [semver range](https://nodesource.com/blog/semver-a-primer/) of the Kap versions your plugin supports. Defaults to `*`.
+    - `macosVersion`: a [semver range](https://nodesource.com/blog/semver-a-primer/) of the macOS versions your plugin supports. Defaults to `*`.
+
+- **DEPRECATED** If your plugin only supports specific versions of Kap, include a `kapVersion` field in the package.json with a [semver range](https://nodesource.com/blog/semver-a-primer/). This is still supported but will be removed at some point in favor of `kap.version`.
 
 ## Development
 

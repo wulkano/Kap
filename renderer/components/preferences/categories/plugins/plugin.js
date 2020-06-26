@@ -41,7 +41,10 @@ PluginTitle.propTypes = {
 };
 
 const Plugin = ({plugin, checked, disabled, onTransitionEnd, onClick, loading, openConfig, tabIndex}) => {
-  const requiredVersion = !plugin.isCompatible && `Requires Kap version ${plugin.kapVersion}.`;
+  const requiredVersion = !plugin.isCompatible && (
+    (plugin.kapVersion && `Requires Kap version ${plugin.kapVersion}.`) ||
+    (plugin.macosVersion && `Requires macOS version ${plugin.macosVersion}`)
+  );
 
   const error = !plugin.isCompatible && (
     <div className="invalid" title={`This plugin is not supported. ${requiredVersion}`}>
