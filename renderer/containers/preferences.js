@@ -31,8 +31,6 @@ export default class PreferencesContainer extends Container {
       openOnStartup: this.remote.app.getLoginItemSettings().openAtLogin,
       pluginsInstalled,
       isMounted: true
-    }, () => {
-      console.log('done');
     });
 
     if (this.state.target && pluginsInstalled.some(plugin => plugin.name === this.state.target.name)) {
@@ -68,7 +66,6 @@ export default class PreferencesContainer extends Container {
   }
 
   scrollIntoView = (tabId, pluginId) => {
-    console.log(tabId, pluginId);
     const tab = document.querySelector(`#${tabId}`);
     const plugin = tab.querySelector(`#${pluginId}`).parentElement;
     tab.scrollTo(0, plugin.offsetTop - tab.offsetTop);
@@ -78,7 +75,6 @@ export default class PreferencesContainer extends Container {
     const isInstalled = this.state.pluginsInstalled.some(plugin => plugin.name === target.name);
     const isFromNpm = this.state.pluginsFromNpm && this.state.pluginsFromNpm.some(plugin => plugin.name === target.name);
 
-    console.log('In here with', target, isInstalled, isFromNpm);
     if (target.action === 'install') {
       if (isInstalled) {
         this.scrollIntoView(this.state.tab, target.name);
