@@ -1,5 +1,6 @@
 'use strict';
 
+const {openPrefsWindow} = require('../preferences');
 const pluginPromises = new Map();
 
 const handlePluginsDeepLink = path => {
@@ -18,8 +19,12 @@ const addPluginPromise = (plugin, resolveFunction) => {
   pluginPromises.set(plugin, resolveFunction);
 };
 
+const triggerPluginAction = action => name => openPrefsWindow({target: {name, action}});
+
 const routes = new Map([
-  ['plugins', handlePluginsDeepLink]
+  ['plugins', handlePluginsDeepLink],
+  ['install-plugin', triggerPluginAction('install')],
+  ['configure-plugin', triggerPluginAction('configure')]
 ]);
 
 const handleDeepLink = url => {

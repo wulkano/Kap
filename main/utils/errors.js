@@ -2,7 +2,6 @@
 
 const {dialog, clipboard} = require('electron');
 const ensureError = require('ensure-error');
-const Sentry = require('./sentry');
 const cleanStack = require('clean-stack');
 
 const showError = async (error, {title, reportToSentry} = {}) => {
@@ -11,6 +10,7 @@ const showError = async (error, {title, reportToSentry} = {}) => {
 
   console.error(error);
   if (reportToSentry) {
+    const Sentry = require('./sentry');
     Sentry.captureException(ensuredError);
   }
 

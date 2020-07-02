@@ -31,7 +31,14 @@ export default class PreferencesContainer extends Container {
       openOnStartup: this.remote.app.getLoginItemSettings().openAtLogin,
       pluginsInstalled,
       isMounted: true
+    }, () => {
+      console.log('done');
     });
+
+    if (this.state.target && pluginsInstalled.some(plugin => plugin.name === this.state.target.name)) {
+      this.openTarget(this.state.target);
+      this.setState({target: undefined});
+    }
 
     if (this.settings.store.recordAudio) {
       this.getAudioDevices();
@@ -60,7 +67,47 @@ export default class PreferencesContainer extends Container {
     this.setState(updates);
   }
 
-  setNavigation = ({category, tab}) => this.setState({category, tab})
+  scrollIntoView = (tabId, pluginId) => {
+    console.log(tabId, pluginId);
+    const tab = document.querySelector(`#${tabId}`);
+    const plugin = tab.querySelector(`#${pluginId}`).parentElement;
+    tab.scrollTo(0, plugin.offsetTop - tab.offsetTop);
+  }
+
+  openTarget = target => {
+    const isInstalled = this.state.pluginsInstalled.some(plugin => plugin.name === target.name);
+    const isFromNpm = this.state.pluginsFromNpm && this.state.pluginsFromNpm.some(plugin => plugin.name === target.name);
+
+    console.log('In here with', target, isInstalled, isFromNpm);
+    if (target.action === 'install') {
+      if (isInstalled) {
+        this.scrollIntoView(this.state.tab, target.name);
+        this.setState({category: 'plugins'});
+      } else if (isFromNpm) {
+        this.scrollIntoView('discover', target.name);
+        this.setState({category: 'plugins', tab: 'discover'});
+        this.install(target.name);
+      } else {
+        this.setState({category: 'plugins'});
+      }
+    } else if (target.action === 'configure' && isInstalled) {
+      this.openPluginsConfig(target.name);
+    } else {
+      this.setState({category: 'plugins'});
+    }
+  }
+
+  setNavigation = ({category, tab, target}) => {
+    if (target) {
+      if (this.state.isMounted) {
+        this.openTarget(target);
+      } else {
+        this.setState({target});
+      }
+    } else {
+      this.setState({category, tab});
+    }
+  }
 
   fetchFromNpm = async () => {
     try {
@@ -75,6 +122,11 @@ export default class PreferencesContainer extends Container {
           return a.prettyName.localeCompare(b.prettyName);
         })
       });
+
+      if (this.state.target) {
+        this.openTarget(this.state.target);
+        this.setState({target: undefined});
+      }
     } catch (_) {
       this.setState({npmError: true});
     }
@@ -125,6 +177,7 @@ export default class PreferencesContainer extends Container {
 
   openPluginsConfig = async name => {
     this.track(`plugin/config/${name}`);
+    this.scrollIntoView('installed', name);
     this.setState({category: 'plugins'});
     this.setOverlay(true);
     await this.plugins.openPluginConfig(name);
