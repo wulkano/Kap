@@ -134,12 +134,15 @@ const updateExportOptions = () => {
 plugins.setUpdateExportOptions(updateExportOptions);
 
 ipc.answerRenderer('update-usage', ({format, plugin, fps}) => {
-  const usage = exportUsageHistory.get(format);
-  const now = Date.now();
+  if (plugin) {
+    const usage = exportUsageHistory.get(format);
+    const now = Date.now();
 
-  usage.plugins[plugin] = now;
-  usage.lastUsed = now;
-  exportUsageHistory.set(format, usage);
+    usage.plugins[plugin] = now;
+    usage.lastUsed = now;
+    exportUsageHistory.set(format, usage);
+  }
+
   fpsUsageHistory.set(format, fps);
   updateExportOptions();
 });

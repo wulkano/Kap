@@ -211,8 +211,10 @@ export default class EditorContainer extends Container {
       } else if (fps > originalFps) {
         shake(target);
         this.setState({fps: originalFps});
+        ipc.callMain('update-usage', {format: this.state.format, fps: originalFps});
       } else {
         this.setState({fps});
+        ipc.callMain('update-usage', {format: this.state.format, fps});
       }
     } else {
       shake(target);
