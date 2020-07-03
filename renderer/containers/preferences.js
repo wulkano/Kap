@@ -33,11 +33,6 @@ export default class PreferencesContainer extends Container {
       isMounted: true
     });
 
-    if (this.state.target && pluginsInstalled.some(plugin => plugin.name === this.state.target.name)) {
-      this.openTarget(this.state.target);
-      this.setState({target: undefined});
-    }
-
     if (this.settings.store.recordAudio) {
       this.getAudioDevices();
     }
