@@ -23,7 +23,7 @@ const {convertTo} = require('../main/convert');
 
 test.afterEach.always(t => {
   if (t.context.outputPath && fs.existsSync(t.context.outputPath)) {
-    fs.unlink(t.context.outputPath, () => {});
+    fs.unlinkSync(t.context.outputPath);
   }
 });
 
