@@ -10,6 +10,7 @@ const showError = async (error, {title, reportToSentry} = {}) => {
 
   console.error(error);
   if (reportToSentry) {
+    // Imported here to avoid circular dependency
     const Sentry = require('./sentry');
     Sentry.captureException(ensuredError);
   }

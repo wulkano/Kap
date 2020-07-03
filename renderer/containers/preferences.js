@@ -61,9 +61,12 @@ export default class PreferencesContainer extends Container {
   }
 
   scrollIntoView = (tabId, pluginId) => {
-    const tab = document.querySelector(`#${tabId}`);
-    const plugin = tab.querySelector(`#${pluginId}`).parentElement;
-    tab.scrollTo(0, plugin.offsetTop - tab.offsetTop);
+    const plugin = document.querySelector(`#${tabId} #${pluginId}`).parentElement;
+    plugin.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+      inline: 'nearest'
+    });
   }
 
   openTarget = target => {
@@ -77,7 +80,21 @@ export default class PreferencesContainer extends Container {
       } else if (isFromNpm) {
         this.scrollIntoView('discover', target.name);
         this.setState({category: 'plugins', tab: 'discover'});
-        this.install(target.name);
+
+        const buttonIndex = this.remote.dialog.showMessageBoxSync(this.remote.getCurrentWindow(), {
+          type: 'question',
+          buttons: [
+            'Install',
+            'Cancel'
+          ],
+          defaultId: 0,
+          cancelId: 1,
+          message: `Do you want to install ${target.name}?`
+        });
+
+        if (buttonIndex === 0) {
+          this.install(target.name);
+        }
       } else {
         this.setState({category: 'plugins'});
       }
