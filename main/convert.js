@@ -54,7 +54,7 @@ const getConvertFunction = shouldTrack => (outputPath, options, args) => {
 
       const timeProccessed = timeRegex.exec(data);
 
-      if (timeProccessed) {
+      if (timeProccessed && speed > 0) {
         const processedMs = moment.duration(timeProccessed[1]).asMilliseconds();
         const progress = processedMs / durationMs;
 
