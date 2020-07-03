@@ -14,6 +14,7 @@
   "private": true,
   "main": "main/index.js",
   "scripts": {
+    "lint": "xo",
     "test": "xo && ava",
     "start": "yarn && electron .",
     "build": "next build renderer && next export renderer",
@@ -135,8 +136,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm test",
-      "pre-push": "npm test"
+      "pre-commit": "yarn lint",
+      "pre-push": "yarn lint"
     }
   },
   "build": {
