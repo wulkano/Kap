@@ -155,6 +155,7 @@ const convertToWebm = PCancelable.fn(async (options, onCancel) => {
     '-b:v', '1M', // Bitrate (same as the MP4)
     '-codec:v', 'vp9',
     '-codec:a', 'vorbis',
+    '-ac', '2', // https://stackoverflow.com/questions/19004762/ffmpeg-covert-from-mp4-to-webm-only-working-on-some-files
     '-strict', '-2', // Needed because `vorbis` is experimental
     '-r', options.fps,
     ...(
