@@ -14,7 +14,8 @@
   "private": true,
   "main": "main/index.js",
   "scripts": {
-    "test": "xo",
+    "lint": "xo",
+    "test": "xo && ava",
     "start": "yarn && electron .",
     "build": "next build renderer && next export renderer",
     "dist": "npm run build && electron-builder",
@@ -79,6 +80,7 @@
     "yarn": "^1.22.4"
   },
   "devDependencies": {
+    "ava": "^3.9.0",
     "babel-eslint": "^10.1.0",
     "electron": "8.2.4",
     "electron-builder": "^22.6.0",
@@ -87,8 +89,26 @@
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^3.0.0",
     "husky": "^4.2.5",
+    "module-alias": "^2.2.2",
     "next": "^9.3.6",
+    "sinon": "^9.0.2",
+    "unique-string": "^2.0.0",
     "xo": "^0.30.0"
+  },
+  "_moduleAliases": {
+    "electron": "test/mocks/electron.js"
+  },
+  "ava": {
+    "files": [
+      "test/**/*.js",
+      "!test/helpers",
+      "!test/mocks"
+    ],
+    "verbose": true,
+    "timeout": "5m",
+    "concurrency": 1,
+    "failFast": true,
+    "require": ["module-alias/register"]
   },
   "xo": {
     "parser": "babel-eslint",
@@ -116,8 +136,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm test",
-      "pre-push": "npm test"
+      "pre-commit": "yarn lint",
+      "pre-push": "yarn lint"
     }
   },
   "build": {
