@@ -6,9 +6,7 @@ import {shake} from '../utils/inputs';
 const isMuted = format => ['gif', 'apng'].includes(format);
 
 export default class EditorContainer extends Container {
-  state = {
-    fps: 60
-  }
+  state = {}
 
   setVideoContainer = videoContainer => {
     this.videoContainer = videoContainer;
@@ -120,11 +118,7 @@ export default class EditorContainer extends Container {
 
   setOptions = ({exportOptions = [], editOptions = [], fps}) => {
     const {format, plugin, editPlugin} = this.state;
-    const updates = {options: exportOptions, editOptions};
-
-    if (fps) {
-      updates.fps = Math.min(fps, this.state.fps);
-    }
+    const updates = {options: exportOptions, editOptions, fpsOptions: fps};
 
     if (format) {
       const option = exportOptions.find(option => option.format === format);
@@ -140,6 +134,10 @@ export default class EditorContainer extends Container {
       updates.plugin = title === 'Open With' ? secondTitle : title;
     }
 
+    if (!this.state.fps && fps && fps[updates.format]) {
+      updates.fps = fps[updates.format];
+    }
+
     if (editPlugin) {
       updates.editPlugin = editOptions.find(({title, pluginName}) => title === editPlugin.title && pluginName === editPlugin.pluginName);
     }
@@ -153,7 +151,7 @@ export default class EditorContainer extends Container {
   }
 
   selectFormat = format => {
-    const {plugin, options, wasMuted} = this.state;
+    const {plugin, options, wasMuted, fpsOptions, originalFps} = this.state;
     const {plugins} = options.find(option => option.format === format);
     const newPlugin = plugin !== 'Open With' && plugins.find(p => p.title === plugin) ? plugin : plugins[0].title;
 
@@ -166,7 +164,13 @@ export default class EditorContainer extends Container {
       }
     }
 
-    this.setState({format, plugin: newPlugin, openWithApp: null});
+    const updates = {format, plugin: newPlugin, openWithApp: null};
+
+    if (fpsOptions && fpsOptions[format]) {
+      updates.fps = Math.min(originalFps, fpsOptions[format]);
+    }
+
+    this.setState(updates);
   }
 
   selectPlugin = plugin => {
@@ -207,8 +211,10 @@ export default class EditorContainer extends Container {
       } else if (fps > originalFps) {
         shake(target);
         this.setState({fps: originalFps});
+        ipc.callMain('update-usage', {format: this.state.format, fps: originalFps});
       } else {
         this.setState({fps});
+        ipc.callMain('update-usage', {format: this.state.format, fps});
       }
     } else {
       shake(target);

@@ -22,7 +22,22 @@ const exportUsageHistory = new Store({
 const fpsUsageHistory = new Store({
   name: 'fps-usage-history',
   schema: {
-    fps: {
+    apng: {
+      type: 'number',
+      minimum: 0,
+      default: 60
+    },
+    webm: {
+      type: 'number',
+      minimum: 0,
+      default: 60
+    },
+    mp4: {
+      type: 'number',
+      minimum: 0,
+      default: 60
+    },
+    gif: {
       type: 'number',
       minimum: 0,
       default: 60
@@ -110,22 +125,25 @@ const updateExportOptions = () => {
   const exportOptions = getExportOptions();
   const editOptions = getEditOptions();
   for (const editor of editors) {
-    ipc.callRenderer(editor, 'export-options', {exportOptions, editOptions});
+    ipc.callRenderer(editor, 'export-options', {exportOptions, editOptions, fps: fpsUsageHistory.store});
   }
 
-  setOptions({exportOptions, editOptions, fps: fpsUsageHistory.get('fps')});
+  setOptions({exportOptions, editOptions, fps: fpsUsageHistory.store});
 };
 
 plugins.setUpdateExportOptions(updateExportOptions);
 
 ipc.answerRenderer('update-usage', ({format, plugin, fps}) => {
-  const usage = exportUsageHistory.get(format);
-  const now = Date.now();
+  if (plugin) {
+    const usage = exportUsageHistory.get(format);
+    const now = Date.now();
 
-  usage.plugins[plugin] = now;
-  usage.lastUsed = now;
-  exportUsageHistory.set(format, usage);
-  fpsUsageHistory.set('fps', fps);
+    usage.plugins[plugin] = now;
+    usage.lastUsed = now;
+    exportUsageHistory.set(format, usage);
+  }
+
+  fpsUsageHistory.set(format, fps);
   updateExportOptions();
 });
 
@@ -135,7 +153,7 @@ const initializeExportOptions = () => {
   setOptions({
     exportOptions: getExportOptions(),
     editOptions: getEditOptions(),
-    fps: fpsUsageHistory.get('fps')
+    fps: fpsUsageHistory.store
   });
 };
 
