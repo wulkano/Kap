@@ -89,7 +89,7 @@ export default class PreferencesContainer extends Container {
           ],
           defaultId: 0,
           cancelId: 1,
-          message: `Do you want to install ${target.name}?`
+          message: `Do you want to install the “${target.name}” plugin?`
         });
 
         if (buttonIndex === 0) {
