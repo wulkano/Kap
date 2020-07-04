@@ -69,7 +69,7 @@ const showError = async (error, {title: customTitle, plugin} = {}) => {
         openNewGitHubIssue({
           repoUrl: plugin.repoUrl,
           title,
-          body: detail
+          body: getIssueBody(title, detail)
         });
       }
     };
