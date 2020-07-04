@@ -64,7 +64,7 @@ class Plugins extends React.Component {
           </nav>
           <div className="tab-container">
             <div className="switcher"/>
-            <div className="tab">
+            <div className="tab" id="discover">
               {
                 npmError ? (
                   <EmptyTab
@@ -85,7 +85,7 @@ class Plugins extends React.Component {
                 )
               }
             </div>
-            <div className="tab">
+            <div className="tab" id="installed">
               {
                 pluginsInstalled.length === 0 ? (
                   <EmptyTab
