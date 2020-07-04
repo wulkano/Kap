@@ -22,6 +22,7 @@ const {hasMicrophoneAccess, ensureScreenCapturePermissions} = require('./common/
 const {handleDeepLink} = require('./utils/deep-linking');
 
 require('./utils/sentry');
+require('./utils/errors').setupErrorHandling();
 
 const filesToOpen = [];
 

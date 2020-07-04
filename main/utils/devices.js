@@ -35,7 +35,7 @@ const getAudioDevices = async () => {
     if (!Array.isArray(devices)) {
       const Sentry = require('./sentry');
       Sentry.captureException(new Error(`devices is not an array: ${JSON.stringify(devices)}`));
-      showError(error, {reportToSentry: true});
+      showError(error);
       return [];
     }
   }

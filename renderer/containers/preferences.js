@@ -164,7 +164,7 @@ export default class PreferencesContainer extends Container {
         try {
           await this.getAudioDevices();
         } catch (error) {
-          this.showError(error, {reportToSentry: true});
+          this.showError(error);
         }
       }
 

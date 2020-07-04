@@ -7,6 +7,42 @@ const SENTRY_PUBLIC_DSN = 'https://2dffdbd619f34418817f4db3309299ce@sentry.io/25
 
 const remote = electron.remote || false;
 
+const systemColorNames = [
+  'alternate-selected-control-text',
+  'control-background',
+  'control',
+  'control-text',
+  'disabled-control-text',
+  'find-highlight',
+  'grid',
+  'header-text',
+  'highlight',
+  'keyboard-focus-indicator',
+  'label',
+  'link',
+  'placeholder-text',
+  'quaternary-label',
+  'scrubber-textured-background',
+  'secondary-label',
+  'selected-content-background',
+  'selected-control',
+  'selected-control-text',
+  'selected-menu-item-text',
+  'selected-text-background',
+  'selected-text',
+  'separator',
+  'shadow',
+  'tertiary-label',
+  'text-background',
+  'text',
+  'under-page-background',
+  'unemphasized-selected-content-background',
+  'unemphasized-selected-text-background',
+  'unemphasized-selected-text',
+  'window-background',
+  'window-frame-text'
+];
+
 export default class Kap extends App {
   state = {isDark: false}
 
@@ -15,8 +51,9 @@ export default class Kap extends App {
 
     if (remote) {
       // TODO: When we disable SSR, this can be a normal import
-      const {is, darkMode} = remote.require('electron-util');
+      const {is, darkMode, api} = require('electron-util');
       const settings = remote.require('./common/settings');
+      this.systemPreferences = api.systemPreferences;
 
       if (!is.development && settings.get('allowAnalytics')) {
         Sentry.init({dsn: SENTRY_PUBLIC_DSN});
@@ -26,10 +63,26 @@ export default class Kap extends App {
     }
   }
 
+  generateSystemColors = () => systemColorNames.map(name => ({
+    name: `--system-${name}`,
+    value: this.systemPreferences.getColor(name)
+  }))
+
   componentDidMount() {
-    this.setState({isDark: this.darkMode.isEnabled});
+    this.setState({
+      isDark: this.darkMode.isEnabled,
+      systemColors: this.generateSystemColors()
+    });
+
     this.darkMode.onChange(() => {
-      this.setState({isDark: this.darkMode.isEnabled});
+      this.setState({
+        isDark: this.darkMode.isEnabled,
+        systemColors: this.generateSystemColors()
+      });
+    });
+
+    this.systemPreferences.on('accent-color-changed', (_, accentColor) => {
+      this.setState({accentColor});
     });
   }
 
@@ -48,7 +101,8 @@ export default class Kap extends App {
 
   render() {
     const {Component, pageProps} = this.props;
-    const {isDark} = this.state;
+    const {isDark, accentColor = '007aff', systemColors = []} = this.state;
+
     return (
       <div className={isDark ? 'dark' : undefined}>
         <Component {...pageProps}/>
@@ -59,6 +113,7 @@ export default class Kap extends App {
             --kap-blue-light: #3287ff;
 
             --kap: var(--kap-blue);
+            --accent: #${accentColor};
 
             --red: #ff3b30;
             --black: #000000;
@@ -93,6 +148,8 @@ export default class Kap extends App {
             --shortcut-box-shadow: none;
             --input-focus-border-color: #ccc;
             --cropper-button-background-color: transparent;
+
+            ${systemColors.map(({name, value}) => `${name}: ${value};`).join('\n')}
           }
 
           .dark {

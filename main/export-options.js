@@ -103,7 +103,7 @@ const getExportOptions = () => {
         }
       }
     } catch (error) {
-      showError(error, {title: `Something went wrong while loading “${json.name}”`});
+      showError(error, {title: `Something went wrong while loading “${json.name}”`, plugin: json});
       const Sentry = require('./utils/sentry');
       Sentry.captureException(error);
     }
