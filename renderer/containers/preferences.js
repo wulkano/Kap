@@ -60,7 +60,62 @@ export default class PreferencesContainer extends Container {
     this.setState(updates);
   }
 
-  setNavigation = ({category, tab}) => this.setState({category, tab})
+  scrollIntoView = (tabId, pluginId) => {
+    const plugin = document.querySelector(`#${tabId} #${pluginId}`).parentElement;
+    plugin.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+      inline: 'nearest'
+    });
+  }
+
+  openTarget = target => {
+    const isInstalled = this.state.pluginsInstalled.some(plugin => plugin.name === target.name);
+    const isFromNpm = this.state.pluginsFromNpm && this.state.pluginsFromNpm.some(plugin => plugin.name === target.name);
+
+    if (target.action === 'install') {
+      if (isInstalled) {
+        this.scrollIntoView(this.state.tab, target.name);
+        this.setState({category: 'plugins'});
+      } else if (isFromNpm) {
+        this.scrollIntoView('discover', target.name);
+        this.setState({category: 'plugins', tab: 'discover'});
+
+        const buttonIndex = this.remote.dialog.showMessageBoxSync(this.remote.getCurrentWindow(), {
+          type: 'question',
+          buttons: [
+            'Install',
+            'Cancel'
+          ],
+          defaultId: 0,
+          cancelId: 1,
+          message: `Do you want to install the “${target.name}” plugin?`
+        });
+
+        if (buttonIndex === 0) {
+          this.install(target.name);
+        }
+      } else {
+        this.setState({category: 'plugins'});
+      }
+    } else if (target.action === 'configure' && isInstalled) {
+      this.openPluginsConfig(target.name);
+    } else {
+      this.setState({category: 'plugins'});
+    }
+  }
+
+  setNavigation = ({category, tab, target}) => {
+    if (target) {
+      if (this.state.isMounted) {
+        this.openTarget(target);
+      } else {
+        this.setState({target});
+      }
+    } else {
+      this.setState({category, tab});
+    }
+  }
 
   fetchFromNpm = async () => {
     try {
@@ -75,6 +130,11 @@ export default class PreferencesContainer extends Container {
           return a.prettyName.localeCompare(b.prettyName);
         })
       });
+
+      if (this.state.target) {
+        this.openTarget(this.state.target);
+        this.setState({target: undefined});
+      }
     } catch (_) {
       this.setState({npmError: true});
     }
@@ -125,6 +185,7 @@ export default class PreferencesContainer extends Container {
 
   openPluginsConfig = async name => {
     this.track(`plugin/config/${name}`);
+    this.scrollIntoView('installed', name);
     this.setState({category: 'plugins'});
     this.setOverlay(true);
     await this.plugins.openPluginConfig(name);

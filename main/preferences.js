@@ -16,6 +16,10 @@ const openPrefsWindow = async options => {
   closeAllCroppers();
 
   if (prefsWindow) {
+    if (options) {
+      ipc.callRenderer(prefsWindow, 'options', options);
+    }
+
     prefsWindow.show();
     return prefsWindow;
   }

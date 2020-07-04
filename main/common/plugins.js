@@ -6,7 +6,6 @@ const electron = require('electron');
 const got = require('got');
 const execa = require('execa');
 const makeDir = require('make-dir');
-const {ipcMain: ipc} = require('electron-better-ipc');
 const packageJson = require('package-json');
 
 const {app, Notification} = electron;
@@ -18,6 +17,10 @@ const {notify} = require('./notifications');
 const {track} = require('./analytics');
 const {InstalledPlugin, NpmPlugin, recordPluginServiceState} = require('../plugin');
 const {showError} = require('../utils/errors');
+
+// Need to persist the notification, otherwise it is garbage collected and the actions don't trigger
+// https://github.com/electron/electron/issues/12690
+let pluginNotification;
 
 class Plugins {
   constructor() {
@@ -147,21 +150,18 @@ class Plugins {
         ]
       };
 
-      const notification = new Notification(options);
+      pluginNotification = new Notification(options);
 
-      if (!isValid) {
-        const openConfig = async () => {
-          const prefsWindow = await openPrefsWindow();
-          ipc.callRenderer(prefsWindow, 'open-plugin-config', name);
-        };
+      if (!isValid || hasConfig) {
+        const openConfig = () => openPrefsWindow({target: {name, action: 'configure'}});
 
-        notification.on('click', openConfig);
+        pluginNotification.on('click', openConfig);
 
-        notification.on('action', (_, index) => {
+        pluginNotification.on('action', (_, index) => {
           if (index === 0) {
             openConfig();
           } else {
-            notification.close();
+            pluginNotification.close();
           }
         });
       }
@@ -172,7 +172,7 @@ class Plugins {
         }
       }
 
-      notification.show();
+      pluginNotification.show();
       this.updateExportOptions();
       this.refreshRecordPluginServices();
 
