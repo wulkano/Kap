@@ -1,5 +1,6 @@
 'use strict';
 
+const path = require('path');
 const os = require('os');
 const {clipboard, shell, app} = require('electron');
 const ensureError = require('ensure-error');
@@ -11,7 +12,7 @@ const delay = require('delay');
 
 const {showDialog} = require('../dialog');
 
-const MAX_RETRIES = 20;
+const MAX_RETRIES = 10;
 
 const getSentryIssue = async (eventId, tries = 0) => {
   if (tries > MAX_RETRIES) {
@@ -19,17 +20,26 @@ const getSentryIssue = async (eventId, tries = 0) => {
   }
 
   try {
+    // This endpoint will poll the Sentry api with the evenId until it gets an issue id (~8 seconds)
+    // Then it will filter through GitHub issues to try and find an issue matching that issue id
+    // It will return the issue information if it finds it or a partial template to use to create one if not
+    // https://github.com/wulkano/kap-sentry-tracker
     const {body} = await got.get(`https://kap-sentry-tracker.vercel.app/api/event/${eventId}`, {json: true});
 
     if (body.pending) {
-      await delay(1000);
+      await delay(2000);
       return getSentryIssue(eventId, tries + 1);
     }
 
     return body;
-  } catch {
-
+  } catch (error) {
+    showError(error);
   }
+};
+
+const getPrettyStack = (error, isPluginError) => {
+  const pluginsPath = path.join(app.getPath('userData'), 'plugins', 'node_modules');
+  return cleanStack(error.stack, {pretty: true, basePath: isPluginError && pluginsPath});
 };
 
 const getIssueBody = (title, errorStack, sentryTemplate) => `
@@ -51,13 +61,14 @@ ${errorStack}
 const showError = async (error, {title: customTitle, plugin} = {}) => {
   const ensuredError = ensureError(error);
   const title = customTitle || ensuredError.name;
-  const detail = cleanStack(ensuredError.stack, {pretty: true});
+  const detail = getPrettyStack(ensureError, plugin);
+  const stack = cleanStack(ensuredError.stack);
 
   const mainButtons = [
     'Don't Report',
     {
       label: 'Copy Error',
-      action: () => clipboard.writeText(`${title}\n${cleanStack(ensuredError.stack)}`)
+      action: () => clipboard.writeText(`${title}\n${stack}`)
     }
   ];
 
@@ -69,7 +80,7 @@ const showError = async (error, {title: customTitle, plugin} = {}) => {
         openNewGitHubIssue({
           repoUrl: plugin.repoUrl,
           title,
-          body: getIssueBody(title, detail)
+          body: getIssueBody(title, stack)
         });
       }
     };
@@ -127,7 +138,7 @@ const showError = async (error, {title: customTitle, plugin} = {}) => {
                   user: 'karaggeorge',
                   repo: 'kap-test-playground',
                   title,
-                  body: getIssueBody(title, cleanStack(ensuredError.stack), issue.ghIssueTemplate),
+                  body: getIssueBody(title, stack, issue.ghIssueTemplate),
                   labels: ['sentry']
                 })
               }

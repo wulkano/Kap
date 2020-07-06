@@ -3,7 +3,7 @@ import React from 'react';
 export default () => {
   return (
     <div>
-      <img src="https://getkap.co/static/favicon/kap.svg"/>
+      <img src="/static/kap-icon.png"/>
       <style jsx>{`
         img {
           width: 58px;

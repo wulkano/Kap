@@ -25,6 +25,7 @@ const Actions = ({buttons, performAction, defaultId}) => {
             ref={index === defaultId ? defaultButton : undefined}
             key={button.label}
             type="button"
+            disabled={index === activeButton}
             onClick={() => action(index)}
           >
             {index === activeButton ? button.activeLabel || button.label : button.label}
@@ -44,9 +45,13 @@ const Actions = ({buttons, performAction, defaultId}) => {
           white-space: nowrap;
           padding: 4px 20px;
           font-size: 1.25rem;
-          color: var(--system-control-text);
+          color: var(--title-color);
           border-radius: 4px;
           text-align: center;
+        }
+
+        button:disabled {
+          opacity: 0.5;
         }
 
         button + button {

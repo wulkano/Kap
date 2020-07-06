@@ -8,7 +8,6 @@ const SENTRY_PUBLIC_DSN = 'https://2dffdbd619f34418817f4db3309299ce@sentry.io/25
 const remote = electron.remote || false;
 
 const systemColorNames = [
-  'alternate-selected-control-text',
   'control-background',
   'control',
   'control-text',

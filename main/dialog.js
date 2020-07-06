@@ -27,10 +27,10 @@ const showDialog = options => new Promise(resolve => {
   loadRoute(dialogWindow, 'dialog');
 
   let buttons;
-  let actionTaken;
+  let wasActionTaken;
 
   const updateUi = async newOptions => {
-    actionTaken = true;
+    wasActionTaken = true;
     buttons = newOptions.buttons.map(button => {
       if (typeof button === 'string') {
         return {label: button};
@@ -61,10 +61,10 @@ const showDialog = options => new Promise(resolve => {
   const unsubscribe = ipc.answerRenderer(`dialog-action-${dialogWindow.id}`, async index => {
     if (buttons[index]) {
       if (buttons[index].action) {
-        actionTaken = false;
+        wasActionTaken = false;
         await buttons[index].action(cleanup, updateUi);
 
-        if (!actionTaken) {
+        if (!wasActionTaken) {
           cleanup(index);
         }
       } else {
@@ -76,7 +76,7 @@ const showDialog = options => new Promise(resolve => {
   });
 
   const cleanup = value => {
-    actionTaken = true;
+    wasActionTaken = true;
     unsubscribe();
     dialogWindow.close();
     resolve(value);

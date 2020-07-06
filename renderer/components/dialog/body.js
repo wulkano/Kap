@@ -33,7 +33,6 @@ const Body = ({title, message, detail}) => {
         }
 
         span {
-          white-space: nowrap;
           min-height: 1.125rem;
         }
 
