@@ -65,7 +65,7 @@ const showError = async (error, {title: customTitle, plugin} = {}) => {
   const stack = cleanStack(ensuredError.stack);
 
   const mainButtons = [
-    'Don't Report',
+    'Don\'t Report',
     {
       label: 'Copy Error',
       action: () => clipboard.writeText(`${title}\n${stack}`)
