@@ -11,6 +11,7 @@ const showDialog = options => new Promise(resolve => {
     height: 1,
     resizable: false,
     minimizable: false,
+    maximizable: false,
     fullscreenable: false,
     vibrancy: 'window',
     show: false,

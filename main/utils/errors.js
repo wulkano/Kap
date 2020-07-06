@@ -54,7 +54,7 @@ const showError = async (error, {title: customTitle, plugin} = {}) => {
   const detail = cleanStack(ensuredError.stack, {pretty: true});
 
   const mainButtons = [
-    'OK',
+    'Don't Report',
     {
       label: 'Copy Error',
       action: () => clipboard.writeText(`${title}\n${cleanStack(ensuredError.stack)}`)
@@ -94,17 +94,17 @@ const showError = async (error, {title: customTitle, plugin} = {}) => {
     const eventId = Sentry.captureException(ensuredError);
     const sentryIssuePromise = getSentryIssue(eventId);
 
-    message = 'Reporting this issue will help us track it better and resolve it faster';
+    message = 'Reporting this issue will help us track it better and resolve it faster.';
 
     buttons.push({
-      label: 'Collect info and report',
-      activeLabel: 'Collecting info…',
+      label: 'Collect Info and Report',
+      activeLabel: 'Collecting Info…',
       action: async (_, updateUi) => {
         const issue = await sentryIssuePromise;
 
         if (!issue || issue.error) {
           updateUi({
-            message: 'Something went wrong while collecting the information',
+            message: 'Something went wrong while collecting the information.',
             buttons: mainButtons
           });
         } else if (issue.ghUrl) {

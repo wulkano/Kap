@@ -77,7 +77,7 @@ export default () => {
           margin: 0;
           width: 100vw;
           height: 100vh;
-          font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+          font-family: system-ui, 'Helvetica Neue', sans-serif;
           background: transparent;
         }
 
