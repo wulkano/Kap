@@ -20,9 +20,9 @@ const getSentryIssue = async (eventId, tries = 0) => {
   }
 
   try {
-    // This endpoint will poll the Sentry api with the evenId until it gets an issue id (~8 seconds)
-    // Then it will filter through GitHub issues to try and find an issue matching that issue id
-    // It will return the issue information if it finds it or a partial template to use to create one if not
+    // This endpoint will poll the Sentry API with the event ID until it gets an issue ID (~8 seconds).
+    // It will then filter through GitHub issues to try and find an issue matching that issue ID.
+    // It will return the issue information if it finds it or a partial template to use to create one if not.
     // https://github.com/wulkano/kap-sentry-tracker
     const {body} = await got.get(`https://kap-sentry-tracker.vercel.app/api/event/${eventId}`, {json: true});
 
