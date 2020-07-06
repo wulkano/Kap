@@ -61,7 +61,7 @@ ${errorStack}
 const showError = async (error, {title: customTitle, plugin} = {}) => {
   const ensuredError = ensureError(error);
   const title = customTitle || ensuredError.name;
-  const detail = getPrettyStack(ensureError, plugin);
+  const detail = getPrettyStack(ensuredError, plugin);
   const stack = cleanStack(ensuredError.stack);
 
   const mainButtons = [
