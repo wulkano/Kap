@@ -1,7 +1,6 @@
 'use strict';
 
 const path = require('path');
-const os = require('os');
 const {clipboard, shell, app} = require('electron');
 const ensureError = require('ensure-error');
 const cleanStack = require('clean-stack');
@@ -9,6 +8,7 @@ const isOnline = require('is-online');
 const {openNewGitHubIssue} = require('electron-util');
 const got = require('got');
 const delay = require('delay');
+const macosRelease = require('macos-release');
 
 const {showDialog} = require('../dialog');
 
@@ -37,18 +37,21 @@ const getSentryIssue = async (eventId, tries = 0) => {
   }
 };
 
-const getPrettyStack = (error, isPluginError) => {
+const getPrettyStack = error => {
   const pluginsPath = path.join(app.getPath('userData'), 'plugins', 'node_modules');
-  return cleanStack(error.stack, {pretty: true, basePath: isPluginError && pluginsPath});
+  return cleanStack(error.stack, {pretty: true, basePath: pluginsPath});
 };
+
+const release = macosRelease();
 
 const getIssueBody = (title, errorStack, sentryTemplate) => `
 ${sentryTemplate}<!--
 Thank you for helping us test Kap. Your feedback helps us make Kap better for everyone!
 -->
 
-**macOS version:**    ${os.release()} (darwin)
+**macOS version:**    ${release.name} (${release.version})
 **Kap version:**      ${app.getVersion()}
+
 \`\`\`
 ${title}
 
@@ -61,14 +64,13 @@ ${errorStack}
 const showError = async (error, {title: customTitle, plugin} = {}) => {
   const ensuredError = ensureError(error);
   const title = customTitle || ensuredError.name;
-  const detail = getPrettyStack(ensuredError, plugin);
-  const stack = cleanStack(ensuredError.stack);
+  const detail = getPrettyStack(ensuredError);
 
   const mainButtons = [
     'Don\'t Report',
     {
       label: 'Copy Error',
-      action: () => clipboard.writeText(`${title}\n${stack}`)
+      action: () => clipboard.writeText(`${title}\n${detail}`)
     }
   ];
 
@@ -80,7 +82,7 @@ const showError = async (error, {title: customTitle, plugin} = {}) => {
         openNewGitHubIssue({
           repoUrl: plugin.repoUrl,
           title,
-          body: getIssueBody(title, stack)
+          body: getIssueBody(title, detail)
         });
       }
     };
@@ -95,13 +97,12 @@ const showError = async (error, {title: customTitle, plugin} = {}) => {
   }
 
   // Avoids circular dependency
-  const settings = require('../common/settings');
   const Sentry = require('./sentry');
 
   let message;
   const buttons = [...mainButtons];
 
-  if (isOnline && settings.get('allowAnalytics')) {
+  if (isOnline && Sentry.isSentryEnabled) {
     const eventId = Sentry.captureException(ensuredError);
     const sentryIssuePromise = getSentryIssue(eventId);
 
@@ -135,10 +136,10 @@ const showError = async (error, {title: customTitle, plugin} = {}) => {
               {
                 label: 'Open Issue',
                 action: () => openNewGitHubIssue({
-                  user: 'karaggeorge',
-                  repo: 'kap-test-playground',
+                  user: 'wulkano',
+                  repo: 'kap',
                   title,
-                  body: getIssueBody(title, stack, issue.ghIssueTemplate),
+                  body: getIssueBody(title, detail, issue.ghIssueTemplate),
                   labels: ['sentry']
                 })
               }
