@@ -163,6 +163,7 @@
       "entitlements": "./build/entitlements.mac.inherit.plist",
       "extendInfo": {
         "NSMicrophoneUsageDescription": "Kap needs access to the microphone to be able to record audio for screen recordings.",
+        "NSCameraUsageDescription": "A Kap plugin wants to use the camera.",
         "NSUserNotificationAlertStyle": "alert",
         "CFBundleDocumentTypes": [
           {
