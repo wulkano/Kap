@@ -34,13 +34,11 @@ workflows:
           filters:
             tags:
               only: /.*/ # Force CircleCI to build on tags
-            branches:
-              ignore: /.*/
       - sentry-release:
-          # requires:
-          #   - build
+          requires:
+            - build
           filters:
             tags:
               only: /^v.*/
-            # branches:
-            #   ignore: /.*/
+            branches:
+              ignore: /.*/
