@@ -1,10 +1,10 @@
 'use strict';
 
-const os = require('os');
 const {Menu, app, dialog, BrowserWindow} = require('electron');
 const {openNewGitHubIssue, appMenu} = require('electron-util');
 const {ipcMain: ipc} = require('electron-better-ipc');
 const delay = require('delay');
+const macosRelease = require('macos-release');
 
 const {supportedVideoExtensions, defaultInputDeviceId} = require('./common/constants');
 const settings = require('./common/settings');
@@ -17,6 +17,7 @@ const {closeAllCroppers} = require('./cropper');
 const {editorEmitter} = require('./editor');
 const openFiles = require('./utils/open-files');
 
+const release = macosRelease();
 const issueBody = `
 <!--
 Thank you for helping us test Kap. Your feedback helps us make Kap better for everyone!
@@ -29,7 +30,7 @@ Expected behavior:    How you expected Kap to behave.
 Workaround:           A workaround for the issue if you've found on. (this will help others experiencing the same issue!)
 -->
 
-**macOS version:**    ${os.release()} (darwin)
+**macOS version:**    ${release.name} (${release.version})
 **Kap version:**      ${app.getVersion()}
 
 #### Steps to reproduce

@@ -50,7 +50,7 @@ class Plugins {
           recordPluginServiceState.set(service.title, true);
         }
       } catch (error) {
-        showError(error, {title: `Something went wrong while enabling “${service.title}”`, reportToSentry: true});
+        showError(error, {title: `Something went wrong while enabling “${service.title}”`});
         const Sentry = require('./utils/sentry');
         Sentry.captureException(error);
       }
@@ -132,7 +132,7 @@ class Plugins {
         try {
           await plugin.plugin.didInstall(plugin.config);
         } catch (error) {
-          showError(error);
+          showError(error, {plugin});
         }
       }
 
@@ -201,7 +201,7 @@ class Plugins {
       try {
         await plugin.plugin.willUninstall(plugin.config);
       } catch (error) {
-        showError(error);
+        showError(error, {plugin});
       }
     }
 

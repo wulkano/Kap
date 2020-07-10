@@ -34,7 +34,7 @@
     "aperture": "^5.2.0",
     "base64-img": "^1.0.4",
     "classnames": "^2.2.6",
-    "clean-stack": "^2.2.0",
+    "clean-stack": "^3.0.0",
     "delay": "^4.3.0",
     "electron-better-ipc": "^1.0.1",
     "electron-log": "^4.1.1",
@@ -49,11 +49,13 @@
     "first-run": "^2.0.0",
     "got": "^9.6.0",
     "insight": "^0.10.3",
+    "is-online": "^8.4.0",
     "lodash": "^4.17.15",
     "mac-open-with": "^1.2.3",
     "mac-screen-capture-permissions": "^1.1.0",
     "mac-windows": "^0.7.1",
     "macos-audio-devices": "^1.3.2",
+    "macos-release": "^2.4.0",
     "macos-version": "^5.2.0",
     "make-dir": "^3.1.0",
     "moment": "^2.24.0",
@@ -108,7 +110,9 @@
     "timeout": "5m",
     "concurrency": 1,
     "failFast": true,
-    "require": ["module-alias/register"]
+    "require": [
+      "module-alias/register"
+    ]
   },
   "xo": {
     "parser": "babel-eslint",

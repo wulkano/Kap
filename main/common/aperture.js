@@ -1,6 +1,5 @@
 'use strict';
 
-const {dialog} = require('electron');
 const createAperture = require('aperture');
 
 const {openEditorWindow} = require('../editor');
@@ -48,7 +47,7 @@ const callPlugins = async method => Promise.all(recordingPlugins.map(async ({plu
         })
       );
     } catch (error) {
-      showError(error, {title: `Something went wrong while using the plugin “${plugin.prettyName}”`});
+      showError(error, {title: `Something went wrong while using the plugin “${plugin.prettyName}”`, plugin});
     }
   }
 }));
@@ -137,7 +136,7 @@ const startRecording = async options => {
     await aperture.startRecording(apertureOptions);
   } catch (error) {
     track('recording/stopped/error');
-    showError(error, {title: 'Recording error', reportToSentry: true});
+    showError(error, {title: 'Recording error'});
     past = null;
     cleanup();
     return;
@@ -161,7 +160,7 @@ const startRecording = async options => {
     // Make sure it doesn't catch the error of ending the recording
     if (past) {
       track('recording/stopped/error');
-      showError(error, {title: 'Recording error', reportToSentry: true});
+      showError(error, {title: 'Recording error'});
       past = null;
       cleanup();
     }
@@ -185,7 +184,7 @@ const stopRecording = async () => {
     filePath = await aperture.stopRecording();
   } catch (error) {
     track('recording/stopped/error');
-    dialog.showErrorBox('Recording error', error.message);
+    showError(error, {title: 'Recording error'});
     cleanup();
     return;
   }

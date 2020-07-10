@@ -30,6 +30,12 @@ class BasePlugin {
   get isCompatible() {
     return semver.satisfies(app.getVersion(), this.kapVersion || '*') && macosVersion.is(this.macosVersion || '*');
   }
+
+  get repoUrl() {
+    const url = new URL(this.link);
+    url.hash = '';
+    return url.href;
+  }
 }
 
 class InstalledPlugin extends BasePlugin {
@@ -58,7 +64,7 @@ class InstalledPlugin extends BasePlugin {
         this.config.onDidAnyChange((newValue, oldValue) => this.plugin.didConfigChange(newValue, oldValue, this.config));
       }
     } catch (error) {
-      showError(error, {title: `Something went wrong while loading “${pluginName}”`});
+      showError(error, {title: `Something went wrong while loading “${pluginName}”`, plugin: this});
       this.plugin = {};
     }
   }
@@ -130,6 +136,7 @@ class NpmPlugin extends BasePlugin {
     this.kapVersion = kap.version;
     this.macosVersion = kap.macosVersion;
     this.isInstalled = false;
+    this.json = json;
 
     this.version = json.version;
     this.description = json.description;
