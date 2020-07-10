@@ -13,14 +13,14 @@ jobs:
           path: dist/Kap.dmg
   sentry-release:
     docker:
-      - image: circleci/node:4.8.2
+      - image: circleci/node:lts
     environment:
       SENTRY_ORG: wulkano-l0
       SENTRY_PROJECT: kap
     steps:
       - checkout
       - run: yarn -v
-      - run: yarn -s run 'sentry-version'
+      - run: yarn run -s sentry-version
       - run: export SENTRY_RELEASE=$(yarn -s run 'sentry-version')
       - run: echo $SENTRY_RELEASE
       - run: |
