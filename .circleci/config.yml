@@ -19,12 +19,13 @@ jobs:
       SENTRY_PROJECT: kap
     steps:
       - checkout
-      - run: yarn run -s sentry-version
-      - run: export SENTRY_RELEASE=$(yarn run -s sentry-version)
+      - run: yarn -v
+      - run: yarn -s run 'sentry-version'
+      - run: export SENTRY_RELEASE=$(yarn -s run 'sentry-version')
       - run: echo $SENTRY_RELEASE
       - run: |
           curl -sL https://sentry.io/get-cli/ | bash
-          export SENTRY_RELEASE=$(yarn run -s sentry-version)
+          export SENTRY_RELEASE=$(yarn -s run 'sentry-version')
           sentry-cli releases new -p $SENTRY_PROJECT $SENTRY_RELEASE
           sentry-cli releases set-commits --auto $SENTRY_RELEASE
           sentry-cli releases finalize $SENTRY_RELEASE
@@ -37,9 +38,11 @@ workflows:
           filters:
             tags:
               only: /.*/ # Force CircleCI to build on tags
+            branches:
+              ignore: /.*/
       - sentry-release:
-          requires:
-            - build
+          # requires:
+          #   - build
           filters:
             tags:
               only: /^v.*/
