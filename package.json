@@ -20,7 +20,8 @@
     "build": "next build renderer && next export renderer",
     "dist": "npm run build && electron-builder",
     "pack": "npm run build && electron-builder --dir",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "electron-builder install-app-deps",
+    "sentry-version": "echo \"$npm_package_name@$npm_package_version\""
   },
   "bundle": {
     "name": "Kap"
