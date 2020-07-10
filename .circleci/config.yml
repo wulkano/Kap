@@ -19,6 +19,9 @@ jobs:
       SENTRY_PROJECT: kap
     steps:
       - checkout
+      - run: yarn run -s sentry-version
+      - run: export SENTRY_RELEASE=$(yarn run -s sentry-version)
+      - run: echo $SENTRY_RELEASE
       - run: |
           curl -sL https://sentry.io/get-cli/ | bash
           export SENTRY_RELEASE=$(yarn run -s sentry-version)
