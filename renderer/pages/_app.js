@@ -55,7 +55,8 @@ export default class Kap extends App {
       this.systemPreferences = api.systemPreferences;
 
       if (!is.development && settings.get('allowAnalytics')) {
-        Sentry.init({dsn: SENTRY_PUBLIC_DSN});
+        const release = `${api.app.name}@${api.app.getVersion()}`.toLowerCase();
+        Sentry.init({dsn: SENTRY_PUBLIC_DSN, release});
       }
 
       this.darkMode = darkMode;
