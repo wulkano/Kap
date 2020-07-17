@@ -189,7 +189,7 @@ class General extends React.Component {
           key="lossyCompression"
           parentItem
           title="Lossy compression"
-          subtitle="Compress GIFs with lossy compression if you prefer small file size over quality"
+          subtitle="Compress GIFs with lossy compression (this will result in minor quality degredation and smaller file size)"
         >
           <Switch
             tabIndex={tabIndex}
