@@ -18,6 +18,7 @@ const {mockImport} = require('./helpers/mocks');
 
 mockImport('./common/analytics', 'analytics');
 mockImport('./service-context', 'service-context');
+mockImport('./common/settings', 'settings');
 
 const {convertTo} = require('../main/convert');
 

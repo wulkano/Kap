@@ -11,8 +11,10 @@ const ffmpeg = require('@ffmpeg-installer/ffmpeg');
 const util = require('electron-util');
 const PCancelable = require('p-cancelable');
 const tempy = require('tempy');
+const gifsicle = require('gifsicle');
 const {track} = require('./common/analytics');
 const {EditServiceContext} = require('./service-context');
+const settings = require('./common/settings');
 
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
 const timeRegex = /time=\s*(\d\d:\d\d:\d\d.\d\d)/gm;
@@ -21,13 +23,15 @@ const speedRegex = /speed=\s*(-?\d+(,\d+)*(\.\d+(e\d+)?)?)/gm;
 // https://trac.ffmpeg.org/ticket/309
 const makeEven = n => 2 * Math.round(n / 2);
 
-const getConvertFunction = shouldTrack => (outputPath, options, args) => {
-  if (shouldTrack) {
-    track(`file/export/fps/${options.fps}`);
-  }
+const getRunFunction = (shouldTrack, mode = 'convert') => (outputPath, options, args) => {
+  const modes = new Map([
+    ['convert', ffmpegPath],
+    ['compress', gifsicle]
+  ]);
+  const program = modes.get(mode);
 
   return new PCancelable((resolve, reject, onCancel) => {
-    const converter = execa(ffmpegPath, args);
+    const runner = execa(program, args);
     const durationMs = moment.duration(options.endTime - options.startTime, 'seconds').asMilliseconds();
     let speed;
 
@@ -36,12 +40,12 @@ const getConvertFunction = shouldTrack => (outputPath, options, args) => {
         track('file/export/convert/canceled');
       }
 
-      converter.kill();
+      runner.kill();
     });
 
     let stderr = '';
-    converter.stderr.setEncoding('utf8');
-    converter.stderr.on('data', data => {
+    runner.stderr.setEncoding('utf8');
+    runner.stderr.on('data', data => {
       stderr += data;
 
       data = data.trim();
@@ -68,25 +72,25 @@ const getConvertFunction = shouldTrack => (outputPath, options, args) => {
       }
     });
 
-    converter.on('error', reject);
+    runner.on('error', reject);
 
-    converter.on('exit', code => {
+    runner.on('exit', code => {
       if (code === 0) {
         if (shouldTrack) {
-          track('file/export/convert/completed');
+          track(`file/export/${mode}/completed`);
         }
 
         resolve(outputPath);
       } else {
         if (shouldTrack) {
-          track('file/export/convert/failed');
+          track(`file/export/${mode}/failed`);
         }
 
-        reject(new Error(`ffmpeg exited with code: ${code}\n\n${stderr}`));
+        reject(new Error(`${program} exited with code: ${code}\n\n${stderr}`));
       }
     });
 
-    converter.catch(reject);
+    runner.catch(reject);
   });
 };
 
@@ -108,7 +112,19 @@ const mute = PCancelable.fn(async (inputPath, onCancel) => {
   return mutedPath;
 });
 
-const convert = getConvertFunction(true);
+const convert = getRunFunction(true);
+const compress = (outputPath, options, args) => {
+  options.onProgress(0, '', 'Compressing');
+
+  if (settings.get('lossyCompression')) {
+    args = [
+      '--lossy=50',
+      ...args
+    ];
+  }
+
+  return getRunFunction(true, 'compress')(outputPath, options, args);
+};
 
 const convertToMp4 = PCancelable.fn(async (options, onCancel) => {
   if (options.isMuted) {
@@ -208,7 +224,7 @@ const convertToGif = PCancelable.fn(async (options, onCancel) => {
 
   await paletteProcessor;
 
-  return convert(options.outputPath, options, [
+  await convert(options.outputPath, options, [
     '-i', options.inputPath,
     '-i', palettePath,
     '-filter_complex', `fps=${options.fps}${options.shouldCrop ? `,scale=${options.width}:${options.height}:flags=lanczos` : ''}[x]; [x][1:v]paletteuse`,
@@ -219,6 +235,11 @@ const convertToGif = PCancelable.fn(async (options, onCancel) => {
         '-to', options.endTime
       ] : []
     ),
+    options.outputPath
+  ]);
+
+  return compress(options.outputPath, options, [
+    '--batch',
     options.outputPath
   ]);
 });
@@ -274,7 +295,7 @@ const convertUsingPlugin = PCancelable.fn(async ({editService, converter, ...opt
   }
 
   let canceled = false;
-  const convertFunction = getConvertFunction(false);
+  const convertFunction = getRunFunction(false);
 
   const editPath = tmp.tmpNameSync({postfix: path.extname(croppedPath)});
 
