@@ -114,7 +114,7 @@ const mute = PCancelable.fn(async (inputPath, onCancel) => {
 
 const convert = getRunFunction(true);
 const compress = (outputPath, options, args) => {
-  options.onProgress(0, 0, 'Compressing');
+  options.onProgress(0, '', 'Compressing');
 
   if (settings.get('lossyCompression')) {
     args = [
