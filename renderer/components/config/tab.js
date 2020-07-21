@@ -7,6 +7,7 @@ import Select from '../preferences/item/select';
 import Switch from '../preferences/item/switch';
 import ColorPicker from '../preferences/item/color-picker';
 import {OpenOnGithubIcon, OpenConfigIcon} from '../../vectors';
+import ShortcutInput from '../preferences/shortcut-input';
 
 const horizontalTypes = [
   'boolean',
@@ -14,6 +15,23 @@ const horizontalTypes = [
 ];
 
 const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
+  if (type === 'accelerator') {
+    return (
+      <div>
+        <ShortcutInput
+          shortcut={value} onChange={value => {
+            console.log(name, value);
+            onChange(name, value);
+          }}/>
+        <style jsx>{`
+          div {
+
+          }
+        `}</style>
+      </div>
+    );
+  }
+
   if (type === 'hexColor') {
     return <ColorPicker value={value} name={name} hasErrors={hasErrors} onChange={value => onChange(name, value)}/>;
   }

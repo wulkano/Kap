@@ -7,22 +7,23 @@ const log = require('electron-log');
 const {autoUpdater} = require('electron-updater');
 const toMilliseconds = require('@sindresorhus/to-milliseconds');
 
+const settings = require('./common/settings');
+
+require('./utils/sentry');
+require('./utils/errors').setupErrorHandling();
+
 const {initializeTray} = require('./tray');
-const plugins = require('./common/plugins');
 const {initializeAnalytics} = require('./common/analytics');
 const initializeExportList = require('./export-list');
 const {openCropperWindow, isCropperOpen, closeAllCroppers} = require('./cropper');
 const {track} = require('./common/analytics');
+const plugins = require('./common/plugins');
 const {initializeGlobalAccelerators} = require('./global-accelerators');
 const {setApplicationMenu} = require('./menus');
 const openFiles = require('./utils/open-files');
 const {initializeExportOptions} = require('./export-options');
-const settings = require('./common/settings');
 const {hasMicrophoneAccess, ensureScreenCapturePermissions} = require('./common/system-permissions');
 const {handleDeepLink} = require('./utils/deep-linking');
-
-require('./utils/sentry');
-require('./utils/errors').setupErrorHandling();
 
 const filesToOpen = [];
 
@@ -40,6 +41,7 @@ app.on('open-file', (event, path) => {
 });
 
 const initializePlugins = async () => {
+  plugins.refreshRecordPluginServices();
   if (!is.development) {
     try {
       await plugins.prune();
@@ -76,10 +78,10 @@ const checkForUpdates = () => {
   // Ensure the app is in the Applications folder
   enforceMacOSAppLocation();
 
+  await prepareNext('./renderer');
+
   // Ensure all plugins are up to date
   initializePlugins();
-
-  await prepareNext('./renderer');
 
   initializeAnalytics();
   initializeTray();

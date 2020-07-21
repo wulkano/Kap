@@ -87,7 +87,7 @@ const ShortcutInput = ({shortcut = '', onChange, tabIndex}) => {
   };
 
   const handleKeyDown = event => {
-    const {metaKey, altKey, ctrlKey, shiftKey, key, location} = event;
+    const {metaKey, altKey, ctrlKey, shiftKey, key, location, which} = event;
     const metaKeys = [
       metaKey && 'Command',
       altKey && 'Alt',
@@ -107,7 +107,7 @@ const ShortcutInput = ({shortcut = '', onChange, tabIndex}) => {
     }
 
     // Handled by the `onPaste` event
-    if (metaKeys.length === 1 && metaKeys && key.toUpperCase() === 'V') {
+    if (metaKeys.length === 1 && metaKey && key.toUpperCase() === 'V') {
       return;
     }
 
@@ -117,7 +117,9 @@ const ShortcutInput = ({shortcut = '', onChange, tabIndex}) => {
       return;
     }
 
-    const keys = [...metaKeys, eventKeyToAccelerator(key, location)];
+    const mappedKey = (which > 47 && which < 58) || (which > 64 && which < 91) ? String.fromCharCode(which) : key;
+
+    const keys = [...metaKeys, eventKeyToAccelerator(mappedKey, location)];
     const accelerator = keys.join('+');
     setIsEditing(false);
     if (checkAccelerator(accelerator)) {

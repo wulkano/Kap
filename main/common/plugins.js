@@ -27,7 +27,6 @@ class Plugins {
     this.yarnBin = path.join(__dirname, '../../node_modules/yarn/bin/yarn.js');
     this._makePluginsDir();
     this.appVersion = app.getVersion();
-    this.refreshRecordPluginServices();
   }
 
   setUpdateExportOptions(updateExportOptions) {
