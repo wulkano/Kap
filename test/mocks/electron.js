@@ -5,6 +5,7 @@ const path = require('path');
 
 const temporaryDir = tempy.directory();
 
+process.env.TZ = 'America/New York';
 process.versions.chrome = '';
 
 module.exports = {
