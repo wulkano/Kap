@@ -347,6 +347,25 @@ const config = {
 
 <img src="../media/plugins/hexColor.png" width="319">
 
+#### `accelerator`
+
+```js
+const config = {
+  shortcut: {
+    title: 'Trigger Shortcut',
+    customType: 'accelerator',
+    required: true,
+    default: 'Command+Shift+5'
+  }
+};
+
+// Later
+
+electron.globalShortcut.register(config.get('shortcut'), () => { /* ... */ });
+```
+
+**Note:** Kap will not register any action for the accelerator. That is up to the plugin implementation.
+
 ## General APIs
 
 Every type of plugin and service can additionally export the following:
