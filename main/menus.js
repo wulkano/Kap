@@ -202,6 +202,17 @@ const appMenuTemplate = [
         type: 'separator'
       },
       {
+        label: 'Clean temporary files',
+        click: () => {
+          // Avoid circular dependency
+          const {cleanPastRecordings} = require('./recording-history');
+          cleanPastRecordings();
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
         role: 'close'
       }
     ]

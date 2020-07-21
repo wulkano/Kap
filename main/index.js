@@ -20,6 +20,7 @@ const {initializeExportOptions} = require('./export-options');
 const settings = require('./common/settings');
 const {hasMicrophoneAccess, ensureScreenCapturePermissions} = require('./common/system-permissions');
 const {handleDeepLink} = require('./utils/deep-linking');
+const {checkForActiveRecording} = require('./recording-history');
 
 require('./utils/sentry');
 require('./utils/errors').setupErrorHandling();
@@ -88,19 +89,21 @@ const checkForUpdates = () => {
   initializeExportOptions();
   setApplicationMenu();
 
+  if (!app.isDefaultProtocolClient('kap')) {
+    app.setAsDefaultProtocolClient('kap');
+  }
+
   if (filesToOpen.length > 0) {
     track('editor/opened/startup');
     openFiles(...filesToOpen);
+    checkForActiveRecording();
   } else if (
+    !(await checkForActiveRecording()) &&
     !app.getLoginItemSettings().wasOpenedAtLogin &&
     ensureScreenCapturePermissions() &&
     (!settings.get('recordAudio') || hasMicrophoneAccess())
   ) {
     openCropperWindow();
-  }
-
-  if (!app.isDefaultProtocolClient('kap')) {
-    app.setAsDefaultProtocolClient('kap');
   }
 
   checkForUpdates();

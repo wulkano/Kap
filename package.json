@@ -33,6 +33,7 @@
     "@sindresorhus/to-milliseconds": "^1.2.0",
     "ajv": "^6.12.2",
     "aperture": "^5.2.0",
+    "async-exit-hook": "^2.0.1",
     "base64-img": "^1.0.4",
     "classnames": "^2.2.6",
     "clean-stack": "^3.0.0",
@@ -110,7 +111,6 @@
     ],
     "verbose": true,
     "timeout": "5m",
-    "concurrency": 1,
     "failFast": true,
     "require": [
       "module-alias/register"
@@ -132,7 +132,8 @@
       "react/jsx-curly-brace-presence": "off",
       "react/static-property-placement": "off",
       "react/boolean-prop-naming": "off",
-      "unicorn/prefer-set-has": "off"
+      "unicorn/prefer-set-has": "off",
+      "ava/use-test": "off"
     },
     "ignores": [
       "dist",

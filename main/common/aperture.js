@@ -1,6 +1,7 @@
 'use strict';
 
 const createAperture = require('aperture');
+const exitHook = require('async-exit-hook');
 
 const {openEditorWindow} = require('../editor');
 const {closePrefsWindow} = require('../preferences');
@@ -17,6 +18,7 @@ const plugins = require('./plugins');
 const {getAudioDevices} = require('../utils/devices');
 const {showError} = require('../utils/errors');
 const {RecordServiceContext} = require('../service-context');
+const {setCurrentRecording, updatePluginState, stopCurrentRecording} = require('../recording-history');
 
 const aperture = createAperture();
 const {videoCodecs} = createAperture;
@@ -33,6 +35,16 @@ let past;
 
 const setRecordingName = name => {
   recordingName = name;
+};
+
+const serializeEditPluginState = () => {
+  return recordingPlugins.reduce((acc, {plugin, service}) => ({
+    ...acc,
+    [plugin.name]: {
+      ...(acc.plugin || {}),
+      [service.title]: serviceState.get(service.title).persistedState
+    }
+  }), {});
 };
 
 const callPlugins = async method => Promise.all(recordingPlugins.map(async ({plugin, service}) => {
@@ -126,14 +138,21 @@ const startRecording = async options => {
     );
 
   for (const {service, plugin} of recordingPlugins) {
-    serviceState.set(service.title, {});
+    serviceState.set(service.title, {persistedState: {}});
     track(`plugins/used/record/${plugin.name}`);
   }
 
   await callPlugins('willStartRecording');
 
   try {
-    await aperture.startRecording(apertureOptions);
+    const filePath = await aperture.startRecording(apertureOptions);
+
+    setCurrentRecording({
+      filePath,
+      name: recordingName,
+      apertureOptions,
+      editPlugins: serializeEditPluginState()
+    });
   } catch (error) {
     track('recording/stopped/error');
     showError(error, {title: 'Recording error'});
@@ -167,9 +186,10 @@ const startRecording = async options => {
   });
 
   await callPlugins('didStartRecording');
+  updatePluginState(serializeEditPluginState());
 };
 
-const stopRecording = async () => {
+const stopRecording = async isAppExiting => {
   // Ensure we only stop recording once
   if (!past) {
     return;
@@ -200,10 +220,20 @@ const stopRecording = async () => {
     // if (recordHevc) {
     //   openEditorWindow(await convertToH264(filePath), {recordedFps, isNewRecording: true, originalFilePath: filePath});
     // } else {
-    openEditorWindow(filePath, {recordedFps, isNewRecording: true, recordingName});
+    await openEditorWindow(filePath, {recordedFps, isNewRecording: true, recordingName});
     // }
+
+    // Sometimes, even though cleanup is called, the plugins are not able finish async tasks
+    // Also since the editor never opens, we show the dialog on next start so the user can still retrieve it
+    if (!isAppExiting) {
+      stopCurrentRecording(recordingName);
+    }
   }
 };
+
+exitHook(callback => {
+  stopRecording(true).then(callback);
+});
 
 module.exports = {
   startRecording,

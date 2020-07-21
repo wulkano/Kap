@@ -10,6 +10,7 @@ module.exports.mockModule = name => {
   }
 
   moduleAlias.addAlias(name, mockModulePath);
+  return require(mockModulePath);
 };
 
 module.exports.mockImport = (importPath, mock) => {
@@ -19,4 +20,5 @@ module.exports.mockImport = (importPath, mock) => {
   }
 
   moduleAlias.addAlias(importPath, mockModulePath);
+  return require(mockModulePath);
 };
