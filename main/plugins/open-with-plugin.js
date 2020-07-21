@@ -1,6 +1,7 @@
 'use strict';
 const path = require('path');
 const {getAppsThatOpenExtension, openFileWithApp} = require('mac-open-with');
+const {getFormatExtension} = require('../common/constants');
 
 const action = async context => {
   const filePath = await context.filePath();
@@ -8,10 +9,10 @@ const action = async context => {
 };
 
 const apps = new Map(
-  ['mp4', 'gif', 'apng', 'webm']
-    .map(extension => [
-      extension,
-      getAppsThatOpenExtension.sync(extension)
+  ['mp4', 'gif', 'apng', 'webm', 'av1']
+    .map(format => [
+      format,
+      getAppsThatOpenExtension.sync(getFormatExtension(format))
         .map(app => ({
           ...app,
           name: decodeURI(path.parse(app.url).name)

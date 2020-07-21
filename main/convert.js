@@ -23,6 +23,8 @@ const speedRegex = /speed=\s*(-?\d+(,\d+)*(\.\d+(e\d+)?)?)/gm;
 // https://trac.ffmpeg.org/ticket/309
 const makeEven = n => 2 * Math.round(n / 2);
 
+const areDimensionsEvent = ({width, height}) => width % 2 === 0 && height % 2 === 0;
+
 const getRunFunction = (shouldTrack, mode = 'convert') => (outputPath, options, args) => {
   const modes = new Map([
     ['convert', ffmpegPath],
@@ -65,6 +67,7 @@ const getRunFunction = (shouldTrack, mode = 'convert') => (outputPath, options, 
         // Wait 2 second in the conversion for the speed to be stable
         if (processedMs > 2 * 1000) {
           const msRemaining = (durationMs - processedMs) / speed;
+
           options.onProgress(progress, prettyMs(Math.max(msRemaining, 1000), {compact: true}));
         } else {
           options.onProgress(progress);
@@ -141,7 +144,7 @@ const convertToMp4 = PCancelable.fn(async (options, onCancel) => {
     '-i', options.inputPath,
     '-r', options.fps,
     ...(
-      options.shouldCrop ? [
+      options.shouldCrop || !areDimensionsEvent(options) ? [
         '-s', `${makeEven(options.width)}x${makeEven(options.height)}`,
         '-ss', options.startTime,
         '-to', options.endTime
@@ -181,6 +184,39 @@ const convertToWebm = PCancelable.fn(async (options, onCancel) => {
         '-to', options.endTime
       ] : []
     ),
+    options.outputPath
+  ]);
+});
+
+const convertToAv1 = PCancelable.fn(async (options, onCancel) => {
+  if (options.isMuted) {
+    const muteProcess = mute(options.inputPath);
+
+    onCancel(() => {
+      muteProcess.cancel();
+    });
+
+    options.inputPath = await muteProcess;
+  }
+
+  return convert(options.outputPath, options, [
+    '-i', options.inputPath,
+    '-r', options.fps,
+    ...(
+      options.shouldCrop || !areDimensionsEvent(options) ? [
+        '-s', `${makeEven(options.width)}x${makeEven(options.height)}`,
+        '-ss', options.startTime,
+        '-to', options.endTime
+      ] : []
+    ),
+    '-c:v', 'libaom-av1',
+    '-c:a', 'libopus',
+    '-crf', '34',
+    '-b:v', '0',
+    '-strict', 'experimental',
+    '-cpu-used', '4',
+    '-row-mt', '1',
+    '-tiles', '2x2',
     options.outputPath
   ]);
 });
@@ -248,7 +284,8 @@ const converters = new Map([
   ['gif', convertToGif],
   ['mp4', convertToMp4],
   ['webm', convertToWebm],
-  ['apng', convertToApng]
+  ['apng', convertToApng],
+  ['av1', convertToAv1]
 ]);
 
 const convertTo = (options, format) => {
