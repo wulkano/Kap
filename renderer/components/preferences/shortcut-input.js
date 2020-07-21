@@ -87,7 +87,7 @@ const ShortcutInput = ({shortcut = '', onChange, tabIndex}) => {
   };
 
   const handleKeyDown = event => {
-    const {metaKey, altKey, ctrlKey, shiftKey, key, location, which} = event;
+    const {metaKey, altKey, ctrlKey, shiftKey, key, location, keyCode} = event;
     const metaKeys = [
       metaKey && 'Command',
       altKey && 'Alt',
@@ -117,7 +117,7 @@ const ShortcutInput = ({shortcut = '', onChange, tabIndex}) => {
       return;
     }
 
-    const mappedKey = (which > 47 && which < 58) || (which > 64 && which < 91) ? String.fromCharCode(which) : key;
+    const mappedKey = (keyCode > 47 && keyCode < 58) || (keyCode > 64 && keyCode < 91) ? String.fromCharCode(keyCode) : key;
 
     const keys = [...metaKeys, eventKeyToAccelerator(mappedKey, location)];
     const accelerator = keys.join('+');

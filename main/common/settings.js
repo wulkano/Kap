@@ -9,7 +9,7 @@ const {getAudioDevices, getDefaultInputDevice} = require('../utils/devices');
 const shortcutToAccelerator = require('../utils/shortcut-to-accelerator');
 
 const shortcuts = {
-  triggerCropper: 'Trigger Kap'
+  triggerCropper: 'Toggle Kap'
 };
 
 const shortcutSchema = {
@@ -101,11 +101,13 @@ const store = new Store({
 module.exports = store;
 module.exports.shortcuts = shortcuts;
 
+// TODO: Remove this when we feel like everyone has migrated
 if (store.has('recordKeyboardShortcut')) {
   store.set('enableShortcuts', store.get('recordKeyboardShortcut'));
   store.delete('recordKeyboardShortcut');
 }
 
+// TODO: Remove this when we feel like everyone has migrated
 if (store.has('cropperShortcut')) {
   store.set('shortcuts.triggerCropper', shortcutToAccelerator(store.get('cropperShortcut')));
   store.delete('cropperShortcut');
