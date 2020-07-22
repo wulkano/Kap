@@ -92,7 +92,11 @@ test('checkForActiveRecording with playable recording', async t => {
     date: new Date().toISOString(),
     apertureOptions: {},
     plugins: {
-      'kap-fake-plugin': {'Fake Service': {some: 'state'}}
+      'kap-fake-plugin': {
+      	'Fake Service': {
+      		some: 'state'
+      	}
+      }
     }
   });
 

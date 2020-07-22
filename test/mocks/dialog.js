@@ -43,9 +43,7 @@ const fakeAction = async index => {
   }
 };
 
-const getCurrentState = () => {
-  return dialogState;
-};
+const getCurrentState = () => dialogState;
 
 const waitForDialog = () => new Promise(resolve => {
   waitForDialogResolve = resolve;

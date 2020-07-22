@@ -2,9 +2,7 @@ const sinon = require('sinon');
 
 const mocks = {};
 
-const getMock = sinon.fake((key, defaultValue) => {
-  return mocks[key] || defaultValue;
-});
+const getMock = sinon.fake((key, defaultValue) => mocks[key] || defaultValue);
 const setMock = sinon.fake();
 const deleteMock = sinon.fake();
 

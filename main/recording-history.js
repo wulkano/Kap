@@ -159,7 +159,7 @@ const handleRecording = async recording => {
     buttons: [
       'Close',
       {
-        label: 'Open in Finder',
+        label: 'Show in Finder',
         action: () => shell.showItemInFolder(recording.filePath)
       },
       {
@@ -205,10 +205,12 @@ const handleCorruptRecording = async (recording, error) => {
       'Close',
       {
         label: 'Copy Error',
-        action: () => clipboard.writeText(error)
+        action: () => {
+        	clipboard.writeText(error);
+        }
       },
       {
-        label: 'Open in Finder',
+        label: 'Show in Finder',
         action: () => shell.showItemInFolder(recording.filePath)
       }
     ]
@@ -240,11 +242,11 @@ const handleCorruptRecording = async (recording, error) => {
               buttons: [
                 'Close',
                 {
-                  label: 'Open in Finder',
+                  label: 'Show in Finder',
                   action: () => shell.showItemInFolder(outputPath)
                 },
                 {
-                  label: 'Open in Editor',
+                  label: 'Show in Editor',
                   action: () => openEditorWindow(outputPath, {recordingName: recording.name})
                 }
               ]

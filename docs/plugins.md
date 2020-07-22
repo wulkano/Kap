@@ -240,7 +240,7 @@ The record service is a plain object defining some metadata and hooks:
 - `didStartRecording`: Function that is called after the recording starts. [Read more below.](#hooks)
 - `didStopRecording`: Function that is called after the recording stops. [Read more below.](#hooks)
 - `willEnable`: Function that is called when the user enables the service. [Read more below.](#hooks)
-- `cleanUp`: Function that is called if Kap exits unexpectedly, without the `didStopRecording` hook being called. This hook will only receive the `persistedState` object from the `state` passed to the rest of the hooks. Use this to clean up any effects introduced when the recording started and don't automatically clear out once Kap stops.
+- `cleanUp`: Function that is called if Kap exited unexpectedly last time it was run (for example, if it crashed), without the `didStopRecording` hook being called. This hook will only receive the `persistedState` object from the `state` passed to the rest of the hooks. Use this to clean up any effects introduced when the recording started and don't automatically clear out once Kap stops.
 
 The `config`, `configDescription` and hook properties are optional.
 
@@ -288,7 +288,7 @@ You can use this to check if you have enough permissions for the service to work
 The hook functions receive a `context` argument with some metadata and utility methods.
 
 - `.state`: An object that will be shared and passed to all hooks in the same recording process. It can be useful to persist data between the different hooks.
-    - `state.persistedState`: An object under `state` which should only contain serializable fields. It will be passed to the `cleanUp` hook if Kap doesn't shut down correctly. Use this to store fields necessary to clean up remaining effects.
+    - `state.persistedState`: An object under `state` which should only contain serializable fields. It will be passed to the `cleanUp` hook if Kap didn't shut down correctly last time it was run. Use this to store fields necessary to clean up remaining effects.
 - `.apertureOptions`: An object with the options passed to [Aperture](https://github.com/wulkano/aperture-node). The API is described [here](https://github.com/wulkano/aperture-node#options).
 - `.config`: Get and set config for your plugin. It’s an instance of [`electron-store`](https://github.com/sindresorhus/electron-store#instance).
 - `.request()`: Do a network request, like uploading. It’s a wrapper around [`got`](https://github.com/sindresorhus/got).

@@ -231,8 +231,9 @@ const stopRecording = async isAppExiting => {
   }
 };
 
-exitHook(callback => {
-  stopRecording(true).then(callback);
+exitHook(async callback => {
+  await stopRecording(true);
+  callback()
 });
 
 module.exports = {
