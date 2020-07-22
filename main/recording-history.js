@@ -1,3 +1,4 @@
+/* eslint-disable array-element-newline */
 'use strict';
 
 const {shell, clipboard} = require('electron');
@@ -131,13 +132,12 @@ const handleIncompleteRecording = async recording => {
   cleanUpRecordingPlugins(recording.plugins);
   try {
     await execa(ffmpegPath, [
-      '-i',
-      recording.filePath,
-      '-v',
-      'error',
-      '-f',
-      'null',
-      '-'
+      '-i', recording.filePath,
+      // Verbosity level
+      '-v', 'error',
+      // Force file type to null (we don't want to actually generate a file)
+      // https://trac.ffmpeg.org/wiki/Null
+      '-f', 'null', '-'
     ]);
 
     return handleRecording(recording);
@@ -179,19 +179,19 @@ const knownErrors = [{
       await execa(ffmpegPath, [
         '-i',
         filePath,
+        // Copy both streams
         '-vcodec',
         'copy',
         '-acodec',
         'copy',
+        // Attempt to move the moov atom to the start of the file
         '-movflags',
         'faststart',
         outputPath
       ]);
 
       return outputPath;
-    } catch {
-
-    }
+    } catch { }
   }
 }];
 
