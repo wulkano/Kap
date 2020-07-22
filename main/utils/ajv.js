@@ -7,7 +7,7 @@ const hexColorValidator = () => {
   };
 };
 
-const acceleratorValidator = () => {
+const keyboardShortcutValidator = () => {
   return {
     type: 'string'
   };
@@ -15,7 +15,7 @@ const acceleratorValidator = () => {
 
 const validators = new Map([
   ['hexColor', hexColorValidator],
-  ['accelerator', acceleratorValidator]
+  ['keyboardShortcut', keyboardShortcutValidator]
 ]);
 
 class CustomAjv extends Ajv {

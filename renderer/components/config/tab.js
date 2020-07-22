@@ -15,7 +15,7 @@ const horizontalTypes = [
 ];
 
 const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
-  if (type === 'accelerator') {
+  if (type === 'keyboardShortcut') {
     return (
       <div>
         <ShortcutInput

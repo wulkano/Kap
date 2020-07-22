@@ -347,13 +347,13 @@ const config = {
 
 <img src="../media/plugins/hexColor.png" width="319">
 
-#### `accelerator`
+#### `keyboardShortcut`
 
 ```js
 const config = {
   shortcut: {
     title: 'Trigger Shortcut',
-    customType: 'accelerator',
+    customType: 'keyboardShortcut',
     required: true,
     default: 'Command+Shift+5'
   }
