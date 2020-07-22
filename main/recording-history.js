@@ -129,6 +129,7 @@ const cleanUpRecordingPlugins = usedPlugins => {
 
 const handleIncompleteRecording = async recording => {
   cleanUpRecordingPlugins(recording.plugins);
+
   try {
     await execa(ffmpegPath, [
       '-i',
