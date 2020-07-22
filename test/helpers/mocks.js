@@ -19,4 +19,5 @@ module.exports.mockImport = (importPath, mock) => {
   }
 
   moduleAlias.addAlias(importPath, mockModulePath);
+  return require(mockModulePath);
 };
