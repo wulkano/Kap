@@ -240,7 +240,7 @@ The record service is a plain object defining some metadata and hooks:
 - `didStartRecording`: Function that is called after the recording starts. [Read more below.](#hooks)
 - `didStopRecording`: Function that is called after the recording stops. [Read more below.](#hooks)
 - `willEnable`: Function that is called when the user enables the service. [Read more below.](#hooks)
-- `cleanUp`: Function that is called if Kap exited unexpectedly last time it was run (for example, if it crashed), without the `didStopRecording` hook being called. This hook will only receive the `persistedState` object from the `state` passed to the rest of the hooks. Use this to clean up any effects introduced when the recording started and don't automatically clear out once Kap stops.
+- `cleanUp`: Function that is called if Kap exited unexpectedly last time it was run (for example, if it crashed), without the `didStopRecording` hook being called. This hook will only receive the `persistedState` object from the `state` passed to the rest of the hooks. Use this to clean up any effects introduced when the recording started and don't automatically clear out once Kap stops. For example, if your plugin killed a running app with intent to restart it after the recording was over, you can use `cleanUp` to ensure the app is properly restarted even in the event that Kap crashed, so the `didStopRecording` wasn't called.
 
 The `config`, `configDescription` and hook properties are optional.
 

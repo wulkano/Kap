@@ -206,12 +206,14 @@ const handleCorruptRecording = async (recording, error) => {
       {
         label: 'Copy Error',
         action: () => {
-        	clipboard.writeText(error);
+          clipboard.writeText(error);
         }
       },
       {
         label: 'Show in Finder',
-        action: () => shell.showItemInFolder(recording.filePath)
+        action: () => {
+          shell.showItemInFolder(recording.filePath);
+        }
       }
     ]
   };
@@ -243,7 +245,9 @@ const handleCorruptRecording = async (recording, error) => {
                 'Close',
                 {
                   label: 'Show in Finder',
-                  action: () => shell.showItemInFolder(outputPath)
+                  action: () => {
+                    shell.showItemInFolder(outputPath);
+                  }
                 },
                 {
                   label: 'Show in Editor',
@@ -261,11 +265,15 @@ const handleCorruptRecording = async (recording, error) => {
             'Close',
             {
               label: 'Copy Error',
-              action: () => clipboard.writeText(error)
+              action: () => {
+                clipboard.writeText(error);
+              }
             },
             {
               label: 'Open in Finder',
-              action: () => shell.showItemInFolder(recording.filePath)
+              action: () => {
+                shell.showItemInFolder(recording.filePath);
+              }
             }
           ]
         });

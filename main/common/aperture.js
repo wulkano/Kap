@@ -38,13 +38,17 @@ const setRecordingName = name => {
 };
 
 const serializeEditPluginState = () => {
-  return recordingPlugins.reduce((acc, {plugin, service}) => ({
-    ...acc,
-    [plugin.name]: {
-      ...(acc.plugin || {}),
-      [service.title]: serviceState.get(service.title).persistedState
+  const result = {};
+
+  for (const {plugin, service} of recordingPlugins) {
+    if (!result[plugin.name]) {
+      result[plugin.name] = {};
     }
-  }), {});
+
+    result[plugin.name][service.title] = serviceState.get(service.title).persistedState;
+  }
+
+  return result;
 };
 
 const callPlugins = async method => Promise.all(recordingPlugins.map(async ({plugin, service}) => {
@@ -233,7 +237,7 @@ const stopRecording = async isAppExiting => {
 
 exitHook(async callback => {
   await stopRecording(true);
-  callback()
+  callback();
 });
 
 module.exports = {

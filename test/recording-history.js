@@ -62,10 +62,8 @@ test('getPastRecordings', t => {
   t.context.paths = [existingPath];
 
   recordingHistory.set('recordings', [{filePath: existingPath}, {filePath: missingPath}]);
-  // RecordingHistory.mockGet('recordings', [{filePath: existingPath}, {filePath: missingPath}]);
 
   t.deepEqual(getPastRecordings(), [{filePath: existingPath}]);
-  // T.true(recordingHistory.set.calledOnceWith('recordings', [{filePath: existingPath}]));
   t.deepEqual(recordingHistory.get('recordings'), [{filePath: existingPath}]);
 });
 
@@ -93,9 +91,9 @@ test('checkForActiveRecording with playable recording', async t => {
     apertureOptions: {},
     plugins: {
       'kap-fake-plugin': {
-      	'Fake Service': {
-      		some: 'state'
-      	}
+        'Fake Service': {
+          some: 'state'
+        }
       }
     }
   });
@@ -202,7 +200,7 @@ test('setCurrentRecording', t => {
 
   t.deepEqual(recordingHistory.get('activeRecording'), {
     filePath: 'some/path',
-    name: 'New Recording 2020-07-21 at 15.27.26',
+    name: 'New Recording 2020-07-21 at 11.27.26',
     date: t.context.now.toISOString(),
     apertureOptions: {some: 'options'},
     plugins: {some: 'plugins'}
