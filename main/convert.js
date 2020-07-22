@@ -23,7 +23,7 @@ const speedRegex = /speed=\s*(-?\d+(,\d+)*(\.\d+(e\d+)?)?)/gm;
 // https://trac.ffmpeg.org/ticket/309
 const makeEven = n => 2 * Math.round(n / 2);
 
-const areDimensionsEvent = ({width, height}) => width % 2 === 0 && height % 2 === 0;
+const areDimensionsEven = ({width, height}) => width % 2 === 0 && height % 2 === 0;
 
 const getRunFunction = (shouldTrack, mode = 'convert') => (outputPath, options, args) => {
   const modes = new Map([
@@ -144,7 +144,7 @@ const convertToMp4 = PCancelable.fn(async (options, onCancel) => {
     '-i', options.inputPath,
     '-r', options.fps,
     ...(
-      options.shouldCrop || !areDimensionsEvent(options) ? [
+      options.shouldCrop || !areDimensionsEven(options) ? [
         '-s', `${makeEven(options.width)}x${makeEven(options.height)}`,
         '-ss', options.startTime,
         '-to', options.endTime
@@ -203,7 +203,7 @@ const convertToAv1 = PCancelable.fn(async (options, onCancel) => {
     '-i', options.inputPath,
     '-r', options.fps,
     ...(
-      options.shouldCrop || !areDimensionsEvent(options) ? [
+      options.shouldCrop || !areDimensionsEven(options) ? [
         '-s', `${makeEven(options.width)}x${makeEven(options.height)}`,
         '-ss', options.startTime,
         '-to', options.endTime
@@ -214,6 +214,8 @@ const convertToAv1 = PCancelable.fn(async (options, onCancel) => {
     '-crf', '34',
     '-b:v', '0',
     '-strict', 'experimental',
+    // Enables row-based multi-threading which maximizes CPU usage
+    // https://trac.ffmpeg.org/wiki/Encode/AV1
     '-cpu-used', '4',
     '-row-mt', '1',
     '-tiles', '2x2',

@@ -55,9 +55,9 @@ const prettifyFormat = format => {
   const formats = new Map([
     ['apng', 'APNG'],
     ['gif', 'GIF'],
-    ['mp4', 'MP4'],
-    ['webm', 'WebM'],
-    ['av1', 'AV1']
+    ['mp4', 'MP4 (H264)'],
+    ['av1', 'MP4 (AV1)'],
+    ['webm', 'WebM']
   ]);
 
   return formats.get(format);

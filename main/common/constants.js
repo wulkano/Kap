@@ -6,9 +6,7 @@ const formatExtensions = new Map([
   ['av1', 'mp4']
 ]);
 
-const getFormatExtension = format => {
-  return formatExtensions.get(format) || format;
-};
+const getFormatExtension = format => formatExtensions.get(format) || format;
 
 module.exports = {
   supportedVideoExtensions,

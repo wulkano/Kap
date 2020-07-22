@@ -3,9 +3,7 @@ const sinon = require('sinon');
 
 const mocks = {};
 
-const mockGet = sinon.fake((key, defaultValue) => {
-  return mocks[key] || defaultValue;
-});
+const mockGet = sinon.fake((key, defaultValue) => mocks[key] || defaultValue);
 
 module.exports = {
   get: mockGet,
