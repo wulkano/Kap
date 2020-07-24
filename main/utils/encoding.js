@@ -17,10 +17,8 @@ const getEncoding = async filePath => {
     const errorMessageMatchedText = /.*: Video: (.*?) \(.*/.exec(error.stderr);
     if (errorMessageMatchedText) {
       throw error;
-    } else {
-      return errorMessageMatchedText[1];
-    }
   }
+  return errorMessageMatchedText[1];
 };
 
 // `ffmpeg -i original.mp4 -vcodec libx264 -crf 27 -preset veryfast -c:a copy output.mp4`
