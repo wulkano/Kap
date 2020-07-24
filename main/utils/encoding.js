@@ -6,7 +6,7 @@ const ffmpeg = require('@ffmpeg-installer/ffmpeg');
 const util = require('electron-util');
 const execa = require('execa');
 
-const {track} = require('../common/analytics');
+const { track } = require('../common/analytics');
 
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
 
@@ -15,17 +15,17 @@ const getEncoding = async filePath => {
     await execa(ffmpegPath, ['-i', filePath]);
   } catch (error) {
     const errorMessageMatchedText = /.*: Video: (.*?) \(.*/.exec(error.stderr);
-    if (errorMessageMatchedText) {
+    if (!errorMessageMatchedText) {
       throw error;
     }
 
-  return errorMessageMatchedText[1];
+    return errorMessageMatchedText[1];
   }
 };
 
 // `ffmpeg -i original.mp4 -vcodec libx264 -crf 27 -preset veryfast -c:a copy output.mp4`
 const convertToH264 = async inputPath => {
-  const outputPath = tmp.tmpNameSync({postfix: path.extname(inputPath)});
+  const outputPath = tmp.tmpNameSync({ postfix: path.extname(inputPath) });
   track('encoding/converted/hevc');
 
   await execa(ffmpegPath, [
