@@ -18,8 +18,8 @@ const getEncoding = async filePath => {
     if (errorMessageMatchedText) {
       throw error;
     }
-    
-    return errorMessageMatchedText[1];
+
+  return errorMessageMatchedText[1];
   }
 };
 
