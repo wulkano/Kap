@@ -42,6 +42,7 @@ app.on('open-file', (event, path) => {
 
 const initializePlugins = async () => {
   plugins.refreshRecordPluginServices();
+
   if (!is.development) {
     try {
       await plugins.prune();
