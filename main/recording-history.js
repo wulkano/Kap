@@ -8,11 +8,11 @@ const ffmpeg = require('@ffmpeg-installer/ffmpeg');
 const util = require('electron-util');
 const execa = require('execa');
 const tempy = require('tempy');
-const moment = require('moment');
 
 const {showDialog} = require('./dialog');
 const {openEditorWindow} = require('./editor');
 const plugins = require('./common/plugins');
+const {generateTimestampedName} = require('./utils/timestamped-name');
 
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
 
@@ -62,7 +62,7 @@ const recordingHistory = new Store({
 
 const setCurrentRecording = ({
   filePath,
-  name = `New Recording ${moment().format('YYYY-MM-DD')} at ${moment().format('H.mm.ss')}`,
+  name = generateTimestampedName(),
   date = new Date().toISOString(),
   apertureOptions,
   plugins = {}

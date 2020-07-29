@@ -7,10 +7,10 @@ const EventEmitter = require('events');
 const pify = require('pify');
 const {ipcMain: ipc} = require('electron-better-ipc');
 const {is} = require('electron-util');
-const moment = require('moment');
 
 const getFps = require('./utils/fps');
 const loadRoute = require('./utils/routes');
+const {generateTimestampedName} = require('./utils/timestamped-name');
 
 const editors = new Map();
 let allOptions;
@@ -22,7 +22,7 @@ const MIN_WINDOW_HEIGHT = MIN_VIDEO_HEIGHT + OPTIONS_BAR_HEIGHT;
 const editorEmitter = new EventEmitter();
 const editorsWithNotSavedDialogs = new Map();
 
-const getEditorName = (filePath, isNewRecording) => isNewRecording ? `New Recording ${moment().format('YYYY-MM-DD')} at ${moment().format('H.mm.ss')}` : path.basename(filePath);
+const getEditorName = (filePath, isNewRecording) => isNewRecording ? generateTimestampedName() : path.basename(filePath);
 
 const openEditorWindow = async (
   filePath,
@@ -121,10 +121,8 @@ const getEditors = () => editors.values();
 const getEditor = path => editors.get(path);
 
 ipc.answerRenderer('save-original', async ({inputPath}) => {
-  const now = moment();
-
   const {filePath} = await dialog.showSaveDialog(BrowserWindow.getFocusedWindow(), {
-    defaultPath: `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.mp4`
+    defaultPath: generateTimestampedName('Kapture', '.mp4')
   });
 
   if (filePath) {

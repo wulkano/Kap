@@ -10,7 +10,6 @@ const ffmpeg = require('@ffmpeg-installer/ffmpeg');
 const util = require('electron-util');
 const execa = require('execa');
 const makeDir = require('make-dir');
-const moment = require('moment');
 
 const settings = require('./common/settings');
 const {track} = require('./common/analytics');
@@ -20,6 +19,7 @@ const {openEditorWindow} = require('./editor');
 const {toggleExportMenuItem} = require('./menus');
 const Export = require('./export');
 const {ensureDockIsShowingSync} = require('./utils/dock');
+const {generateTimestampedName} = require('./utils/timestamped-name');
 
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
 let lastSavedDirectory;
@@ -58,10 +58,8 @@ const getDragIcon = async inputPath => {
 };
 
 const saveSnapshot = async ({inputPath, time}) => {
-  const now = moment();
-
   const {filePath: outputPath} = await dialog.showSaveDialog(BrowserWindow.getFocusedWindow(), {
-    defaultPath: `Snapshot ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}.jpg`
+    defaultPath: generateTimestampedName('Snapshot', '.jpg')
   });
 
   if (outputPath) {
