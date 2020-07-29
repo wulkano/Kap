@@ -7,6 +7,7 @@ const moment = require('moment');
 const {track} = require('./common/analytics');
 const {convertTo} = require('./convert');
 const {ShareServiceContext} = require('./service-context');
+const {getFormatExtension} = require('./common/constants');
 const PluginConfig = require('./utils/plugin-config');
 
 class Export {
@@ -42,7 +43,7 @@ class Export {
 
     const now = moment();
     const fileName = options.recordingName || (options.isNewRecording ? `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}` : path.parse(this.inputPath).name);
-    this.defaultFileName = `${fileName}.${this.format}`;
+    this.defaultFileName = `${fileName}.${getFormatExtension(this.format)}`;
 
     this.context = new ShareServiceContext({
       _isBuiltin: options.sharePlugin.pluginName.startsWith('_'),
@@ -134,7 +135,7 @@ class Export {
     this.convertProcess = convertTo(
       {
         ...this.exportOptions,
-        defaultFileName: fileType ? `${path.parse(this.defaultFileName).name}.${fileType}` : this.defaultFileName,
+        defaultFileName: fileType ? `${path.parse(this.defaultFileName).name}.${getFormatExtension(fileType)}` : this.defaultFileName,
         inputPath: this.inputPath,
         onProgress: (percentage, estimate, action = 'Converting') => this.setProgress(estimate ? `${action} — ${estimate} remaining` : `${action}…`, percentage),
         editService: this.editService ? {

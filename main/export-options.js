@@ -15,7 +15,8 @@ const exportUsageHistory = new Store({
     apng: {lastUsed: 1, plugins: {default: 1}},
     webm: {lastUsed: 2, plugins: {default: 1}},
     mp4: {lastUsed: 3, plugins: {default: 1}},
-    gif: {lastUsed: 4, plugins: {default: 1}}
+    gif: {lastUsed: 4, plugins: {default: 1}},
+    av1: {lastUsed: 5, plugins: {default: 1}}
   }
 });
 
@@ -41,6 +42,11 @@ const fpsUsageHistory = new Store({
       type: 'number',
       minimum: 0,
       default: 60
+    },
+    av1: {
+      type: 'number',
+      minimum: 0,
+      default: 60
     }
   }
 });
@@ -49,7 +55,8 @@ const prettifyFormat = format => {
   const formats = new Map([
     ['apng', 'APNG'],
     ['gif', 'GIF'],
-    ['mp4', 'MP4'],
+    ['mp4', 'MP4 (H264)'],
+    ['av1', 'MP4 (AV1)'],
     ['webm', 'WebM']
   ]);
 

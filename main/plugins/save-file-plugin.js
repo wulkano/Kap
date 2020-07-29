@@ -31,7 +31,8 @@ const saveFile = {
     'gif',
     'mp4',
     'webm',
-    'apng'
+    'apng',
+    'av1'
   ],
   action
 };
