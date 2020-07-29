@@ -1,6 +1,6 @@
 'use strict';
 
-const test = require('ava');
+const {serial: test} = require('ava');
 const uniqueString = require('unique-string');
 const fs = require('fs');
 const sinon = require('sinon');

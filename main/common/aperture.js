@@ -17,6 +17,7 @@ const plugins = require('./plugins');
 const {getAudioDevices} = require('../utils/devices');
 const {showError} = require('../utils/errors');
 const {RecordServiceContext} = require('../service-context');
+const {setCurrentRecording, updatePluginState, stopCurrentRecording} = require('../recording-history');
 
 const aperture = createAperture();
 const {videoCodecs} = createAperture;
@@ -33,6 +34,20 @@ let past;
 
 const setRecordingName = name => {
   recordingName = name;
+};
+
+const serializeEditPluginState = () => {
+  const result = {};
+
+  for (const {plugin, service} of recordingPlugins) {
+    if (!result[plugin.name]) {
+      result[plugin.name] = {};
+    }
+
+    result[plugin.name][service.title] = serviceState.get(service.title).persistedState;
+  }
+
+  return result;
 };
 
 const callPlugins = async method => Promise.all(recordingPlugins.map(async ({plugin, service}) => {
@@ -126,14 +141,21 @@ const startRecording = async options => {
     );
 
   for (const {service, plugin} of recordingPlugins) {
-    serviceState.set(service.title, {});
+    serviceState.set(service.title, {persistedState: {}});
     track(`plugins/used/record/${plugin.name}`);
   }
 
   await callPlugins('willStartRecording');
 
   try {
-    await aperture.startRecording(apertureOptions);
+    const filePath = await aperture.startRecording(apertureOptions);
+
+    setCurrentRecording({
+      filePath,
+      name: recordingName,
+      apertureOptions,
+      editPlugins: serializeEditPluginState()
+    });
   } catch (error) {
     track('recording/stopped/error');
     showError(error, {title: 'Recording error'});
@@ -167,6 +189,7 @@ const startRecording = async options => {
   });
 
   await callPlugins('didStartRecording');
+  updatePluginState(serializeEditPluginState());
 };
 
 const stopRecording = async () => {
@@ -200,8 +223,10 @@ const stopRecording = async () => {
     // if (recordHevc) {
     //   openEditorWindow(await convertToH264(filePath), {recordedFps, isNewRecording: true, originalFilePath: filePath});
     // } else {
-    openEditorWindow(filePath, {recordedFps, isNewRecording: true, recordingName});
+    await openEditorWindow(filePath, {recordedFps, isNewRecording: true, recordingName});
     // }
+
+    stopCurrentRecording(recordingName);
   }
 };
 

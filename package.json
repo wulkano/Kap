@@ -110,7 +110,6 @@
     ],
     "verbose": true,
     "timeout": "5m",
-    "concurrency": 1,
     "failFast": true,
     "require": [
       "module-alias/register"
@@ -132,7 +131,8 @@
       "react/jsx-curly-brace-presence": "off",
       "react/static-property-placement": "off",
       "react/boolean-prop-naming": "off",
-      "unicorn/prefer-set-has": "off"
+      "unicorn/prefer-set-has": "off",
+      "ava/use-test": "off"
     },
     "ignores": [
       "dist",

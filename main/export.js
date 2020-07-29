@@ -2,13 +2,13 @@
 
 const path = require('path');
 const PCancelable = require('p-cancelable');
-const moment = require('moment');
 
 const {track} = require('./common/analytics');
 const {convertTo} = require('./convert');
 const {ShareServiceContext} = require('./service-context');
 const {getFormatExtension} = require('./common/constants');
 const PluginConfig = require('./utils/plugin-config');
+const {generateTimestampedName} = require('./utils/timestamped-name');
 
 class Export {
   constructor(options) {
@@ -41,8 +41,7 @@ class Export {
     this.isSaveFileService = options.sharePlugin.pluginName === '_saveToDisk';
     this.disableOutputActions = false;
 
-    const now = moment();
-    const fileName = options.recordingName || (options.isNewRecording ? `Kapture ${now.format('YYYY-MM-DD')} at ${now.format('H.mm.ss')}` : path.parse(this.inputPath).name);
+    const fileName = options.recordingName || (options.isNewRecording ? generateTimestampedName('Kapture') : path.parse(this.inputPath).name);
     this.defaultFileName = `${fileName}.${getFormatExtension(this.format)}`;
 
     this.context = new ShareServiceContext({

@@ -34,12 +34,17 @@ class Plugins {
     this.updateExportOptions = updateExportOptions;
   }
 
-  async enableService(service) {
+  async enableService(service, plugin) {
     const wasEnabled = recordPluginServiceState.get(service.title) || false;
 
     if (wasEnabled) {
       recordPluginServiceState.set(service.title, false);
       return this.refreshRecordPluginServices();
+    }
+
+    if (!plugin.config.validServices.includes(service.title)) {
+      openPrefsWindow({target: {name: plugin.name, action: 'configure'}});
+      return;
     }
 
     if (service.willEnable) {
@@ -69,7 +74,7 @@ class Plugins {
         plugin => plugin.recordServices.map(service => ({
           ...service,
           isEnabled: recordPluginServiceState.get(service.title) || false,
-          toggleEnabled: () => this.enableService(service)
+          toggleEnabled: () => this.enableService(service, plugin)
         }))
       )
     );
