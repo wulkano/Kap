@@ -20,7 +20,7 @@ const {initializeExportOptions} = require('./export-options');
 const settings = require('./common/settings');
 const {hasMicrophoneAccess, ensureScreenCapturePermissions} = require('./common/system-permissions');
 const {handleDeepLink} = require('./utils/deep-linking');
-const {checkForActiveRecording} = require('./recording-history');
+const {hasActiveRecording, cleanPastRecordings} = require('./recording-history');
 
 require('./utils/sentry');
 require('./utils/errors').setupErrorHandling();
@@ -96,9 +96,9 @@ const checkForUpdates = () => {
   if (filesToOpen.length > 0) {
     track('editor/opened/startup');
     openFiles(...filesToOpen);
-    checkForActiveRecording();
+    hasActiveRecording();
   } else if (
-    !(await checkForActiveRecording()) &&
+    !(await hasActiveRecording()) &&
     !app.getLoginItemSettings().wasOpenedAtLogin &&
     ensureScreenCapturePermissions() &&
     (!settings.get('recordAudio') || hasMicrophoneAccess())
@@ -127,4 +127,8 @@ app.on('will-finish-launching', () => {
     event.preventDefault();
     handleDeepLink(url);
   });
+});
+
+app.on('quit', () => {
+  cleanPastRecordings();
 });

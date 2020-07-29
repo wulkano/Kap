@@ -139,11 +139,11 @@ const handleIncompleteRecording = async recording => {
       // https://trac.ffmpeg.org/wiki/Null
       '-f', 'null', '-'
     ]);
-
-    return handleRecording(recording);
   } catch (error) {
     return handleCorruptRecording(recording, error.stderr);
   }
+
+  return handleRecording(recording);
 };
 
 const handleRecording = async recording => {
@@ -154,16 +154,18 @@ const handleRecording = async recording => {
   });
 
   return showDialog({
-    title: 'Kap didn\'t shut down correctly',
-    detail: 'Looks like Kap crashed during a recording. We were able to locate the file and it appears to be playable.',
+    title: 'Kap didn\'t shut down correctly.',
+    detail: 'Looks like Kap crashed during a recording. Kap was able to locate the file and it appears to be playable.',
     buttons: [
       'Close',
       {
         label: 'Show in Finder',
-        action: () => shell.showItemInFolder(recording.filePath)
+        action: () => {
+          shell.showItemInFolder(recording.filePath);
+        }
       },
       {
-        label: 'Open in Editor',
+        label: 'Show in Editor',
         action: () => openEditorWindow(recording.filePath, {recordingName: recording.name})
       }
     ]
@@ -197,8 +199,8 @@ const knownErrors = [{
 
 const handleCorruptRecording = async (recording, error) => {
   const options = {
-    title: 'Kap didn\'t shut down correctly',
-    detail: `Looks like Kap crashed during a recording. We were able to locate the file. Unfortunately it appears to be corrupt.\n\n${error}`,
+    title: 'Kap didn\'t shut down correctly.',
+    detail: `Looks like Kap crashed during a recording. We were able to locate the file. Unfortunately, it appears to be corrupt.\n\n${error}`,
     cancelId: 0,
     defaultId: 2,
     buttons: [
@@ -220,77 +222,79 @@ const handleCorruptRecording = async (recording, error) => {
 
   const applicableErrors = knownErrors.filter(({test}) => test(error));
 
-  if (applicableErrors.length > 0) {
-    options.message = 'We can attempt to repair the recording';
-    options.defaultId = 3;
-    options.buttons.push({
-      label: 'Attempt to Fix',
-      activeLabel: 'Attempting to Fix…',
-      action: async (_, updateUi) => {
-        for (const {fix} of applicableErrors) {
-          // eslint-disable-next-line no-await-in-loop
-          const outputPath = await fix(recording.filePath);
-
-          if (outputPath) {
-            addRecording({
-              filePath: outputPath,
-              name: recording.name,
-              date: new Date().toISOString()
-            });
-
-            return updateUi({
-              message: 'The recording was repaired successfully',
-              defaultId: 2,
-              buttons: [
-                'Close',
-                {
-                  label: 'Show in Finder',
-                  action: () => {
-                    shell.showItemInFolder(outputPath);
-                  }
-                },
-                {
-                  label: 'Show in Editor',
-                  action: () => openEditorWindow(outputPath, {recordingName: recording.name})
-                }
-              ]
-            });
-          }
-        }
-
-        return updateUi({
-          message: 'We were unable to repair the recording',
-          defaultId: 2,
-          buttons: [
-            'Close',
-            {
-              label: 'Copy Error',
-              action: () => {
-                clipboard.writeText(error);
-              }
-            },
-            {
-              label: 'Open in Finder',
-              action: () => {
-                shell.showItemInFolder(recording.filePath);
-              }
-            }
-          ]
-        });
-      }
-    });
-  } else {
+  if (applicableErrors.length === 0) {
     const Sentry = require('./utils/sentry');
     if (Sentry.isSentryEnabled) {
       // Collect info about possible unknown errors, to see if we can implement fixes using ffmpeg
       Sentry.captureException(new Error(`Corrupt recording: ${error}`));
     }
+
+    return showDialog(options);
   }
+
+  options.message = 'We can attempt to repair the recording.';
+  options.defaultId = 3;
+  options.buttons.push({
+    label: 'Attempt to Fix',
+    activeLabel: 'Attempting to Fix…',
+    action: async (_, updateUi) => {
+      for (const {fix} of applicableErrors) {
+        // eslint-disable-next-line no-await-in-loop
+        const outputPath = await fix(recording.filePath);
+
+        if (outputPath) {
+          addRecording({
+            filePath: outputPath,
+            name: recording.name,
+            date: new Date().toISOString()
+          });
+
+          return updateUi({
+            message: 'The recording was successfully repaired.',
+            defaultId: 2,
+            buttons: [
+              'Close',
+              {
+                label: 'Show in Finder',
+                action: () => {
+                  shell.showItemInFolder(outputPath);
+                }
+              },
+              {
+                label: 'Show in Editor',
+                action: () => openEditorWindow(outputPath, {recordingName: recording.name})
+              }
+            ]
+          });
+        }
+      }
+
+      return updateUi({
+        message: 'Kap was unable to repair the recording.',
+        defaultId: 2,
+        buttons: [
+          'Close',
+          {
+            label: 'Copy Error',
+            action: () => {
+              clipboard.writeText(error);
+            }
+          },
+          {
+            label: 'Open in Finder',
+            action: () => {
+              shell.showItemInFolder(recording.filePath);
+            }
+          }
+        ]
+      });
+    }
+  });
 
   return showDialog(options);
 };
 
-const checkForActiveRecording = async () => {
+const hasActiveRecording = async () => {
   const activeRecording = recordingHistory.get('activeRecording');
 
   if (activeRecording) {
@@ -306,7 +310,7 @@ module.exports = {
   recordingHistory,
   getPastRecordings,
   addRecording,
-  checkForActiveRecording,
+  hasActiveRecording,
   setCurrentRecording,
   updatePluginState,
   stopCurrentRecording,

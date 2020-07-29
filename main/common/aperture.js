@@ -1,7 +1,6 @@
 'use strict';
 
 const createAperture = require('aperture');
-const exitHook = require('async-exit-hook');
 
 const {openEditorWindow} = require('../editor');
 const {closePrefsWindow} = require('../preferences');
@@ -193,7 +192,7 @@ const startRecording = async options => {
   updatePluginState(serializeEditPluginState());
 };
 
-const stopRecording = async isAppExiting => {
+const stopRecording = async () => {
   // Ensure we only stop recording once
   if (!past) {
     return;
@@ -227,18 +226,9 @@ const stopRecording = async isAppExiting => {
     await openEditorWindow(filePath, {recordedFps, isNewRecording: true, recordingName});
     // }
 
-    // Sometimes, even though cleanup is called, the plugins are not able finish async tasks
-    // Also since the editor never opens, we show the dialog on next start so the user can still retrieve it
-    if (!isAppExiting) {
-      stopCurrentRecording(recordingName);
-    }
+    stopCurrentRecording(recordingName);
   }
 };
-
-exitHook(async callback => {
-  await stopRecording(true);
-  callback();
-});
 
 module.exports = {
   startRecording,

@@ -33,7 +33,6 @@
     "@sindresorhus/to-milliseconds": "^1.2.0",
     "ajv": "^6.12.2",
     "aperture": "^5.2.0",
-    "async-exit-hook": "^2.0.1",
     "base64-img": "^1.0.4",
     "classnames": "^2.2.6",
     "clean-stack": "^3.0.0",

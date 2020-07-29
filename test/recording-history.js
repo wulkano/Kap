@@ -18,7 +18,7 @@ const {shell} = require('electron');
 const {
   recordingHistory,
   getPastRecordings,
-  checkForActiveRecording,
+  hasActiveRecording,
   addRecording,
   setCurrentRecording,
   updatePluginState,
@@ -54,7 +54,7 @@ test.afterEach.always(t => {
   }
 });
 
-test('getPastRecordings', t => {
+test('`getPastRecordings()`', t => {
   const existingPath = tempy.file({extension: 'mp4'});
   const missingPath = tempy.file({extension: 'mp4'});
 
@@ -67,11 +67,11 @@ test('getPastRecordings', t => {
   t.deepEqual(recordingHistory.get('recordings'), [{filePath: existingPath}]);
 });
 
-test('checkForActiveRecording with no recording', async t => {
-  t.false(await checkForActiveRecording());
+test('`hasActiveRecording()` with no recording', async t => {
+  t.false(await hasActiveRecording());
 });
 
-test('checkForActiveRecording with playable recording', async t => {
+test('`hasActiveRecording()` with playable recording', async t => {
   const fakeService = {
     title: 'Fake Service',
     cleanUp: sinon.fake()
@@ -98,7 +98,7 @@ test('checkForActiveRecording with playable recording', async t => {
     }
   });
 
-  const checkPromise = checkForActiveRecording();
+  const checkPromise = hasActiveRecording();
 
   const dialogState = await dialog.waitForDialog();
   t.true(dialogState.detail.includes('playable'));
@@ -116,12 +116,19 @@ test('checkForActiveRecording with playable recording', async t => {
 
   t.false(recordingHistory.has('activeRecording'));
   t.true(fakeService.cleanUp.calledOnceWith({some: 'state'}));
-  t.deepEqual(recordingHistory.get('recordings'), [
-    {filePath: incomplete, name: 'Incomplete', date: new Date().toISOString()}
-  ]);
+  t.deepEqual(
+    recordingHistory.get('recordings'),
+    [
+      {
+        filePath: incomplete,
+        name: 'Incomplete',
+        date: new Date().toISOString()
+      }
+    ]
+  );
 });
 
-test('checkForActiveRecording with known corrupt recording', async t => {
+test('`hasActiveRecording()` with known corrupt recording', async t => {
   recordingHistory.set('activeRecording', {
     filePath: corrupt,
     name: 'Corrupt',
@@ -130,7 +137,7 @@ test('checkForActiveRecording with known corrupt recording', async t => {
     plugins: {}
   });
 
-  const checkPromise = checkForActiveRecording();
+  const checkPromise = hasActiveRecording();
 
   const dialogState = await dialog.waitForDialog();
   t.true(dialogState.detail.includes('corrupt'));
@@ -155,7 +162,7 @@ test('checkForActiveRecording with known corrupt recording', async t => {
   t.is(recordingHistory.get('recordings').length, 0);
 });
 
-test('checkForActiveRecording with unknown corrupt recording', async t => {
+test('`hasActiveRecording()` with unknown corrupt recording', async t => {
   const filePath = tempy.file();
   fs.writeFileSync(filePath, 'data');
   t.context.paths = [filePath];
@@ -168,7 +175,7 @@ test('checkForActiveRecording with unknown corrupt recording', async t => {
     plugins: {}
   });
 
-  const checkPromise = checkForActiveRecording();
+  const checkPromise = hasActiveRecording();
 
   const dialogState = await dialog.waitForDialog();
   t.true(dialogState.detail.includes('corrupt'));
@@ -191,7 +198,7 @@ test('checkForActiveRecording with unknown corrupt recording', async t => {
   t.true(sentryError.message.startsWith('Corrupt recording:'));
 });
 
-test('setCurrentRecording', t => {
+test('`setCurrentRecording()`', t => {
   setCurrentRecording({
     filePath: 'some/path',
     apertureOptions: {some: 'options'},
@@ -207,7 +214,7 @@ test('setCurrentRecording', t => {
   });
 });
 
-test('updatePluginState', t => {
+test('`updatePluginState()`', t => {
   recordingHistory.set('activeRecording', {
     name: 'Some name',
     plugins: {
@@ -239,7 +246,7 @@ test('updatePluginState', t => {
   });
 });
 
-test('stopCurrentRecording', t => {
+test('`stopCurrentRecording()`', t => {
   const filePath = tempy.file({extension: 'mp4'});
   fs.writeFileSync(filePath, 'data');
   t.context.paths = [filePath];
@@ -268,7 +275,7 @@ test('stopCurrentRecording', t => {
   ]);
 });
 
-test('cleanPastRecordings', t => {
+test('`cleanPastRecordings()`', t => {
   const filePath = tempy.file({extension: 'mp4'});
   fs.writeFileSync(filePath, 'data');
   t.context.paths = [filePath];
@@ -284,7 +291,7 @@ test('cleanPastRecordings', t => {
   t.false(fs.existsSync(filePath));
 });
 
-test('addRecording', t => {
+test('`addRecording()`', t => {
   const filePath = tempy.file({extension: 'mp4'});
 
   addRecording({filePath});
