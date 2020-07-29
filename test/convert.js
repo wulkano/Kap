@@ -8,8 +8,9 @@ const path = require('path');
 
 const {getVideoMetadata} = require('./helpers/video-utils');
 const {almostEquals} = require('./helpers/assertions');
+const {getFormatExtension} = require('../main/common/constants');
 
-const getRandomFileName = (ext = 'mp4') => `${uniqueString()}.${ext}`;
+const getRandomFileName = (ext = 'mp4') => `${uniqueString()}.${getFormatExtension(ext)}`;
 
 const input = path.resolve(__dirname, 'fixtures', 'input.mp4');
 const retinaInput = path.resolve(__dirname, 'fixtures', 'input@2x.mp4');
@@ -18,7 +19,7 @@ const {mockImport} = require('./helpers/mocks');
 
 mockImport('./common/analytics', 'analytics');
 mockImport('./service-context', 'service-context');
-mockImport('./common/settings', 'settings');
+const settings = mockImport('./common/settings', 'settings');
 
 const {convertTo} = require('../main/convert');
 
@@ -95,7 +96,8 @@ test('mp4: non-retina', async t => {
     height: 143,
     startTime: 11.5,
     endTime: 27,
-    shouldCrop: true
+    // Should resize even though this is false, because dimensions are odd
+    shouldCrop: false
   });
 
   const meta = await getVideoMetadata(t.context.outputPath);
@@ -290,6 +292,110 @@ test('gif: non-retina', async t => {
   t.is(meta.fps, 15);
   t.true(almostEquals(meta.duration, 15.5));
   t.is(meta.encoding, 'gif');
+
+  t.false(meta.hasAudio);
+});
+
+test('gif: lossy', async t => {
+  const regular = await convert('gif', {
+    inputPath: input,
+    fps: 15,
+    width: 510,
+    height: 286,
+    startTime: 10,
+    endTime: 15,
+    shouldCrop: true
+  });
+
+  settings.setMock('lossyCompression', true);
+
+  const lossy = await convert('gif', {
+    inputPath: input,
+    fps: 15,
+    width: 510,
+    height: 286,
+    startTime: 10,
+    endTime: 15,
+    shouldCrop: true
+  });
+
+  t.true(
+    fs.statSync(regular).size >
+    fs.statSync(lossy).size
+  );
+});
+
+// AV1
+
+test('av1: retina with sound', async t => {
+  const onProgress = sinon.fake();
+
+  t.context.outputPath = await convert('av1', {
+    isMuted: false,
+    inputPath: retinaInput,
+    fps: 15,
+    width: 235,
+    height: 420,
+    startTime: 30,
+    endTime: 35.5,
+    shouldCrop: true,
+    onProgress
+  });
+
+  const meta = await getVideoMetadata(t.context.outputPath);
+
+  // Makes dimensions even
+  t.is(meta.size.width, 236);
+  t.is(meta.size.height, 420);
+
+  t.is(meta.fps, 15);
+  t.true(almostEquals(meta.duration, 5.5));
+  t.is(meta.encoding, 'av1');
+
+  t.true(meta.hasAudio);
+
+  t.true(onProgress.calledWithMatch(sinon.match.number));
+  t.true(onProgress.calledWithMatch(sinon.match.number, sinon.match.string));
+});
+
+test('av1: retina without sound', async t => {
+  t.context.outputPath = await convert('av1', {
+    isMuted: true,
+    inputPath: retinaInput,
+    fps: 10,
+    width: 100,
+    height: 200,
+    startTime: 0,
+    endTime: 4,
+    shouldCrop: true
+  });
+
+  const meta = await getVideoMetadata(t.context.outputPath);
+
+  t.false(meta.hasAudio);
+});
+
+test('av1: non-retina', async t => {
+  t.context.outputPath = await convert('av1', {
+    isMuted: false,
+    inputPath: input,
+    fps: 10,
+    width: 255,
+    height: 143,
+    startTime: 11.5,
+    endTime: 16,
+    shouldCrop: true
+  });
+
+  const meta = await getVideoMetadata(t.context.outputPath);
+
+  // Makes dimensions even
+  t.is(meta.size.width, 256);
+  t.is(meta.size.height, 144);
+
+  t.is(meta.fps, 10);
+  t.true(almostEquals(meta.duration, 4.5));
+  t.is(meta.encoding, 'av1');
 
   t.false(meta.hasAudio);
 });
