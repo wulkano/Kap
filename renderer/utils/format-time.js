@@ -2,23 +2,21 @@ import moment from 'moment';
 
 const formatTime = (time, options) => {
   options = {
-    showMilliseconds: true,
+    showMilliseconds: false,
     ...options
   };
 
-  const format = `m:ss${options.showMilliseconds ? '.SS' : ''}`;
-
   const durationFormatted = options.extra ?
-    `  (${moment()
-      .startOf('day')
-      .milliseconds(options.extra * 1000)
-      .format(format)})` :
+    `  (${format(options.extra, options)})` :
     '';
 
-  return `${moment()
-    .startOf('day')
-    .milliseconds(time * 1000)
-    .format(format)}${durationFormatted}`;
+  return `${format(time, options)}${durationFormatted}`;
+};
+
+const format = (time, {showMilliseconds} = {}) => {
+  const formatString = `${time >= 60 * 60 ? 'hh:m' : ''}m:ss${showMilliseconds ? '.SS' : ''}`;
+
+  return moment().startOf('day').millisecond(time * 1000).format(formatString);
 };
 
 export default formatTime;
