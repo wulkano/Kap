@@ -2,7 +2,7 @@ import moment from 'moment';
 
 const formatTime = (time, options) => {
   options = {
-    showMilliseconds: true,
+    showMilliseconds: false,
     ...options
   };
 
@@ -14,7 +14,7 @@ const formatTime = (time, options) => {
 };
 
 const format = (time, {showMilliseconds} = {}) => {
-  const formatString = `${time >= 60 * 60 ? 'h:m' : ''}m:ss${showMilliseconds ? '.SS' : ''}`;
+  const formatString = `${time >= 60 * 60 ? 'hh:m' : ''}m:ss${showMilliseconds ? '.SS' : ''}`;
 
   return moment().startOf('day').millisecond(time * 1000).format(formatString);
 };
