@@ -58,9 +58,7 @@ const ShortcutInput = ({shortcut = '', onChange, tabIndex}) => {
     resetKeys();
   }, [shortcut]);
 
-  const keysToRender = keys.map(key => {
-    return metaCharacters.get(key) || key;
-  });
+  const keysToRender = keys.map(key => metaCharacters.get(key) || key);
 
   const clearShortcut = () => {
     setKeys([]);
@@ -87,6 +85,7 @@ const ShortcutInput = ({shortcut = '', onChange, tabIndex}) => {
   };
 
   const handleKeyDown = event => {
+    // TODO: Use `code` instead of `keyCode` when this is released https://github.com/facebook/react/pull/18287
     const {metaKey, altKey, ctrlKey, shiftKey, key, location, keyCode} = event;
     const metaKeys = [
       metaKey && 'Command',

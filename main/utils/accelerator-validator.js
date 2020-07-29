@@ -1,5 +1,11 @@
 'use strict';
 
+// The goal of this file is validating accelerator values we receive from the user
+// to make sure that they are can be used with the electron api https://www.electronjs.org/docs/api/accelerator
+
+// Also, this extracts the right accelerator from a keyboard event, checking the
+// location for numpad keys and special characters for when shift is pressed
+
 const modifiers = ['Command', 'Alt', 'Option', 'Shift', 'Cmd', 'Control', 'Ctrl'];
 
 const codes = [

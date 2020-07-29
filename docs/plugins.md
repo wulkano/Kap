@@ -349,10 +349,12 @@ const config = {
 
 #### `keyboardShortcut`
 
+[List of possible values](https://www.electronjs.org/docs/api/accelerator)
+
 ```js
 const config = {
-  shortcut: {
-    title: 'Trigger Shortcut',
+  keyboardShortcut: {
+    title: 'Toggle Unicorn Mode',
     customType: 'keyboardShortcut',
     required: true,
     default: 'Command+Shift+5'
@@ -364,7 +366,7 @@ const config = {
 electron.globalShortcut.register(config.get('shortcut'), () => { /* ... */ });
 ```
 
-**Note:** Kap will not register any action for the accelerator. That is up to the plugin implementation.
+**Note:** Kap will not register any action for the keyboard shortcut. That is up to the plugin implementation.
 
 ## General APIs
 

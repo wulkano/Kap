@@ -18,14 +18,10 @@ const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
   if (type === 'keyboardShortcut') {
     return (
       <div>
-        <ShortcutInput
-          shortcut={value} onChange={value => {
-            console.log(name, value);
-            onChange(name, value);
-          }}/>
+        <ShortcutInput tabIndex={0} shortcut={value} onChange={value => onChange(name, value)}/>
         <style jsx>{`
           div {
-
+            margin-top: 8px;
           }
         `}</style>
       </div>

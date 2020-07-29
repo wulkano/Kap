@@ -27,6 +27,7 @@ export default class PreferencesContainer extends Container {
     this.fetchFromNpm();
 
     this.setState({
+      shortcuts: {},
       ...this.settings.store,
       openOnStartup: this.remote.app.getLoginItemSettings().openAtLogin,
       pluginsInstalled,

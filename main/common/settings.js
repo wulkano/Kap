@@ -93,7 +93,8 @@ const store = new Store({
     },
     shortcuts: {
       type: 'object',
-      properties: Object.keys(shortcuts).reduce((acc, key) => ({...acc, [key]: shortcutSchema}), {})
+      properties: Object.keys(shortcuts).reduce((acc, key) => ({...acc, [key]: shortcutSchema}), {}),
+      default: {}
     }
   }
 });
