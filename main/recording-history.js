@@ -282,7 +282,7 @@ const handleCorruptRecording = async (recording, error) => {
             }
           },
           {
-            label: 'Open in Finder',
+            label: 'Show in Finder',
             action: () => {
               shell.showItemInFolder(recording.filePath);
             }
