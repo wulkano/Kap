@@ -109,6 +109,7 @@ class General extends React.Component {
           parentItem
           title="Keyboard shortcuts"
           subtitle="Toggle and customise keyboard shortcuts"
+          help="You can paste any valid Electron accelerator string like Command+Shift+5"
         >
           <Switch tabIndex={tabIndex} checked={enableShortcuts} onClick={toggleShortcuts}/>
         </Item>

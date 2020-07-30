@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Linkify from 'react-linkify';
+import {HelpIcon} from '../../../vectors';
 
 export const Link = ({href, children}) => (
   <span onClick={() => electron.shell.openExternal(href)}>
@@ -48,7 +49,8 @@ class Item extends React.Component {
       onClick,
       last,
       parentItem,
-      small
+      small,
+      help
     } = this.props;
 
     const subtitleArray = Array.isArray(subtitle) ? subtitle : [subtitle];
@@ -62,7 +64,16 @@ class Item extends React.Component {
         <div className="item" id={id}>
           {warning}
           <div className="content">
-            <div className={className}>{title}</div>
+            <div className={className}>
+              {title}
+              {
+                help && (
+                  <div title={help}>
+                    <HelpIcon hoverFill="var(--icon-color)" size="16px"/>
+                  </div>
+                )
+              }
+            </div>
             <div className={subtitleClassName} title={tooltip} onClick={onSubtitleClick}>
               { subtitleArray.map(s => <div key={s}><Linkify component={Link}>{s}</Linkify></div>) }
             </div>
@@ -101,6 +112,11 @@ class Item extends React.Component {
             line-height: 1.6rem;
             font-weight: 500;
             color: var(--title-color);
+            display: flex;
+          }
+
+          .title div {
+            margin-left: 8px;
           }
 
           .content {
@@ -165,6 +181,7 @@ class Item extends React.Component {
 }
 
 Item.propTypes = {
+  help: PropTypes.string,
   id: PropTypes.string,
   title: PropTypes.oneOfType([
     PropTypes.string,

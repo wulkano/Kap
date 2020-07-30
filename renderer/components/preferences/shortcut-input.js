@@ -3,6 +3,14 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {shake} from '../../utils/inputs';
 import {checkAccelerator, eventKeyToAccelerator} from '../../../main/utils/accelerator-validator';
+import {DropdownArrowIcon} from '../../vectors';
+
+const presets = [
+  'Command+Shift+3',
+  'Command+Shift+4',
+  'Command+Shift+5',
+  'Command+Shift+6'
+];
 
 const Key = ({children}) => (
   <span>
@@ -143,20 +151,41 @@ const ShortcutInput = ({shortcut = '', onChange, tabIndex}) => {
     }
   };
 
+  const openMenu = () => {
+    const {Menu} = require('electron').remote;
+    const menu = Menu.buildFromTemplate(presets.map(accelerator => ({
+      label: accelerator.split('+').map(key => metaCharacters.get(key) || key).join(''),
+      click: () => {
+        onChange(accelerator);
+      }
+    })));
+
+    const {left, top} = boxRef.current.getBoundingClientRect();
+    menu.popup({
+      x: Math.round(left),
+      y: Math.round(top)
+    });
+  };
+
   const className = classNames('box', {invalid: false});
 
   return (
     <div className="shortcut-input">
       <div ref={boxRef} className={className} onClick={() => inputRef.current.focus()}>
-        {keysToRender.map(key => <Key key={key}>{key}</Key>)}
-        <input
-          ref={inputRef}
-          tabIndex={tabIndex}
-          onKeyDown={handleKeyDown}
-          onKeyUp={isEditing ? cancel : undefined}
-          onBlur={isEditing ? cancel : undefined}
-          onPaste={paste}
-        />
+        <div className="key-container">
+          {keysToRender.map(key => <Key key={key}>{key}</Key>)}
+          <input
+            ref={inputRef}
+            tabIndex={tabIndex}
+            onKeyDown={handleKeyDown}
+            onKeyUp={isEditing ? cancel : undefined}
+            onBlur={isEditing ? cancel : undefined}
+            onPaste={paste}
+          />
+        </div>
+        <div className="dropdown">
+          <DropdownArrowIcon onClick={openMenu}/>
+        </div>
       </div>
       <button type="button" tabIndex={tabIndex} onClick={clearShortcut}>
         <svg style={{width: '20px', height: '20px'}} viewBox="0 0 24 24">
@@ -171,17 +200,27 @@ const ShortcutInput = ({shortcut = '', onChange, tabIndex}) => {
           justify-content: stretch;
         }
 
+        .dropdown {
+          cursor: default;
+        }
+
         .box {
           position: relative;
           padding: 1px 1px;
           background: var(--input-background-color);
           border-radius: 3px;
           border: 1px solid var(--input-border-color);
-          width: 120px;
+          min-width: 96px;
           cursor: text;
           display: flex;
           height: 24px;
           box-sizing: border-box;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .key-container {
+          display: flex;
         }
 
         .box:focus-within {
