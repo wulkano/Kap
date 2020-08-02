@@ -27,10 +27,12 @@ export default class PreferencesContainer extends Container {
     this.fetchFromNpm();
 
     this.setState({
+      shortcuts: {},
       ...this.settings.store,
       openOnStartup: this.remote.app.getLoginItemSettings().openAtLogin,
       pluginsInstalled,
-      isMounted: true
+      isMounted: true,
+      shortcutMap: this.settings.shortcuts
     });
 
     if (this.settings.store.recordAudio) {
@@ -235,7 +237,7 @@ export default class PreferencesContainer extends Container {
   }
 
   toggleShortcuts = async () => {
-    const setting = 'recordKeyboardShortcut';
+    const setting = 'enableShortcuts';
     const newValue = !this.state[setting];
     this.toggleSetting(setting, newValue);
     await ipc.callMain('toggle-shortcuts', {enabled: newValue});
@@ -244,7 +246,14 @@ export default class PreferencesContainer extends Container {
   updateShortcut = async (setting, shortcut) => {
     try {
       await ipc.callMain('update-shortcut', {setting, shortcut});
-      this.setState({[setting]: shortcut});
+      this.setState({
+        shortcuts: {
+          // TODO: Fix this ESLint violation
+          // eslint-disable-next-line react/no-access-state-in-setstate
+          ...this.state.shortcuts,
+          [setting]: shortcut
+        }
+      });
     } catch (error) {
       console.warn('Error updating shortcut', error);
     }

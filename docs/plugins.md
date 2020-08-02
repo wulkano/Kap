@@ -349,6 +349,27 @@ const config = {
 
 <img src="../media/plugins/hexColor.png" width="319">
 
+#### `keyboardShortcut`
+
+[List of possible values](https://www.electronjs.org/docs/api/accelerator)
+
+```js
+const config = {
+  keyboardShortcut: {
+    title: 'Toggle Unicorn Mode',
+    customType: 'keyboardShortcut',
+    required: true,
+    default: 'Command+Shift+5'
+  }
+};
+
+// Later
+
+electron.globalShortcut.register(config.get('shortcut'), () => { /* ... */ });
+```
+
+**Note:** Kap will not register any action for the keyboard shortcut. That is up to the plugin implementation.
+
 ## General APIs
 
 Every type of plugin and service can additionally export the following:

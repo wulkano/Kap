@@ -1,8 +1,7 @@
 'use strict';
 const {globalShortcut} = require('electron');
 const {ipcMain: ipc} = require('electron-better-ipc');
-const shortcutToAccelerator = require('./utils/shortcut-to-accelerator');
-const store = require('./common/settings');
+const settings = require('./common/settings');
 const {openCropperWindow, isCropperOpen} = require('./cropper');
 
 const openCropper = () => {
@@ -13,15 +12,15 @@ const openCropper = () => {
 
 // All settings that should be loaded and handled as global accelerators
 const handlers = new Map([
-  ['cropperShortcut', openCropper]
+  ['triggerCropper', openCropper]
 ]);
 
 // If no action is passed, it resets
 const setCropperShortcutAction = (action = openCropper) => {
-  if (store.get('recordKeyboardShortcut') && store.has('cropperShortcut')) {
+  if (settings.get('enableShortcuts') && settings.has('shortcuts.triggerCropper')) {
     handlers.set('cropperShortcut', action);
 
-    const shortcut = shortcutToAccelerator(store.get('cropperShortcut'));
+    const shortcut = settings.get('shortcuts.triggerCropper');
     if (globalShortcut.isRegistered(shortcut)) {
       globalShortcut.unregister(shortcut);
     }
@@ -32,17 +31,16 @@ const setCropperShortcutAction = (action = openCropper) => {
 
 const registerShortcut = (shortcut, action) => {
   try {
-    const shortcutAccelerator = shortcutToAccelerator(shortcut);
-    globalShortcut.register(shortcutAccelerator, action);
+    globalShortcut.register(shortcut, action);
   } catch (error) {
     console.error('Error registering shortcut', shortcut, action, error);
   }
 };
 
-const registrerFromStore = () => {
-  if (store.get('recordKeyboardShortcut')) {
+const registerFromStore = () => {
+  if (settings.get('enableShortcuts')) {
     for (const [setting, action] of handlers.entries()) {
-      const shortcut = store.get(setting);
+      const shortcut = settings.get(`shortcuts.${setting}`);
       if (shortcut) {
         registerShortcut(shortcut, action);
       }
@@ -54,36 +52,37 @@ const registrerFromStore = () => {
 
 const initializeGlobalAccelerators = () => {
   ipc.answerRenderer('update-shortcut', ({setting, shortcut}) => {
+    const oldShortcut = settings.get(`shortcuts.${setting}`);
+
     try {
-      if (store.has(setting)) {
-        const oldShortcut = store.get(setting);
-        const shortcutAccelerator = shortcutToAccelerator(oldShortcut);
-        if (globalShortcut.isRegistered(shortcutAccelerator)) {
-          globalShortcut.unregister(shortcutAccelerator);
-        }
+      if (oldShortcut && oldShortcut !== shortcut && globalShortcut.isRegistered(oldShortcut)) {
+        globalShortcut.unregister(oldShortcut);
       }
     } catch (error) {
-      console.error('Error unregestering old shortcutAccelerator', error);
-    }
+      console.error('Error unregistering old shortcutAccelerator', error);
+    } finally {
+      if (shortcut && shortcut !== oldShortcut) {
+        settings.set(`shortcuts.${setting}`, shortcut);
 
-    if (shortcut) {
-      store.set(setting, shortcut);
-      registerShortcut(shortcut, handlers.get(setting));
-    } else {
-      store.delete(setting);
+        if (settings.get('enableShortcuts')) {
+          registerShortcut(shortcut, handlers.get(setting));
+        }
+      } else if (!shortcut) {
+        settings.delete(`shortcuts.${setting}`);
+      }
     }
   });
 
   ipc.answerRenderer('toggle-shortcuts', ({enabled}) => {
     if (enabled) {
-      registrerFromStore();
+      registerFromStore();
     } else {
       globalShortcut.unregisterAll();
     }
   });
 
   // Register keyboard shortcuts from store
-  registrerFromStore();
+  registerFromStore();
 };
 
 module.exports = {

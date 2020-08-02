@@ -40,7 +40,7 @@ class General extends React.Component {
       showCursor,
       highlightClicks,
       record60fps,
-      recordKeyboardShortcut,
+      enableShortcuts,
       loopExports,
       toggleSetting,
       toggleRecordAudio,
@@ -50,11 +50,12 @@ class General extends React.Component {
       recordAudio,
       pickKapturesDir,
       setOpenOnStartup,
-      cropperShortcut,
       updateShortcut,
       toggleShortcuts,
       category,
-      lossyCompression
+      lossyCompression,
+      shortcuts,
+      shortcutMap
     } = this.props;
 
     const {showCursorSupported} = this.state;
@@ -72,54 +73,56 @@ class General extends React.Component {
       <Category>
         {
           showCursorSupported &&
-            <Item
-              key="showCursor"
-              parentItem
-              title="Show cursor"
-              subtitle="Display the mouse cursor in your Kaptures"
-            >
-              <Switch
-                tabIndex={tabIndex}
-                checked={showCursor}
-                onClick={
-                  () => {
-                    if (showCursor) {
-                      toggleSetting('highlightClicks', false);
-                    }
-
-                    toggleSetting('showCursor');
+          <Item
+            key="showCursor"
+            parentItem
+            title="Show cursor"
+            subtitle="Display the mouse cursor in your Kaptures"
+          >
+            <Switch
+              tabIndex={tabIndex}
+              checked={showCursor}
+              onClick={
+                () => {
+                  if (showCursor) {
+                    toggleSetting('highlightClicks', false);
                   }
-                }/>
-            </Item>
+
+                  toggleSetting('showCursor');
+                }
+              }/>
+          </Item>
         }
         {
           showCursorSupported &&
-            <Item key="highlightClicks" subtitle="Highlight clicks">
-              <Switch
-                tabIndex={tabIndex}
-                checked={highlightClicks}
-                disabled={!showCursor}
-                onClick={() => toggleSetting('highlightClicks')}
-              />
-            </Item>
+          <Item key="highlightClicks" subtitle="Highlight clicks">
+            <Switch
+              tabIndex={tabIndex}
+              checked={highlightClicks}
+              disabled={!showCursor}
+              onClick={() => toggleSetting('highlightClicks')}
+            />
+          </Item>
         }
         <Item
-          key="recordKeyboardShortcut"
+          key="enableShortcuts"
           parentItem
           title="Keyboard shortcuts"
           subtitle="Toggle and customise keyboard shortcuts"
+          help="You can paste any valid Electron accelerator string like Command+Shift+5"
         >
-          <Switch tabIndex={tabIndex} checked={recordKeyboardShortcut} onClick={toggleShortcuts}/>
+          <Switch tabIndex={tabIndex} checked={enableShortcuts} onClick={toggleShortcuts}/>
         </Item>
         {
-          recordKeyboardShortcut &&
-            <Item key="cropperShortcut" subtitle="Trigger Kap">
+          enableShortcuts && Object.entries(shortcutMap).map(([key, title]) => (
+            <Item key={key} subtitle={title}>
               <ShortcutInput
-                shortcut={cropperShortcut}
+                shortcut={shortcuts[key]}
                 tabIndex={tabIndex}
-                onChange={shortcut => updateShortcut('cropperShortcut', shortcut)}
+                onChange={shortcut => updateShortcut(key, shortcut)}
               />
             </Item>
+          ))
         }
         <Item
           key="loopExports"
@@ -141,15 +144,15 @@ class General extends React.Component {
         </Item>
         {
           recordAudio &&
-            <Item key="audioInputDeviceId" subtitle="Select input device">
-              <Select
-                tabIndex={tabIndex}
-                options={devices}
-                selected={audioInputDeviceId}
-                placeholder="Select Device"
-                noOptionsMessage="No input devices"
-                onSelect={setAudioInputDeviceId}/>
-            </Item>
+          <Item key="audioInputDeviceId" subtitle="Select input device">
+            <Select
+              tabIndex={tabIndex}
+              options={devices}
+              selected={audioInputDeviceId}
+              placeholder="Select Device"
+              noOptionsMessage="No input devices"
+              onSelect={setAudioInputDeviceId}/>
+          </Item>
         }
         <Item
           key="record60fps"
@@ -206,7 +209,7 @@ General.propTypes = {
   showCursor: PropTypes.bool,
   highlightClicks: PropTypes.bool,
   record60fps: PropTypes.bool,
-  recordKeyboardShortcut: PropTypes.bool,
+  enableShortcuts: PropTypes.bool,
   toggleSetting: PropTypes.elementType.isRequired,
   toggleRecordAudio: PropTypes.elementType.isRequired,
   audioInputDeviceId: PropTypes.string,
@@ -222,13 +225,8 @@ General.propTypes = {
   updateShortcut: PropTypes.elementType.isRequired,
   toggleShortcuts: PropTypes.elementType.isRequired,
   category: PropTypes.string,
-  cropperShortcut: PropTypes.shape({
-    metaKey: PropTypes.bool.isRequired,
-    altKey: PropTypes.bool.isRequired,
-    ctrlKey: PropTypes.bool.isRequired,
-    shiftKey: PropTypes.bool.isRequired,
-    character: PropTypes.string.isRequired
-  }),
+  shortcutMap: PropTypes.object,
+  shortcuts: PropTypes.object,
   lossyCompression: PropTypes.bool
 };
 
@@ -239,31 +237,33 @@ export default connect(
     highlightClicks,
     record60fps,
     recordAudio,
-    recordKeyboardShortcut,
+    enableShortcuts,
     audioInputDeviceId,
     audioDevices,
     kapturesDir,
     openOnStartup,
     allowAnalytics,
     loopExports,
-    cropperShortcut,
     category,
-    lossyCompression
+    lossyCompression,
+    shortcuts,
+    shortcutMap
   }) => ({
     showCursor,
     highlightClicks,
     record60fps,
     recordAudio,
-    recordKeyboardShortcut,
+    enableShortcuts,
     audioInputDeviceId,
     audioDevices,
     kapturesDir,
     openOnStartup,
     allowAnalytics,
     loopExports,
-    cropperShortcut,
     category,
-    lossyCompression
+    lossyCompression,
+    shortcuts,
+    shortcutMap
   }),
   ({
     toggleSetting,

@@ -6,6 +6,16 @@ const Store = require('electron-store');
 const {defaultInputDeviceId} = require('./constants');
 const {hasMicrophoneAccess} = require('./system-permissions');
 const {getAudioDevices, getDefaultInputDevice} = require('../utils/devices');
+const shortcutToAccelerator = require('../utils/shortcut-to-accelerator');
+
+const shortcuts = {
+  triggerCropper: 'Toggle Kap'
+};
+
+const shortcutSchema = {
+  type: 'string',
+  default: ''
+};
 
 const store = new Store({
   schema: {
@@ -76,11 +86,33 @@ const store = new Store({
     lossyCompression: {
       type: 'boolean',
       default: false
+    },
+    enableShortcuts: {
+      type: 'boolean',
+      default: true
+    },
+    shortcuts: {
+      type: 'object',
+      properties: Object.keys(shortcuts).reduce((acc, key) => ({...acc, [key]: shortcutSchema}), {}),
+      default: {}
     }
   }
 });
 
 module.exports = store;
+module.exports.shortcuts = shortcuts;
+
+// TODO: Remove this when we feel like everyone has migrated
+if (store.has('recordKeyboardShortcut')) {
+  store.set('enableShortcuts', store.get('recordKeyboardShortcut'));
+  store.delete('recordKeyboardShortcut');
+}
+
+// TODO: Remove this when we feel like everyone has migrated
+if (store.has('cropperShortcut')) {
+  store.set('shortcuts.triggerCropper', shortcutToAccelerator(store.get('cropperShortcut')));
+  store.delete('cropperShortcut');
+}
 
 store.set('cropper', {});
 store.set('actionBar', {});
