@@ -16,6 +16,7 @@ const {track} = require('./common/analytics');
 const {EditServiceContext} = require('./service-context');
 const settings = require('./common/settings');
 
+const gifsiclePath = util.fixPathForAsarUnpack(gifsicle);
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
 const timeRegex = /time=\s*(\d\d:\d\d:\d\d.\d\d)/gm;
 const speedRegex = /speed=\s*(-?\d+(,\d+)*(\.\d+(e\d+)?)?)/gm;
@@ -28,7 +29,7 @@ const areDimensionsEven = ({width, height}) => width % 2 === 0 && height % 2 ===
 const getRunFunction = (shouldTrack, mode = 'convert') => (outputPath, options, args) => {
   const modes = new Map([
     ['convert', ffmpegPath],
-    ['compress', gifsicle]
+    ['compress', gifsiclePath]
   ]);
   const program = modes.get(mode);
 
