@@ -177,8 +177,16 @@ const handleInputKeyPress = (onChange, min, max) => event => {
     return onChange(event, {ignoreEmpty: false});
   }
 
+  // Don't let shift key lock aspect ratio
+  if (event.key === 'Shift') {
+    event.stopPropagation();
+  }
+
   const multiplier = event.shiftKey ? 10 : 1;
   const parsedValue = Number.parseInt(event.currentTarget.value, 10);
+  if (parsedValue === NaN) {
+    return;
+  }
 
   // Fake an onChange event
   if (event.key === 'ArrowUp') {
@@ -187,11 +195,6 @@ const handleInputKeyPress = (onChange, min, max) => event => {
   } else if (event.key === 'ArrowDown') {
     event.currentTarget.value = `${Math.max(parsedValue - multiplier, min)}`;
     onChange(event);
-  }
-
-  // Don't let shift key lock aspect ratio
-  if (event.key === 'Shift') {
-    event.stopPropagation();
   }
 };
 

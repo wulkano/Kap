@@ -74,6 +74,9 @@ const checkForUpdates = () => {
 (async () => {
   await app.whenReady();
 
+  // Initialize remote states
+  require('./remote-states');
+
   app.dock.hide();
   app.setAboutPanelOptions({copyright: 'Copyright © Wulkano'});
 

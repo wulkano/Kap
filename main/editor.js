@@ -11,6 +11,7 @@ const {is} = require('electron-util');
 const getFps = require('./utils/fps');
 const loadRoute = require('./utils/routes');
 const {generateTimestampedName} = require('./utils/timestamped-name');
+const KapWindow = require('./kap-window');
 
 const editors = new Map();
 let allOptions;
@@ -41,7 +42,7 @@ const openEditorWindow = async (
   const fps = recordedFps || await getFps(filePath);
   const title = recordingName || getEditorName(originalFilePath || filePath, isNewRecording);
 
-  const editorWindow = new BrowserWindow({
+  const editorWindow = new KapWindow({
     title,
     minWidth: MIN_VIDEO_WIDTH,
     minHeight: MIN_WINDOW_HEIGHT,
@@ -54,12 +55,20 @@ const openEditorWindow = async (
     frame: false,
     transparent: true,
     vibrancy: 'window',
-    show: false
+    route: 'editor2',
+    args: {
+      filePath,
+      fps,
+      originalFilePath,
+      isNewRecording,
+      recordingName,
+      title
+    }
   });
 
   editors.set(filePath, editorWindow);
 
-  loadRoute(editorWindow, 'editor');
+  // loadRoute(editorWindow, 'editor2');
 
   if (isNewRecording) {
     editorWindow.setDocumentEdited(true);
@@ -98,18 +107,19 @@ const openEditorWindow = async (
     ipc.callRenderer(editorWindow, 'focus');
   });
 
-  editorWindow.webContents.on('did-finish-load', async () => {
-    ipc.callRenderer(editorWindow, 'export-options', allOptions);
-    await ipc.callRenderer(editorWindow, 'file', {
-      filePath,
-      fps,
-      originalFilePath,
-      isNewRecording,
-      recordingName,
-      title
-    });
-    editorWindow.show();
-  });
+  // editorWindow.webContents.on('did-finish-load', async () => {
+  //   ipc.callRenderer(editorWindow, 'kap-window-args', {filePath});
+  //   ipc.callRenderer(editorWindow, 'export-options', allOptions);
+  //   await ipc.callRenderer(editorWindow, 'file', {
+  //     filePath,
+  //     fps,
+  //     originalFilePath,
+  //     isNewRecording,
+  //     recordingName,
+  //     title
+  //   });
+  //   editorWindow.show();
+  // });
 };
 
 const setOptions = options => {

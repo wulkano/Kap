@@ -1,6 +1,8 @@
 'use strict';
 const {Notification, clipboard} = require('electron');
 const got = require('got');
+const {EventEmitter} = require('events');
+
 const {addPluginPromise} = require('./utils/deep-linking');
 
 const prettifyFormat = format => {
@@ -14,7 +16,7 @@ const prettifyFormat = format => {
   return formats.get(format);
 };
 
-class ServiceContext {
+class ServiceContext extends EventEmitter {
   constructor(options) {
     this._isBuiltin = options._isBuiltin;
     this.config = options.config;
@@ -100,7 +102,7 @@ class ServiceContext {
   }
 }
 
-class ShareServiceContext extends ServiceContext {
+export class ShareServiceContext extends ServiceContext {
   constructor(options) {
     super(options);
 
@@ -135,7 +137,7 @@ class ShareServiceContext extends ServiceContext {
   }
 }
 
-class RecordServiceContext extends ServiceContext {
+export class RecordServiceContext extends ServiceContext {
   constructor(options) {
     super(options);
 
@@ -145,7 +147,7 @@ class RecordServiceContext extends ServiceContext {
   }
 }
 
-class EditServiceContext extends ServiceContext {
+export class EditServiceContext extends ServiceContext {
   constructor(options) {
     super(options);
 
@@ -178,8 +180,8 @@ class EditServiceContext extends ServiceContext {
   }
 }
 
-module.exports = {
-  ShareServiceContext,
-  RecordServiceContext,
-  EditServiceContext
-};
+// module.exports = {
+//   ShareServiceContext,
+//   RecordServiceContext,
+//   EditServiceContext
+// };

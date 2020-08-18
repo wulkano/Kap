@@ -1,0 +1,22 @@
+{
+  "extends": "@sindresorhus/tsconfig",
+  "compilerOptions": {
+    "outDir": "dist-js",
+    "target": "es2019",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "downlevelIteration": true,
+    "allowJs": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    "lib": [
+      "esnext"
+    ]
+  },
+  "include": [
+    "main/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

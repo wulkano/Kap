@@ -12,12 +12,14 @@
     "url": "https://wulkano.com"
   },
   "private": true,
-  "main": "main/index.js",
+  "main": "dist-js/index.js",
   "scripts": {
     "lint": "xo",
     "test": "xo && ava",
-    "start": "yarn && electron .",
-    "build": "next build renderer && next export renderer",
+    "start": "tsc && electron .",
+    "build-main": "tsc",
+    "build-renderer": "next build renderer && next export renderer",
+    "build": "yarn build-main && yarn build-renderer",
     "dist": "npm run build && electron-builder",
     "pack": "npm run build && electron-builder --dir",
     "postinstall": "electron-builder install-app-deps",
@@ -37,7 +39,7 @@
     "classnames": "^2.2.6",
     "clean-stack": "^3.0.0",
     "delay": "^4.3.0",
-    "electron-better-ipc": "^1.0.1",
+    "electron-better-ipc": "^1.1.0",
     "electron-log": "^4.1.1",
     "electron-next": "^3.1.5",
     "electron-notarize": "^0.3.0",
@@ -81,9 +83,12 @@
     "tildify": "^2.0.0",
     "tmp": "^0.2.0",
     "unstated": "^1.2.0",
+    "unstated-next": "^1.1.0",
     "yarn": "^1.22.4"
   },
   "devDependencies": {
+    "@sindresorhus/tsconfig": "^0.7.0",
+    "@types/react": "^16.9.46",
     "ava": "^3.9.0",
     "babel-eslint": "^10.1.0",
     "electron": "8.2.4",
@@ -96,6 +101,7 @@
     "module-alias": "^2.2.2",
     "next": "^9.3.6",
     "sinon": "^9.0.2",
+    "typescript": "^4.0.3",
     "unique-string": "^2.0.0",
     "xo": "^0.30.0"
   },
@@ -156,7 +162,8 @@
       ]
     },
     "files": [
-      "**/*",
+      "static",
+      "dist-js/**/*",
       "!renderer",
       "renderer/out"
     ],

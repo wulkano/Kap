@@ -66,6 +66,8 @@ const showError = async (error, {title: customTitle, plugin} = {}) => {
   const title = customTitle || ensuredError.name;
   const detail = getPrettyStack(ensuredError);
 
+  console.log(error);
+
   const mainButtons = [
     'Don\'t Report',
     {

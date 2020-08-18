@@ -1,4 +1,4 @@
-const Ajv = require('ajv');
+import Ajv, {Options} from 'ajv';
 
 const hexColorValidator = () => {
   return {
@@ -13,18 +13,24 @@ const keyboardShortcutValidator = () => {
   };
 };
 
-const validators = new Map([
+const validators = new Map<string, (parentSchema: object) => object>([
   ['hexColor', hexColorValidator],
   ['keyboardShortcut', keyboardShortcutValidator]
 ]);
 
-class CustomAjv extends Ajv {
-  constructor(options) {
+export default class CustomAjv extends Ajv {
+  constructor(options: Options) {
     super(options);
 
     this.addKeyword('customType', {
       macro: (schema, parentSchema) => {
-        return validators.get(schema)(parentSchema);
+        const validator = validators.get(schema);
+
+        if (!validator) {
+          throw new Error(`No custom type found for ${schema}`);
+        }
+
+        return validator(parentSchema);
       },
       metaSchema: {
         type: 'string',
@@ -33,5 +39,3 @@ class CustomAjv extends Ajv {
     });
   }
 }
-
-module.exports = CustomAjv;

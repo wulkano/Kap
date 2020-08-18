@@ -262,7 +262,6 @@ class Right extends React.Component {
           tabIndex={advanced ? 0 : -1}
           onChange={this.onWidthChange}
           onBlur={this.onWidthBlur}
-          onKeyDown={this.onWidthChange}
           onMouseDown={stopPropagation}
         />
         <div className="swap" tabIndex={advanced ? 0 : -1} onKeyPress={handleKeyboardActivation(swapDimensions)}>
@@ -280,7 +279,6 @@ class Right extends React.Component {
           tabIndex={advanced ? 0 : -1}
           onChange={this.onHeightChange}
           onBlur={this.onHeightBlur}
-          onKeyDown={this.onHeightChange}
           onMouseDown={stopPropagation}
         />
         {keyboardInputStyles}

@@ -1,64 +1,50 @@
-import electron from 'electron';
-import React from 'react';
+import {remote} from 'electron';
+import {useState, useEffect} from 'react';
 
-export default class TrafficLights extends React.Component {
-  state = {
-    tint: 'blue'
-  };
+const TrafficLights = () => {
+  const currentWindow = remote.getCurrentWindow();
+  const [tint, setTint] = useState('blue');
 
-  componentDidMount() {
-    this.tintSubscription = electron.remote.systemPreferences.subscribeNotification('AppleAquaColorVariantChanged', this.onTintChange);
-    this.setState({tint: this.getTintColor()});
-  }
+  useEffect(() => {
+    const setTintColor = () => {
+      setTint(remote.systemPreferences.getUserDefault('AppleAquaColorVariant', 'string') === '6' ? 'graphite' : 'blue');
+    };
 
-  componentWillUnmount() {
-    electron.remote.systemPreferences.unsubscribeNotification(this.tintSubscription);
-  }
+    const tintSubscription = remote.systemPreferences.subscribeNotification('AppleAquaColorVariantChanged', setTintColor);
+    setTintColor();
 
-  getTintColor = () => electron.remote.systemPreferences.getUserDefault('AppleAquaColorVariant', 'string') === '6' ? 'graphite' : 'blue';
+    return () => {
+      remote.systemPreferences.unsubscribeNotification(tintSubscription);
+    };
+  }, []);
 
-  onTintChange = () => {
-    this.setState({tint: this.getTintColor()});
-  }
+  const close = () => currentWindow.close();
+  const minimize = () => currentWindow.minimize();
+  const maximize = () => currentWindow.setFullScreen(!currentWindow.isFullScreen());
 
-  close = () => {
-    electron.remote.BrowserWindow.getFocusedWindow().close();
-  }
-
-  minimize = () => {
-    electron.remote.BrowserWindow.getFocusedWindow().minimize();
-  }
-
-  maximize = () => {
-    // TODO: When we get to Electron 4 use this API https://github.com/electron/electron/commit/a42ca9eecc6e82c087604f92a3e6581de66ece5a
-    const win = electron.remote.BrowserWindow.getFocusedWindow();
-    win.setFullScreen(!win.isFullScreen());
-  }
-
-  render() {
-    return (
-      <div className={`traffic-lights ${this.state.tint}`}>
-        <div className="traffic-light close" onClick={this.close}>
-          <svg width="12" height="12">
-            <circle cx="6" cy="6" r="5.75" strokeWidth="0.5"/>
-            <line x1="3.17" y1="3.17" x2="8.83" y2="8.83" stroke="black"/>
-            <line x1="3.17" y1="8.83" x2="8.83" y2="3.17" stroke="#760e0e"/>
-          </svg>
-        </div>
-        <div className="traffic-light minimize" onClick={this.minimize}>
-          <svg width="12" height="12">
-            <circle cx="6" cy="6" r="5.75" strokeWidth="0.5"/>
-            <line x1="2" y1="6" x2="10" y2="6"/>
-          </svg>
-        </div>
-        <div className="traffic-light maximize" onClick={this.maximize}>
-          <svg width="12" height="12">
-            <circle cx="6" cy="6" r="5.75" strokeWidth="0.5"/>
-            <rect x="3.5" y="3.5" width="5" height="5" rx="1" ry="1"/>
-            <rect className="background-rect" x="5.5" y="1.5" width="1" height="9" transform="rotate(-45 6 6)"/>
-          </svg>
-        </div>
-        <style jsx>{`
+  return (
+    <div className={`traffic-lights ${tint}`}>
+      <div className="traffic-light close" onClick={close}>
+        <svg width="12" height="12">
+          <circle cx="6" cy="6" r="5.75" strokeWidth="0.5" />
+          <line x1="3.17" y1="3.17" x2="8.83" y2="8.83" stroke="black" />
+          <line x1="3.17" y1="8.83" x2="8.83" y2="3.17" stroke="#760e0e" />
+        </svg>
+      </div>
+      <div className="traffic-light minimize" onClick={minimize}>
+        <svg width="12" height="12">
+          <circle cx="6" cy="6" r="5.75" strokeWidth="0.5" />
+          <line x1="2" y1="6" x2="10" y2="6" />
+        </svg>
+      </div>
+      <div className="traffic-light maximize" onClick={maximize}>
+        <svg width="12" height="12">
+          <circle cx="6" cy="6" r="5.75" strokeWidth="0.5" />
+          <rect x="3.5" y="3.5" width="5" height="5" rx="1" ry="1" />
+          <rect className="background-rect" x="5.5" y="1.5" width="1" height="9" transform="rotate(-45 6 6)" />
+        </svg>
+      </div>
+      <style jsx>{`
           .traffic-lights {
             display: flex;
             align-items: center;
@@ -170,7 +156,8 @@ export default class TrafficLights extends React.Component {
             stroke: #8f8f94;
           }
         `}</style>
-      </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+export default TrafficLights;

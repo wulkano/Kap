@@ -1,5 +1,5 @@
-const Store = require('electron-store');
-const Ajv = require('./ajv');
+import Store from 'electron-store';
+import Ajv from './ajv';
 
 class PluginConfig extends Store {
   constructor(plugin) {

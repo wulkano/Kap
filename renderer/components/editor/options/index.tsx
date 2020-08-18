@@ -1,15 +1,12 @@
-import React from 'react';
-
 import LeftOptions from './left';
 import RightOptions from './right';
 
-export default class Options extends React.Component {
-  render() {
-    return (
-      <div className="container">
-        <LeftOptions/>
-        <RightOptions/>
-        <style jsx>{`
+const Options = () => {
+  return (
+    <div className="container">
+      <LeftOptions />
+      <RightOptions />
+      <style jsx>{`
           .container {
             display: flex;
             flex: 1;
@@ -18,9 +15,14 @@ export default class Options extends React.Component {
             justify-content: space-between;
             width: 100%;
             background: var(--background-color);
+            z-index: 99;
+            height: 48px;
+            max-height: 48px;
+            flex-shrink: 0;
           }
         `}</style>
-      </div>
-    );
-  }
+    </div>
+  );
 }
+
+export default Options;

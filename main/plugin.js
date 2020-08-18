@@ -13,7 +13,7 @@ const {showError} = require('./utils/errors');
 
 const {app, shell} = electron;
 
-const recordPluginServiceState = new Store({
+export const recordPluginServiceState = new Store({
   name: 'record-plugin-state',
   defaults: {}
 });
@@ -38,7 +38,7 @@ class BasePlugin {
   }
 }
 
-class InstalledPlugin extends BasePlugin {
+export class InstalledPlugin extends BasePlugin {
   constructor(pluginName) {
     super(pluginName);
 
@@ -129,7 +129,7 @@ class InstalledPlugin extends BasePlugin {
   }
 }
 
-class NpmPlugin extends BasePlugin {
+export class NpmPlugin extends BasePlugin {
   constructor(json, kap = {}) {
     super(json.name);
 
@@ -150,8 +150,8 @@ class NpmPlugin extends BasePlugin {
   }
 }
 
-module.exports = {
-  InstalledPlugin,
-  NpmPlugin,
-  recordPluginServiceState
-};
+// module.exports = {
+//   InstalledPlugin,
+//   NpmPlugin,
+//   recordPluginServiceState
+// };

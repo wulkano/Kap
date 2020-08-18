@@ -1,15 +1,15 @@
 'use strict';
 
-const {homedir} = require('os');
-const Store = require('electron-store');
+import {homedir} from 'os';
+import Store from 'electron-store';
 
 const {defaultInputDeviceId} = require('./constants');
 const {hasMicrophoneAccess} = require('./system-permissions');
 const {getAudioDevices, getDefaultInputDevice} = require('../utils/devices');
 const shortcutToAccelerator = require('../utils/shortcut-to-accelerator');
 
-const shortcuts = {
-  triggerCropper: 'Toggle Kap'
+export const shortcuts = {
+  triggerCropper: 'Toggle Kap',
 };
 
 const shortcutSchema = {
@@ -17,7 +17,31 @@ const shortcutSchema = {
   default: ''
 };
 
-const store = new Store({
+interface Settings {
+  kapturesDir: string;
+  allowAnalytics: boolean;
+  showCursor: boolean;
+  highlightClicks: boolean;
+  record60fps: boolean;
+  loopExports: boolean;
+  recordKeyboardShortcut: boolean;
+  recordAudio: boolean;
+  audioInputDeviceId?: string;
+  cropperShortcut: {
+    metaKey: boolean,
+    altKey: boolean,
+    ctrlKey: boolean,
+    shiftKey: boolean,
+    character: string
+  };
+  lossyCompression: boolean;
+  enableShortcuts: boolean;
+  shortcuts: {
+    [key in keyof typeof shortcuts]: string
+  }
+}
+
+const store = new Store<Settings>({
   schema: {
     kapturesDir: {
       type: 'string',
@@ -99,8 +123,7 @@ const store = new Store({
   }
 });
 
-module.exports = store;
-module.exports.shortcuts = shortcuts;
+export default store;
 
 // TODO: Remove this when we feel like everyone has migrated
 if (store.has('recordKeyboardShortcut')) {
@@ -110,12 +133,13 @@ if (store.has('recordKeyboardShortcut')) {
 
 // TODO: Remove this when we feel like everyone has migrated
 if (store.has('cropperShortcut')) {
-  store.set('shortcuts.triggerCropper', shortcutToAccelerator(store.get('cropperShortcut')));
+  // TODO: Investigate type for dot notation
+  store.set('shortcuts.triggerCropper' as any, shortcutToAccelerator(store.get('cropperShortcut')));
   store.delete('cropperShortcut');
 }
 
-store.set('cropper', {});
-store.set('actionBar', {});
+store.set('cropper' as any, {});
+store.set('actionBar' as any, {});
 
 const audioInputDeviceId = store.get('audioInputDeviceId');
 
@@ -123,13 +147,13 @@ if (hasMicrophoneAccess()) {
   (async () => {
     const devices = await getAudioDevices();
 
-    if (!devices.some(device => device.id === audioInputDeviceId)) {
+    if (!devices.some((device: any) => device.id === audioInputDeviceId)) {
       store.set('audioInputDeviceId', defaultInputDeviceId);
     }
   })();
 }
 
-module.exports.getSelectedInputDeviceId = () => {
+export const getSelectedInputDeviceId = () => {
   const audioInputDeviceId = store.get('audioInputDeviceId', defaultInputDeviceId);
 
   if (audioInputDeviceId === defaultInputDeviceId) {

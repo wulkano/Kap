@@ -17,13 +17,15 @@ const {notify} = require('./notifications');
 const {track} = require('./analytics');
 const {InstalledPlugin, NpmPlugin, recordPluginServiceState} = require('../plugin');
 const {showError} = require('../utils/errors');
+const {EventEmitter} = require('events');
 
 // Need to persist the notification, otherwise it is garbage collected and the actions don't trigger
 // https://github.com/electron/electron/issues/12690
 let pluginNotification;
 
-class Plugins {
+class Plugins extends EventEmitter {
   constructor() {
+    super();
     this.yarnBin = path.join(__dirname, '../../node_modules/yarn/bin/yarn.js');
     this._makePluginsDir();
     this.appVersion = app.getVersion();
@@ -179,6 +181,7 @@ class Plugins {
       pluginNotification.show();
       this.updateExportOptions();
       this.refreshRecordPluginServices();
+      this.emit('installed', plugin);
 
       return plugin;
     } catch (error) {
@@ -210,6 +213,7 @@ class Plugins {
     }
 
     plugin.config.clear();
+    this.emit('uninstalled', name);
     this.updateExportOptions();
     return new NpmPlugin(plugin.json, {
       // Keeping for backwards compatibility
@@ -256,15 +260,15 @@ class Plugins {
 
   getBuiltIn() {
     return [{
-      pluginPath: './plugins/copy-to-clipboard-plugin',
+      pluginPath: path.resolve(__dirname, '..', 'plugins', 'copy-to-clipboard-plugin'),
       isCompatible: true,
       name: '_copyToClipboard'
     }, {
-      pluginPath: './plugins/save-file-plugin',
+        pluginPath: path.resolve(__dirname, '..', 'plugins', 'save-file-plugin'),
       isCompatible: true,
       name: '_saveToDisk'
     }, {
-      pluginPath: './plugins/open-with-plugin',
+        pluginPath: path.resolve(__dirname, '..', 'plugins', 'open-with-plugin'),
       isCompatible: true,
       name: '_openWith'
     }];
@@ -296,6 +300,7 @@ class Plugins {
   async openPluginConfig(name) {
     await openConfigWindow(name);
     const plugin = new InstalledPlugin(name);
+    this.emit('config-changed', plugin);
     return plugin.isValid;
   }
 }

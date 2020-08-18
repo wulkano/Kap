@@ -6,7 +6,6 @@ const pEvent = require('p-event');
 
 const loadRoute = require('./utils/routes');
 const {openPrefsWindow} = require('./preferences');
-const {getEditor} = require('./editor');
 
 const openConfigWindow = async pluginName => {
   const prefsWindow = await openPrefsWindow();
@@ -65,8 +64,8 @@ const openEditorConfigWindow = async (pluginName, serviceTitle, editorWindow) =>
   await pEvent(configWindow, 'closed');
 };
 
-ipc.answerRenderer('open-edit-config', async ({pluginName, serviceTitle, filePath}) => {
-  return openEditorConfigWindow(pluginName, serviceTitle, getEditor(filePath));
+ipc.answerRenderer('open-edit-config', async ({pluginName, serviceTitle}, window) => {
+  return openEditorConfigWindow(pluginName, serviceTitle, window);
 });
 
 module.exports = {
