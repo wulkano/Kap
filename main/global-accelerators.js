@@ -17,7 +17,7 @@ const handlers = new Map([
 
 // If no action is passed, it resets
 const setCropperShortcutAction = (action = openCropper) => {
-  if (settings.get('enableShortcuts') && settings.has('shortcuts.triggerCropper')) {
+  if (settings.get('enableShortcuts') && settings.get('shortcuts.triggerCropper')) {
     handlers.set('cropperShortcut', action);
 
     const shortcut = settings.get('shortcuts.triggerCropper');
