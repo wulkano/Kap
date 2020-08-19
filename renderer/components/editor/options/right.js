@@ -111,7 +111,7 @@ class RightOptions extends React.Component {
 
           .format {
             height: 24px;
-            width: 96px;
+            width: 104px;
             margin-right: 8px;
           }
 

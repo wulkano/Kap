@@ -88,12 +88,12 @@ const aboutItem = {
 
 let isExportsItemEnabled = false;
 
-const exportHistoryItem = {
+const getExportHistoryItem = () => ({
   label: 'Export History',
   click: openExportsWindow,
   enabled: isExportsItemEnabled,
   id: 'exports'
-};
+});
 
 const preferencesItem = {
   label: 'Preferences…',
@@ -163,7 +163,7 @@ const getCogMenuTemplate = async () => [
     type: 'separator'
   },
   openFileItem,
-  exportHistoryItem,
+  getExportHistoryItem(),
   {
     type: 'separator'
   },
@@ -221,7 +221,7 @@ const appMenuTemplate = [
       {
         type: 'separator'
       },
-      exportHistoryItem,
+      getExportHistoryItem(),
       {
         type: 'separator'
       },
