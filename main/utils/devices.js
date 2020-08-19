@@ -30,11 +30,18 @@ const getAudioDevices = async () => {
       return 0;
     }).map(device => ({id: device.uid, name: device.name}));
   } catch (error) {
-    const devices = await aperture.audioDevices();
+    try {
+      const devices = await aperture.audioDevices();
 
-    if (!Array.isArray(devices)) {
-      const Sentry = require('./sentry');
-      Sentry.captureException(new Error(`devices is not an array: ${JSON.stringify(devices)}`));
+      if (!Array.isArray(devices)) {
+        const Sentry = require('./sentry');
+        Sentry.captureException(new Error(`devices is not an array: ${JSON.stringify(devices)}`));
+        showError(error);
+        return [];
+      }
+
+      return devices;
+    } catch (error) {
       showError(error);
       return [];
     }
