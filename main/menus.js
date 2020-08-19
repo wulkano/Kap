@@ -132,7 +132,7 @@ const getMicrophoneItem = async () => {
         click: () => settings.set('recordAudio', false)
       },
       ...[
-        {name: `System Default (${currentDefaultDevice.name})`, id: defaultInputDeviceId},
+        {name: `System Default${currentDefaultDevice ? ` (${currentDefaultDevice.name})` : ''}`, id: defaultInputDeviceId},
         ...devices
       ].map(device => ({
         label: device.name,

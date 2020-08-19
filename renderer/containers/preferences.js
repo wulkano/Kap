@@ -43,12 +43,12 @@ export default class PreferencesContainer extends Container {
   getAudioDevices = async () => {
     const {getAudioDevices, getDefaultInputDevice} = this.remote.require('./utils/devices');
     const {audioInputDeviceId} = this.settings.store;
-    const {name: currentDefaultName} = getDefaultInputDevice();
+    const {name: currentDefaultName} = getDefaultInputDevice() || {};
 
     const audioDevices = await getAudioDevices();
     const updates = {
       audioDevices: [
-        {name: `System Default (${currentDefaultName})`, id: defaultInputDeviceId},
+        {name: `System Default${currentDefaultName ? ` (${currentDefaultName})` : ''}`, id: defaultInputDeviceId},
         ...audioDevices
       ],
       audioInputDeviceId
