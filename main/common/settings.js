@@ -134,7 +134,7 @@ module.exports.getSelectedInputDeviceId = () => {
 
   if (audioInputDeviceId === defaultInputDeviceId) {
     const device = getDefaultInputDevice();
-    return device.id;
+    return device && device.id;
   }
 
   return audioInputDeviceId;
