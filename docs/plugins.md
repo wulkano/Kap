@@ -23,7 +23,7 @@ Tip: You can use modern JavaScript features like async/await in your plugin.
     - `version`: a [semver range](https://nodesource.com/blog/semver-a-primer/) of the Kap versions your plugin supports. Defaults to `*`.
     - `macosVersion`: a [semver range](https://nodesource.com/blog/semver-a-primer/) of the macOS versions your plugin supports. Defaults to `*`.
 
-- **DEPRECATED** If your plugin only supports specific versions of Kap, include a `kapVersion` field in the package.json with a [semver range](https://nodesource.com/blog/semver-a-primer/). This is still supported but will be removed at some point in favor of `kap.version`.
+- **Deprecation notice:** If your plugin only supports specific versions of Kap, include a `kapVersion` field in the package.json with a [semver range](https://nodesource.com/blog/semver-a-primer/). This is still supported but will be removed at some point in favor of `kap.version`.
 
 ## Development
 
