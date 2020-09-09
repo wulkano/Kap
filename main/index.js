@@ -71,7 +71,7 @@ const checkForUpdates = () => {
 
   setInterval(checkForUpdates, toMilliseconds({hours: 1}));
 
-  checkForUpdates()
+  checkForUpdates();
 };
 
 // Prepare the renderer once the app is ready
