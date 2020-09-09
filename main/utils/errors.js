@@ -33,6 +33,7 @@ const getSentryIssue = async (eventId, tries = 0) => {
 
     return body;
   } catch (error) {
+    // We are not using `showError` again here to avoid an infinite error cycle
     console.log(error);
   }
 };
