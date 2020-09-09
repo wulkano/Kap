@@ -47,7 +47,6 @@
     "ensure-error": "^2.0.0",
     "execa": "4.0.0",
     "file-icon": "^3.0.0",
-    "first-run": "^2.0.0",
     "gifsicle": "^5.0.0",
     "got": "^9.6.0",
     "insight": "^0.10.3",

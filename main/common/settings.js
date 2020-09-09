@@ -95,6 +95,10 @@ const store = new Store({
       type: 'object',
       properties: Object.keys(shortcuts).reduce((acc, key) => ({...acc, [key]: shortcutSchema}), {}),
       default: {}
+    },
+    version: {
+      type: 'string',
+      default: ''
     }
   }
 });
