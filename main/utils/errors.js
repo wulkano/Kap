@@ -15,7 +15,7 @@ const {showDialog} = require('../dialog');
 const MAX_RETRIES = 10;
 
 const ERRORS_TO_IGNORE = [
-  /net::ERR_CONNECTION_TIMED_OUT/m
+  /net::ERR_CONNECTION_TIMED_OUT/
 ];
 
 const shouldIgnoreError = errorText => ERRORS_TO_IGNORE.some(regex => regex.test(errorText));
