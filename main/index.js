@@ -59,15 +59,21 @@ const checkForUpdates = () => {
     return false;
   }
 
+  const checkForUpdates = async () => {
+    try {
+      await autoUpdater.checkForUpdates();
+    } catch (error) {
+      autoUpdater.logger.error(error);
+    }
+  };
+
   // For auto-update debugging in Console.app
   autoUpdater.logger = log;
   autoUpdater.logger.transports.file.level = 'info';
 
-  setInterval(() => {
-    autoUpdater.checkForUpdates();
-  }, toMilliseconds({hours: 1}));
+  setInterval(checkForUpdates, toMilliseconds({hours: 1}));
 
-  autoUpdater.checkForUpdates();
+  checkForUpdates();
 };
 
 // Prepare the renderer once the app is ready
