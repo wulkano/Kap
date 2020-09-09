@@ -62,7 +62,9 @@ const checkForUpdates = () => {
   const checkForUpdates = async () => {
     try {
       await autoUpdater.checkForUpdates();
-    } catch {}
+    } catch (error) {
+      autoUpdater.logger.error(error);
+    }
   };
 
   // For auto-update debugging in Console.app
