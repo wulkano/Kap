@@ -1,6 +1,6 @@
 'use strict';
 
-const firstRun = require('first-run');
+const util = require('electron-util');
 const Insight = require('insight');
 const {parse} = require('semver');
 const pkg = require('../../package');
@@ -20,12 +20,13 @@ const track = (...paths) => {
 };
 
 const initializeAnalytics = () => {
-  if (firstRun()) {
+  if (util.isFirstAppLaunch()) {
     insight.track('install');
   }
 
-  if (firstRun({name: `${pkg.name}-${pkg.version}`})) {
+  if (settings.get('version') !== pkg.version) {
     track('install');
+    settings.set('version', pkg.version);
   }
 };
 
