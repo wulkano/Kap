@@ -33,7 +33,7 @@ const getSentryIssue = async (eventId, tries = 0) => {
 
     return body;
   } catch (error) {
-    showError(error);
+    console.log(error);
   }
 };
 

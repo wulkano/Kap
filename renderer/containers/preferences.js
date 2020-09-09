@@ -207,8 +207,6 @@ export default class PreferencesContainer extends Container {
   }
 
   toggleSetting = (setting, value) => {
-    // TODO: Fix this ESLint violation
-    // eslint-disable-next-line react/no-access-state-in-setstate
     const newValue = value === undefined ? !this.state[setting] : value;
     if (!SETTINGS_ANALYTICS_BLACKLIST.includes(setting)) {
       this.track(`preferences/setting/${setting}/${newValue}`);
@@ -248,8 +246,6 @@ export default class PreferencesContainer extends Container {
       await ipc.callMain('update-shortcut', {setting, shortcut});
       this.setState({
         shortcuts: {
-          // TODO: Fix this ESLint violation
-          // eslint-disable-next-line react/no-access-state-in-setstate
           ...this.state.shortcuts,
           [setting]: shortcut
         }
@@ -260,8 +256,6 @@ export default class PreferencesContainer extends Container {
   }
 
   setOpenOnStartup = value => {
-    // TODO: Fix this ESLint violation
-    // eslint-disable-next-line react/no-access-state-in-setstate
     const openOnStartup = typeof value === 'boolean' ? value : !this.state.openOnStartup;
     this.setState({openOnStartup});
     this.remote.app.setLoginItemSettings({openAtLogin: openOnStartup});
