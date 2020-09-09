@@ -14,6 +14,12 @@ const {showDialog} = require('../dialog');
 
 const MAX_RETRIES = 10;
 
+const ERRORS_TO_IGNORE = [
+  /net::ERR_CONNECTION_TIMED_OUT/m
+];
+
+const shouldIgnoreError = errorText => ERRORS_TO_IGNORE.some(regex => regex.test(errorText));
+
 const getSentryIssue = async (eventId, tries = 0) => {
   if (tries > MAX_RETRIES) {
     return;
@@ -66,6 +72,10 @@ const showError = async (error, {title: customTitle, plugin} = {}) => {
   const ensuredError = ensureError(error);
   const title = customTitle || ensuredError.name;
   const detail = getPrettyStack(ensuredError);
+
+  if (shouldIgnoreError(`${title}\n${detail}`)) {
+    return;
+  }
 
   const mainButtons = [
     'Don\'t Report',
