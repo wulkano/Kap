@@ -22,6 +22,8 @@ export default class EditorContainer extends Container {
       originalFilePath,
       recordingName,
       title,
+      // TODO: Fix this ESLint violation
+      // eslint-disable-next-line react/no-access-state-in-setstate
       fps: Math.min(fps, this.state.fps),
       originalFps: fps,
       wasMuted: false,
