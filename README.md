@@ -9,7 +9,7 @@
 
 **[Download the latest release](https://kap.now.sh/api)** (macOS only)
 
-Or install with [Homebrew-Cask](https://caskroom.github.io):
+- Or install with [Homebrew-Cask](https://caskroom.github.io):
 
 ```
 $ brew cask install kap
@@ -17,15 +17,15 @@ $ brew cask install kap
 
 ## Contribute
 
-Read the [contribution guide](contributing.md).
+- Read the [contribution guide](contributing.md).
 
 ## Plugins
 
-For more info on how to create plugins, read the [plugins docs](docs/plugins.md).
+- For more info on how to create plugins, read the [plugins docs](docs/plugins.md).
 
 ## Dev builds
 
-Download [`master`](https://kap-artifacts.now.sh/master) or builds for any other branch using: `https://kap-artifacts.now.sh/<branch>`. Note that these builds are unsupported and may have issues.<br>
+- Download [`master`](https://kap-artifacts.now.sh/master) or builds for any other branch using: `https://kap-artifacts.now.sh/<branch>`. Note that these builds are unsupported and may have issues.<br>
 
 ## Related Repositories
 
