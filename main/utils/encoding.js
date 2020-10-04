@@ -18,6 +18,7 @@ const getEncoding = async filePath => {
     if (!errorText) {
       throw error;
     }
+    
     return errorText[1];
   }
 };
