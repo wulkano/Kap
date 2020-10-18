@@ -119,6 +119,10 @@ const store = new Store<Settings>({
       type: 'object',
       properties: Object.keys(shortcuts).reduce((acc, key) => ({...acc, [key]: shortcutSchema}), {}),
       default: {}
+    },
+    version: {
+      type: 'string',
+      default: ''
     }
   }
 });
@@ -158,7 +162,7 @@ export const getSelectedInputDeviceId = () => {
 
   if (audioInputDeviceId === defaultInputDeviceId) {
     const device = getDefaultInputDevice();
-    return device.id;
+    return device && device.id;
   }
 
   return audioInputDeviceId;

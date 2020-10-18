@@ -34,6 +34,13 @@ const ConfigInput = ({name, type, schema, value, onChange, hasErrors}) => {
 
   if (type === 'select') {
     const options = schema.enum.map(value => ({label: value, value}));
+
+    if (!options.some(option => option.value === value)) {
+      const newValue = options[0] && options[0].value;
+      onChange(name, newValue);
+      return <Select full tabIndex={0} options={options} selected={newValue} onSelect={value => onChange(name, value)}/>;
+    }
+
     return <Select full tabIndex={0} options={options} selected={value} onSelect={value => onChange(name, value)}/>;
   }
 

@@ -30,11 +30,18 @@ const getAudioDevices = async () => {
       return 0;
     }).map(device => ({id: device.uid, name: device.name}));
   } catch (error) {
-    const devices = await aperture.audioDevices();
+    try {
+      const devices = await aperture.audioDevices();
 
-    if (!Array.isArray(devices)) {
-      const Sentry = require('./sentry');
-      Sentry.captureException(new Error(`devices is not an array: ${JSON.stringify(devices)}`));
+      if (!Array.isArray(devices)) {
+        const Sentry = require('./sentry');
+        Sentry.captureException(new Error(`devices is not an array: ${JSON.stringify(devices)}`));
+        showError(error);
+        return [];
+      }
+
+      return devices;
+    } catch (error) {
       showError(error);
       return [];
     }
@@ -42,11 +49,15 @@ const getAudioDevices = async () => {
 };
 
 const getDefaultInputDevice = () => {
-  const device = audioDevices.getDefaultInputDevice.sync();
-  return {
-    id: device.uid,
-    name: device.name
-  };
+  try {
+    const device = audioDevices.getDefaultInputDevice.sync();
+    return {
+      id: device.uid,
+      name: device.name
+    };
+  } catch {
+    // Running on 10.13 and don't have swift support libs. No need to report
+  }
 };
 
 module.exports = {getAudioDevices, getDefaultInputDevice};

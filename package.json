@@ -1,7 +1,7 @@
 {
   "name": "kap",
   "productName": "Kap",
-  "version": "3.2.2",
+  "version": "3.3.2",
   "description": "An open-source screen recorder built with web technology",
   "license": "MIT",
   "repository": "wulkano/kap",
@@ -49,7 +49,6 @@
     "ensure-error": "^2.0.0",
     "execa": "4.0.0",
     "file-icon": "^3.0.0",
-    "first-run": "^2.0.0",
     "gifsicle": "^5.0.0",
     "got": "^9.6.0",
     "insight": "^0.10.3",
@@ -176,6 +175,7 @@
       "entitlements": "./build/entitlements.mac.inherit.plist",
       "extendInfo": {
         "NSMicrophoneUsageDescription": "Kap needs access to the microphone to be able to record audio for screen recordings.",
+        "NSCameraUsageDescription": "A Kap plugin wants to use the camera.",
         "NSUserNotificationAlertStyle": "alert",
         "CFBundleDocumentTypes": [
           {
