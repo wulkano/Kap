@@ -1,17 +1,25 @@
 import {useState, useEffect} from 'react'
 import {createContainer} from 'unstated-next';
 
-import {FormatName, EditService} from '../../../main/common/remote-state';
-import useWindowArgs from '../../hooks/window-args';
+import useWindowState from 'hooks/window-state';
 import VideoMetadataContainer from './video-metadata-container';
 import VideoControlsContainer from './video-controls-container';
-import useEditorOptions from './editor-options';
+import useEditorOptions, {EditorOptionsState} from 'hooks/editor/use-editor-options';
+import {Format} from 'common/types';
+import {App} from 'common/remote-state-types';
 
+type EditService = EditorOptionsState["editServices"][0]
 
-const isFormatMuted = (format: FormatName) => ['gif', 'apng'].includes(format);
+type SharePlugin = {
+  pluginName: string;
+  serviceTitle: string;
+  app?: App;
+}
+
+const isFormatMuted = (format: Format) => ['gif', 'apng'].includes(format);
 
 const useOptions = () => {
-  const {fps: originalFps} = useWindowArgs();
+  const {fps: originalFps} = useWindowState();
   const {
     state: {
       formats,
@@ -21,15 +29,17 @@ const useOptions = () => {
     updateFpsUsage,
     isLoading
   } = useEditorOptions();
+  console.log(formats, fpsHistory);
 
   const metadata = VideoMetadataContainer.useContainer();
   const {isMuted, mute, unmute} = VideoControlsContainer.useContainer();
 
-  const [format, setFormat] = useState<FormatName>();
+  const [format, setFormat] = useState<Format>();
   const [fps, setFps] = useState<number>();
   const [width, setWidth] = useState<number>();
   const [height, setHeight] = useState<number>();
   const [editPlugin, setEditPlugin] = useState<EditService>();
+  const [sharePlugin, setSharePlugin] = useState<SharePlugin>();
 
   const [wasMuted, setWasMuted] = useState(false);
 
@@ -38,7 +48,11 @@ const useOptions = () => {
     setFps(newFps);
   }
 
-  const updateFormat = (formatName: FormatName) => {
+  const updateSharePlugin = (plugin: SharePlugin) => {
+    setSharePlugin(plugin);
+  }
+
+  const updateFormat = (formatName: Format) => {
     if (metadata.hasAudio) {
       if (isFormatMuted(formatName) && !isFormatMuted(format)) {
         setWasMuted(isMuted);
@@ -48,7 +62,21 @@ const useOptions = () => {
       }
     }
 
+    const formatOption = formats.find(f => f.format === formatName);
+    const selectedSharePlugin = formatOption.plugins.find(plugin => {
+      return (
+        plugin.pluginName === sharePlugin.pluginName &&
+        plugin.title === sharePlugin.serviceTitle &&
+        (plugin.apps?.some(app => app.url === sharePlugin.app?.url) ?? true)
+      );
+    }) ?? formatOption.plugins.find(plugin => plugin.pluginName !== '_openWith');
+
     setFormat(formatName);
+    setSharePlugin({
+      pluginName: selectedSharePlugin.pluginName,
+      serviceTitle: selectedSharePlugin.title,
+      app: selectedSharePlugin.apps ? sharePlugin.app : undefined
+    });
     updateFps(Math.min(originalFps, fpsHistory[formatName]), formatName);
   }
 
@@ -57,9 +85,18 @@ const useOptions = () => {
       return;
     }
 
-    const formatName = formats[0].format
+    const firstFormat = formats[0];
+    const formatName = firstFormat.format;
 
     setFormat(formatName);
+
+    const firstPlugin = firstFormat.plugins.find(plugin => plugin.pluginName !== '_openWith');
+
+    setSharePlugin(firstPlugin && {
+      pluginName: firstPlugin.pluginName,
+      serviceTitle: firstPlugin.title
+    });
+
     updateFps(Math.min(originalFps, fpsHistory[formatName]), formatName);
   }, [isLoading]);
 
@@ -91,6 +128,8 @@ const useOptions = () => {
     editPlugin,
     formats,
     editServices,
+    sharePlugin,
+    updateSharePlugin,
     updateFps,
     updateFormat,
     setEditPlugin,

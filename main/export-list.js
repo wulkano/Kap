@@ -11,7 +11,7 @@ const util = require('electron-util');
 const execa = require('execa');
 const makeDir = require('make-dir');
 
-const settings = require('./common/settings');
+const settings = require('./common/settings').default;
 const {track} = require('./common/analytics');
 const {openPrefsWindow} = require('./preferences');
 const {getExportsWindow, openExportsWindow} = require('./exports');

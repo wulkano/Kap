@@ -1,10 +1,10 @@
-import useWindowArgs from '../../hooks/window-args';
+import useWindowState from '../../hooks/window-state';
 import TrafficLights from '../traffic-lights';
 import VideoPlayer from './video-player';
 import Options from './options';
 
 const EditorPreview = () => {
-  const {title = 'Editor'} = useWindowArgs();
+  const {title = 'Editor'} = useWindowState();
 
   return (
     <div className="preview-container">

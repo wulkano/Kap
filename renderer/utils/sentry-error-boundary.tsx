@@ -7,7 +7,7 @@ const SENTRY_PUBLIC_DSN = 'https://2dffdbd619f34418817f4db3309299ce@sentry.io/25
 class SentryErrorBoundary extends React.Component<{children: React.ReactNode}> {
   constructor(props) {
     super(props);
-    const settings = electron.remote.require('./common/settings');
+    const settings = electron.remote.require('./common/settings').default;
     // Done in-line because this is used in _app
     const {is, api} = require('electron-util');
 

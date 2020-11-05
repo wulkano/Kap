@@ -34,7 +34,7 @@ const getAudioDevices = async () => {
       const devices = await aperture.audioDevices();
 
       if (!Array.isArray(devices)) {
-        const Sentry = require('./sentry');
+        const Sentry = require('./sentry').default;
         Sentry.captureException(new Error(`devices is not an array: ${JSON.stringify(devices)}`));
         showError(error);
         return [];

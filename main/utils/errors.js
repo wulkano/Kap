@@ -71,6 +71,7 @@ ${errorStack}
 `;
 
 const showError = async (error, {title: customTitle, plugin} = {}) => {
+  await app.whenReady();
   const ensuredError = ensureError(error);
   const title = customTitle || ensuredError.name;
   const detail = getPrettyStack(ensuredError);
@@ -111,12 +112,12 @@ const showError = async (error, {title: customTitle, plugin} = {}) => {
   }
 
   // Avoids circular dependency
-  const Sentry = require('./sentry');
+  const {default: Sentry, isSentryEnabled} = require('./sentry');
 
   let message;
   const buttons = [...mainButtons];
 
-  if (isOnline && Sentry.isSentryEnabled) {
+  if (isOnline && isSentryEnabled) {
     const eventId = Sentry.captureException(ensuredError);
     const sentryIssuePromise = getSentryIssue(eventId);
 

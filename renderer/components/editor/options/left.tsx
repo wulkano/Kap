@@ -6,7 +6,7 @@ import {useState, useEffect, useMemo} from 'react';
 import * as stringMath from 'string-math';
 import VideoMetadataContainer from '../video-metadata-container';
 import {shake} from '../../../utils/inputs';
-import Select from './select';
+import Select, {Separator} from './select';
 
 const percentValues = [100, 75, 50, 33, 25, 20, 10];
 
@@ -146,7 +146,7 @@ const LeftOptions = () => {
         },
         {
           separator: true
-        },
+        } as Separator,
         ...options
       ];
     }

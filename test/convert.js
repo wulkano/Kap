@@ -8,7 +8,7 @@ const path = require('path');
 
 const {getVideoMetadata} = require('./helpers/video-utils');
 const {almostEquals} = require('./helpers/assertions');
-const {getFormatExtension} = require('../main/common/constants');
+const {getFormatExtension} = require('common/constants');
 
 const getRandomFileName = (ext = 'mp4') => `${uniqueString()}.${getFormatExtension(ext)}`;
 

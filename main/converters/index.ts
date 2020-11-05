@@ -1,14 +1,15 @@
 import path from 'path';
 import tempy from 'tempy';
+import {Encoding, Format} from '../common/types';
 import {track} from '../common/analytics';
 import h264Converters from './h264';
 import {ConvertOptions} from './utils';
 
 const converters = new Map([
-  ['h264', h264Converters]
+  [Encoding.h264, h264Converters]
 ]);
 
-export const convertTo = (format: string, options: Omit<ConvertOptions, 'outputPath'> & {defaultFileName: string}, encoding: string = 'h264') => {
+export const convertTo = (format: Format, options: Omit<ConvertOptions, 'outputPath'> & {defaultFileName: string}, encoding: Encoding = Encoding.h264) => {
   if (!converters.has(encoding)) {
     throw new Error(`Unsupported encoding: ${encoding}`);
   }

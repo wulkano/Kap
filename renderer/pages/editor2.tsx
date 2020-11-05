@@ -1,4 +1,3 @@
-import useWindowArgs from '../hooks/window-args';
 import Head from 'next/head';
 import EditorPreview from '../components/editor/editor-preview';
 import combineUnstatedContainers from '../utils/combine-unstated-containers';
@@ -6,6 +5,8 @@ import VideoMetadataContainer from '../components/editor/video-metadata-containe
 import VideoTimeContainer from '../components/editor/video-time-container';
 import VideoControlsContainer from '../components/editor/video-controls-container';
 import OptionsContainer from '../components/editor/options-container';
+import useEditorWindowState from 'hooks/editor/use-editor-window-state';
+import {ConversionContextProvider} from 'hooks/editor/use-conversion';
 
 const ContainerProvider = combineUnstatedContainers([
   OptionsContainer,
@@ -14,10 +15,8 @@ const ContainerProvider = combineUnstatedContainers([
   VideoControlsContainer
 ]);
 
-const Editor = () => {
-  const args = useWindowArgs();
-
-  console.log('HERE', args);
+const EditorPage = () => {
+  const args = useEditorWindowState();
 
   if (!args) {
     return null;
@@ -28,9 +27,11 @@ const Editor = () => {
       <Head>
         <meta httpEquiv="Content-Security-Policy" content="media-src file:;"/>
       </Head>
-      <ContainerProvider>
-        <EditorPreview />
-      </ContainerProvider>
+      <ConversionContextProvider>
+        <ContainerProvider>
+          <EditorPreview />
+        </ContainerProvider>
+      </ConversionContextProvider>
       <style jsx global>{`
         :root {
           --slider-popup-background: rgba(255, 255, 255, 0.85);
@@ -71,4 +72,4 @@ const Editor = () => {
   );
 };
 
-export default Editor;
+export default EditorPage;

@@ -1,20 +1,32 @@
 import {DropdownArrowIcon, CancelIcon} from '../../../vectors';
 import classNames from 'classnames';
 import {useRef} from 'react';
-import {remote, MenuItemConstructorOptions} from 'electron';
+import {remote, MenuItemConstructorOptions, NativeImage} from 'electron';
 
 type Option<T> = {
   label: string;
   value: T;
-  subMenu?: MenuItemConstructorOptions[];
-  separator?: boolean;
+  subMenu?: Option<T>[];
   type?: string;
   checked?: boolean;
+  click?: () => void;
+  separator?: false;
+  icon?: NativeImage;
+}
+
+export type Separator = {
+  value: never;
+  label: never;
+  subMenu: never;
+  type: never;
+  checked: never;
+  icon: never;
+  separator: true;
 }
 
 interface Props<T> {
   value?: T;
-  options: Option<T>[];
+  options: (Option<T> | Separator)[];
   onChange: (newValue?: T) => void;
   clearable?: boolean;
   customLabel?: string;
@@ -37,27 +49,29 @@ function Select<T>(props: Props<T>) {
 
     const {Menu} = remote;
 
-    const menu = Menu.buildFromTemplate(
-      options.map(option => {
-        if (option.separator) {
-          return {type: 'separator'};
-        }
+    const convertToMenuTemplate = (option: Option<T>): MenuItemConstructorOptions => {
+      if (option.separator) {
+        return {type: 'separator'};
+      }
 
-        if (option.subMenu) {
-          return {
-            label: option.label,
-            submenu: option.subMenu
-          };
-        }
-
+      if (option.subMenu) {
         return {
           label: option.label,
-          type: option.type as any || 'checkbox',
-          checked: option.checked ?? (option.value === value),
-          click: () => props.onChange(option.value)
+          submenu: option.subMenu.map(convertToMenuTemplate),
+          checked: option.checked
         };
-      })
-    );
+      }
+
+      return {
+        label: option.label,
+        type: option.type as any || 'checkbox',
+        checked: option.checked ?? (option.value === value),
+        click: option.click ?? (() => props.onChange(option.value)),
+        icon: option.icon
+      };
+    }
+
+    const menu = Menu.buildFromTemplate(options.map(convertToMenuTemplate));
 
     menu.popup({
       x: Math.round(boundingRect.left),

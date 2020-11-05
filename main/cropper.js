@@ -3,7 +3,7 @@
 const electron = require('electron');
 const delay = require('delay');
 
-const settings = require('./common/settings');
+const settings = require('./common/settings').default;
 const {hasMicrophoneAccess, ensureMicrophonePermissions, openSystemPreferences, ensureScreenCapturePermissions} = require('./common/system-permissions');
 const loadRoute = require('./utils/routes');
 const {checkForAnyBlockingEditors} = require('./editor');

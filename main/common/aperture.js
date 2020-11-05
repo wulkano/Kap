@@ -11,7 +11,7 @@ const {setCropperShortcutAction} = require('../global-accelerators');
 // eslint-disable-next-line no-unused-vars
 const {convertToH264} = require('../utils/encoding');
 
-const settings = require('./settings');
+const settings = require('./settings').default;
 const {track} = require('./analytics');
 const plugins = require('./plugins');
 const {getAudioDevices} = require('../utils/devices');

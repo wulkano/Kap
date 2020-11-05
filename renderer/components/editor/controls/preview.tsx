@@ -1,5 +1,5 @@
 import VideoTimeContainer from '../video-time-container';
-import useWindowArgs from '../../../hooks/window-args';
+import useWindowState from '../../../hooks/window-state';
 import formatTime from '../../../utils/format-time';
 import {useRef, useEffect} from 'react';
 
@@ -12,7 +12,7 @@ type Props = {
 
 const Preview = ({time, labelTime, duration, hidePreview}: Props) => {
   const videoRef = useRef<HTMLVideoElement>();
-  const {filePath} = useWindowArgs();
+  const {filePath} = useWindowState();
   const src = `file://${filePath}`;
 
   useEffect(() => {

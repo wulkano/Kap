@@ -7,7 +7,7 @@ const delay = require('delay');
 const macosRelease = require('macos-release');
 
 const {supportedVideoExtensions, defaultInputDeviceId} = require('./common/constants');
-const settings = require('./common/settings');
+const settings = require('./common/settings').default;
 const {hasMicrophoneAccess} = require('./common/system-permissions');
 const {getAudioDevices, getDefaultInputDevice} = require('./utils/devices');
 const {ensureDockIsShowing} = require('./utils/dock');

@@ -14,7 +14,7 @@ const tempy = require('tempy');
 const gifsicle = require('gifsicle');
 const {track} = require('./common/analytics');
 const {EditServiceContext} = require('./service-context');
-const settings = require('./common/settings');
+const settings = require('./common/settings').default;
 
 const gifsiclePath = util.fixPathForAsarUnpack(gifsicle);
 const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);

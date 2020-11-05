@@ -8,16 +8,17 @@ const pify = require('pify');
 const {ipcMain: ipc} = require('electron-better-ipc');
 const {is} = require('electron-util');
 
-const getFps = require('./utils/fps');
+const getFps = require('./utils/fps').default;
 const loadRoute = require('./utils/routes');
 const {generateTimestampedName} = require('./utils/timestamped-name');
 const KapWindow = require('./kap-window');
+const {Video} = require('./video');
 
 const editors = new Map();
 let allOptions;
 const OPTIONS_BAR_HEIGHT = 48;
 const VIDEO_ASPECT = 9 / 16;
-const MIN_VIDEO_WIDTH = 768;
+const MIN_VIDEO_WIDTH = 900;
 const MIN_VIDEO_HEIGHT = MIN_VIDEO_WIDTH * VIDEO_ASPECT;
 const MIN_WINDOW_HEIGHT = MIN_VIDEO_HEIGHT + OPTIONS_BAR_HEIGHT;
 const editorEmitter = new EventEmitter();
@@ -39,6 +40,8 @@ const openEditorWindow = async (
     return;
   }
 
+  const video = new Video({filePath});
+
   const fps = recordedFps || await getFps(filePath);
   const title = recordingName || getEditorName(originalFilePath || filePath, isNewRecording);
 
@@ -56,7 +59,7 @@ const openEditorWindow = async (
     transparent: true,
     vibrancy: 'window',
     route: 'editor2',
-    args: {
+    initialState: {
       filePath,
       fps,
       originalFilePath,

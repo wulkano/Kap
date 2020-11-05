@@ -1,7 +1,7 @@
 'use strict';
 const {globalShortcut} = require('electron');
 const {ipcMain: ipc} = require('electron-better-ipc');
-const settings = require('./common/settings');
+const settings = require('./common/settings').default;
 const {openCropperWindow, isCropperOpen} = require('./cropper');
 
 const openCropper = () => {

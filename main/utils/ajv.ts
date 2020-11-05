@@ -1,4 +1,10 @@
 import Ajv, {Options} from 'ajv';
+import {Schema as JSONSchema} from 'electron-store';
+
+export type Schema = Omit<JSONSchema, 'required'> & {
+  required?: boolean;
+  customType?: string;
+}
 
 const hexColorValidator = () => {
   return {
@@ -13,10 +19,10 @@ const keyboardShortcutValidator = () => {
   };
 };
 
-const validators = new Map<string, (parentSchema: object) => object>([
-  ['hexColor', hexColorValidator],
-  ['keyboardShortcut', keyboardShortcutValidator]
-]);
+const validators: {[key: string]: (parentSchema: object) => object} = {
+  'hexColor': hexColorValidator,
+  'keyboardShortcut': keyboardShortcutValidator
+};
 
 export default class CustomAjv extends Ajv {
   constructor(options: Options) {
@@ -24,7 +30,7 @@ export default class CustomAjv extends Ajv {
 
     this.addKeyword('customType', {
       macro: (schema, parentSchema) => {
-        const validator = validators.get(schema);
+        const validator = validators[schema];
 
         if (!validator) {
           throw new Error(`No custom type found for ${schema}`);
@@ -34,7 +40,7 @@ export default class CustomAjv extends Ajv {
       },
       metaSchema: {
         type: 'string',
-        enum: [...validators.keys()]
+        enum: [Object.keys(validators)]
       }
     });
   }

@@ -1,4 +1,5 @@
-const shortcutToAccelerator = shortcut => {
+
+export const shortcutToAccelerator = (shortcut: any) => {
   const {metaKey, altKey, ctrlKey, shiftKey, character} = shortcut;
   if (!character) {
     throw new Error(`shortcut needs character ${JSON.stringify(shortcut)}`);
@@ -13,5 +14,3 @@ const shortcutToAccelerator = shortcut => {
   ].filter(Boolean);
   return keys.join('+');
 };
-
-module.exports = shortcutToAccelerator;

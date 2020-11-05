@@ -2,6 +2,12 @@ import {GearIcon} from '../../../vectors';
 import OptionsContainer from '../options-container';
 import Select from './select';
 import {ipcRenderer as ipc} from 'electron-better-ipc';
+import useConversionContext from 'hooks/editor/use-conversion';
+import Options from '.';
+import useEditorWindowState from 'hooks/editor/use-editor-window-state';
+import VideoTimeContainer from '../video-time-container';
+import VideoControlsContainer from '../video-controls-container';
+import useSharePlugins from 'hooks/editor/use-share-plugins';
 
 const FormatSelect = () => {
   const {formats, format, updateFormat} = OptionsContainer.useContainer();
@@ -9,6 +15,11 @@ const FormatSelect = () => {
 
   return <Select options={options} value={format} onChange={updateFormat} />;
 };
+
+const PluginsSelect = () => {
+  const {menuOptions, label, onChange} = useSharePlugins();
+  return <Select options={menuOptions} customLabel={label} onChange={onChange}/>;
+}
 
 const EditPluginsControl = () => {
   const {editServices, editPlugin, setEditPlugin} = OptionsContainer.useContainer();
@@ -106,12 +117,72 @@ const EditPluginsControl = () => {
   );
 }
 
+const ConvertButton = () => {
+  const {startConversion} = useConversionContext();
+  const options = OptionsContainer.useContainer();
+  const {filePath} = useEditorWindowState();
+  const {startTime, endTime} = VideoTimeContainer.useContainer();
+  const {isMuted} = VideoControlsContainer.useContainer();
+
+  const onClick = () => {
+    const shouldCrop = true;
+    console.log('HERE');
+    startConversion({
+      filePath,
+      options: {
+        width: options.width,
+        height: options.height,
+        startTime,
+        endTime,
+        fps: options.fps,
+        shouldMute: isMuted,
+        shouldCrop
+      },
+      format: options.format,
+      plugins: {
+        share: options.sharePlugin
+      }
+    });
+  }
+
+  return (
+    <button type="button" className="start-export" onClick={onClick}>
+      Convert
+      <style jsx>{`
+        button {
+          padding: 4px 8px;
+          background: rgba(255, 255, 255, 0.1);
+          font-size: 12px;
+          line-height: 12px;
+          color: white;
+          height: 24px;
+          border-radius: 4px;
+          text-align: center;
+          border: none;
+          box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover,
+        button:focus {
+          background: hsla(0, 0%, 100%, 0.2);
+          outline: none;
+        }
+
+        .start-export {
+          width: 72px;
+        }
+      `}</style>
+    </button>
+  )
+}
+
 const RightOptions = () => {
   return (
     <div className="container">
       <EditPluginsControl/>
       <div className="format"><FormatSelect/></div>
-      <button type="button" className="start-export">Convert</button>
+      <div className="plugin"><PluginsSelect/></div>
+      <ConvertButton/>
       <style jsx>{`
           .container {
             height: 100%;
@@ -131,27 +202,10 @@ const RightOptions = () => {
             margin-right: 8px;
           }
 
-          button {
-            padding: 4px 8px;
-            background: rgba(255, 255, 255, 0.1);
-            font-size: 12px;
-            line-height: 12px;
-            color: white;
+          .plugin {
             height: 24px;
-            border-radius: 4px;
-            text-align: center;
-            border: none;
-            box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.2);
-          }
-
-          button:hover,
-          button:focus {
-            background: hsla(0, 0%, 100%, 0.2);
-            outline: none;
-          }
-
-          .start-export {
-            width: 72px;
+            width: 128px;
+            margin-right: 8px;
           }
         `}</style>
     </div>
@@ -283,11 +337,11 @@ export default RightOptions;
     //         width: 128px;
     //       }
 
-    //       .plugin {
-    //         height: 24px;
-    //         width: 128px;
-    //         margin-right: 8px;
-    //       }
+          // .plugin {
+          //   height: 24px;
+          //   width: 128px;
+          //   margin-right: 8px;
+          // }
 
     //       button {
     //         padding: 4px 8px;

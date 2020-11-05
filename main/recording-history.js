@@ -224,7 +224,7 @@ const handleCorruptRecording = async (recording, error) => {
   const applicableErrors = knownErrors.filter(({test}) => test(error));
 
   if (applicableErrors.length === 0) {
-    const Sentry = require('./utils/sentry');
+    const Sentry = require('./utils/sentry').default;
     if (Sentry.isSentryEnabled) {
       // Collect info about possible unknown errors, to see if we can implement fixes using ffmpeg
       Sentry.captureException(new Error(`Corrupt recording: ${error}`));

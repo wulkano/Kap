@@ -47,7 +47,7 @@ export default class CropperContainer extends Container {
       return;
     }
 
-    this.settings = this.remote.require('./common/settings');
+    this.settings = this.remote.require('./common/settings').default;
 
     this.state = {
       isRecording: false,

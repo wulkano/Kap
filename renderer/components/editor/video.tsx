@@ -1,5 +1,5 @@
 import {useRef, useMemo, useEffect, RefObject} from 'react';
-import useWindowArgs from '../../hooks/window-args';
+import useWindowState from '../../hooks/window-state';
 import VideoTimeContainer from './video-time-container';
 import VideoMetadataContainer from './video-metadata-container';
 import VideoControlsContainer from './video-controls-container';
@@ -29,7 +29,7 @@ const getVideoProps = (propsArray: React.DetailedHTMLProps<React.VideoHTMLAttrib
 
 const Video = () => {
   const videoRef = useRef();
-  const {filePath} = useWindowArgs();
+  const {filePath} = useWindowState();
   const src = `file://${filePath}`;
 
   const videoTimeContainer = VideoTimeContainer.useContainer();

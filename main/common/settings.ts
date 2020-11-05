@@ -38,7 +38,8 @@ interface Settings {
   enableShortcuts: boolean;
   shortcuts: {
     [key in keyof typeof shortcuts]: string
-  }
+  },
+  version: string;
 }
 
 const store = new Store<Settings>({

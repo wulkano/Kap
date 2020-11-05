@@ -7,12 +7,13 @@ const log = require('electron-log');
 const {autoUpdater} = require('electron-updater');
 const toMilliseconds = require('@sindresorhus/to-milliseconds');
 
-const settings = require('./common/settings');
+const settings = require('./common/settings').default;
 
-require('./utils/sentry');
+require('./utils/sentry').default;
 require('./utils/errors').setupErrorHandling();
 
 const {initializeTray} = require('./tray');
+const {setupConversionHook} = require('./conversion');
 const {initializeAnalytics} = require('./common/analytics');
 const initializeExportList = require('./export-list');
 const {openCropperWindow, isCropperOpen, closeAllCroppers} = require('./cropper');
@@ -21,10 +22,11 @@ const plugins = require('./common/plugins');
 const {initializeGlobalAccelerators} = require('./global-accelerators');
 const {setApplicationMenu} = require('./menus');
 const openFiles = require('./utils/open-files');
-const {initializeExportOptions} = require('./export-options');
 const {hasMicrophoneAccess, ensureScreenCapturePermissions} = require('./common/system-permissions');
 const {handleDeepLink} = require('./utils/deep-linking');
 const {hasActiveRecording, cleanPastRecordings} = require('./recording-history');
+
+const {setupRemoteStates} = require('./remote-states');
 
 const filesToOpen = [];
 
@@ -42,8 +44,6 @@ app.on('open-file', (event, path) => {
 });
 
 const initializePlugins = async () => {
-  plugins.refreshRecordPluginServices();
-
   if (!is.development) {
     try {
       await plugins.prune();
@@ -81,7 +81,8 @@ const checkForUpdates = () => {
   await app.whenReady();
 
   // Initialize remote states
-  require('./remote-states');
+  setupRemoteStates();
+  setupConversionHook();
 
   app.dock.hide();
   app.setAboutPanelOptions({copyright: 'Copyright © Wulkano'});
@@ -98,7 +99,7 @@ const checkForUpdates = () => {
   initializeTray();
   initializeExportList();
   initializeGlobalAccelerators();
-  initializeExportOptions();
+  // initializeExportOptions();
   setApplicationMenu();
 
   if (!app.isDefaultProtocolClient('kap')) {

@@ -4,6 +4,7 @@ import {compress, convert} from './process';
 import {areDimensionsEven, conditionalArgs, ConvertOptions, makeEven} from './utils';
 import settings from '../common/settings';
 import os from 'os';
+import {Format} from '../common/types';
 
 // `time ffmpeg -i original.mp4 -vf fps=30,scale=480:-1::flags=lanczos,palettegen palette.png`
 // `time ffmpeg -i original.mp4 -i palette.png -filter_complex 'fps=30,scale=-1:-1:flags=lanczos[x]; [x][1:v]paletteuse' palette.gif`
@@ -183,9 +184,9 @@ const convertToApng = (options: ConvertOptions) => convert(options.outputPath, {
 ));
 
 export default new Map([
-  ['gif', convertToGif],
-  ['mp4', convertToMp4],
-  ['webm', convertToWebm],
-  ['apng', convertToApng],
-  ['av1', convertToAv1]
+  [Format.gif, convertToGif],
+  [Format.mp4, convertToMp4],
+  [Format.webm, convertToWebm],
+  [Format.apng, convertToApng],
+  [Format.av1, convertToAv1]
 ]);

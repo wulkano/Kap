@@ -11,7 +11,7 @@ const {mockImport} = require('./helpers/mocks');
 const {openEditorWindow} = mockImport('./editor', 'editor');
 const plugins = mockImport('./common/plugins', 'plugins');
 const dialog = mockImport('./dialog', 'dialog');
-const Sentry = mockImport('./utils/sentry', 'sentry');
+const Sentry = mockImport('./utils/sentry', 'sentry').default;
 
 const {shell} = require('electron');
 

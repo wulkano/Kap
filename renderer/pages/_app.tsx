@@ -3,8 +3,9 @@ import {useState, useEffect} from 'react';
 import useDarkMode from '../hooks/dark-mode';
 import GlobalStyles from '../utils/global-styles';
 import SentryErrorBoundary from '../utils/sentry-error-boundary';
-import {WindowArgsProvider} from '../hooks/window-args';
+import {WindowStateProvider} from '../hooks/window-state';
 import classNames from 'classnames';
+import {ipcRenderer} from 'electron-better-ipc';
 
 function Kap(props: AppProps) {
   const [isMounted, setIsMounted] = useState(false);
@@ -12,6 +13,13 @@ function Kap(props: AppProps) {
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (isMounted) {
+      console.log('SENDING');
+      ipcRenderer.callMain('kap-window-mount');
+    }
+  }, [isMounted])
 
   if (!isMounted) {
     return null;
@@ -27,10 +35,10 @@ const MainApp = ({Component, pageProps}: AppProps) => {
   return (
     <div className={className}>
       <SentryErrorBoundary>
-        <WindowArgsProvider>
+        <WindowStateProvider>
           <Component {...pageProps} />
           <GlobalStyles />
-        </WindowArgsProvider>
+        </WindowStateProvider>
       </SentryErrorBoundary>
     </div>
   );
