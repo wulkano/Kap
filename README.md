@@ -25,7 +25,7 @@ For more info on how to create plugins, read the [plugins docs](docs/plugins.md)
 
 ## Dev builds
 
-Download [`master`](https://kap-artifacts.now.sh/master) or builds for any other branch using: `https://kap-artifacts.now.sh/<branch>`. Note that these builds are unsupported and may have issues.<br>
+Download [`main`](https://kap-artifacts.now.sh/main) or builds for any other branch using: `https://kap-artifacts.now.sh/<branch>`. Note that these builds are unsupported and may have issues.
 
 ## Related Repositories
 
