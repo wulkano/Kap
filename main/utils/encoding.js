@@ -14,7 +14,12 @@ const getEncoding = async filePath => {
   try {
     await execa(ffmpegPath, ['-i', filePath]);
   } catch (error) {
-    return /.*: Video: (.*?) \(.*/.exec(error.stderr)[1];
+    const errorMessageMatchedText = /.*: Video: (.*?) \(.*/.exec(error.stderr);
+    if (!errorMessageMatchedText) {
+      throw error;
+    }
+
+    return errorMessageMatchedText[1];
   }
 };
 
