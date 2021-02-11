@@ -2,12 +2,12 @@ import {GearIcon} from '../../../vectors';
 import OptionsContainer from '../options-container';
 import Select from './select';
 import {ipcRenderer as ipc} from 'electron-better-ipc';
-import useConversionContext from 'hooks/editor/use-conversion';
-import Options from '.';
+import useConversionIdContext from 'hooks/editor/use-conversion-id';
 import useEditorWindowState from 'hooks/editor/use-editor-window-state';
 import VideoTimeContainer from '../video-time-container';
 import VideoControlsContainer from '../video-controls-container';
 import useSharePlugins from 'hooks/editor/use-share-plugins';
+import useEditorOptions from 'hooks/editor/use-editor-options';
 
 const FormatSelect = () => {
   const {formats, format, updateFormat} = OptionsContainer.useContainer();
@@ -118,11 +118,12 @@ const EditPluginsControl = () => {
 }
 
 const ConvertButton = () => {
-  const {startConversion} = useConversionContext();
+  const {startConversion} = useConversionIdContext();
   const options = OptionsContainer.useContainer();
   const {filePath} = useEditorWindowState();
   const {startTime, endTime} = VideoTimeContainer.useContainer();
   const {isMuted} = VideoControlsContainer.useContainer();
+  const {updatePluginUsage} = useEditorOptions();
 
   const onClick = () => {
     const shouldCrop = true;
@@ -136,12 +137,21 @@ const ConvertButton = () => {
         endTime,
         fps: options.fps,
         shouldMute: isMuted,
-        shouldCrop
+        shouldCrop,
+        editService: options.editPlugin ? {
+          pluginName: options.editPlugin.pluginName,
+          serviceTitle: options.editPlugin.title
+        } : undefined
       },
       format: options.format,
       plugins: {
-        share: options.sharePlugin
+        share: options.sharePlugin,
       }
+    });
+
+    updatePluginUsage({
+      format: options.format,
+      plugin: options.sharePlugin.pluginName
     });
   }
 

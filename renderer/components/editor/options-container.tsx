@@ -5,8 +5,7 @@ import useWindowState from 'hooks/window-state';
 import VideoMetadataContainer from './video-metadata-container';
 import VideoControlsContainer from './video-controls-container';
 import useEditorOptions, {EditorOptionsState} from 'hooks/editor/use-editor-options';
-import {Format} from 'common/types';
-import {App} from 'common/remote-state-types';
+import {Format, App} from 'common/types';
 
 type EditService = EditorOptionsState["editServices"][0]
 
@@ -29,7 +28,6 @@ const useOptions = () => {
     updateFpsUsage,
     isLoading
   } = useEditorOptions();
-  console.log(formats, fpsHistory);
 
   const metadata = VideoMetadataContainer.useContainer();
   const {isMuted, mute, unmute} = VideoControlsContainer.useContainer();
@@ -119,7 +117,7 @@ const useOptions = () => {
     setHeight(dimensions.height);
   }
 
-  const res = {
+  return {
     width,
     height,
     format,
@@ -135,9 +133,6 @@ const useOptions = () => {
     setEditPlugin,
     setDimensions
   };
-
-  console.log(res);
-  return res;
 }
 
 const OptionsContainer = createContainer(useOptions);

@@ -25,7 +25,7 @@ const modes = new Map([
   [Mode.compress, gifsiclePath]
 ]);
 
-interface ProcessOptions {
+export interface ProcessOptions {
   shouldTrack?: boolean;
   startTime?: number;
   endTime?: number;
@@ -59,6 +59,7 @@ const createProcess = (mode: Mode) => {
 
     return new PCancelable<string>((resolve, reject, onCancel) => {
       const runner = execa(program, args);
+      const conversionStartTime = Date.now();
 
       onCancel(() => {
         trackConversionEvent('canceled');
@@ -72,7 +73,7 @@ const createProcess = (mode: Mode) => {
       runner.stderr?.on('data', data => {
         stderr += data;
 
-        const progressData = extractProgressFromStderr(data, durationMs);
+        const progressData = extractProgressFromStderr(data, conversionStartTime, durationMs);
 
         if (progressData) {
           onProgress?.(progressData.progress, progressData.estimate);

@@ -116,15 +116,15 @@ export class InstalledPlugin extends BasePlugin {
   }
 
   get shareServices() {
-    return this.content.shareServices || [];
+    return this.content.shareServices ?? [];
   }
 
   get editServices() {
-    return this.content.editServices || [];
+    return this.content.editServices ?? [];
   }
 
   get recordServices() {
-    return this.content.recordServices || [];
+    return this.content.recordServices ?? [];
   }
 
   get allServices() {

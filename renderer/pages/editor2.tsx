@@ -1,12 +1,13 @@
 import Head from 'next/head';
-import EditorPreview from '../components/editor/editor-preview';
+// import EditorPreview from '../components/editor/editor-preview';
 import combineUnstatedContainers from '../utils/combine-unstated-containers';
 import VideoMetadataContainer from '../components/editor/video-metadata-container';
 import VideoTimeContainer from '../components/editor/video-time-container';
 import VideoControlsContainer from '../components/editor/video-controls-container';
 import OptionsContainer from '../components/editor/options-container';
 import useEditorWindowState from 'hooks/editor/use-editor-window-state';
-import {ConversionContextProvider} from 'hooks/editor/use-conversion';
+import {ConversionIdContextProvider} from 'hooks/editor/use-conversion-id';
+import Editor from 'components/editor';
 
 const ContainerProvider = combineUnstatedContainers([
   OptionsContainer,
@@ -27,11 +28,11 @@ const EditorPage = () => {
       <Head>
         <meta httpEquiv="Content-Security-Policy" content="media-src file:;"/>
       </Head>
-      <ConversionContextProvider>
+      <ConversionIdContextProvider>
         <ContainerProvider>
-          <EditorPreview />
+          <Editor />
         </ContainerProvider>
-      </ConversionContextProvider>
+      </ConversionIdContextProvider>
       <style jsx global>{`
         :root {
           --slider-popup-background: rgba(255, 255, 255, 0.85);
@@ -66,6 +67,7 @@ const EditorPage = () => {
         .cover-window {
           -webkit-app-region: drag;
           user-select: none;
+          background-color: var(--background-color);
         }
       `}</style>
     </div>

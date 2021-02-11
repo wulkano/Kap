@@ -11,6 +11,7 @@
     "strict": false,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
+    "preserveSymlinks": true,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "node",
@@ -24,11 +25,13 @@
       "components/*": ["./components/*"],
       "containers/*": ["./containers/*"],
       "hooks/*": ["./hooks/*"],
-      "common/*": ["./common/*"]
+      "common/*": ["./common/*"],
+      "vectors": ["./vectors"]
     }
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "common-remote-states"
   ],
   "include": [
     "next-env.d.ts",

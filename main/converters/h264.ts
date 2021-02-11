@@ -183,6 +183,18 @@ const convertToApng = (options: ConvertOptions) => convert(options.outputPath, {
   options.outputPath
 ));
 
+export const crop = (options: ConvertOptions) => convert(options.outputPath, {
+  onProgress: (progress, estimate) => options.onProgress('Cropping', progress, estimate),
+  startTime: options.startTime,
+  endTime: options.endTime
+}, conditionalArgs(
+  '-i', options.inputPath,
+  '-s', `${makeEven(options.width)}x${makeEven(options.height)}`,
+  '-ss', options.startTime.toString(),
+  '-to', options.endTime.toString(),
+  options.outputPath
+));
+
 export default new Map([
   [Format.gif, convertToGif],
   [Format.mp4, convertToMp4],

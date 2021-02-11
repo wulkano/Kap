@@ -17,11 +17,11 @@ const openContextMenu = async () => {
 
 const initializeTray = () => {
   tray = new Tray(path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'));
-  // tray.on('click', openCropperWindow);
-  tray.on('click', () => {
-    const {openEditorWindow} = require('./editor');
-    openEditorWindow('/Users/b008822/Kaptures/Kapture 2020-07-10 at 9.48.45.mp4');
-  });
+  tray.on('click', openCropperWindow);
+  // tray.on('click', () => {
+  //   const {openEditorWindow} = require('./editor');
+  //   openEditorWindow('/Users/b008822/Kaptures/Kapture 2020-07-10 at 9.48.45.mp4');
+  // });
   tray.on('right-click', openContextMenu);
   tray.on('drop-files', (_, files) => {
     track('editor/opened/tray');

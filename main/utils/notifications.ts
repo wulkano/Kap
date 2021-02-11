@@ -14,7 +14,7 @@ interface NotificationOptions extends NotificationConstructorOptions {
   show?: boolean;
 }
 
-type NotificationPromise = Promise<any> & {
+type NotificationPromise = Promise<void> & {
   show: () => void;
   close: () => void;
 }
@@ -44,7 +44,7 @@ export const notify = (options: NotificationOptions): NotificationPromise => {
     }
 
     notification.on('close', () => {
-      resolve();
+      resolve(undefined);
     });
   });
 

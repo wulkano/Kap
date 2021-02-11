@@ -11,27 +11,31 @@ export interface ConvertOptions {
   height: number;
   fps: number;
   shouldMute: boolean;
+  onCancel: () => void;
   onProgress: (action: string, progress: number, estimate?: string) => void;
+  editService?: {
+    pluginName: string;
+    serviceTitle: string;
+  }
 }
 
 export const makeEven = (n: number) => 2 * Math.round(n / 2);
 
 export const areDimensionsEven = ({width, height}: {width: number, height: number}) => width % 2 === 0 && height % 2 === 0;
 
-const timeRegex = /time=\s*(\d\d:\d\d:\d\d.\d\d)/gm;
-const speedRegex = /speed=\s*(-?\d+(,\d+)*(\.\d+(e\d+)?)?)/gm;
-
-export const extractProgressFromStderr = (stderr: string, durationMs: number) => {
+export const extractProgressFromStderr = (stderr: string, conversionStartTime: number, durationMs: number) => {
+  const conversionDuration = Date.now() - conversionStartTime;
   const data = stderr.trim();
 
-  const speed = Number.parseFloat(speedRegex.exec(data)?.[1] ?? '0');
-  const processedMs = moment.duration(timeRegex.exec(data)?.[1] ?? 0).asMilliseconds();
+  const speed = Number.parseFloat(/speed=\s*(-?\d+(,\d+)*(\.\d+(e\d+)?)?)/gm.exec(data)?.[1] ?? '0');
+  const processedMs = moment.duration(/time=\s*(\d\d:\d\d:\d\d.\d\d)/gm.exec(data)?.[1] ?? 0).asMilliseconds();
 
-  if (speed > 0 && processedMs > 0) {
+  if (speed > 0) {
     const progress = processedMs / durationMs;
 
     // Wait 2 seconds in the conversion for speed to be stable
-    if (processedMs > 2 * 1000) {
+    // Either 2 seconds of the video or 15 seconds real time (for super slow conversion like AV1)
+    if (processedMs > 2 * 1000 || conversionDuration > 15 * 1000) {
       const msRemaining = (durationMs - processedMs) / speed;
 
       return {

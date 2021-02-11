@@ -47,7 +47,10 @@ export default class CropperContainer extends Container {
       return;
     }
 
-    this.settings = this.remote.require('./common/settings').default;
+    const {default: settings, getSelectedInputDeviceId} = this.remote.require('./common/settings');
+    this.settings = settings;
+    console.log(getSelectedInputDeviceId);
+    this.settings.getSelectedInputDeviceId = getSelectedInputDeviceId;
 
     this.state = {
       isRecording: false,

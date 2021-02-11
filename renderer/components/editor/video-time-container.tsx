@@ -52,8 +52,12 @@ const useVideoTime = () => {
   };
 
   useEffect(() => {
+    if (!videoRef.current) {
+      return;
+    }
+
     const interval = setInterval(() => {
-      updateTime(videoRef.current.currentTime, true);
+      updateTime(videoRef.current.currentTime ?? 0, true);
     }, 1000 / 30);
 
     return () => {

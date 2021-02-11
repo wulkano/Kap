@@ -29,7 +29,10 @@ const useRemoteState = <Callback extends RemoteState<any, any>>(
 
         const actions = actionKeys.reduce((acc, key) => ({
           ...acc,
-          [key]: (data: any) => ipcRenderer.callMain(channelNames.callAction, {key, data, id})
+          [key]: (data: any) => {
+            console.log('Action', key, 'called with', data);
+            return ipcRenderer.callMain(channelNames.callAction, {key, data, id})
+          }
         }), {});
 
         const getState = async () => {

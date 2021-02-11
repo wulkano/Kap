@@ -11,7 +11,7 @@ const {setCropperShortcutAction} = require('../global-accelerators');
 // eslint-disable-next-line no-unused-vars
 const {convertToH264} = require('../utils/encoding');
 
-const settings = require('./settings').default;
+const {default: settings, getSelectedInputDeviceId} = require('./settings');
 const {track} = require('./analytics');
 const plugins = require('./plugins');
 const {getAudioDevices} = require('../utils/devices');
@@ -115,7 +115,7 @@ const startRecording = async options => {
   if (recordAudio === true) {
     // In case for some reason the default audio device is not set
     // use the first available device for recording
-    const audioInputDeviceId = settings.getSelectedInputDeviceId();
+    const audioInputDeviceId = getSelectedInputDeviceId();
     if (audioInputDeviceId) {
       apertureOptions.audioDeviceId = audioInputDeviceId;
     } else {

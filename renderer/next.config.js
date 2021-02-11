@@ -1,4 +1,5 @@
 const path = require('path');
+
 module.exports = (nextConfig) => {
   return Object.assign({}, nextConfig, {
     webpack(config, options) {
@@ -6,7 +7,7 @@ module.exports = (nextConfig) => {
         test: /\.+(js|jsx|mjs|ts|tsx)$/,
         loader: options.defaultLoaders.babel,
         include: [
-          path.join(__dirname, '..', 'main', 'common', 'constants.ts'),
+          path.join(__dirname, '..', 'main', 'common'),
           path.join(__dirname, '..', 'main', 'remote-states', 'use-remote-state.ts')
         ]
       });
@@ -22,6 +23,25 @@ module.exports = (nextConfig) => {
     }
   })
 }
+
+// module.exports = {
+//   webpack: function (config, {defaultLoaders}) {
+//     console.log('CONTEXT IS ', config.context);
+//     const resolvedBaseUrl = path.resolve(config.context, '..')
+//     config.module.rules = [
+//       ...config.module.rules,
+//       {
+//         test: /\.(tsx|ts|js|mjs|jsx)$/,
+//         include: [resolvedBaseUrl],
+//         use: defaultLoaders.babel,
+//         exclude: (excludePath) => {
+//           return /node_modules/.test(excludePath)
+//         },
+//       },
+//     ]
+//     return config
+//   }
+// }
 
 // exports.webpack = (nextConfig, options) => {
 //   console.log(nextConfig);

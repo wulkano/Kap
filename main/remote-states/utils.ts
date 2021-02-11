@@ -10,5 +10,6 @@ export const getChannelNames = (name: string) => ({
 
 export type RemoteState<State, Actions extends {[key: string]: Function}> = (sendUpdate: (state?: State, id?: string) => void) => {
   getState: (id?: string) => State,
-  actions: Actions
+  actions: Actions,
+  subscribe?: (id?: string) => undefined | (() => void)
 }

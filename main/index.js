@@ -116,7 +116,7 @@ const checkForUpdates = () => {
     ensureScreenCapturePermissions() &&
     (!settings.get('recordAudio') || hasMicrophoneAccess())
   ) {
-    openCropperWindow();
+    // openCropperWindow();
   }
 
   checkForUpdates();

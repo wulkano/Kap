@@ -11,7 +11,7 @@ const {is} = require('electron-util');
 const getFps = require('./utils/fps').default;
 const loadRoute = require('./utils/routes');
 const {generateTimestampedName} = require('./utils/timestamped-name');
-const KapWindow = require('./kap-window');
+const KapWindow = require('./kap-window').default;
 const {Video} = require('./video');
 
 const editors = new Map();
@@ -40,15 +40,17 @@ const openEditorWindow = async (
     return;
   }
 
-  const video = new Video({filePath});
-
   const fps = recordedFps || await getFps(filePath);
   const title = recordingName || getEditorName(originalFilePath || filePath, isNewRecording);
+  const video = new Video({filePath, fps, title});
 
-  const editorWindow = new KapWindow({
+  console.log(MIN_VIDEO_HEIGHT);
+  console.log(MIN_VIDEO_WIDTH);
+
+  const editorKapWindow = new KapWindow({
     title,
-    minWidth: MIN_VIDEO_WIDTH,
-    minHeight: MIN_WINDOW_HEIGHT,
+    // minWidth: MIN_VIDEO_WIDTH,
+    // minHeight: MIN_WINDOW_HEIGHT,
     width: MIN_VIDEO_WIDTH,
     height: MIN_WINDOW_HEIGHT,
     webPreferences: {
@@ -68,6 +70,8 @@ const openEditorWindow = async (
       title
     }
   });
+
+  const editorWindow = editorKapWindow.browserWindow;
 
   editors.set(filePath, editorWindow);
 

@@ -1,4 +1,3 @@
-import VideoTimeContainer from '../video-time-container';
 import useWindowState from '../../../hooks/window-state';
 import formatTime from '../../../utils/format-time';
 import {useRef, useEffect} from 'react';

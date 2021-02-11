@@ -1,4 +1,4 @@
-import {App} from './remote-state-types'
+import {App, Format} from './base'
 
 export type CreateConversionOptions = {
   filePath: string;
@@ -9,12 +9,13 @@ export type CreateConversionOptions = {
       pluginName: string;
       serviceTitle: string;
       app?: App
-    },
-    edit?: {
-      pluginName: string;
-      serviceTitle: string;
     }
   }
+}
+
+export type EditServiceInfo = {
+  pluginName: string;
+  serviceTitle: string;
 }
 
 export type ConversionOptions = {
@@ -25,19 +26,13 @@ export type ConversionOptions = {
   fps: number;
   shouldCrop: boolean;
   shouldMute: boolean;
+  editService?: EditServiceInfo;
 }
 
-export enum Format {
-  gif = 'gif',
-  mp4 = 'mp4',
-  webm = 'webm',
-  apng = 'apng',
-  av1 = 'av1'
-}
-
-export enum Encoding {
-  h264 = 'h264',
-  hevc = 'hevc',
-  proRes422 = 'proRes422',
-  proRes4444 = 'proRes4444'
+export enum ConversionStatus {
+  idle = 'idle',
+  inProgress = 'inProgress',
+  failed = 'failed',
+  canceled = 'canceled',
+  completed = 'completed'
 }

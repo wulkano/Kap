@@ -1,7 +1,8 @@
 
+import PCancelable from 'p-cancelable';
 import {Format} from '../common/types';
 import {Schema} from '../utils/ajv';
-import {ShareServiceContext} from './service-context';
+import {EditServiceContext, ShareServiceContext} from './service-context';
 
 export interface Service<Config = any> {
   title: string;
@@ -11,11 +12,11 @@ export interface Service<Config = any> {
 
 export interface ShareService<Config = any> extends Service<Config> {
   formats: Format[];
-  action: (context: ShareServiceContext) => void;
+  action: (context: ShareServiceContext) => PromiseLike<void> | PCancelable<void>;
 }
 
 export interface EditService<Config = any> extends Service<Config> {
-  action: () => {};
+  action: (context: EditServiceContext) => PromiseLike<void> | PCancelable<void>;
 }
 
 export interface RecordService<Config = any> extends Service<Config> {

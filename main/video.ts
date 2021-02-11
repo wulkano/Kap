@@ -35,7 +35,7 @@ export class Video {
 
   constructor(options: VideoOptions) {
     this.filePath = options.filePath;
-    this.title = options.title ?? path.basename(this.filePath);
+    this.title = options.title ?? path.parse(this.filePath).name;
     this.fps = options.fps;
     this.encoding = options.encoding;
     this.pixelDensity = options.pixelDensity ?? 1;

@@ -51,7 +51,6 @@ export default class PreferencesPage extends React.Component {
 
             .cover-window {
               background-color: var(--window-background-color);
-              z-index: -2;
               display: flex;
               flex-direction: column;
               font-size: 1.4rem;

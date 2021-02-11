@@ -5,26 +5,37 @@ import {BrowserWindow} from 'electron';
 const setupRemoteState = async <State, Actions extends {[key: string]: Function}>(name: string, callback: RemoteState<State, Actions>) => {
   const channelNames = getChannelNames(name);
 
-  const renderers = new Map();
+  const renderers = new Map<string, BrowserWindow>();
 
   const sendUpdate = async (state?: State, id?: string) => {
     if (id) {
-      return ipcMain.callRenderer(renderers.get(id), channelNames.stateUpdated, state);
+      console.log('got update', state);
+      const renderer = renderers.get(id);
+
+      if (renderer) {
+        ipcMain.callRenderer(renderer, channelNames.stateUpdated, state);
+      }
+
+      return;
     }
 
     for (const [windowId, renderer] of renderers.entries()) {
-      ipcMain.callRenderer(renderer, channelNames.stateUpdated, state ?? (await getState?.(windowId)));
+      if (renderer && !renderer.isDestroyed()) {
+        ipcMain.callRenderer(renderer, channelNames.stateUpdated, state ?? (await getState?.(windowId)));
+      }
     }
   }
 
-  const {getState, actions = {}} = await callback(sendUpdate);
+  const {getState, actions = {}, subscribe} = await callback(sendUpdate);
 
   ipcMain.answerRenderer(channelNames.subscribe, (customId: string, window: BrowserWindow) => {
     const id = customId ?? window.id.toString();
     renderers.set(id, window);
+    const unsubscribe = subscribe?.(id);
 
-    window.on('closed', () => {
+    window.on('close', () => {
       renderers.delete(id);
+      unsubscribe?.();
     });
 
     return Object.keys(actions);

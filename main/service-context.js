@@ -1,7 +1,6 @@
 'use strict';
 const {Notification, clipboard} = require('electron');
 const got = require('got');
-const {EventEmitter} = require('events');
 
 const {addPluginPromise} = require('./utils/deep-linking');
 
@@ -16,7 +15,7 @@ const prettifyFormat = format => {
   return formats.get(format);
 };
 
-class ServiceContext extends EventEmitter {
+class ServiceContext {
   constructor(options) {
     this._isBuiltin = options._isBuiltin;
     this.config = options.config;

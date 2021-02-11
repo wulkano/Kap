@@ -1,4 +1,4 @@
-import electron from 'electron';
+import electron, {BrowserWindow} from 'electron';
 import {ipcMain as ipc} from 'electron-better-ipc';
 import pEvent from 'p-event';
 import loadRoute from './utils/routes';
@@ -11,25 +11,26 @@ interface KapWindowOptions<State> extends Electron.BrowserWindowConstructorOptio
 
 // Has to be named BrowserWindow because of
 // https://github.com/electron/electron/blob/master/lib/browser/api/browser-window.ts#L82
-class BrowserWindow<State = any> extends electron.BrowserWindow {
-  private static windows = new Map<number, BrowserWindow>();
+export default class KapWindow<State = any> {
+  private static windows = new Map<number, KapWindow>();
 
   static getAllWindows() {
     return [...this.windows.values()];
   }
 
   static fromId(id: number) {
-    return this.windows.get(id) as BrowserWindow;
+    return this.windows.get(id);
   }
 
   static defaultOptions = {
     waitForMount: true
   };
 
-  private readyPromise: Promise<void>;
+  private readyPromise: Promise<void>
+  private cleanupMethods: Function[] = [];
+  private options: KapWindowOptions<State>;
 
-  options: KapWindowOptions<State>;
-  cleanupMethods: Function[];
+  browserWindow: BrowserWindow;
   state?: State;
 
   constructor(props: KapWindowOptions<State>) {
@@ -40,7 +41,7 @@ class BrowserWindow<State = any> extends electron.BrowserWindow {
       ...rest
     } = props;
 
-    super({
+    this.browserWindow = new BrowserWindow({
       ...rest,
       webPreferences: {
         nodeIntegration: true,
@@ -51,21 +52,30 @@ class BrowserWindow<State = any> extends electron.BrowserWindow {
 
     this.cleanupMethods = [];
     this.options = {
-      ...BrowserWindow.defaultOptions,
+      ...KapWindow.defaultOptions,
       ...props
     };
 
     this.state = initialState;
-    loadRoute(this, route);
+    loadRoute(this.browserWindow, route);
     this.readyPromise = this.setupWindow();
+  }
+
+  get id() {
+    return this.browserWindow.id;
+  }
+
+  get webContents() {
+    return this.browserWindow.webContents;
   }
 
   private async setupWindow() {
     const {waitForMount} = this.options;
 
-    BrowserWindow.windows.set(this.id, this);
+    KapWindow.windows.set(this.id, this);
 
-    this.on('closed', this.cleanup);
+    this.browserWindow.on('close', this.cleanup);
+    this.browserWindow.on('closed', this.cleanup);
 
     this.webContents.on('did-finish-load', async () => {
       if (this.state) {
@@ -74,38 +84,36 @@ class BrowserWindow<State = any> extends electron.BrowserWindow {
       }
     });
 
-    await pEvent(this.webContents, 'did-finish-load');
-
     if (waitForMount) {
       return new Promise<void>(resolve => {
-        console.log('SET IT UP');
         this.answerRenderer('kap-window-mount', () => {
-          console.log('GOT IT');
-          this.show();
+          this.browserWindow.show();
           resolve();
         });
       });
     } else {
-      this.show();
+      await pEvent(this.webContents, 'did-finish-load');
+      this.browserWindow.show();
     }
   }
 
-  cleanup() {
-    BrowserWindow.windows.delete(this.id);
+  cleanup = () => {
+    console.log('Cleaning up', this.cleanupMethods);
+    KapWindow.windows.delete(this.id);
     for (const method of this.cleanupMethods) {
       method?.();
     }
   }
 
-  callRenderer<T, R>(channel: string, data: T) {
-    return ipc.callRenderer<T, R>(this, channel, data);
+  callRenderer = <T, R>(channel: string, data: T) => {
+    return ipc.callRenderer<T, R>(this.browserWindow, channel, data);
   }
 
-  answerRenderer<T, R>(channel: string, callback: (data: T, window: electron.BrowserWindow) => R) {
-    this.cleanupMethods.push(ipc.answerRenderer(this, channel, callback));
+  answerRenderer = <T, R>(channel: string, callback: (data: T, window: electron.BrowserWindow) => R) => {
+    this.cleanupMethods.push(ipc.answerRenderer(this.browserWindow, channel, callback));
   }
 
-  setState(partialState: State) {
+  setState = (partialState: State) => {
     this.state = {
       ...this.state,
       ...partialState
@@ -114,11 +122,7 @@ class BrowserWindow<State = any> extends electron.BrowserWindow {
     this.callRenderer('kap-window-state', this.state);
   }
 
-  async whenReady() {
+  whenReady = async () => {
     return this.readyPromise;
   }
 }
-
-const KapWindow = BrowserWindow;
-
-module.exports = KapWindow;

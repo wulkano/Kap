@@ -1,9 +1,9 @@
 import Store from 'electron-store';
-import {Format} from '../common/types';
+import {EditorOptionsRemoteState, ExportOptions, ExportOptionsPlugin, Format} from '../common/types';
 import {formats} from '../common/constants';
 
 import plugins from '../plugins';
-import {apps, App} from '../plugins/built-in/open-with-plugin';
+import {apps} from '../plugins/built-in/open-with-plugin';
 import {prettifyFormat} from '../utils/formats';
 
 const exportUsageHistory = new Store<{[key in Format]: {lastUsed: number, plugins: {[key: string]: number}}}>({
@@ -49,7 +49,6 @@ const fpsUsageHistory = new Store<{[key in Format]: number}>({
 });
 
 const getEditOptions = () => {
-  // console.log(plugins.getEditPlugins());
   return plugins.editPlugins.flatMap(
     plugin => plugin.editServices
       .filter(service => plugin.config.validServices.includes(service.title))
@@ -62,13 +61,7 @@ const getEditOptions = () => {
   );
 };
 
-interface ExportOptionsPlugin {
-  title: string;
-  pluginName: string;
-  pluginPath: string;
-  apps?: App[];
-  lastUsed: number;
-}
+
 
 const getExportOptions = () => {
   const installed = plugins.sharePlugins;
@@ -103,15 +96,7 @@ const getExportOptions = () => {
   return options.map(option => ({...option, plugins: option.plugins.sort(sortFunc)})).sort(sortFunc);
 };
 
-
-export interface ExportOptions {
-  formats: ReturnType<typeof getExportOptions>;
-  editServices: ReturnType<typeof getEditOptions>;
-  fpsHistory: typeof fpsUsageHistory.store
-}
-
-
-const editorOptionsRemoteState = (sendUpdate: (state: ExportOptions) => void) => {
+const editorOptionsRemoteState: EditorOptionsRemoteState = (sendUpdate: (state: ExportOptions) => void) => {
   const state: ExportOptions = {
     formats: getExportOptions(),
     editServices: getEditOptions(),
@@ -155,5 +140,4 @@ const editorOptionsRemoteState = (sendUpdate: (state: ExportOptions) => void) =>
 };
 
 export default editorOptionsRemoteState;
-export type EditorOptions = typeof editorOptionsRemoteState;
 export const name = 'editor-options';

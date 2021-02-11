@@ -1,7 +1,7 @@
-import {EditorOptions} from 'common/remote-state-types';
+import {EditorOptionsRemoteState} from 'common/types';
 import useRemoteState from 'hooks/use-remote-state';
 
-const useEditorOptions = useRemoteState<EditorOptions>('editor-options', {
+const useEditorOptions = useRemoteState<EditorOptionsRemoteState>('editor-options', {
   formats: [],
   editServices: [],
   fpsHistory: {

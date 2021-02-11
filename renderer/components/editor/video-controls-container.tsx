@@ -46,6 +46,11 @@ const useVideoControls = () => {
 
   const setVideoRef = (video: HTMLVideoElement) => {
     videoRef.current = video;
+    setIsPaused(video.paused);
+
+    if (video.paused) {
+      play();
+    }
   };
 
   const videoProps = {

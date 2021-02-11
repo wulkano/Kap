@@ -15,7 +15,7 @@ const EditorPreview = () => {
             <div className="title">{title}</div>
           </div>
         </div>
-        <VideoPlayer />
+        <VideoPlayer/>
       </div>
       <Options/>
       <style jsx>{`

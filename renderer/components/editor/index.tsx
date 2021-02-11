@@ -1,12 +1,18 @@
-import useConversionContext from 'hooks/editor/use-conversion';
+import {remote} from 'electron';
+import useConversionIdContext from 'hooks/editor/use-conversion-id';
 import useEditorWindowState from 'hooks/editor/use-editor-window-state';
-import {useEffect} from 'react';
+import {useEditorWindowSizeEffect} from 'hooks/editor/use-window-size';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import EditorConversionView from './conversion';
 import EditorPreview from './editor-preview';
+import ReactCSSTransitionReplace from 'react-css-transition-replace';
+import classNames from 'classnames';
+
 
 const Editor = () => {
-  const {conversionId, setConversionId} = useConversionContext();
+  const {conversionId, setConversionId} = useConversionIdContext();
   const state = useEditorWindowState();
+  const [isConversionPreviewState, setIsConversionPreviewState] = useState(false);
 
   useEffect(() => {
     if (state.conversionId && !conversionId) {
@@ -14,7 +20,43 @@ const Editor = () => {
     }
   }, [state.conversionId]);
 
-  return conversionId ? <EditorConversionView/> : <EditorPreview/>;
+  useEditorWindowSizeEffect(isConversionPreviewState);
+
+  const isTransitioning = Boolean(conversionId) !== isConversionPreviewState;
+
+  const className = classNames('container', {
+    'transitioning': isTransitioning
+  });
+
+  const onTransitionEnd = () => {
+    console.log('Called');
+    setIsConversionPreviewState(Boolean(conversionId));
+  };
+
+  return (
+    <div
+      className={className}
+      onTransitionEnd={onTransitionEnd}
+      >
+      {
+        isConversionPreviewState ?
+          <EditorConversionView conversionId={conversionId}/> :
+          <EditorPreview/>
+      }
+      <style jsx>{`
+        .container {
+          flex: 1;
+          display: flex;
+          transition: opacity 0.2s ease-in-out;
+          opacity: 1;
+        }
+
+        .transitioning {
+          opacity: 0;
+        }
+      `}</style>
+    </div>
+  );
 }
 
 export default Editor;

@@ -5,6 +5,8 @@ import {Format} from '../common/types';
 import {InstalledPlugin} from './plugin';
 import {addPluginPromise} from '../utils/deep-linking';
 import {notify} from '../utils/notifications';
+import PCancelable from 'p-cancelable';
+import {getFormatExtension} from '../common/constants';
 
 interface ServiceContextOptions {
   plugin: InstalledPlugin;
@@ -78,11 +80,68 @@ export class ShareServiceContext extends ServiceContext {
   }
 
   get defaultFileName() {
-    return this.options.defaultFileName;
+    return `${this.options.defaultFileName}.${getFormatExtension(this.options.format)}`;
   }
 
   filePath = (options: {fileType?: Format}) => {
     return this.options.filePath(options);
+  }
+
+  setProgress = (text: string, percentage: number) => {
+    this.options.onProgress(text, percentage);
+  }
+
+  cancel = () => {
+    this.isCanceled = true;
+    this.options.onCancel();
+
+    for (const request of this.requests) {
+      request.cancel();
+    }
+  }
+}
+
+interface EditServiceContextOptions extends ServiceContextOptions {
+  onProgress: (text: string, percentage: number) => void;
+  inputPath: string,
+  outputPath: string,
+  exportOptions: {
+    width: number,
+    height: number,
+    format: Format,
+    fps: number,
+    duration: number,
+    isMuted: boolean,
+    loop: boolean
+  },
+  convert: (args: string[], text?: string) => PCancelable<void>,
+  onCancel: () => void;
+}
+
+export class EditServiceContext extends ServiceContext {
+  private options: EditServiceContextOptions;
+
+  isCanceled = false;
+
+  constructor(options: EditServiceContextOptions) {
+    super(options);
+    this.options = options;
+  }
+
+  get inputPath() {
+    return this.options.inputPath;
+  }
+
+  get outputPath() {
+    return this.options.outputPath;
+  }
+
+  get exportOptions() {
+    return this.options.exportOptions;
+  }
+
+  get convert() {
+    return this.options.convert;
   }
 
   setProgress = (text: string, percentage: number) => {

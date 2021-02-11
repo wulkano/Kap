@@ -18,10 +18,13 @@ export default class PreferencesContainer extends Container {
 
   mount = async setOverlay => {
     this.setOverlay = setOverlay;
-    this.settings = this.remote.require('./common/settings').default;
+    const {default: settings, shortcuts} = this.remote.require('./common/settings');
+    this.settings = settings;
+    this.settings.shortcuts = shortcuts;
     this.systemPermissions = this.remote.require('./common/system-permissions');
     this.plugins = this.remote.require('./common/plugins');
     this.track = this.remote.require('./common/analytics').track;
+    console.log(this.track);
     this.showError = this.remote.require('./utils/errors').showError;
 
     const pluginsInstalled = this.plugins.getInstalled().sort((a, b) => a.prettyName.localeCompare(b.prettyName));

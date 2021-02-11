@@ -1,6 +1,6 @@
 import setupRemoteState from './setup-remote-state';
 
-const remoteStateNames = ['editor-options'];
+const remoteStateNames = ['editor-options', 'conversion'];
 
 export const setupRemoteStates = async () => {
   return Promise.all(remoteStateNames.map(async fileName => {

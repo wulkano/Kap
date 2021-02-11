@@ -2,14 +2,28 @@ import path from 'path';
 import tempy from 'tempy';
 import {Encoding, Format} from '../common/types';
 import {track} from '../common/analytics';
-import h264Converters from './h264';
+import h264Converters, {crop as h264Crop} from './h264';
 import {ConvertOptions} from './utils';
+import {getFormatExtension} from '../common/constants';
+import PCancelable, {OnCancelFunction} from 'p-cancelable';
+import {convert} from './process';
+import plugins from '../plugins';
+import {EditServiceContext} from '../plugins/service-context';
+import settings from '../common/settings';
 
 const converters = new Map([
   [Encoding.h264, h264Converters]
 ]);
 
-export const convertTo = (format: Format, options: Omit<ConvertOptions, 'outputPath'> & {defaultFileName: string}, encoding: Encoding = Encoding.h264) => {
+const croppingHandlers = new Map([
+  [Encoding.h264, h264Crop]
+]);
+
+export const convertTo = (
+  format: Format,
+  options: Omit<ConvertOptions, 'outputPath'> & {defaultFileName: string},
+  encoding: Encoding = Encoding.h264
+) => {
   if (!converters.has(encoding)) {
     throw new Error(`Unsupported encoding: ${encoding}`);
   }
@@ -23,10 +37,133 @@ export const convertTo = (format: Format, options: Omit<ConvertOptions, 'outputP
   track(`file/export/encoding/${encoding}`);
   track(`file/export/format/${format}`);
 
-  // TODO: fill in edit service
-
-  return converter({
-    outputPath: path.join(tempy.directory(), options.defaultFileName),
+  const conversionOptions = {
+    outputPath: path.join(tempy.directory(), `${options.defaultFileName}.${getFormatExtension(format)}`),
     ...options,
-  });
+  };
+
+  if (options.editService) {
+    const croppingHandler = croppingHandlers.get(encoding);
+
+    if (!croppingHandler) {
+      throw new Error(`Unsupported encoding: ${encoding}`);
+    }
+
+    return convertWithEditPlugin({...conversionOptions, format, croppingHandler, converter})
+  }
+
+  console.log('Converting with no edit plugin', options);
+
+  return converter(conversionOptions);
 };
+
+const convertWithEditPlugin = PCancelable.fn(
+  async (
+    options: ConvertOptions & {
+      format: Format;
+      converter: (options: ConvertOptions) => PCancelable<string>;
+      croppingHandler: (options: ConvertOptions) => PCancelable<string>;
+    },
+    onCancel: OnCancelFunction
+  ) => {
+    let croppedPath: string;
+
+    if (options.shouldCrop) {
+      croppedPath = tempy.file({extension: path.extname(options.inputPath)});
+
+      options.onProgress('Cropping', 0);
+
+      const cropProcess = options.croppingHandler({
+        ...options,
+        outputPath: croppedPath
+      });
+
+      onCancel(() => {
+        cropProcess.cancel();
+      });
+
+      await cropProcess;
+    } else {
+      croppedPath = options.inputPath;
+    }
+
+    let canceled = false;
+
+    const convertFunction = (args: string[], text: string = 'Converting') => new PCancelable<void>(async (resolve, reject, onCancel) => {
+      try {
+        const process = convert(
+          '', {
+            shouldTrack: false,
+            startTime: options.startTime,
+            endTime: options.endTime,
+            onProgress: (progress, estimate) => options.onProgress(text, progress, estimate)
+          }, args
+        );
+
+        onCancel(() => {
+          process.cancel();
+        });
+        await process;
+        resolve();
+      } catch (error) {
+        reject(error);
+      }
+    });
+
+    const editPath = tempy.file({extension: path.extname(croppedPath)});
+
+    const editPlugin = plugins.editPlugins.find(plugin => {
+      return plugin.name === options.editService?.pluginName
+    });
+
+    const editService = editPlugin?.editServices.find(service => {
+      return service.title === options.editService?.serviceTitle
+    });
+
+    if (!editService || !editPlugin) {
+      throw new Error(`Edit service ${options.editService?.serviceTitle} not found`);
+    }
+
+    const editProcess = editService.action(
+      new EditServiceContext({
+        plugin: editPlugin,
+        onCancel: options.onCancel,
+        onProgress: options.onProgress,
+        convert: convertFunction,
+        inputPath: croppedPath,
+        outputPath: editPath,
+        exportOptions: {
+          width: options.width,
+          height: options.height,
+          format: options.format,
+          fps: options.fps,
+          duration: options.endTime - options.startTime,
+          isMuted: options.shouldMute,
+          loop: settings.get('loopExports')
+        }
+      })
+    );
+
+    onCancel(() => {
+      canceled = true;
+      // @ts-ignore
+      if (editProcess.cancel && typeof editProcess.cancel === 'function') {
+        (editProcess as PCancelable<void>).cancel();
+      }
+    });
+
+    await editProcess;
+
+    if (canceled) {
+      return '';
+    }
+
+    track(`plugins/used/edit/${options.editService?.pluginName}`);
+
+    return options.converter({
+      ...options,
+      shouldCrop: false,
+      inputPath: editPath
+    });
+  }
+);
