@@ -51,7 +51,7 @@ const createRemoteStateHook = <Callback extends RemoteState<any, any>>(
         }), {});
 
         const getState = async () => {
-          const newState = (await ipcRenderer.callMain(channelNames.getState, id));
+          const newState = (await ipcRenderer.callMain<string, any>(channelNames.getState, id));
           setState(newState);
         };
 

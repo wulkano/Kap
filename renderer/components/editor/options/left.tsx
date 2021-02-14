@@ -186,7 +186,7 @@ const LeftOptions = () => {
         onBlur={onBlur}
       />
       <div className="percent">
-        <Select options={percentOptions} customLabel={percentLabel} onChange={selectPercentage}/>
+        <Select options={percentOptions as any} customLabel={percentLabel} onChange={selectPercentage}/>
       </div>
       <div className="label">FPS</div>
       <div className="fps">

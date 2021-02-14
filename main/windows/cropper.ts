@@ -6,7 +6,7 @@ import delay from 'delay';
 import {settings} from '../common/settings';
 import {hasMicrophoneAccess, ensureMicrophonePermissions, openSystemPreferences, ensureScreenCapturePermissions} from '../common/system-permissions';
 import {loadRoute} from '../utils/routes';
-import {MacWindow} from '../common/windows';
+import {MacWindow} from '../utils/windows';
 
 const croppers = new Map<number, BrowserWindow>();
 let notificationId: number | undefined;

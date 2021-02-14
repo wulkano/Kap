@@ -1,5 +1,5 @@
 import type {BrowserWindow} from 'electron';
-import {MacWindow} from '../common/windows';
+import {MacWindow} from '../utils/windows';
 import type {Video} from '../video';
 import type {DialogOptions} from './dialog';
 import type {PreferencesWindowOptions} from './preferences';

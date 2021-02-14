@@ -28,7 +28,7 @@ const remote = electron.remote || false;
 let menu;
 
 const buildMenu = async ({selectedApp}) => {
-  const {buildWindowsMenu} = remote.require('./common/windows');
+  const {buildWindowsMenu} = remote.require('./utils/windows');
   menu = await buildWindowsMenu(selectedApp);
 };
 

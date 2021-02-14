@@ -14,7 +14,7 @@ const ContainerProvider = combineUnstatedContainers([
   VideoMetadataContainer,
   VideoTimeContainer,
   VideoControlsContainer
-]);
+]) as any;
 
 const EditorPage = () => {
   const args = useEditorWindowState();
