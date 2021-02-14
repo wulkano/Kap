@@ -26,7 +26,7 @@ const Actions = ({buttons, performAction, defaultId}) => {
             key={button.label}
             type="button"
             disabled={index === activeButton}
-            onClick={() => action(index)}
+            onClick={async () => action(index)}
           >
             {index === activeButton ? button.activeLabel || button.label : button.label}
           </button>

@@ -8,9 +8,9 @@ const VideoPlayer = () => {
     <div className="container">
       <Video/>
       <div className="video-controls">
-        <div className="controls left"><LeftControls /></div>
-        <div className="controls center"><PlayBar /></div>
-        <div className="controls right"><RightControls /></div>
+        <div className="controls left"><LeftControls/></div>
+        <div className="controls center"><PlayBar/></div>
+        <div className="controls right"><RightControls/></div>
       </div>
       <style jsx>{`
         .container {
@@ -51,18 +51,11 @@ const VideoPlayer = () => {
       `}</style>
     </div>
   );
-}
+};
 
 export default VideoPlayer;
 
-
-
-
-
-
-
-
-// import PropTypes from 'prop-types';
+// Import PropTypes from 'prop-types';
 // import React from 'react';
 // import classNames from 'classnames';
 

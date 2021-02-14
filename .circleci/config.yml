@@ -6,7 +6,7 @@ jobs:
     steps:
       - checkout
       - run: yarn
-      # - run: yarn test
+      - run: yarn test
       - run: yarn run dist
       - run: mv dist/*.dmg dist/Kap.dmg
       - store_artifacts:

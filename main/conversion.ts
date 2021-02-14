@@ -1,29 +1,100 @@
 import fs from 'fs';
-import {app, clipboard} from 'electron';
+import {app, clipboard, dialog} from 'electron';
 import {EventEmitter} from 'events';
 import {ConversionOptions, ConversionStatus, CreateConversionOptions, Format} from './common/types';
 import {Video} from './video';
 import {convertTo} from './converters';
 import Export, {ExportOptions} from './export';
 import hash from 'object-hash';
-import {ipcMain} from 'electron-better-ipc';
-import plugins from './plugins';
+import {ipcMain as ipc} from 'electron-better-ipc';
+import {plugins} from './plugins';
 import {askForTargetFilePath} from './plugins/built-in/save-file-plugin';
 import path from 'path';
 import {showError} from './utils/errors';
 import {notify} from './utils/notifications';
 import PCancelable from 'p-cancelable';
 import prettyBytes from 'pretty-bytes';
+import {ensureDockIsShowingSync} from './utils/dock';
+import {windowManager} from './windows/manager';
 
 const plist = require('plist');
+
+// TODO: remove this when exports window is rewritten
+const callExportsWindow = (channel: string, data: any) => {
+  const exportsWindow = windowManager.exports?.get();
+
+  if (exportsWindow) {
+    // TODO(karaggeorge): Investigate why `ipc.callRenderer(exportsWindow, channel, data);` is not working here.
+    ipc.callRenderer(exportsWindow, channel, data);
+  }
+};
 
 // A conversion object describes the process of converting a video or recording
 // using ffmpeg that can then be shared multiple times using Share plugins
 export default class Conversion extends EventEmitter {
-  static all = new Map<string, Conversion>();
+  static conversionMap = new Map<string, Conversion>();
+
+  static get all() {
+    return [...this.conversionMap.values()];
+  }
+
+  id: string;
+  video: Video;
+  format: Format;
+  options: ConversionOptions;
+
+  text = '';
+  percentage?: number;
+  error?: Error;
+  description: string;
+  title: string;
+  finalSize?: string;
+  convertedFilePath?: string;
+  requestedFileType?: Format;
+
+  private currentExport?: Export;
+  private _status: ConversionStatus = ConversionStatus.idle;
+
+  get status() {
+    return this._status;
+  }
+
+  set status(newStatus: ConversionStatus) {
+    this._status = newStatus;
+    this.emit('updated');
+  }
+
+  get canCopy() {
+    return Boolean(this.convertedFilePath && [Format.gif, Format.apng].includes(this.format));
+  }
+
+  private conversionProcess?: PCancelable<string>;
+
+  constructor(video: Video, format: Format, options: ConversionOptions) {
+    super();
+    this.video = video;
+    this.format = format;
+    this.options = options;
+
+    this.description = `${this.options.width} x ${this.options.height} at ${this.options.fps} FPS`;
+    this.title = video.title;
+
+    this.id = hash({
+      filePath: video.filePath,
+      format,
+      options
+    });
+
+    Conversion.conversionMap.set(this.id, this);
+
+    // TODO: remove this when exports window is rewritten
+    this.on('updated', () => {
+      callExportsWindow('update-export-data', this.currentExport?.data);
+    });
+  }
 
   static fromId(id: string) {
-    return this.all.get(id);
+    return this.conversionMap.get(id);
   }
 
   static getOrCreate(video: Video, format: Format, options: ConversionOptions) {
@@ -36,90 +107,53 @@ export default class Conversion extends EventEmitter {
     return this.fromId(id) ?? new Conversion(video, format, options);
   }
 
-  id: string;
-  video: Video;
-  format: Format;
-  options: ConversionOptions;
-
-  text: string = '';
-  percentage?: number;
-  error?: Error;
-  description: string;
-  title: string;
-  finalSize?: string;
-  private currentExport?: Export;
-  private convertedFilePath?: string;
-
-  private _status: ConversionStatus = ConversionStatus.idle;
-
-  get status() {
-    return this._status;
-  }
-
-  get canCopy() {
-    console.log('Can copy,', this.convertedFilePath, this.format);
-    return Boolean(this.convertedFilePath && [Format.gif, Format.apng].includes(this.format));
-  }
-
   copy = () => {
-    console.log('Copy was called', this.convertedFilePath);
     clipboard.writeBuffer('NSFilenamesPboardType', Buffer.from(plist.build([this.convertedFilePath])));
     notify({
       body: 'The file has been copied to the clipboard',
       title: app.name
     });
-  }
+  };
 
-  set status(newStatus: ConversionStatus) {
-    this._status = newStatus;
-    this.emit('updated');
-  }
+  async filePathExists() {
+    if (!this.convertedFilePath) {
+      return false;
+    }
 
-  private conversionProcess?: PCancelable<string>;
-
-  constructor(video: Video, format: Format, options: ConversionOptions) {
-    super();
-    this.video = video;
-    this.format = format;
-    this.options = options;
-
-    this.description = `${this.options.width} x ${this.options.height} at ${this.options.fps} FPS`;
-    this.title = path.parse(this.video.filePath).name;
-
-    this.id = hash({
-      filePath: video.filePath,
-      format,
-      options
-    });
-
-    Conversion.all.set(this.id, this);
+    try {
+      await fs.promises.access(this.convertedFilePath, fs.constants.F_OK);
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   onProgress = (text: string, progress: number) => {
     this.text = text;
     this.percentage = Math.max(Math.min(progress, 1), 0);
+
+    if (this.currentExport) {
+      this.currentExport.text = this.text;
+      this.currentExport.percentage = this.percentage;
+    }
+
     this.emit('updated');
-  }
-
-  private onConversionProgress = (action: string, progress: number, estimate?: string) => {
-    console.log('OnConversionProgress was called');
-    const text = estimate ? `${action} — ${estimate} remaining` : `${action}…`;
-    this.onProgress(text, progress);
-  }
-
-  private onExportProgress = (text: string, progress: number) => {
-    this.onProgress(text, progress);
-  }
+  };
 
   filePath = async ({fileType}: {fileType?: Format} = {}) => {
-    console.log(fileType);
-    if (!this.conversionProcess) {
+    if (fileType) {
+      this.currentExport?.disableActions();
+    }
+
+    if (!this.conversionProcess || (this.requestedFileType !== fileType)) {
       this.start();
     }
 
+    this.requestedFileType = fileType;
+
     try {
       this.convertedFilePath = await this.conversionProcess;
-      return this.convertedFilePath as string;
+      return this.convertedFilePath!;
     } catch (error) {
       // Ensure we re-try the conversion if it fails
       this.conversionProcess = undefined;
@@ -130,7 +164,7 @@ export default class Conversion extends EventEmitter {
 
       return '';
     }
-  }
+  };
 
   addExport(exportOptions: ExportOptions) {
     this.status = ConversionStatus.inProgress;
@@ -140,37 +174,45 @@ export default class Conversion extends EventEmitter {
 
     const newExport = new Export(this, exportOptions);
 
-    newExport.on('progress', ({text, percentage}) => this.onExportProgress(text, percentage));
+    const onProgress = ({text, percentage}: {text: string; percentage: number}) => {
+      newExport.status = 'processing';
+      this.onExportProgress(text, percentage);
+    };
+
+    newExport.on('progress', onProgress);
+
     const cleanup = () => {
       this.currentExport = undefined;
-      newExport.off('progress', this.onExportProgress);
-    }
+      newExport.off('progress', onProgress);
+    };
 
     newExport.once('canceled', () => {
-      this.onExportProgress('Export canceled', 1);
-      cleanup();
+      newExport.onProgress('Export canceled', 1);
+      newExport.status = 'canceled';
       this.status = ConversionStatus.canceled;
       this.emit('updated');
+      cleanup();
     });
 
     newExport.once('finished', () => {
-      this.onExportProgress('Export completed', 1);
-      cleanup();
+      newExport.onProgress('Export completed', 1);
+      newExport.status = 'completed';
       this.status = ConversionStatus.completed;
       this.emit('updated');
+      cleanup();
     });
 
     newExport.once('error', (error: Error) => {
       showError(error, {plugin: exportOptions.plugin} as any);
-      this.onExportProgress('Export failed', 1);
-      cleanup();
+      newExport.onProgress('Export failed', 1);
+      newExport.status = 'failed';
       this.error = error;
       this.status = ConversionStatus.failed;
       this.emit('updated');
+      cleanup();
     });
 
     this.currentExport = newExport;
-    console.log('Starting export', newExport);
     newExport.start();
   }
 
@@ -179,11 +221,20 @@ export default class Conversion extends EventEmitter {
     if (!this.conversionProcess?.isCanceled) {
       this.conversionProcess?.cancel();
     }
-    this.currentExport?.onCancel();
-  }
 
-  private start = () => {
-    console.log('STart called');
+    this.currentExport?.onCancel();
+  };
+
+  private readonly onConversionProgress = (action: string, progress: number, estimate?: string) => {
+    const text = estimate ? `${action} — ${estimate} remaining` : `${action}…`;
+    this.onProgress(text, progress);
+  };
+
+  private readonly onExportProgress = (text: string, progress: number) => {
+    this.onProgress(text, progress);
+  };
+
+  private readonly start = () => {
     this.conversionProcess = convertTo(
       this.format,
       {
@@ -203,17 +254,17 @@ export default class Conversion extends EventEmitter {
         this.emit('updated');
       } catch {}
     });
-  }
+  };
 }
 
-export const setupConversionHook = () => {
-  ipcMain.answerRenderer('create-conversion', async ({
+export const setUpConversionListeners = () => {
+  ipc.answerRenderer('create-conversion', async ({
     filePath, options, format, plugins: pluginOptions
   }: CreateConversionOptions, window) => {
-    console.log('HERE WITH', filePath, options, format, pluginOptions);
-    console.log(window);
     const video = Video.fromId(filePath);
-    const extras: {[key: string]: any} = {};
+    const extras: Record<string, any> = {
+      appUrl: pluginOptions.share.app?.url
+    };
 
     if (!video) {
       return;
@@ -228,27 +279,22 @@ export const setupConversionHook = () => {
 
       if (targetFilePath) {
         extras.targetFilePath = targetFilePath;
-
       } else {
         return;
       }
     }
 
-    console.log('Here with', video);
-
     const exportPlugin = plugins.sharePlugins.find(plugin => {
-      return plugin.name === pluginOptions.share.pluginName
+      return plugin.name === pluginOptions.share.pluginName;
     });
 
     const exportService = exportPlugin?.shareServices.find(service => {
-      return service.title === pluginOptions.share.serviceTitle
+      return service.title === pluginOptions.share.serviceTitle;
     });
 
     if (!exportPlugin || !exportService) {
       return;
     }
-
-    console.log('here', exportPlugin);
 
     const conversion = Conversion.getOrCreate(video, format, options);
 
@@ -262,7 +308,30 @@ export const setupConversionHook = () => {
       extras
     });
 
-    console.log('queueed', conversion.id);
     return conversion.id;
   });
-}
+
+  app.on('before-quit', event => {
+    if (Conversion.all.some(conversion => conversion.status === ConversionStatus.inProgress)) {
+      windowManager.exports?.open();
+
+      ensureDockIsShowingSync(() => {
+        const buttonIndex = dialog.showMessageBoxSync({
+          type: 'question',
+          buttons: [
+            'Continue',
+            'Quit'
+          ],
+          defaultId: 0,
+          cancelId: 1,
+          message: 'Do you want to continue exporting?',
+          detail: 'Kap is currently exporting files. If you quit, the export task will be canceled.'
+        });
+
+        if (buttonIndex === 0) {
+          event.preventDefault();
+        }
+      });
+    }
+  });
+};

@@ -1,4 +1,4 @@
-import {useState, useEffect, useMemo} from 'react'
+import {useState, useEffect, useMemo} from 'react';
 import useDarkMode from '../hooks/dark-mode';
 import {remote} from 'electron';
 
@@ -12,12 +12,14 @@ const GlobalStyles = () => {
       .join('\n');
   }, [isDarkMode]);
 
-  const updateAccentColor = (_, accentColor) => setAccentColor(accentColor);
+  const updateAccentColor = (_, accentColor) => {
+    setAccentColor(accentColor);
+  };
 
   useEffect(() => {
     remote.systemPreferences.on('accent-color-changed', updateAccentColor);
 
-    // return () => {
+    // Return () => {
     //   api.systemPreferences.off('accent-color-changed', updateAccentColor);
     // };
   }, []);
@@ -204,8 +206,8 @@ const GlobalStyles = () => {
 
           * { box-sizing: border-box; }
     `}</style>
-  )
-}
+  );
+};
 
 export default GlobalStyles;
 

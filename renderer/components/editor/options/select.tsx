@@ -6,13 +6,13 @@ import {remote, MenuItemConstructorOptions, NativeImage} from 'electron';
 type Option<T> = {
   label: string;
   value: T;
-  subMenu?: Option<T>[];
+  subMenu?: Array<Option<T>>;
   type?: string;
   checked?: boolean;
   click?: () => void;
   separator?: false;
   icon?: NativeImage;
-}
+};
 
 export type Separator = {
   value: never;
@@ -22,22 +22,23 @@ export type Separator = {
   checked: never;
   icon: never;
   separator: true;
-}
+};
 
 interface Props<T> {
   value?: T;
-  options: (Option<T> | Separator)[];
+  options: Array<Option<T> | Separator>;
   onChange: (newValue?: T) => void;
   clearable?: boolean;
   customLabel?: string;
 }
 
-function Select<T>(props: Props<T>) {
+// eslint-disable-next-line @typescript-eslint/comma-dangle
+const Select = <T, >(props: Props<T>) => {
   const select = useRef<HTMLDivElement>();
   const {options = [], value} = props;
 
   const selectedOption = options.find(opt => opt.value === value);
-  const selectedLabel = props.customLabel ?? (selectedOption?.label ?? '');
+  const selectedLabel = props.customLabel ?? (selectedOption?.label);
   const clearable = props.clearable && selectedOption;
 
   const handleClick = () => {
@@ -49,7 +50,7 @@ function Select<T>(props: Props<T>) {
 
     const {Menu} = remote;
 
-    const convertToMenuTemplate = (option: Option<T>): MenuItemConstructorOptions => {
+    const convertToMenuTemplate = (option: Option<T> | Separator): MenuItemConstructorOptions => {
       if (option.separator) {
         return {type: 'separator'};
       }
@@ -57,7 +58,7 @@ function Select<T>(props: Props<T>) {
       if (option.subMenu) {
         return {
           label: option.label,
-          submenu: option.subMenu.map(convertToMenuTemplate),
+          submenu: option.subMenu.map(opt => convertToMenuTemplate(opt)),
           checked: option.checked
         };
       }
@@ -66,18 +67,20 @@ function Select<T>(props: Props<T>) {
         label: option.label,
         type: option.type as any || 'checkbox',
         checked: option.checked ?? (option.value === value),
-        click: option.click ?? (() => props.onChange(option.value)),
+        click: option.click ?? (() => {
+          props.onChange(option.value);
+        }),
         icon: option.icon
       };
-    }
+    };
 
-    const menu = Menu.buildFromTemplate(options.map(convertToMenuTemplate));
+    const menu = Menu.buildFromTemplate(options.map(opt => convertToMenuTemplate(opt)));
 
     menu.popup({
       x: Math.round(boundingRect.left),
       y: Math.round(boundingRect.top)
     });
-  }
+  };
 
   const handleDropdownClick = event => {
     if (clearable) {
@@ -89,11 +92,11 @@ function Select<T>(props: Props<T>) {
   return (
     <div ref={select} className="container" onClick={handleClick}>
       <div className="label">{selectedLabel}</div>
-      <div className={classNames({dropdown: true, clearable: clearable})} onClick={handleDropdownClick}>
+      <div className={classNames({dropdown: true, clearable})} onClick={handleDropdownClick}>
         {
           clearable ?
-            <CancelIcon size="16px" /> :
-            <DropdownArrowIcon />
+            <CancelIcon size="16px"/> :
+            <DropdownArrowIcon/>
         }
       </div>
       <style jsx>{`
@@ -137,6 +140,6 @@ function Select<T>(props: Props<T>) {
       `}</style>
     </div>
   );
-}
+};
 
 export default Select;

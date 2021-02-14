@@ -1,19 +1,21 @@
-import React from 'react';
+import React, {FunctionComponent, PropsWithChildren} from 'react';
 import {Container} from 'unstated-next';
 
 type ContainerOrWithInitialState<T = any> = Container<any, T> | [Container<any, T>, T];
 
-const combineUnstatedContainers = (containers: ContainerOrWithInitialState[]) => ({children}: React.PropsWithChildren<{}>) => {
-  return containers.reduce(
+const combineUnstatedContainers = (containers: ContainerOrWithInitialState[]) => ({children}: PropsWithChildren<Record<string, unknown>>) => {
+  // eslint-disable-next-line unicorn/no-array-reduce
+  return containers.reduce<React.ReactElement>(
     (tree, ContainerOrWithInitialState) => {
       if (Array.isArray(ContainerOrWithInitialState)) {
         const [Container, initialState] = ContainerOrWithInitialState;
-        return <Container.Provider initialState={initialState}>{tree}</Container.Provider>
-      } else {
-        return <ContainerOrWithInitialState.Provider>{tree}</ContainerOrWithInitialState.Provider>
+        return <Container.Provider initialState={initialState}>{tree}</Container.Provider>;
       }
+
+      return <ContainerOrWithInitialState.Provider>{tree}</ContainerOrWithInitialState.Provider>;
     },
-    children as React.ReactElement
+    // @ts-expect-error
+    children
   );
 };
 

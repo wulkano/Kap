@@ -12,9 +12,9 @@ const stopPropagation = event => event.stopPropagation();
 export default class Export extends React.Component {
   static defaultProps = {
     percentage: 0
-  }
+  };
 
-  state = {}
+  state = {};
 
   componentDidMount() {
     const {remote} = electron;
@@ -31,7 +31,7 @@ export default class Export extends React.Component {
     if (this.isActionable) {
       electron.remote.shell.showItemInFolder(filePath);
     }
-  }
+  };
 
   onDragStart = event => {
     const {createdAt} = this.props;
@@ -39,7 +39,7 @@ export default class Export extends React.Component {
     if (this.isActionable) {
       electron.ipcRenderer.send('drag-export', createdAt);
     }
-  }
+  };
 
   get isActionable() {
     const {filePath, disableOutputActions} = this.props;

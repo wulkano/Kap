@@ -1,7 +1,7 @@
 import electron from 'electron';
 import {Container} from 'unstated';
 import {ipcRenderer as ipc} from 'electron-better-ipc';
-// import {defaultInputDeviceId} from 'common/constants';
+// Import {defaultInputDeviceId} from 'common/constants';
 
 const defaultInputDeviceId = 'asd';
 
@@ -14,20 +14,19 @@ export default class PreferencesContainer extends Container {
     category: 'general',
     tab: 'discover',
     isMounted: false
-  }
+  };
 
   mount = async setOverlay => {
     this.setOverlay = setOverlay;
-    const {default: settings, shortcuts} = this.remote.require('./common/settings');
+    const {settings, shortcuts} = this.remote.require('./common/settings');
     this.settings = settings;
     this.settings.shortcuts = shortcuts;
     this.systemPermissions = this.remote.require('./common/system-permissions');
-    this.plugins = this.remote.require('./common/plugins');
+    this.plugins = this.remote.require('./plugins').plugins;
     this.track = this.remote.require('./common/analytics').track;
-    console.log(this.track);
     this.showError = this.remote.require('./utils/errors').showError;
 
-    const pluginsInstalled = this.plugins.getInstalled().sort((a, b) => a.prettyName.localeCompare(b.prettyName));
+    const pluginsInstalled = this.plugins.installedPlugins.sort((a, b) => a.prettyName.localeCompare(b.prettyName));
 
     this.fetchFromNpm();
 
@@ -43,7 +42,7 @@ export default class PreferencesContainer extends Container {
     if (this.settings.store.recordAudio) {
       this.getAudioDevices();
     }
-  }
+  };
 
   getAudioDevices = async () => {
     const {getAudioDevices, getDefaultInputDevice} = this.remote.require('./utils/devices');
@@ -65,7 +64,7 @@ export default class PreferencesContainer extends Container {
     }
 
     this.setState(updates);
-  }
+  };
 
   scrollIntoView = (tabId, pluginId) => {
     const plugin = document.querySelector(`#${tabId} #${pluginId}`).parentElement;
@@ -74,7 +73,7 @@ export default class PreferencesContainer extends Container {
       block: 'start',
       inline: 'nearest'
     });
-  }
+  };
 
   openTarget = target => {
     const isInstalled = this.state.pluginsInstalled.some(plugin => plugin.name === target.name);
@@ -110,7 +109,7 @@ export default class PreferencesContainer extends Container {
     } else {
       this.setState({category: 'plugins'});
     }
-  }
+  };
 
   setNavigation = ({category, tab, target}) => {
     if (target) {
@@ -122,7 +121,7 @@ export default class PreferencesContainer extends Container {
     } else {
       this.setState({category, tab});
     }
-  }
+  };
 
   fetchFromNpm = async () => {
     try {
@@ -142,10 +141,10 @@ export default class PreferencesContainer extends Container {
         this.openTarget(this.state.target);
         this.setState({target: undefined});
       }
-    } catch (_) {
+    } catch {
       this.setState({npmError: true});
     }
-  }
+  };
 
   togglePlugin = plugin => {
     if (plugin.isInstalled) {
@@ -153,7 +152,7 @@ export default class PreferencesContainer extends Container {
     } else {
       this.install(plugin.name);
     }
-  }
+  };
 
   install = async name => {
     const {pluginsInstalled, pluginsFromNpm} = this.state;
@@ -172,7 +171,7 @@ export default class PreferencesContainer extends Container {
         pluginBeingInstalled: undefined
       });
     }
-  }
+  };
 
   uninstall = async name => {
     const {pluginsInstalled, pluginsFromNpm} = this.state;
@@ -188,7 +187,7 @@ export default class PreferencesContainer extends Container {
     };
 
     this.setState({pluginBeingUninstalled: name, onTransitionEnd});
-  }
+  };
 
   openPluginsConfig = async name => {
     this.track(`plugin/config/${name}`);
@@ -198,22 +197,20 @@ export default class PreferencesContainer extends Container {
     await this.plugins.openPluginConfig(name);
     ipc.callMain('refresh-usage');
     this.setOverlay(false);
-  }
+  };
 
-  openPluginsFolder = () => electron.shell.openItem(this.plugins.cwd);
+  openPluginsFolder = () => electron.shell.openItem(this.plugins.pluginsDir);
 
   selectCategory = category => {
     this.setState({category});
-  }
+  };
 
   selectTab = tab => {
     this.track(`preferences/tab/${tab}`);
     this.setState({tab});
-  }
+  };
 
   toggleSetting = (setting, value) => {
-    // TODO: Fix this ESLint violation
-    // eslint-disable-next-line react/no-access-state-in-setstate
     const newValue = value === undefined ? !this.state[setting] : value;
     if (!SETTINGS_ANALYTICS_BLACKLIST.includes(setting)) {
       this.track(`preferences/setting/${setting}/${newValue}`);
@@ -221,7 +218,7 @@ export default class PreferencesContainer extends Container {
 
     this.setState({[setting]: newValue});
     this.settings.set(setting, newValue);
-  }
+  };
 
   toggleRecordAudio = async () => {
     const newValue = !this.state.recordAudio;
@@ -239,22 +236,20 @@ export default class PreferencesContainer extends Container {
       this.setState({recordAudio: newValue});
       this.settings.set('recordAudio', newValue);
     }
-  }
+  };
 
   toggleShortcuts = async () => {
     const setting = 'enableShortcuts';
     const newValue = !this.state[setting];
     this.toggleSetting(setting, newValue);
     await ipc.callMain('toggle-shortcuts', {enabled: newValue});
-  }
+  };
 
   updateShortcut = async (setting, shortcut) => {
     try {
       await ipc.callMain('update-shortcut', {setting, shortcut});
       this.setState({
         shortcuts: {
-          // TODO: Fix this ESLint violation
-          // eslint-disable-next-line react/no-access-state-in-setstate
           ...this.state.shortcuts,
           [setting]: shortcut
         }
@@ -262,15 +257,13 @@ export default class PreferencesContainer extends Container {
     } catch (error) {
       console.warn('Error updating shortcut', error);
     }
-  }
+  };
 
   setOpenOnStartup = value => {
-    // TODO: Fix this ESLint violation
-    // eslint-disable-next-line react/no-access-state-in-setstate
     const openOnStartup = typeof value === 'boolean' ? value : !this.state.openOnStartup;
     this.setState({openOnStartup});
     this.remote.app.setLoginItemSettings({openAtLogin: openOnStartup});
-  }
+  };
 
   pickKapturesDir = () => {
     const {dialog, getCurrentWindow} = this.remote;
@@ -285,10 +278,10 @@ export default class PreferencesContainer extends Container {
     if (directories) {
       this.toggleSetting('kapturesDir', directories[0]);
     }
-  }
+  };
 
   setAudioInputDeviceId = id => {
     this.setState({audioInputDeviceId: id});
     this.settings.set('audioInputDeviceId', id);
-  }
+  };
 }

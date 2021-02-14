@@ -62,7 +62,7 @@ const AdvancedControls = {};
 const stopPropagation = event => event.stopPropagation();
 
 class Left extends React.Component {
-  state = {}
+  state = {};
 
   select = React.createRef();
 
@@ -92,7 +92,7 @@ class Left extends React.Component {
       y: Math.round(top) + 6,
       positioningItem
     });
-  }
+  };
 
   render() {
     const {advanced, toggleAdvanced, toggleRatioLock, ratioLocked, ratio = []} = this.props;
@@ -214,7 +214,7 @@ class Right extends React.Component {
       heightInput: heightInput.current.getRef(),
       ignoreEmpty
     });
-  }
+  };
 
   onHeightChange = (event, {ignoreEmpty} = {}) => {
     const {bounds, width, setBounds, ratioLocked, ratio, setHeight} = this.props;
@@ -233,17 +233,17 @@ class Right extends React.Component {
       heightInput: heightInput.current.getRef(),
       ignoreEmpty
     });
-  }
+  };
 
   onWidthBlur = event => {
     this.onWidthChange(event, {ignoreEmpty: false});
     handleWidthInput.flush();
-  }
+  };
 
   onHeightBlur = event => {
     this.onHeightChange(event, {ignoreEmpty: false});
     handleHeightInput.flush();
-  }
+  };
 
   render() {
     const {swapDimensions, width, height, screenWidth, screenHeight, advanced} = this.props;

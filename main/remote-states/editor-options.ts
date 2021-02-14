@@ -2,11 +2,11 @@ import Store from 'electron-store';
 import {EditorOptionsRemoteState, ExportOptions, ExportOptionsPlugin, Format} from '../common/types';
 import {formats} from '../common/constants';
 
-import plugins from '../plugins';
+import {plugins} from '../plugins';
 import {apps} from '../plugins/built-in/open-with-plugin';
 import {prettifyFormat} from '../utils/formats';
 
-const exportUsageHistory = new Store<{[key in Format]: {lastUsed: number, plugins: {[key: string]: number}}}>({
+const exportUsageHistory = new Store<{[key in Format]: {lastUsed: number; plugins: Record<string, number>}}>({
   name: 'export-usage-history',
   defaults: {
     apng: {lastUsed: 1, plugins: {default: 1}},
@@ -56,12 +56,10 @@ const getEditOptions = () => {
         title: service.title,
         pluginName: plugin.name,
         pluginPath: plugin.pluginPath,
-        hasConfig: Object.keys(service.config || {}).length > 0
+        hasConfig: Object.keys(service.config ?? {}).length > 0
       }))
   );
 };
-
-
 
 const getExportOptions = () => {
   const installed = plugins.sharePlugins;
@@ -107,14 +105,14 @@ const editorOptionsRemoteState: EditorOptionsRemoteState = (sendUpdate: (state: 
     state.formats = getExportOptions();
     state.editServices = getEditOptions();
     sendUpdate(state);
-  }
+  };
 
   plugins.on('installed', updatePlugins);
   plugins.on('uninstalled', updatePlugins);
   plugins.on('config-changed', updatePlugins);
 
   const actions = {
-    updatePluginUsage: ({format, plugin}: {format: Format, plugin: string}) => {
+    updatePluginUsage: ({format, plugin}: {format: Format; plugin: string}) => {
       const usage = exportUsageHistory.get(format);
       const now = Date.now();
 
@@ -125,18 +123,17 @@ const editorOptionsRemoteState: EditorOptionsRemoteState = (sendUpdate: (state: 
       state.formats = getExportOptions();
       sendUpdate(state);
     },
-    updateFpsUsage: ({format, fps}: {format: Format, fps: number}) => {
+    updateFpsUsage: ({format, fps}: {format: Format; fps: number}) => {
       fpsUsageHistory.set(format, fps);
       state.fpsHistory = fpsUsageHistory.store;
       sendUpdate(state);
     }
   };
 
-  console.log(state);
   return {
     actions,
     getState: () => state
-  }
+  };
 };
 
 export default editorOptionsRemoteState;

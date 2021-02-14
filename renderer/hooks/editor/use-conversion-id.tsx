@@ -5,12 +5,12 @@ import {createContext, PropsWithChildren, useContext, useState} from 'react';
 const ConversionIdContext = createContext<{
   conversionId: string;
   setConversionId: (id: string) => void;
-  startConversion: (options: CreateConversionOptions) => Promise<void>
+  startConversion: (options: CreateConversionOptions) => Promise<void>;
 }>(undefined);
 
 let savedConversionId: string;
 
-export const ConversionIdContextProvider = (props: PropsWithChildren<{}>) => {
+export const ConversionIdContextProvider = (props: PropsWithChildren<Record<string, unknown>>) => {
   const [conversionId, setConversionId] = useState<string>();
 
   const startConversion = async (options: CreateConversionOptions) => {
@@ -21,7 +21,7 @@ export const ConversionIdContextProvider = (props: PropsWithChildren<{}>) => {
   const setConvId = (id: string) => {
     savedConversionId = savedConversionId || id;
     setConversionId(id || savedConversionId);
-  }
+  };
 
   const value = {
     conversionId,

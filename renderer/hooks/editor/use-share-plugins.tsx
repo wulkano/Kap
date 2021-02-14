@@ -1,4 +1,4 @@
-import OptionsContainer from 'components/editor/options-container'
+import OptionsContainer from 'components/editor/options-container';
 import {remote} from 'electron';
 import {ipcRenderer} from 'electron-better-ipc';
 import {useMemo} from 'react';
@@ -43,7 +43,7 @@ const useSharePlugins = () => {
           },
           checked: sharePlugin.pluginName === plugin.pluginName,
           label: 'Open with…'
-        }
+        };
       }
 
       if (!plugin.pluginName.startsWith('_')) {
@@ -57,7 +57,7 @@ const useSharePlugins = () => {
         },
         checked: sharePlugin.pluginName === plugin.pluginName,
         label: plugin.title
-      }
+      };
     });
 
     if (onlyBuiltIn) {
@@ -69,7 +69,7 @@ const useSharePlugins = () => {
         click: () => {
           ipcRenderer.callMain('open-preferences', {category: 'plugins', tab: 'discover'});
         }
-      } as any)
+      } as any);
     }
 
     return options ?? [];
@@ -78,6 +78,6 @@ const useSharePlugins = () => {
   const label = sharePlugin?.app ? sharePlugin.app.name : sharePlugin?.serviceTitle;
 
   return {menuOptions, label, onChange: updateSharePlugin};
-}
+};
 
 export default useSharePlugins;

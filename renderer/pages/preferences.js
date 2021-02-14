@@ -12,15 +12,17 @@ import PreferencesContainer from '../containers/preferences';
 const preferencesContainer = new PreferencesContainer();
 
 export default class PreferencesPage extends React.Component {
-  state = {overlay: false}
+  state = {overlay: false};
 
   componentDidMount() {
     ipc.answerMain('open-plugin-config', preferencesContainer.openPluginsConfig);
     ipc.answerMain('options', preferencesContainer.setNavigation);
-    ipc.answerMain('mount', () => preferencesContainer.mount(this.setOverlay));
+    ipc.answerMain('mount', async () => preferencesContainer.mount(this.setOverlay));
   }
 
-  setOverlay = overlay => this.setState({overlay});
+  setOverlay = overlay => {
+    this.setState({overlay});
+  };
 
   render() {
     const {overlay} = this.state;

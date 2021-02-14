@@ -48,7 +48,8 @@ const LeftOptions = () => {
 
   const onChange = (event, {ignoreEmpty = true}: {ignoreEmpty?: boolean} = {}) => {
     if (!ignoreEmpty) {
-      return onBlur(event);
+      onBlur(event);
+      return;
     }
 
     const {currentTarget: {name, value}} = event;
@@ -74,7 +75,6 @@ const LeftOptions = () => {
     if (value) {
       value = Math.round(value);
       const ratio = metadata.width / metadata.height;
-      console.log(ratio);
 
       if (name === 'width') {
         const min = Math.max(1, Math.ceil(ratio));
@@ -146,13 +146,13 @@ const LeftOptions = () => {
         },
         {
           separator: true
-        } as Separator,
+        },
         ...options
       ];
     }
 
     return options;
-  }, [metadata, width]);
+  }, [metadata, width, height]);
 
   const selectPercentage = updates => {
     setDimensions(updates);
@@ -186,11 +186,11 @@ const LeftOptions = () => {
         onBlur={onBlur}
       />
       <div className="percent">
-        <Select options={percentOptions} onChange={selectPercentage} customLabel={percentLabel} />
+        <Select options={percentOptions} customLabel={percentLabel} onChange={selectPercentage}/>
       </div>
       <div className="label">FPS</div>
       <div className="fps">
-        <Slider value={fps} min={5} max={originalFps} onChange={updateFps} />
+        <Slider value={fps} min={5} max={originalFps} onChange={updateFps}/>
       </div>
       {keyboardInputStyles}
       <style jsx>{`
@@ -245,7 +245,7 @@ const LeftOptions = () => {
 
 export default LeftOptions;
 
-// import React from 'react';
+// Import React from 'react';
 // import PropTypes from 'prop-types';
 // import {connect, EditorContainer} from '../../../containers';
 // import css from 'styled-jsx/css';
@@ -289,79 +289,79 @@ export default LeftOptions;
 //   }
 
 //   render() {
-    // const {width, height, changeDimension, fps, originalFps, setFps, original} = this.props;
+// const {width, height, changeDimension, fps, originalFps, setFps, original} = this.props;
 
-    // return (
-    //   <div className="container">
-    //     <div className="label">Size</div>
-    //     <KeyboardNumberInput
-    //       className={keyboardInputClass}
-    //       value={width || ''}
-    //       size="5"
-    //       min={1}
-    //       max={original && original.width}
-    //       name="width"
-    //       onChange={changeDimension}
-    //       onKeyDown={changeDimension}
-    //       onBlur={this.handleBlur}
-    //     />
-    //     <KeyboardNumberInput
-    //       className={keyboardInputClass}
-    //       value={height || ''}
-    //       size="5"
-    //       min={1}
-    //       max={original && original.height}
-    //       name="height"
-    //       onChange={changeDimension}
-    //       onKeyDown={changeDimension}
-    //       onBlur={this.handleBlur}
-    //     />
-    //     <div className="label">FPS</div>
-    //     <div className="fps">
-    //       <Slider value={fps} min={1} max={originalFps} onChange={setFps}/>
-    //     </div>
-    //     {keyboardInputStyles}
-    //     <style jsx>{`
-    //       .container {
-    //         height: 100%;
-    //         display: flex;
-    //         align-items: center;
-    //       }
+// return (
+//   <div className="container">
+//     <div className="label">Size</div>
+//     <KeyboardNumberInput
+//       className={keyboardInputClass}
+//       value={width || ''}
+//       size="5"
+//       min={1}
+//       max={original && original.width}
+//       name="width"
+//       onChange={changeDimension}
+//       onKeyDown={changeDimension}
+//       onBlur={this.handleBlur}
+//     />
+//     <KeyboardNumberInput
+//       className={keyboardInputClass}
+//       value={height || ''}
+//       size="5"
+//       min={1}
+//       max={original && original.height}
+//       name="height"
+//       onChange={changeDimension}
+//       onKeyDown={changeDimension}
+//       onBlur={this.handleBlur}
+//     />
+//     <div className="label">FPS</div>
+//     <div className="fps">
+//       <Slider value={fps} min={1} max={originalFps} onChange={setFps}/>
+//     </div>
+//     {keyboardInputStyles}
+//     <style jsx>{`
+//       .container {
+//         height: 100%;
+//         display: flex;
+//         align-items: center;
+//       }
 
-    //       .label {
-    //         font-size: 12px;
-    //         margin-right: 8px;
-    //         color: white;
-    //       }
+//       .label {
+//         font-size: 12px;
+//         margin-right: 8px;
+//         color: white;
+//       }
 
-    //       .fps {
-    //         height: 24px;
-    //         width: 32px;
-    //       }
+//       .fps {
+//         height: 24px;
+//         width: 32px;
+//       }
 
-    //       .option {
-    //         width: 48px;
-    //         height: 22px;
-    //         background: transparent;
-    //         display: flex;
-    //         align-items: center;
-    //         justify-content: center;
-    //         font-size: 12px;
-    //         color: white;
-    //         box-sizing: border-box;
-    //       }
+//       .option {
+//         width: 48px;
+//         height: 22px;
+//         background: transparent;
+//         display: flex;
+//         align-items: center;
+//         justify-content: center;
+//         font-size: 12px;
+//         color: white;
+//         box-sizing: border-box;
+//       }
 
-    //       .option:hover {
-    //         background: hsla(0, 0%, 100%, 0.2);
-    //       }
+//       .option:hover {
+//         background: hsla(0, 0%, 100%, 0.2);
+//       }
 
-    //       .option:active,
-    //       .option.selected {
-    //         background: transparent;
-    //       }
-    //     `}</style>
-    //   </div>
-    // );
+//       .option:active,
+//       .option.selected {
+//         background: transparent;
+//       }
+//     `}</style>
+//   </div>
+// );
 //   }
 // }
 

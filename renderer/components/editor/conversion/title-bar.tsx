@@ -1,13 +1,12 @@
-import TrafficLights from 'components/traffic-lights'
-import {BackPlainIcon} from 'vectors'
+import TrafficLights from 'components/traffic-lights';
+import {BackPlainIcon} from 'vectors';
 import {UseConversionState} from 'hooks/editor/use-conversion';
 
-const TitleBar = ({conversion, cancel, copy}: {conversion: UseConversionState, cancel: () => any, copy: () => any}) => {
-
+const TitleBar = ({conversion, cancel, copy}: {conversion: UseConversionState; cancel: () => any; copy: () => any}) => {
   return (
     <div className="title-bar">
       <div className="left">
-        <TrafficLights />
+        <TrafficLights/>
         <div className="icon" onClick={cancel}>
           <BackPlainIcon fill="white" hoverFill="white" size="100%"/>
         </div>
@@ -22,6 +21,7 @@ const TitleBar = ({conversion, cancel, copy}: {conversion: UseConversionState, c
           display: flex;
           align-items: center;
           justify-content: space-between;
+          -webkit-app-region: drag;
         }
 
         .left {
@@ -65,7 +65,7 @@ const TitleBar = ({conversion, cancel, copy}: {conversion: UseConversionState, c
         }
       `}</style>
     </div>
-  )
-}
+  );
+};
 
 export default TitleBar;

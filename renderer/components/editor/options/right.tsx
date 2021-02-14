@@ -13,13 +13,13 @@ const FormatSelect = () => {
   const {formats, format, updateFormat} = OptionsContainer.useContainer();
   const options = formats.map(format => ({label: format.prettyFormat, value: format.format}));
 
-  return <Select options={options} value={format} onChange={updateFormat} />;
+  return <Select options={options} value={format} onChange={updateFormat}/>;
 };
 
 const PluginsSelect = () => {
   const {menuOptions, label, onChange} = useSharePlugins();
   return <Select options={menuOptions} customLabel={label} onChange={onChange}/>;
-}
+};
 
 const EditPluginsControl = () => {
   const {editServices, editPlugin, setEditPlugin} = OptionsContainer.useContainer();
@@ -30,7 +30,11 @@ const EditPluginsControl = () => {
 
   if (!editPlugin) {
     return (
-      <button type="button" className="add-edit-plugin" onClick={() => setEditPlugin(editServices[0])}>
+      <button
+        type="button" className="add-edit-plugin" onClick={() => {
+          setEditPlugin(editServices[0]);
+        }}
+      >
         +
         <style jsx>{`
           button {
@@ -58,7 +62,7 @@ const EditPluginsControl = () => {
           }
         `}</style>
       </button>
-    )
+    );
   }
 
   const openEditPluginConfig = () => {
@@ -75,7 +79,7 @@ const EditPluginsControl = () => {
       {
         editPlugin.hasConfig && (
           <button type="button" className="add-edit-plugin" onClick={openEditPluginConfig}>
-            <GearIcon fill="#fff" hoverFill="#fff" size="12px" />
+            <GearIcon fill="#fff" hoverFill="#fff" size="12px"/>
           </button>
         )
       }
@@ -115,7 +119,7 @@ const EditPluginsControl = () => {
       `}</style>
     </>
   );
-}
+};
 
 const ConvertButton = () => {
   const {startConversion} = useConversionIdContext();
@@ -127,7 +131,6 @@ const ConvertButton = () => {
 
   const onClick = () => {
     const shouldCrop = true;
-    console.log('HERE');
     startConversion({
       filePath,
       options: {
@@ -145,7 +148,7 @@ const ConvertButton = () => {
       },
       format: options.format,
       plugins: {
-        share: options.sharePlugin,
+        share: options.sharePlugin
       }
     });
 
@@ -153,7 +156,7 @@ const ConvertButton = () => {
       format: options.format,
       plugin: options.sharePlugin.pluginName
     });
-  }
+  };
 
   return (
     <button type="button" className="start-export" onClick={onClick}>
@@ -183,8 +186,8 @@ const ConvertButton = () => {
         }
       `}</style>
     </button>
-  )
-}
+  );
+};
 
 const RightOptions = () => {
   return (
@@ -220,11 +223,11 @@ const RightOptions = () => {
         `}</style>
     </div>
   );
-}
+};
 
 export default RightOptions;
 
-// import electron from 'electron';
+// Import electron from 'electron';
 // import React from 'react';
 // import PropTypes from 'prop-types';
 
@@ -293,96 +296,96 @@ export default RightOptions;
 //     const editPluginOptions = editOptions && editOptions.map(option => ({label: option.title, value: option}));
 //     const buttonAction = editPlugin ? openEditPluginConfig : () => selectEditPlugin(editOptions[0]);
 
-    // return (
-    //   <div className="container">
-    //     {
-    //       editPluginOptions && editPluginOptions.length > 0 && (
-    //         <>
-    //           {
-    //             (!editPlugin || editPlugin.hasConfig) && (
-    //               <button key={editPlugin} type="button" className="add-edit-plugin" onClick={buttonAction}>
-    //                 {editPlugin ? <GearIcon fill="#fff" hoverFill="#fff" size="12px"/> : '+'}
-    //               </button>
-    //             )
-    //           }
-    //           {
-    //             editPlugin && (
-    //               <div className="edit-plugin">
-    //                 <Select clearable options={editPluginOptions} selected={editPlugin} onChange={selectEditPlugin}/>
-    //               </div>
-    //             )
-    //           }
-    //         </>
-    //       )
-    //     }
-    //     <div className="format">
-    //       <Select options={formatOptions} selected={format} onChange={selectFormat}/>
-    //     </div>
-    //     <div className="plugin">
-    //       <Select options={pluginOptions} selected={plugin} onChange={selectPlugin}/>
-    //     </div>
-    //     <button type="button" className="start-export" onClick={startExport}>Export</button>
-    //     <style jsx>{`
-    //       .container {
-    //         height: 100%;
-    //         display: flex;
-    //         align-items: center;
-    //       }
+// return (
+//   <div className="container">
+//     {
+//       editPluginOptions && editPluginOptions.length > 0 && (
+//         <>
+//           {
+//             (!editPlugin || editPlugin.hasConfig) && (
+//               <button key={editPlugin} type="button" className="add-edit-plugin" onClick={buttonAction}>
+//                 {editPlugin ? <GearIcon fill="#fff" hoverFill="#fff" size="12px"/> : '+'}
+//               </button>
+//             )
+//           }
+//           {
+//             editPlugin && (
+//               <div className="edit-plugin">
+//                 <Select clearable options={editPluginOptions} selected={editPlugin} onChange={selectEditPlugin}/>
+//               </div>
+//             )
+//           }
+//         </>
+//       )
+//     }
+//     <div className="format">
+//       <Select options={formatOptions} selected={format} onChange={selectFormat}/>
+//     </div>
+//     <div className="plugin">
+//       <Select options={pluginOptions} selected={plugin} onChange={selectPlugin}/>
+//     </div>
+//     <button type="button" className="start-export" onClick={startExport}>Export</button>
+//     <style jsx>{`
+//       .container {
+//         height: 100%;
+//         display: flex;
+//         align-items: center;
+//       }
 
-    //       .label {
-    //         font-size: 12px;
-    //         margin-right: 8px;
-    //         color: white;
-    //       }
+//       .label {
+//         font-size: 12px;
+//         margin-right: 8px;
+//         color: white;
+//       }
 
-    //       .format {
-    //         height: 24px;
-    //         width: 96px;
-    //         margin-right: 8px;
-    //       }
+//       .format {
+//         height: 24px;
+//         width: 96px;
+//         margin-right: 8px;
+//       }
 
-    //       .edit-plugin {
-    //         height: 24px;
-    //         margin-right: 8px;
-    //         width: 128px;
-    //       }
+//       .edit-plugin {
+//         height: 24px;
+//         margin-right: 8px;
+//         width: 128px;
+//       }
 
-          // .plugin {
-          //   height: 24px;
-          //   width: 128px;
-          //   margin-right: 8px;
-          // }
+// .plugin {
+//   height: 24px;
+//   width: 128px;
+//   margin-right: 8px;
+// }
 
-    //       button {
-    //         padding: 4px 8px;
-    //         background: rgba(255, 255, 255, 0.1);
-    //         font-size: 12px;
-    //         line-height: 12px;
-    //         color: white;
-    //         height: 24px;
-    //         border-radius: 4px;
-    //         text-align: center;
-    //         border: none;
-    //         box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.2);
-    //       }
+//       button {
+//         padding: 4px 8px;
+//         background: rgba(255, 255, 255, 0.1);
+//         font-size: 12px;
+//         line-height: 12px;
+//         color: white;
+//         height: 24px;
+//         border-radius: 4px;
+//         text-align: center;
+//         border: none;
+//         box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.2);
+//       }
 
-    //       button:hover,
-    //       button:focus {
-    //         background: hsla(0, 0%, 100%, 0.2);
-    //         outline: none;
-    //       }
+//       button:hover,
+//       button:focus {
+//         background: hsla(0, 0%, 100%, 0.2);
+//         outline: none;
+//       }
 
-    //       .start-export {
-    //         width: 72px;
-    //       }
+//       .start-export {
+//         width: 72px;
+//       }
 
-    //       .add-edit-plugin {
-    //         width: max-content;
-    //         margin-right: 8px;
-    //       }
-    //     `}</style>
-    //   </div>
-    // );
+//       .add-edit-plugin {
+//         width: max-content;
+//         margin-right: 8px;
+//       }
+//     `}</style>
+//   </div>
+// );
 //   }
 // }
 

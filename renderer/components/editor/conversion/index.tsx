@@ -3,7 +3,7 @@ import useConversion from 'hooks/editor/use-conversion';
 import useConversionIdContext from 'hooks/editor/use-conversion-id';
 import {useConfirmation} from 'hooks/use-confirmation';
 import ConversionDetails from './conversion-details';
-import TitleBar from './title-bar'
+import TitleBar from './title-bar';
 import VideoPreview from './video-preview';
 
 const dialogOptions = {
@@ -16,13 +16,17 @@ const EditorConversionView = ({conversionId}: {conversionId: string}) => {
   const {setConversionId} = useConversionIdContext();
   const conversion = useConversion(conversionId);
 
-  const cancel = () => conversion.cancel();
+  const cancel = () => {
+    conversion.cancel();
+  };
+
   const safeCancel = useConfirmation(cancel, dialogOptions);
 
   const cancelAndGoBack = () => {
     cancel();
     setConversionId('');
   };
+
   const safeCancelAndGoBack = useConfirmation(cancelAndGoBack, dialogOptions);
 
   const inProgress = conversion.state?.status === ConversionStatus.inProgress;
@@ -32,7 +36,10 @@ const EditorConversionView = ({conversionId}: {conversionId: string}) => {
 
   return (
     <div className="editor-conversion-view">
-      <TitleBar conversion={conversion.state} cancel={finalCancelAndGoBack} copy={() => conversion.copy()}/>
+      <TitleBar
+        conversion={conversion.state} cancel={finalCancelAndGoBack} copy={() => {
+          conversion.copy();
+        }}/>
       <VideoPreview conversion={conversion.state} cancel={finalCancel}/>
       <ConversionDetails conversion={conversion.state}/>
       <style jsx>{`
@@ -40,10 +47,11 @@ const EditorConversionView = ({conversionId}: {conversionId: string}) => {
           display: flex;
           flex-direction: column;
           flex: 1;
+          -webkit-app-region: no-drag;
         }
       `}</style>
     </div>
-  )
+  );
 };
 
 export default EditorConversionView;

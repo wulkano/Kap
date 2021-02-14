@@ -1,24 +1,25 @@
 import path from 'path';
 import getFps from './utils/fps';
 import {getEncoding, convertToH264} from './utils/encoding';
-import {Rectangle, screen} from 'electron';
-import {Encoding} from './common/types';
+import {nativeImage, NativeImage, screen} from 'electron';
+import {ApertureOptions, Encoding} from './common/types';
 import {generateTimestampedName} from './utils/timestamped-name';
+import fs from 'fs';
+import {generatePreviewImage} from './utils/image-preview';
+import {windowManager} from './windows/manager';
 
 interface VideoOptions {
   filePath: string;
   title?: string;
   fps?: number;
   encoding?: Encoding;
+  previewPath?: string;
   pixelDensity?: number;
+  isNewRecording?: boolean;
 }
 
 export class Video {
   static all = new Map<string, Video>();
-
-  static fromId(id: string) {
-    return this.all.get(id);
-  }
 
   filePath: string;
   title: string;
@@ -26,12 +27,13 @@ export class Video {
   encoding?: Encoding;
   pixelDensity: number;
   previewPath?: string;
-
+  dragIcon?: NativeImage;
   isNewRecording = false;
-
   isReady = false;
-  private readyPromise: Promise<void>;
-  private previewReadyPromise: Promise<string | undefined>;
+  previewImage?: {path: string; data: string};
+
+  private readonly readyPromise: Promise<void>;
+  private readonly previewReadyPromise: Promise<string | undefined>;
 
   constructor(options: VideoOptions) {
     this.filePath = options.filePath;
@@ -39,20 +41,21 @@ export class Video {
     this.fps = options.fps;
     this.encoding = options.encoding;
     this.pixelDensity = options.pixelDensity ?? 1;
+    this.isNewRecording = options.isNewRecording ?? false;
+    this.previewPath = options.previewPath;
 
     Video.all.set(this.filePath, this);
 
     this.readyPromise = this.collectInfo();
-    this.previewReadyPromise = this.readyPromise.then(() => this.getPreviewPath());
+    this.previewReadyPromise = this.readyPromise.then(async () => this.getPreviewPath());
   }
 
-  private async collectInfo() {
-    await Promise.all([
-      this.getFps(),
-      this.getEncoding(),
-    ]);
+  static fromId(id: string) {
+    return this.all.get(id);
+  }
 
-    this.isReady = true;
+  static getOrCreate(options: VideoOptions) {
+    return Video.fromId(options.filePath) ?? new Video(options);
   }
 
   async getFps() {
@@ -61,6 +64,15 @@ export class Video {
     }
 
     return this.fps;
+  }
+
+  async exists() {
+    try {
+      await fs.promises.access(this.filePath, fs.constants.F_OK);
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   async getEncoding() {
@@ -72,6 +84,10 @@ export class Video {
   }
 
   async getPreviewPath() {
+    if (!await this.exists()) {
+      return;
+    }
+
     if (!this.previewPath) {
       if (this.encoding === 'h264') {
         this.previewPath = this.filePath;
@@ -80,7 +96,26 @@ export class Video {
       }
     }
 
-    return this.encoding;
+    return this.previewPath;
+  }
+
+  async getDragIcon({width, height}: {width: number; height: number}) {
+    const previewImagePath = (await this.generatePreviewImage())?.path;
+
+    if (previewImagePath) {
+      const resizeOptions = width > height ? {width: 64} : {height: 64};
+      return nativeImage.createFromPath(previewImagePath).resize(resizeOptions);
+    }
+
+    return nativeImage.createEmpty();
+  }
+
+  async generatePreviewImage() {
+    if (!this.previewImage) {
+      this.previewImage = await generatePreviewImage(this.filePath);
+    }
+
+    return this.previewImage;
   }
 
   async whenReady() {
@@ -90,16 +125,23 @@ export class Video {
   async whenPreviewReady() {
     return this.previewReadyPromise;
   }
-}
 
-interface ApertureOptions {
-  fps: number;
-  cropArea: Rectangle;
-  showCursor: boolean;
-  highlightClicks: boolean;
-  screenId: number;
-  audioDeviceId: string;
-  videoCodec: Encoding;
+  async openEditorWindow() {
+    return windowManager.editor?.open(this);
+  }
+
+  private async collectInfo() {
+    if (!await this.exists()) {
+      return;
+    }
+
+    await Promise.all([
+      this.getFps(),
+      this.getEncoding()
+    ]);
+
+    this.isReady = true;
+  }
 }
 
 export class Recording extends Video {
@@ -111,9 +153,9 @@ export class Recording extends Video {
 
     super({
       filePath: options.filePath,
-      title: options.title || generateTimestampedName(),
+      title: options.title ?? generateTimestampedName(),
       fps: options.apertureOptions.fps,
-      encoding: options.apertureOptions.videoCodec,
+      encoding: options.apertureOptions.videoCodec ?? Encoding.h264,
       pixelDensity
     });
 

@@ -4,7 +4,7 @@ import {ipcRenderer as ipc} from 'electron-better-ipc';
 export default class ExportsContainer extends Container {
   state = {
     exports: []
-  }
+  };
 
   mount = async () => {
     const exports = await ipc.callMain('get-exports');
@@ -14,9 +14,10 @@ export default class ExportsContainer extends Container {
       isMounted: true
     });
 
-    const {ipcRenderer} = require('electron');
-    ipcRenderer.on('update-export', (_, updates) => this.update(updates));
-  }
+    ipc.answerMain('update-export-data', updates => {
+      this.update(updates);
+    });
+  };
 
   update = updates => {
     const {createdAt} = updates;
@@ -34,13 +35,13 @@ export default class ExportsContainer extends Container {
     }
 
     this.setState({exports});
-  }
+  };
 
   cancel = createdAt => {
     ipc.callMain('cancel-export', createdAt);
-  }
+  };
 
   openInEditor = createdAt => {
     ipc.callMain('open-export', createdAt);
-  }
+  };
 }

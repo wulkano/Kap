@@ -8,10 +8,9 @@ const DEFAULT_EDITOR_WIDTH = 768;
 const DEFAULT_EDITOR_HEIGHT = 480;
 
 export const useEditorWindowSizeEffect = (isConversionWindowState: boolean) => {
-  const previousWindowSizeRef = useRef<{width: number, height: number}>();
+  const previousWindowSizeRef = useRef<{width: number; height: number}>();
 
   useEffect(() => {
-    console.log('In with', isConversionWindowState, previousWindowSizeRef.current);
     if (!previousWindowSizeRef.current) {
       previousWindowSizeRef.current = {
         width: DEFAULT_EDITOR_WIDTH,
@@ -29,9 +28,13 @@ export const useEditorWindowSizeEffect = (isConversionWindowState: boolean) => {
         height: bounds.height
       };
 
-      window.setBounds(resizeKeepingCenter(bounds, {width: CONVERSION_WIDTH, height: CONVERSION_HEIGHT}));
+      window.setBounds(resizeKeepingCenter(bounds, {width: CONVERSION_WIDTH, height: CONVERSION_HEIGHT}), true);
+      window.setResizable(false);
+      window.setFullScreenable(false);
     } else {
-      window.setBounds(resizeKeepingCenter(bounds, previousWindowSizeRef.current));
+      window.setResizable(true);
+      window.setFullScreenable(true);
+      window.setBounds(resizeKeepingCenter(bounds, previousWindowSizeRef.current), true);
     }
   }, [isConversionWindowState]);
-}
+};

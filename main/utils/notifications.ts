@@ -17,7 +17,7 @@ interface NotificationOptions extends NotificationConstructorOptions {
 type NotificationPromise = Promise<void> & {
   show: () => void;
   close: () => void;
-}
+};
 
 export const notify = (options: NotificationOptions): NotificationPromise => {
   const notification = new Notification(options);
@@ -27,7 +27,7 @@ export const notify = (options: NotificationOptions): NotificationPromise => {
   const promise = new Promise(resolve => {
     if (options.click && typeof options.click === 'function') {
       notification.on('click', () => {
-        resolve(options.click?.())
+        resolve(options.click?.());
       });
     }
 
@@ -36,7 +36,7 @@ export const notify = (options: NotificationOptions): NotificationPromise => {
         const button = options.actions?.[index];
 
         if (button?.action && typeof button?.action === 'function') {
-          resolve(button?.action?.())
+          resolve(button?.action?.());
         } else {
           resolve(index);
         }
@@ -49,16 +49,16 @@ export const notify = (options: NotificationOptions): NotificationPromise => {
   });
 
   promise.then(() => {
-    notifications.delete(notification)
+    notifications.delete(notification);
   });
 
   (promise as NotificationPromise).show = () => {
     notification.show();
-  }
+  };
 
   (promise as NotificationPromise).close = () => {
     notification.close();
-  }
+  };
 
   if (options.show ?? true) {
     notification.show();

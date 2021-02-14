@@ -2,14 +2,14 @@ import {RemoteState, getChannelNames} from './utils';
 import {ipcMain} from 'electron-better-ipc';
 import {BrowserWindow} from 'electron';
 
-const setupRemoteState = async <State, Actions extends {[key: string]: Function}>(name: string, callback: RemoteState<State, Actions>) => {
+// eslint-disable-next-line @typescript-eslint/ban-types
+const setupRemoteState = async <State, Actions extends Record<string, Function>>(name: string, callback: RemoteState<State, Actions>) => {
   const channelNames = getChannelNames(name);
 
   const renderers = new Map<string, BrowserWindow>();
 
   const sendUpdate = async (state?: State, id?: string) => {
     if (id) {
-      console.log('got update', state);
       const renderer = renderers.get(id);
 
       if (renderer) {
@@ -24,7 +24,7 @@ const setupRemoteState = async <State, Actions extends {[key: string]: Function}
         ipcMain.callRenderer(renderer, channelNames.stateUpdated, state ?? (await getState?.(windowId)));
       }
     }
-  }
+  };
 
   const {getState, actions = {}, subscribe} = await callback(sendUpdate);
 
@@ -50,6 +50,6 @@ const setupRemoteState = async <State, Actions extends {[key: string]: Function}
     const id = customId || window.id.toString();
     return (actions as any)[key]?.(data, id);
   });
-}
+};
 
 export default setupRemoteState;

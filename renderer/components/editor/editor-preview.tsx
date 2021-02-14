@@ -1,17 +1,17 @@
-import useWindowState from '../../hooks/window-state';
 import TrafficLights from '../traffic-lights';
 import VideoPlayer from './video-player';
 import Options from './options';
+import useEditorWindowState from 'hooks/editor/use-editor-window-state';
 
 const EditorPreview = () => {
-  const {title = 'Editor'} = useWindowState();
+  const {title = 'Editor'} = useEditorWindowState();
 
   return (
     <div className="preview-container">
       <div className="preview-hover-container">
         <div className="title-bar">
           <div className="title-bar-container">
-            <TrafficLights />
+            <TrafficLights/>
             <div className="title">{title}</div>
           </div>
         </div>

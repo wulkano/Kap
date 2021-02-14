@@ -2,9 +2,9 @@ import React, {FunctionComponent, useRef} from 'react';
 import {SvgProps} from 'vectors/svg';
 
 interface IconMenuProps extends SvgProps {
-  onOpen: (options: {x: number, y: number}) => void,
-  icon: FunctionComponent<SvgProps>,
-  fillParent?: boolean
+  onOpen: (options: {x: number; y: number}) => void;
+  icon: FunctionComponent<SvgProps>;
+  fillParent?: boolean;
 }
 
 const IconMenu: FunctionComponent<IconMenuProps> = ({onOpen, icon: Icon, fillParent, ...iconProps}) => {
@@ -18,11 +18,11 @@ const IconMenu: FunctionComponent<IconMenuProps> = ({onOpen, icon: Icon, fillPar
       x: Math.round(left),
       y: Math.round(bottom)
     });
-  }
+  };
 
   return (
     <div ref={container} onClick={openMenu}>
-      <Icon {...iconProps} />
+      <Icon {...iconProps}/>
       <style jsx>{`
           display: flex;
           align-items: center;
@@ -31,7 +31,7 @@ const IconMenu: FunctionComponent<IconMenuProps> = ({onOpen, icon: Icon, fillPar
           height: ${fillParent ? '100%' : 'none'}
         `}</style>
     </div>
-  )
-}
+  );
+};
 
 export default IconMenu;

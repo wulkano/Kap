@@ -20,8 +20,8 @@ const RightControls = () => {
       <div className="mute">
         {
           isMuted || !hasAudio ?
-            <VolumeOffIcon shadow fill={unmuteColor} hoverFill={unmuteColor} tabIndex={canUnmute ? undefined : -1} onClick={canUnmute ? unmute : undefined} /> :
-            <VolumeHighIcon shadow fill="#fff" hoverFill="#fff" onClick={mute} />
+            <VolumeOffIcon shadow fill={unmuteColor} hoverFill={unmuteColor} tabIndex={canUnmute ? undefined : -1} onClick={canUnmute ? unmute : undefined}/> :
+            <VolumeHighIcon shadow fill="#fff" hoverFill="#fff" onClick={mute}/>
         }
       </div>
       <style jsx>{`

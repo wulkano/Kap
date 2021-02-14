@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import {connect, CursorContainer, CropperContainer} from '../../containers';
 
 class Cursor extends React.Component {
-  remote = electron.remote || false
+  remote = electron.remote || false;
 
   render() {
     if (!this.remote) {

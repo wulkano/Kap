@@ -1,14 +1,14 @@
 'use strict';
 
 import {BrowserWindow, dialog} from 'electron';
-import {ShareServiceContext} from '../../service-context';
-import settings from '../../common/settings';
+import {ShareServiceContext} from '../service-context';
+import {settings} from '../../common/settings';
 import makeDir from 'make-dir';
 import {Format} from '../../common/types';
 import path from 'path';
 
 const {Notification, shell} = require('electron');
-const moveFile = require('move-file');
+const cpFile = require('cp-file');
 
 const action = async (context: ShareServiceContext & {targetFilePath: string}) => {
   const temporaryFilePath = await context.filePath();
@@ -18,7 +18,9 @@ const action = async (context: ShareServiceContext & {targetFilePath: string}) =
     return;
   }
 
-  await moveFile(temporaryFilePath, context.targetFilePath);
+  // Copy the file, so we can still use the temporary source for future exports
+  // The temporary file will be cleaned up on app exit, or automatic system cleanup
+  await cpFile(temporaryFilePath, context.targetFilePath);
 
   const notification = new Notification({
     title: 'File saved successfully!',
@@ -66,10 +68,6 @@ export const askForTargetFilePath = async (
 
   const defaultPath = path.join(lastSavedDirectory ?? kapturesDir, fileName);
 
-  console.log('y u no work', fileName);
-  console.log(window);
-  console.log(defaultPath);
-
   const filters = filterMap.get(format);
 
   const {filePath} = await dialog.showSaveDialog(window, {
@@ -84,5 +82,5 @@ export const askForTargetFilePath = async (
   }
 
   return undefined;
-}
+};
 

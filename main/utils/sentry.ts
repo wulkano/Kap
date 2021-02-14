@@ -3,7 +3,7 @@
 import {app} from 'electron';
 import {is} from 'electron-util';
 import * as Sentry from '@sentry/electron';
-import settings from '../common/settings';
+import {settings} from '../common/settings';
 
 const SENTRY_PUBLIC_DSN = 'https://2dffdbd619f34418817f4db3309299ce@sentry.io/255536';
 

@@ -1,7 +1,7 @@
 
 export const resizeKeepingCenter = (
   bounds: Electron.Rectangle,
-  newSize: {width: number, height: number}
+  newSize: {width: number; height: number}
 ): Electron.Rectangle => {
   const cx = Math.round(bounds.x + (bounds.width / 2));
   const cy = Math.round(bounds.y + (bounds.height / 2));

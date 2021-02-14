@@ -9,5 +9,5 @@ const formats = new Map([
 ]);
 
 export const prettifyFormat = (format: Format): string => {
-  return formats.get(format) as string;
-}
+  return formats.get(format)!;
+};

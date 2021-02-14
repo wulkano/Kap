@@ -1,4 +1,4 @@
-import {App, Format} from './base'
+import {App, Format} from './base';
 
 export type CreateConversionOptions = {
   filePath: string;
@@ -8,15 +8,15 @@ export type CreateConversionOptions = {
     share: {
       pluginName: string;
       serviceTitle: string;
-      app?: App
-    }
-  }
-}
+      app?: App;
+    };
+  };
+};
 
 export type EditServiceInfo = {
   pluginName: string;
   serviceTitle: string;
-}
+};
 
 export type ConversionOptions = {
   startTime: number;
@@ -27,7 +27,7 @@ export type ConversionOptions = {
   shouldCrop: boolean;
   shouldMute: boolean;
   editService?: EditServiceInfo;
-}
+};
 
 export enum ConversionStatus {
   idle = 'idle',

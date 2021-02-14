@@ -1,3 +1,4 @@
+import {Promisable} from 'type-fest';
 import {useState, useEffect, useRef} from 'react';
 import {ipcRenderer} from 'electron-better-ipc';
 
@@ -11,12 +12,14 @@ export const getChannelNames = (name: string) => ({
   stateUpdated: getChannelName(name, 'state-updated')
 });
 
-export type RemoteState<State, Actions extends {[key: string]: Function}> = (sendUpdate: (state?: State, id?: string) => void) => {
-  getState: (id?: string) => State,
-  actions: Actions
-}
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type RemoteState<State, Actions extends Record<string, Function>> = (sendUpdate: (state?: State, id?: string) => void) => Promisable<{
+  getState: (id?: string) => Promisable<State>;
+  actions: Actions;
+  subscribe?: (id?: string) => undefined | (() => void);
+}>;
 
-const useRemoteState = <Callback extends RemoteState<any, any>>(
+const createRemoteStateHook = <Callback extends RemoteState<any, any>>(
   name: string,
   initialState?: Callback extends RemoteState<infer State, any> ? State : never
 ): (id?: string) => (
@@ -39,17 +42,18 @@ const useRemoteState = <Callback extends RemoteState<any, any>>(
       const cleanup = ipcRenderer.answerMain(channelNames.stateUpdated, setState);
 
       (async () => {
-        const actionKeys = (await ipcRenderer.callMain(channelNames.subscribe, id)) as string[];
+        const actionKeys = (await ipcRenderer.callMain<string, string[]>(channelNames.subscribe, id));
 
+        // eslint-disable-next-line unicorn/no-array-reduce
         const actions = actionKeys.reduce((acc, key) => ({
           ...acc,
-          [key]: (data: any) => ipcRenderer.callMain(channelNames.callAction, {key, data, id})
+          [key]: async (data: any) => ipcRenderer.callMain(channelNames.callAction, {key, data, id})
         }), {});
 
         const getState = async () => {
-          const newState = (await ipcRenderer.callMain(channelNames.getState, id)) as typeof state;
+          const newState = (await ipcRenderer.callMain(channelNames.getState, id));
           setState(newState);
-        }
+        };
 
         actionsRef.current = {
           ...actions,
@@ -68,7 +72,7 @@ const useRemoteState = <Callback extends RemoteState<any, any>>(
       isLoading,
       state
     };
-  }
-}
+  };
+};
 
-export default useRemoteState;
+export default createRemoteStateHook;

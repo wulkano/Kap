@@ -2,7 +2,7 @@
 import PCancelable from 'p-cancelable';
 import {Format} from '../common/types';
 import {Schema} from '../utils/ajv';
-import {EditServiceContext, ShareServiceContext} from './service-context';
+import {EditServiceContext, RecordServiceContext, ShareServiceContext} from './service-context';
 
 export interface Service<Config = any> {
   title: string;
@@ -19,10 +19,11 @@ export interface EditService<Config = any> extends Service<Config> {
   action: (context: EditServiceContext) => PromiseLike<void> | PCancelable<void>;
 }
 
-export interface RecordService<Config = any> extends Service<Config> {
-  willStartRecording?: () => {};
-  didStartRecording?: () => {};
-  didStopRecording?: () => {};
-  willEnable?: () => {};
-  cleanUp?: () => {};
-}
+export type RecordServiceHook = 'willStartRecording' | 'didStartRecording' | 'didStopRecording';
+
+export type RecordService<Config = any> = Service<Config> & {
+  [key in RecordServiceHook]: ((context: RecordServiceContext<any>) => PromiseLike<void>) | undefined;
+} & {
+  willEnable?: () => PromiseLike<boolean>;
+  cleanUp?: (persistedState: Record<string, unknown>) => void;
+};

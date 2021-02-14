@@ -11,7 +11,7 @@ const useVideoTime = () => {
 
   const setVideoRef = (video: HTMLVideoElement) => {
     videoRef.current = video;
-  }
+  };
 
   const videoProps = {
     onLoadedMetadata: () => {
@@ -26,11 +26,12 @@ const useVideoTime = () => {
   const updateTime = (time: number, ignoreElement = false) => {
     if (time >= endTime && !videoRef.current.paused) {
       videoRef.current.currentTime = startTime;
-      setCurrentTime(startTime)
+      setCurrentTime(startTime);
     } else {
       if (!ignoreElement) {
         videoRef.current.currentTime = time;
       }
+
       setCurrentTime(time);
     }
   };
@@ -63,7 +64,7 @@ const useVideoTime = () => {
     return () => {
       clearInterval(interval);
     };
-  }, [startTime, endTime])
+  }, [startTime, endTime]);
 
   return {
     startTime,

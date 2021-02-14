@@ -16,12 +16,12 @@ export interface ConvertOptions {
   editService?: {
     pluginName: string;
     serviceTitle: string;
-  }
+  };
 }
 
 export const makeEven = (n: number) => 2 * Math.round(n / 2);
 
-export const areDimensionsEven = ({width, height}: {width: number, height: number}) => width % 2 === 0 && height % 2 === 0;
+export const areDimensionsEven = ({width, height}: {width: number; height: number}) => width % 2 === 0 && height % 2 === 0;
 
 export const extractProgressFromStderr = (stderr: string, conversionStartTime: number, durationMs: number) => {
   const conversionDuration = Date.now() - conversionStartTime;
@@ -50,7 +50,7 @@ export const extractProgressFromStderr = (stderr: string, conversionStartTime: n
   return undefined;
 };
 
-type ArgType = string[] | string | { args: string[], if: boolean };
+type ArgType = string[] | string | { args: string[]; if: boolean };
 
 // Resolve conditional args
 //

@@ -7,7 +7,7 @@ import path from 'path';
 
 import {track} from '../common/analytics';
 import {conditionalArgs, extractProgressFromStderr} from './utils';
-import settings from '../common/settings';
+import {settings} from '../common/settings';
 
 const ffmpeg = require('@ffmpeg-installer/ffmpeg');
 const gifsicle = require('gifsicle');
@@ -33,12 +33,13 @@ export interface ProcessOptions {
 }
 
 const defaultProcessOptions = {
-  shouldTrack: true,
-}
+  shouldTrack: true
+};
 
 const createProcess = (mode: Mode) => {
-  const program = modes.get(mode) as string;
+  const program = modes.get(mode)!;
 
+  // eslint-disable-next-line @typescript-eslint/promise-function-async
   return (outputPath: string, options: ProcessOptions, args: string[]) => {
     const {
       shouldTrack,
@@ -55,7 +56,7 @@ const createProcess = (mode: Mode) => {
       if (shouldTrack) {
         track(`file/export/${modeName}/${eventName}`);
       }
-    }
+    };
 
     return new PCancelable<string>((resolve, reject, onCancel) => {
       const runner = execa(program, args);
@@ -83,7 +84,7 @@ const createProcess = (mode: Mode) => {
       const failWithError = (reason: unknown) => {
         trackConversionEvent('failed');
         reject(reason);
-      }
+      };
 
       runner.on('error', failWithError);
 
@@ -92,18 +93,19 @@ const createProcess = (mode: Mode) => {
           trackConversionEvent('completed');
           resolve(outputPath);
         } else {
-          failWithError(new Error(`${program} exited with code: ${code}\n\n${stderr}`));
+          failWithError(new Error(`${program} exited with code: ${code ?? 0}\n\n${stderr}`));
         }
       });
 
       runner.catch(failWithError);
     });
-  }
-}
+  };
+};
 
 export const convert = createProcess(Mode.convert);
 const compressFunction = createProcess(Mode.compress);
 
+// eslint-disable-next-line @typescript-eslint/promise-function-async
 export const compress = (outputPath: string, options: ProcessOptions, args: string[]) => {
   const useLossy = settings.get('lossyCompression', false);
 
@@ -118,9 +120,11 @@ export const mute = PCancelable.fn(async (inputPath: string, onCancel: PCancelab
   const mutedPath = tempy.file({extension: path.extname(inputPath)});
 
   const converter = convert(mutedPath, {shouldTrack: false}, [
-    '-i', inputPath,
+    '-i',
+    inputPath,
     '-an',
-    '-vcodec', 'copy',
+    '-vcodec',
+    'copy',
     mutedPath
   ]);
 

@@ -2,9 +2,10 @@ import PCancelable from 'p-cancelable';
 import tempy from 'tempy';
 import {compress, convert} from './process';
 import {areDimensionsEven, conditionalArgs, ConvertOptions, makeEven} from './utils';
-import settings from '../common/settings';
+import {settings} from '../common/settings';
 import os from 'os';
 import {Format} from '../common/types';
+import fs from 'fs';
 
 // `time ffmpeg -i original.mp4 -vf fps=30,scale=480:-1::flags=lanczos,palettegen palette.png`
 // `time ffmpeg -i original.mp4 -i palette.png -filter_complex 'fps=30,scale=-1:-1:flags=lanczos[x]; [x][1:v]paletteuse' palette.gif`
@@ -16,8 +17,10 @@ const convertToGif = PCancelable.fn(async (options: ConvertOptions, onCancel: PC
     '-vf', `fps=${options.fps}${options.shouldCrop ? `,scale=${options.width}:${options.height}:flags=lanczos` : ''},palettegen`,
     {
       args: [
-        '-ss', options.startTime.toString(),
-        '-to', options.endTime.toString()
+        '-ss',
+        options.startTime.toString(),
+        '-to',
+        options.endTime.toString()
       ],
       if: options.shouldCrop
     },
@@ -30,21 +33,42 @@ const convertToGif = PCancelable.fn(async (options: ConvertOptions, onCancel: PC
 
   await paletteProcess;
 
+  // Sometimes if the clip is too short or fps too low, the palette is not generated
+  const hasPalette = fs.existsSync(palettePath);
+
   const shouldLoop = settings.get('loopExports');
 
   const conversionProcess = convert(options.outputPath, {
-    onProgress: (progress, estimate) => options.onProgress('Converting', progress, estimate),
+    onProgress: (progress, estimate) => {
+      options.onProgress('Converting', progress, estimate);
+    },
     startTime: options.startTime,
     endTime: options.endTime
   }, conditionalArgs(
     '-i', options.inputPath,
-    '-i', palettePath,
-    '-filter_complex', `fps=${options.fps}${options.shouldCrop ? `,scale=${options.width}:${options.height}:flags=lanczos` : ''}[x]; [x][1:v]paletteuse`,
+    {
+      args: [
+        '-i',
+        palettePath,
+        '-filter_complex',
+        `fps=${options.fps}${options.shouldCrop ? `,scale=${options.width}:${options.height}:flags=lanczos` : ''}[x]; [x][1:v]paletteuse`
+      ],
+      if: hasPalette
+    },
+    {
+      args: [
+        '-vf',
+        `fps=${options.fps}${options.shouldCrop ? `,scale=${options.width}:${options.height}:flags=lanczos` : ''}`
+      ],
+      if: !hasPalette
+    },
     '-loop', shouldLoop ? '0' : '-1', // 0 == forever; -1 == no loop
     {
       args: [
-        '-ss', options.startTime.toString(),
-        '-to', options.endTime.toString()
+        '-ss',
+        options.startTime.toString(),
+        '-to',
+        options.endTime.toString()
       ],
       if: options.shouldCrop
     },
@@ -58,7 +82,9 @@ const convertToGif = PCancelable.fn(async (options: ConvertOptions, onCancel: PC
   await conversionProcess;
 
   const compressProcess = compress(options.outputPath, {
-    onProgress: (progress, estimate) => options.onProgress('Compressing', progress, estimate),
+    onProgress: (progress, estimate) => {
+      options.onProgress('Compressing', progress, estimate);
+    },
     startTime: options.startTime,
     endTime: options.endTime
   }, [
@@ -75,8 +101,11 @@ const convertToGif = PCancelable.fn(async (options: ConvertOptions, onCancel: PC
   return options.outputPath;
 });
 
+// eslint-disable-next-line @typescript-eslint/promise-function-async
 const convertToMp4 = (options: ConvertOptions) => convert(options.outputPath, {
-  onProgress: (progress, estimate) => options.onProgress('Converting', progress, estimate),
+  onProgress: (progress, estimate) => {
+    options.onProgress('Converting', progress, estimate);
+  },
   startTime: options.startTime,
   endTime: options.endTime
 }, conditionalArgs(
@@ -88,17 +117,23 @@ const convertToMp4 = (options: ConvertOptions) => convert(options.outputPath, {
   },
   {
     args: [
-      '-s', `${makeEven(options.width)}x${makeEven(options.height)}`,
-      '-ss', options.startTime.toString(),
-      '-to', options.endTime.toString()
+      '-s',
+      `${makeEven(options.width)}x${makeEven(options.height)}`,
+      '-ss',
+      options.startTime.toString(),
+      '-to',
+      options.endTime.toString()
     ],
     if: options.shouldCrop || !areDimensionsEven(options)
   },
   options.outputPath
 ));
 
+// eslint-disable-next-line @typescript-eslint/promise-function-async
 const convertToWebm = (options: ConvertOptions) => convert(options.outputPath, {
-  onProgress: (progress, estimate) => options.onProgress('Converting', progress, estimate),
+  onProgress: (progress, estimate) => {
+    options.onProgress('Converting', progress, estimate);
+  },
   startTime: options.startTime,
   endTime: options.endTime
 }, conditionalArgs(
@@ -119,17 +154,23 @@ const convertToWebm = (options: ConvertOptions) => convert(options.outputPath, {
   },
   {
     args: [
-      '-s', `${makeEven(options.width)}x${makeEven(options.height)}`,
-      '-ss', options.startTime.toString(),
-      '-to', options.endTime.toString()
+      '-s',
+      `${makeEven(options.width)}x${makeEven(options.height)}`,
+      '-ss',
+      options.startTime.toString(),
+      '-to',
+      options.endTime.toString()
     ],
     if: options.shouldCrop || !areDimensionsEven(options)
   },
   options.outputPath
 ));
 
+// eslint-disable-next-line @typescript-eslint/promise-function-async
 const convertToAv1 = (options: ConvertOptions) => convert(options.outputPath, {
-  onProgress: (progress, estimate) => options.onProgress('Converting', progress, estimate),
+  onProgress: (progress, estimate) => {
+    options.onProgress('Converting', progress, estimate);
+  },
   startTime: options.startTime,
   endTime: options.endTime
 }, conditionalArgs(
@@ -151,17 +192,23 @@ const convertToAv1 = (options: ConvertOptions) => convert(options.outputPath, {
   },
   {
     args: [
-      '-s', `${makeEven(options.width)}x${makeEven(options.height)}`,
-      '-ss', options.startTime.toString(),
-      '-to', options.endTime.toString()
+      '-s',
+      `${makeEven(options.width)}x${makeEven(options.height)}`,
+      '-ss',
+      options.startTime.toString(),
+      '-to',
+      options.endTime.toString()
     ],
     if: options.shouldCrop || !areDimensionsEven(options)
   },
   options.outputPath
 ));
 
+// eslint-disable-next-line @typescript-eslint/promise-function-async
 const convertToApng = (options: ConvertOptions) => convert(options.outputPath, {
-  onProgress: (progress, estimate) => options.onProgress('Converting', progress, estimate),
+  onProgress: (progress, estimate) => {
+    options.onProgress('Converting', progress, estimate);
+  },
   startTime: options.startTime,
   endTime: options.endTime
 }, conditionalArgs(
@@ -175,16 +222,21 @@ const convertToApng = (options: ConvertOptions) => convert(options.outputPath, {
   },
   {
     args: [
-      '-ss', options.startTime.toString(),
-      '-to', options.endTime.toString()
+      '-ss',
+      options.startTime.toString(),
+      '-to',
+      options.endTime.toString()
     ],
     if: options.shouldCrop
   },
   options.outputPath
 ));
 
+// eslint-disable-next-line @typescript-eslint/promise-function-async
 export const crop = (options: ConvertOptions) => convert(options.outputPath, {
-  onProgress: (progress, estimate) => options.onProgress('Cropping', progress, estimate),
+  onProgress: (progress, estimate) => {
+    options.onProgress('Cropping', progress, estimate);
+  },
   startTime: options.startTime,
   endTime: options.endTime
 }, conditionalArgs(

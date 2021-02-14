@@ -47,10 +47,9 @@ export default class CropperContainer extends Container {
       return;
     }
 
-    const {default: settings, getSelectedInputDeviceId} = this.remote.require('./common/settings');
+    const {settings} = this.remote.require('./common/settings');
     this.settings = settings;
-    console.log(getSelectedInputDeviceId);
-    this.settings.getSelectedInputDeviceId = getSelectedInputDeviceId;
+    this.settings.getSelectedInputDeviceId = this.remote.require('./utils/devices').getSelectedInputDeviceId;
 
     this.state = {
       isRecording: false,
@@ -96,15 +95,15 @@ export default class CropperContainer extends Container {
       ratio
     });
     this.actionBarContainer.setInputValues({width, height});
-  }
+  };
 
   willStartRecording = () => {
     this.setState({willStartRecording: true});
-  }
+  };
 
   setRecording = () => {
     this.setState({isRecording: true});
-  }
+  };
 
   setActive = isActive => {
     const updates = {isActive};
@@ -120,7 +119,7 @@ export default class CropperContainer extends Container {
     }
 
     this.setState(updates);
-  }
+  };
 
   updateSettings = updates => {
     const {x, y, width, height, ratio, displayId} = this.state;
@@ -135,7 +134,7 @@ export default class CropperContainer extends Container {
       displayId
     });
     this.setState(updates);
-  }
+  };
 
   setSize = ({width: defaultWidth, height: defaultHeight}) => {
     let {width, height} = this.state;
@@ -145,15 +144,15 @@ export default class CropperContainer extends Container {
     this.settings.set('cropper', updates);
     this.setState(updates);
     this.actionBarContainer.setInputValues(updates);
-  }
+  };
 
   bindCursor = cursorContainer => {
     this.cursorContainer = cursorContainer;
-  }
+  };
 
   bindActionBar = actionBarContainer => {
     this.actionBarContainer = actionBarContainer;
-  }
+  };
 
   setBounds = (bounds, {save = true, ignoreRatioLocked} = {}) => {
     if (bounds) {
@@ -176,7 +175,7 @@ export default class CropperContainer extends Container {
     } else {
       this.actionBarContainer.setInputValues({});
     }
-  }
+  };
 
   setRatio = ratio => {
     const {x, y, width, screenHeight} = this.state;
@@ -195,7 +194,7 @@ export default class CropperContainer extends Container {
     this.updateSettings(updates);
     this.actionBarContainer.setInputValues(updates);
     this.actionBarContainer.toggleRatioLock(true);
-  }
+  };
 
   swapDimensions = () => {
     const {x, y, width, height, ratio, screenHeight} = this.state;
@@ -214,21 +213,23 @@ export default class CropperContainer extends Container {
 
     this.updateSettings(updates);
     this.actionBarContainer.setInputValues(updates);
-  }
+  };
 
   selectApp = app => {
     const {x, y, width, height, ownerName} = app;
     this.setState({selectedApp: ownerName});
     this.setBounds({x, y, width, height}, {ignoreRatioLocked: true});
-  }
+  };
 
   unselectApp = () => {
     if (this.state.selectedApp) {
       this.setState({selectedApp: ''});
     }
-  }
+  };
 
-  toggleResizeFromCenter = resizeFromCenter => this.setState({resizeFromCenter});
+  toggleResizeFromCenter = resizeFromCenter => {
+    this.setState({resizeFromCenter});
+  };
 
   enterFullscreen = () => {
     const {x, y, width, height, screenWidth, screenHeight} = this.state;
@@ -242,18 +243,18 @@ export default class CropperContainer extends Container {
       showHandles: false,
       original: {x, y, width, height}
     });
-  }
+  };
 
   exitFullscreen = () => {
     const {original} = this.state;
     this.setState({isFullscreen: false, showHandles: true, ...original});
-  }
+  };
 
   startPicking = ({pageX, pageY}) => {
     this.unselectApp();
     this.setState({isPicking: true, original: {pageX, pageY}});
     this.cursorContainer.addCursorObserver(this.pick);
-  }
+  };
 
   pick = ({pageX, pageY}) => {
     const {original, isPicking} = this.state;
@@ -276,7 +277,7 @@ export default class CropperContainer extends Container {
       this.setOriginal();
       this.cursorContainer.addCursorObserver(this.resize);
     }
-  }
+  };
 
   stopPicking = () => {
     if (this.state.isPicking) {
@@ -284,12 +285,12 @@ export default class CropperContainer extends Container {
     } else {
       this.cursorContainer.removeCursorObserver(this.pick);
     }
-  }
+  };
 
   setOriginal = () => {
     const {x, y, width, height} = this.state;
     this.setState({original: {x, y, width, height}});
-  }
+  };
 
   startResizing = currentHandle => {
     if (!this.state.isFullscreen) {
@@ -298,7 +299,7 @@ export default class CropperContainer extends Container {
       this.setState({currentHandle, isResizing: true});
       this.cursorContainer.addCursorObserver(this.resize);
     }
-  }
+  };
 
   stopResizing = () => {
     if (!this.state.isFullscreen && this.state.isResizing) {
@@ -313,7 +314,7 @@ export default class CropperContainer extends Container {
         ratio
       });
     }
-  }
+  };
 
   startMoving = ({pageX, pageY}) => {
     if (!this.state.isFullscreen) {
@@ -321,7 +322,7 @@ export default class CropperContainer extends Container {
       this.setState({isMoving: true, showHandles: false, offsetX: pageX, offsetY: pageY});
       this.cursorContainer.addCursorObserver(this.move);
     }
-  }
+  };
 
   stopMoving = () => {
     if (!this.state.isFullscreen && this.state.isMoving) {
@@ -331,7 +332,7 @@ export default class CropperContainer extends Container {
       this.cursorContainer.removeCursorObserver(this.move);
       this.updateSettings({x, y});
     }
-  }
+  };
 
   move = ({pageX, pageY}) => {
     const {x, y, offsetX, offsetY, width, height, screenWidth, screenHeight} = this.state;
@@ -350,7 +351,7 @@ export default class CropperContainer extends Container {
     }
 
     this.setBounds(updates, {save: false});
-  }
+  };
 
   resize = ({pageX, pageY}) => {
     const {currentHandle, x, y, width, height, original, ratio, screenWidth, screenHeight, resizeFromCenter} = this.state;
@@ -514,5 +515,5 @@ export default class CropperContainer extends Container {
     }
 
     this.setBounds(updates, {save: false});
-  }
+  };
 }

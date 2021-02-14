@@ -10,13 +10,13 @@ class KeyboardNumberInput extends React.Component {
 
   getRef = () => {
     return this.inputRef;
-  }
+  };
 
   render() {
     const {onChange, min, max, ...rest} = this.props;
 
     return (
-      <input {...rest} onChange={onChange} ref={this.inputRef} type="text" onKeyDown={handleInputKeyPress(onChange, min, max)}/>
+      <input {...rest} ref={this.inputRef} type="text" onChange={onChange} onKeyDown={handleInputKeyPress(onChange, min, max)}/>
     );
   }
 }
@@ -24,7 +24,8 @@ class KeyboardNumberInput extends React.Component {
 KeyboardNumberInput.propTypes = {
   onKeyDown: PropTypes.elementType,
   min: PropTypes.number,
-  max: PropTypes.number
+  max: PropTypes.number,
+  onChange: PropTypes.elementType
 };
 
 export default KeyboardNumberInput;

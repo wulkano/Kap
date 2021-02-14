@@ -1,7 +1,7 @@
 import {app, clipboard} from 'electron';
 import Store from 'electron-store';
 import got, {GotFn, GotPromise} from 'got';
-import {Format} from '../common/types';
+import {ApertureOptions, Format} from '../common/types';
 import {InstalledPlugin} from './plugin';
 import {addPluginPromise} from '../utils/deep-linking';
 import {notify} from '../utils/notifications';
@@ -13,10 +13,10 @@ interface ServiceContextOptions {
 }
 
 class ServiceContext {
-  private plugin: InstalledPlugin;
-  requests: GotPromise<any>[] = [];
-
+  requests: Array<GotPromise<any>> = [];
   config: Store;
+
+  private readonly plugin: InstalledPlugin;
 
   constructor(options: ServiceContextOptions) {
     this.plugin = options.plugin;
@@ -27,11 +27,11 @@ class ServiceContext {
     const request = got(...args);
     this.requests.push(request);
     return request;
-  }
+  };
 
   copyToClipboard = (text: string) => {
     clipboard.writeText(text);
-  }
+  };
 
   notify = (text: string, action?: () => any) => {
     return notify({
@@ -39,17 +39,17 @@ class ServiceContext {
       title: this.plugin.isBuiltIn ? app.name : this.plugin.prettyName,
       click: action
     });
-  }
+  };
 
   openConfigFile = () => {
     this.config.openInEditor();
-  }
+  };
 
   waitForDeepLink = async () => {
     return new Promise(resolve => {
       addPluginPromise(this.plugin.name, resolve);
     });
-  }
+  };
 }
 
 interface ShareServiceContextOptions extends ServiceContextOptions {
@@ -62,9 +62,9 @@ interface ShareServiceContextOptions extends ServiceContextOptions {
 }
 
 export class ShareServiceContext extends ServiceContext {
-  private options: ShareServiceContextOptions;
-
   isCanceled = false;
+
+  private readonly options: ShareServiceContextOptions;
 
   constructor(options: ShareServiceContextOptions) {
     super(options);
@@ -83,13 +83,13 @@ export class ShareServiceContext extends ServiceContext {
     return `${this.options.defaultFileName}.${getFormatExtension(this.options.format)}`;
   }
 
-  filePath = (options: {fileType?: Format}) => {
+  filePath = async (options?: {fileType?: Format}) => {
     return this.options.filePath(options);
-  }
+  };
 
   setProgress = (text: string, percentage: number) => {
     this.options.onProgress(text, percentage);
-  }
+  };
 
   cancel = () => {
     this.isCanceled = true;
@@ -98,30 +98,30 @@ export class ShareServiceContext extends ServiceContext {
     for (const request of this.requests) {
       request.cancel();
     }
-  }
+  };
 }
 
 interface EditServiceContextOptions extends ServiceContextOptions {
   onProgress: (text: string, percentage: number) => void;
-  inputPath: string,
-  outputPath: string,
+  inputPath: string;
+  outputPath: string;
   exportOptions: {
-    width: number,
-    height: number,
-    format: Format,
-    fps: number,
-    duration: number,
-    isMuted: boolean,
-    loop: boolean
-  },
-  convert: (args: string[], text?: string) => PCancelable<void>,
+    width: number;
+    height: number;
+    format: Format;
+    fps: number;
+    duration: number;
+    isMuted: boolean;
+    loop: boolean;
+  };
+  convert: (args: string[], text?: string) => PCancelable<void>;
   onCancel: () => void;
 }
 
 export class EditServiceContext extends ServiceContext {
-  private options: EditServiceContextOptions;
-
   isCanceled = false;
+
+  private readonly options: EditServiceContextOptions;
 
   constructor(options: EditServiceContextOptions) {
     super(options);
@@ -146,7 +146,7 @@ export class EditServiceContext extends ServiceContext {
 
   setProgress = (text: string, percentage: number) => {
     this.options.onProgress(text, percentage);
-  }
+  };
 
   cancel = () => {
     this.isCanceled = true;
@@ -155,5 +155,36 @@ export class EditServiceContext extends ServiceContext {
     for (const request of this.requests) {
       request.cancel();
     }
+  };
+}
+
+export type RecordServiceState<PersistedState extends Record<string, unknown> = Record<string, unknown>> = {
+  persistedState?: PersistedState;
+};
+
+export interface RecordServiceContextOptions<State extends RecordServiceState> extends ServiceContextOptions {
+  apertureOptions: ApertureOptions;
+  state: State;
+  setRecordingName: (name: string) => void;
+}
+
+export class RecordServiceContext<State extends RecordServiceState> extends ServiceContext {
+  private readonly options: RecordServiceContextOptions<State>;
+
+  constructor(options: RecordServiceContextOptions<State>) {
+    super(options);
+    this.options = options;
+  }
+
+  get state() {
+    return this.options.state;
+  }
+
+  get apertureOptions() {
+    return this.options.apertureOptions;
+  }
+
+  get setRecordingName() {
+    return this.options.setRecordingName;
   }
 }

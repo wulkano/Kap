@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default () => {
+const Icon = () => {
   return (
     <div>
       <img src="/static/kap-icon.png"/>
@@ -18,3 +18,5 @@ export default () => {
     </div>
   );
 };
+
+export default Icon;

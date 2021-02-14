@@ -4,12 +4,10 @@ import {homedir} from 'os';
 import Store from 'electron-store';
 
 const {defaultInputDeviceId} = require('./constants');
-const {hasMicrophoneAccess} = require('./system-permissions');
-const {getAudioDevices, getDefaultInputDevice} = require('../utils/devices');
 const shortcutToAccelerator = require('../utils/shortcut-to-accelerator');
 
 export const shortcuts = {
-  triggerCropper: 'Toggle Kap',
+  triggerCropper: 'Toggle Kap'
 };
 
 const shortcutSchema = {
@@ -28,21 +26,21 @@ interface Settings {
   recordAudio: boolean;
   audioInputDeviceId?: string;
   cropperShortcut: {
-    metaKey: boolean,
-    altKey: boolean,
-    ctrlKey: boolean,
-    shiftKey: boolean,
-    character: string
+    metaKey: boolean;
+    altKey: boolean;
+    ctrlKey: boolean;
+    shiftKey: boolean;
+    character: string;
   };
   lossyCompression: boolean;
   enableShortcuts: boolean;
   shortcuts: {
     [key in keyof typeof shortcuts]: string
-  },
+  };
   version: string;
 }
 
-const store = new Store<Settings>({
+export const settings = new Store<Settings>({
   schema: {
     kapturesDir: {
       type: 'string',
@@ -118,6 +116,7 @@ const store = new Store<Settings>({
     },
     shortcuts: {
       type: 'object',
+      // eslint-disable-next-line unicorn/no-array-reduce
       properties: Object.keys(shortcuts).reduce((acc, key) => ({...acc, [key]: shortcutSchema}), {}),
       default: {}
     },
@@ -128,43 +127,17 @@ const store = new Store<Settings>({
   }
 });
 
-export default store;
-
 // TODO: Remove this when we feel like everyone has migrated
-if (store.has('recordKeyboardShortcut')) {
-  store.set('enableShortcuts', store.get('recordKeyboardShortcut'));
-  store.delete('recordKeyboardShortcut');
+if (settings.has('recordKeyboardShortcut')) {
+  settings.set('enableShortcuts', settings.get('recordKeyboardShortcut'));
+  settings.delete('recordKeyboardShortcut');
 }
 
 // TODO: Remove this when we feel like everyone has migrated
-if (store.has('cropperShortcut')) {
-  // TODO: Investigate type for dot notation
-  store.set('shortcuts.triggerCropper' as any, shortcutToAccelerator(store.get('cropperShortcut')));
-  store.delete('cropperShortcut');
+if (settings.has('cropperShortcut')) {
+  settings.set('shortcuts.triggerCropper', shortcutToAccelerator(settings.get('cropperShortcut')));
+  settings.delete('cropperShortcut');
 }
 
-store.set('cropper' as any, {});
-store.set('actionBar' as any, {});
-
-const audioInputDeviceId = store.get('audioInputDeviceId');
-
-if (hasMicrophoneAccess()) {
-  (async () => {
-    const devices = await getAudioDevices();
-
-    if (!devices.some((device: any) => device.id === audioInputDeviceId)) {
-      store.set('audioInputDeviceId', defaultInputDeviceId);
-    }
-  })();
-}
-
-export const getSelectedInputDeviceId = () => {
-  const audioInputDeviceId = store.get('audioInputDeviceId', defaultInputDeviceId);
-
-  if (audioInputDeviceId === defaultInputDeviceId) {
-    const device = getDefaultInputDevice();
-    return device && device.id;
-  }
-
-  return audioInputDeviceId;
-};
+settings.set('cropper' as any, {});
+settings.set('actionBar' as any, {});

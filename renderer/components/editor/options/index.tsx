@@ -4,8 +4,8 @@ import RightOptions from './right';
 const Options = () => {
   return (
     <div className="container">
-      <LeftOptions />
-      <RightOptions />
+      <LeftOptions/>
+      <RightOptions/>
       <style jsx>{`
           .container {
             display: flex;
@@ -23,6 +23,6 @@ const Options = () => {
         `}</style>
     </div>
   );
-}
+};
 
 export default Options;

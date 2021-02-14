@@ -1,7 +1,7 @@
 import {UseConversionState} from 'hooks/editor/use-conversion';
 
 const ConversionDetails = ({conversion}: {conversion: UseConversionState}) => {
-  const message = conversion?.message ?? "Loading…";
+  const message = conversion?.message ?? 'Loading…';
   const title = conversion?.title;
   const description = conversion?.description;
   const size = conversion?.size;
@@ -45,11 +45,15 @@ const ConversionDetails = ({conversion}: {conversion: UseConversionState}) => {
           flex: 1;
           display: flex;
           flex-direction: column;
+          overflow: hidden;
         }
 
         .title {
           font-weight: 500;
           font-size: 14px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .description {
@@ -60,6 +64,7 @@ const ConversionDetails = ({conversion}: {conversion: UseConversionState}) => {
         .size {
           font-size: 14px;
           flex-shrink: 0;
+          margin-left: 8px;
         }
       `}</style>
     </div>

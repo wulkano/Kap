@@ -18,7 +18,7 @@ class Overlay extends React.Component {
     width: 0,
     height: 0,
     isReady: false
-  }
+  };
 
   render() {
     const {

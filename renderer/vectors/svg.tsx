@@ -11,7 +11,7 @@ const defaultProps: SvgProps = {
   active: false,
   viewBox: '0 0 24 24',
   tabIndex: -1
-}
+};
 
 const stopPropagation = event => {
   event.stopPropagation();
@@ -90,8 +90,8 @@ const Svg: FunctionComponent<SvgProps> = props => {
             }
         `}</style>
     </div>
-  )
-}
+  );
+};
 
 export interface SvgProps {
   fill?: string;

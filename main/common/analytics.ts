@@ -2,7 +2,7 @@
 
 import util from 'electron-util';
 import {parse} from 'semver';
-import settings from './settings';
+import {settings} from './settings';
 
 const Insight = require('insight');
 const pkg = require('../../package');

@@ -1,10 +1,11 @@
 import Ajv, {Options} from 'ajv';
 import {Schema as JSONSchema} from 'electron-store';
+import {Except} from 'type-fest';
 
-export type Schema = Omit<JSONSchema, 'required'> & {
+export type Schema<T extends {'required': boolean} = any> = Except<JSONSchema<T>, 'required'> & {
   required?: boolean;
   customType?: string;
-}
+};
 
 const hexColorValidator = () => {
   return {
@@ -19,18 +20,20 @@ const keyboardShortcutValidator = () => {
   };
 };
 
-const validators: {[key: string]: (parentSchema: object) => object} = {
-  'hexColor': hexColorValidator,
-  'keyboardShortcut': keyboardShortcutValidator
-};
+// eslint-disable-next-line @typescript-eslint/ban-types
+const validators = new Map<string, (parentSchema: object) => object>([
+  ['hexColor', hexColorValidator],
+  ['keyboardShortcut', keyboardShortcutValidator]
+]);
 
 export default class CustomAjv extends Ajv {
   constructor(options: Options) {
     super(options);
 
     this.addKeyword('customType', {
-      macro: (schema, parentSchema) => {
-        const validator = validators[schema];
+      // eslint-disable-next-line @typescript-eslint/ban-types
+      macro: (schema: string, parentSchema: object) => {
+        const validator = validators.get(schema);
 
         if (!validator) {
           throw new Error(`No custom type found for ${schema}`);
@@ -40,7 +43,7 @@ export default class CustomAjv extends Ajv {
       },
       metaSchema: {
         type: 'string',
-        enum: [Object.keys(validators)]
+        enum: [...validators.keys()]
       }
     });
   }

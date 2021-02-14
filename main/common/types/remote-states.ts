@@ -14,20 +14,20 @@ export type ExportOptionsFormat = {
   format: Format;
   prettyFormat: string;
   lastUsed: number;
-}
+};
 
 export type ExportOptionsEditService = {
   title: string;
   pluginName: string;
   pluginPath: string;
   hasConfig: boolean;
-}
+};
 
 export type ExportOptions = {
   formats: ExportOptionsFormat[];
   editServices: ExportOptionsEditService[];
   fpsHistory: {[key in Format]: number};
-}
+};
 
 export type EditorOptionsRemoteState = (sendUpdate: (state: ExportOptions) => void) => {
   actions: {
@@ -41,7 +41,7 @@ export type EditorOptionsRemoteState = (sendUpdate: (state: ExportOptions) => vo
     }) => void;
   };
   getState: () => ExportOptions;
-}
+};
 
 export interface ConversionState {
   title: string;
@@ -55,8 +55,8 @@ export interface ConversionState {
 
 export type ConversionRemoteState = (sendUpdate: (state: ConversionState, id: string) => void) => {
   actions: {
-    copy: (_?: undefined, conversionId?: string) => void
-    cancel: (_?: undefined, conversionId?: string) => void
-  },
-  getState: (conversionId: string) => ConversionState | undefined
-}
+    copy: (_?: undefined, conversionId?: string) => void;
+    cancel: (_?: undefined, conversionId?: string) => void;
+  };
+  getState: (conversionId: string) => ConversionState | undefined;
+};

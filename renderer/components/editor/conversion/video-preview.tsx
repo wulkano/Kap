@@ -1,17 +1,26 @@
 import {CancelIcon, SpinnerIcon} from 'vectors';
-import useWindowState from 'hooks/window-state';
 import {UseConversion, UseConversionState} from 'hooks/editor/use-conversion';
 import {ConversionStatus} from 'common/types';
+import useEditorWindowState from 'hooks/editor/use-editor-window-state';
+import useConversionIdContext from 'hooks/editor/use-conversion-id';
 
-const VideoPreview = ({conversion, cancel}: {conversion: UseConversionState, cancel: () => any}) => {
-  const {filePath} = useWindowState();
+const VideoPreview = ({conversion, cancel}: {conversion: UseConversionState; cancel: () => any}) => {
+  const {conversionId} = useConversionIdContext();
+  const {filePath} = useEditorWindowState();
   const src = `file://${filePath}`;
 
   const percentage = conversion?.progress ?? 0;
   const done = conversion?.status !== ConversionStatus.inProgress;
 
+  const onDragStart = (event: any) => {
+    event.preventDefault();
+    // Has to be the electron one for this
+    const {ipcRenderer} = require('electron');
+    ipcRenderer.send('drag-conversion', conversionId);
+  };
+
   return (
-    <div className="video-preview">
+    <div draggable className="video-preview" onDragStart={onDragStart}>
       <video src={src}/>
       <div className="overlay" style={{display: done ? 'none' : 'flex'}}>
         <div className="progress-indicator">
@@ -33,6 +42,7 @@ const VideoPreview = ({conversion, cancel}: {conversion: UseConversionState, can
           position: relative;
           flex: 1;
           height: 0;
+          -webkit-app-region: no-drag;
         }
 
         video {
@@ -78,7 +88,7 @@ const VideoPreview = ({conversion, cancel}: {conversion: UseConversionState, can
       `}</style>
     </div>
   );
-}
+};
 
 const IndeterminateSpinner = () => (
   <div className="container">
@@ -113,7 +123,7 @@ const ProgressCircle = ({percent}: {percent: number}) => {
 
   return (
     <svg viewBox="0 0 24 24">
-      <circle stroke="white" strokeWidth="2" fill="transparent" cx="12" cy="12" r="12" />
+      <circle stroke="white" strokeWidth="2" fill="transparent" cx="12" cy="12" r="12"/>
       <style jsx>{`
           svg {
             width: 100%;

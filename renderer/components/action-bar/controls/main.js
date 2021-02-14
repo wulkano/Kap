@@ -86,9 +86,9 @@ MainControls.Left = connect(
 
 class Right extends React.Component {
   onCogMenuClick = async () => {
-    const cogMenu = await electron.remote.require('./menus').getCogMenu();
+    const cogMenu = await electron.remote.require('./menus/cog').getCogMenu();
     cogMenu.popup();
-  }
+  };
 
   render() {
     const {enterFullscreen, exitFullscreen, isFullscreen, advanced} = this.props;

@@ -12,7 +12,7 @@ class Handle extends React.Component {
     left: false,
     right: false,
     ratioLocked: false
-  }
+  };
 
   render() {
     const {
@@ -94,7 +94,7 @@ class Handles extends React.Component {
     ratioLocked: false,
     width: 0,
     height: 0
-  }
+  };
 
   render() {
     const {

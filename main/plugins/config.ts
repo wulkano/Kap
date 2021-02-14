@@ -5,12 +5,12 @@ import {Service} from './service';
 
 export default class PluginConfig extends Store {
   servicesWithNoConfig: Service[];
-  validators: {
+  validators: Array<{
     title: string;
     description?: string;
-    config: {[key: string]: Schema}
-    validate: ValidateFunction
-  }[]
+    config: Record<string, Schema>;
+    validate: ValidateFunction;
+  }>;
 
   constructor(name: string, services: Service[]) {
     const defaults = {};
@@ -18,8 +18,8 @@ export default class PluginConfig extends Store {
     const validators = services
       .filter(({config}) => Boolean(config))
       .map(service => {
-        const config = service.config as {[key: string]: Schema};
-        const schema: {[key: string]: JSONSchema} = {};
+        const config = service.config as Record<string, Schema>;
+        const schema: Record<string, JSONSchema<any>> = {};
         const requiredKeys = [];
 
         for (const key of Object.keys(config)) {
@@ -54,8 +54,8 @@ export default class PluginConfig extends Store {
           validate: validator,
           title: service.title,
           description: service.configDescription,
-          config: config
-        }
+          config
+        };
       });
 
     super({
@@ -69,10 +69,7 @@ export default class PluginConfig extends Store {
   }
 
   get isValid() {
-    return this.validators.reduce(
-      (isValid, validator) => isValid && (validator.validate(this.store) as boolean),
-      true
-    );
+    return this.validators.every(validator => validator.validate(this.store));
   }
 
   get validServices() {

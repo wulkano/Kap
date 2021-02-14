@@ -21,7 +21,7 @@ class Categories extends React.Component {
   componentDidUpdate(previousProps) {
     if (!previousProps.isMounted && this.props.isMounted) {
       // Wait for the transitions to end
-      setTimeout(() => ipc.callMain('preferences-ready'), 300);
+      setTimeout(async () => ipc.callMain('preferences-ready'), 300);
     }
   }
 

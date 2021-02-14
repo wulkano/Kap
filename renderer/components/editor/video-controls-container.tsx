@@ -26,8 +26,7 @@ const useVideoControls = () => {
     if (videoRef.current && !videoRef.current.paused) {
       try {
         await transitioningPauseState.current;
-      } catch {
-      } finally {
+      } catch {} finally {
         videoRef.current.pause();
         setIsPaused(true);
       }
@@ -37,12 +36,12 @@ const useVideoControls = () => {
   const mute = () => {
     setIsMuted(true);
     videoRef.current.muted = true;
-  }
+  };
 
   const unmute = () => {
     setIsMuted(false);
     videoRef.current.muted = false;
-  }
+  };
 
   const setVideoRef = (video: HTMLVideoElement) => {
     videoRef.current = video;
@@ -81,13 +80,13 @@ const useVideoControls = () => {
       if (!wasPaused.current) {
         pause();
       }
-    }
+    };
 
     const focusListener = () => {
       if (!wasPaused.current) {
         play();
       }
-    }
+    };
 
     currentWindow.addListener('blur', blurListener);
     currentWindow.addListener('focus', focusListener);
@@ -108,7 +107,7 @@ const useVideoControls = () => {
     unmute,
     videoProps
   };
-}
+};
 
 const VideoControlsContainer = createContainer(useVideoControls);
 

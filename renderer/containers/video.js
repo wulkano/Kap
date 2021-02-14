@@ -13,9 +13,11 @@ export default class VideoContainer extends Container {
 
   setEditorContainer = editorContainer => {
     this.editorContainer = editorContainer;
-  }
+  };
 
-  setSrc = src => this.setState({src})
+  setSrc = src => {
+    this.setState({src});
+  };
 
   checkTime = () => {
     if (this.ticker) {
@@ -24,7 +26,7 @@ export default class VideoContainer extends Container {
 
     this.updateTime(this.video.currentTime);
     this.ticker = setTimeout(this.checkTime, 1000 / 120);
-  }
+  };
 
   updateTime = currentTime => {
     const {startTime, endTime} = this.state;
@@ -35,7 +37,7 @@ export default class VideoContainer extends Container {
     } else {
       this.setState({currentTime});
     }
-  }
+  };
 
   setStartTime = startTime => {
     const {endTime} = this.state;
@@ -43,7 +45,7 @@ export default class VideoContainer extends Container {
       this.video.currentTime = startTime;
       this.setState({startTime, currentTime: startTime});
     }
-  }
+  };
 
   setEndTime = endTime => {
     const {startTime} = this.state;
@@ -51,7 +53,7 @@ export default class VideoContainer extends Container {
       this.video.currentTime = endTime;
       this.setState({endTime, currentTime: endTime});
     }
-  }
+  };
 
   setVideo = video => {
     this.video = video;
@@ -101,7 +103,7 @@ export default class VideoContainer extends Container {
       this.updateTime(endTime);
       this.play();
     });
-  }
+  };
 
   play = async () => {
     try {
@@ -113,7 +115,7 @@ export default class VideoContainer extends Container {
     } finally {
       this.playPromise = undefined;
     }
-  }
+  };
 
   pause = async () => {
     if (this.playPromise) {
@@ -122,20 +124,20 @@ export default class VideoContainer extends Container {
 
     this.video.pause();
     this.setState({isPaused: true});
-  }
+  };
 
   mute = () => {
     this.setState({isMuted: true});
     this.video.muted = true;
-  }
+  };
 
   unmute = () => {
     this.setState({isMuted: false});
     this.video.muted = false;
-  }
+  };
 
   seek = time => {
     this.video.currentTime = time;
     this.updateTime(time);
-  }
+  };
 }

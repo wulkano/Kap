@@ -8,8 +8,9 @@ import {RecordService, ShareService, EditService} from './service';
 import {showError} from '../utils/errors';
 import PluginConfig from './config';
 import Store from 'electron-store';
+import {windowManager} from '../windows/manager';
 
-export const recordPluginServiceState = new Store<{[key: string]: boolean}>({
+export const recordPluginServiceState = new Store<Record<string, boolean>>({
   name: 'record-plugin-state',
   defaults: {}
 });
@@ -22,7 +23,7 @@ class BasePlugin {
   json?: readPkg.NormalizedPackageJson;
 
   constructor(pluginName: string) {
-    this.name = pluginName
+    this.name = pluginName;
   }
 
   get prettyName() {
@@ -30,12 +31,12 @@ class BasePlugin {
   }
 
   get isCompatible() {
-    return semver.satisfies(app.getVersion(), this.kapVersion || '*') && macosVersion.is(this.macosVersion || '*');
+    return semver.satisfies(app.getVersion(), this.kapVersion ?? '*') && macosVersion.is(this.macosVersion ?? '*');
   }
 
   get repoUrl() {
     if (!this.link) {
-      return;
+      return '';
     }
 
     const url = new URL(this.link);
@@ -53,15 +54,15 @@ class BasePlugin {
 
   viewOnGithub() {
     if (this.link) {
-      shell.openExternal(this.link)
+      shell.openExternal(this.link);
     }
   }
 }
 
 export interface KapPlugin<Config = any> {
-  shareServices?: ShareService<Config>[];
-  editServices?: EditService<Config>[];
-  recordServices?: RecordService<Config>[];
+  shareServices?: Array<ShareService<Config>>;
+  editServices?: Array<EditService<Config>>;
+  recordServices?: Array<RecordService<Config>>;
 
   didConfigChange?: (newValue: Readonly<any> | undefined, oldValue: Readonly<any> | undefined, config: Store<Config>) => void | Promise<void>;
   didInstall?: (config: Store<Config>) => void | Promise<void>;
@@ -82,7 +83,7 @@ export class InstalledPlugin extends BasePlugin {
   constructor(pluginName: string, customPath?: string) {
     super(pluginName);
 
-    this.pluginPath = customPath || path.join(this.pluginsPath, 'node_modules', pluginName);
+    this.pluginPath = customPath ?? path.join(this.pluginsPath, 'node_modules', pluginName);
     this.isBuiltIn = Boolean(customPath);
 
     if (!this.isBuiltIn) {
@@ -142,23 +143,60 @@ export class InstalledPlugin extends BasePlugin {
   get recordServicesWithStatus() {
     return this.recordServices.map(service => ({
       ...service,
-      isEnabled: recordPluginServiceState.get(`${this.name}-${service.title}`, false)
+      isEnabled: recordPluginServiceState.get(this.getRecordServiceKey(service), false),
+      setEnabled: this.getSetEnableFunction(service)
     }));
   }
 
-  enableService(service: RecordService) {
-    recordPluginServiceState.set(`${this.name}-${service.title}`, true);
-  }
+  enableService = (service: RecordService) => {
+    recordPluginServiceState.set(this.getRecordServiceKey(service), true);
+  };
 
-  openConfig() {
+  openConfig = () => windowManager.config?.open(this.name);
+
+  openConfigInEditor = () => {
     this.config.openInEditor();
-  }
+  };
+
+  private readonly getSetEnableFunction = (service: RecordService) => async (enabled: boolean) => {
+    const isEnabled = recordPluginServiceState.get(this.getRecordServiceKey(service), false);
+
+    if (isEnabled === enabled) {
+      return;
+    }
+
+    if (!enabled) {
+      recordPluginServiceState.set(this.getRecordServiceKey(service), false);
+      return;
+    }
+
+    if (!this.config.validServices.includes(service.title)) {
+      windowManager.preferences?.open({target: {name: this.name, action: 'configure'}});
+      return;
+    }
+
+    if (service.willEnable && typeof service.willEnable === 'function') {
+      try {
+        const canEnable = await service.willEnable();
+
+        if (canEnable) {
+          recordPluginServiceState.set(this.getRecordServiceKey(service), true);
+        }
+      } catch (error) {
+        showError(error, {title: `Something went wrong while enabling "${service.title}`, plugin: this});
+      }
+    } else {
+      recordPluginServiceState.set(this.getRecordServiceKey(service), true);
+    }
+  };
+
+  private readonly getRecordServiceKey = (service: RecordService) => `${this.name}-${service.title}`;
 }
 
 export class NpmPlugin extends BasePlugin {
   isInstalled = false;
 
-  constructor(json: readPkg.NormalizedPackageJson, kap: {version?: string, macosVersion?: string} = {}) {
+  constructor(json: readPkg.NormalizedPackageJson, kap: {version?: string; macosVersion?: string} = {}) {
     super(json.name);
 
     this.json = json;

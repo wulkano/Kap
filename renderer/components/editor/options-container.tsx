@@ -1,24 +1,24 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect} from 'react';
 import {createContainer} from 'unstated-next';
 
-import useWindowState from 'hooks/window-state';
 import VideoMetadataContainer from './video-metadata-container';
 import VideoControlsContainer from './video-controls-container';
 import useEditorOptions, {EditorOptionsState} from 'hooks/editor/use-editor-options';
 import {Format, App} from 'common/types';
+import useEditorWindowState from 'hooks/editor/use-editor-window-state';
 
-type EditService = EditorOptionsState["editServices"][0]
+type EditService = EditorOptionsState['editServices'][0];
 
 type SharePlugin = {
   pluginName: string;
   serviceTitle: string;
   app?: App;
-}
+};
 
 const isFormatMuted = (format: Format) => ['gif', 'apng'].includes(format);
 
 const useOptions = () => {
-  const {fps: originalFps} = useWindowState();
+  const {fps: originalFps} = useEditorWindowState();
   const {
     state: {
       formats,
@@ -44,11 +44,11 @@ const useOptions = () => {
   const updateFps = (newFps: number, formatName = format) => {
     updateFpsUsage({format: formatName, fps: newFps});
     setFps(newFps);
-  }
+  };
 
   const updateSharePlugin = (plugin: SharePlugin) => {
     setSharePlugin(plugin);
-  }
+  };
 
   const updateFormat = (formatName: Format) => {
     if (metadata.hasAudio) {
@@ -76,7 +76,7 @@ const useOptions = () => {
       app: selectedSharePlugin.apps ? sharePlugin.app : undefined
     });
     updateFps(Math.min(originalFps, fpsHistory[formatName]), formatName);
-  }
+  };
 
   useEffect(() => {
     if (isLoading) {
@@ -112,10 +112,10 @@ const useOptions = () => {
     setEditPlugin(newPlugin);
   }, [editServices]);
 
-  const setDimensions = (dimensions: {width: number, height: number}) => {
+  const setDimensions = (dimensions: {width: number; height: number}) => {
     setWidth(dimensions.width);
     setHeight(dimensions.height);
-  }
+  };
 
   return {
     width,
@@ -133,7 +133,7 @@ const useOptions = () => {
     setEditPlugin,
     setDimensions
   };
-}
+};
 
 const OptionsContainer = createContainer(useOptions);
 

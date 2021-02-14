@@ -1,4 +1,4 @@
-import {ShareServiceContext} from '../../service-context';
+import {ShareServiceContext} from '../service-context';
 import path from 'path';
 import {getFormatExtension} from '../../common/constants';
 import {Format} from '../../common/types';
@@ -23,7 +23,7 @@ const getAppsForFormat = (format: Format) => {
     .filter(app => !['Kap', 'Kap Beta'].includes(app.name))
     .sort((a, b) => {
       if (a.isDefault !== b.isDefault) {
-        return Number(b.isDefault) - Number(a.isDefault)
+        return Number(b.isDefault) - Number(a.isDefault);
       }
 
       return Number(b.name === 'Gifski') - Number(a.name === 'Gifski');
@@ -35,7 +35,7 @@ const appsForFormat = (['mp4', 'gif', 'apng', 'webm', 'av1'] as Format[])
     format,
     apps: getAppsForFormat(format)
   }))
-  .filter(({apps}) => apps.length > 0)
+  .filter(({apps}) => apps.length > 0);
 
 export const apps = new Map(appsForFormat.map(({format, apps}) => [format, apps]));
 
@@ -44,5 +44,4 @@ export const shareServices = [{
   formats: [...apps.keys()],
   action
 }];
-
 

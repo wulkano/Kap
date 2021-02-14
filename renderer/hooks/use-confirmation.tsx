@@ -1,10 +1,10 @@
-import {useCallback} from 'react'
+import {useCallback} from 'react';
 
 interface UseConfirmationOptions {
-  message: string,
-  detail?: string,
-  confirmButtonText: string,
-  cancelButtonText?: string
+  message: string;
+  detail?: string;
+  confirmButtonText: string;
+  cancelButtonText?: string;
 }
 
 export const useConfirmation = (
@@ -30,4 +30,4 @@ export const useConfirmation = (
       callback();
     }
   }, [callback]);
-}
+};

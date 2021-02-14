@@ -1,10 +1,11 @@
 import {useRef, useEffect} from 'react';
-import useWindowState from '../../hooks/window-state';
 import VideoTimeContainer from './video-time-container';
 import VideoMetadataContainer from './video-metadata-container';
 import VideoControlsContainer from './video-controls-container';
+import useEditorWindowState from 'hooks/editor/use-editor-window-state';
+import {ipcRenderer as ipc} from 'electron-better-ipc';
 
-const getVideoProps = (propsArray: React.DetailedHTMLProps<React.VideoHTMLAttributes<HTMLVideoElement>, HTMLVideoElement>[]) => {
+const getVideoProps = (propsArray: Array<React.DetailedHTMLProps<React.VideoHTMLAttributes<HTMLVideoElement>, HTMLVideoElement>>) => {
   const handlers = new Map();
 
   for (const props of propsArray) {
@@ -17,19 +18,20 @@ const getVideoProps = (propsArray: React.DetailedHTMLProps<React.VideoHTMLAttrib
     }
   }
 
+  // eslint-disable-next-line unicorn/no-array-reduce
   return [...handlers.entries()].reduce((acc, [key, handlerList]) => ({
     ...acc,
     [key]: () => {
       for (const handler of handlerList) {
-        handler?.()
+        handler?.();
       }
     }
   }), {});
 };
 
 const Video = () => {
-  const videoRef = useRef();
-  const {filePath} = useWindowState();
+  const videoRef = useRef<HTMLVideoElement>();
+  const {filePath} = useEditorWindowState();
   const src = `file://${filePath}`;
 
   const videoTimeContainer = VideoTimeContainer.useContainer();
@@ -40,7 +42,7 @@ const Video = () => {
     videoTimeContainer.setVideoRef(videoRef.current);
     videoMetadataContainer.setVideoRef(videoRef.current);
     videoControlsContainer.setVideoRef(videoRef.current);
-  }, []);
+  }, [videoTimeContainer, videoMetadataContainer, videoControlsContainer]);
 
   const videoProps = getVideoProps([
     videoTimeContainer.videoProps,
@@ -48,8 +50,38 @@ const Video = () => {
     videoControlsContainer.videoProps
   ]);
 
+  const onContextMenu = async () => {
+    const video = videoRef.current;
+
+    if (!video) {
+      return;
+    }
+
+    const wasPaused = video.paused;
+
+    if (!wasPaused) {
+      await videoControlsContainer.pause();
+    }
+
+    const {Menu} = require('electron-util').api;
+    const menu = Menu.buildFromTemplate([{
+      label: 'Snapshot',
+      click: () => {
+        ipc.callMain('save-snapshot', video.currentTime);
+      }
+    }]);
+
+    menu.popup({
+      callback: () => {
+        if (!wasPaused) {
+          videoControlsContainer.play();
+        }
+      }
+    });
+  };
+
   return (
-    <div>
+    <div onContextMenu={onContextMenu}>
       <video ref={videoRef} preload="auto" src={src} {...videoProps}/>
       <style jsx>{`
         video {
@@ -60,6 +92,6 @@ const Video = () => {
       `}</style>
     </div>
   );
-}
+};
 
 export default Video;

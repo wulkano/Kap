@@ -1,4 +1,4 @@
-import VideoControlsContainer from '../video-controls-container'
+import VideoControlsContainer from '../video-controls-container';
 import VideoTimeContainer from '../video-time-container';
 import {PlayIcon, PauseIcon} from '../../../vectors';
 import formatTime from '../../../utils/format-time';
@@ -12,8 +12,8 @@ const LeftControls = () => {
       <div className="play">
         {
           isPaused ?
-            <PlayIcon shadow size="26px" fill="#fff" hoverFill="#fff" onClick={play} /> :
-            <PauseIcon shadow size="26px" fill="#fff" hoverFill="#fff" onClick={pause} />
+            <PlayIcon shadow size="26px" fill="#fff" hoverFill="#fff" onClick={play}/> :
+            <PauseIcon shadow size="26px" fill="#fff" hoverFill="#fff" onClick={pause}/>
         }
       </div>
       <div className="time">{formatTime(currentTime, {showMilliseconds: false})}</div>
@@ -42,6 +42,6 @@ const LeftControls = () => {
         `}</style>
     </div>
   );
-}
+};
 
 export default LeftControls;

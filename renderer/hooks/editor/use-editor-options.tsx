@@ -1,7 +1,7 @@
 import {EditorOptionsRemoteState} from 'common/types';
-import useRemoteState from 'hooks/use-remote-state';
+import createRemoteStateHook from 'hooks/use-remote-state';
 
-const useEditorOptions = useRemoteState<EditorOptionsRemoteState>('editor-options', {
+const useEditorOptions = createRemoteStateHook<EditorOptionsRemoteState>('editor-options', {
   formats: [],
   editServices: [],
   fpsHistory: {
@@ -13,5 +13,5 @@ const useEditorOptions = useRemoteState<EditorOptionsRemoteState>('editor-option
   }
 });
 
-export type EditorOptionsState = ReturnType<typeof useEditorOptions>["state"];
+export type EditorOptionsState = ReturnType<typeof useEditorOptions>['state'];
 export default useEditorOptions;

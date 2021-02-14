@@ -9,7 +9,7 @@ import WindowHeader from '../components/window-header';
 const configContainer = new ConfigContainer();
 
 export default class ConfigPage extends React.Component {
-  state = {title: ''}
+  state = {title: ''};
 
   componentDidMount() {
     ipc.answerMain('plugin', pluginName => {

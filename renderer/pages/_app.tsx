@@ -7,7 +7,7 @@ import {WindowStateProvider} from '../hooks/window-state';
 import classNames from 'classnames';
 import {ipcRenderer} from 'electron-better-ipc';
 
-function Kap(props: AppProps) {
+const Kap = (props: AppProps) => {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -16,17 +16,16 @@ function Kap(props: AppProps) {
 
   useEffect(() => {
     if (isMounted) {
-      console.log('SENDING');
       ipcRenderer.callMain('kap-window-mount');
     }
-  }, [isMounted])
+  }, [isMounted]);
 
   if (!isMounted) {
     return null;
   }
 
-  return <MainApp {...props}/>
-}
+  return <MainApp {...props}/>;
+};
 
 const MainApp = ({Component, pageProps}: AppProps) => {
   const isDarkMode = useDarkMode();
@@ -36,8 +35,8 @@ const MainApp = ({Component, pageProps}: AppProps) => {
     <div className={className}>
       <SentryErrorBoundary>
         <WindowStateProvider>
-          <Component {...pageProps} />
-          <GlobalStyles />
+          <Component {...pageProps}/>
+          <GlobalStyles/>
         </WindowStateProvider>
       </SentryErrorBoundary>
     </div>

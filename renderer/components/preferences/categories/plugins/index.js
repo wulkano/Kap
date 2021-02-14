@@ -11,7 +11,7 @@ class Plugins extends React.Component {
     pluginsInstalled: [],
     pluginsFromNpm: [],
     category: 'general'
-  }
+  };
 
   render() {
     const {
