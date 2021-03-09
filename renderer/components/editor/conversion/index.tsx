@@ -27,17 +27,14 @@ const EditorConversionView = ({conversionId}: {conversionId: string}) => {
     setConversionId('');
   };
 
-  const safeCancelAndGoBack = useConfirmation(cancelAndGoBack, dialogOptions);
-
   const inProgress = conversion.state?.status === ConversionStatus.inProgress;
 
   const finalCancel = inProgress ? safeCancel : cancel;
-  const finalCancelAndGoBack = inProgress ? safeCancelAndGoBack : cancelAndGoBack;
 
   return (
     <div className="editor-conversion-view">
       <TitleBar
-        conversion={conversion.state} cancel={finalCancelAndGoBack} copy={() => {
+        conversion={conversion.state} cancel={cancelAndGoBack} copy={() => {
           conversion.copy();
         }}/>
       <VideoPreview conversion={conversion.state} cancel={finalCancel}/>

@@ -1,5 +1,6 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useMemo} from 'react';
 import {createContainer} from 'unstated-next';
+import {debounce, DebouncedFunc} from 'lodash';
 
 import VideoMetadataContainer from './video-metadata-container';
 import VideoControlsContainer from './video-controls-container';
@@ -41,9 +42,17 @@ const useOptions = () => {
 
   const [wasMuted, setWasMuted] = useState(false);
 
+  const debouncedUpdateFpsUsage = useMemo(() => {
+    if (!updateFpsUsage) {
+      return;
+    }
+
+    return debounce(updateFpsUsage, 1000);
+  }, [updateFpsUsage]);
+
   const updateFps = (newFps: number, formatName = format) => {
-    updateFpsUsage({format: formatName, fps: newFps});
     setFps(newFps);
+    debouncedUpdateFpsUsage?.({format: formatName, fps: newFps});
   };
 
   const updateSharePlugin = (plugin: SharePlugin) => {
@@ -51,6 +60,8 @@ const useOptions = () => {
   };
 
   const updateFormat = (formatName: Format) => {
+    debouncedUpdateFpsUsage.flush();
+
     if (metadata.hasAudio) {
       if (isFormatMuted(formatName) && !isFormatMuted(format)) {
         setWasMuted(isMuted);

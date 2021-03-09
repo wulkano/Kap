@@ -26,7 +26,7 @@ const createRemoteStateHook = <Callback extends RemoteState<any, any>>(
   Callback extends RemoteState<infer State, infer Actions> ? (
     Actions & {
       state: State;
-      isLoading: false;
+      isLoading: boolean;
       refreshState: () => void;
     }
   ) : never

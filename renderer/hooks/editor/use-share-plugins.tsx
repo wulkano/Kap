@@ -42,7 +42,7 @@ const useSharePlugins = () => {
             app: plugin.apps[0]
           },
           checked: sharePlugin.pluginName === plugin.pluginName,
-          label: 'Open with…'
+          label: 'Open With…'
         };
       }
 

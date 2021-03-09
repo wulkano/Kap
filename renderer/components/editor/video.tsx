@@ -42,7 +42,7 @@ const Video = () => {
     videoTimeContainer.setVideoRef(videoRef.current);
     videoMetadataContainer.setVideoRef(videoRef.current);
     videoControlsContainer.setVideoRef(videoRef.current);
-  }, [videoTimeContainer, videoMetadataContainer, videoControlsContainer]);
+  }, []);
 
   const videoProps = getVideoProps([
     videoTimeContainer.videoProps,

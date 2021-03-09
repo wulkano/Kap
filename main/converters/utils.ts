@@ -19,7 +19,7 @@ export interface ConvertOptions {
   };
 }
 
-export const makeEven = (n: number) => 2 * Math.round(n / 2);
+export const makeEven = (number: number) => 2 * Math.round(number / 2);
 
 export const areDimensionsEven = ({width, height}: {width: number; height: number}) => width % 2 === 0 && height % 2 === 0;
 

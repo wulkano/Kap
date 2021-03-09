@@ -18,6 +18,14 @@ const TrafficLights = () => {
     };
   }, []);
 
+  const enabled = {
+    close: currentWindow.isClosable(),
+    minimize: currentWindow.isMinimizable(),
+    maximize: currentWindow.isMaximizable()
+  };
+
+  const getClassName = (name: string) => `traffic-light ${name}${enabled[name] ? '' : ' disabled'}`;
+
   const close = () => {
     currentWindow.close();
   };
@@ -32,20 +40,20 @@ const TrafficLights = () => {
 
   return (
     <div className={`traffic-lights ${tint}`}>
-      <div className="traffic-light close" onClick={close}>
+      <div className={getClassName('close')} onClick={close}>
         <svg width="12" height="12">
           <circle cx="6" cy="6" r="5.75" strokeWidth="0.5"/>
           <line x1="3.17" y1="3.17" x2="8.83" y2="8.83" stroke="black"/>
           <line x1="3.17" y1="8.83" x2="8.83" y2="3.17" stroke="#760e0e"/>
         </svg>
       </div>
-      <div className="traffic-light minimize" onClick={minimize}>
+      <div className={getClassName('minimize')} onClick={minimize}>
         <svg width="12" height="12">
           <circle cx="6" cy="6" r="5.75" strokeWidth="0.5"/>
           <line x1="2" y1="6" x2="10" y2="6"/>
         </svg>
       </div>
-      <div className="traffic-light maximize" onClick={maximize}>
+      <div className={getClassName('maximize')} onClick={maximize}>
         <svg width="12" height="12">
           <circle cx="6" cy="6" r="5.75" strokeWidth="0.5"/>
           <rect x="3.5" y="3.5" width="5" height="5" rx="1" ry="1"/>
@@ -162,6 +170,16 @@ const TrafficLights = () => {
           .graphite .maximize .background-rect {
             fill: #8f8f94;
             stroke: #8f8f94;
+          }
+
+          .traffic-light.disabled circle {
+            fill: #6b6c6d;
+            stroke: #6b6c6d;
+          }
+
+          .traffic-light.disabled line,
+          .traffic-light.disabled rect {
+            visibility: hidden;
           }
         `}</style>
     </div>

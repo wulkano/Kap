@@ -87,7 +87,7 @@ const convertWithEditPlugin = PCancelable.fn(
       croppedPath = options.inputPath;
     }
 
-    let canceled = false;
+    let isCanceled = false;
 
     // eslint-disable-next-line @typescript-eslint/promise-function-async
     const convertFunction = (args: string[], text = 'Converting') => new PCancelable<void>(async (resolve, reject, onCancel) => {
@@ -148,7 +148,7 @@ const convertWithEditPlugin = PCancelable.fn(
     );
 
     onCancel(() => {
-      canceled = true;
+      isCanceled = true;
       // @ts-expect-error
       if (editProcess.cancel && typeof editProcess.cancel === 'function') {
         (editProcess as PCancelable<void>).cancel();
@@ -157,7 +157,7 @@ const convertWithEditPlugin = PCancelable.fn(
 
     await editProcess;
 
-    if (canceled) {
+    if (isCanceled) {
       return '';
     }
 

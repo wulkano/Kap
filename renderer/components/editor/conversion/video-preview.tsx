@@ -69,7 +69,6 @@ const VideoPreview = ({conversion, cancel}: {conversion: UseConversionState; can
         .progress-indicator, .cancel {
           width: 48px;
           height: 48px;
-          cursor: pointer;
           position: absolute;
           transition: opacity 0.35s ease-in-out;
         }

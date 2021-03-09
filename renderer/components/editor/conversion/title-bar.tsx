@@ -56,10 +56,8 @@ const TitleBar = ({conversion, cancel, copy}: {conversion: UseConversionState; c
           font-weight: 500;
         }
 
-        .button:hover,
-        .button:focus,
-        .icon:hover,
-        .icon:focus {
+        .button:active,
+        .icon:active {
           background: hsla(0, 0%, 100%, 0.2);
           outline: none;
         }

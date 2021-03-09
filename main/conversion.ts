@@ -169,7 +169,7 @@ export default class Conversion extends EventEmitter {
   addExport(exportOptions: ExportOptions) {
     this.status = ConversionStatus.inProgress;
     this.error = undefined;
-    this.text = 'Initiating…';
+    this.text = 'Initializing…';
     this.percentage = 0;
 
     const newExport = new Export(this, exportOptions);

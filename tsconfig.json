@@ -5,7 +5,6 @@
     "target": "es2019",
     "module": "commonjs",
     "esModuleInterop": true,
-    "downlevelIteration": true,
     "allowJs": true,
     "sourceMap": true,
     "inlineSources": true,
