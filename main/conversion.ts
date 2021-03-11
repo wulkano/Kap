@@ -153,16 +153,12 @@ export default class Conversion extends EventEmitter {
 
     try {
       this.convertedFilePath = await this.conversionProcess;
+      this.calculateFileSize(this.convertedFilePath);
       return this.convertedFilePath!;
     } catch (error) {
       // Ensure we re-try the conversion if it fails
       this.conversionProcess = undefined;
-
-      if (!error.isCanceled) {
-        throw error;
-      }
-
-      return '';
+      throw error;
     }
   };
 
@@ -234,6 +230,18 @@ export default class Conversion extends EventEmitter {
     this.onProgress(text, progress);
   };
 
+  private readonly calculateFileSize = async (filePath?: string) => {
+    if (!filePath) {
+      return;
+    }
+
+    try {
+      const {size} = await fs.promises.stat(filePath);
+      this.finalSize = prettyBytes(size);
+      this.emit('updated');
+    } catch {}
+  };
+
   private readonly start = () => {
     this.conversionProcess = convertTo(
       this.format,
@@ -246,14 +254,6 @@ export default class Conversion extends EventEmitter {
       },
       this.video.encoding
     );
-
-    this.conversionProcess.then(async filePath => {
-      try {
-        const {size} = await fs.promises.stat(filePath);
-        this.finalSize = prettyBytes(size);
-        this.emit('updated');
-      } catch {}
-    });
   };
 }
 

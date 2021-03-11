@@ -2,6 +2,8 @@ import {ConversionStatus} from 'common/types';
 import useConversion from 'hooks/editor/use-conversion';
 import useConversionIdContext from 'hooks/editor/use-conversion-id';
 import {useConfirmation} from 'hooks/use-confirmation';
+import {useMemo} from 'react';
+import {useKeyboardAction} from '../../../hooks/use-keyboard-action';
 import ConversionDetails from './conversion-details';
 import TitleBar from './title-bar';
 import VideoPreview from './video-preview';
@@ -29,7 +31,9 @@ const EditorConversionView = ({conversionId}: {conversionId: string}) => {
 
   const inProgress = conversion.state?.status === ConversionStatus.inProgress;
 
-  const finalCancel = inProgress ? safeCancel : cancel;
+  const finalCancel = useMemo(() => inProgress ? safeCancel : () => { /* do nothing */ }, [inProgress]);
+
+  useKeyboardAction('Escape', finalCancel);
 
   return (
     <div className="editor-conversion-view">

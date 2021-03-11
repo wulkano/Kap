@@ -155,7 +155,7 @@ export class InstalledPlugin extends BasePlugin {
   openConfig = () => windowManager.config?.open(this.name);
 
   openConfigInEditor = () => {
-    this.config.openInEditor();
+    shell.openPath(this.config.path);
   };
 
   private readonly getSetEnableFunction = (service: RecordService) => async (enabled: boolean) => {

@@ -104,8 +104,14 @@ export default class Export extends EventEmitter {
   };
 
   start = async () => {
-    this.process = this._start();
-    return this.process;
+    try {
+      this.process = this._start();
+      await this.process;
+    } catch (error) {
+      if (!error.isCanceled) {
+        this.emit('error', error);
+      }
+    }
   };
 
   onProgress = (text: string, percentage: number) => {

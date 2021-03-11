@@ -9,11 +9,11 @@ import {prettifyFormat} from '../utils/formats';
 const exportUsageHistory = new Store<{[key in Format]: {lastUsed: number; plugins: Record<string, number>}}>({
   name: 'export-usage-history',
   defaults: {
-    apng: {lastUsed: 1, plugins: {default: 1}},
-    webm: {lastUsed: 2, plugins: {default: 1}},
-    mp4: {lastUsed: 3, plugins: {default: 1}},
-    gif: {lastUsed: 4, plugins: {default: 1}},
-    av1: {lastUsed: 5, plugins: {default: 1}}
+    gif: {lastUsed: 5, plugins: {default: 1}},
+    mp4: {lastUsed: 4, plugins: {default: 1}},
+    webm: {lastUsed: 3, plugins: {default: 1}},
+    av1: {lastUsed: 2, plugins: {default: 1}},
+    apng: {lastUsed: 1, plugins: {default: 1}}
   }
 });
 

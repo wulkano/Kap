@@ -41,7 +41,7 @@ export default class ConfigContainer extends Container {
 
   closeWindow = () => this.remote.getCurrentWindow().close();
 
-  openConfig = () => this.plugin.openConfig();
+  openConfig = () => this.plugin.openConfigInEditor();
 
   viewOnGithub = () => this.plugin.viewOnGithub();
 
