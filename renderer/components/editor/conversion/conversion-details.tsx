@@ -23,7 +23,7 @@ const ConversionDetails = ({conversion}: {conversion: UseConversionState}) => {
           width: 100%;
           padding: 24px;
           flex-direction: column;
-          color: var(--title-color);
+          color: var(--white);
           flex-shrink: 0;
           line-height: 16px;
         }

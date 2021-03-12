@@ -67,7 +67,7 @@ const EditorPage = () => {
         .cover-window {
           -webkit-app-region: drag;
           user-select: none;
-          background-color: var(--background-color);
+          background-color: #222222;
         }
       `}</style>
     </div>
