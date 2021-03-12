@@ -64,8 +64,8 @@ const open = async (video: Video) => {
 
         const index = submenu.findIndex(item => item.id === MenuItemId.openVideo);
 
-        if (index > 0) {
-          submenu.splice(index, 0, {
+        if (index > -1) {
+          submenu.splice(index + 1, 0, {
             type: 'separator'
           }, {
             label: 'Save Original…',
