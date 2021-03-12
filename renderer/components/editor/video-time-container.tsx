@@ -15,8 +15,10 @@ const useVideoTime = () => {
 
   const videoProps = {
     onLoadedMetadata: () => {
-      setDuration(videoRef.current?.duration);
-      setEndTime(videoRef.current?.duration);
+      if (duration === 0) {
+        setDuration(videoRef.current?.duration);
+        setEndTime(videoRef.current?.duration);
+      }
     },
     onEnded: () => {
       updateTime(startTime);
