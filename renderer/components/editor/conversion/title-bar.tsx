@@ -2,11 +2,11 @@ import TrafficLights from 'components/traffic-lights';
 import {BackPlainIcon} from 'vectors';
 import {UseConversionState} from 'hooks/editor/use-conversion';
 import {flags} from '../../../common/flags';
-import {api} from 'electron-util';
 import {remote} from 'electron';
 import {ConversionStatus} from '../../../common/types';
 
 const TitleBar = ({conversion, cancel, copy}: {conversion: UseConversionState; cancel: () => any; copy: () => any}) => {
+  const {api} = require('electron-util');
   const shouldClose = async () => {
     if (conversion.status === ConversionStatus.inProgress && !flags.get('backgroundEditorConversion')) {
       await api.dialog.showMessageBox(remote.getCurrentWindow(), {
