@@ -1,7 +1,11 @@
 import {remote} from 'electron';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, FunctionComponent} from 'react';
 
-const TrafficLights = () => {
+interface TrafficLightsProps {
+  shouldClose?: () => PromiseLike<boolean>;
+}
+
+const TrafficLights: FunctionComponent<TrafficLightsProps> = props => {
   const currentWindow = remote.getCurrentWindow();
   const [tint, setTint] = useState('blue');
 
@@ -26,8 +30,10 @@ const TrafficLights = () => {
 
   const getClassName = (name: string) => `traffic-light ${name}${enabled[name] ? '' : ' disabled'}`;
 
-  const close = () => {
-    currentWindow.close();
+  const close = async () => {
+    if (!props.shouldClose || await props.shouldClose()) {
+      currentWindow.close();
+    }
   };
 
   const minimize = () => {

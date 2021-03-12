@@ -139,7 +139,7 @@ export const showError = async (
   let message;
   const buttons: any[] = [...mainButtons];
 
-  if (isOnline && isSentryEnabled) {
+  if (isSentryEnabled && await isOnline()) {
     const eventId = Sentry.captureException(ensuredError);
     const sentryIssuePromise = getSentryIssue(eventId);
 

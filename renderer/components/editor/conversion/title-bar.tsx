@@ -1,12 +1,30 @@
 import TrafficLights from 'components/traffic-lights';
 import {BackPlainIcon} from 'vectors';
 import {UseConversionState} from 'hooks/editor/use-conversion';
+import {flags} from '../../../common/flags';
+import {api} from 'electron-util';
+import {remote} from 'electron';
+import {ConversionStatus} from '../../../common/types';
 
 const TitleBar = ({conversion, cancel, copy}: {conversion: UseConversionState; cancel: () => any; copy: () => any}) => {
+  const shouldClose = async () => {
+    if (conversion.status === ConversionStatus.inProgress && !flags.get('backgroundEditorConversion')) {
+      await api.dialog.showMessageBox(remote.getCurrentWindow(), {
+        type: 'info',
+        message: 'Your export will continue in the background. You can access it through the Export History window.',
+        buttons: ['Ok'],
+        defaultId: 0
+      });
+      flags.set('backgroundEditorConversion', true);
+    }
+
+    return true;
+  };
+
   return (
     <div className="title-bar">
       <div className="left">
-        <TrafficLights/>
+        <TrafficLights shouldClose={shouldClose}/>
         <div className="icon" onClick={cancel}>
           <BackPlainIcon fill="white" hoverFill="white" size="100%"/>
         </div>
