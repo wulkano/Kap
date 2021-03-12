@@ -39,6 +39,12 @@ const Slider = (props: Props) => {
     }
   };
 
+  const onKeyDown = event => {
+    if (event.key === 'Enter') {
+      onBlur(event);
+    }
+  };
+
   const onSliderChange = event => {
     const value = Number.parseInt(event.currentTarget.value, 10);
     props.onChange(value);
@@ -56,6 +62,7 @@ const Slider = (props: Props) => {
         className="value"
         value={valueText || ''}
         onChange={onChange}
+        onKeyDown={onKeyDown}
         onBlur={onBlur}
         onFocus={() => {
           setIsOpen(true);
