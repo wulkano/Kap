@@ -22,7 +22,7 @@ actionBarContainer.bindCropper(cropperContainer);
 let lastRatioLockState = null;
 
 export default class CropperPage extends React.Component {
-  remote = electron.remote || false
+  remote = electron.remote || false;
 
   dev = false;
 
@@ -100,7 +100,7 @@ export default class CropperPage extends React.Component {
       default:
         break;
     }
-  }
+  };
 
   render() {
     return (

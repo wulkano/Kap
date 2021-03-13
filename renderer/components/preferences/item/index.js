@@ -6,7 +6,7 @@ import Linkify from 'react-linkify';
 import {HelpIcon} from '../../../vectors';
 
 export const Link = ({href, children}) => (
-  <span onClick={() => electron.shell.openExternal(href)}>
+  <span onClick={async () => electron.shell.openExternal(href)}>
     {children}
     <style jsx>{`
       color: var(--kap);
@@ -32,7 +32,7 @@ class Item extends React.Component {
   static defaultProps = {
     subtitle: [],
     errors: []
-  }
+  };
 
   render() {
     const {

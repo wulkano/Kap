@@ -2,7 +2,7 @@ import React, {useRef, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {shake} from '../../utils/inputs';
-import {checkAccelerator, eventKeyToAccelerator} from '../../../main/utils/accelerator-validator';
+import {checkAccelerator, eventKeyToAccelerator} from 'common/accelerator-validator';
 import {DropdownArrowIcon} from '../../vectors';
 
 const presets = [
@@ -60,7 +60,9 @@ const ShortcutInput = ({shortcut = '', onChange, tabIndex}) => {
   const boxRef = useRef();
   const inputRef = useRef();
 
-  const resetKeys = () => setKeys(shortcut.split('+').filter(Boolean));
+  const resetKeys = () => {
+    setKeys(shortcut.split('+').filter(Boolean));
+  };
 
   useEffect(() => {
     resetKeys();

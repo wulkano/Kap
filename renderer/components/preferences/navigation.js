@@ -20,7 +20,7 @@ const CATEGORIES = [
 class PreferencesNavigation extends React.Component {
   static defaultProps = {
     category: 'general'
-  }
+  };
 
   render() {
     const {selectCategory, category} = this.props;

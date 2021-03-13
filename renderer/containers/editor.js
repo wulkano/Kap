@@ -6,11 +6,11 @@ import {shake} from '../utils/inputs';
 const isMuted = format => ['gif', 'apng'].includes(format);
 
 export default class EditorContainer extends Container {
-  state = {}
+  state = {};
 
   setVideoContainer = videoContainer => {
     this.videoContainer = videoContainer;
-  }
+  };
 
   mount = ({filePath, fps = 15, originalFilePath, isNewRecording, recordingName, title}, resolve) => {
     const src = `file://${filePath}`;
@@ -22,19 +22,17 @@ export default class EditorContainer extends Container {
       originalFilePath,
       recordingName,
       title,
-      // TODO: Fix this ESLint violation
-      // eslint-disable-next-line react/no-access-state-in-setstate
       fps: Math.min(fps, this.state.fps),
       originalFps: fps,
       wasMuted: false,
       isNewRecording
     });
     this.videoContainer.setSrc(src);
-  }
+  };
 
   setDimensions = (width, height) => {
     this.setState({width, height, ratio: width / height, original: {width, height}});
-  }
+  };
 
   changeDimension = (event, {ignoreEmpty = true} = {}) => {
     const {ratio, original, lastValid = {}} = this.state;
@@ -102,7 +100,7 @@ export default class EditorContainer extends Container {
     }
 
     this.setState(updates);
-  }
+  };
 
   openEditPluginConfig = async () => {
     const {editPlugin, filePath} = this.state;
@@ -114,7 +112,7 @@ export default class EditorContainer extends Container {
     });
 
     ipc.callMain('refresh-usage');
-  }
+  };
 
   setOptions = ({exportOptions = [], editOptions = [], fps}) => {
     const {format, plugin, editPlugin} = this.state;
@@ -123,7 +121,7 @@ export default class EditorContainer extends Container {
     if (format) {
       const option = exportOptions.find(option => option.format === format);
 
-      if (!option.plugins.find(p => p.title === plugin)) {
+      if (!option.plugins.some(p => p.title === plugin)) {
         const [{title}, {title: secondTitle} = {}] = option.plugins;
         updates.plugin = title === 'Open With' ? secondTitle : title;
       }
@@ -143,17 +141,17 @@ export default class EditorContainer extends Container {
     }
 
     this.setState(updates);
-  }
+  };
 
   saveOriginal = () => {
     const {filePath, originalFilePath} = this.state;
     ipc.callMain('save-original', {inputPath: originalFilePath || filePath});
-  }
+  };
 
   selectFormat = format => {
     const {plugin, options, wasMuted, fpsOptions, originalFps} = this.state;
     const {plugins} = options.find(option => option.format === format);
-    const newPlugin = plugin !== 'Open With' && plugins.find(p => p.title === plugin) ? plugin : plugins[0].title;
+    const newPlugin = plugin !== 'Open With' && plugins.some(p => p.title === plugin) ? plugin : plugins[0].title;
 
     if (this.videoContainer.state.hasAudio) {
       if (isMuted(format) && !isMuted(this.state.format)) {
@@ -171,7 +169,7 @@ export default class EditorContainer extends Container {
     }
 
     this.setState(updates);
-  }
+  };
 
   selectPlugin = plugin => {
     if (plugin === 'open-plugins') {
@@ -179,15 +177,15 @@ export default class EditorContainer extends Container {
     } else {
       this.setState({plugin, openWithApp: null});
     }
-  }
+  };
 
   selectEditPlugin = editPlugin => {
     this.setState({editPlugin});
-  }
+  };
 
   selectOpenWithApp = openWithApp => {
     this.setState({plugin: 'Open With', openWithApp});
-  }
+  };
 
   setFps = (value, target, {ignoreEmpty = true} = {}) => {
     const {fps, lastValidFps} = this.state;
@@ -219,11 +217,11 @@ export default class EditorContainer extends Container {
     } else {
       shake(target);
     }
-  }
+  };
 
   load = () => {
     this.finishLoading();
-  }
+  };
 
   getSnapshot = () => {
     const time = this.videoContainer.state.currentTime;
@@ -233,7 +231,7 @@ export default class EditorContainer extends Container {
       inputPath: filePath,
       time
     });
-  }
+  };
 
   startExport = () => {
     const {
@@ -284,5 +282,5 @@ export default class EditorContainer extends Container {
 
     ipc.callMain('export', data);
     ipc.callMain('update-usage', {format, plugin: plugin.pluginName, fps});
-  }
+  };
 }

@@ -10,14 +10,14 @@ class Select extends React.Component {
     options: [],
     placeholder: 'Select',
     noOptionsMessage: 'No options'
-  }
+  };
 
   constructor(props) {
     super(props);
     this.select = React.createRef();
   }
 
-  state = {}
+  state = {};
 
   static getDerivedStateFromProps(nextProps) {
     const {options, onSelect, selected} = nextProps;
@@ -52,7 +52,7 @@ class Select extends React.Component {
         y: Math.round(boundingRect.top)
       });
     }
-  }
+  };
 
   render() {
     const {options, selected, placeholder, noOptionsMessage, tabIndex, full} = this.props;

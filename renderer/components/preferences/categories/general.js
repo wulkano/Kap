@@ -18,19 +18,19 @@ class General extends React.Component {
     audioDevices: [],
     kapturesDir: '',
     category: 'general'
-  }
+  };
 
-  state = {}
+  state = {};
 
   componentDidMount() {
     this.setState({
-      showCursorSupported: electron.remote.require('./utils/macos-version').isGreaterThanOrEqualTo('10.13')
+      showCursorSupported: electron.remote.require('macos-version').isGreaterThanOrEqualTo('10.13')
     });
   }
 
   openKapturesDir = () => {
     electron.shell.openItem(this.props.kapturesDir);
-  }
+  };
 
   render() {
     const {

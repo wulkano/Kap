@@ -1,0 +1,22 @@
+{
+  "extends": "@sindresorhus/tsconfig",
+  "compilerOptions": {
+    "outDir": "dist-js",
+    "target": "es2019",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "allowJs": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    "lib": [
+      "esnext"
+    ]
+  },
+  "include": [
+    "node_modules/type-fest/index.d.ts",
+    "main/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

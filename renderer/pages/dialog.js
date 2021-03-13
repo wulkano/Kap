@@ -6,13 +6,13 @@ import {ipcRenderer as ipc} from 'electron-better-ipc';
 
 let measureResolve;
 
-export default () => {
+const Dialog = () => {
   const [data, setData] = useState();
   const [measureSize, setMeasureSize] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
   const container = useRef(null);
 
-  const performAction = index => {
+  const performAction = async index => {
     if (!isDisabled || data.cancelId === index) {
       setIsDisabled(true);
       return ipc.callMain(`dialog-action-${data.id}`, index);
@@ -20,7 +20,7 @@ export default () => {
   };
 
   useEffect(() => {
-    return ipc.answerMain('data', newData => new Promise(resolve => {
+    return ipc.answerMain('data', async newData => new Promise(resolve => {
       setData(newData);
       setMeasureSize(true);
       measureResolve = resolve;
@@ -45,7 +45,7 @@ export default () => {
         document.removeEventListener('keydown', handler);
       };
     }
-  }, [data]);
+  }, [data, performAction, isDisabled, setIsDisabled]);
 
   useEffect(() => {
     if (measureSize && measureResolve) {
@@ -85,8 +85,6 @@ export default () => {
           display: flex;
           width: ${measureSize ? 'max-content' : '100%'};
           height: ${measureSize ? 'max-content' : '100%'};
-          min-width: 420px;
-          min-height: 150px;
         }
 
         .dialog-content {
@@ -121,3 +119,5 @@ export default () => {
     </div>
   );
 };
+
+export default Dialog;

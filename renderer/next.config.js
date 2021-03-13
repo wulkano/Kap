@@ -1,14 +1,25 @@
-exports.webpack = config => Object.assign(config, {
-  target: 'electron-renderer',
-  devtool: 'cheap-module-source-map',
-  plugins: config.plugins.filter(p => p.constructor.name !== 'UglifyJsPlugin')
-});
+const path = require('path');
 
-exports.exportPathMap = () => ({
-  '/cropper': {page: '/cropper'},
-  '/editor': {page: '/editor'},
-  '/preferences': {page: '/preferences'},
-  '/exports': {page: '/exports'},
-  '/config': {page: '/config'},
-  '/dialog': {page: '/dialog'}
-});
+module.exports = (nextConfig) => {
+  return Object.assign({}, nextConfig, {
+    webpack(config, options) {
+      config.module.rules.push({
+        test: /\.+(js|jsx|mjs|ts|tsx)$/,
+        loader: options.defaultLoaders.babel,
+        include: [
+          path.join(__dirname, '..', 'main', 'common'),
+          path.join(__dirname, '..', 'main', 'remote-states', 'use-remote-state.ts')
+        ]
+      });
+
+      config.target = 'electron-renderer';
+      config.devtool = 'cheap-module-source-map';
+
+      if (typeof nextConfig.webpack === 'function') {
+        return nextConfig.webpack(config, options);
+      }
+
+      return config;
+    }
+  })
+}

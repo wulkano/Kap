@@ -12,16 +12,21 @@
     "url": "https://wulkano.com"
   },
   "private": true,
-  "main": "main/index.js",
+  "main": "dist-js/index.js",
   "scripts": {
     "lint": "xo",
-    "test": "xo && ava",
-    "start": "yarn && electron .",
-    "build": "next build renderer && next export renderer",
+    "lint:fix": "xo --fix",
+    "test:main": "TS_NODE_PROJECT=test/tsconfig.json ava",
+    "test": "yarn lint && yarn test:main",
+    "start": "tsc && run-electron .",
+    "build-main": "tsc",
+    "build-renderer": "next build renderer && next export renderer",
+    "build": "yarn build-main && yarn build-renderer",
     "dist": "npm run build && electron-builder",
     "pack": "npm run build && electron-builder --dir",
     "postinstall": "electron-builder install-app-deps",
-    "sentry-version": "echo \"$npm_package_name@$npm_package_version\""
+    "sentry-version": "echo \"$npm_package_name@$npm_package_version\"",
+    "dev": "next dev renderer"
   },
   "bundle": {
     "name": "Kap"
@@ -36,12 +41,14 @@
     "base64-img": "^1.0.4",
     "classnames": "^2.2.6",
     "clean-stack": "^3.0.0",
+    "cp-file": "^9.0.0",
     "delay": "^4.3.0",
-    "electron-better-ipc": "^1.0.1",
+    "electron-better-ipc": "^1.1.1",
     "electron-log": "^4.1.1",
     "electron-next": "^3.1.5",
     "electron-notarize": "^0.3.0",
-    "electron-store": "^5.1.1",
+    "electron-store": "^7.0.2",
+    "electron-timber": "^0.5.1",
     "electron-updater": "^4.3.1",
     "electron-util": "^0.14.1",
     "ensure-error": "^2.0.0",
@@ -56,18 +63,20 @@
     "mac-screen-capture-permissions": "^1.1.0",
     "mac-windows": "^0.7.1",
     "macos-audio-devices": "^1.3.2",
-    "macos-release": "^2.4.0",
+    "macos-release": "^2.4.1",
     "macos-version": "^5.2.0",
     "make-dir": "^3.1.0",
     "moment": "^2.24.0",
     "move-file": "^2.0.0",
     "nearest-normal-aspect-ratio": "^1.2.1",
     "node-mac-app-icon": "^1.4.0",
+    "object-hash": "^2.0.3",
     "p-cancelable": "^2.0.0",
     "p-event": "^4.1.0",
     "package-json": "^6.5.0",
     "pify": "^4.0.1",
     "plist": "^3.0.1",
+    "pretty-bytes": "^5.5.0",
     "pretty-ms": "^7.0.0",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
@@ -80,42 +89,67 @@
     "tildify": "^2.0.0",
     "tmp": "^0.2.0",
     "unstated": "^1.2.0",
+    "unstated-next": "^1.1.0",
     "yarn": "^1.22.4"
   },
   "devDependencies": {
-    "ava": "^3.9.0",
+    "@babel/core": "^7.12.16",
+    "@babel/eslint-parser": "^7.12.16",
+    "@sindresorhus/tsconfig": "^0.7.0",
+    "@types/got": "9.6.0",
+    "@types/insight": "^0.8.0",
+    "@types/lodash": "^4.14.168",
+    "@types/module-alias": "^2.0.0",
+    "@types/node": "^14.11.10",
+    "@types/object-hash": "^1.3.4",
+    "@types/react": "^16.9.46",
+    "@types/sinon": "^9.0.10",
+    "@typescript-eslint/eslint-plugin": "^4.15.0",
+    "@typescript-eslint/parser": "^4.15.0",
+    "ava": "^3.15.0",
     "babel-eslint": "^10.1.0",
     "electron": "8.2.4",
     "electron-builder": "^22.6.0",
     "electron-builder-notarize": "^1.1.2",
+    "eslint-config-xo": "^0.34.0",
     "eslint-config-xo-react": "^0.23.0",
-    "eslint-plugin-react": "^7.19.0",
-    "eslint-plugin-react-hooks": "^3.0.0",
+    "eslint-config-xo-typescript": "^0.37.0",
+    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^4.2.5",
     "module-alias": "^2.2.2",
-    "next": "^9.3.6",
+    "next": "^10.0.4",
+    "run-electron": "^1.0.0",
     "sinon": "^9.0.2",
+    "ts-node": "^9.1.1",
+    "type-fest": "^0.21.0",
+    "typed-emitter": "^1.3.1",
+    "typescript": "^4.0.3",
     "unique-string": "^2.0.0",
-    "xo": "^0.30.0"
+    "xo": "^0.37.1"
   },
   "_moduleAliases": {
-    "electron": "test/mocks/electron.js"
+    "electron": "test/mocks/electron.ts"
   },
   "ava": {
     "files": [
+      "test/**/*.ts",
       "test/**/*.js",
       "!test/helpers",
       "!test/mocks"
+    ],
+    "extensions": [
+      "ts"
     ],
     "verbose": true,
     "timeout": "5m",
     "failFast": true,
     "require": [
+      "ts-node/register",
       "module-alias/register"
     ]
   },
   "xo": {
-    "parser": "babel-eslint",
     "extends": "xo-react",
     "space": 2,
     "envs": [
@@ -123,20 +157,78 @@
       "browser"
     ],
     "rules": {
+      "template-curly-spacing": "off",
       "import/no-extraneous-dependencies": "off",
       "import/no-unassigned-import": "off",
       "react/jsx-closing-tag-location": "off",
       "react/require-default-props": "off",
       "react/jsx-curly-brace-presence": "off",
       "react/static-property-placement": "off",
+      "react/react-in-jsx-scope": "off",
       "react/boolean-prop-naming": "off",
       "unicorn/prefer-set-has": "off",
-      "ava/use-test": "off"
+      "ava/use-test": "off",
+      "import/extensions": "off"
     },
     "ignores": [
+      "dist-js",
       "dist",
       "renderer/.next",
-      "renderer/out"
+      "renderer/out",
+      "renderer/next.config.js"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "**/*.js",
+          "**/*.jsx"
+        ],
+        "parser": "babel-eslint"
+      },
+      {
+        "files": [
+          "**/*.ts",
+          "**/*.tsx"
+        ],
+        "extends": [
+          "xo-react",
+          "xo-typescript"
+        ],
+        "parserOptions": {
+          "project": [
+            "tsconfig.json",
+            "renderer/tsconfig.json",
+            "test/tsconfig.json"
+          ]
+        },
+        "rules": {
+          "react-hooks/exhaustive-deps": "off",
+          "@typescript-eslint/no-dynamic-delete": "off",
+          "@typescript-eslint/no-var-requires": "off",
+          "@typescript-eslint/no-floating-promises": "off",
+          "@typescript-eslint/no-implicit-any-catch": "off",
+          "@typescript-eslint/restrict-template-expressions": "off",
+          "no-await-in-loop": "off",
+          "react/prop-types": "off",
+          "@typescript-eslint/no-confusing-void-expression": "off",
+          "@typescript-eslint/indent": [
+            "error",
+            2
+          ]
+        }
+      },
+      {
+        "files": [
+          "test/**/*.ts"
+        ],
+        "rules": {
+          "@typescript-eslint/consistent-type-assertions": "off",
+          "@typescript-eslint/member-ordering": "off",
+          "import/no-anonymous-default-export": "off",
+          "@typescript-eslint/no-extraneous-class": "off",
+          "@typescript-eslint/no-empty-function": "off"
+        }
+      }
     ]
   },
   "husky": {
@@ -155,7 +247,8 @@
       ]
     },
     "files": [
-      "**/*",
+      "static",
+      "dist-js/**/*",
       "!renderer",
       "renderer/out"
     ],

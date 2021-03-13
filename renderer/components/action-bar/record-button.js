@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import {connect, CropperContainer} from '../../containers';
 import {handleKeyboardActivation} from '../../utils/inputs';
 
-const getMediaNode = deviceId => new Promise((resolve, reject) => {
+const getMediaNode = async deviceId => new Promise((resolve, reject) => {
   navigator.getUserMedia({
     audio: {deviceId}
   }, stream => {
@@ -53,7 +53,7 @@ const RecordButton = ({
         javascriptNode.onaudioprocess = () => {
           const array = new Uint8Array(analyser.frequencyBinCount);
           analyser.getByteFrequencyData(array);
-
+          // eslint-disable-next-line unicorn/no-array-reduce
           const avg = array.reduce((p, c) => p + c) / array.length;
           if (avg >= 36) {
             setShowFirstRipple(true);
@@ -98,7 +98,7 @@ const RecordButton = ({
 
     if (cropperExists) {
       const {remote} = electron;
-      const {startRecording} = remote.require('./common/aperture');
+      const {startRecording} = remote.require('./aperture');
 
       willStartRecording();
 

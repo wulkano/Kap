@@ -22,7 +22,9 @@ const ColorPicker = ({hasErrors, value, onChange}) => {
         value={value.startsWith('#') ? value.slice(1, value.length) : value}
         size={7}
         onChange={handleChange}
-        onMouseUp={event => event.currentTarget.select()}
+        onMouseUp={event => {
+          event.currentTarget.select();
+        }}
       />
       <style jsx>{`
         .container {
