@@ -147,7 +147,7 @@ export class Video {
 export class Recording extends Video {
   apertureOptions: ApertureOptions;
 
-  constructor(options: VideoOptions & { apertureOptions: ApertureOptions }) {
+  constructor(options: VideoOptions & {apertureOptions: ApertureOptions}) {
     const displays = screen.getAllDisplays();
     const pixelDensity = displays.find(display => display.id === options.apertureOptions.screenId)?.scaleFactor;
 

@@ -20,8 +20,8 @@ class Exports extends React.Component {
         {
           exports.map(exp => (
             <Export
-              {...exp}
               key={exp.createdAt}
+              {...exp}
               cancel={() => cancel(exp.createdAt)}
               openInEditor={() => openInEditor(exp.createdAt)}/>
           ))

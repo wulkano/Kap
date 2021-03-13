@@ -7,7 +7,9 @@ export default class CursorContainer extends Container {
 
   setCursor = ({pageX, pageY}) => {
     this.setState({cursorX: pageX, cursorY: pageY});
-    this.state.observers.forEach(observer => observer({pageX, pageY}));
+    for (const observer of this.state.observers) {
+      observer({pageX, pageY});
+    }
   };
 
   addCursorObserver = observer => {

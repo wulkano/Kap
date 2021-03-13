@@ -46,7 +46,7 @@ export default class EditorContainer extends Container {
       return;
     }
 
-    if (!value.match(/^\d+$/) && ignoreEmpty) {
+    if (!/^\d+$/.test(value) && ignoreEmpty) {
       const {width, height, lastValid = {}} = this.state;
       this.setState({[name]: value, lastValid: {width, height, ...lastValid}});
       return;
@@ -199,7 +199,7 @@ export default class EditorContainer extends Container {
       return;
     }
 
-    if (value.match(/^\d+$/)) {
+    if (/^\d+$/.test(value)) {
       const fps = Number.parseInt(value, 10);
       const {originalFps} = this.state;
 
