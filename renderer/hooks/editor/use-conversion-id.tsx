@@ -1,6 +1,6 @@
 import {CreateConversionOptions} from 'common/types';
 import {ipcRenderer} from 'electron-better-ipc';
-import {createContext, PropsWithChildren, useContext, useState} from 'react';
+import {createContext, PropsWithChildren, useContext, useMemo, useState} from 'react';
 
 const ConversionIdContext = createContext<{
   conversionId: string;
@@ -18,18 +18,16 @@ export const ConversionIdContextProvider = (props: PropsWithChildren<Record<stri
     setConversionId(id);
   };
 
-  const setConvId = (id: string) => {
+  const updateConversionId = (id: string) => {
     savedConversionId = savedConversionId || id;
     setConversionId(id || savedConversionId);
   };
 
-  // TODO: Fix this.
-  // eslint-disable-next-line react/jsx-no-constructed-context-values
-  const value = {
+  const value = useMemo(() => ({
     conversionId,
-    setConversionId: setConvId,
+    setConversionId: updateConversionId,
     startConversion
-  };
+  }), [conversionId, setConversionId]);
 
   return (
     <ConversionIdContext.Provider value={value}>
