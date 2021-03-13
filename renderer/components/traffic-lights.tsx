@@ -23,9 +23,9 @@ const TrafficLights: FunctionComponent<TrafficLightsProps> = props => {
   }, []);
 
   const enabled = {
-    close: currentWindow.isClosable(),
-    minimize: currentWindow.isMinimizable(),
-    maximize: currentWindow.isMaximizable()
+    close: currentWindow.closable,
+    minimize: currentWindow.minimizable,
+    maximize: currentWindow.maximizable
   };
 
   const getClassName = (name: string) => `traffic-light ${name}${enabled[name] ? '' : ' disabled'}`;

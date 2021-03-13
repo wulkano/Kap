@@ -84,7 +84,7 @@ class Left extends React.Component {
     const boundingRect = this.select.current.getBoundingClientRect();
     const {top, left} = boundingRect;
     const selectedRatio = ratio.join(':');
-    const index = RATIOS.findIndex(r => r === selectedRatio);
+    const index = RATIOS.indexOf(selectedRatio);
     const positioningItem = index > -1 ? index : RATIOS.length;
 
     this.state.menu.popup({

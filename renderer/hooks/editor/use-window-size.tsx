@@ -29,11 +29,11 @@ export const useEditorWindowSizeEffect = (isConversionWindowState: boolean) => {
       };
 
       window.setBounds(resizeKeepingCenter(bounds, {width: CONVERSION_WIDTH, height: CONVERSION_HEIGHT}), true);
-      window.setResizable(false);
-      window.setFullScreenable(false);
+      window.resizable = false;
+      window.fullScreenable = false;
     } else {
-      window.setResizable(true);
-      window.setFullScreenable(true);
+      window.resizable = true;
+      window.fullScreenable = true;
       window.setBounds(resizeKeepingCenter(bounds, previousWindowSizeRef.current), true);
     }
   }, [isConversionWindowState]);

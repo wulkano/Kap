@@ -50,7 +50,7 @@ export const extractProgressFromStderr = (stderr: string, conversionStartTime: n
   return undefined;
 };
 
-type ArgType = string[] | string | { args: string[]; if: boolean };
+type ArgType = string[] | string | {args: string[]; if: boolean};
 
 // Resolve conditional args
 //

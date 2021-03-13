@@ -50,7 +50,7 @@ const handleWidthInput = _.debounce(({
     return;
   }
 
-  if (value.match(/^\d+$/)) {
+  if (/^\d+$/.test(value)) {
     const integer = Number.parseInt(value, 10);
 
     target.width = Math.max(minWidth, Math.min(screenWidth, integer));
@@ -97,7 +97,7 @@ const handleHeightInput = _.debounce(({
     return;
   }
 
-  if (value.match(/^\d+$/)) {
+  if (/^\d+$/.test(value)) {
     const integer = Number.parseInt(value, 10);
 
     target.height = Math.max(minHeight, Math.min(screenHeight, integer));
