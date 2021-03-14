@@ -146,7 +146,7 @@ export default class Conversion extends EventEmitter {
     }
 
     if (!this.conversionProcess || (this.requestedFileType !== fileType)) {
-      this.start();
+      this.start(fileType);
     }
 
     this.requestedFileType = fileType;
@@ -242,9 +242,9 @@ export default class Conversion extends EventEmitter {
     } catch {}
   };
 
-  private readonly start = () => {
+  private readonly start = (fileType?: Format) => {
     this.conversionProcess = convertTo(
-      this.format,
+      fileType ?? this.format,
       {
         ...this.options,
         defaultFileName: this.video.title,
