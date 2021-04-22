@@ -64,6 +64,10 @@ export default class CropperContainer extends Container {
       isActive: false,
       isReady: false,
       ratio: [1, 1],
+      // Added this to keep track of cropper history to add undo button
+      cropperHistory: [],
+      cropperPointer: -1,
+      undone: false,
       recordAudio: this.settings.get('recordAudio'),
       audioInputDeviceId: this.settings.getSelectedInputDeviceId()
     };
@@ -122,8 +126,22 @@ export default class CropperContainer extends Container {
   };
 
   updateSettings = updates => {
-    const {x, y, width, height, ratio, displayId} = this.state;
+    // If already undone, if moved again then erase everything after current pointer
+    if (this.state.undone) {
+      let newCropperHistory = this.state.cropperHistory;
+      const CropperHistoryLength = this.state.cropperHistory.length;
+      if (this.state.cropperPointer > -1) {
+        const toBeDeleted = (CropperHistoryLength - 1) - this.state.cropperPointer;
+        newCropperHistory.splice(this.state.cropperPointer + 1, toBeDeleted);
+      } else {
+        newCropperHistory = [];
+      }
 
+      this.setState({cropperHistory: newCropperHistory});
+      this.setState({undone: false});
+    }
+
+    const {x, y, width, height, ratio, displayId} = this.state;
     this.settings.set('cropper', {
       x,
       y,
@@ -133,6 +151,10 @@ export default class CropperContainer extends Container {
       ...updates,
       displayId
     });
+    // Added in: keep track of cropper
+    this.setState({cropperHistory: [...this.state.cropperHistory, this.state]});
+    this.setState({cropperPointer: this.state.cropperPointer + 1});
+
     this.setState(updates);
   };
 
@@ -331,6 +353,50 @@ export default class CropperContainer extends Container {
       this.setState({isMoving: false, showHandles: true});
       this.cursorContainer.removeCursorObserver(this.move);
       this.updateSettings({x, y});
+    }
+  };
+
+  redo = () => {
+    if (this.state.undone && this.state.cropperPointer < this.state.cropperHistory.length - 1) {
+      const originalCropperHistory = this.state.cropperHistory;
+      const currPointer = this.state.cropperPointer + 1;
+      const newState = this.state.cropperHistory[currPointer];
+      this.setState(newState);
+      this.setState({cropperHistory: originalCropperHistory});
+      this.setState({cropperPointer: currPointer});
+      this.setState({undone: true});
+      const {x, y, width, height, ratio, displayId} = this.state;
+
+      this.settings.set('cropper', {
+        x,
+        y,
+        width,
+        height,
+        ratio,
+        displayId
+      });
+    }
+  }
+
+  undo = () => {
+    if (this.state.cropperPointer > 0) {
+      const originalCropperHistory = this.state.cropperHistory;
+      const currPointer = this.state.cropperPointer - 1;
+      const newState = this.state.cropperHistory[currPointer];
+      this.setState(newState);
+      this.setState({undone: true});
+      this.setState({cropperHistory: originalCropperHistory});
+      this.setState({cropperPointer: currPointer});
+      const {x, y, width, height, ratio, displayId} = this.state;
+
+      this.settings.set('cropper', {
+        x,
+        y,
+        width,
+        height,
+        ratio,
+        displayId
+      });
     }
   };
 
