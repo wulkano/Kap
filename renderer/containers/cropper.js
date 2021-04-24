@@ -356,7 +356,7 @@ export default class CropperContainer extends Container {
       this.setBounds({x, y, width, height});
       this.setState({isMoving: false, showHandles: true});
       this.cursorContainer.removeCursorObserver(this.move);
-      //this.updateSettings({x, y}); <-- do we need this? since it alreadly calls setBounds which updates Settings
+      // Check: this.updateSettings({x, y}); <-- do we need this? since it alreadly calls setBounds which updates Settings
     }
   };
 
