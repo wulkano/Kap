@@ -7,7 +7,7 @@
 
 ## Get Kap
 
-**[Download the latest release](https://kap.now.sh/api)** (macOS only)
+**[Download the latest release](https://getkap.co/download)** (macOS only)
 
 Or install with [Homebrew-Cask](https://caskroom.github.io):
 
