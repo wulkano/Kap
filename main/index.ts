@@ -1,4 +1,4 @@
-import {app, protocol} from 'electron';
+import {app} from 'electron';
 import {is, enforceMacOSAppLocation} from 'electron-util';
 import log from 'electron-log';
 import {autoUpdater} from 'electron-updater';
@@ -22,6 +22,7 @@ import {hasActiveRecording, cleanPastRecordings} from './recording-history';
 import {setupRemoteStates} from './remote-states';
 import {setUpExportsListeners} from './export';
 import {windowManager} from './windows/manager';
+import {setupProtocol} from './utils/protocol';
 
 const prepareNext = require('electron-next');
 
@@ -82,6 +83,8 @@ const checkForUpdates = () => {
   // Initialize remote states
   setupRemoteStates();
 
+  setupProtocol();
+
   app.dock.hide();
   app.setAboutPanelOptions({copyright: 'Copyright © Wulkano'});
 
@@ -101,11 +104,6 @@ const checkForUpdates = () => {
   if (!app.isDefaultProtocolClient('kap')) {
     app.setAsDefaultProtocolClient('kap');
   }
-
-  protocol.registerFileProtocol('file', (request, callback) => {
-    const pathname = decodeURI(request.url.replace('file:///', ''));
-    callback(pathname);
-  });
 
   if (filesToOpen.length > 0) {
     track('editor/opened/startup');
