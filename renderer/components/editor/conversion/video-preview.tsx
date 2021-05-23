@@ -4,7 +4,7 @@ import {ExportStatus} from 'common/types';
 import useEditorWindowState from 'hooks/editor/use-editor-window-state';
 import useConversionIdContext from 'hooks/editor/use-conversion-id';
 
-const VideoPreview = ({conversion, cancel}: {conversion: UseConversionState; cancel: () => any}) => {
+const VideoPreview = ({conversion, cancel, showInFolder}: {conversion: UseConversionState; cancel: () => any; showInFolder: () => any}) => {
   const {conversionId} = useConversionIdContext();
   const {filePath} = useEditorWindowState();
   const src = `file://${filePath}`;
@@ -16,12 +16,16 @@ const VideoPreview = ({conversion, cancel}: {conversion: UseConversionState; can
     event.preventDefault();
     // Has to be the electron one for this
     const {ipcRenderer} = require('electron');
-    ipcRenderer.send('drag-conversion', conversionId);
+    ipcRenderer.send('drag-export', conversionId);
   };
 
   return (
-    <div draggable className="video-preview" onDragStart={onDragStart}>
-      <video src={src}/>
+    <div draggable className="video-preview" onDragStart={onDragStart} onClick={showInFolder}>
+      {
+        done && conversion?.canPreviewExport ?
+          <img src={`file://${conversion?.filePath}`}/> :
+          <video src={src}/>
+      }
       <div className="overlay" style={{display: done ? 'none' : 'flex'}}>
         <div className="progress-indicator">
           {
@@ -45,7 +49,7 @@ const VideoPreview = ({conversion, cancel}: {conversion: UseConversionState; can
           -webkit-app-region: no-drag;
         }
 
-        video {
+        video, img {
           width: 100%;
           height: 100%;
         }

@@ -17,7 +17,8 @@ const copyToClipboard = {
   title: 'Copy to Clipboard',
   formats: [
     'gif',
-    'apng'
+    'apng',
+    'mp4'
   ],
   action
 };

@@ -44,9 +44,14 @@ const exportsRemoteState: RemoteStateHandler<ExportsRemoteState> = sendUpdate =>
       Export.fromId(exportId)?.video?.openEditorWindow?.();
     },
     showInFolder: (exportId: string) => {
-      const {filePath, disableOutputActions} = Export.fromId(exportId)?.data ?? {};
-      if (filePath && !disableOutputActions) {
-        shell.showItemInFolder(filePath);
+      const exportInstance = Export.fromId(exportId);
+
+      if (!exportInstance) {
+        return;
+      }
+
+      if (exportInstance.finalFilePath && !exportInstance.data.disableOutputActions) {
+        shell.showItemInFolder(exportInstance.finalFilePath);
       }
     }
   } as any;

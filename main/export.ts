@@ -36,7 +36,7 @@ export default class Export extends (EventEmitter as new () => TypedEventEmitter
   conversion?: Conversion;
   status: ExportStatus = ExportStatus.inProgress;
 
-  private text = '';
+  private text = 'Loading…';
   private percentage = 0;
 
   private readonly context: ShareServiceContext;
@@ -47,6 +47,7 @@ export default class Export extends (EventEmitter as new () => TypedEventEmitter
 
   private readonly _start = PCancelable.fn(async (onCancel: OnCancelFunction) => {
     this.error = undefined;
+    this.text = 'Loading…';
     const action = this.options.service.action(this.context) as any;
 
     onCancel(() => {
@@ -114,9 +115,21 @@ export default class Export extends (EventEmitter as new () => TypedEventEmitter
     return this.createdAt.toString();
   }
 
+  get canPreviewExport() {
+    return [Format.gif, Format.apng].includes(this.format) && this.finalFilePath !== undefined;
+  }
+
+  get finalFilePath() {
+    const filePath = this.conversion?.convertedFilePath;
+
+    // If Save To Disk plugin is used, open the file in the final destination, not the temp one
+    return filePath && ((this.options.extras.targetFilePath as string) ?? filePath);
+  }
+
   get data(): ExportState {
     return {
       title: this.title,
+      titleWithFormat: `${this.title}.${this.format}`,
       description: this.description,
       canCopy: this.conversion?.canCopy ?? false,
       status: this.status,
@@ -127,7 +140,8 @@ export default class Export extends (EventEmitter as new () => TypedEventEmitter
       filePath: this.conversion?.convertedFilePath,
       error: this.error,
       fileSize: this.conversion?.finalSize,
-      disableOutputActions: this.areOutputActionsDisabled
+      disableOutputActions: this.areOutputActionsDisabled,
+      canPreviewExport: this.canPreviewExport
     };
   }
 
@@ -227,17 +241,6 @@ interface ExportsEvents {
 export const setUpExportsListeners = () => {
   ipcMain.on('drag-export', async (event: any, id: string) => {
     const conversion = Export.exportsMap.get(id)?.conversion;
-
-    if (conversion && (await conversion.filePathExists())) {
-      event.sender.startDrag({
-        file: conversion.convertedFilePath,
-        icon: await conversion.video.getDragIcon(conversion.options)
-      });
-    }
-  });
-
-  ipcMain.on('drag-conversion', async (event: any, id: string) => {
-    const conversion = Conversion.fromId(id);
 
     if (conversion && (await conversion.filePathExists())) {
       event.sender.startDrag({

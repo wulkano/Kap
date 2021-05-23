@@ -73,6 +73,8 @@ export interface ExportState {
   status: ExportStatus;
   canCopy: boolean;
   disableOutputActions: boolean;
+  canPreviewExport: boolean;
+  titleWithFormat: string;
 }
 
 export type ExportsRemoteState = RemoteState<ExportState, {

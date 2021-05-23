@@ -26,7 +26,7 @@ export default class Conversion extends (EventEmitter as new () => TypedEventEmi
   convertedFilePath?: string;
 
   get canCopy() {
-    return Boolean(this.convertedFilePath && [Format.gif, Format.apng].includes(this.format));
+    return Boolean(this.convertedFilePath && [Format.gif, Format.apng, Format.mp4].includes(this.format));
   }
 
   private conversionProcess?: PCancelable<string>;

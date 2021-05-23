@@ -8,6 +8,7 @@ import {Progress, ProgressSpinner} from './progress';
 import useConversion from '../../hooks/editor/use-conversion';
 import {ExportStatus} from '../../common/types';
 import {useShowWindow} from '../../hooks/use-show-window';
+import {MenuItemConstructorOptions} from 'electron/common';
 
 const stopPropagation = event => event.stopPropagation();
 
@@ -41,19 +42,32 @@ const Export = ({id}: {id: string}) => {
 
   const menu = useMemo(() => {
     const {api} = require('electron-util');
-    return api.Menu.buildFromTemplate([{
+
+    const menuTemplate: MenuItemConstructorOptions[] = [{
       label: 'Open Original',
-      click: openInEditor
-    },
-    state?.canCopy && {
-      label: 'Copy',
-      click: () => copy()
-    },
-    canRetry && {
-      label: 'Retry',
-      click: () => retry()
-    }].filter(Boolean));
-  }, [canRetry, retry, openInEditor]);
+      click: () => openInEditor()
+    }];
+
+    if (state?.canCopy) {
+      menuTemplate.unshift({
+        label: 'Copy',
+        click: () => copy()
+      }, {
+        type: 'separator'
+      });
+    }
+
+    if (canRetry) {
+      menuTemplate.unshift({
+        label: 'Retry',
+        click: () => retry()
+      }, {
+        type: 'separator'
+      });
+    }
+
+    return api.Menu.buildFromTemplate(menuTemplate);
+  }, [canRetry, retry, openInEditor, state?.canCopy, copy]);
 
   if (isLoading) {
     return null;
@@ -90,8 +104,8 @@ const Export = ({id}: {id: string}) => {
         </div>
       </div>
       <div className="details">
-        <div className={fileNameClassName}>
-          {state.title}
+        <div className={fileNameClassName} title={state.titleWithFormat}>
+          {state.titleWithFormat}
         </div>
         <div className="subtitle" title={state.error?.message}>{state.message}{state.error && ` - ${state.error.message}`}</div>
       </div>

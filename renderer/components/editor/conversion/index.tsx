@@ -48,10 +48,11 @@ const EditorConversionView = ({conversionId}: {conversionId: string}) => {
         retry={() => {
           conversion.retry();
         }}/>
-      <VideoPreview conversion={conversion.state} cancel={finalCancel}/>
+      <VideoPreview conversion={conversion.state} cancel={finalCancel} showInFolder={() => conversion.showInFolder()}/>
       <ConversionDetails conversion={conversion.state}/>
       <style jsx>{`
         .editor-conversion-view {
+          width: 360px;
           display: flex;
           flex-direction: column;
           flex: 1;
