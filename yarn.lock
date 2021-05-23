@@ -3356,10 +3356,10 @@ electron-util@^0.8.2:
   dependencies:
     electron-is-dev "^0.3.0"
 
-electron@8.2.4:
-  version "8.2.4"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-8.2.4.tgz#c4e51ca8e84b5a5beaaabdae1024bd52ba487ba4"
-  integrity sha512-Lle0InIgSAHZxD5KDY0wZ1A2Zlc6GHwMhAxoHMzn05mndyP1YBkCYHc0TDDofzUTrsLFofduPjlknO5Oj9fTPA==
+electron@10.4.6:
+  version "10.4.6"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-10.4.6.tgz#1f69e5c2394c3e6cc0f7b610d5bed06a0709c68c"
+  integrity sha512-HCKJrWy9ZF4x7dOE8Q3+lXFVz/We7D+4mAZJHtwdeZT3EjcGrm575TsuuzY8AOUASohmezaBANcSmJy0zVlAzw==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^12.0.12"

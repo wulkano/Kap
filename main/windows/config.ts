@@ -50,7 +50,8 @@ const openEditorConfigWindow = async (pluginName: string, serviceTitle: string, 
     parent: editorWindow,
     modal: true,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      enableRemoteModule: true
     }
   });
 

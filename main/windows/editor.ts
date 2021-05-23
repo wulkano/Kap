@@ -40,7 +40,6 @@ const open = async (video: Video) => {
     height: MIN_WINDOW_HEIGHT,
     backgroundColor: '#222222',
     webPreferences: {
-      nodeIntegration: true,
       webSecurity: !is.development // Disable webSecurity in dev to load video over file:// protocol while serving over insecure http, this is not needed in production where we use file:// protocol for html serving.
     },
     frame: false,

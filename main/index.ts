@@ -22,6 +22,7 @@ import {hasActiveRecording, cleanPastRecordings} from './recording-history';
 import {setupRemoteStates} from './remote-states';
 import {setUpExportsListeners} from './export';
 import {windowManager} from './windows/manager';
+import {setupProtocol} from './utils/protocol';
 
 const prepareNext = require('electron-next');
 
@@ -81,6 +82,8 @@ const checkForUpdates = () => {
 
   // Initialize remote states
   setupRemoteStates();
+
+  setupProtocol();
 
   app.dock.hide();
   app.setAboutPanelOptions({copyright: 'Copyright © Wulkano'});
