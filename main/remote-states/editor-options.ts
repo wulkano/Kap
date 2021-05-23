@@ -1,5 +1,5 @@
 import Store from 'electron-store';
-import {EditorOptionsRemoteState, ExportOptions, ExportOptionsPlugin, Format} from '../common/types';
+import {EditorOptionsRemoteState, ExportOptions, ExportOptionsPlugin, Format, RemoteStateHandler} from '../common/types';
 import {formats} from '../common/constants';
 
 import {plugins} from '../plugins';
@@ -94,7 +94,7 @@ const getExportOptions = () => {
   return options.map(option => ({...option, plugins: option.plugins.sort(sortFunc)})).sort(sortFunc);
 };
 
-const editorOptionsRemoteState: EditorOptionsRemoteState = (sendUpdate: (state: ExportOptions) => void) => {
+const editorOptionsRemoteState: RemoteStateHandler<EditorOptionsRemoteState> = sendUpdate => {
   const state: ExportOptions = {
     formats: getExportOptions(),
     editServices: getEditOptions(),
@@ -112,7 +112,7 @@ const editorOptionsRemoteState: EditorOptionsRemoteState = (sendUpdate: (state: 
   plugins.on('config-changed', updatePlugins);
 
   const actions = {
-    updatePluginUsage: ({format, plugin}: {format: Format; plugin: string}) => {
+    updatePluginUsage: (_: string, {format, plugin}: {format: Format; plugin: string}) => {
       const usage = exportUsageHistory.get(format);
       const now = Date.now();
 
@@ -123,7 +123,7 @@ const editorOptionsRemoteState: EditorOptionsRemoteState = (sendUpdate: (state: 
       state.formats = getExportOptions();
       sendUpdate(state);
     },
-    updateFpsUsage: ({format, fps}: {format: Format; fps: number}) => {
+    updateFpsUsage: (_: string, {format, fps}: {format: Format; fps: number}) => {
       fpsUsageHistory.set(format, fps);
       state.fpsHistory = fpsUsageHistory.store;
       sendUpdate(state);

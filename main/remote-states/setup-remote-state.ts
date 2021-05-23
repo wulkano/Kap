@@ -6,22 +6,26 @@ import {BrowserWindow} from 'electron';
 const setupRemoteState = async <State, Actions extends Record<string, Function>>(name: string, callback: RemoteState<State, Actions>) => {
   const channelNames = getChannelNames(name);
 
-  const renderers = new Map<string, BrowserWindow>();
+  const renderersMap = new Map<string, Set<BrowserWindow>>();
 
   const sendUpdate = async (state?: State, id?: string) => {
     if (id) {
-      const renderer = renderers.get(id);
+      const renderers = renderersMap.get(id) ?? new Set();
 
-      if (renderer) {
-        ipcMain.callRenderer(renderer, channelNames.stateUpdated, state);
+      for (const renderer of renderers) {
+        ipcMain.callRenderer(renderer, channelNames.stateUpdated, {state, id});
       }
 
       return;
     }
 
-    for (const [windowId, renderer] of renderers.entries()) {
-      if (renderer && !renderer.isDestroyed()) {
-        ipcMain.callRenderer(renderer, channelNames.stateUpdated, state ?? (await getState?.(windowId)));
+    for (const [windowId, renderers] of renderersMap.entries()) {
+      for (const renderer of renderers) {
+        if (renderer && !renderer.isDestroyed()) {
+          ipcMain.callRenderer(renderer, channelNames.stateUpdated, {state: state ?? (await getState?.(windowId))});
+        } else {
+          renderers.delete(renderer);
+        }
       }
     }
   };
@@ -30,11 +34,16 @@ const setupRemoteState = async <State, Actions extends Record<string, Function>>
 
   ipcMain.answerRenderer(channelNames.subscribe, (customId: string, window: BrowserWindow) => {
     const id = customId ?? window.id.toString();
-    renderers.set(id, window);
+
+    if (!renderersMap.has(id)) {
+      renderersMap.set(id, new Set());
+    }
+
+    renderersMap.get(id)?.add(window);
     const unsubscribe = subscribe?.(id);
 
     window.on('close', () => {
-      renderers.delete(id);
+      renderersMap.get(id)?.delete(window);
       unsubscribe?.();
     });
 
@@ -48,7 +57,7 @@ const setupRemoteState = async <State, Actions extends Record<string, Function>>
 
   ipcMain.answerRenderer(channelNames.callAction, ({key, data, id: customId}: any, window: BrowserWindow) => {
     const id = customId || window.id.toString();
-    return (actions as any)[key]?.(data, id);
+    return (actions as any)[key]?.(id, ...data);
   });
 };
 

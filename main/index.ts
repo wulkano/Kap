@@ -13,7 +13,6 @@ import {settings} from './common/settings';
 import {plugins} from './plugins';
 import {initializeTray} from './tray';
 import {initializeDevices} from './utils/devices';
-import {setUpConversionListeners} from './conversion';
 import {initializeAnalytics, track} from './common/analytics';
 import {initializeGlobalAccelerators} from './global-accelerators';
 import {openFiles} from './utils/open-files';
@@ -82,7 +81,6 @@ const checkForUpdates = () => {
 
   // Initialize remote states
   setupRemoteStates();
-  setUpConversionListeners();
 
   app.dock.hide();
   app.setAboutPanelOptions({copyright: 'Copyright © Wulkano'});

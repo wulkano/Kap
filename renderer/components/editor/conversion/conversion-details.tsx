@@ -1,10 +1,10 @@
 import {UseConversionState} from 'hooks/editor/use-conversion';
 
 const ConversionDetails = ({conversion}: {conversion: UseConversionState}) => {
-  const message = conversion?.message ?? 'Loading…';
+  const message = conversion?.message || 'Loading…';
   const title = conversion?.title;
   const description = conversion?.description;
-  const size = conversion?.size;
+  const size = conversion?.fileSize;
 
   return (
     <div className="conversion-details">

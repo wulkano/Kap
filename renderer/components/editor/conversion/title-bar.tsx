@@ -3,12 +3,12 @@ import {BackPlainIcon} from 'vectors';
 import {UseConversionState} from 'hooks/editor/use-conversion';
 import {flags} from '../../../common/flags';
 import {remote} from 'electron';
-import {ConversionStatus} from '../../../common/types';
+import {ExportStatus} from '../../../common/types';
 
-const TitleBar = ({conversion, cancel, copy}: {conversion: UseConversionState; cancel: () => any; copy: () => any}) => {
+const TitleBar = ({conversion, cancel, copy, retry}: {conversion: UseConversionState; cancel: () => any; copy: () => any; retry: () => any}) => {
   const {api} = require('electron-util');
   const shouldClose = async () => {
-    if (conversion.status === ConversionStatus.inProgress && !flags.get('backgroundEditorConversion')) {
+    if (conversion.status === ExportStatus.inProgress && !flags.get('backgroundEditorConversion')) {
       await api.dialog.showMessageBox(remote.getCurrentWindow(), {
         type: 'info',
         message: 'Your export will continue in the background. You can access it through the Export History window.',
@@ -21,6 +21,8 @@ const TitleBar = ({conversion, cancel, copy}: {conversion: UseConversionState; c
     return true;
   };
 
+  const canRetry = [ExportStatus.canceled, ExportStatus.failed].includes(conversion?.status);
+
   return (
     <div className="title-bar">
       <div className="left">
@@ -31,6 +33,7 @@ const TitleBar = ({conversion, cancel, copy}: {conversion: UseConversionState; c
       </div>
       <div className="right">
         {conversion?.canCopy && <div className="button" onClick={copy}>Copy</div>}
+        {canRetry && <div className="button" onClick={retry}>Retry</div>}
       </div>
       <style jsx>{`
         .title-bar {

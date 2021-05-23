@@ -1,7 +1,7 @@
-import {ConversionRemoteState} from 'common/types';
+import {ExportsRemoteState} from 'common/types';
 import createRemoteStateHook from 'hooks/use-remote-state';
 
-const useConversion = createRemoteStateHook<ConversionRemoteState>('conversion');
+const useConversion = createRemoteStateHook<ExportsRemoteState>('exports');
 
 export type UseConversion = ReturnType<typeof useConversion>;
 export type UseConversionState = UseConversion['state'];

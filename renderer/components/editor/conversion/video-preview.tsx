@@ -1,6 +1,6 @@
 import {CancelIcon, SpinnerIcon} from 'vectors';
 import {UseConversion, UseConversionState} from 'hooks/editor/use-conversion';
-import {ConversionStatus} from 'common/types';
+import {ExportStatus} from 'common/types';
 import useEditorWindowState from 'hooks/editor/use-editor-window-state';
 import useConversionIdContext from 'hooks/editor/use-conversion-id';
 
@@ -10,7 +10,7 @@ const VideoPreview = ({conversion, cancel}: {conversion: UseConversionState; can
   const src = `file://${filePath}`;
 
   const percentage = conversion?.progress ?? 0;
-  const done = conversion?.status !== ConversionStatus.inProgress;
+  const done = conversion?.status !== ExportStatus.inProgress;
 
   const onDragStart = (event: any) => {
     event.preventDefault();

@@ -33,6 +33,7 @@ export default class KapWindow<State = any> {
   browserWindow: BrowserWindow;
   state?: State;
   menu: Menu = Menu.buildFromTemplate(defaultApplicationMenu());
+  readonly id: number;
 
   private readonly readyPromise: Promise<void>;
   private readonly cleanupMethods: Array<() => void> = [];
@@ -55,6 +56,9 @@ export default class KapWindow<State = any> {
       show: false
     });
 
+    this.id = this.browserWindow.id;
+    KapWindow.windows.set(this.id, this);
+
     this.cleanupMethods = [];
     this.options = {
       ...KapWindow.defaultOptions,
@@ -75,18 +79,12 @@ export default class KapWindow<State = any> {
     return this.windows.get(id);
   }
 
-  get id() {
-    return this.browserWindow.id;
-  }
-
   get webContents() {
     return this.browserWindow.webContents;
   }
 
   cleanup = () => {
-    this.executeIfNotDestroyed(() => {
-      KapWindow.windows.delete(this.id);
-    });
+    KapWindow.windows.delete(this.id);
 
     for (const method of this.cleanupMethods) {
       method();
@@ -128,8 +126,6 @@ export default class KapWindow<State = any> {
     this.browserWindow.on('show', () => {
       if (this.options.dock && !app.dock.isVisible) {
         app.dock.show();
-      } else if (!this.options.dock && app.dock.isVisible) {
-        app.dock.hide();
       }
     });
 
@@ -150,7 +146,10 @@ export default class KapWindow<State = any> {
     if (waitForMount) {
       return new Promise<void>(resolve => {
         this.answerRenderer('kap-window-mount', () => {
-          this.browserWindow.show();
+          if (!this.browserWindow.isVisible()) {
+            this.browserWindow.show();
+          }
+
           resolve();
         });
       });
@@ -162,9 +161,9 @@ export default class KapWindow<State = any> {
 
   // Use this around any call that causes:
   // TypeError: Object has been destroyed
-  private readonly executeIfNotDestroyed = (callback: () => void) => {
-    if (!this.browserWindow.isDestroyed()) {
-      callback();
-    }
-  };
+  // private readonly executeIfNotDestroyed = (callback: () => void) => {
+  //   if (!this.browserWindow.isDestroyed()) {
+  //     callback();
+  //   }
+  // };
 }

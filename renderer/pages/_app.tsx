@@ -14,12 +14,6 @@ const Kap = (props: AppProps) => {
     setIsMounted(true);
   }, []);
 
-  useEffect(() => {
-    if (isMounted) {
-      ipcRenderer.callMain('kap-window-mount');
-    }
-  }, [isMounted]);
-
   if (!isMounted) {
     return null;
   }

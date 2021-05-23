@@ -133,7 +133,7 @@ const ConvertButton = () => {
     const shouldCrop = true;
     startConversion({
       filePath,
-      options: {
+      conversionOptions: {
         width: options.width,
         height: options.height,
         startTime,

@@ -1,4 +1,4 @@
-import {ConversionStatus} from 'common/types';
+import {ExportStatus} from 'common/types';
 import useConversion from 'hooks/editor/use-conversion';
 import useConversionIdContext from 'hooks/editor/use-conversion-id';
 import {useConfirmation} from 'hooks/use-confirmation';
@@ -18,8 +18,12 @@ const EditorConversionView = ({conversionId}: {conversionId: string}) => {
   const {setConversionId} = useConversionIdContext();
   const conversion = useConversion(conversionId);
 
+  const inProgress = conversion.state?.status === ExportStatus.inProgress;
+
   const cancel = () => {
-    conversion.cancel();
+    if (inProgress) {
+      conversion.cancel();
+    }
   };
 
   const safeCancel = useConfirmation(cancel, dialogOptions);
@@ -29,8 +33,6 @@ const EditorConversionView = ({conversionId}: {conversionId: string}) => {
     setConversionId('');
   };
 
-  const inProgress = conversion.state?.status === ConversionStatus.inProgress;
-
   const finalCancel = useMemo(() => inProgress ? safeCancel : () => { /* do nothing */ }, [inProgress]);
 
   useKeyboardAction('Escape', finalCancel);
@@ -38,8 +40,13 @@ const EditorConversionView = ({conversionId}: {conversionId: string}) => {
   return (
     <div className="editor-conversion-view">
       <TitleBar
-        conversion={conversion.state} cancel={cancelAndGoBack} copy={() => {
+        conversion={conversion.state}
+        cancel={cancelAndGoBack}
+        copy={() => {
           conversion.copy();
+        }}
+        retry={() => {
+          conversion.retry();
         }}/>
       <VideoPreview conversion={conversion.state} cancel={finalCancel}/>
       <ConversionDetails conversion={conversion.state}/>

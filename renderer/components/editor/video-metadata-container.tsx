@@ -1,5 +1,6 @@
 import {createContainer} from 'unstated-next';
 import {useRef, useState} from 'react';
+import {useShowWindow} from '../../hooks/use-show-window';
 
 const useVideoMetadata = () => {
   const videoRef = useRef<HTMLVideoElement>();
@@ -8,6 +9,7 @@ const useVideoMetadata = () => {
   const [height, setHeight] = useState(0);
   const [hasAudio, setHasAudio] = useState(false);
   const [duration, setDuration] = useState(0);
+  useShowWindow(duration !== 0);
 
   const setVideoRef = (video: HTMLVideoElement) => {
     videoRef.current = video;

@@ -1,11 +1,11 @@
-import {CreateConversionOptions} from 'common/types';
+import {CreateExportOptions} from 'common/types';
 import {ipcRenderer} from 'electron-better-ipc';
 import {createContext, PropsWithChildren, useContext, useMemo, useState} from 'react';
 
 const ConversionIdContext = createContext<{
   conversionId: string;
   setConversionId: (id: string) => void;
-  startConversion: (options: CreateConversionOptions) => Promise<void>;
+  startConversion: (options: CreateExportOptions) => Promise<void>;
 }>(undefined);
 
 let savedConversionId: string;
@@ -13,8 +13,8 @@ let savedConversionId: string;
 export const ConversionIdContextProvider = (props: PropsWithChildren<Record<string, unknown>>) => {
   const [conversionId, setConversionId] = useState<string>();
 
-  const startConversion = async (options: CreateConversionOptions) => {
-    const id = await ipcRenderer.callMain<CreateConversionOptions, string>('create-conversion', options);
+  const startConversion = async (options: CreateExportOptions) => {
+    const id = await ipcRenderer.callMain<CreateExportOptions, string>('create-export', options);
     setConversionId(id);
   };
 
