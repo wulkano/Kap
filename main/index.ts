@@ -1,4 +1,4 @@
-import {app} from 'electron';
+import {app, protocol} from 'electron';
 import {is, enforceMacOSAppLocation} from 'electron-util';
 import log from 'electron-log';
 import {autoUpdater} from 'electron-updater';
@@ -101,6 +101,11 @@ const checkForUpdates = () => {
   if (!app.isDefaultProtocolClient('kap')) {
     app.setAsDefaultProtocolClient('kap');
   }
+
+  protocol.registerFileProtocol('file', (request, callback) => {
+    const pathname = decodeURI(request.url.replace('file:///', ''));
+    callback(pathname);
+  });
 
   if (filesToOpen.length > 0) {
     track('editor/opened/startup');

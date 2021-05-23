@@ -5,7 +5,6 @@ import GlobalStyles from '../utils/global-styles';
 import SentryErrorBoundary from '../utils/sentry-error-boundary';
 import {WindowStateProvider} from '../hooks/window-state';
 import classNames from 'classnames';
-import {ipcRenderer} from 'electron-better-ipc';
 
 const Kap = (props: AppProps) => {
   const [isMounted, setIsMounted] = useState(false);

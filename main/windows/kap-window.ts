@@ -39,7 +39,7 @@ export default class KapWindow<State = any> {
   private readonly cleanupMethods: Array<() => void> = [];
   private readonly options: KapWindowOptions<State>;
 
-  constructor(props: KapWindowOptions<State>) {
+  constructor(private readonly props: KapWindowOptions<State>) {
     const {
       route,
       waitForMount,
@@ -51,6 +51,7 @@ export default class KapWindow<State = any> {
       ...rest,
       webPreferences: {
         nodeIntegration: true,
+        enableRemoteModule: true,
         ...rest.webPreferences
       },
       show: false
@@ -67,7 +68,6 @@ export default class KapWindow<State = any> {
 
     this.state = initialState;
     this.generateMenu();
-    loadRoute(this.browserWindow, route);
     this.readyPromise = this.setupWindow();
   }
 
@@ -142,6 +142,10 @@ export default class KapWindow<State = any> {
         this.callRenderer('kap-window-state', this.state);
       }
     });
+
+    this.answerRenderer('kap-window-state', () => this.state);
+
+    loadRoute(this.browserWindow, this.props.route);
 
     if (waitForMount) {
       return new Promise<void>(resolve => {

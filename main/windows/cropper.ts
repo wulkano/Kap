@@ -46,7 +46,8 @@ const openCropper = (display: Display, activeDisplayId?: number) => {
     transparent: true,
     show: false,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      enableRemoteModule: true
     }
   });
 
@@ -153,7 +154,6 @@ const openCropperWindow = async () => {
 
     const wasFocused = cropper.isFocused();
 
-    // @ts-expect-error
     cropper.removeAllListeners('closed');
     cropper.destroy();
     croppers.delete(id);
@@ -176,7 +176,6 @@ const preventDefault = (event: any) => event.preventDefault();
 
 const selectApp = async (window: MacWindow, activateWindow: (ownerName: string) => Promise<void>) => {
   for (const cropper of croppers.values()) {
-    // @ts-expect-error
     cropper.prependListener('blur', preventDefault);
   }
 
@@ -213,7 +212,6 @@ const disableCroppers = () => {
   }
 
   for (const cropper of croppers.values()) {
-    // @ts-expect-error
     cropper.removeAllListeners('blur');
     cropper.setIgnoreMouseEvents(true);
     cropper.setVisibleOnAllWorkspaces(true);

@@ -199,7 +199,7 @@ export default class PreferencesContainer extends Container {
     this.setOverlay(false);
   };
 
-  openPluginsFolder = () => electron.shell.openItem(this.plugins.pluginsDir);
+  openPluginsFolder = () => electron.shell.openPath(this.plugins.pluginsDir);
 
   selectCategory = category => {
     this.setState({category});

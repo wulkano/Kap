@@ -155,8 +155,7 @@ export class InstalledPlugin extends BasePlugin {
   openConfig = () => windowManager.config?.open(this.name);
 
   openConfigInEditor = () => {
-    // TODO: replace with `this.config.openInEditor()` when we upgrade to an Electron version that has `shell.openPath()`
-    shell.openItem(this.config.path);
+    return this.config.openInEditor();
   };
 
   private readonly getSetEnableFunction = (service: RecordService) => async (enabled: boolean) => {
