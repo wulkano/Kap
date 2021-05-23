@@ -7,7 +7,6 @@ import {CancelIcon, MoreIcon} from '../../vectors';
 import {Progress, ProgressSpinner} from './progress';
 import useConversion from '../../hooks/editor/use-conversion';
 import {ExportStatus} from '../../common/types';
-import util from 'electron-util';
 import {useShowWindow} from '../../hooks/use-show-window';
 
 const stopPropagation = event => event.stopPropagation();
@@ -41,7 +40,8 @@ const Export = ({id}: {id: string}) => {
   }, [isActionable, state?.id]);
 
   const menu = useMemo(() => {
-    return util.api.Menu.buildFromTemplate([{
+    const {api} = require('electron-util');
+    return api.Menu.buildFromTemplate([{
       label: 'Open Original',
       click: openInEditor
     },
