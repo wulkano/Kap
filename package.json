@@ -82,6 +82,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-linkify": "^0.2.2",
+    "react-tooltip": "^4.2.19",
     "read-pkg": "^5.2.0",
     "semver": "^7.3.4",
     "string-math": "^1.2.2",
