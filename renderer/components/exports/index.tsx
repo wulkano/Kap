@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import useExportsList from '../../hooks/exports/use-exports-list';
 import Export from './export';
 
 const Exports = () => {
-  const {state: exportList = []} = useExportsList();
+  const {state = []} = useExportsList();
+
+  const exportList = useMemo(() => state.reverse(), [state]);
 
   return (
     <div>

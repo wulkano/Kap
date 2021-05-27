@@ -2,7 +2,7 @@ import {remote} from 'electron';
 import {useEffect, useRef} from 'react';
 import {resizeKeepingCenter} from 'utils/window';
 
-const CONVERSION_WIDTH = 360;
+const CONVERSION_WIDTH = 370;
 const CONVERSION_HEIGHT = 392;
 const DEFAULT_EDITOR_WIDTH = 768;
 const DEFAULT_EDITOR_HEIGHT = 480;

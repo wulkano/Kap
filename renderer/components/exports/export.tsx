@@ -40,9 +40,7 @@ const Export = ({id}: {id: string}) => {
     }
   }, [isActionable, state?.id]);
 
-  const menu = useMemo(() => {
-    const {api} = require('electron-util');
-
+  const template = useMemo(() => {
     const menuTemplate: MenuItemConstructorOptions[] = [{
       label: 'Open Original',
       click: () => openInEditor()
@@ -66,7 +64,7 @@ const Export = ({id}: {id: string}) => {
       });
     }
 
-    return api.Menu.buildFromTemplate(menuTemplate);
+    return menuTemplate;
   }, [canRetry, retry, openInEditor, state?.canCopy, copy]);
 
   if (isLoading) {
@@ -89,7 +87,7 @@ const Export = ({id}: {id: string}) => {
                 fill="white"
                 hoverFill="white"
                 activeFill="white"
-                onOpen={menu.popup}
+                template={template}
               />
           }
         </div>

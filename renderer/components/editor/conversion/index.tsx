@@ -37,6 +37,8 @@ const EditorConversionView = ({conversionId}: {conversionId: string}) => {
 
   useKeyboardAction('Escape', finalCancel);
 
+  const showInFolder = () => conversion.showInFolder();
+
   return (
     <div className="editor-conversion-view">
       <TitleBar
@@ -47,12 +49,13 @@ const EditorConversionView = ({conversionId}: {conversionId: string}) => {
         }}
         retry={() => {
           conversion.retry();
-        }}/>
-      <VideoPreview conversion={conversion.state} cancel={finalCancel} showInFolder={() => conversion.showInFolder()}/>
-      <ConversionDetails conversion={conversion.state}/>
+        }}
+        showInFolder={showInFolder}/>
+      <VideoPreview conversion={conversion.state} cancel={finalCancel} showInFolder={showInFolder}/>
+      <ConversionDetails conversion={conversion.state} showInFolder={showInFolder}/>
       <style jsx>{`
         .editor-conversion-view {
-          width: 360px;
+          width: 370px;
           display: flex;
           flex-direction: column;
           flex: 1;

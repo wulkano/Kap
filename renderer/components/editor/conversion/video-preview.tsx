@@ -54,6 +54,10 @@ const VideoPreview = ({conversion, cancel, showInFolder}: {conversion: UseConver
           height: 100%;
         }
 
+        img {
+          object-fit: contain;
+        }
+
         .overlay {
           width: 100%;
           height: 100%;
@@ -63,10 +67,6 @@ const VideoPreview = ({conversion, cancel, showInFolder}: {conversion: UseConver
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: background .35s ease-in-out;
-        }
-
-        .overlay:hover {
           background: rgba(0, 0, 0, .5);
         }
 
