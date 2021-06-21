@@ -205,6 +205,38 @@ const convertToAv1 = (options: ConvertOptions) => convert(options.outputPath, {
 ));
 
 // eslint-disable-next-line @typescript-eslint/promise-function-async
+const convertToHevc = (options: ConvertOptions) => convert(options.outputPath, {
+  onProgress: (progress, estimate) => {
+    options.onProgress('Converting', progress, estimate);
+  },
+  startTime: options.startTime,
+  endTime: options.endTime
+}, conditionalArgs(
+  '-i', options.inputPath,
+  '-r', options.fps.toString(),
+  '-c:v', 'libx265',
+  '-c:a', 'libopus',
+  '-preset', 'medium',
+  '-tag:v', 'hvc1', // Metadata for macOS
+  {
+    args: ['-an'],
+    if: options.shouldMute
+  },
+  {
+    args: [
+      '-s',
+      `${makeEven(options.width)}x${makeEven(options.height)}`,
+      '-ss',
+      options.startTime.toString(),
+      '-to',
+      options.endTime.toString()
+    ],
+    if: options.shouldCrop || !areDimensionsEven(options)
+  },
+  options.outputPath
+));
+
+// eslint-disable-next-line @typescript-eslint/promise-function-async
 const convertToApng = (options: ConvertOptions) => convert(options.outputPath, {
   onProgress: (progress, estimate) => {
     options.onProgress('Converting', progress, estimate);
@@ -250,6 +282,7 @@ export const crop = (options: ConvertOptions) => convert(options.outputPath, {
 export default new Map([
   [Format.gif, convertToGif],
   [Format.mp4, convertToMp4],
+  [Format.hevc, convertToHevc],
   [Format.webm, convertToWebm],
   [Format.apng, convertToApng],
   [Format.av1, convertToAv1]

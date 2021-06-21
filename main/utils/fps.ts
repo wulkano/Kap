@@ -1,8 +1,5 @@
-import util from 'electron-util';
 import execa from 'execa';
-
-const ffmpeg = require('@ffmpeg-installer/ffmpeg');
-const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
+import ffmpegPath from './ffmpeg-path';
 
 const getFps = async (filePath: string) => {
   try {

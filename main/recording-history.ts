@@ -4,7 +4,6 @@
 import {shell, clipboard} from 'electron';
 import fs from 'fs';
 import Store from 'electron-store';
-import util from 'electron-util';
 import execa from 'execa';
 import tempy from 'tempy';
 import {SetOptional} from 'type-fest';
@@ -16,8 +15,7 @@ import {Video} from './video';
 import {ApertureOptions} from './common/types';
 import Sentry, {isSentryEnabled} from './utils/sentry';
 
-const ffmpeg = require('@ffmpeg-installer/ffmpeg');
-const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
+import ffmpegPath from './utils/ffmpeg-path';
 
 export interface PastRecording {
   filePath: string;

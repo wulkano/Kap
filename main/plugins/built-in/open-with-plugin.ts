@@ -30,7 +30,7 @@ const getAppsForFormat = (format: Format) => {
     });
 };
 
-const appsForFormat = (['mp4', 'gif', 'apng', 'webm', 'av1'] as Format[])
+const appsForFormat = (['mp4', 'gif', 'apng', 'webm', 'av1', 'hevc'] as Format[])
   .map(format => ({
     format,
     apps: getAppsForFormat(format)
@@ -44,4 +44,3 @@ export const shareServices = [{
   formats: [...apps.keys()],
   action
 }];
-

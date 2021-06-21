@@ -1,13 +1,10 @@
 /* eslint-disable array-element-newline */
 
 import path from 'path';
-import util from 'electron-util';
 import execa from 'execa';
 import tempy from 'tempy';
 import {track} from '../common/analytics';
-
-const ffmpeg = require('@ffmpeg-installer/ffmpeg');
-const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
+import ffmpegPath from './ffmpeg-path';
 
 export const getEncoding = async (filePath: string) => {
   try {
