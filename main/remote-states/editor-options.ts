@@ -10,9 +10,9 @@ const exportUsageHistory = new Store<{[key in Format]: {lastUsed: number; plugin
   name: 'export-usage-history',
   defaults: {
     gif: {lastUsed: 6, plugins: {default: 1}},
-    hevc: {lastUsed: 5, plugins: {default: 1}},
-    mp4: {lastUsed: 4, plugins: {default: 1}},
-    webm: {lastUsed: 3, plugins: {default: 1}},
+    mp4: {lastUsed: 5, plugins: {default: 1}},
+    webm: {lastUsed: 4, plugins: {default: 1}},
+    hevc: {lastUsed: 3, plugins: {default: 1}},
     av1: {lastUsed: 2, plugins: {default: 1}},
     apng: {lastUsed: 1, plugins: {default: 1}}
   }
