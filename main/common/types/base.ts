@@ -2,6 +2,7 @@ import {Rectangle} from 'electron';
 
 export enum Format {
   gif = 'gif',
+  hevc = 'hevc',
   mp4 = 'mp4',
   webm = 'webm',
   apng = 'apng',

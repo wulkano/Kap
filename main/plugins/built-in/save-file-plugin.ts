@@ -41,7 +41,8 @@ const saveFile = {
     'mp4',
     'webm',
     'apng',
-    'av1'
+    'av1',
+    'hevc'
   ],
   action
 };
@@ -53,7 +54,8 @@ const filterMap = new Map([
   [Format.webm, [{name: 'Movies', extensions: ['webm']}]],
   [Format.gif, [{name: 'Images', extensions: ['gif']}]],
   [Format.apng, [{name: 'Images', extensions: ['apng']}]],
-  [Format.av1, [{name: 'Movies', extensions: ['mp4']}]]
+  [Format.av1, [{name: 'Movies', extensions: ['mp4']}]],
+  [Format.hevc, [{name: 'Movies', extensions: ['mp4']}]]
 ]);
 
 let lastSavedDirectory: string;
@@ -83,4 +85,3 @@ export const askForTargetFilePath = async (
 
   return undefined;
 };
-

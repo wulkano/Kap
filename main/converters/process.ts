@@ -9,10 +9,9 @@ import {track} from '../common/analytics';
 import {conditionalArgs, extractProgressFromStderr} from './utils';
 import {settings} from '../common/settings';
 
-const ffmpeg = require('@ffmpeg-installer/ffmpeg');
-const gifsicle = require('gifsicle');
+import ffmpegPath from '../utils/ffmpeg-path';
 
-const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
+const gifsicle = require('gifsicle');
 const gifsiclePath = util.fixPathForAsarUnpack(gifsicle);
 
 enum Mode {

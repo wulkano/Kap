@@ -1,16 +1,14 @@
 /* eslint-disable array-element-newline */
 
 import {BrowserWindow, dialog} from 'electron';
-import util from 'electron-util';
 import execa from 'execa';
 import tempy from 'tempy';
 import {promisify} from 'util';
 import type {Video} from '../video';
 import {generateTimestampedName} from './timestamped-name';
+import ffmpegPath from './ffmpeg-path';
 
 const base64Img = require('base64-img');
-const ffmpeg = require('@ffmpeg-installer/ffmpeg');
-const ffmpegPath = util.fixPathForAsarUnpack(ffmpeg.path);
 
 const getBase64 = promisify(base64Img.base64);
 

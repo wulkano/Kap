@@ -406,3 +406,59 @@ test('av1: non-retina', async t => {
 
   t.false(meta.hasAudio);
 });
+
+// HEVC
+
+test('HEVC: retina', async t => {
+  const onProgress = sinon.fake();
+
+  t.context.outputPath = await convert(Format.hevc, {
+    shouldMute: true,
+    inputPath: retinaInput,
+    fps: 15,
+    width: 469,
+    height: 839,
+    startTime: 30,
+    endTime: 43.5,
+    shouldCrop: true,
+    onProgress
+  });
+
+  const meta = await getVideoMetadata(t.context.outputPath);
+
+  // Makes dimensions even
+  t.is(meta.size.width, 470);
+  t.is(meta.size.height, 840);
+
+  t.is(meta.fps, 15);
+  t.is(meta.encoding, 'hevc');
+
+  t.false(meta.hasAudio);
+
+  t.true(onProgress.calledWithMatch(sinon.match.string, sinon.match.number));
+  t.true(onProgress.calledWithMatch(sinon.match.string, sinon.match.number, sinon.match.string));
+});
+
+test('HEVC: non-retina', async t => {
+  t.context.outputPath = await convert(Format.hevc, {
+    shouldMute: true,
+    inputPath: input,
+    fps: 15,
+    width: 255,
+    height: 143,
+    startTime: 11.5,
+    endTime: 27,
+    shouldCrop: true
+  });
+
+  const meta = await getVideoMetadata(t.context.outputPath);
+
+  // Makes dimensions even
+  t.is(meta.size.width, 256);
+  t.is(meta.size.height, 144);
+
+  t.is(meta.fps, 15);
+  t.is(meta.encoding, 'hevc');
+
+  t.false(meta.hasAudio);
+});

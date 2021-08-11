@@ -1,9 +1,7 @@
 import moment from 'moment';
 import execa from 'execa';
 
-const ffmpeg = require('@ffmpeg-installer/ffmpeg');
-
-const ffmpegPath = ffmpeg.path;
+const ffmpegPath = require('ffmpeg-static');
 
 const getDuration = (text: string): number => {
   const durationString = /Duration: ([\d:.]*)/.exec(text)?.[1];

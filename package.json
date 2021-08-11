@@ -32,7 +32,6 @@
     "name": "Kap"
   },
   "dependencies": {
-    "@ffmpeg-installer/ffmpeg": "^1.0.20",
     "@sentry/browser": "^6.2.2",
     "@sentry/electron": "^2.4.0",
     "@sindresorhus/to-milliseconds": "^1.2.0",
@@ -53,6 +52,7 @@
     "electron-util": "^0.14.2",
     "ensure-error": "^3.0.1",
     "execa": "5.0.0",
+    "ffmpeg-static": "^4.4.0",
     "file-icon": "^3.0.0",
     "gifsicle": "^5.2.0",
     "got": "^9.6.0",
@@ -96,6 +96,7 @@
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
     "@sindresorhus/tsconfig": "^0.7.0",
+    "@types/ffmpeg-static": "^3.0.0",
     "@types/got": "9.6.11",
     "@types/insight": "^0.8.0",
     "@types/lodash": "^4.14.168",

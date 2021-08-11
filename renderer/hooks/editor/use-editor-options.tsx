@@ -9,7 +9,8 @@ const useEditorOptions = createRemoteStateHook<EditorOptionsRemoteState>('editor
     mp4: 60,
     av1: 60,
     webm: 60,
-    apng: 60
+    apng: 60,
+    hevc: 60
   }
 });
 

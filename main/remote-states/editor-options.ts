@@ -9,9 +9,10 @@ import {prettifyFormat} from '../utils/formats';
 const exportUsageHistory = new Store<{[key in Format]: {lastUsed: number; plugins: Record<string, number>}}>({
   name: 'export-usage-history',
   defaults: {
-    gif: {lastUsed: 5, plugins: {default: 1}},
-    mp4: {lastUsed: 4, plugins: {default: 1}},
-    webm: {lastUsed: 3, plugins: {default: 1}},
+    gif: {lastUsed: 6, plugins: {default: 1}},
+    mp4: {lastUsed: 5, plugins: {default: 1}},
+    webm: {lastUsed: 4, plugins: {default: 1}},
+    hevc: {lastUsed: 3, plugins: {default: 1}},
     av1: {lastUsed: 2, plugins: {default: 1}},
     apng: {lastUsed: 1, plugins: {default: 1}}
   }
@@ -41,6 +42,11 @@ const fpsUsageHistory = new Store<{[key in Format]: number}>({
       default: 60
     },
     av1: {
+      type: 'number',
+      minimum: 0,
+      default: 60
+    },
+    hevc: {
       type: 'number',
       minimum: 0,
       default: 60
