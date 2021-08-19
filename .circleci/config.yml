@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     macos:
-      xcode: '12.0.0'
+      xcode: '12.5.1'
     steps:
       - checkout
       - run: yarn
@@ -13,7 +13,7 @@ jobs:
           path: dist/Kap.dmg
   sentry-release:
     docker:
-      - image: circleci/node:lts
+      - image: cimg/node:lts
     environment:
       SENTRY_ORG: wulkano-l0
       SENTRY_PROJECT: kap
