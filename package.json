@@ -63,7 +63,7 @@
     "mac-screen-capture-permissions": "^1.1.0",
     "mac-windows": "^1.0.0",
     "macos-audio-devices": "^1.4.0",
-    "macos-release": "^2.4.1",
+    "macos-release": "^2.5.0",
     "macos-version": "^5.2.1",
     "make-dir": "^3.1.0",
     "moment": "^2.29.1",
