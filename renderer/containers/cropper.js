@@ -64,6 +64,10 @@ export default class CropperContainer extends Container {
       isActive: false,
       isReady: false,
       ratio: [1, 1],
+      // Added this to keep track of cropper history to add undo button
+      cropperHistory: [],
+      cropperPointer: -1,
+      isUndone: false,
       recordAudio: this.settings.get('recordAudio'),
       audioInputDeviceId: this.settings.getSelectedInputDeviceId()
     };
@@ -122,8 +126,24 @@ export default class CropperContainer extends Container {
   };
 
   updateSettings = updates => {
-    const {x, y, width, height, ratio, displayId} = this.state;
+    // If already undone, if moved again then erase everything after current pointer
+    if (this.state.isUndone) {
+      let newCropperHistory = this.state.cropperHistory;
+      const CropperHistoryLength = this.state.cropperHistory.length;
+      if (this.state.cropperPointer > -1) {
+        const toBeDeleted = (CropperHistoryLength - 1) - this.state.cropperPointer;
+        newCropperHistory.splice(this.state.cropperPointer + 1, toBeDeleted);
+      } else {
+        newCropperHistory = [];
+      }
 
+      this.setState({
+        cropperHistory: newCropperHistory,
+        isUndone: false
+      });
+    }
+
+    const {x, y, width, height, ratio, displayId} = this.state;
     this.settings.set('cropper', {
       x,
       y,
@@ -133,6 +153,12 @@ export default class CropperContainer extends Container {
       ...updates,
       displayId
     });
+    // Added in: keep track of cropper
+    this.setState({
+      cropperHistory: [...this.state.cropperHistory, this.state],
+      cropperPointer: this.state.cropperPointer + 1
+    });
+
     this.setState(updates);
   };
 
@@ -330,7 +356,56 @@ export default class CropperContainer extends Container {
       this.setBounds({x, y, width, height});
       this.setState({isMoving: false, showHandles: true});
       this.cursorContainer.removeCursorObserver(this.move);
-      this.updateSettings({x, y});
+      // Check: this.updateSettings({x, y}); <-- do we need this? since it alreadly calls setBounds which updates Settings
+    }
+  };
+
+  redo = () => {
+    if (this.state.isUndone && this.state.cropperPointer < this.state.cropperHistory.length - 1) {
+      const originalCropperHistory = this.state.cropperHistory;
+      const currentPointer = this.state.cropperPointer + 1;
+      const newState = this.state.cropperHistory[currentPointer];
+      this.setState(newState);
+      this.setState({
+        cropperHistory: originalCropperHistory,
+        cropperPointer: currentPointer,
+        isUndone: true
+      });
+
+      const {x, y, width, height, ratio, displayId} = this.state;
+
+      this.settings.set('cropper', {
+        x,
+        y,
+        width,
+        height,
+        ratio,
+        displayId
+      });
+    }
+  };
+
+  undo = () => {
+    if (this.state.cropperPointer > 0) {
+      const currentPointer = this.state.cropperPointer - 1;
+      const originalCropperHistory = this.state.cropperHistory;
+      const newState = this.state.cropperHistory[currentPointer];
+      this.setState(newState);
+      this.setState({
+        isUndone: true,
+        cropperHistory: originalCropperHistory,
+        cropperPointer: currentPointer
+      });
+      const {x, y, width, height, ratio, displayId} = this.state;
+
+      this.settings.set('cropper', {
+        x,
+        y,
+        width,
+        height,
+        ratio,
+        displayId
+      });
     }
   };
 

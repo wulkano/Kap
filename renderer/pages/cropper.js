@@ -20,6 +20,8 @@ actionBarContainer.bindCursor(cursorContainer);
 actionBarContainer.bindCropper(cropperContainer);
 
 let lastRatioLockState = null;
+let metaKeyDown = false;
+let ShiftDown = false;
 
 export default class CropperPage extends React.Component {
   remote = electron.remote || false;
@@ -76,6 +78,18 @@ export default class CropperPage extends React.Component {
   }
 
   handleKeyEvent = event => {
+    if (event.metaKey && event.type === 'keydown') {
+      metaKeyDown = true;
+    } else if (event.metaKey && event.type === 'keyup') {
+      metaKeyDown = false;
+    }
+
+    if (event.key === 'Shift' && event.type === 'keydown') {
+      ShiftDown = true;
+    } else if (event.key === 'Shift' && event.type === 'keyup') {
+      ShiftDown = false;
+    }
+
     switch (event.key) {
       case 'Escape':
         this.remote.getCurrentWindow().close();
@@ -96,6 +110,14 @@ export default class CropperPage extends React.Component {
       case 'i':
         this.remote.getCurrentWindow().setIgnoreMouseEvents(true);
         this.dev = !this.dev;
+        break;
+      case 'z':
+        if (metaKeyDown && ShiftDown) {
+          cropperContainer.redo();
+        } else if (metaKeyDown && !ShiftDown) {
+          cropperContainer.undo();
+        }
+
         break;
       default:
         break;
