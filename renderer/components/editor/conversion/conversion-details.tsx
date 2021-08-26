@@ -1,17 +1,17 @@
 import {UseConversionState} from 'hooks/editor/use-conversion';
 
-const ConversionDetails = ({conversion}: {conversion: UseConversionState}) => {
-  const message = conversion?.message ?? 'Loading…';
-  const title = conversion?.title;
+const ConversionDetails = ({conversion, showInFolder}: {conversion: UseConversionState; showInFolder: () => void}) => {
+  const message = conversion?.message;
+  const title = conversion?.titleWithFormat;
   const description = conversion?.description;
-  const size = conversion?.size;
+  const size = conversion?.fileSize;
 
   return (
     <div className="conversion-details">
       <div className="message">{message}</div>
       <div className="details">
         <div className="left">
-          <div className="title">{title}</div>
+          <div className="title" title={title} onClick={showInFolder}>{title}</div>
           <div className="description">{description}</div>
         </div>
         <div className="size">{size}</div>

@@ -1,23 +1,39 @@
+import {MenuItemConstructorOptions} from 'electron';
 import React, {FunctionComponent, useRef} from 'react';
 import {SvgProps} from 'vectors/svg';
 
-interface IconMenuProps extends SvgProps {
+type MenuProps = {
   onOpen: (options: {x: number; y: number}) => void;
+} | {
+  template: MenuItemConstructorOptions[];
+};
+
+type IconMenuProps = SvgProps & MenuProps & {
   icon: FunctionComponent<SvgProps>;
   fillParent?: boolean;
-}
+};
 
-const IconMenu: FunctionComponent<IconMenuProps> = ({onOpen, icon: Icon, fillParent, ...iconProps}) => {
+const IconMenu: FunctionComponent<IconMenuProps> = props => {
+  const {icon: Icon, fillParent, ...iconProps} = props;
   const container = useRef(null);
 
   const openMenu = () => {
     const boundingRect = container.current.children[0].getBoundingClientRect();
     const {bottom, left} = boundingRect;
 
-    onOpen({
-      x: Math.round(left),
-      y: Math.round(bottom)
-    });
+    if ('onOpen' in props) {
+      props.onOpen({
+        x: Math.round(left),
+        y: Math.round(bottom)
+      });
+    } else {
+      const {api} = require('electron-util');
+      const menu = api.Menu.buildFromTemplate(props.template);
+      menu.popup({
+        x: Math.round(left),
+        y: Math.round(bottom)
+      });
+    }
   };
 
   return (

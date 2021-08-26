@@ -67,6 +67,7 @@ const convertWithEditPlugin = PCancelable.fn(
     onCancel: OnCancelFunction
   ) => {
     let croppedPath: string;
+    let isCanceled = false;
 
     if (options.shouldCrop) {
       croppedPath = tempy.file({extension: path.extname(options.inputPath)});
@@ -79,15 +80,18 @@ const convertWithEditPlugin = PCancelable.fn(
       });
 
       onCancel(() => {
+        isCanceled = true;
         cropProcess.cancel();
       });
 
       await cropProcess;
+
+      if (isCanceled) {
+        return '';
+      }
     } else {
       croppedPath = options.inputPath;
     }
-
-    let isCanceled = false;
 
     // eslint-disable-next-line @typescript-eslint/promise-function-async
     const convertFunction = (args: string[], text = 'Converting') => new PCancelable<void>(async (resolve, reject, onCancel) => {
@@ -163,10 +167,16 @@ const convertWithEditPlugin = PCancelable.fn(
 
     track(`plugins/used/edit/${options.editService?.pluginName}`);
 
-    return options.converter({
+    const conversionProcess = options.converter({
       ...options,
       shouldCrop: false,
       inputPath: editPath
     });
+
+    onCancel(() => {
+      conversionProcess.cancel();
+    });
+
+    return conversionProcess;
   }
 );

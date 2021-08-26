@@ -1,8 +1,8 @@
 import {App, Format} from './base';
 
-export type CreateConversionOptions = {
+export type CreateExportOptions = {
   filePath: string;
-  options: ConversionOptions;
+  conversionOptions: ConversionOptions;
   format: Format;
   plugins: {
     share: {
@@ -29,8 +29,7 @@ export type ConversionOptions = {
   editService?: EditServiceInfo;
 };
 
-export enum ConversionStatus {
-  idle = 'idle',
+export enum ExportStatus {
   inProgress = 'inProgress',
   failed = 'failed',
   canceled = 'canceled',

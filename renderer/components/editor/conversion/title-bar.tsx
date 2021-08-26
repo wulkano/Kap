@@ -1,14 +1,17 @@
 import TrafficLights from 'components/traffic-lights';
-import {BackPlainIcon} from 'vectors';
+import {BackPlainIcon, MoreIcon} from 'vectors';
 import {UseConversionState} from 'hooks/editor/use-conversion';
 import {flags} from '../../../common/flags';
-import {remote} from 'electron';
-import {ConversionStatus} from '../../../common/types';
+import {MenuItemConstructorOptions, remote} from 'electron';
+import {ExportStatus} from '../../../common/types';
+import {useMemo} from 'react';
+import {template} from 'lodash';
+import IconMenu from '../../icon-menu';
 
-const TitleBar = ({conversion, cancel, copy}: {conversion: UseConversionState; cancel: () => any; copy: () => any}) => {
+const TitleBar = ({conversion, cancel, copy, retry, showInFolder}: {conversion: UseConversionState; cancel: () => any; copy: () => any; retry: () => any; showInFolder: () => void}) => {
   const {api} = require('electron-util');
   const shouldClose = async () => {
-    if (conversion.status === ConversionStatus.inProgress && !flags.get('backgroundEditorConversion')) {
+    if (conversion.status === ExportStatus.inProgress && !flags.get('backgroundEditorConversion')) {
       await api.dialog.showMessageBox(remote.getCurrentWindow(), {
         type: 'info',
         message: 'Your export will continue in the background. You can access it through the Export History window.',
@@ -21,6 +24,30 @@ const TitleBar = ({conversion, cancel, copy}: {conversion: UseConversionState; c
     return true;
   };
 
+  const menuTemplate = useMemo(() => {
+    const template: MenuItemConstructorOptions[] = [];
+
+    if (conversion?.canCopy) {
+      template.push({
+        label: 'Copy',
+        click: () => copy()
+      }, {
+        type: 'separator'
+      });
+    }
+
+    if (conversion?.status === ExportStatus.completed) {
+      template.push({
+        label: 'Show in Finder',
+        click: () => showInFolder()
+      });
+    }
+
+    return template;
+  }, [conversion?.canCopy, conversion?.status]);
+
+  const canRetry = [ExportStatus.canceled, ExportStatus.failed].includes(conversion?.status);
+
   return (
     <div className="title-bar">
       <div className="left">
@@ -30,7 +57,21 @@ const TitleBar = ({conversion, cancel, copy}: {conversion: UseConversionState; c
         </div>
       </div>
       <div className="right">
-        {conversion?.canCopy && <div className="button" onClick={copy}>Copy</div>}
+        {canRetry && <div className="button" onClick={retry}>Retry</div>}
+        {
+          menuTemplate.length > 0 && (
+            <div className="icon">
+              <IconMenu
+                icon={MoreIcon}
+                fill="white"
+                hoverFill="white"
+                activeFill="white"
+                size="20px"
+                template={menuTemplate}
+              />
+            </div>
+          )
+        }
       </div>
       <style jsx>{`
         .title-bar {
@@ -58,6 +99,9 @@ const TitleBar = ({conversion, cancel, copy}: {conversion: UseConversionState; c
           height: 24px;
           background: #666666;
           border-radius: 4px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         .button {

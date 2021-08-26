@@ -1,17 +1,13 @@
-'use strict';
-
-import {BrowserWindow, ipcMain} from 'electron';
-import pEvent from 'p-event';
-import {loadRoute} from '../utils/routes';
+import KapWindow from './kap-window';
 import {windowManager} from './manager';
 
-let exportsWindow: BrowserWindow | undefined;
+let exportsKapWindow: KapWindow | undefined;
 
 const openExportsWindow = async () => {
-  if (exportsWindow) {
-    exportsWindow.focus();
+  if (exportsKapWindow) {
+    exportsKapWindow.browserWindow.focus();
   } else {
-    exportsWindow = new BrowserWindow({
+    exportsKapWindow = new KapWindow({
       title: 'Exports',
       width: 320,
       height: 360,
@@ -19,32 +15,31 @@ const openExportsWindow = async () => {
       maximizable: false,
       fullscreenable: false,
       titleBarStyle: 'hiddenInset',
-      show: false,
       frame: false,
       transparent: true,
       vibrancy: 'window',
       webPreferences: {
         nodeIntegration: true
-      }
+      },
+      route: 'exports'
     });
 
-    const titlebarHeight = 37;
-    exportsWindow.setSheetOffset(titlebarHeight);
+    const exportsWindow = exportsKapWindow.browserWindow;
 
-    loadRoute(exportsWindow, 'exports');
+    const titleBarHeight = 37;
+    exportsWindow.setSheetOffset(titleBarHeight);
 
     exportsWindow.on('close', () => {
-      exportsWindow = undefined;
+      exportsKapWindow = undefined;
     });
 
-    await pEvent(ipcMain, 'exports-ready');
-    exportsWindow.show();
+    await exportsKapWindow.whenReady();
   }
 
-  return exportsWindow;
+  return exportsKapWindow.browserWindow;
 };
 
-const getExportsWindow = () => exportsWindow;
+const getExportsWindow = () => exportsKapWindow?.browserWindow;
 
 windowManager.setExports({
   open: openExportsWindow,

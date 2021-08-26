@@ -1,27 +1,66 @@
 import {CancelIcon, SpinnerIcon} from 'vectors';
 import {UseConversion, UseConversionState} from 'hooks/editor/use-conversion';
-import {ConversionStatus} from 'common/types';
+import {ExportStatus} from 'common/types';
 import useEditorWindowState from 'hooks/editor/use-editor-window-state';
 import useConversionIdContext from 'hooks/editor/use-conversion-id';
+import {flags} from '../../../common/flags';
+import ReactTooltip from 'react-tooltip';
+import {useEffect, useRef, useState} from 'react';
+import classNames from 'classnames';
 
-const VideoPreview = ({conversion, cancel}: {conversion: UseConversionState; cancel: () => any}) => {
+const VideoPreview = ({conversion, cancel, showInFolder}: {conversion: UseConversionState; cancel: () => any; showInFolder: () => any}) => {
   const {conversionId} = useConversionIdContext();
   const {filePath} = useEditorWindowState();
+  const [tooltipShowing, setTooltipShowing] = useState(!flags.get('editorDragTooltip'));
+  const tooltipRef = useRef();
   const src = `file://${filePath}`;
 
   const percentage = conversion?.progress ?? 0;
-  const done = conversion?.status !== ConversionStatus.inProgress;
+  const done = conversion && (conversion?.status !== ExportStatus.inProgress);
 
   const onDragStart = (event: any) => {
     event.preventDefault();
     // Has to be the electron one for this
     const {ipcRenderer} = require('electron');
-    ipcRenderer.send('drag-conversion', conversionId);
+    ipcRenderer.send('drag-export', conversionId);
+  };
+
+  useEffect(() => {
+    if (!done) {
+      return;
+    }
+
+    if (tooltipShowing) {
+      ReactTooltip.show(tooltipRef.current);
+    } else {
+      ReactTooltip.hide(tooltipRef.current);
+    }
+  }, [tooltipRef.current, tooltipShowing, done]);
+
+  const onTooltipClick = event => {
+    event.stopPropagation();
+    setTooltipShowing(false);
+  };
+
+  const onTooltipHide = () => {
+    flags.set('editorDragTooltip', true);
   };
 
   return (
-    <div draggable className="video-preview" onDragStart={onDragStart}>
-      <video src={src}/>
+    <div
+      ref={tooltipRef}
+      data-tip="Plz"
+      draggable={done}
+      className={classNames('video-preview', {'hide-tooltip': !tooltipShowing})}
+      data-for="tooltip"
+      onDragStart={onDragStart}
+      onClick={showInFolder}
+    >
+      {
+        done && conversion?.canPreviewExport ?
+          <img src={`file://${conversion?.filePath}`}/> :
+          <video src={src}/>
+      }
       <div className="overlay" style={{display: done ? 'none' : 'flex'}}>
         <div className="progress-indicator">
           {
@@ -34,6 +73,23 @@ const VideoPreview = ({conversion, cancel}: {conversion: UseConversionState; can
           <CancelIcon fill="white" hoverFill="white" activeFill="white" size="100%"/>
         </div>
       </div>
+      <ReactTooltip
+        border
+        multiline
+        clickable
+        disable={!tooltipShowing}
+        place="bottom"
+        event="dblclick"
+        eventOff="dblclick"
+        className="tooltip"
+        id="tooltip"
+        backgroundColor="var(--background-color)"
+        effect="solid"
+        borderColor="rgba(255, 255, 255, 0.4)"
+        afterHide={onTooltipHide}
+      >
+        <div className="tooltip-content" onClick={onTooltipClick}>Drag and drop to copy the recording to your desktop or an application. Click to open its parent directory</div>
+      </ReactTooltip>
       <style jsx>{`
         .video-preview {
           width: 100%;
@@ -45,9 +101,13 @@ const VideoPreview = ({conversion, cancel}: {conversion: UseConversionState; can
           -webkit-app-region: no-drag;
         }
 
-        video {
+        video, img {
           width: 100%;
           height: 100%;
+        }
+
+        img {
+          object-fit: contain;
         }
 
         .overlay {
@@ -59,10 +119,6 @@ const VideoPreview = ({conversion, cancel}: {conversion: UseConversionState; can
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: background .35s ease-in-out;
-        }
-
-        .overlay:hover {
           background: rgba(0, 0, 0, .5);
         }
 

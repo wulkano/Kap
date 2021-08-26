@@ -13,7 +13,6 @@ import {settings} from './common/settings';
 import {plugins} from './plugins';
 import {initializeTray} from './tray';
 import {initializeDevices} from './utils/devices';
-import {setUpConversionListeners} from './conversion';
 import {initializeAnalytics, track} from './common/analytics';
 import {initializeGlobalAccelerators} from './global-accelerators';
 import {openFiles} from './utils/open-files';
@@ -23,6 +22,7 @@ import {hasActiveRecording, cleanPastRecordings} from './recording-history';
 import {setupRemoteStates} from './remote-states';
 import {setUpExportsListeners} from './export';
 import {windowManager} from './windows/manager';
+import {setupProtocol} from './utils/protocol';
 
 const prepareNext = require('electron-next');
 
@@ -82,7 +82,8 @@ const checkForUpdates = () => {
 
   // Initialize remote states
   setupRemoteStates();
-  setUpConversionListeners();
+
+  setupProtocol();
 
   app.dock.hide();
   app.setAboutPanelOptions({copyright: 'Copyright © Wulkano'});

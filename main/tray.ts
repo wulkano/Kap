@@ -38,8 +38,6 @@ export const resetTray = () => {
     clearTimeout(trayAnimation);
   }
 
-  // TODO: figure out why it's marked like this. Tray extends EventEmitter, so removeAllListeners should be available
-  // @ts-expect-error
   tray.removeAllListeners('click');
 
   tray.setImage(path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'));

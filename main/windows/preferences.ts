@@ -38,7 +38,8 @@ const openPrefsWindow = async (options?: PreferencesWindowOptions) => {
     transparent: true,
     vibrancy: 'window',
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      enableRemoteModule: true
     }
   });
 

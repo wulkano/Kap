@@ -7,6 +7,8 @@ export const WindowStateProvider = (props: {children: ReactNode}) => {
   const [windowState, setWindowState] = useState();
 
   useEffect(() => {
+    ipc.callMain('kap-window-state').then(setWindowState);
+
     return ipc.answerMain('kap-window-state', (newState: any) => {
       setWindowState(newState);
     });

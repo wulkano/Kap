@@ -3204,10 +3204,10 @@ electron-util@^0.8.2:
   dependencies:
     electron-is-dev "^0.3.0"
 
-electron@8.2.4:
-  version "8.2.4"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-8.2.4.tgz#c4e51ca8e84b5a5beaaabdae1024bd52ba487ba4"
-  integrity sha512-Lle0InIgSAHZxD5KDY0wZ1A2Zlc6GHwMhAxoHMzn05mndyP1YBkCYHc0TDDofzUTrsLFofduPjlknO5Oj9fTPA==
+electron@10.4.6:
+  version "10.4.6"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-10.4.6.tgz#1f69e5c2394c3e6cc0f7b610d5bed06a0709c68c"
+  integrity sha512-HCKJrWy9ZF4x7dOE8Q3+lXFVz/We7D+4mAZJHtwdeZT3EjcGrm575TsuuzY8AOUASohmezaBANcSmJy0zVlAzw==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^12.0.12"
@@ -7472,6 +7472,14 @@ react-refresh@0.8.3:
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.8.3.tgz#721d4657672d400c5e3c75d063c4a85fb2d5d68f"
   integrity sha512-X8jZHc7nCMjaCqoU+V2I0cOhNW+QMBwSUkeXnTi8IPe6zaRWfn60ZzvFDZqWPfmSJfjub7dDW1SP0jaHWLu/hg==
 
+react-tooltip@^4.2.19:
+  version "4.2.19"
+  resolved "https://registry.yarnpkg.com/react-tooltip/-/react-tooltip-4.2.19.tgz#a865fffdb62154c6079bcb273e238de6b3c57366"
+  integrity sha512-wF6h0a2nqX3UHw9aSoj77Tv/+/KIjRdb107otHtX+1wISad1QoLD+j5chrBDx7mjY1T4WKfrV2DN+iFCimdZOw==
+  dependencies:
+    prop-types "^15.7.2"
+    uuid "^7.0.3"
+
 react@^17.0.1:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react/-/react-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"
@@ -9224,6 +9232,11 @@ uuid@^3.0.1, uuid@^3.3.2:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
+
+uuid@^7.0.3:
+  version "7.0.3"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-7.0.3.tgz#c5c9f2c8cf25dc0a372c4df1441c41f5bd0c680b"
+  integrity sha512-DPSke0pXhTZgoF/d+WSt2QaKMCFSfx7QegxEWT+JOuHF5aWrKEn0G+ztjuJg/gG8/ItK+rbPCD/yNv8yyih6Cg==
 
 v8-compile-cache@^2.0.3:
   version "2.3.0"
