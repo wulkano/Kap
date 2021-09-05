@@ -184,7 +184,7 @@ const handleInputKeyPress = (onChange, min, max) => event => {
 
   const multiplier = event.shiftKey ? 10 : 1;
   const parsedValue = Number.parseInt(event.currentTarget.value, 10);
-  if (parsedValue === Number.NaN) {
+  if (Number.isNaN(parsedValue)) {
     return;
   }
 

@@ -162,6 +162,7 @@
       "template-curly-spacing": "off",
       "import/no-extraneous-dependencies": "off",
       "import/no-unassigned-import": "off",
+      "import/no-named-as-default-member": "off",
       "react/jsx-closing-tag-location": "off",
       "react/require-default-props": "off",
       "react/jsx-curly-brace-presence": "off",
