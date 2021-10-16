@@ -22,7 +22,8 @@ const openConfigWindow = async (pluginName: string) => {
     parent: prefsWindow,
     modal: true,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      enableRemoteModule: true
     }
   });
 
