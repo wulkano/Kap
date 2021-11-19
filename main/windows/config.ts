@@ -23,7 +23,8 @@ const openConfigWindow = async (pluginName: string) => {
     modal: true,
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true
+      enableRemoteModule: true,
+      contextIsolation: false
     }
   });
 
@@ -52,7 +53,8 @@ const openEditorConfigWindow = async (pluginName: string, serviceTitle: string, 
     modal: true,
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true
+      enableRemoteModule: true,
+      contextIsolation: false
     }
   });
 
