@@ -1,7 +1,7 @@
 {
   "name": "kap",
   "productName": "Kap",
-  "version": "3.4.2",
+  "version": "3.5.0",
   "description": "An open-source screen recorder built with web technology",
   "license": "MIT",
   "repository": "wulkano/kap",

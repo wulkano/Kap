@@ -11,8 +11,8 @@
 
 Or install with [Homebrew-Cask](https://caskroom.github.io):
 
-```
-$ brew install --cask kap
+```sh
+brew install --cask kap
 ```
 
 ## Contribute
