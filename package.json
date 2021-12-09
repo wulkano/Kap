@@ -279,7 +279,7 @@
         ]
       },
       "target": {
-        "target": "dmg",
+        "target": "default",
         "arch": ["x64", "arm64"]
       }
     },
