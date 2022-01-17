@@ -8,7 +8,9 @@ jobs:
     steps:
       - checkout
       - run: yarn
-      - run: yarn test
+      - run: mkdir -p ~/reports
+      - run: yarn lint
+      - run: yarn test:ci
       - run: yarn run dist
       - run: mv dist/*-x64.dmg dist/Kap-x64.dmg
       - run: mv dist/*-arm64.dmg dist/Kap-arm64.dmg
@@ -16,6 +18,8 @@ jobs:
           path: dist/Kap-x64.dmg
       - store_artifacts:
           path: dist/Kap-arm64.dmg
+      - store_test_results:
+          path: ~/reports
   sentry-release:
     docker:
       - image: cimg/node:lts
