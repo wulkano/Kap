@@ -280,10 +280,14 @@
       },
       "target": {
         "target": "default",
-        "arch": ["x64", "arm64"]
+        "arch": [
+          "x64",
+          "arm64"
+        ]
       }
     },
     "dmg": {
+      "artifactName": "${productName}-${version}-${arch}.${ext}",
       "iconSize": 160,
       "contents": [
         {
