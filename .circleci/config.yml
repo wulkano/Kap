@@ -8,9 +8,11 @@ jobs:
       - run: yarn
       - run: yarn test
       - run: yarn run dist
-      - run: mv dist/*.dmg dist/Kap.dmg
+      # - run: mv dist/*.dmg dist/Kap.dmg
       - store_artifacts:
-          path: dist/Kap.dmg
+          path: dist/Kap-x64.dmg
+      - store_artifacts:
+          path: dist/Kap-arm64.dmg
   sentry-release:
     docker:
       - image: cimg/node:lts
