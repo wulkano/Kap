@@ -3031,10 +3031,10 @@ electron-better-ipc@^1.1.1:
   dependencies:
     serialize-error "^5.0.0"
 
-electron-builder-notarize@^1.3.0-beta.1:
-  version "1.3.0-beta.1"
-  resolved "https://registry.yarnpkg.com/electron-builder-notarize/-/electron-builder-notarize-1.3.0-beta.1.tgz#5b8dd56257afb65e8e4e08b067b96a088cac044d"
-  integrity sha512-igxK9F/oKly+oiHOtYctxAFX1L8WKk/K3Q/FZMGYK0sFyI2jp3JWj1hxR2ebAl780UR3iMF12mh8zq9zzlLxTQ==
+electron-builder-notarize@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/electron-builder-notarize/-/electron-builder-notarize-1.4.0.tgz#9e3609935eb70bf08f64fba255c3e4c43b0058e7"
+  integrity sha512-5CPVlzkG+SofK3VU3E6HKmdXW6Uu6q5WWvzXX6diLAlAy9qJsR0n99aNztVKKsPl6yjEbvT+MUl4ci0YCwOBRA==
   dependencies:
     electron-notarize "^1.1.1"
     js-yaml "^3.14.0"
