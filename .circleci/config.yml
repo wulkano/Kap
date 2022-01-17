@@ -3,6 +3,8 @@ jobs:
   build:
     macos:
       xcode: '12.5.1'
+    environment:
+      CSC_FOR_PULL_REQUEST: "true"
     steps:
       - checkout
       - run: yarn
