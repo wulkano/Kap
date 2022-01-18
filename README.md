@@ -9,7 +9,7 @@
 
 Download the latest release:
 
-- [Apple (M1)](https://getkap.co/api/download/arm64)
+- [Apple silicon](https://getkap.co/api/download/arm64)
 - [Intel](https://getkap.co/api/download/x64)
 
 Or install with [Homebrew-Cask](https://caskroom.github.io):
