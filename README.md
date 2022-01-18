@@ -7,7 +7,10 @@
 
 ## Get Kap
 
-**[Download the latest release](https://getkap.co/download)** (macOS only)
+Download the latest release:
+
+- [Apple silicon](https://getkap.co/api/download/arm64)
+- [Intel](https://getkap.co/api/download/x64)
 
 Or install with [Homebrew-Cask](https://caskroom.github.io):
 
