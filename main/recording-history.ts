@@ -156,7 +156,7 @@ export const handleIncompleteRecording = async (recording: ActiveRecording) => {
       '-f', 'null', '-'
     ]);
   } catch (error) {
-    return handleCorruptRecording(recording, error.stderr);
+    return handleCorruptRecording(recording, (error as any).stderr);
   }
 
   return handleRecording(recording);

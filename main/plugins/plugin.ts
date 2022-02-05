@@ -104,7 +104,7 @@ export class InstalledPlugin extends BasePlugin {
         this.config.onDidAnyChange((newValue, oldValue) => this.content.didConfigChange?.(newValue, oldValue, this.config));
       }
     } catch (error) {
-      showError(error, {title: `Something went wrong while loading “${pluginName}”`, plugin: this});
+      showError(error as any, {title: `Something went wrong while loading “${pluginName}”`, plugin: this});
 
       this.content = {};
       this.config = new PluginConfig(pluginName, []);
@@ -183,7 +183,7 @@ export class InstalledPlugin extends BasePlugin {
           recordPluginServiceState.set(this.getRecordServiceKey(service), true);
         }
       } catch (error) {
-        showError(error, {title: `Something went wrong while enabling "${service.title}`, plugin: this});
+        showError(error as any, {title: `Something went wrong while enabling "${service.title}`, plugin: this});
       }
     } else {
       recordPluginServiceState.set(this.getRecordServiceKey(service), true);

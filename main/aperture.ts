@@ -52,7 +52,7 @@ const callPlugins = async (method: RecordServiceHook) => Promise.all(recordingPl
         })
       );
     } catch (error) {
-      showError(error, {title: `Something went wrong while using the plugin “${plugin.prettyName}”`, plugin});
+      showError(error as any, {title: `Something went wrong while using the plugin “${plugin.prettyName}”`, plugin});
     }
   }
 }));
@@ -147,7 +147,7 @@ export const startRecording = async (options: StartRecordingOptions) => {
     });
   } catch (error) {
     track('recording/stopped/error');
-    showError(error, {title: 'Recording error', plugin: undefined});
+    showError(error as any, {title: 'Recording error', plugin: undefined});
     past = undefined;
     cleanup();
     return;
@@ -196,7 +196,7 @@ export const stopRecording = async () => {
     filePath = await aperture.stopRecording();
   } catch (error) {
     track('recording/stopped/error');
-    showError(error, {title: 'Recording error', plugin: undefined});
+    showError(error as any, {title: 'Recording error', plugin: undefined});
     cleanup();
     return;
   }

@@ -96,8 +96,8 @@ export default class Conversion extends (EventEmitter as new () => TypedEventEmi
     } catch (error) {
       // Ensure we re-try the conversion if it fails
       this.conversionProcess = undefined;
-      if (!error.isCanceled) {
-        this.emit('error', error);
+      if (!(error as any)?.isCanceled) {
+        this.emit('error', error as any);
       }
 
       throw error;

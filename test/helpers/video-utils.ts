@@ -37,7 +37,7 @@ export const getVideoMetadata = async (path: string): Promise<{
   try {
     await execa(ffmpegPath, ['-i', path]);
   } catch (error) {
-    const {stderr} = error;
+    const {stderr} = error as any;
     return {
       duration: getDuration(stderr),
       encoding: getEncoding(stderr)!,

@@ -64,7 +64,7 @@ export default class Export extends (EventEmitter as new () => TypedEventEmitter
       this.text = 'Export completed';
       this.emit('updated', this.data);
     } catch (error) {
-      this.captureError(error);
+      this.captureError(error as any);
     }
   });
 
@@ -163,7 +163,7 @@ export default class Export extends (EventEmitter as new () => TypedEventEmitter
       this.process = this._start();
       await this.process;
     } catch (error) {
-      this.captureError(error);
+      this.captureError(error as any);
     }
   };
 

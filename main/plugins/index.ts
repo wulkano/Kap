@@ -58,7 +58,7 @@ export class Plugins extends EventEmitter {
         try {
           await plugin.content.didInstall?.(plugin.config);
         } catch (error) {
-          showError(error, {plugin} as any);
+          showError(error as any, {plugin} as any);
         }
       }
 
@@ -97,7 +97,7 @@ export class Plugins extends EventEmitter {
       this.modifyMainPackageJson(pkg => {
         delete pkg.dependencies[name];
       });
-      showError(error);
+      showError(error as any);
     }
   }
 
@@ -112,7 +112,7 @@ export class Plugins extends EventEmitter {
       try {
         await plugin.content.willUninstall?.(plugin.config);
       } catch (error) {
-        showError(error, {plugin} as any);
+        showError(error as any, {plugin} as any);
       }
     }
 
