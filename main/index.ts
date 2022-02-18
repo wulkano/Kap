@@ -9,6 +9,9 @@ import './utils/sentry';
 
 require('electron-timber').hookConsole({main: true, renderer: true});
 
+// Initialize Electron remote
+require('@electron/remote/main').initialize();
+
 import {settings} from './common/settings';
 import {plugins} from './plugins';
 import {initializeTray} from './tray';

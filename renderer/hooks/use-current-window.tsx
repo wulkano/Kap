@@ -1,5 +1,7 @@
-import {remote} from 'electron';
+// TODO: Is this file used?
 
-export const useCurrentWindow = () => {
-  return remote.getCurrentWindow();
-};
+// import {remote} from 'electron';
+
+// export const useCurrentWindow = () => {
+//   return remote.getCurrentWindow();
+// };

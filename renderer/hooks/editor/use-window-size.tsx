@@ -1,4 +1,3 @@
-import {remote} from 'electron';
 import {useEffect, useRef} from 'react';
 import {resizeKeepingCenter} from 'utils/window';
 
@@ -19,7 +18,7 @@ export const useEditorWindowSizeEffect = (isConversionWindowState: boolean) => {
       return;
     }
 
-    const window = remote.getCurrentWindow();
+    const window = require('@electron/remote').getCurrentWindow();
     const bounds = window.getBounds();
 
     if (isConversionWindowState) {

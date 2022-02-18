@@ -154,7 +154,7 @@ const ShortcutInput = ({shortcut = '', onChange, tabIndex}) => {
   };
 
   const openMenu = () => {
-    const {Menu} = require('electron').remote;
+    const {Menu} = require('@electron/remote');
     const menu = Menu.buildFromTemplate(presets.map(accelerator => ({
       label: accelerator.split('+').map(key => metaCharacters.get(key) || key).join(''),
       click: () => {

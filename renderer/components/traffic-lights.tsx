@@ -1,4 +1,3 @@
-import {remote} from 'electron';
 import {useState, useEffect, FunctionComponent} from 'react';
 
 interface TrafficLightsProps {
@@ -6,19 +5,21 @@ interface TrafficLightsProps {
 }
 
 const TrafficLights: FunctionComponent<TrafficLightsProps> = props => {
+  const remote = require('@electron/remote');
+  const {systemPreferences} = require('electron-util').api;
   const currentWindow = remote.getCurrentWindow();
   const [tint, setTint] = useState('blue');
 
   useEffect(() => {
     const setTintColor = () => {
-      setTint(remote.systemPreferences.getUserDefault('AppleAquaColorVariant', 'string') === '6' ? 'graphite' : 'blue');
+      setTint(systemPreferences.getUserDefault('AppleAquaColorVariant', 'string') === '6' ? 'graphite' : 'blue');
     };
 
-    const tintSubscription = remote.systemPreferences.subscribeNotification('AppleAquaColorVariantChanged', setTintColor);
+    const tintSubscription = systemPreferences.subscribeNotification('AppleAquaColorVariantChanged', setTintColor);
     setTintColor();
 
     return () => {
-      remote.systemPreferences.unsubscribeNotification(tintSubscription);
+      systemPreferences.unsubscribeNotification(tintSubscription);
     };
   }, []);
 

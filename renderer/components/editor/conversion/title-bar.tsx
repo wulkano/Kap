@@ -2,13 +2,14 @@ import TrafficLights from 'components/traffic-lights';
 import {BackPlainIcon, MoreIcon} from 'vectors';
 import {UseConversionState} from 'hooks/editor/use-conversion';
 import {flags} from '../../../common/flags';
-import {MenuItemConstructorOptions, remote} from 'electron';
+import {MenuItemConstructorOptions} from 'electron';
 import {ExportStatus} from '../../../common/types';
 import {useMemo} from 'react';
 import {template} from 'lodash';
 import IconMenu from '../../icon-menu';
 
 const TitleBar = ({conversion, cancel, copy, retry, showInFolder}: {conversion: UseConversionState; cancel: () => any; copy: () => any; retry: () => any; showInFolder: () => void}) => {
+  const remote = require('@electron/remote');
   const {api} = require('electron-util');
   const shouldClose = async () => {
     if (conversion.status === ExportStatus.inProgress && !flags.get('backgroundEditorConversion')) {

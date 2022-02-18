@@ -1,10 +1,9 @@
 import {createContainer} from 'unstated-next';
-import electron from 'electron';
 import {useRef, useState, useEffect} from 'react';
 
 const useVideoControls = () => {
   const videoRef = useRef<HTMLVideoElement>();
-  const currentWindow = electron.remote.getCurrentWindow();
+  const currentWindow = require('@electron/remote').getCurrentWindow();
   const wasPaused = useRef(true);
   const transitioningPauseState = useRef<Promise<void>>();
 

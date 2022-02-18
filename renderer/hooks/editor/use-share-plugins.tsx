@@ -1,5 +1,4 @@
 import OptionsContainer from 'components/editor/options-container';
-import {remote} from 'electron';
 import {ipcRenderer} from 'electron-better-ipc';
 import {useMemo} from 'react';
 
@@ -10,6 +9,7 @@ const useSharePlugins = () => {
     sharePlugin,
     updateSharePlugin
   } = OptionsContainer.useContainer();
+  const remote = process.type === 'browser' ? false : require('@electron/remote');
 
   const menuOptions = useMemo(() => {
     const selectedFormat = formats.find(f => f.format === format);

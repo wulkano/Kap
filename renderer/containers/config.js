@@ -1,8 +1,7 @@
-import electron from 'electron';
 import {Container} from 'unstated';
 
 export default class ConfigContainer extends Container {
-  remote = electron.remote || false;
+  remote = process.type === 'browser' ? false : require('@electron/remote');
 
   state = {selectedTab: 0};
 

@@ -22,7 +22,7 @@ actionBarContainer.bindCropper(cropperContainer);
 let lastRatioLockState = null;
 
 export default class CropperPage extends React.Component {
-  remote = electron.remote || false;
+  remote = process.type === 'browser' ? false : require('@electron/remote');
 
   dev = false;
 
@@ -33,7 +33,7 @@ export default class CropperPage extends React.Component {
       return;
     }
 
-    const {ipcRenderer, remote} = electron;
+    const {ipcRenderer} = electron;
 
     ipcRenderer.on('display', (_, display) => {
       cropperContainer.setDisplay(display);
@@ -53,7 +53,7 @@ export default class CropperPage extends React.Component {
       cropperContainer.setRecording();
     });
 
-    const window = remote.getCurrentWindow();
+    const window = this.remote.getCurrentWindow();
     window.on('focus', () => {
       cropperContainer.setActive(true);
     });
