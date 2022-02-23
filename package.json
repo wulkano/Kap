@@ -37,7 +37,7 @@
     "@sentry/electron": "^2.4.0",
     "@sindresorhus/to-milliseconds": "^1.2.0",
     "ajv": "^6.12.2",
-    "aperture": "^6.1.1",
+    "aperture": "^6.1.2",
     "base64-img": "^1.0.4",
     "classnames": "^2.2.6",
     "clean-stack": "^3.0.1",

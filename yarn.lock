@@ -1205,10 +1205,10 @@ anymatch@~3.1.1, anymatch@~3.1.2:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
 
-aperture@^6.1.1:
-  version "6.1.1"
-  resolved "https://registry.yarnpkg.com/aperture/-/aperture-6.1.1.tgz#d20666677cdefea7669ecee0141742de7e7d2487"
-  integrity sha512-STXRDJArEmillPcjzIjwrCNYbfOG7WbMN4WozlW1s5G5+9eT8IOjlfXAGw6vCOj8Jwi7EQPes3NC6syv0Mckvg==
+aperture@^6.1.2:
+  version "6.1.2"
+  resolved "https://registry.yarnpkg.com/aperture/-/aperture-6.1.2.tgz#8aa8fbca5f579a9aa18cbda66e724fdf7477c70c"
+  integrity sha512-VSD9XzC1GssGmKWTlrzaDum0WPu+SYsSpnDkDahMdAF1gVykZ/VH/lA5ekdmmYnvYiz1a/BmDd0TIxNUzIBChw==
   dependencies:
     delay "^5.0.0"
     electron-util "^0.14.2"
