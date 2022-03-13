@@ -1,5 +1,5 @@
 import {app} from 'electron';
-import {is, enforceMacOSAppLocation} from 'electron-util';
+import {enforceMacOSAppLocation} from 'electron-util';
 import log from 'electron-log';
 import {autoUpdater} from 'electron-updater';
 import toMilliseconds from '@sindresorhus/to-milliseconds';
@@ -26,6 +26,7 @@ import {setupRemoteStates} from './remote-states';
 import {setUpExportsListeners} from './export';
 import {windowManager} from './windows/manager';
 import {setupProtocol} from './utils/protocol';
+import {isDevelopment} from './utils/environment';
 
 const prepareNext = require('electron-next');
 
@@ -45,7 +46,7 @@ app.on('open-file', (event, path) => {
 });
 
 const initializePlugins = async () => {
-  if (!is.development) {
+  if (!isDevelopment()) {
     try {
       await plugins.upgrade();
     } catch (error) {
@@ -55,7 +56,7 @@ const initializePlugins = async () => {
 };
 
 const checkForUpdates = () => {
-  if (is.development) {
+  if (isDevelopment()) {
     return false;
   }
 
