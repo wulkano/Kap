@@ -1,8 +1,8 @@
 'use strict';
 
-import util from 'electron-util';
 import {parse} from 'semver';
 import {settings} from './settings';
+import {isFirstAppLaunch} from '../utils/launch';
 
 const Insight = require('insight');
 const pkg = require('../../package');
@@ -21,7 +21,7 @@ export const track = (...paths: string[]) => {
 };
 
 export const initializeAnalytics = () => {
-  if (util.isFirstAppLaunch()) {
+  if (isFirstAppLaunch()) {
     insight.track('install');
   }
 
