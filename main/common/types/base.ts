@@ -6,7 +6,8 @@ export enum Format {
   mp4 = 'mp4',
   webm = 'webm',
   apng = 'apng',
-  av1 = 'av1'
+  av1 = 'av1',
+  mkv = 'mkv'
 }
 
 export enum Encoding {

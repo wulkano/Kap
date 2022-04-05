@@ -462,3 +462,83 @@ test('HEVC: non-retina', async t => {
 
   t.false(meta.hasAudio);
 });
+
+
+
+
+
+// MKV
+
+test('mkv: retina with sound', async t => {
+  const onProgress = sinon.fake();
+
+  t.context.outputPath = await convert(Format.mkv, {
+    shouldMute: false,
+    inputPath: retinaInput,
+    fps: 39,
+    width: 469,
+    height: 839,
+    startTime: 30,
+    endTime: 43.5,
+    shouldCrop: true,
+    onProgress
+  });
+
+  const meta = await getVideoMetadata(t.context.outputPath);
+
+  // Makes dimensions even
+  t.is(meta.size.width, 470);
+  t.is(meta.size.height, 840);
+
+  t.is(meta.fps, 39);
+  t.true(almostEquals(meta.duration, 13.5));
+  t.is(meta.encoding, 'h264');
+
+  t.true(meta.hasAudio);
+
+  t.true(onProgress.calledWithMatch(sinon.match.string, sinon.match.number));
+  t.true(onProgress.calledWithMatch(sinon.match.string, sinon.match.number, sinon.match.string));
+});
+
+test('mkv: retina without sound', async t => {
+  t.context.outputPath = await convert(Format.mkv, {
+    shouldMute: true,
+    inputPath: retinaInput,
+    fps: 10,
+    width: 46,
+    height: 83,
+    startTime: 0,
+    endTime: 5,
+    shouldCrop: true
+  });
+
+  const meta = await getVideoMetadata(t.context.outputPath);
+
+  t.false(meta.hasAudio);
+});
+
+test('mkv: non-retina', async t => {
+  t.context.outputPath = await convert(Format.mp4, {
+    shouldMute: false,
+    inputPath: input,
+    fps: 30,
+    width: 255,
+    height: 143,
+    startTime: 11.5,
+    endTime: 27,
+    // Should resize even though this is false, because dimensions are odd
+    shouldCrop: false
+  });
+
+  const meta = await getVideoMetadata(t.context.outputPath);
+
+  // Makes dimensions even
+  t.is(meta.size.width, 256);
+  t.is(meta.size.height, 144);
+
+  t.is(meta.fps, 30);
+  t.true(almostEquals(meta.duration, 15.5));
+  t.is(meta.encoding, 'h264');
+
+  t.false(meta.hasAudio);
+});
