@@ -279,11 +279,44 @@ export const crop = (options: ConvertOptions) => convert(options.outputPath, {
   options.outputPath
 ));
 
+
+// converting the recorded video to MKV Format
+// ffmpeg -i original.mp4 -vf fps=30 -c copy output.mkv
+const convertToMKV = (options: ConvertOptions) => convert(options.outputPath, {
+  onProgress: (progress, estimate) => {
+    options.onProgress('Converting', progress, estimate);
+  },
+  startTime: options.startTime,
+  endTime: options.endTime
+}, conditionalArgs(
+  '-i', options.inputPath,
+  '-r', options.fps.toString(),
+  {
+    args: ['-an'],
+    if: options.shouldMute
+  },
+  {
+    args: [
+      '-s',
+      `${makeEven(options.width)}x${makeEven(options.height)}`,
+      '-ss',
+      options.startTime.toString(),
+      '-to',
+      options.endTime.toString()
+    ],
+    if: options.shouldCrop || !areDimensionsEven(options)
+  },
+  options.outputPath
+));
+
+
+
 export default new Map([
   [Format.gif, convertToGif],
   [Format.mp4, convertToMp4],
   [Format.hevc, convertToHevc],
   [Format.webm, convertToWebm],
   [Format.apng, convertToApng],
-  [Format.av1, convertToAv1]
+  [Format.av1, convertToAv1],
+  [Format.mkv, convertToMKV]
 ]);
