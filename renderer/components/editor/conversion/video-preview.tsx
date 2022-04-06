@@ -99,6 +99,7 @@ const VideoPreview = ({conversion, cancel, showInFolder}: {conversion: UseConver
           flex: 1;
           height: 0;
           -webkit-app-region: no-drag;
+          max-height: 200px;
         }
 
         video, img {
