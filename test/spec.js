@@ -1,7 +1,10 @@
+import test from 'ava';
+
 const { Application } = require('spectron')
 const assert = require('assert')
 const electronPath = require('electron') // Require Electron from the binaries included in node_modules.
 const path = require('path')
+
 
 describe('Application launch', function () {
   this.timeout(10000)
@@ -13,19 +16,7 @@ describe('Application launch', function () {
       // But for the sake of the example we fetch it from our node_modules.
       path: electronPath,
 
-      // Assuming you have the following directory structure
-
-      //  |__ my project
-      //     |__ ...
-      //     |__ main.js
-      //     |__ package.json
-      //     |__ index.html
-      //     |__ ...
-      //     |__ test
-      //        |__ spec.js  <- You are here! ~ Well you should be.
-
-      // The following line tells spectron to look and use the main.js file
-      // and the package.json located 1 level above.
+      
       args: [path.join(__dirname, '..')]
     })
     await this.app.start()
@@ -44,3 +35,33 @@ describe('Application launch', function () {
     // assert.equal(count, 2)
   })
 })
+
+
+
+test.beforeEach(async t => {
+  t.context.app = new Application({
+    path: '/home/mt/Kap/'
+  });
+
+  await t.context.app.start();
+});
+
+test.afterEach.always(async t => {
+  await t.context.app.stop();
+});
+
+test('launch', async t => {
+  const app = t.context.app;
+  await app.client.waitUntilWindowLoaded();
+
+  const win = app.browserWindow;
+  t.is(await app.client.getWindowCount(), 1);
+  t.false(await win.isMinimized());
+  t.false(await win.isDevToolsOpened());
+  t.true(await win.isVisible());
+  t.true(await win.isFocused());
+
+  const {width, height} = await win.getBounds();
+  t.true(width > 0);
+  t.true(height > 0);
+});
