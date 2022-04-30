@@ -73,7 +73,6 @@ class Config extends React.Component {
             display: flex;
             flex-direction: column;
             word-break: break-word;
-            overflow-y: auto;
           }
 
           .service-nav {
@@ -110,10 +109,9 @@ class Config extends React.Component {
           }
 
           .tab-container {
-            flex: 1;
+            flex: 1 1 272px;
             display: flex;
             overflow-x: hidden;
-            height: 272px;
           }
 
           .tab {
