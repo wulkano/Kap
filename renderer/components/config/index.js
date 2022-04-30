@@ -73,6 +73,7 @@ class Config extends React.Component {
             display: flex;
             flex-direction: column;
             word-break: break-word;
+            overflow-y: auto;
           }
 
           .service-nav {
