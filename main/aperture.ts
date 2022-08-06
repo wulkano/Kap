@@ -1,5 +1,5 @@
 import {windowManager} from './windows/manager';
-import {setRecordingTray, disableTray, resetTray} from './tray';
+import {setRecordingTray, setPausedTray, disableTray, resetTray} from './tray';
 import {setCropperShortcutAction} from './global-accelerators';
 import {settings} from './common/settings';
 import {track} from './common/analytics';
@@ -162,7 +162,7 @@ export const startRecording = async (options: StartRecordingOptions) => {
 
   console.log(`Started recording after ${startTime}s`);
   windowManager.cropper?.setRecording();
-  setRecordingTray(stopRecording);
+  setRecordingTray(stopRecording, pauseRecording);
   setCropperShortcutAction(stopRecording);
   past = Date.now();
 
@@ -214,5 +214,43 @@ export const stopRecording = async () => {
     await recording.openEditorWindow();
 
     stopCurrentRecording(recordingName);
+  }
+};
+
+export const pauseRecording = async () => {
+  // Ensure we only pause if there's a recording in progress and if it's currently not paused
+  const isPaused = await aperture.isPaused();
+  if (!past || isPaused) {
+    return;
+  }
+
+  try {
+    await aperture.pause();
+    setPausedTray(resumeRecording);
+    track('recording/paused');
+    console.log(`Paused recording after ${(Date.now() - past) / 1000}s`);
+  } catch (error) {
+    track('recording/paused/error');
+    showError(error as any, {title: 'Recording error', plugin: undefined});
+    cleanup();
+  }
+};
+
+export const resumeRecording = async () => {
+  // Ensure we only resume if there's a recording in progress and if it's currently paused
+  const isPaused = await aperture.isPaused();
+  if (!past || !isPaused) {
+    return;
+  }
+
+  try {
+    await aperture.resume();
+    setRecordingTray(stopRecording, pauseRecording);
+    track('recording/resumed');
+    console.log(`Resume recording after ${(Date.now() - past) / 1000}s`);
+  } catch (error) {
+    track('recording/resumed/error');
+    showError(error as any, {title: 'Recording error', plugin: undefined});
+    cleanup();
   }
 };

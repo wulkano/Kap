@@ -45,11 +45,21 @@ export const resetTray = () => {
   tray.on('right-click', openContextMenu);
 };
 
-export const setRecordingTray = (stopRecording: () => void) => {
+export const setRecordingTray = (stopRecording: () => void, pauseRecording: () => void) => {
   animateIcon();
 
   // TODO: figure out why this is marked as missing. It's defined properly in the electron.d.ts file
   tray.once('click', stopRecording);
+  tray.once('right-click', pauseRecording);
+};
+
+export const setPausedTray = (resumeRecording: () => void) => {
+  if (trayAnimation) {
+    clearTimeout(trayAnimation);
+  }
+
+  tray.setImage(path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'));
+  tray.once('right-click', resumeRecording);
 };
 
 const animateIcon = async () => new Promise<void>(resolve => {
