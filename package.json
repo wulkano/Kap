@@ -60,7 +60,7 @@
     "is-online": "^8.4.0",
     "lodash": "^4.17.21",
     "mac-open-with": "^1.2.3",
-    "mac-screen-capture-permissions": "^2.0.0",
+    "mac-screen-capture-permissions": "^1.1.0",
     "mac-windows": "^1.0.0",
     "macos-audio-devices": "^1.4.0",
     "macos-version": "^5.2.1",
