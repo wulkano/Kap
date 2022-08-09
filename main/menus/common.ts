@@ -1,7 +1,7 @@
 import delay from 'delay';
 import {app, dialog} from 'electron';
 import {openNewGitHubIssue} from 'electron-util';
-import macosRelease from 'macos-release';
+import macosRelease from '../utils/macos-release';
 import {supportedVideoExtensions} from '../common/constants';
 import {getCurrentMenuItem, MenuItemId} from './utils';
 import {openFiles} from '../utils/open-files';

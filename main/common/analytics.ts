@@ -4,11 +4,13 @@ import util from 'electron-util';
 import {parse} from 'semver';
 import {settings} from './settings';
 
-const Insight = require('insight');
+// TODO: Disabled because of https://github.com/wulkano/Kap/issues/1126
+/// const Insight = require('insight');
 const pkg = require('../../package');
 
-const trackingCode = 'UA-84705099-2';
-const insight = new Insight({trackingCode, pkg});
+/// const trackingCode = 'UA-84705099-2';
+/// const insight = new Insight({trackingCode, pkg});
+
 const version = parse(pkg.version);
 
 export const track = (...paths: string[]) => {
@@ -16,13 +18,13 @@ export const track = (...paths: string[]) => {
 
   if (allowAnalytics) {
     console.log('Tracking', `v${version?.major}.${version?.minor}`, ...paths);
-    insight.track(`v${version?.major}.${version?.minor}`, ...paths);
+    /// insight.track(`v${version?.major}.${version?.minor}`, ...paths);
   }
 };
 
 export const initializeAnalytics = () => {
   if (util.isFirstAppLaunch()) {
-    insight.track('install');
+    /// insight.track('install');
   }
 
   if (settings.get('version') !== pkg.version) {

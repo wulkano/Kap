@@ -6,7 +6,7 @@ import isOnline from 'is-online';
 import {openNewGitHubIssue} from 'electron-util';
 import got from 'got';
 import delay from 'delay';
-import macosRelease from 'macos-release';
+import macosRelease from './macos-release';
 
 import {windowManager} from '../windows/manager';
 import Sentry, {isSentryEnabled} from './sentry';
