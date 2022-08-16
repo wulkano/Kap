@@ -1,5 +1,5 @@
 import {systemPreferences, shell, dialog, app} from 'electron';
-const {hasScreenCapturePermission, hasPromptedForPermission} = require('mac-screen-capture-permissions');
+import {getAuthStatus, askForScreenCaptureAccess} from 'node-mac-permissions';
 const {ensureDockIsShowing} = require('../utils/dock');
 
 let isDialogShowing = false;
@@ -73,17 +73,14 @@ const screenCaptureFallback = promptSystemPreferences({
 });
 
 export const ensureScreenCapturePermissions = (fallback = screenCaptureFallback) => {
-  const hadAsked = hasPromptedForPermission();
-
-  const hasAccess = hasScreenCapturePermission();
-
-  if (hasAccess) {
+  const status = getAuthStatus('screen');
+  if (status === 'authorized') {
     return true;
   }
 
-  fallback({hasAsked: !hadAsked});
+  askForScreenCaptureAccess();
+  fallback();
   return false;
 };
 
-export const hasScreenCaptureAccess = () => hasScreenCapturePermission();
-
+export const hasScreenCaptureAccess = () => getAuthStatus('screen') === 'authorized';
