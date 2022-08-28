@@ -1,7 +1,10 @@
+import {join} from 'path';
+import {existsSync, openSync} from 'fs';
 import {systemPreferences, shell, dialog, app} from 'electron';
 import {getAuthStatus, askForScreenCaptureAccess} from 'node-mac-permissions';
 const {ensureDockIsShowing} = require('../utils/dock');
 
+const hasAskedForScreenCapturePermissionsPath = join(app.getPath('userData'), '.has-asked-for-screen-capture-permissions');
 let isDialogShowing = false;
 
 const promptSystemPreferences = (options: {message: string; detail: string; systemPreferencesPath: string}) => async ({hasAsked}: {hasAsked?: boolean} = {}) => {
@@ -73,12 +76,20 @@ const screenCaptureFallback = promptSystemPreferences({
 });
 
 export const ensureScreenCapturePermissions = (fallback = screenCaptureFallback) => {
+  // Check for screen capture permissions
   const status = getAuthStatus('screen');
   if (status === 'authorized') {
     return true;
   }
 
-  askForScreenCaptureAccess();
+  // If not authorized for screen capture and we haven't already asked, then ask for permissions now
+  if (!existsSync(hasAskedForScreenCapturePermissionsPath)) {
+    askForScreenCaptureAccess();
+    openSync(hasAskedForScreenCapturePermissionsPath, 'w');
+    return false;
+  }
+
+  // If we've already asked, then prompt user again to give permission
   fallback();
   return false;
 };
