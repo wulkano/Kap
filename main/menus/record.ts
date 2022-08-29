@@ -25,7 +25,7 @@ const getPauseRecordingMenuItem = () => ({
 });
 
 const getResumeRecordingMenuItem = () => ({
-  id: MenuItemId.pauseRecording,
+  id: MenuItemId.resumeRecording,
   label: 'Resume Recording',
   click: resumeRecording
 });
