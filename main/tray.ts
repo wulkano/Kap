@@ -22,8 +22,8 @@ const openRecordingContextMenu = async () => {
 };
 
 const openPausedContextMenu = async () => {
-  tray.popUpContextMenu(await getRecordMenu(true))
-}
+  tray.popUpContextMenu(await getRecordMenu(true));
+};
 
 const openCropperWindow = () => windowManager.cropper?.open();
 
@@ -84,8 +84,9 @@ const onRecordingTrayClick = (event: KeyboardEvent) => {
     pauseRecording();
     return;
   }
+
   stopRecording();
-}
+};
 
 const animateIcon = async () => new Promise<void>(resolve => {
   const interval = 20;
