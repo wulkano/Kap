@@ -162,7 +162,7 @@ export const startRecording = async (options: StartRecordingOptions) => {
 
   console.log(`Started recording after ${startTime}s`);
   windowManager.cropper?.setRecording();
-  setRecordingTray(stopRecording, pauseRecording);
+  setRecordingTray();
   setCropperShortcutAction(stopRecording);
   past = Date.now();
 
@@ -226,7 +226,7 @@ export const pauseRecording = async () => {
 
   try {
     await aperture.pause();
-    setPausedTray(resumeRecording);
+    setPausedTray();
     track('recording/paused');
     console.log(`Paused recording after ${(Date.now() - past) / 1000}s`);
   } catch (error) {
@@ -245,7 +245,7 @@ export const resumeRecording = async () => {
 
   try {
     await aperture.resume();
-    setRecordingTray(stopRecording, pauseRecording);
+    setRecordingTray();
     track('recording/resumed');
     console.log(`Resume recording after ${(Date.now() - past) / 1000}s`);
   } catch (error) {
