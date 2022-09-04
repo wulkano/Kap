@@ -74,7 +74,7 @@ export const setPausedTray = () => {
 
   tray.removeAllListeners('right-click');
 
-  tray.setImage(path.join(__dirname, '..', 'static', 'menubarDefaultTemplate.png'));
+  tray.setImage(path.join(__dirname, '..', 'static', 'pauseTemplate.png'));
   tray.once('click', resumeRecording);
   tray.on('right-click', openPausedContextMenu);
 };
