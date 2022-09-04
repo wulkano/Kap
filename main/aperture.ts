@@ -217,6 +217,32 @@ export const stopRecording = async () => {
   }
 };
 
+export const stopRecordingWithNoEdit = async () => {
+  // Ensure we only stop recording once
+  if (!past) {
+    return;
+  }
+
+  console.log(`Stopped recording after ${(Date.now() - past) / 1000}s`);
+  past = undefined;
+
+  try {
+    await aperture.stopRecording();
+  } catch (error) {
+    track('recording/quit/error');
+    showError(error as any, {title: 'Recording error', plugin: undefined});
+    cleanup();
+    return;
+  }
+
+  try {
+    cleanup();
+  } finally {
+    track('recording/quit');
+    stopCurrentRecording(recordingName);
+  }
+};
+
 export const pauseRecording = async () => {
   // Ensure we only pause if there's a recording in progress and if it's currently not paused
   const isPaused = await aperture.isPaused();
