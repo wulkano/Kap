@@ -2,38 +2,36 @@ import {Menu} from 'electron';
 import {MenuItemId, MenuOptions} from './utils';
 import {pauseRecording, resumeRecording, stopRecording} from '../aperture';
 
-const getRecordMenuTemplate = async (): Promise<MenuOptions> => [
-  getStopRecordingMenuItem(),
-  getPauseRecordingMenuItem()
-];
-
-const getPausedMenuTemplate = async (): Promise<MenuOptions> => [
-  getStopRecordingMenuItem(),
-  getResumeRecordingMenuItem()
-];
-
 const getStopRecordingMenuItem = () => ({
   id: MenuItemId.stopRecording,
-  label: 'Stop Recording',
+  label: 'Stop',
   click: stopRecording
 });
 
 const getPauseRecordingMenuItem = () => ({
   id: MenuItemId.pauseRecording,
-  label: 'Pause Recording',
+  label: 'Pause',
   click: pauseRecording
 });
 
 const getResumeRecordingMenuItem = () => ({
   id: MenuItemId.resumeRecording,
-  label: 'Resume Recording',
+  label: 'Resume',
   click: resumeRecording
 });
 
-export const getRecordMenu = async (isPaused: boolean) => {
-  if (isPaused) {
-    return Menu.buildFromTemplate(await getPausedMenuTemplate());
+const getRecordMenuTemplate = (isPaused: boolean): MenuOptions => [
+  isPaused ? getResumeRecordingMenuItem() : getPauseRecordingMenuItem(),
+  getStopRecordingMenuItem(),
+  {
+    type: 'separator'
+  },
+  {
+    role: 'quit',
+    accelerator: 'Command+Q'
   }
+];
 
-  return Menu.buildFromTemplate(await getRecordMenuTemplate());
+export const getRecordMenu = async (isPaused: boolean) => {
+  return Menu.buildFromTemplate(getRecordMenuTemplate(isPaused));
 };
