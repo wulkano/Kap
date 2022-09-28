@@ -1,6 +1,20 @@
 import {Menu} from 'electron';
 import {MenuItemId, MenuOptions} from './utils';
-import {pauseRecording, resumeRecording, stopRecording} from '../aperture';
+import {overallDuration, currentDurationStart, pauseRecording, resumeRecording, stopRecording} from '../aperture';
+import formatTime from '../utils/format-time';
+
+const getDurationLabel = () => {
+  if (currentDurationStart <= 0) {
+    return formatTime((overallDuration) / 1000, undefined);
+  }
+  return formatTime((overallDuration + (Date.now() - currentDurationStart)) / 1000, undefined);
+}
+
+const getDurationMenuItem = () => ({
+  id: MenuItemId.duration,
+  label: getDurationLabel(),
+  enabled: false
+});
 
 const getStopRecordingMenuItem = () => ({
   id: MenuItemId.stopRecording,
@@ -20,7 +34,11 @@ const getResumeRecordingMenuItem = () => ({
   click: resumeRecording
 });
 
-const getRecordMenuTemplate = (isPaused: boolean): MenuOptions => [
+export const getRecordMenuTemplate = (isPaused: boolean): MenuOptions => [
+  getDurationMenuItem(),
+  {
+    type: 'separator'
+  },
   isPaused ? getResumeRecordingMenuItem() : getPauseRecordingMenuItem(),
   getStopRecordingMenuItem(),
   {

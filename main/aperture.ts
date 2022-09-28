@@ -22,6 +22,9 @@ let apertureOptions: ApertureOptions;
 let recordingName: string | undefined;
 let past: number | undefined;
 
+export let overallDuration = 0;
+export let currentDurationStart = 0;
+
 const setRecordingName = (name: string) => {
   recordingName = name;
 };
@@ -138,6 +141,8 @@ export const startRecording = async (options: StartRecordingOptions) => {
 
   try {
     const filePath = await aperture.startRecording(apertureOptions);
+    overallDuration = 0;
+    currentDurationStart = Date.now();
 
     setCurrentRecording({
       filePath,
@@ -194,6 +199,8 @@ export const stopRecording = async () => {
 
   try {
     filePath = await aperture.stopRecording();
+    overallDuration = 0;
+    currentDurationStart = 0;
   } catch (error) {
     track('recording/stopped/error');
     showError(error as any, {title: 'Recording error', plugin: undefined});
@@ -228,6 +235,8 @@ export const stopRecordingWithNoEdit = async () => {
 
   try {
     await aperture.stopRecording();
+    overallDuration = 0;
+    currentDurationStart = 0;
   } catch (error) {
     track('recording/quit/error');
     showError(error as any, {title: 'Recording error', plugin: undefined});
@@ -252,6 +261,8 @@ export const pauseRecording = async () => {
 
   try {
     await aperture.pause();
+    overallDuration += (Date.now() - currentDurationStart);
+    currentDurationStart = 0;
     setPausedTray();
     track('recording/paused');
     console.log(`Paused recording after ${(Date.now() - past) / 1000}s`);
@@ -271,6 +282,7 @@ export const resumeRecording = async () => {
 
   try {
     await aperture.resume();
+    currentDurationStart = Date.now();
     setRecordingTray();
     track('recording/resumed');
     console.log(`Resume recording after ${(Date.now() - past) / 1000}s`);
