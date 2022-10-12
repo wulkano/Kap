@@ -43,7 +43,7 @@ Download [`main`](https://kap-artifacts.now.sh/main) or builds for any other bra
 
 ## Thanks
 
-- [▲ Vercel](https://vercel.com/) for fast deployments served from the edge, hosting our website, downloads, and updates.
-- [● CircleCI](https://circleci.com/) for supporting the open source community and making our builds fast and reliable.
-- [△ Sentry](https://sentry.io/) for letting us know when Kap isn't behaving and helping us eradicate said behaviour.
+- [<img height="14" src="https://si-cdn.vercel.app/vercel"/> Vercel](https://vercel.com/) for fast deployments served from the edge, hosting our website, downloads, and updates.
+- [<img height="14" src="https://si-cdn.vercel.app/circleci"/> CircleCI](https://circleci.com/) for supporting the open source community and making our builds fast and reliable.
+- [<img height="14" src="https://si-cdn.vercel.app/sentry"/> Sentry](https://sentry.io/) for letting us know when Kap isn't behaving and helping us eradicate said behaviour.
 - Our [contributors](https://github.com/wulkano/kap/contributors) who help maintain Kap and make screen recording and sharing easy.
