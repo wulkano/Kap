@@ -1,14 +1,16 @@
 import {Menu} from 'electron';
 import {MenuItemId, MenuOptions} from './utils';
-import {overallDuration, currentDurationStart, pauseRecording, resumeRecording, stopRecording} from '../aperture';
+import {pauseRecording, resumeRecording, stopRecording} from '../aperture';
 import formatTime from '../utils/format-time';
+import {getCurrentDurationStart, getOverallDuration} from '../utils/track-duration';
 
 const getDurationLabel = () => {
-  if (currentDurationStart <= 0) {
-    return formatTime((overallDuration) / 1000, undefined);
+  if (getCurrentDurationStart() <= 0) {
+    return formatTime((getOverallDuration()) / 1000, undefined);
   }
-  return formatTime((overallDuration + (Date.now() - currentDurationStart)) / 1000, undefined);
-}
+
+  return formatTime((getOverallDuration() + (Date.now() - getCurrentDurationStart())) / 1000, undefined);
+};
 
 const getDurationMenuItem = () => ({
   id: MenuItemId.duration,
