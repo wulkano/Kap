@@ -43,7 +43,7 @@ Download [`main`](https://kap-artifacts.now.sh/main) or builds for any other bra
 
 ## Thanks
 
-- [<img height="14" src="https://si-cdn.vercel.app/vercel"/> Vercel](https://vercel.com/) for fast deployments served from the edge, hosting our website, downloads, and updates.
-- [<img height="14" src="https://si-cdn.vercel.app/circleci"/> CircleCI](https://circleci.com/) for supporting the open source community and making our builds fast and reliable.
-- [<img height="14" src="https://si-cdn.vercel.app/sentry"/> Sentry](https://sentry.io/) for letting us know when Kap isn't behaving and helping us eradicate said behaviour.
+- [<picture><source media="(prefers-color-scheme: dark)" srcset="https://cdn.simpleicons.org/vercel/white"><source media="(prefers-color-scheme: light)" srcset="https://cdn.simpleicons.org/vercel"><img alt="Vercel" height="14" src="https://cdn.simpleicons.org/vercel"></picture> Vercel](https://vercel.com/) for fast deployments served from the edge, hosting our website, downloads, and updates.
+- [<picture><source media="(prefers-color-scheme: dark)" srcset="https://cdn.simpleicons.org/circleci/white"><source media="(prefers-color-scheme: light)" srcset="https://cdn.simpleicons.org/circleci"><img alt="CircleCI" height="14" src="https://cdn.simpleicons.org/circleci"></picture> CircleCI](https://circleci.com/) for supporting the open source community and making our builds fast and reliable.
+- [<picture><source media="(prefers-color-scheme: dark)" srcset="https://cdn.simpleicons.org/sentry/white"><source media="(prefers-color-scheme: light)" srcset="https://cdn.simpleicons.org/sentry"><img alt="CircleCI" height="14" src="https://cdn.simpleicons.org/sentry"></picture> Sentry](https://sentry.io/) for letting us know when Kap isn't behaving and helping us eradicate said behaviour.
 - Our [contributors](https://github.com/wulkano/kap/contributors) who help maintain Kap and make screen recording and sharing easy.
