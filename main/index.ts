@@ -23,10 +23,13 @@ import {setupRemoteStates} from './remote-states';
 import {setUpExportsListeners} from './export';
 import {windowManager} from './windows/manager';
 import {setupProtocol} from './utils/protocol';
+import {stopRecordingWithNoEdit} from './aperture';
 
 const prepareNext = require('electron-next');
 
 const filesToOpen: string[] = [];
+
+let onExitCleanupComplete = false;
 
 app.commandLine.appendSwitch('--enable-features', 'OverlayScrollbar');
 
@@ -133,6 +136,12 @@ app.on('will-finish-launching', () => {
   });
 });
 
-app.on('quit', () => {
-  cleanPastRecordings();
+app.on('before-quit', async (event: any) => {
+  if (!onExitCleanupComplete) {
+    event.preventDefault();
+    await stopRecordingWithNoEdit();
+    cleanPastRecordings();
+    onExitCleanupComplete = true;
+    app.quit();
+  }
 });

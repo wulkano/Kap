@@ -1,5 +1,5 @@
 import {windowManager} from './windows/manager';
-import {setRecordingTray, disableTray, resetTray} from './tray';
+import {setRecordingTray, setPausedTray, disableTray, resetTray} from './tray';
 import {setCropperShortcutAction} from './global-accelerators';
 import {settings} from './common/settings';
 import {track} from './common/analytics';
@@ -12,6 +12,7 @@ import {Recording} from './video';
 import {ApertureOptions, StartRecordingOptions} from './common/types';
 import {InstalledPlugin} from './plugins/plugin';
 import {RecordService, RecordServiceHook} from './plugins/service';
+import {getCurrentDurationStart, getOverallDuration, setCurrentDurationStart, setOverallDuration} from './utils/track-duration';
 
 const createAperture = require('aperture');
 const aperture = createAperture();
@@ -138,6 +139,8 @@ export const startRecording = async (options: StartRecordingOptions) => {
 
   try {
     const filePath = await aperture.startRecording(apertureOptions);
+    setOverallDuration(0);
+    setCurrentDurationStart(Date.now());
 
     setCurrentRecording({
       filePath,
@@ -162,7 +165,7 @@ export const startRecording = async (options: StartRecordingOptions) => {
 
   console.log(`Started recording after ${startTime}s`);
   windowManager.cropper?.setRecording();
-  setRecordingTray(stopRecording);
+  setRecordingTray();
   setCropperShortcutAction(stopRecording);
   past = Date.now();
 
@@ -194,6 +197,8 @@ export const stopRecording = async () => {
 
   try {
     filePath = await aperture.stopRecording();
+    setOverallDuration(0);
+    setCurrentDurationStart(0);
   } catch (error) {
     track('recording/stopped/error');
     showError(error as any, {title: 'Recording error', plugin: undefined});
@@ -214,5 +219,74 @@ export const stopRecording = async () => {
     await recording.openEditorWindow();
 
     stopCurrentRecording(recordingName);
+  }
+};
+
+export const stopRecordingWithNoEdit = async () => {
+  // Ensure we only stop recording once
+  if (!past) {
+    return;
+  }
+
+  console.log(`Stopped recording after ${(Date.now() - past) / 1000}s`);
+  past = undefined;
+
+  try {
+    await aperture.stopRecording();
+    setOverallDuration(0);
+    setCurrentDurationStart(0);
+  } catch (error) {
+    track('recording/quit/error');
+    showError(error as any, {title: 'Recording error', plugin: undefined});
+    cleanup();
+    return;
+  }
+
+  try {
+    cleanup();
+  } finally {
+    track('recording/quit');
+    stopCurrentRecording(recordingName);
+  }
+};
+
+export const pauseRecording = async () => {
+  // Ensure we only pause if there's a recording in progress and if it's currently not paused
+  const isPaused = await aperture.isPaused();
+  if (!past || isPaused) {
+    return;
+  }
+
+  try {
+    await aperture.pause();
+    setOverallDuration(getOverallDuration() + (Date.now() - getCurrentDurationStart()));
+    setCurrentDurationStart(0);
+    setPausedTray();
+    track('recording/paused');
+    console.log(`Paused recording after ${(Date.now() - past) / 1000}s`);
+  } catch (error) {
+    track('recording/paused/error');
+    showError(error as any, {title: 'Recording error', plugin: undefined});
+    cleanup();
+  }
+};
+
+export const resumeRecording = async () => {
+  // Ensure we only resume if there's a recording in progress and if it's currently paused
+  const isPaused = await aperture.isPaused();
+  if (!past || !isPaused) {
+    return;
+  }
+
+  try {
+    await aperture.resume();
+    setCurrentDurationStart(Date.now());
+    setRecordingTray();
+    track('recording/resumed');
+    console.log(`Resume recording after ${(Date.now() - past) / 1000}s`);
+  } catch (error) {
+    track('recording/resumed/error');
+    showError(error as any, {title: 'Recording error', plugin: undefined});
+    cleanup();
   }
 };
