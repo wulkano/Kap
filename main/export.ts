@@ -245,7 +245,7 @@ export const setUpExportsListeners = () => {
 
     if (conversion && (await conversion.filePathExists()) && exportMap?.status === ExportStatus.completed) {
       event.sender.startDrag({
-        file: exportMap?.finalFilePath || conversion.convertedFilePath,
+        file: exportMap?.finalFilePath ?? conversion.convertedFilePath,
         icon: await conversion.video.getDragIcon(conversion.options)
       });
     }
