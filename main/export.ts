@@ -240,11 +240,12 @@ interface ExportsEvents {
 
 export const setUpExportsListeners = () => {
   ipcMain.on('drag-export', async (event: any, id: string) => {
-    const conversion = Export.exportsMap.get(id)?.conversion;
+    const exportMap = Export.exportsMap.get(id);
+    const conversion = exportMap?.conversion;
 
-    if (conversion && (await conversion.filePathExists())) {
+    if (conversion && (await conversion.filePathExists()) && exportMap?.status === ExportStatus.completed) {
       event.sender.startDrag({
-        file: conversion.convertedFilePath,
+        file: exportMap?.finalFilePath || conversion.convertedFilePath,
         icon: await conversion.video.getDragIcon(conversion.options)
       });
     }
