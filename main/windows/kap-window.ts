@@ -4,6 +4,8 @@ import pEvent from 'p-event';
 import {customApplicationMenu, defaultApplicationMenu, MenuModifier} from '../menus/application';
 import {loadRoute} from '../utils/routes';
 
+const remoteMain = require('@electron/remote/main');
+
 interface KapWindowOptions<State> extends Electron.BrowserWindowConstructorOptions {
   route: string;
   waitForMount?: boolean;
@@ -51,12 +53,13 @@ export default class KapWindow<State = any> {
       ...rest,
       webPreferences: {
         nodeIntegration: true,
-        enableRemoteModule: true,
         contextIsolation: false,
         ...rest.webPreferences
       },
       show: false
     });
+
+    remoteMain.enable(this.browserWindow.webContents);
 
     this.id = this.browserWindow.id;
     KapWindow.windows.set(this.id, this);

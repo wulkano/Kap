@@ -7,6 +7,8 @@ import pEvent from 'p-event';
 import {loadRoute} from '../utils/routes';
 import {windowManager} from './manager';
 
+const remoteMain = require('@electron/remote/main');
+
 const openConfigWindow = async (pluginName: string) => {
   const prefsWindow = await windowManager.preferences?.open();
   const configWindow = new BrowserWindow({
@@ -23,10 +25,11 @@ const openConfigWindow = async (pluginName: string) => {
     modal: true,
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true,
       contextIsolation: false
     }
   });
+
+  remoteMain.enable(configWindow.webContents);
 
   loadRoute(configWindow, 'config');
 
@@ -53,10 +56,11 @@ const openEditorConfigWindow = async (pluginName: string, serviceTitle: string, 
     modal: true,
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true,
       contextIsolation: false
     }
   });
+
+  remoteMain.enable(configWindow.webContents);
 
   loadRoute(configWindow, 'config');
 

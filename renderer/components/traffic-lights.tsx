@@ -1,4 +1,4 @@
-import {remote} from 'electron';
+import remote from '@electron/remote';
 import {useState, useEffect, FunctionComponent} from 'react';
 
 interface TrafficLightsProps {

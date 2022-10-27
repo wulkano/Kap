@@ -25,6 +25,9 @@ import {windowManager} from './windows/manager';
 import {setupProtocol} from './utils/protocol';
 import {stopRecordingWithNoEdit} from './aperture';
 
+const remoteMain = require('@electron/remote/main');
+remoteMain.initialize();
+
 const prepareNext = require('electron-next');
 
 const filesToOpen: string[] = [];

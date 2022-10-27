@@ -33,6 +33,7 @@
     "name": "Kap"
   },
   "dependencies": {
+    "@electron/remote": "^2.0.8",
     "@sentry/browser": "^6.2.2",
     "@sentry/electron": "^2.4.0",
     "@sindresorhus/to-milliseconds": "^1.2.0",

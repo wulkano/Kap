@@ -5,6 +5,8 @@ import {ipcMain as ipc} from 'electron-better-ipc';
 import {loadRoute} from '../utils/routes';
 import {windowManager} from './manager';
 
+const remoteMain = require('@electron/remote/main');
+
 const DIALOG_MIN_WIDTH = 420;
 const DIALOG_MIN_HEIGHT = 150;
 
@@ -26,10 +28,11 @@ const showDialog = async (options: DialogOptions) => new Promise<number | void>(
     useContentSize: true,
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true,
       contextIsolation: false
     }
   });
+
+  remoteMain.enable(dialogWindow.webContents);
 
   loadRoute(dialogWindow, 'dialog');
 
