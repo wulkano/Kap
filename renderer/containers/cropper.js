@@ -1,4 +1,3 @@
-import electron from 'electron';
 import nearestNormalAspectRatio from 'nearest-normal-aspect-ratio';
 import {Container} from 'unstated';
 
@@ -37,7 +36,7 @@ export const findRatioForSize = (width, height) => {
 };
 
 export default class CropperContainer extends Container {
-  remote = electron.remote || false;
+  remote = process.type === 'browser' ? false : require('@electron/remote');
 
   constructor() {
     super();

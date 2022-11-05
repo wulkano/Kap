@@ -1,12 +1,24 @@
 import {useState, useEffect} from 'react';
 
 const useDarkMode = () => {
-  const {darkMode} = require('electron-util');
-  const [isDarkMode, setIsDarkMode] = useState(darkMode.isEnabled);
+  const {nativeTheme} = require('@electron/remote');
+  const [isDarkMode, setIsDarkMode] = useState(nativeTheme.shouldUseDarkColors);
+
+  const onThemeChange = callback => {
+    const handler = () => {
+      callback();
+    };
+
+    nativeTheme.on('updated', handler);
+
+    return () => {
+      nativeTheme.off(handler);
+    };
+  };
 
   useEffect(() => {
-    return darkMode.onChange(() => {
-      setIsDarkMode(darkMode.isEnabled);
+    return onThemeChange(() => {
+      setIsDarkMode(nativeTheme.shouldUseDarkColors);
     });
   }, []);
 

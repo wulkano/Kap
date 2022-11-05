@@ -1,0 +1,13 @@
+diff --git a/node_modules/electron-is-dev/index.js b/node_modules/electron-is-dev/index.js
+index 3b3fbc5..042a8a5 100644
+--- a/node_modules/electron-is-dev/index.js
++++ b/node_modules/electron-is-dev/index.js
+@@ -5,7 +5,7 @@ if (typeof electron === 'string') {
+ 	throw new TypeError('Not running in an Electron environment!');
+ }
+
+-const app = electron.app || electron.remote.app;
++const app = electron.app || require('@electron/remote');
+
+ const isEnvSet = 'ELECTRON_IS_DEV' in process.env;
+ const getFromEnv = parseInt(process.env.ELECTRON_IS_DEV, 10) === 1;

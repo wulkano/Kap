@@ -1,11 +1,10 @@
-import electron from 'electron';
 import {Container} from 'unstated';
 
 const barWidth = 464;
 const barHeight = 64;
 
 export default class ActionBarContainer extends Container {
-  remote = electron.remote || false;
+  remote = process.type === 'browser' ? false : require('@electron/remote');
 
   constructor() {
     super();

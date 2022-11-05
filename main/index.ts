@@ -7,8 +7,6 @@ import toMilliseconds from '@sindresorhus/to-milliseconds';
 import './windows/load';
 import './utils/sentry';
 
-require('electron-timber').hookConsole({main: true, renderer: true});
-
 import {settings} from './common/settings';
 import {plugins} from './plugins';
 import {initializeTray} from './tray';
