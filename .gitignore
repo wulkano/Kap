@@ -4,3 +4,4 @@ node_modules
 /app/dist
 /dist
 /dist-js
+*.DS_Store
