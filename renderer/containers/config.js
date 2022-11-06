@@ -1,8 +1,13 @@
-import electron from 'electron';
 import {Container} from 'unstated';
 
 export default class ConfigContainer extends Container {
-  remote = electron.remote || false;
+  constructor() {
+    super();
+
+    if (typeof window !== 'undefined' && typeof window.process === 'object' && window.process.type === 'renderer') {
+      this.remote = window.require('@electron/remote');
+    }
+  }
 
   state = {selectedTab: 0};
 

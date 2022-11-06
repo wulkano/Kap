@@ -119,7 +119,7 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^4.2.5",
     "module-alias": "^2.2.2",
-    "next": "^10.0.8",
+    "next": "10.1.1",
     "patch-package": "^6.5.0",
     "run-electron": "^1.0.0",
     "sinon": "^9.2.4",

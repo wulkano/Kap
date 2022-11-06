@@ -8,7 +8,12 @@ const defaultInputDeviceId = 'asd';
 const SETTINGS_ANALYTICS_BLACKLIST = ['kapturesDir'];
 
 export default class PreferencesContainer extends Container {
-  remote = electron.remote || false;
+  constructor() {
+    super();
+    if (typeof window !== 'undefined' && typeof window.process === 'object' && window.process.type === 'renderer') {
+      this.remote = window.require('@electron/remote');
+    }
+  }
 
   state = {
     category: 'general',

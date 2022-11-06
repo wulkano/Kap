@@ -1,4 +1,3 @@
-import electron from 'electron';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -22,11 +21,13 @@ class Select extends React.Component {
   static getDerivedStateFromProps(nextProps) {
     const {options, onSelect, selected} = nextProps;
 
-    if (!electron.remote || options.length === 0) {
+    const remote = require('@electron/remote');
+
+    if (!remote || options.length === 0) {
       return {};
     }
 
-    const {Menu, MenuItem} = electron.remote;
+    const {Menu, MenuItem} = remote;
     const menu = new Menu();
 
     for (const option of options) {

@@ -1,5 +1,4 @@
 import {createContainer} from 'unstated-next';
-import electron from 'electron';
 import {useRef, useState, useEffect} from 'react';
 
 const useVideoControls = () => {

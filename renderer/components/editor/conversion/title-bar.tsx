@@ -2,17 +2,16 @@ import TrafficLights from 'components/traffic-lights';
 import {BackPlainIcon, MoreIcon} from 'vectors';
 import {UseConversionState} from 'hooks/editor/use-conversion';
 import {flags} from '../../../common/flags';
-import {MenuItemConstructorOptions, remote} from 'electron';
+import {MenuItemConstructorOptions} from 'electron';
 import {ExportStatus} from '../../../common/types';
 import {useMemo} from 'react';
-import {template} from 'lodash';
 import IconMenu from '../../icon-menu';
 
 const TitleBar = ({conversion, cancel, copy, retry, showInFolder}: {conversion: UseConversionState; cancel: () => any; copy: () => any; retry: () => any; showInFolder: () => void}) => {
-  const {api} = require('electron-util');
+  const remote = process.type === 'renderer' ? require('@electron/remote') : false;
   const shouldClose = async () => {
     if (conversion.status === ExportStatus.inProgress && !flags.get('backgroundEditorConversion')) {
-      await api.dialog.showMessageBox(remote.getCurrentWindow(), {
+      await remote.dialog.showMessageBox(remote.getCurrentWindow(), {
         type: 'info',
         message: 'Your export will continue in the background. You can access it through the Export History window.',
         buttons: ['Ok'],
