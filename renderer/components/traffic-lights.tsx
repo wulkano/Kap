@@ -5,13 +5,11 @@ interface TrafficLightsProps {
 }
 
 const TrafficLights: FunctionComponent<TrafficLightsProps> = props => {
-  let currentWindow;
   const [tint, setTint] = useState('blue');
+  const remote = process.type === 'renderer' ? require('@electron/remote') : false;
+  const currentWindow = remote.getCurrentWindow();
 
   useEffect(() => {
-    const remote = require('@electron/remote');
-    currentWindow = remote.getCurrentWindow();
-
     const setTintColor = () => {
       setTint(remote.systemPreferences.getUserDefault('AppleAquaColorVariant', 'string') === '6' ? 'graphite' : 'blue');
     };

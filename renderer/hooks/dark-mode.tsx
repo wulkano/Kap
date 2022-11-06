@@ -12,7 +12,7 @@ const useDarkMode = () => {
     nativeTheme.on('updated', handler);
 
     return () => {
-      nativeTheme.off(handler);
+      nativeTheme.off('update', handler);
     };
   };
 

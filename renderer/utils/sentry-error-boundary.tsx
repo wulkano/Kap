@@ -29,9 +29,6 @@ class SentryErrorBoundary extends React.Component<{children: React.ReactNode}> {
     });
 
     Sentry.captureException(error);
-
-    // This is needed to render errors correctly in development / production
-    super.componentDidCatch(error, errorInfo);
   }
 
   render() {
