@@ -4,10 +4,12 @@ const barWidth = 464;
 const barHeight = 64;
 
 export default class ActionBarContainer extends Container {
-  remote = process.type === 'browser' ? false : require('@electron/remote');
-
   constructor() {
     super();
+
+    if (typeof window !== 'undefined' && typeof window.process === 'object' && window.process.type === 'renderer') {
+      this.remote = process.type === 'browser' ? false : window.require('@electron/remote');
+    }
 
     if (!this.remote) {
       this.state = {};

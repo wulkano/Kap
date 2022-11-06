@@ -2,27 +2,30 @@ import {useState, useEffect, useMemo} from 'react';
 import useDarkMode from '../hooks/dark-mode';
 
 const GlobalStyles = () => {
-  const remote = require('@electron/remote');
-  const [accentColor, setAccentColor] = useState(remote.systemPreferences.getAccentColor());
+  const [accentColor, setAccentColor] = useState('');
   const isDarkMode = useDarkMode();
-
-  const systemColors = useMemo(() => {
-    return systemColorNames
-      .map(name => `--system-${name}: ${remote.systemPreferences.getColor(name as any)};`)
-      .join('\n');
-  }, [isDarkMode]);
 
   const updateAccentColor = (_, accentColor) => {
     setAccentColor(accentColor);
   };
 
   useEffect(() => {
+    const remote = require('@electron/remote');
+
+    setAccentColor(remote.systemPreferences.getAccentColor());
+
     remote.systemPreferences.on('accent-color-changed', updateAccentColor);
 
     // Return () => {
     //   api.systemPreferences.off('accent-color-changed', updateAccentColor);
     // };
   }, []);
+
+  const systemColors = useMemo(() => {
+    return systemColorNames
+      .map(name => `--system-${name}: ${require('@electron/remote').systemPreferences.getColor(name as any)};`)
+      .join('\n');
+  }, [isDarkMode]);
 
   return (
     <style jsx global>{`
