@@ -40,7 +40,7 @@ export default class CropperContainer extends Container {
     super();
 
     if (typeof window !== 'undefined' && typeof window.process === 'object' && window.process.type === 'renderer') {
-      this.remote = process.type === 'browser' ? false : window.require('@electron/remote');
+      this.remote = require('@electron/remote');
     }
 
     if (!this.remote) {

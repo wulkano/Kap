@@ -5,7 +5,7 @@ export default class ConfigContainer extends Container {
     super();
 
     if (typeof window !== 'undefined' && typeof window.process === 'object' && window.process.type === 'renderer') {
-      this.remote = window.require('@electron/remote');
+      this.remote = require('@electron/remote');
     }
   }
 
