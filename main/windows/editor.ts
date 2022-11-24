@@ -7,6 +7,7 @@ import {is} from 'electron-util';
 import fs from 'fs';
 import {saveSnapshot} from '../utils/image-preview';
 import {windowManager} from './manager';
+import {settings} from '../common/settings';
 
 const pify = require('pify');
 
@@ -86,20 +87,24 @@ const open = async (video: Video) => {
     editorWindow.setDocumentEdited(true);
     editorWindow.on('close', (event: any) => {
       editorsWithNotSavedDialogs.set(video.filePath, true);
-      const buttonIndex = dialog.showMessageBoxSync(editorWindow, {
-        type: 'question',
-        buttons: [
-          'Discard',
-          'Cancel'
-        ],
-        defaultId: 0,
-        cancelId: 1,
-        message: 'Are you sure that you want to discard this recording?',
-        detail: 'You will no longer be able to edit and export the original recording.'
-      });
 
-      if (buttonIndex === 1) {
-        event.preventDefault();
+      const showDiscardWarning = settings.get('showDiscardWarning');
+      if (showDiscardWarning) {
+        const buttonIndex = dialog.showMessageBoxSync(editorWindow, {
+          type: 'question',
+          buttons: [
+            'Discard',
+            'Cancel'
+          ],
+          defaultId: 0,
+          cancelId: 1,
+          message: 'Are you sure that you want to discard this recording?',
+          detail: 'You will no longer be able to edit and export the original recording. You can set Kap to not show this warning in the preferences.'
+        });
+
+        if (buttonIndex === 1) {
+          event.preventDefault();
+        }
       }
 
       editorsWithNotSavedDialogs.delete(video.filePath);
