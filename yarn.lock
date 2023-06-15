@@ -1126,6 +1126,15 @@ ajv@^8.0.1:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
+akey-mac-screen-capture-permissions@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/akey-mac-screen-capture-permissions/-/akey-mac-screen-capture-permissions-1.0.0.tgz#bc26a54b8db555bb46fe413458ca9cf6e45049d4"
+  integrity sha512-k7Sms+m7vz5ChoC7/dDO6PcOsuduzE8DPdAu7LrWwLEDqSBSBtUCYSspsb4warKKSBShBh1mbSF57AXTlkq2Qg==
+  dependencies:
+    electron-util "^0.13.0"
+    execa "^2.0.4"
+    macos-version "^5.2.1"
+
 anser@1.4.9:
   version "1.4.9"
   resolved "https://registry.yarnpkg.com/anser/-/anser-1.4.9.tgz#1f85423a5dcf8da4631a341665ff675b96845760"
@@ -6200,15 +6209,6 @@ mac-open-with@^1.2.3:
   integrity sha512-1zz1P4k3dh/8rEeokA3XsZybvVBeZ8cEavDxI66HS+ROFy8s2MQiWK5bP/8ctJ5Av9FTOqAjr97384sGZin8ZA==
   dependencies:
     electron-util "^0.12.1"
-    execa "^2.0.4"
-    macos-version "^5.2.0"
-
-mac-screen-capture-permissions@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/mac-screen-capture-permissions/-/mac-screen-capture-permissions-1.1.0.tgz#a60ac7f06240d5037b0e86d409723ec36d077c8c"
-  integrity sha512-jMRumlB3FScui/7yW+5FqqbuO7CQ0XOJVT5oTsb7W9eRQDhCIpJpIF0XxLVXwq2DIOp0fYsz1LFiBjnyDYULyQ==
-  dependencies:
-    electron-util "^0.13.0"
     execa "^2.0.4"
     macos-version "^5.2.0"
 
