@@ -1,5 +1,5 @@
 import {systemPreferences, shell, dialog, app} from 'electron';
-const {hasScreenCapturePermission, hasPromptedForPermission} = require('mac-screen-capture-permissions');
+const {hasScreenCapturePermission, hasPromptedForPermission} = require('akey-mac-screen-capture-permissions');
 const {ensureDockIsShowing} = require('../utils/dock');
 
 let isDialogShowing = false;
