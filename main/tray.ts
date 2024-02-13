@@ -1,28 +1,31 @@
 'use strict';
 
-import {Tray} from 'electron';
-import {KeyboardEvent} from 'electron/main';
+import { Tray } from 'electron';
+import { KeyboardEvent } from 'electron/main';
 import path from 'path';
-import {getCogMenu} from './menus/cog';
-import {getRecordMenu} from './menus/record';
-import {track} from './common/analytics';
-import {openFiles} from './utils/open-files';
-import {windowManager} from './windows/manager';
-import {pauseRecording, resumeRecording, stopRecording} from './aperture';
+import { getCogMenu } from './menus/cog';
+import { getRecordMenu } from './menus/record';
+import { track } from './common/analytics';
+import { openFiles } from './utils/open-files';
+import { windowManager } from './windows/manager';
+import { pauseRecording, resumeRecording, stopRecording } from './aperture';
 
 let tray: Tray;
 let trayAnimation: NodeJS.Timeout | undefined;
 
+let cogMenu = getCogMenu()
 const openContextMenu = async () => {
-  tray.popUpContextMenu(await getCogMenu());
+  tray.popUpContextMenu(await cogMenu);
 };
 
+let recordMenu = getRecordMenu(false)
 const openRecordingContextMenu = async () => {
-  tray.popUpContextMenu(await getRecordMenu(false));
+  tray.popUpContextMenu(await recordMenu);
 };
 
+let pausedMenu = getRecordMenu(true)
 const openPausedContextMenu = async () => {
-  tray.popUpContextMenu(await getRecordMenu(true));
+  tray.popUpContextMenu(await pausedMenu);
 };
 
 const openCropperWindow = () => windowManager.cropper?.open();
@@ -58,13 +61,13 @@ export const resetTray = () => {
 };
 
 export const setRecordingTray = () => {
-  animateIcon();
 
   tray.removeAllListeners('right-click');
 
   // TODO: figure out why this is marked as missing. It's defined properly in the electron.d.ts file
   tray.once('click', onRecordingTrayClick);
   tray.on('right-click', openRecordingContextMenu);
+  animateIcon();
 };
 
 export const setPausedTray = () => {
@@ -89,7 +92,7 @@ const onRecordingTrayClick = (event: KeyboardEvent) => {
 };
 
 const animateIcon = async () => new Promise<void>(resolve => {
-  const interval = 20;
+  const interval = 50;
   let i = 0;
 
   const next = () => {

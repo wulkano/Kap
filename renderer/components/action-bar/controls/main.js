@@ -11,7 +11,7 @@ import {
   FullscreenIcon,
   ExitFullscreenIcon
 } from '../../../vectors';
-import {connect, ActionBarContainer, CropperContainer} from '../../../containers';
+import { connect, ActionBarContainer, CropperContainer } from '../../../containers';
 
 const mainStyle = css`
   .main {
@@ -27,8 +27,8 @@ const MainControls = {};
 const remote = electron.remote || false;
 let menu;
 
-const buildMenu = async ({selectedApp}) => {
-  const {buildWindowsMenu} = remote.require('./utils/windows');
+const buildMenu = async ({ selectedApp }) => {
+  const { buildWindowsMenu } = remote.require('./utils/windows');
   menu = await buildWindowsMenu(selectedApp);
 };
 
@@ -36,25 +36,25 @@ class Left extends React.Component {
   state = {};
 
   static getDerivedStateFromProps(nextProps, previousState) {
-    const {selectedApp} = nextProps;
+    const { selectedApp } = nextProps;
 
     if (selectedApp !== previousState.selectedApp) {
-      buildMenu({selectedApp});
-      return {selectedApp};
+      buildMenu({ selectedApp });
+      return { selectedApp };
     }
 
     return null;
   }
 
   render() {
-    const {toggleAdvanced, selectedApp, advanced} = this.props;
+    const { toggleAdvanced, selectedApp, advanced } = this.props;
 
     return (
       <div className="main">
         <div className="crop">
-          <CropIcon tabIndex={advanced ? -1 : 0} onClick={toggleAdvanced}/>
+          <CropIcon tabIndex={advanced ? -1 : 0} onClick={toggleAdvanced} />
         </div>
-        <IconMenu isMenu icon={ApplicationsIcon} tabIndex={advanced ? -1 : 0} active={Boolean(selectedApp)} onOpen={menu && menu.popup}/>
+        <IconMenu isMenu icon={ApplicationsIcon} tabIndex={advanced ? -1 : 0} active={Boolean(selectedApp)} onOpen={menu && menu.popup} />
         <style jsx>{mainStyle}</style>
         <style jsx>{`
           .crop {
@@ -80,29 +80,31 @@ Left.propTypes = {
 
 MainControls.Left = connect(
   [CropperContainer, ActionBarContainer],
-  ({selectedApp}, {advanced}) => ({selectedApp, advanced}),
-  (_, {toggleAdvanced}) => ({toggleAdvanced})
+  ({ selectedApp }, { advanced }) => ({ selectedApp, advanced }),
+  (_, { toggleAdvanced }) => ({ toggleAdvanced })
 )(Left);
-
+let cogMenu = electron.remote?.require('./menus/cog').getCogMenu();
 class Right extends React.Component {
   onCogMenuClick = async () => {
-    const cogMenu = await electron.remote.require('./menus/cog').getCogMenu();
+    cogMenu = await (cogMenu || electron.remote?.require('./menus/cog').getCogMenu());
+    await cogMenu
     cogMenu.popup();
   };
 
   render() {
-    const {enterFullscreen, exitFullscreen, isFullscreen, advanced} = this.props;
+    cogMenu = cogMenu || electron.remote?.require('./menus/cog').getCogMenu();
+    const { enterFullscreen, exitFullscreen, isFullscreen, advanced } = this.props;
 
     return (
       <div className="main">
         <div className="fullscreen">
           {
             isFullscreen ?
-              <ExitFullscreenIcon active tabIndex={advanced ? -1 : 0} onClick={exitFullscreen}/> :
-              <FullscreenIcon tabIndex={advanced ? -1 : 0} onClick={enterFullscreen}/>
+              <ExitFullscreenIcon active tabIndex={advanced ? -1 : 0} onClick={exitFullscreen} /> :
+              <FullscreenIcon tabIndex={advanced ? -1 : 0} onClick={enterFullscreen} />
           }
         </div>
-        <IconMenu isMenu icon={MoreIcon} tabIndex={advanced ? -1 : 0} onOpen={this.onCogMenuClick}/>
+        <IconMenu isMenu icon={MoreIcon} tabIndex={advanced ? -1 : 0} onOpen={this.onCogMenuClick} />
         <style jsx>{mainStyle}</style>
         <style jsx>{`
           .fullscreen {
@@ -125,8 +127,8 @@ Right.propTypes = {
 
 MainControls.Right = connect(
   [CropperContainer, ActionBarContainer],
-  ({isFullscreen}, {advanced}) => ({isFullscreen, advanced}),
-  ({enterFullscreen, exitFullscreen}) => ({enterFullscreen, exitFullscreen})
+  ({ isFullscreen }, { advanced }) => ({ isFullscreen, advanced }),
+  ({ enterFullscreen, exitFullscreen }) => ({ enterFullscreen, exitFullscreen })
 )(Right);
 
 export default MainControls;
