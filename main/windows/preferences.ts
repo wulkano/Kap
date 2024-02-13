@@ -1,11 +1,11 @@
-import {BrowserWindow} from 'electron';
-import {promisify} from 'util';
+import { BrowserWindow } from 'electron';
+import { promisify } from 'util';
 import pEvent from 'p-event';
 
-import {ipcMain as ipc} from 'electron-better-ipc';
-import {loadRoute} from '../utils/routes';
-import {track} from '../common/analytics';
-import {windowManager} from './manager';
+import { ipcMain as ipc } from 'electron-better-ipc';
+import { loadRoute } from '../utils/routes';
+import { track } from '../common/analytics';
+import { windowManager } from './manager';
 
 let prefsWindow: BrowserWindow | undefined;
 
@@ -13,7 +13,7 @@ export type PreferencesWindowOptions = any;
 
 const openPrefsWindow = async (options?: PreferencesWindowOptions) => {
   track('preferences/opened');
-  windowManager.cropper?.close();
+  // windowManager.cropper?.close();
 
   if (prefsWindow) {
     if (options) {
