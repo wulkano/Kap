@@ -74,6 +74,7 @@ export const startRecording = async (options: StartRecordingOptions) => {
   }
 
   past = Date.now();
+  console.log(`Starting recording ${(Date.now() - past) / 1000}s`);
   recordingName = undefined;
 
   windowManager.preferences?.close();
@@ -98,14 +99,20 @@ export const startRecording = async (options: StartRecordingOptions) => {
     highlightClicks,
     screenId: displayId
   };
+  console.log(`before recordaudio ${(Date.now() - past) / 1000}s`);
 
   if (recordAudio) {
     // In case for some reason the default audio device is not set
     // use the first available device for recording
+    console.log(`getting audio ${(Date.now() - past) / 1000}s`);
     const audioInputDeviceId = getSelectedInputDeviceId();
+    console.log(`getSelectedInputDeviceId ${(Date.now() - past) / 1000}s`);
+
     if (audioInputDeviceId) {
       apertureOptions.audioDeviceId = audioInputDeviceId;
     } else {
+      console.log(`getting defaultaudio ${(Date.now() - past) / 1000}s`);
+
       const [defaultAudioDevice] = await getAudioDevices();
       apertureOptions.audioDeviceId = defaultAudioDevice?.id;
     }
@@ -134,11 +141,16 @@ export const startRecording = async (options: StartRecordingOptions) => {
     serviceState.set(service.title, { persistedState: {} });
     track(`plugins/used/record/${plugin.name}`);
   }
+  console.log(`callplugins b4 ${(Date.now() - past) / 1000}s`);
 
   await callPlugins('willStartRecording');
+  console.log(`callplugins after ${(Date.now() - past) / 1000}s`);
+
 
   try {
     const filePath = await aperture.startRecording(apertureOptions);
+    console.log(`aperture startrecording ${(Date.now() - past) / 1000}s`);
+
     setOverallDuration(0);
     setCurrentDurationStart(Date.now());
 

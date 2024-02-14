@@ -1,11 +1,11 @@
-import {hasMicrophoneAccess} from '../common/system-permissions';
+import { hasMicrophoneAccess } from '../common/system-permissions';
 import * as audioDevices from 'macos-audio-devices';
-import {settings} from '../common/settings';
-import {defaultInputDeviceId} from '../common/constants';
+import { settings } from '../common/settings';
+import { defaultInputDeviceId } from '../common/constants';
 import Sentry from './sentry';
 const aperture = require('aperture');
 
-const {showError} = require('./errors');
+const { showError } = require('./errors');
 
 export const getAudioDevices = async () => {
   if (!hasMicrophoneAccess()) {
@@ -29,7 +29,7 @@ export const getAudioDevices = async () => {
       }
 
       return 0;
-    }).map(device => ({id: device.uid, name: device.name}));
+    }).map(device => ({ id: device.uid, name: device.name }));
   } catch (error) {
     try {
       const devices = await aperture.audioDevices();
@@ -47,10 +47,10 @@ export const getAudioDevices = async () => {
     }
   }
 };
-
+let defaultDevice = audioDevices.getDefaultInputDevice.sync();
 export const getDefaultInputDevice = () => {
   try {
-    const device = audioDevices.getDefaultInputDevice.sync();
+    const device = defaultDevice || audioDevices.getDefaultInputDevice.sync();
     return {
       id: device.uid,
       name: device.name
@@ -62,10 +62,13 @@ export const getDefaultInputDevice = () => {
 };
 
 export const getSelectedInputDeviceId = () => {
+  let start = Date.now()
   const audioInputDeviceId = settings.get('audioInputDeviceId', defaultInputDeviceId);
-
+  console.log('getSelectedInputDeviceId', Date.now() - start)
   if (audioInputDeviceId === defaultInputDeviceId) {
+    console.log('getting default audio device', Date.now() - start)
     const device = getDefaultInputDevice();
+    console.log('got default audio device', Date.now() - start)
     return device?.id;
   }
 
