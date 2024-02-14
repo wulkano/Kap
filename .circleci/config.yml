@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     macos:
-      xcode: '13.0.0'
+      xcode: '13.4.1'
     steps:
       - checkout
       - run: yarn
