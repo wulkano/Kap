@@ -8106,7 +8106,6 @@ __metadata:
     unstated: "npm:^1.2.0"
     unstated-next: "npm:^1.1.0"
     xo: "npm:^0.38.2"
-    yarn: "npm:^1.22.10"
   languageName: unknown
   linkType: soft
 
@@ -13664,16 +13663,6 @@ __metadata:
     y18n: "npm:^5.0.5"
     yargs-parser: "npm:^20.2.2"
   checksum: 10c0/2042e57047af784bb900cbc715f32fee2bfeab7c4b30dd4b83bf4d57f7f228ada084ba367a588f311803e0db65c9e9b97962c02e7daf88ba08f08864f4f615a2
-  languageName: node
-  linkType: hard
-
-"yarn@npm:^1.22.10":
-  version: 1.22.17
-  resolution: "yarn@npm:1.22.17"
-  bin:
-    yarn: ./bin/yarn.js
-    yarnpkg: ./bin/yarn.js
-  checksum: 10c0/caef6683ec23bc4a4ddfd73fcdbf6b040309df6523c99eee9eabdb619b1ad7b5d6b620c3a28a955b3a4c139b46d5b4e0cc42f3ec29637ad08acc015535442cc8
   languageName: node
   linkType: hard
 
