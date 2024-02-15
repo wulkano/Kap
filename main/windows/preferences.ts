@@ -7,6 +7,8 @@ import {loadRoute} from '../utils/routes';
 import {track} from '../common/analytics';
 import {windowManager} from './manager';
 
+const remoteMain = require('@electron/remote/main');
+
 let prefsWindow: BrowserWindow | undefined;
 
 export type PreferencesWindowOptions = any;
@@ -39,10 +41,11 @@ const openPrefsWindow = async (options?: PreferencesWindowOptions) => {
     vibrancy: 'window',
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true,
       contextIsolation: false
     }
   });
+
+  remoteMain.enable(prefsWindow.webContents);
 
   const titlebarHeight = 85;
   prefsWindow.setSheetOffset(titlebarHeight);

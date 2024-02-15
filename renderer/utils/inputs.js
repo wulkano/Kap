@@ -1,4 +1,3 @@
-import electron from 'electron';
 import _ from 'lodash';
 
 let screenWidth = 0;
@@ -9,7 +8,6 @@ export const setScreenSize = (width, height) => {
   screenHeight = height;
 };
 
-const {remote} = electron;
 const debounceTimeout = 500;
 export const minWidth = 20;
 export const minHeight = 20;
@@ -138,6 +136,8 @@ export const RATIOS = [
 ];
 
 const buildAspectRatioMenu = ({setRatio, ratio}) => {
+  const remote = process.type === 'renderer' ? require('@electron/remote') : false;
+
   if (!remote) {
     return;
   }

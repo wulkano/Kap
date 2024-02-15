@@ -1,4 +1,3 @@
-import {remote} from 'electron';
 import {useState, useEffect, FunctionComponent} from 'react';
 
 interface TrafficLightsProps {
@@ -6,8 +5,9 @@ interface TrafficLightsProps {
 }
 
 const TrafficLights: FunctionComponent<TrafficLightsProps> = props => {
-  const currentWindow = remote.getCurrentWindow();
   const [tint, setTint] = useState('blue');
+  const remote = process.type === 'renderer' ? require('@electron/remote') : false;
+  const currentWindow = remote.getCurrentWindow();
 
   useEffect(() => {
     const setTintColor = () => {

@@ -1,14 +1,15 @@
-import electron from 'electron';
 import {Container} from 'unstated';
 
 const barWidth = 464;
 const barHeight = 64;
 
 export default class ActionBarContainer extends Container {
-  remote = electron.remote || false;
-
   constructor() {
     super();
+
+    if (typeof window !== 'undefined' && typeof window.process === 'object' && window.process.type === 'renderer') {
+      this.remote = require('@electron/remote');
+    }
 
     if (!this.remote) {
       this.state = {};

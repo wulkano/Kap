@@ -12,6 +12,8 @@ const croppers = new Map<number, BrowserWindow>();
 let notificationId: number | undefined;
 let isOpen = false;
 
+const remoteMain = require('@electron/remote/main');
+
 const closeAllCroppers = () => {
   screen.removeAllListeners('display-removed');
   screen.removeAllListeners('display-added');
@@ -47,10 +49,11 @@ const openCropper = (display: Display, activeDisplayId?: number) => {
     show: false,
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true,
       contextIsolation: false
     }
   });
+
+  remoteMain.enable(cropper.webContents);
 
   loadRoute(cropper, 'cropper');
 

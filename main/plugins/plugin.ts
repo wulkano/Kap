@@ -59,7 +59,7 @@ class BasePlugin {
   }
 }
 
-export interface KapPlugin<Config = any> {
+export interface KapPlugin<Config extends Record<string, any> = any> {
   shareServices?: Array<ShareService<Config>>;
   editServices?: Array<EditService<Config>>;
   recordServices?: Array<RecordService<Config>>;

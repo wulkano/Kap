@@ -1,7 +1,7 @@
 import {DropdownArrowIcon, CancelIcon} from '../../../vectors';
 import classNames from 'classnames';
 import {useRef} from 'react';
-import {remote, MenuItemConstructorOptions, NativeImage} from 'electron';
+import {MenuItemConstructorOptions, NativeImage} from 'electron';
 
 type Option<T> = {
   label: string;
@@ -48,7 +48,7 @@ const Select = <T, >(props: Props<T>) => {
 
     const boundingRect = select.current.getBoundingClientRect();
 
-    const {Menu} = remote;
+    const {Menu} = require('@electron/remote');
 
     const convertToMenuTemplate = (option: Option<T> | Separator): MenuItemConstructorOptions => {
       if (option.separator) {
