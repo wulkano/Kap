@@ -75,7 +75,7 @@ class Overlay extends React.Component {
           }
 
           .overlay.picking {
-            cursor: crosshair;
+            cursor: none;
           }
 
           .overlay.no-transition {
