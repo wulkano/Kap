@@ -54,6 +54,7 @@ class General extends React.Component {
       toggleShortcuts,
       category,
       lossyCompression,
+      showDiscardWarning,
       shortcuts,
       shortcutMap
     } = this.props;
@@ -200,6 +201,18 @@ class General extends React.Component {
             onClick={() => toggleSetting('lossyCompression')}
           />
         </Item>
+        <Item
+          key="showDiscardWarning"
+          parentItem
+          title="Show discard warning"
+          subtitle="Show a warning when discarding a recording."
+        >
+          <Switch
+            tabIndex={tabIndex}
+            checked={showDiscardWarning}
+            onClick={() => toggleSetting('showDiscardWarning')}
+          />
+        </Item>
       </Category>
     );
   }
@@ -227,7 +240,8 @@ General.propTypes = {
   category: PropTypes.string,
   shortcutMap: PropTypes.object,
   shortcuts: PropTypes.object,
-  lossyCompression: PropTypes.bool
+  lossyCompression: PropTypes.bool,
+  showDiscardWarning: PropTypes.bool
 };
 
 export default connect(
@@ -246,6 +260,7 @@ export default connect(
     loopExports,
     category,
     lossyCompression,
+    showDiscardWarning,
     shortcuts,
     shortcutMap
   }) => ({
@@ -262,6 +277,7 @@ export default connect(
     loopExports,
     category,
     lossyCompression,
+    showDiscardWarning,
     shortcuts,
     shortcutMap
   }),

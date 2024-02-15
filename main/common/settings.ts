@@ -38,6 +38,7 @@ interface Settings {
     [key in keyof typeof shortcuts]: string
   };
   version: string;
+  showDiscardWarning: boolean;
 }
 
 export const settings = new Store<Settings>({
@@ -123,6 +124,10 @@ export const settings = new Store<Settings>({
     version: {
       type: 'string',
       default: ''
+    },
+    showDiscardWarning: {
+      type: 'boolean',
+      default: true
     }
   }
 });
