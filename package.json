@@ -21,7 +21,7 @@
     "test": "yarn lint && yarn test:main",
     "start": "tsc && run-electron .",
     "build-main": "tsc",
-    "build-renderer": "export NODE_OPTIONS='--openssl-legacy-provider' && next build renderer && next export renderer",
+    "build-renderer": "NODE_OPTIONS='--openssl-legacy-provider' && next build renderer && next export renderer",
     "build": "yarn build-main && yarn build-renderer",
     "dist": "npm run build && electron-builder",
     "pack": "npm run build && electron-builder --dir",
