@@ -1,12 +1,12 @@
-import {EditorWindowState} from '../common/types';
-import type {Video} from '../video';
+import { EditorWindowState } from '../common/types';
+import type { Video } from '../video';
 import KapWindow from './kap-window';
-import {MenuItemId} from '../menus/utils';
-import {BrowserWindow, dialog} from 'electron';
-import {is} from 'electron-util';
+import { MenuItemId } from '../menus/utils';
+import { BrowserWindow, dialog } from 'electron';
+import { is } from 'electron-util';
 import fs from 'fs';
-import {saveSnapshot} from '../utils/image-preview';
-import {windowManager} from './manager';
+import { saveSnapshot } from '../utils/image-preview';
+import { windowManager } from './manager';
 
 const pify = require('pify');
 
@@ -20,6 +20,7 @@ const editors = new Map();
 const editorsWithNotSavedDialogs = new Map();
 
 const open = async (video: Video) => {
+  windowManager.cropper?.close();
   if (editors.has(video.filePath)) {
     editors.get(video.filePath).show();
     return;
@@ -124,7 +125,7 @@ const open = async (video: Video) => {
 };
 
 const saveOriginal = async (video: Video) => {
-  const {filePath} = await dialog.showSaveDialog(BrowserWindow.getFocusedWindow()!, {
+  const { filePath } = await dialog.showSaveDialog(BrowserWindow.getFocusedWindow()!, {
     defaultPath: `${video.title}.mp4`
   });
 

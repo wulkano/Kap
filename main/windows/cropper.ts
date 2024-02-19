@@ -1,24 +1,32 @@
 
-import {windowManager} from './manager';
-import {BrowserWindow, systemPreferences, dialog, screen, Display, app} from 'electron';
+import { windowManager } from './manager';
+import { BrowserWindow, systemPreferences, dialog, screen, Display, app } from 'electron';
 import delay from 'delay';
 
-import {settings} from '../common/settings';
-import {hasMicrophoneAccess, ensureMicrophonePermissions, openSystemPreferences, ensureScreenCapturePermissions} from '../common/system-permissions';
-import {loadRoute} from '../utils/routes';
-import {MacWindow} from '../utils/windows';
+import { settings } from '../common/settings';
+import { hasMicrophoneAccess, ensureMicrophonePermissions, openSystemPreferences, ensureScreenCapturePermissions } from '../common/system-permissions';
+import { loadRoute } from '../utils/routes';
+import { MacWindow } from '../utils/windows';
 
 const croppers = new Map<number, BrowserWindow>();
 let notificationId: number | undefined;
 let isOpen = false;
 
 const closeAllCroppers = () => {
+  console.log("closeAllCroppers")
   screen.removeAllListeners('display-removed');
   screen.removeAllListeners('display-added');
-
+  let i = 0
   for (const [id, cropper] of croppers) {
-    cropper.destroy();
-    croppers.delete(id);
+    if (cropper.isDestroyed()) {
+      croppers.delete(id);
+    } else if (!i) {
+      cropper.hide()
+    } else {
+
+      cropper.destroy();
+      croppers.delete(id);
+    }
   }
 
   isOpen = false;
@@ -30,10 +38,20 @@ const closeAllCroppers = () => {
 };
 
 const openCropper = (display: Display, activeDisplayId?: number) => {
-  const {id, bounds} = display;
-  const {x, y, width, height} = bounds;
-
-  const cropper = new BrowserWindow({
+  const { id, bounds } = display;
+  const { x, y, width, height } = bounds;
+  let availableCroppers = []
+  for (const [id, cropper] of croppers) {
+    console.log("cropper exists with id: " + id)
+    if (cropper.isDestroyed()) {
+      croppers.delete(id);
+    } else {
+      availableCroppers.push(cropper)
+    }
+  }
+  if (!availableCroppers[0]) { console.log("no cropper available???") }
+  // console.log(availableCroppers)
+  const cropper = availableCroppers[0] || new BrowserWindow({
     x,
     y,
     width,
@@ -44,15 +62,29 @@ const openCropper = (display: Display, activeDisplayId?: number) => {
     movable: false,
     frame: false,
     transparent: true,
-    show: false,
+    show: true,
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
       contextIsolation: false
     }
   });
-
-  loadRoute(cropper, 'cropper');
+  cropper.on('close', () => console.log("cropper closed? idk why"))
+  if (!availableCroppers[0])
+    loadRoute(cropper, 'cropper');
+  else {
+    availableCroppers[0].setBounds({ x, y, width, height })
+    const isActive = activeDisplayId === id;
+    const displayInfo = {
+      isActive,
+      id,
+      x,
+      y,
+      width,
+      height
+    };
+    cropper.webContents.send('display', displayInfo);
+  }
 
   cropper.setAlwaysOnTop(true, 'screen-saver', 1);
 
@@ -85,7 +117,7 @@ const openCropper = (display: Display, activeDisplayId?: number) => {
 };
 
 const openCropperWindow = async () => {
-  closeAllCroppers();
+  // closeAllCroppers();
   if (windowManager.editor?.areAnyBlocking()) {
     return;
   }
@@ -98,7 +130,7 @@ const openCropperWindow = async () => {
 
   if (recordAudio && !hasMicrophoneAccess()) {
     const granted = await ensureMicrophonePermissions(async () => {
-      const {response} = await dialog.showMessageBox({
+      const { response } = await dialog.showMessageBox({
         type: 'warning',
         buttons: ['Open System Preferences', 'Continue'],
         defaultId: 1,
@@ -142,11 +174,11 @@ const openCropperWindow = async () => {
 
   // Electron typing issue, this should be marked as returning a number
   notificationId = (systemPreferences as any).subscribeWorkspaceNotification('NSWorkspaceActiveSpaceDidChangeNotification', () => {
-    closeAllCroppers();
+    // closeAllCroppers();
   });
 
   screen.on('display-removed', (_, oldDisplay) => {
-    const {id} = oldDisplay;
+    const { id } = oldDisplay;
     const cropper = croppers.get(id);
 
     if (!cropper) {
@@ -182,10 +214,10 @@ const selectApp = async (window: MacWindow, activateWindow: (ownerName: string) 
 
   await activateWindow(window.ownerName);
 
-  const {x, y, width, height, ownerName} = window;
+  const { x, y, width, height, ownerName } = window;
 
-  const display = screen.getDisplayMatching({x, y, width, height});
-  const {id, bounds: {x: screenX, y: screenY}} = display;
+  const display = screen.getDisplayMatching({ x, y, width, height });
+  const { id, bounds: { x: screenX, y: screenY } } = display;
 
   // For some reason this happened a bit too early without the timeout
   await delay(300);
@@ -225,7 +257,17 @@ const setRecordingCroppers = () => {
   }
 };
 
-const isCropperOpen = () => isOpen;
+const isCropperOpen = () => {
+  let focusedWindow = BrowserWindow.getFocusedWindow();
+  if (focusedWindow?.isVisible()) {
+    return focusedWindow
+  } else {
+    if (isOpen) return BrowserWindow.getAllWindows().find(window =>
+      window.webContents.getURL().includes("cropper")) || false;
+    else return false
+  }
+
+};
 
 app.on('before-quit', closeAllCroppers);
 

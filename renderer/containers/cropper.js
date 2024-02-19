@@ -1,8 +1,8 @@
 import electron from 'electron';
 import nearestNormalAspectRatio from 'nearest-normal-aspect-ratio';
-import {Container} from 'unstated';
+import { Container } from 'unstated';
 
-import {minHeight, minWidth, resizeTo, setScreenSize} from '../utils/inputs';
+import { minHeight, minWidth, resizeTo, setScreenSize } from '../utils/inputs';
 
 // Helper function for retrieving the simplest ratio,
 // via the largest common divisor of two numbers (thanks @doot0)
@@ -47,7 +47,7 @@ export default class CropperContainer extends Container {
       return;
     }
 
-    const {settings} = this.remote.require('./common/settings');
+    const { settings } = this.remote.require('./common/settings');
     this.settings = settings;
     this.settings.getSelectedInputDeviceId = this.remote.require('./utils/devices').getSelectedInputDeviceId;
 
@@ -69,17 +69,17 @@ export default class CropperContainer extends Container {
     };
 
     this.settings.onDidChange('recordAudio', recordAudio => {
-      this.setState({recordAudio});
+      this.setState({ recordAudio });
     });
 
     this.settings.onDidChange('audioInputDeviceId', async () => {
-      this.setState({audioInputDeviceId: this.settings.getSelectedInputDeviceId()});
+      this.setState({ audioInputDeviceId: this.settings.getSelectedInputDeviceId() });
     });
   }
 
   setDisplay = display => {
-    const {width: screenWidth, height: screenHeight, isActive, id, cropper = {}} = display;
-    const {x, y, width, height, ratio = [4, 3]} = cropper;
+    const { width: screenWidth, height: screenHeight, isActive, id, cropper = {} } = display;
+    const { x, y, width, height, ratio = [4, 3] } = cropper;
 
     setScreenSize(screenWidth, screenHeight);
     this.setState({
@@ -94,19 +94,19 @@ export default class CropperContainer extends Container {
       height,
       ratio
     });
-    this.actionBarContainer.setInputValues({width, height});
+    this.actionBarContainer.setInputValues({ width, height });
   };
 
   willStartRecording = () => {
-    this.setState({willStartRecording: true});
+    this.setState({ willStartRecording: true });
   };
 
   setRecording = () => {
-    this.setState({isRecording: true});
+    this.setState({ isRecording: true });
   };
 
   setActive = isActive => {
-    const updates = {isActive};
+    const updates = { isActive };
 
     if (!isActive) {
       updates.x = 0;
@@ -122,7 +122,7 @@ export default class CropperContainer extends Container {
   };
 
   updateSettings = updates => {
-    const {x, y, width, height, ratio, displayId} = this.state;
+    const { x, y, width, height, ratio, displayId } = this.state;
 
     this.settings.set('cropper', {
       x,
@@ -136,11 +136,11 @@ export default class CropperContainer extends Container {
     this.setState(updates);
   };
 
-  setSize = ({width: defaultWidth, height: defaultHeight}) => {
-    let {width, height} = this.state;
+  setSize = ({ width: defaultWidth, height: defaultHeight }) => {
+    let { width, height } = this.state;
     width = width || defaultWidth;
     height = height || defaultHeight;
-    const updates = {width, height};
+    const updates = { width, height };
     this.settings.set('cropper', updates);
     this.setState(updates);
     this.actionBarContainer.setInputValues(updates);
@@ -154,12 +154,12 @@ export default class CropperContainer extends Container {
     this.actionBarContainer = actionBarContainer;
   };
 
-  setBounds = (bounds, {save = true, ignoreRatioLocked} = {}) => {
+  setBounds = (bounds, { save = true, ignoreRatioLocked } = {}) => {
     if (bounds) {
       const updates = bounds;
 
       if ((!this.actionBarContainer.state.ratioLocked || ignoreRatioLocked) && (bounds.width || bounds.height)) {
-        const {width, height} = this.state;
+        const { width, height } = this.state;
         updates.ratio = findRatioForSize(bounds.width || width, bounds.height || height);
       }
 
@@ -178,8 +178,8 @@ export default class CropperContainer extends Container {
   };
 
   setRatio = ratio => {
-    const {x, y, width, screenHeight} = this.state;
-    const target = {width};
+    const { x, y, width, screenHeight } = this.state;
+    const target = { width };
 
     this.unselectApp();
     const computedHeight = Math.ceil(width * ratio[1] / ratio[0]);
@@ -189,7 +189,7 @@ export default class CropperContainer extends Container {
       target.width = Math.ceil(target.height * ratio[0] / ratio[1]);
     }
 
-    const updates = {ratio, ...resizeTo({x, y}, target)};
+    const updates = { ratio, ...resizeTo({ x, y }, target) };
 
     this.updateSettings(updates);
     this.actionBarContainer.setInputValues(updates);
@@ -197,7 +197,7 @@ export default class CropperContainer extends Container {
   };
 
   swapDimensions = () => {
-    const {x, y, width, height, ratio, screenHeight} = this.state;
+    const { x, y, width, height, ratio, screenHeight } = this.state;
     const target = {
       width: height,
       height: Math.min(width, screenHeight)
@@ -209,30 +209,30 @@ export default class CropperContainer extends Container {
       target.width = Math.ceil(target.height * ratio[1] / ratio[0]);
     }
 
-    const updates = {ratio: ratio.reverse(), ...resizeTo({x, y}, target)};
+    const updates = { ratio: ratio.reverse(), ...resizeTo({ x, y }, target) };
 
     this.updateSettings(updates);
     this.actionBarContainer.setInputValues(updates);
   };
 
   selectApp = app => {
-    const {x, y, width, height, ownerName} = app;
-    this.setState({selectedApp: ownerName});
-    this.setBounds({x, y, width, height}, {ignoreRatioLocked: true});
+    const { x, y, width, height, ownerName } = app;
+    this.setState({ selectedApp: ownerName });
+    this.setBounds({ x, y, width, height }, { ignoreRatioLocked: true });
   };
 
   unselectApp = () => {
     if (this.state.selectedApp) {
-      this.setState({selectedApp: ''});
+      this.setState({ selectedApp: '' });
     }
   };
 
   toggleResizeFromCenter = resizeFromCenter => {
-    this.setState({resizeFromCenter});
+    this.setState({ resizeFromCenter });
   };
 
   enterFullscreen = () => {
-    const {x, y, width, height, screenWidth, screenHeight} = this.state;
+    const { x, y, width, height, screenWidth, screenHeight } = this.state;
     this.unselectApp();
     this.setState({
       isFullscreen: true,
@@ -241,23 +241,23 @@ export default class CropperContainer extends Container {
       width: screenWidth,
       height: screenHeight,
       showHandles: false,
-      original: {x, y, width, height}
+      original: { x, y, width, height }
     });
   };
 
   exitFullscreen = () => {
-    const {original} = this.state;
-    this.setState({isFullscreen: false, showHandles: true, ...original});
+    const { original } = this.state;
+    this.setState({ isFullscreen: false, showHandles: true, ...original });
   };
 
-  startPicking = ({pageX, pageY}) => {
+  startPicking = ({ pageX, pageY }) => {
     this.unselectApp();
-    this.setState({isPicking: true, original: {pageX, pageY}});
+    this.setState({ isPicking: true, original: { pageX, pageY } });
     this.cursorContainer.addCursorObserver(this.pick);
   };
 
-  pick = ({pageX, pageY}) => {
-    const {original, isPicking} = this.state;
+  pick = ({ pageX, pageY }) => {
+    const { original, isPicking } = this.state;
     const width = Math.abs(original.pageX - pageX);
     const height = Math.abs(original.pageY - pageY);
     if ((width > 0 || height > 0) && isPicking) {
@@ -271,7 +271,7 @@ export default class CropperContainer extends Container {
         height,
         isResizing: true,
         isPicking: false,
-        currentHandle: {top, bottom: !top, left, right: !left}
+        currentHandle: { top, bottom: !top, left, right: !left }
       });
 
       this.setOriginal();
@@ -281,33 +281,33 @@ export default class CropperContainer extends Container {
 
   stopPicking = () => {
     if (this.state.isPicking) {
-      this.remote.getCurrentWindow().close();
+      this.remote.getCurrentWindow().hide();
     } else {
       this.cursorContainer.removeCursorObserver(this.pick);
     }
   };
 
   setOriginal = () => {
-    const {x, y, width, height} = this.state;
-    this.setState({original: {x, y, width, height}});
+    const { x, y, width, height } = this.state;
+    this.setState({ original: { x, y, width, height } });
   };
 
   startResizing = currentHandle => {
     if (!this.state.isFullscreen) {
       this.unselectApp();
       this.setOriginal();
-      this.setState({currentHandle, isResizing: true});
+      this.setState({ currentHandle, isResizing: true });
       this.cursorContainer.addCursorObserver(this.resize);
     }
   };
 
   stopResizing = () => {
     if (!this.state.isFullscreen && this.state.isResizing) {
-      const {x, y, width, height, ratio} = this.state;
-      this.setState({currentHandle: null, isResizing: false, showHandles: true, isPicking: false});
+      const { x, y, width, height, ratio } = this.state;
+      this.setState({ currentHandle: null, isResizing: false, showHandles: true, isPicking: false });
       this.cursorContainer.removeCursorObserver(this.resize);
       this.setBounds({
-        ...resizeTo({x, y}, {
+        ...resizeTo({ x, y }, {
           width: Math.max(minWidth, width),
           height: Math.max(minHeight, height)
         }),
@@ -316,26 +316,26 @@ export default class CropperContainer extends Container {
     }
   };
 
-  startMoving = ({pageX, pageY}) => {
+  startMoving = ({ pageX, pageY }) => {
     if (!this.state.isFullscreen) {
       this.unselectApp();
-      this.setState({isMoving: true, showHandles: false, offsetX: pageX, offsetY: pageY});
+      this.setState({ isMoving: true, showHandles: false, offsetX: pageX, offsetY: pageY });
       this.cursorContainer.addCursorObserver(this.move);
     }
   };
 
   stopMoving = () => {
     if (!this.state.isFullscreen && this.state.isMoving) {
-      const {x, y, width, height} = this.state;
-      this.setBounds({x, y, width, height});
-      this.setState({isMoving: false, showHandles: true});
+      const { x, y, width, height } = this.state;
+      this.setBounds({ x, y, width, height });
+      this.setState({ isMoving: false, showHandles: true });
       this.cursorContainer.removeCursorObserver(this.move);
-      this.updateSettings({x, y});
+      this.updateSettings({ x, y });
     }
   };
 
-  move = ({pageX, pageY}) => {
-    const {x, y, offsetX, offsetY, width, height, screenWidth, screenHeight} = this.state;
+  move = ({ pageX, pageY }) => {
+    const { x, y, offsetX, offsetY, width, height, screenWidth, screenHeight } = this.state;
 
     const updates = {
       offsetY: pageY,
@@ -350,14 +350,14 @@ export default class CropperContainer extends Container {
       updates.x = x + pageX - offsetX;
     }
 
-    this.setBounds(updates, {save: false});
+    this.setBounds(updates, { save: false });
   };
 
-  resize = ({pageX, pageY}) => {
-    const {currentHandle, x, y, width, height, original, ratio, screenWidth, screenHeight, resizeFromCenter} = this.state;
-    const {top, bottom, left, right} = currentHandle;
-    const {ratioLocked} = this.actionBarContainer.state;
-    const updates = {currentHandle: {top, bottom, right, left}};
+  resize = ({ pageX, pageY }) => {
+    const { currentHandle, x, y, width, height, original, ratio, screenWidth, screenHeight, resizeFromCenter } = this.state;
+    const { top, bottom, left, right } = currentHandle;
+    const { ratioLocked } = this.actionBarContainer.state;
+    const updates = { currentHandle: { top, bottom, right, left } };
 
     if (top) {
       updates.y = pageY;
@@ -411,7 +411,7 @@ export default class CropperContainer extends Container {
 
     if (ratioLocked) {
       if (updates.width < 0 && updates.height < 0) {
-        updates.currentHandle = {bottom: !bottom, top: !top, left: !left, right: !right};
+        updates.currentHandle = { bottom: !bottom, top: !top, left: !left, right: !right };
       }
 
       // Check which dimension has changed the most
@@ -514,6 +514,6 @@ export default class CropperContainer extends Container {
       }
     }
 
-    this.setBounds(updates, {save: false});
+    this.setBounds(updates, { save: false });
   };
 }

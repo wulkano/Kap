@@ -1,24 +1,26 @@
 import delay from 'delay';
-import {app, dialog} from 'electron';
-import {openNewGitHubIssue} from 'electron-util';
+import { app, dialog } from 'electron';
+import { openNewGitHubIssue } from 'electron-util';
 import macosRelease from '../utils/macos-release';
-import {supportedVideoExtensions} from '../common/constants';
-import {getCurrentMenuItem, MenuItemId} from './utils';
-import {openFiles} from '../utils/open-files';
-import {windowManager} from '../windows/manager';
+import { supportedVideoExtensions } from '../common/constants';
+import { getCurrentMenuItem, MenuItemId } from './utils';
+import { openFiles } from '../utils/open-files';
+import { windowManager } from '../windows/manager';
 
 export const getPreferencesMenuItem = () => ({
   id: MenuItemId.preferences,
   label: 'Preferences…',
   accelerator: 'Command+,',
-  click: () => windowManager.preferences?.open()
+  click: () =>
+    windowManager.preferences?.open()
+
 });
 
 export const getAboutMenuItem = () => ({
   id: MenuItemId.about,
   label: `About ${app.name}`,
   click: () => {
-    windowManager.cropper?.close();
+    // windowManager.cropper?.close();
     app.focus();
     app.showAboutPanel();
   }
@@ -34,8 +36,8 @@ export const getOpenFileMenuItem = () => ({
     await delay(200);
 
     app.focus();
-    const {canceled, filePaths} = await dialog.showOpenDialog({
-      filters: [{name: 'Videos', extensions: supportedVideoExtensions}],
+    const { canceled, filePaths } = await dialog.showOpenDialog({
+      filters: [{ name: 'Videos', extensions: supportedVideoExtensions }],
       properties: ['openFile', 'multiSelections']
     });
 

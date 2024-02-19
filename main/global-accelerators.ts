@@ -1,11 +1,16 @@
-import {globalShortcut} from 'electron';
-import {ipcMain as ipc} from 'electron-better-ipc';
-import {settings} from './common/settings';
-import {windowManager} from './windows/manager';
+import { globalShortcut } from 'electron';
+import { ipcMain as ipc } from 'electron-better-ipc';
+import { settings } from './common/settings';
+import { windowManager } from './windows/manager';
 
 const openCropper = () => {
-  if (!windowManager.cropper?.isOpen()) {
+  let cropperwindow = windowManager.cropper?.isOpen()
+  if (!cropperwindow) {
     windowManager.cropper?.open();
+  } else {
+    if (cropperwindow.isVisible())
+      cropperwindow?.hide()
+    else cropperwindow?.show()
   }
 };
 
@@ -31,6 +36,7 @@ export const setCropperShortcutAction = (action = openCropper) => {
 const registerShortcut = (shortcut: string, action: () => void) => {
   try {
     globalShortcut.register(shortcut, action);
+    console.log('Registered shortcut successfully', shortcut, action);
   } catch (error) {
     console.error('Error registering shortcut', shortcut, action, error);
   }
@@ -50,31 +56,36 @@ const registerFromStore = () => {
 };
 
 export const initializeGlobalAccelerators = () => {
-  ipc.answerRenderer('update-shortcut', ({setting, shortcut}) => {
+  ipc.answerRenderer('update-shortcut', ({ setting, shortcut }) => {
     const oldShortcut = settings.get<string, string>(`shortcuts.${setting}`);
 
     try {
       if (oldShortcut && oldShortcut !== shortcut && globalShortcut.isRegistered(oldShortcut)) {
+        console.log('Unregistering old shortcut', oldShortcut);
         globalShortcut.unregister(oldShortcut);
       }
     } catch (error) {
       console.error('Error unregistering old shortcutAccelerator', error);
     } finally {
       if (shortcut && shortcut !== oldShortcut) {
+        console.log('Registering new shortcut', shortcut);
         settings.set(`shortcuts.${setting}`, shortcut);
         const handler = handlers.get(setting);
-
+        console.log(handler)
         if (settings.get('enableShortcuts') && handler) {
+          console.log('Registering new shortcut2', shortcut);
           registerShortcut(shortcut, handler);
         }
       } else if (!shortcut) {
         // @ts-expect-error
         settings.delete(`shortcuts.${setting}`);
+        console.log('No shortcut, unregistering shortcut', oldShortcut);
       }
     }
   });
 
-  ipc.answerRenderer('toggle-shortcuts', ({enabled}) => {
+  ipc.answerRenderer('toggle-shortcuts', ({ enabled }) => {
+    console.log('Toggling shortcuts', enabled);
     if (enabled) {
       registerFromStore();
     } else {

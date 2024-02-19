@@ -1,6 +1,6 @@
 import electron from 'electron';
-import {Container} from 'unstated';
-import {ipcRenderer as ipc} from 'electron-better-ipc';
+import { Container } from 'unstated';
+import { ipcRenderer as ipc } from 'electron-better-ipc';
 // Import {defaultInputDeviceId} from 'common/constants';
 
 const defaultInputDeviceId = 'asd';
@@ -18,7 +18,7 @@ export default class PreferencesContainer extends Container {
 
   mount = async setOverlay => {
     this.setOverlay = setOverlay;
-    const {settings, shortcuts} = this.remote.require('./common/settings');
+    const { settings, shortcuts } = this.remote.require('./common/settings');
     this.settings = settings;
     this.settings.shortcuts = shortcuts;
     this.systemPermissions = this.remote.require('./common/system-permissions');
@@ -45,14 +45,14 @@ export default class PreferencesContainer extends Container {
   };
 
   getAudioDevices = async () => {
-    const {getAudioDevices, getDefaultInputDevice} = this.remote.require('./utils/devices');
-    const {audioInputDeviceId} = this.settings.store;
-    const {name: currentDefaultName} = getDefaultInputDevice() || {};
+    const { getAudioDevices, getDefaultInputDevice } = this.remote.require('./utils/devices');
+    const { audioInputDeviceId } = this.settings.store;
+    const { name: currentDefaultName } = getDefaultInputDevice() || {};
 
     const audioDevices = await getAudioDevices();
     const updates = {
       audioDevices: [
-        {name: `System Default${currentDefaultName ? ` (${currentDefaultName})` : ''}`, id: defaultInputDeviceId},
+        { name: `System Default${currentDefaultName ? ` (${currentDefaultName})` : ''}`, id: defaultInputDeviceId },
         ...audioDevices
       ],
       audioInputDeviceId
@@ -82,10 +82,10 @@ export default class PreferencesContainer extends Container {
     if (target.action === 'install') {
       if (isInstalled) {
         this.scrollIntoView(this.state.tab, target.name);
-        this.setState({category: 'plugins'});
+        this.setState({ category: 'plugins' });
       } else if (isFromNpm) {
         this.scrollIntoView('discover', target.name);
-        this.setState({category: 'plugins', tab: 'discover'});
+        this.setState({ category: 'plugins', tab: 'discover' });
 
         const buttonIndex = this.remote.dialog.showMessageBoxSync(this.remote.getCurrentWindow(), {
           type: 'question',
@@ -102,24 +102,24 @@ export default class PreferencesContainer extends Container {
           this.install(target.name);
         }
       } else {
-        this.setState({category: 'plugins'});
+        this.setState({ category: 'plugins' });
       }
     } else if (target.action === 'configure' && isInstalled) {
       this.openPluginsConfig(target.name);
     } else {
-      this.setState({category: 'plugins'});
+      this.setState({ category: 'plugins' });
     }
   };
 
-  setNavigation = ({category, tab, target}) => {
+  setNavigation = ({ category, tab, target }) => {
     if (target) {
       if (this.state.isMounted) {
         this.openTarget(target);
       } else {
-        this.setState({target});
+        this.setState({ target });
       }
     } else {
-      this.setState({category, tab});
+      this.setState({ category, tab });
     }
   };
 
@@ -139,10 +139,10 @@ export default class PreferencesContainer extends Container {
 
       if (this.state.target) {
         this.openTarget(this.state.target);
-        this.setState({target: undefined});
+        this.setState({ target: undefined });
       }
     } catch {
-      this.setState({npmError: true});
+      this.setState({ npmError: true });
     }
   };
 
@@ -155,9 +155,9 @@ export default class PreferencesContainer extends Container {
   };
 
   install = async name => {
-    const {pluginsInstalled, pluginsFromNpm} = this.state;
+    const { pluginsInstalled, pluginsFromNpm } = this.state;
 
-    this.setState({pluginBeingInstalled: name});
+    this.setState({ pluginBeingInstalled: name });
     const result = await this.plugins.install(name);
 
     if (result) {
@@ -174,7 +174,7 @@ export default class PreferencesContainer extends Container {
   };
 
   uninstall = async name => {
-    const {pluginsInstalled, pluginsFromNpm} = this.state;
+    const { pluginsInstalled, pluginsFromNpm } = this.state;
 
     const onTransitionEnd = async () => {
       const plugin = await this.plugins.uninstall(name);
@@ -186,13 +186,13 @@ export default class PreferencesContainer extends Container {
       });
     };
 
-    this.setState({pluginBeingUninstalled: name, onTransitionEnd});
+    this.setState({ pluginBeingUninstalled: name, onTransitionEnd });
   };
 
   openPluginsConfig = async name => {
     this.track(`plugin/config/${name}`);
     this.scrollIntoView('installed', name);
-    this.setState({category: 'plugins'});
+    this.setState({ category: 'plugins' });
     this.setOverlay(true);
     await this.plugins.openPluginConfig(name);
     ipc.callMain('refresh-usage');
@@ -202,12 +202,12 @@ export default class PreferencesContainer extends Container {
   openPluginsFolder = () => electron.shell.openPath(this.plugins.pluginsDir);
 
   selectCategory = category => {
-    this.setState({category});
+    this.setState({ category });
   };
 
   selectTab = tab => {
     this.track(`preferences/tab/${tab}`);
-    this.setState({tab});
+    this.setState({ tab });
   };
 
   toggleSetting = (setting, value) => {
@@ -216,7 +216,7 @@ export default class PreferencesContainer extends Container {
       this.track(`preferences/setting/${setting}/${newValue}`);
     }
 
-    this.setState({[setting]: newValue});
+    this.setState({ [setting]: newValue });
     this.settings.set(setting, newValue);
   };
 
@@ -233,7 +233,7 @@ export default class PreferencesContainer extends Container {
         }
       }
 
-      this.setState({recordAudio: newValue});
+      this.setState({ recordAudio: newValue });
       this.settings.set('recordAudio', newValue);
     }
   };
@@ -242,12 +242,14 @@ export default class PreferencesContainer extends Container {
     const setting = 'enableShortcuts';
     const newValue = !this.state[setting];
     this.toggleSetting(setting, newValue);
-    await ipc.callMain('toggle-shortcuts', {enabled: newValue});
+    await ipc.callMain('toggle-shortcuts', { enabled: newValue });
   };
 
   updateShortcut = async (setting, shortcut) => {
     try {
-      await ipc.callMain('update-shortcut', {setting, shortcut});
+      console.log('updateShortcut', setting, shortcut)
+      await ipc.callMain('update-shortcut', { setting, shortcut }).catch((e) => console.log('updateshorcuterror', e));
+      console.log('updateShortcut2', setting, shortcut)
       this.setState({
         shortcuts: {
           ...this.state.shortcuts,
@@ -261,12 +263,12 @@ export default class PreferencesContainer extends Container {
 
   setOpenOnStartup = value => {
     const openOnStartup = typeof value === 'boolean' ? value : !this.state.openOnStartup;
-    this.setState({openOnStartup});
-    this.remote.app.setLoginItemSettings({openAtLogin: openOnStartup});
+    this.setState({ openOnStartup });
+    this.remote.app.setLoginItemSettings({ openAtLogin: openOnStartup });
   };
 
   pickKapturesDir = () => {
-    const {dialog, getCurrentWindow} = this.remote;
+    const { dialog, getCurrentWindow } = this.remote;
 
     const directories = dialog.showOpenDialogSync(getCurrentWindow(), {
       properties: [
@@ -281,7 +283,7 @@ export default class PreferencesContainer extends Container {
   };
 
   setAudioInputDeviceId = id => {
-    this.setState({audioInputDeviceId: id});
+    this.setState({ audioInputDeviceId: id });
     this.settings.set('audioInputDeviceId', id);
   };
 }

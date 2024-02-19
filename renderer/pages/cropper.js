@@ -1,6 +1,6 @@
 import electron from 'electron';
 import React from 'react';
-import {Provider} from 'unstated';
+import { Provider } from 'unstated';
 
 import Overlay from '../components/cropper/overlay';
 import Cropper from '../components/cropper';
@@ -33,7 +33,7 @@ export default class CropperPage extends React.Component {
       return;
     }
 
-    const {ipcRenderer, remote} = electron;
+    const { ipcRenderer, remote } = electron;
 
     ipcRenderer.on('display', (_, display) => {
       cropperContainer.setDisplay(display);
@@ -76,9 +76,18 @@ export default class CropperPage extends React.Component {
   }
 
   handleKeyEvent = event => {
+    console.log('event', event.key, event.type, event.defaultPrevented)
     switch (event.key) {
+      case ' ':
+        cropperContainer.enterFullscreen();
+        break
+      case 'Enter':
+        window?.startRecording?.(event);
+        break
       case 'Escape':
-        this.remote.getCurrentWindow().close();
+        this.remote.getCurrentWindow().hide();
+        // reload window
+        // this.remote.getCurrentWindow().reload();
         break;
       case 'Shift':
         if (event.type === 'keydown' && !event.defaultPrevented) {
@@ -107,8 +116,8 @@ export default class CropperPage extends React.Component {
       <div className="cover-screen">
         <Provider inject={[cursorContainer, cropperContainer, actionBarContainer]}>
           <Overlay>
-            <Cropper/>
-            <ActionBar/>
+            <Cropper />
+            <ActionBar />
           </Overlay>
         </Provider>
         <style jsx global>{`
