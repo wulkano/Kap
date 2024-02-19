@@ -76,7 +76,14 @@ export default class CropperPage extends React.Component {
   }
 
   handleKeyEvent = event => {
+    console.log('event', event.key, event.type, event.defaultPrevented)
     switch (event.key) {
+      case ' ':
+        cropperContainer.enterFullscreen();
+        break
+      case 'Enter':
+        window?.startRecording?.(event);
+        break
       case 'Escape':
         this.remote.getCurrentWindow().hide();
         // reload window

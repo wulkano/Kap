@@ -59,7 +59,7 @@ const callPlugins = async (method: RecordServiceHook) => Promise.all(recordingPl
 }));
 
 const cleanup = async () => {
-  // windowManager.cropper?.close();
+  windowManager.cropper?.close();
   resetTray();
 
   await callPlugins('didStopRecording');

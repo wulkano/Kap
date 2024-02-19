@@ -1,14 +1,14 @@
 import electron from 'electron';
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import {connect, CropperContainer} from '../../containers';
-import {handleKeyboardActivation} from '../../utils/inputs';
+import { connect, CropperContainer } from '../../containers';
+import { handleKeyboardActivation } from '../../utils/inputs';
 
 const getMediaNode = async deviceId => new Promise((resolve, reject) => {
   navigator.getUserMedia({
-    audio: {deviceId}
+    audio: { deviceId }
   }, stream => {
     const audioContext = new AudioContext();
     const analyser = audioContext.createAnalyser();
@@ -22,7 +22,7 @@ const getMediaNode = async deviceId => new Promise((resolve, reject) => {
     analyser.connect(javascriptNode);
     javascriptNode.connect(audioContext.destination);
 
-    resolve({javascriptNode, analyser});
+    resolve({ javascriptNode, analyser });
   }, reject);
 });
 
@@ -47,8 +47,9 @@ const RecordButton = ({
     let node;
 
     const connectToDevice = async () => {
+
       try {
-        const {javascriptNode, analyser} = await getMediaNode(audioInputDeviceId);
+        const { javascriptNode, analyser } = await getMediaNode(audioInputDeviceId);
 
         javascriptNode.onaudioprocess = () => {
           const array = new Uint8Array(analyser.frequencyBinCount);
@@ -97,8 +98,8 @@ const RecordButton = ({
     event.stopPropagation();
 
     if (cropperExists) {
-      const {remote} = electron;
-      const {startRecording} = remote.require('./aperture');
+      const { remote } = electron;
+      const { startRecording } = remote.require('./aperture');
 
       willStartRecording();
 
@@ -117,19 +118,20 @@ const RecordButton = ({
       });
     }
   };
+  window.startRecording = startRecording;
 
   return (
     <div
-      className={classNames('container', {'cropper-exists': cropperExists})}
+      className={classNames('container', { 'cropper-exists': cropperExists })}
       tabIndex={cropperExists ? 0 : -1}
       onKeyDown={handleKeyboardActivation(startRecording)}
     >
       <div className="outer" onMouseDown={startRecording}>
         <div className="inner">
-          {!cropperExists && <div className="fill"/>}
+          {!cropperExists && <div className="fill" />}
         </div>
-        {showFirstRipple && <div className="ripple first" onAnimationIteration={shouldFirstStop}/>}
-        {showSecondRipple && <div className="ripple second" onAnimationIteration={shouldSecondStop}/>}
+        {showFirstRipple && <div className="ripple first" onAnimationIteration={shouldFirstStop} />}
+        {showSecondRipple && <div className="ripple second" onAnimationIteration={shouldSecondStop} />}
       </div>
       <style jsx>{`
             .container {
@@ -235,6 +237,6 @@ RecordButton.propTypes = {
 
 export default connect(
   [CropperContainer],
-  ({x, y, width, height, screenWidth, screenHeight, displayId, recordAudio, audioInputDeviceId}) => ({x, y, width, height, screenWidth, screenHeight, displayId, recordAudio, audioInputDeviceId}),
-  ({willStartRecording}) => ({willStartRecording})
+  ({ x, y, width, height, screenWidth, screenHeight, displayId, recordAudio, audioInputDeviceId }) => ({ x, y, width, height, screenWidth, screenHeight, displayId, recordAudio, audioInputDeviceId }),
+  ({ willStartRecording }) => ({ willStartRecording })
 )(RecordButton);

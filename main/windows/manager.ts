@@ -1,8 +1,8 @@
-import type {BrowserWindow} from 'electron';
-import {MacWindow} from '../utils/windows';
-import type {Video} from '../video';
-import type {DialogOptions} from './dialog';
-import type {PreferencesWindowOptions} from './preferences';
+import type { BrowserWindow } from 'electron';
+import { MacWindow } from '../utils/windows';
+import type { Video } from '../video';
+import type { DialogOptions } from './dialog';
+import type { PreferencesWindowOptions } from './preferences';
 
 export interface EditorManager {
   open: (video: Video) => Promise<void>;
@@ -14,7 +14,7 @@ export interface CropperManager {
   close: () => void;
   disable: () => void;
   setRecording: () => void;
-  isOpen: () => boolean;
+  isOpen: () => BrowserWindow | false;
   selectApp: (window: MacWindow, activateWindow: (ownerName: string) => Promise<void>) => void;
 }
 

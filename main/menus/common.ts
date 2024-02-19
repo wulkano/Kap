@@ -11,7 +11,9 @@ export const getPreferencesMenuItem = () => ({
   id: MenuItemId.preferences,
   label: 'Preferences…',
   accelerator: 'Command+,',
-  click: () => windowManager.preferences?.open()
+  click: () =>
+    windowManager.preferences?.open()
+
 });
 
 export const getAboutMenuItem = () => ({
