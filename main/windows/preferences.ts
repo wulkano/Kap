@@ -13,7 +13,9 @@ export type PreferencesWindowOptions = any;
 
 const openPrefsWindow = async (options?: PreferencesWindowOptions) => {
   track('preferences/opened');
-  // windowManager.cropper?.close();
+  let window = windowManager.cropper?.isOpen()
+  if (window) window?.hide?.()
+
 
   if (prefsWindow) {
     if (options) {

@@ -16,10 +16,17 @@ const closeAllCroppers = () => {
   console.log("closeAllCroppers")
   screen.removeAllListeners('display-removed');
   screen.removeAllListeners('display-added');
-
+  let i = 0
   for (const [id, cropper] of croppers) {
-    cropper.destroy();
-    croppers.delete(id);
+    if (cropper.isDestroyed()) {
+      croppers.delete(id);
+    } else if (!i) {
+      cropper.hide()
+    } else {
+
+      cropper.destroy();
+      croppers.delete(id);
+    }
   }
 
   isOpen = false;
@@ -250,7 +257,17 @@ const setRecordingCroppers = () => {
   }
 };
 
-const isCropperOpen = () => isOpen;
+const isCropperOpen = () => {
+  let focusedWindow = BrowserWindow.getFocusedWindow();
+  if (focusedWindow?.isVisible()) {
+    return focusedWindow
+  } else {
+    if (isOpen) return BrowserWindow.getAllWindows().find(window =>
+      window.webContents.getURL().includes("cropper")) || false;
+    else return false
+  }
+
+};
 
 app.on('before-quit', closeAllCroppers);
 
