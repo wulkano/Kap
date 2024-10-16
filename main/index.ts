@@ -24,6 +24,7 @@ import {setUpExportsListeners} from './export';
 import {windowManager} from './windows/manager';
 import {setupProtocol} from './utils/protocol';
 import {stopRecordingWithNoEdit} from './aperture';
+import {initializeWindows} from './utils/windows';
 
 const prepareNext = require('electron-next');
 
@@ -103,6 +104,7 @@ const checkForUpdates = () => {
   initializeTray();
   initializeGlobalAccelerators();
   setUpExportsListeners();
+  initializeWindows();
 
   if (!app.isDefaultProtocolClient('kap')) {
     app.setAsDefaultProtocolClient('kap');
