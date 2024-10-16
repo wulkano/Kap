@@ -1,47 +1,56 @@
-import {remote} from 'electron';
+import {ipcRenderer} from 'electron-better-ipc';
 import {useState, useEffect, FunctionComponent} from 'react';
 
 interface TrafficLightsProps {
   shouldClose?: () => PromiseLike<boolean>;
 }
 
+interface WindowInfo {
+  closable: boolean;
+  minimizable: boolean;
+  maximizable: boolean;
+}
+
 const TrafficLights: FunctionComponent<TrafficLightsProps> = props => {
-  const currentWindow = remote.getCurrentWindow();
   const [tint, setTint] = useState('blue');
+  const [enabled, setEnabled] = useState({
+    close: true,
+    minimize: true,
+    maximize: true
+  });
 
   useEffect(() => {
-    const setTintColor = () => {
-      setTint(remote.systemPreferences.getUserDefault('AppleAquaColorVariant', 'string') === '6' ? 'graphite' : 'blue');
-    };
+    (async () => {
+      const result = await ipcRenderer.callMain<never, WindowInfo>('get-window-info');
 
-    const tintSubscription = remote.systemPreferences.subscribeNotification('AppleAquaColorVariantChanged', setTintColor);
-    setTintColor();
-
-    return () => {
-      remote.systemPreferences.unsubscribeNotification(tintSubscription);
-    };
+      setEnabled({
+        close: result.closable,
+        minimize: result.minimizable,
+        maximize: result.maximizable
+      });
+    })();
   }, []);
 
-  const enabled = {
-    close: currentWindow.closable,
-    minimize: currentWindow.minimizable,
-    maximize: currentWindow.maximizable
-  };
+  useEffect(() => {
+    return ipcRenderer.answerMain<string>('window-tint-changed', tint => {
+      setTint(tint);
+    });
+  }, []);
 
   const getClassName = (name: string) => `traffic-light ${name}${enabled[name] ? '' : ' disabled'}`;
 
   const close = async () => {
     if (!props.shouldClose || await props.shouldClose()) {
-      currentWindow.close();
+      ipcRenderer.callMain('window-action', 'close');
     }
   };
 
   const minimize = () => {
-    currentWindow.minimize();
+    ipcRenderer.callMain('window-action', 'minimize');
   };
 
   const maximize = () => {
-    currentWindow.setFullScreen(!currentWindow.isFullScreen());
+    ipcRenderer.callMain('window-action', 'toggle-fullscreen');
   };
 
   return (
