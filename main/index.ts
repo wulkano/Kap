@@ -5,7 +5,7 @@ import {autoUpdater} from 'electron-updater';
 import toMilliseconds from '@sindresorhus/to-milliseconds';
 
 import './windows/load';
-import './utils/sentry';
+import {initializeSentryListeners} from './utils/sentry';
 
 require('electron-timber').hookConsole({main: true, renderer: true});
 
@@ -110,6 +110,7 @@ const checkForUpdates = () => {
   initializeWindowControls();
   initializeAperture();
   initializeCogMenu();
+  initializeSentryListeners();
 
   if (!app.isDefaultProtocolClient('kap')) {
     app.setAsDefaultProtocolClient('kap');
