@@ -1,4 +1,4 @@
-import electron from 'electron';
+import {ipcRenderer} from 'electron';
 import {Container} from 'unstated';
 import {settings} from '../utils/settings';
 
@@ -6,12 +6,10 @@ const barWidth = 464;
 const barHeight = 64;
 
 export default class ActionBarContainer extends Container {
-  remote = electron.remote || false;
-
   constructor() {
     super();
 
-    if (!this.remote) {
+    if (!ipcRenderer) {
       this.state = {};
       return;
     }

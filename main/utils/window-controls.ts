@@ -1,5 +1,5 @@
 import {ipcMain} from 'electron-better-ipc';
-import {BrowserWindow, dialog, MessageBoxOptions, nativeTheme, systemPreferences} from 'electron/main';
+import {BrowserWindow, dialog, Event, MessageBoxOptions, nativeTheme, systemPreferences} from 'electron/main';
 import {systemColorNames} from '../common/system-colors';
 
 export function initializeWindowControls() {
@@ -12,13 +12,15 @@ export function initializeWindowControls() {
     };
   });
 
-  ipcMain.answerRenderer<'close' | 'minimize' | 'toggle-fullscreen'>('window-action', async (action, window) => {
+  ipcMain.answerRenderer<'close' | 'minimize' | 'toggle-fullscreen' | 'ignore-mouse-events'>('window-action', async (action, window) => {
     if (action === 'close') {
       window.close();
     } else if (action === 'minimize') {
       window.minimize();
     } else if (action === 'toggle-fullscreen') {
       window.setFullScreen(!window.isFullScreen());
+    } else if (action === 'ignore-mouse-events') {
+      window.setIgnoreMouseEvents(true);
     }
   });
 
@@ -33,8 +35,10 @@ export function initializeWindowControls() {
       ipcMain.callRenderer(window, 'window-focus');
     };
 
-    const onBlur = () => {
-      ipcMain.callRenderer(window, 'window-blur');
+    const onBlur = (event: Event) => {
+      ipcMain.callRenderer(window, 'window-blur', {
+        defaultPrevented: event.defaultPrevented
+      });
     };
 
     window.on('focus', onFocus);
