@@ -27,6 +27,7 @@ import {initializeAperture, stopRecordingWithNoEdit} from './aperture';
 import {initializeWindows} from './utils/windows';
 import {initializeWindowControls} from './utils/window-controls';
 import {initializeCogMenu} from './menus/cog';
+import {initializeMenus} from './utils/menus';
 
 const prepareNext = require('electron-next');
 
@@ -111,6 +112,7 @@ const checkForUpdates = () => {
   initializeAperture();
   initializeCogMenu();
   initializeSentryListeners();
+  initializeMenus();
 
   if (!app.isDefaultProtocolClient('kap')) {
     app.setAsDefaultProtocolClient('kap');

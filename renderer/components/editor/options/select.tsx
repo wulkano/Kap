@@ -1,7 +1,9 @@
 import {DropdownArrowIcon, CancelIcon} from '../../../vectors';
 import classNames from 'classnames';
 import {useRef} from 'react';
-import {remote, MenuItemConstructorOptions, NativeImage} from 'electron';
+import {MenuItemConstructorOptions, NativeImage} from 'electron';
+import {ipcRenderer} from 'electron-better-ipc';
+import {Except} from 'type-fest';
 
 type Option<T> = {
   label: string;
@@ -11,7 +13,7 @@ type Option<T> = {
   checked?: boolean;
   click?: () => void;
   separator?: false;
-  icon?: NativeImage;
+  icon?: NativeImage | string;
 };
 
 export type Separator = {
@@ -32,6 +34,10 @@ interface Props<T> {
   customLabel?: string;
 }
 
+type TransferableMenuOption = Except<MenuItemConstructorOptions, 'click'> & {
+  actionId?: number;
+};
+
 // eslint-disable-next-line @typescript-eslint/comma-dangle
 const Select = <T, >(props: Props<T>) => {
   const select = useRef<HTMLDivElement>();
@@ -41,16 +47,17 @@ const Select = <T, >(props: Props<T>) => {
   const selectedLabel = props.customLabel ?? (selectedOption?.label);
   const clearable = props.clearable && selectedOption;
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (options.length === 0) {
       return;
     }
 
     const boundingRect = select.current.getBoundingClientRect();
 
-    const {Menu} = remote;
+    let id = 1;
+    const actions: Record<number, () => void> = {};
 
-    const convertToMenuTemplate = (option: Option<T> | Separator): MenuItemConstructorOptions => {
+    const convertToMenuTemplate = (option: Option<T> | Separator): TransferableMenuOption => {
       if (option.separator) {
         return {type: 'separator'};
       }
@@ -63,23 +70,29 @@ const Select = <T, >(props: Props<T>) => {
         };
       }
 
+      const actionId = id++;
+      // @ts-expect-error
+      actions[actionId] = option.click ?? (() => {
+        props.onChange(option.value);
+      });
+
       return {
         label: option.label,
         type: option.type as any || 'checkbox',
         checked: option.checked ?? (option.value === value),
-        click: option.click ?? (() => {
-          props.onChange(option.value);
-        }),
+        actionId,
         icon: option.icon
       };
     };
 
-    const menu = Menu.buildFromTemplate(options.map(opt => convertToMenuTemplate(opt)));
-
-    menu.popup({
-      x: Math.round(boundingRect.left),
-      y: Math.round(boundingRect.top)
+    const result = await ipcRenderer.callMain<unknown, number>('show-menu', {
+      options: options.map(opt => convertToMenuTemplate(opt)),
+      popup: {
+        x: Math.round(boundingRect.left),
+        y: Math.round(boundingRect.top)
+      }
     });
+    actions[result]?.();
   };
 
   const handleDropdownClick = event => {
