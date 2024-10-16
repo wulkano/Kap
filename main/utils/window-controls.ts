@@ -1,5 +1,6 @@
 import {ipcMain} from 'electron-better-ipc';
-import {BrowserWindow, dialog, MessageBoxOptions, systemPreferences} from 'electron/main';
+import {BrowserWindow, dialog, MessageBoxOptions, nativeTheme, systemPreferences} from 'electron/main';
+import {systemColorNames} from '../common/system-colors';
 
 export function initializeWindowControls() {
   ipcMain.answerRenderer('get-window-info', async (_, window) => {
@@ -50,5 +51,31 @@ export function initializeWindowControls() {
 
   ipcMain.answerRenderer<MessageBoxOptions>('show-dialog', async (args, window) => {
     return dialog.showMessageBox(window, args);
+  });
+
+  ipcMain.answerRenderer('get-system-colors', async () => {
+    return {
+      accentColor: systemPreferences.getAccentColor(),
+      colors: Object.fromEntries(systemColorNames.map(name => [
+        name,
+        systemPreferences.getColor(name)
+      ]))
+    };
+  });
+
+  systemPreferences.on('accent-color-changed', (_, newColor) => {
+    for (const window of BrowserWindow.getAllWindows()) {
+      ipcMain.callRenderer(window, 'accent-color-changed', newColor);
+    }
+  });
+
+  ipcMain.answerRenderer('get-dark-mode', async () => {
+    return nativeTheme.shouldUseDarkColors;
+  });
+
+  nativeTheme.on('updated', () => {
+    for (const window of BrowserWindow.getAllWindows()) {
+      ipcMain.callRenderer(window, 'dark-mode-changed', nativeTheme.shouldUseDarkColors);
+    }
   });
 }

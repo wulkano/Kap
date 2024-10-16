@@ -21,8 +21,12 @@ const Kap = (props: AppProps) => {
 };
 
 const MainApp = ({Component, pageProps}: AppProps) => {
-  const isDarkMode = useDarkMode();
+  const {isDarkMode, isReady} = useDarkMode();
   const className = classNames('cover-window', {dark: isDarkMode});
+
+  if (!isReady) {
+    return null;
+  }
 
   return (
     <div className={className}>
