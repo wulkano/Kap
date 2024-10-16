@@ -1,5 +1,5 @@
 import {ipcMain} from 'electron-better-ipc';
-import {BrowserWindow, systemPreferences} from 'electron/main';
+import {BrowserWindow, dialog, MessageBoxOptions, systemPreferences} from 'electron/main';
 
 export function initializeWindowControls() {
   ipcMain.answerRenderer('get-window-info', async (_, window) => {
@@ -46,5 +46,9 @@ export function initializeWindowControls() {
         cleanup();
       }
     });
+  });
+
+  ipcMain.answerRenderer<MessageBoxOptions>('show-dialog', async (args, window) => {
+    return dialog.showMessageBox(window, args);
   });
 }

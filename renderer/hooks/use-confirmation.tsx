@@ -1,3 +1,5 @@
+import {ipcRenderer} from 'electron-better-ipc';
+import type {MessageBoxOptions, MessageBoxReturnValue} from 'electron/renderer';
 import {useCallback} from 'react';
 
 interface UseConfirmationOptions {
@@ -12,9 +14,7 @@ export const useConfirmation = (
   options: UseConfirmationOptions
 ) => {
   return useCallback(() => {
-    const {dialog, remote} = require('electron-util').api;
-
-    const buttonIndex = dialog.showMessageBoxSync(remote.getCurrentWindow(), {
+    ipcRenderer.callMain<MessageBoxOptions, MessageBoxReturnValue>('show-dialog', {
       type: 'question',
       buttons: [
         options.confirmButtonText,
@@ -24,10 +24,10 @@ export const useConfirmation = (
       cancelId: 1,
       message: options.message,
       detail: options.detail
+    }).then(response => {
+      if (response.response === 0) {
+        callback();
+      }
     });
-
-    if (buttonIndex === 0) {
-      callback();
-    }
   }, [callback]);
 };
