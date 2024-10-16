@@ -1,5 +1,6 @@
 import electron from 'electron';
 import {Container} from 'unstated';
+import {settings} from '../utils/settings';
 
 const barWidth = 464;
 const barHeight = 64;
@@ -15,7 +16,7 @@ export default class ActionBarContainer extends Container {
       return;
     }
 
-    this.settings = this.remote.require('./common/settings').settings;
+    this.settings = settings;
     this.state = {
       cropperWidth: '',
       cropperHeight: ''

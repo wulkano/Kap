@@ -1,6 +1,7 @@
 import electron from 'electron';
 import nearestNormalAspectRatio from 'nearest-normal-aspect-ratio';
 import {Container} from 'unstated';
+import {settings} from '../utils/settings';
 
 import {minHeight, minWidth, resizeTo, setScreenSize} from '../utils/inputs';
 
@@ -47,7 +48,6 @@ export default class CropperContainer extends Container {
       return;
     }
 
-    const {settings} = this.remote.require('./common/settings');
     this.settings = settings;
     this.settings.getSelectedInputDeviceId = this.remote.require('./utils/devices').getSelectedInputDeviceId;
 
