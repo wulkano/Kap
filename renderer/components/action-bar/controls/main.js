@@ -1,8 +1,7 @@
-import electron from 'electron';
 import PropTypes from 'prop-types';
 import React from 'react';
 import css from 'styled-jsx/css';
-import {ipcRenderer as ipc} from 'electron-better-ipc';
+import {ipcRenderer as ipc, ipcRenderer} from 'electron-better-ipc';
 
 import IconMenu from '../../icon-menu';
 import {
@@ -86,8 +85,7 @@ MainControls.Left = connect(
 
 class Right extends React.Component {
   onCogMenuClick = async () => {
-    const cogMenu = await electron.remote.require('./menus/cog').getCogMenu();
-    cogMenu.popup();
+    ipcRenderer.callMain('open-cog-menu');
   };
 
   render() {

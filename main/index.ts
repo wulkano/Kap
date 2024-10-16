@@ -26,6 +26,7 @@ import {setupProtocol} from './utils/protocol';
 import {initializeAperture, stopRecordingWithNoEdit} from './aperture';
 import {initializeWindows} from './utils/windows';
 import {initializeWindowControls} from './utils/window-controls';
+import {initializeCogMenu} from './menus/cog';
 
 const prepareNext = require('electron-next');
 
@@ -108,6 +109,7 @@ const checkForUpdates = () => {
   initializeWindows();
   initializeWindowControls();
   initializeAperture();
+  initializeCogMenu();
 
   if (!app.isDefaultProtocolClient('kap')) {
     app.setAsDefaultProtocolClient('kap');
