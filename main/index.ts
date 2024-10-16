@@ -23,7 +23,7 @@ import {setupRemoteStates} from './remote-states';
 import {setUpExportsListeners} from './export';
 import {windowManager} from './windows/manager';
 import {setupProtocol} from './utils/protocol';
-import {stopRecordingWithNoEdit} from './aperture';
+import {initializeAperture, stopRecordingWithNoEdit} from './aperture';
 import {initializeWindows} from './utils/windows';
 import {initializeWindowControls} from './utils/window-controls';
 
@@ -107,6 +107,7 @@ const checkForUpdates = () => {
   setUpExportsListeners();
   initializeWindows();
   initializeWindowControls();
+  initializeAperture();
 
   if (!app.isDefaultProtocolClient('kap')) {
     app.setAsDefaultProtocolClient('kap');
