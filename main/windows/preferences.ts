@@ -6,6 +6,7 @@ import {ipcMain as ipc} from 'electron-better-ipc';
 import {loadRoute} from '../utils/routes';
 import {track} from '../common/analytics';
 import {windowManager} from './manager';
+import {isGreaterThanOrEqualTo} from 'macos-version';
 
 let prefsWindow: BrowserWindow | undefined;
 
@@ -75,6 +76,10 @@ const closePrefsWindow = () => {
 };
 
 ipc.answerRenderer('open-preferences', openPrefsWindow);
+
+ipc.answerRenderer('show-cursor-supported', () => {
+  return isGreaterThanOrEqualTo('10.13');
+});
 
 windowManager.setPreferences({
   open: openPrefsWindow,
