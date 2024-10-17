@@ -3,6 +3,7 @@
 import util from 'electron-util';
 import {parse} from 'semver';
 import {settings} from './settings';
+import {ipcMain} from 'electron-better-ipc';
 
 // TODO: Disabled because of https://github.com/wulkano/Kap/issues/1126
 /// const Insight = require('insight');
@@ -31,4 +32,8 @@ export const initializeAnalytics = () => {
     track('install');
     settings.set('version', pkg.version);
   }
+
+  ipcMain.answerRenderer<string[]>('track-event', paths => {
+    track(...paths);
+  });
 };

@@ -25,5 +25,8 @@ export const settings = {
       unsubscribe();
       ipcRenderer.callMain('unsubscribe-setting', key);
     };
+  },
+  get store() {
+    return ipc.sendSync('get-settings-store');
   }
 };

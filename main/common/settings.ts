@@ -152,6 +152,10 @@ ipc.on('set-setting', (_, args) => {
   settings.set(args.key, args.value);
 });
 
+ipc.on('get-settings-store', event => {
+  event.returnValue = settings.store;
+});
+
 ipcMain.answerRenderer<string>('subscribe-setting', (key, window) => {
   const unsubscribeChange = settings.onDidChange(key as keyof Settings, value => {
     ipcMain.callRenderer<{key: string; value: unknown}>(window, 'setting-changed', {key, value});

@@ -1,4 +1,6 @@
 import {systemPreferences, shell, dialog, app} from 'electron';
+import {ipcMain} from 'electron-better-ipc';
+import {OpenDialogOptions} from 'electron/main';
 const {hasScreenCapturePermission, hasPromptedForPermission} = require('mac-screen-capture-permissions');
 const {ensureDockIsShowing} = require('../utils/dock');
 
@@ -87,3 +89,18 @@ export const ensureScreenCapturePermissions = (fallback = screenCaptureFallback)
 
 export const hasScreenCaptureAccess = () => hasScreenCapturePermission();
 
+ipcMain.answerRenderer('ensure-microphone-permissions', async () => {
+  return ensureMicrophonePermissions();
+});
+
+ipcMain.answerRenderer('get-open-at-login', async () => {
+  return app.getLoginItemSettings().openAtLogin;
+});
+
+ipcMain.answerRenderer('set-open-at-login', async ({openAtLogin}) => {
+  app.setLoginItemSettings({openAtLogin});
+});
+
+ipcMain.answerRenderer<OpenDialogOptions>('show-open-dialog', async (args, window) => {
+  return dialog.showOpenDialog(window, args);
+});

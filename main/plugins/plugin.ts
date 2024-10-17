@@ -9,6 +9,7 @@ import {showError} from '../utils/errors';
 import PluginConfig from './config';
 import Store from 'electron-store';
 import {windowManager} from '../windows/manager';
+import {ipcMain} from 'electron-better-ipc';
 
 export const recordPluginServiceState = new Store<Record<string, boolean>>({
   name: 'record-plugin-state',
@@ -205,3 +206,44 @@ export class NpmPlugin extends BasePlugin {
     this.link = this.json.homepage ?? this.json.links?.homepage;
   }
 }
+
+ipcMain.answerRenderer<{pluginName: string; serviceTitle?: string}>('get-plugin', ({pluginName, serviceTitle}) => {
+  const plugin = new InstalledPlugin(pluginName);
+
+  const store = plugin.config.store;
+  const validators = plugin.config.validators.filter(validator => !serviceTitle || validator.title === serviceTitle).map(validator => {
+    validator.validate(store);
+
+    return {
+      title: validator.title,
+      description: validator.description,
+      config: validator.config,
+      errors: validator.validate.errors
+    };
+  });
+
+  return {
+    config: store,
+    validators
+  };
+});
+
+ipcMain.answerRenderer<{pluginName: string; action: 'open-config' | 'view-on-github'}>('plugin-action', ({pluginName, action}) => {
+  const plugin = new InstalledPlugin(pluginName);
+
+  if (action === 'open-config') {
+    plugin.openConfigInEditor();
+  } else if (action === 'view-on-github') {
+    plugin.viewOnGithub();
+  }
+});
+
+ipcMain.answerRenderer<{pluginName: string; key: string; value: unknown}>('change-plugin-config', ({pluginName, key, value}) => {
+  const plugin = new InstalledPlugin(pluginName);
+
+  if (value === undefined) {
+    plugin.config.delete(key);
+  } else {
+    plugin.config.set(key, value);
+  }
+});

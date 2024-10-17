@@ -11,6 +11,7 @@ import macosRelease from './macos-release';
 import {windowManager} from '../windows/manager';
 import Sentry, {isSentryEnabled} from './sentry';
 import {InstalledPlugin} from '../plugins/plugin';
+import {ipcMain} from 'electron-better-ipc';
 
 const MAX_RETRIES = 10;
 
@@ -206,5 +207,9 @@ export const setupErrorHandling = () => {
 
   process.on('unhandledRejection', error => {
     showError(ensureError(error), {title: 'Unhandled Promise Rejection'});
+  });
+
+  ipcMain.answerRenderer<Error>('show-error', error => {
+    showError(error);
   });
 };

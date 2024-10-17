@@ -1,59 +1,59 @@
-import electron from 'electron';
+import {ipcRenderer} from 'electron-better-ipc';
 import {Container} from 'unstated';
 
 export default class ConfigContainer extends Container {
-  remote = electron.remote || false;
-
   state = {selectedTab: 0};
 
   setPlugin(pluginName) {
-    const {InstalledPlugin} = this.remote.require('./plugins/plugin');
-    this.plugin = new InstalledPlugin(pluginName);
-    this.config = this.plugin.config;
-    this.validators = this.config.validators;
-    this.validate();
-    this.setState({
-      validators: this.validators,
-      values: this.config.store,
-      pluginName
+    ipcRenderer.callMain('get-plugin', {pluginName}).then(plugin => {
+      this.setState({
+        validators: plugin.validators,
+        pluginName,
+        values: plugin.config
+      });
     });
   }
 
   setEditService = (pluginName, serviceTitle) => {
-    const {InstalledPlugin} = this.remote.require('./plugins/plugin');
-    this.plugin = new InstalledPlugin(pluginName);
-    this.config = this.plugin.config;
-    this.validators = this.config.validators.filter(({title}) => title === serviceTitle);
-    this.validate();
-    this.setState({
-      validators: this.validators,
-      values: this.config.store,
-      pluginName,
-      serviceTitle
+    ipcRenderer.callMain('get-plugin', {pluginName, serviceTitle}).then(plugin => {
+      this.setState({
+        validators: plugin.validators,
+        pluginName,
+        serviceTitle,
+        values: plugin.config
+      });
     });
   };
 
   validate = () => {
-    for (const validator of this.validators) {
-      validator.validate(this.config.store);
-    }
+    ipcRenderer.callMain('get-plugin', {pluginName: this.state.pluginName, serviceTitle: this.state.serviceTitle}).then(plugin => {
+      this.setState({
+        validators: plugin.validators,
+        values: plugin.config
+      });
+    });
   };
 
-  closeWindow = () => this.remote.getCurrentWindow().close();
+  closeWindow = () => {
+    ipcRenderer.callMain('window-action', 'close');
+  }
 
-  openConfig = () => this.plugin.openConfigInEditor();
+  openConfig = () => {
+    ipcRenderer.callMain('plugin-action', {pluginName: this.state.pluginName, action: 'open-config'});
+  }
 
-  viewOnGithub = () => this.plugin.viewOnGithub();
+  viewOnGithub = () => {
+    ipcRenderer.callMain('plugin-action', {pluginName: this.state.pluginName, action: 'view-on-github'});
+  }
 
   onChange = (key, value) => {
-    if (value === undefined) {
-      this.config.delete(key);
-    } else {
-      this.config.set(key, value);
-    }
-
-    this.validate();
-    this.setState({values: this.config.store});
+    ipcRenderer.callMain('change-plugin-config', {
+      pluginName: this.state.pluginName,
+      key,
+      value
+    }).then(() => {
+      this.validate();
+    });
   };
 
   selectTab = selectedTab => {
