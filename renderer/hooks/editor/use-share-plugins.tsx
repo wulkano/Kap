@@ -1,5 +1,4 @@
 import OptionsContainer from 'components/editor/options-container';
-import {remote} from 'electron';
 import {ipcRenderer} from 'electron-better-ipc';
 import {useMemo} from 'react';
 
