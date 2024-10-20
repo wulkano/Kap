@@ -20,7 +20,6 @@ jobs:
       - checkout
       - run: yarn
       - run: mkdir -p ~/reports
-      - run: yarn lint
       - run: yarn test:ci
       - run: yarn run dist
       - run: mv dist/*-x64.dmg dist/Kap-x64.dmg
