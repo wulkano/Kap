@@ -1,28 +1,30 @@
 import {useState, useEffect, useMemo} from 'react';
 import useDarkMode from '../hooks/dark-mode';
-import {remote} from 'electron';
+import {ipcRenderer} from 'electron-better-ipc';
 
 const GlobalStyles = () => {
-  const [accentColor, setAccentColor] = useState(remote.systemPreferences.getAccentColor());
-  const isDarkMode = useDarkMode();
-
-  const systemColors = useMemo(() => {
-    return systemColorNames
-      .map(name => `--system-${name}: ${remote.systemPreferences.getColor(name as any)};`)
-      .join('\n');
-  }, [isDarkMode]);
-
-  const updateAccentColor = (_, accentColor) => {
-    setAccentColor(accentColor);
-  };
+  const [accentColor, setAccentColor] = useState<string | undefined>(undefined);
+  const [systemColors, setSystemColors] = useState<string | undefined>(undefined);
+  const {isDarkMode} = useDarkMode();
 
   useEffect(() => {
-    remote.systemPreferences.on('accent-color-changed', updateAccentColor);
+    (async () => {
+      const result = await ipcRenderer.callMain<never, {accentColor: string; colors: Record<string, string>}>('get-system-colors');
 
-    // Return () => {
-    //   api.systemPreferences.off('accent-color-changed', updateAccentColor);
-    // };
+      setAccentColor(result.accentColor);
+      setSystemColors(Object.entries(result.colors).map(([name, color]) => `--system-${name}: ${color};`).join('\n'));
+    })();
+  }, [isDarkMode]);
+
+  useEffect(() => {
+    return ipcRenderer.answerMain<string>('accent-color-changed', newColor => {
+      setAccentColor(newColor);
+    });
   }, []);
+
+  if (!accentColor || !systemColors) {
+    return null;
+  }
 
   return (
     <style jsx global>{`
@@ -210,38 +212,3 @@ const GlobalStyles = () => {
 };
 
 export default GlobalStyles;
-
-const systemColorNames = [
-  'control-background',
-  'control',
-  'control-text',
-  'disabled-control-text',
-  'find-highlight',
-  'grid',
-  'header-text',
-  'highlight',
-  'keyboard-focus-indicator',
-  'label',
-  'link',
-  'placeholder-text',
-  'quaternary-label',
-  'scrubber-textured-background',
-  'secondary-label',
-  'selected-content-background',
-  'selected-control',
-  'selected-control-text',
-  'selected-menu-item-text',
-  'selected-text-background',
-  'selected-text',
-  'separator',
-  'shadow',
-  'tertiary-label',
-  'text-background',
-  'text',
-  'under-page-background',
-  'unemphasized-selected-content-background',
-  'unemphasized-selected-text-background',
-  'unemphasized-selected-text',
-  'window-background',
-  'window-frame-text'
-];

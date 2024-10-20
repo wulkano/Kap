@@ -1,8 +1,10 @@
-import electron from 'electron';
+import {ipcRenderer as ipc} from 'electron';
 import nearestNormalAspectRatio from 'nearest-normal-aspect-ratio';
 import {Container} from 'unstated';
+import {settings} from '../utils/settings';
 
 import {minHeight, minWidth, resizeTo, setScreenSize} from '../utils/inputs';
+import {ipcRenderer} from 'electron-better-ipc';
 
 // Helper function for retrieving the simplest ratio,
 // via the largest common divisor of two numbers (thanks @doot0)
@@ -37,19 +39,18 @@ export const findRatioForSize = (width, height) => {
 };
 
 export default class CropperContainer extends Container {
-  remote = electron.remote || false;
-
   constructor() {
     super();
 
-    if (!this.remote) {
+    if (!ipc) {
       this.state = {};
       return;
     }
 
-    const {settings} = this.remote.require('./common/settings');
     this.settings = settings;
-    this.settings.getSelectedInputDeviceId = this.remote.require('./utils/devices').getSelectedInputDeviceId;
+    this.settings.getSelectedInputDeviceId = () => {
+      return ipc.sendSync('get-selected-input-device-id');
+    };
 
     this.state = {
       isRecording: false,
@@ -281,7 +282,7 @@ export default class CropperContainer extends Container {
 
   stopPicking = () => {
     if (this.state.isPicking) {
-      this.remote.getCurrentWindow().close();
+      ipcRenderer.callMain('window-action', 'close');
     } else {
       this.cursorContainer.removeCursorObserver(this.pick);
     }

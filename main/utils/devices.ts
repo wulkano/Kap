@@ -3,6 +3,8 @@ import * as audioDevices from 'macos-audio-devices';
 import {settings} from '../common/settings';
 import {defaultInputDeviceId} from '../common/constants';
 import Sentry from './sentry';
+import {ipcMain as ipc} from 'electron';
+import {ipcMain} from 'electron-better-ipc';
 const aperture = require('aperture');
 
 const {showError} = require('./errors');
@@ -73,6 +75,17 @@ export const getSelectedInputDeviceId = () => {
 };
 
 export const initializeDevices = async () => {
+  ipc.on('get-selected-input-device-id', event => {
+    event.returnValue = getSelectedInputDeviceId();
+  });
+
+  ipcMain.answerRenderer('get-audio-devices', async () => {
+    return {
+      audioDevices: await getAudioDevices(),
+      defaultDevice: getDefaultInputDevice()
+    };
+  });
+
   const audioInputDeviceId = settings.get('audioInputDeviceId');
 
   if (hasMicrophoneAccess()) {

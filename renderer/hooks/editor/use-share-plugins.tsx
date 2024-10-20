@@ -1,5 +1,4 @@
 import OptionsContainer from 'components/editor/options-container';
-import {remote} from 'electron';
 import {ipcRenderer} from 'electron-better-ipc';
 import {useMemo} from 'react';
 
@@ -26,7 +25,7 @@ const useSharePlugins = () => {
             serviceTitle: plugin.title,
             app
           },
-          icon: remote.nativeImage.createFromDataURL(app.icon).resize({width: 16, height: 16})
+          icon: app.icon
         }));
 
         if (plugin.apps[0].isDefault) {

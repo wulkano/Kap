@@ -1,7 +1,7 @@
-import electron from 'electron';
 import PropTypes from 'prop-types';
 import React from 'react';
 import css from 'styled-jsx/css';
+import {ipcRenderer as ipc, ipcRenderer} from 'electron-better-ipc';
 
 import IconMenu from '../../icon-menu';
 import {
@@ -24,14 +24,6 @@ const mainStyle = css`
 
 const MainControls = {};
 
-const remote = electron.remote || false;
-let menu;
-
-const buildMenu = async ({selectedApp}) => {
-  const {buildWindowsMenu} = remote.require('./utils/windows');
-  menu = await buildWindowsMenu(selectedApp);
-};
-
 class Left extends React.Component {
   state = {};
 
@@ -39,11 +31,18 @@ class Left extends React.Component {
     const {selectedApp} = nextProps;
 
     if (selectedApp !== previousState.selectedApp) {
-      buildMenu({selectedApp});
+      ipc.callMain('update-windows-menu', {selected: selectedApp});
       return {selectedApp};
     }
 
     return null;
+  }
+
+  onOpen = options => {
+    ipc.callMain('open-windows-menu', {
+      options,
+      selected: this.state.selectedApp || ''
+    });
   }
 
   render() {
@@ -54,7 +53,7 @@ class Left extends React.Component {
         <div className="crop">
           <CropIcon tabIndex={advanced ? -1 : 0} onClick={toggleAdvanced}/>
         </div>
-        <IconMenu isMenu icon={ApplicationsIcon} tabIndex={advanced ? -1 : 0} active={Boolean(selectedApp)} onOpen={menu && menu.popup}/>
+        <IconMenu isMenu icon={ApplicationsIcon} tabIndex={advanced ? -1 : 0} active={Boolean(selectedApp)} onOpen={this.onOpen}/>
         <style jsx>{mainStyle}</style>
         <style jsx>{`
           .crop {
@@ -86,8 +85,7 @@ MainControls.Left = connect(
 
 class Right extends React.Component {
   onCogMenuClick = async () => {
-    const cogMenu = await electron.remote.require('./menus/cog').getCogMenu();
-    cogMenu.popup();
+    ipcRenderer.callMain('open-cog-menu');
   };
 
   render() {

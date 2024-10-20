@@ -2,7 +2,7 @@ import {EditorWindowState} from '../common/types';
 import type {Video} from '../video';
 import KapWindow from './kap-window';
 import {MenuItemId} from '../menus/utils';
-import {BrowserWindow, dialog} from 'electron';
+import {BrowserWindow, dialog, Rectangle} from 'electron';
 import {is} from 'electron-util';
 import fs from 'fs';
 import {saveSnapshot} from '../utils/image-preview';
@@ -120,6 +120,20 @@ const open = async (video: Video) => {
 
   editorKapWindow.answerRenderer('save-snapshot', (time: number) => {
     saveSnapshot(video, time);
+  });
+
+  editorKapWindow.answerRenderer<{
+    bounds: Partial<Rectangle>;
+    resizable: boolean;
+    fullScreenable: boolean;
+  }, void>('resize-window', (args, win) => {
+    win.setBounds(args.bounds, true);
+    win.resizable = args.resizable;
+    win.fullScreenable = args.fullScreenable;
+  });
+
+  editorKapWindow.answerRenderer('get-bounds', (_, window) => {
+    return window.getBounds();
   });
 };
 

@@ -22,6 +22,7 @@ import {
 } from '../../../utils/inputs';
 
 import KeyboardNumberInput from '../../keyboard-number-input';
+import {ipcRenderer} from 'electron-better-ipc';
 
 const advancedStyles = css`
   .advanced {
@@ -67,12 +68,12 @@ class Left extends React.Component {
   select = React.createRef();
 
   static getDerivedStateFromProps(nextProps, previousState) {
-    const {ratio, isResizing, setRatio} = nextProps;
+    const {ratio, isResizing} = nextProps;
 
     if (ratio !== previousState.ratio && !isResizing) {
       return {
         ratio,
-        menu: buildAspectRatioMenu({setRatio, ratio})
+        menuOptions: buildAspectRatioMenu({ratio})
       };
     }
 
@@ -80,17 +81,29 @@ class Left extends React.Component {
   }
 
   openMenu = () => {
-    const {ratio} = this.props;
+    const {ratio, setRatio} = this.props;
     const boundingRect = this.select.current.getBoundingClientRect();
     const {top, left} = boundingRect;
     const selectedRatio = ratio.join(':');
     const index = RATIOS.indexOf(selectedRatio);
     const positioningItem = index > -1 ? index : RATIOS.length;
 
-    this.state.menu.popup({
-      x: Math.round(left),
-      y: Math.round(top) + 6,
-      positioningItem
+    ipcRenderer.callMain('show-menu', {
+      options: this.state.menuOptions.map(option => {
+        return {
+          ...option,
+          actionId: option.label.startsWith('Custom') ? undefined : option.label
+        };
+      }),
+      popup: {
+        x: Math.round(left),
+        y: Math.round(top) + 6,
+        positioningItem
+      }
+    }).then(result => {
+      if (result) {
+        setRatio(result.split(':').map(d => Number.parseInt(d, 10)));
+      }
     });
   };
 

@@ -3,7 +3,7 @@ import VideoTimeContainer from './video-time-container';
 import VideoMetadataContainer from './video-metadata-container';
 import VideoControlsContainer from './video-controls-container';
 import useEditorWindowState from 'hooks/editor/use-editor-window-state';
-import {ipcRenderer as ipc} from 'electron-better-ipc';
+import {ipcRenderer} from 'electron-better-ipc';
 
 const getVideoProps = (propsArray: Array<React.DetailedHTMLProps<React.VideoHTMLAttributes<HTMLVideoElement>, HTMLVideoElement>>) => {
   const handlers = new Map();
@@ -63,27 +63,31 @@ const Video = () => {
       await videoControlsContainer.pause();
     }
 
-    const {Menu} = require('electron-util').api;
-    const menu = Menu.buildFromTemplate([{
-      label: 'Snapshot',
-      click: () => {
-        ipc.callMain('save-snapshot', video.currentTime);
+    ipcRenderer.callMain('show-menu', {
+      options: [{
+        label: 'Snapshot',
+        actionId: 1
+      }],
+    }).then(result => {
+      if (result) {
+        ipcRenderer.callMain('save-snapshot', video.currentTime);
       }
-    }]);
 
-    menu.popup({
-      callback: () => {
-        if (!wasPaused) {
-          videoControlsContainer.play();
-        }
+      if (!wasPaused) {
+        videoControlsContainer.play();
       }
     });
   };
 
   return (
-    <div onContextMenu={onContextMenu}>
+    <div className="video-container" onContextMenu={onContextMenu}>
       <video ref={videoRef} preload="auto" src={src} {...videoProps}/>
       <style jsx>{`
+        .video-container {
+          display: flex;
+          flex: 1;
+        }
+
         video {
           width: 100%;
           height: 100%;

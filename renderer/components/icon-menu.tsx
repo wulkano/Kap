@@ -1,5 +1,7 @@
 import {MenuItemConstructorOptions} from 'electron';
+import { ipcRenderer } from 'electron-better-ipc';
 import React, {FunctionComponent, useRef} from 'react';
+import { Except } from 'type-fest';
 import {SvgProps} from 'vectors/svg';
 
 type MenuProps = {
@@ -11,6 +13,10 @@ type MenuProps = {
 type IconMenuProps = SvgProps & MenuProps & {
   icon: FunctionComponent<SvgProps>;
   fillParent?: boolean;
+};
+
+type TransferableMenuOption = Except<MenuItemConstructorOptions, 'click'> & {
+  actionId?: number;
 };
 
 const IconMenu: FunctionComponent<IconMenuProps> = props => {
@@ -27,11 +33,39 @@ const IconMenu: FunctionComponent<IconMenuProps> = props => {
         y: Math.round(bottom)
       });
     } else {
-      const {api} = require('electron-util');
-      const menu = api.Menu.buildFromTemplate(props.template);
-      menu.popup({
-        x: Math.round(left),
-        y: Math.round(bottom)
+      let id = 1;
+      const actions: Record<number, () => void> = {};
+
+      const convertToMenuTemplate = (option: MenuItemConstructorOptions): TransferableMenuOption => {
+
+        if (option.submenu) {
+          return {
+            ...option,
+            submenu: Array.isArray(option.submenu) ? option.submenu.map(opt => convertToMenuTemplate(opt)) : undefined,
+          };
+        }
+
+        const { click, ...rest } = option;
+        const actionId = id++;
+        // @ts-expect-error
+        actions[actionId] = option.click;
+
+        return {
+          ...rest,
+          actionId,
+        };
+      };
+
+      ipcRenderer.callMain<unknown, number>('show-menu', {
+        options: props.template.map(opt => convertToMenuTemplate(opt)),
+        popup: {
+          x: Math.round(left),
+          y: Math.round(bottom)
+        }
+      }).then(result => {
+        if (result) {
+          actions[result]?.();
+        }
       });
     }
   };

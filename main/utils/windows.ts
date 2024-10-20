@@ -1,9 +1,10 @@
-import {Menu, MenuItem, nativeImage} from 'electron';
+import {Menu, MenuItem, nativeImage, PopupOptions} from 'electron';
 import Store from 'electron-store';
 import {windowManager} from '../windows/manager';
+import {ipcMain} from 'electron-better-ipc';
 
 const {getWindows, activateWindow} = require('mac-windows');
-const {getAppIconListByPid} = require('node-mac-app-icon');
+// const {getAppIconListByPid} = require('node-mac-app-icon');
 
 export interface MacWindow {
   pid: number;
@@ -36,13 +37,17 @@ const isValidApp = ({ownerName}: MacWindow) => !APP_BLACKLIST.includes(ownerName
 
 const getWindowList = async () => {
   const windows = await getWindows() as MacWindow[];
-  const images = await getAppIconListByPid(windows.map(win => win.pid), {
-    size: 16,
-    failOnError: false
-  }) as Array<{
+  const images = [] as Array<{
     pid: number;
     icon: Buffer;
   }>;
+  // const images = await getAppIconListByPid(windows.map(win => win.pid), {
+  //   size: 16,
+  //   failOnError: false
+  // }) as Array<{
+  //   pid: number;
+  //   icon: Buffer;
+  // }>;
 
   let maxLastUsed = 0;
 
@@ -74,7 +79,9 @@ const getWindowList = async () => {
   });
 };
 
-export const buildWindowsMenu = async (selected: string) => {
+let cachedMenu: Menu | undefined;
+
+export const buildWindowsMenu = async (selected?: string) => {
   const menu = new Menu();
   const windows = await getWindowList();
 
@@ -110,3 +117,17 @@ export const activateApp = (window: MacWindow) => {
   updateAppUsageHistory(window);
   windowManager.cropper?.selectApp(window, activateWindow);
 };
+
+export function initializeWindows() {
+  ipcMain.answerRenderer<{
+    options: PopupOptions;
+    selected?: string;
+  }>('open-windows-menu', async args => {
+    const menu = cachedMenu ?? await buildWindowsMenu(args.selected);
+    menu.popup(args.options);
+  });
+
+  ipcMain.answerRenderer<{selected?: string}>('update-windows-menu', async ({selected}) => {
+    cachedMenu = await buildWindowsMenu(selected);
+  });
+}

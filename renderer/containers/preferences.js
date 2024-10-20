@@ -1,15 +1,16 @@
-import electron from 'electron';
 import {Container} from 'unstated';
-import {ipcRenderer as ipc} from 'electron-better-ipc';
-// Import {defaultInputDeviceId} from 'common/constants';
+import {ipcRenderer as ipc, ipcRenderer} from 'electron-better-ipc';
+import {settings} from '../utils/settings';
 
 const defaultInputDeviceId = 'asd';
+
+const shortcuts = {
+  triggerCropper: 'Toggle Kap'
+};
 
 const SETTINGS_ANALYTICS_BLACKLIST = ['kapturesDir'];
 
 export default class PreferencesContainer extends Container {
-  remote = electron.remote || false;
-
   state = {
     category: 'general',
     tab: 'discover',
@@ -18,23 +19,35 @@ export default class PreferencesContainer extends Container {
 
   mount = async setOverlay => {
     this.setOverlay = setOverlay;
-    const {settings, shortcuts} = this.remote.require('./common/settings');
     this.settings = settings;
     this.settings.shortcuts = shortcuts;
-    this.systemPermissions = this.remote.require('./common/system-permissions');
-    this.plugins = this.remote.require('./plugins').plugins;
-    this.track = this.remote.require('./common/analytics').track;
-    this.showError = this.remote.require('./utils/errors').showError;
+    this.track = (...paths) => {
+      ipcRenderer.callMain('track-event', paths);
+    };
 
-    const pluginsInstalled = this.plugins.installedPlugins.sort((a, b) => a.prettyName.localeCompare(b.prettyName));
+    this.showError = error => {
+      ipcRenderer.callMain('show-error', error);
+    };
+
+    ipcRenderer.callMain('get-installed-plugins').then(plugins => {
+      this.setState({
+        pluginsInstalled: plugins
+      });
+    });
+
+    ipcRenderer.callMain('get-open-at-login').then(openAtLogin => {
+      this.setState({
+        openOnStartup: openAtLogin
+      });
+    });
 
     this.fetchFromNpm();
 
     this.setState({
       shortcuts: {},
       ...this.settings.store,
-      openOnStartup: this.remote.app.getLoginItemSettings().openAtLogin,
-      pluginsInstalled,
+      openOnStartup: false,
+      pluginsInstalled: [],
       isMounted: true,
       shortcutMap: this.settings.shortcuts
     });
@@ -45,11 +58,10 @@ export default class PreferencesContainer extends Container {
   };
 
   getAudioDevices = async () => {
-    const {getAudioDevices, getDefaultInputDevice} = this.remote.require('./utils/devices');
+    const {audioDevices, defaultDevice} = await ipcRenderer.callMain('get-audio-devices');
     const {audioInputDeviceId} = this.settings.store;
-    const {name: currentDefaultName} = getDefaultInputDevice() || {};
+    const {name: currentDefaultName} = defaultDevice || {};
 
-    const audioDevices = await getAudioDevices();
     const updates = {
       audioDevices: [
         {name: `System Default${currentDefaultName ? ` (${currentDefaultName})` : ''}`, id: defaultInputDeviceId},
@@ -87,7 +99,7 @@ export default class PreferencesContainer extends Container {
         this.scrollIntoView('discover', target.name);
         this.setState({category: 'plugins', tab: 'discover'});
 
-        const buttonIndex = this.remote.dialog.showMessageBoxSync(this.remote.getCurrentWindow(), {
+        ipcRenderer.callMain('show-dialog', {
           type: 'question',
           buttons: [
             'Install',
@@ -96,11 +108,11 @@ export default class PreferencesContainer extends Container {
           defaultId: 0,
           cancelId: 1,
           message: `Do you want to install the “${target.name}” plugin?`
+        }).then(({response}) => {
+          if (response === 0) {
+            this.install(target.name);
+          }
         });
-
-        if (buttonIndex === 0) {
-          this.install(target.name);
-        }
       } else {
         this.setState({category: 'plugins'});
       }
@@ -125,7 +137,7 @@ export default class PreferencesContainer extends Container {
 
   fetchFromNpm = async () => {
     try {
-      const plugins = await this.plugins.getFromNpm();
+      const plugins = await ipcRenderer.callMain('get-npm-plugins');
       this.setState({
         npmError: false,
         pluginsFromNpm: plugins.sort((a, b) => {
@@ -158,7 +170,7 @@ export default class PreferencesContainer extends Container {
     const {pluginsInstalled, pluginsFromNpm} = this.state;
 
     this.setState({pluginBeingInstalled: name});
-    const result = await this.plugins.install(name);
+    const result = await ipcRenderer.callMain('install-plugin', {pluginName: name});
 
     if (result) {
       this.setState({
@@ -177,7 +189,7 @@ export default class PreferencesContainer extends Container {
     const {pluginsInstalled, pluginsFromNpm} = this.state;
 
     const onTransitionEnd = async () => {
-      const plugin = await this.plugins.uninstall(name);
+      const plugin = await ipcRenderer.callMain('uninstall-plugin', {pluginName: name});
       this.setState({
         pluginsInstalled: pluginsInstalled.filter(p => p.name !== name),
         pluginsFromNpm: [plugin, ...pluginsFromNpm].sort((a, b) => a.prettyName.localeCompare(b.prettyName)),
@@ -194,12 +206,12 @@ export default class PreferencesContainer extends Container {
     this.scrollIntoView('installed', name);
     this.setState({category: 'plugins'});
     this.setOverlay(true);
-    await this.plugins.openPluginConfig(name);
+    await ipcRenderer.callMain('open-plugin-config', {pluginName: name});
     ipc.callMain('refresh-usage');
     this.setOverlay(false);
   };
 
-  openPluginsFolder = () => electron.shell.openPath(this.plugins.pluginsDir);
+  openPluginsFolder = () => ipcRenderer.callMain('open-plugins-folder');
 
   selectCategory = category => {
     this.setState({category});
@@ -224,7 +236,7 @@ export default class PreferencesContainer extends Container {
     const newValue = !this.state.recordAudio;
     this.track(`preferences/setting/recordAudio/${newValue}`);
 
-    if (!newValue || await this.systemPermissions.ensureMicrophonePermissions()) {
+    if (!newValue || await ipcRenderer.callMain('ensure-microphone-permissions')) {
       if (newValue) {
         try {
           await this.getAudioDevices();
@@ -262,22 +274,20 @@ export default class PreferencesContainer extends Container {
   setOpenOnStartup = value => {
     const openOnStartup = typeof value === 'boolean' ? value : !this.state.openOnStartup;
     this.setState({openOnStartup});
-    this.remote.app.setLoginItemSettings({openAtLogin: openOnStartup});
+    ipcRenderer.callMain('set-open-at-login', {openAtLogin: openOnStartup});
   };
 
   pickKapturesDir = () => {
-    const {dialog, getCurrentWindow} = this.remote;
-
-    const directories = dialog.showOpenDialogSync(getCurrentWindow(), {
+    ipcRenderer.callMain('show-open-dialog', {
       properties: [
         'openDirectory',
         'createDirectory'
       ]
+    }).then(result => {
+      if (result && !result.canceled && result.filePaths?.[0]) {
+        this.toggleSetting('kapturesDir', result.filePaths[0]);
+      }
     });
-
-    if (directories) {
-      this.toggleSetting('kapturesDir', directories[0]);
-    }
   };
 
   setAudioInputDeviceId = id => {

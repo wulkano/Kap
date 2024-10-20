@@ -4,6 +4,7 @@ import React from 'react';
 
 import {DropdownArrowIcon} from '../../../vectors';
 import {handleKeyboardActivation} from '../../../utils/inputs';
+import { ipcRenderer } from 'electron-better-ipc';
 
 class Select extends React.Component {
   static defaultProps = {
@@ -19,38 +20,26 @@ class Select extends React.Component {
 
   state = {};
 
-  static getDerivedStateFromProps(nextProps) {
-    const {options, onSelect, selected} = nextProps;
-
-    if (!electron.remote || options.length === 0) {
-      return {};
-    }
-
-    const {Menu, MenuItem} = electron.remote;
-    const menu = new Menu();
-
-    for (const option of options) {
-      menu.append(
-        new MenuItem({
-          label: option.label,
-          type: 'radio',
-          checked: option.value === selected,
-          click: () => onSelect(option.value)
-        })
-      );
-    }
-
-    return {menu};
-  }
-
   handleClick = () => {
     if (this.props.options.length > 0) {
       const boundingRect = this.select.current.getBoundingClientRect();
 
-      this.state.menu.popup({
-        x: Math.round(boundingRect.left),
-        y: Math.round(boundingRect.top)
-      });
+      ipcRenderer.callMain('show-menu', {
+        options: this.props.options.map(option => ({
+          label: option.label,
+          type: 'radio',
+          checked: option.value === this.props.selected,
+          actionId: option.value,
+        })),
+        popup: {
+          x: Math.round(boundingRect.left),
+          y: Math.round(boundingRect.top)
+        }
+      }).then(result => {
+        if (result) {
+          this.props.onSelect(result);
+        }
+      })
     }
   };
 

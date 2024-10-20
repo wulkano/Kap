@@ -13,6 +13,7 @@ import {ApertureOptions, StartRecordingOptions} from './common/types';
 import {InstalledPlugin} from './plugins/plugin';
 import {RecordService, RecordServiceHook} from './plugins/service';
 import {getCurrentDurationStart, getOverallDuration, setCurrentDurationStart, setOverallDuration} from './utils/track-duration';
+import {ipcMain} from 'electron-better-ipc';
 
 const createAperture = require('aperture');
 const aperture = createAperture();
@@ -67,6 +68,12 @@ const cleanup = async () => {
 
   setCropperShortcutAction();
 };
+
+export function initializeAperture() {
+  ipcMain.answerRenderer('start-recording', async (options: StartRecordingOptions) => {
+    return startRecording(options);
+  });
+}
 
 export const startRecording = async (options: StartRecordingOptions) => {
   if (past) {

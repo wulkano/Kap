@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import {shake} from '../../utils/inputs';
 import {checkAccelerator, eventKeyToAccelerator} from 'common/accelerator-validator';
 import {DropdownArrowIcon} from '../../vectors';
+import { ipcRenderer } from 'electron-better-ipc';
 
 const presets = [
   'Command+Shift+3',
@@ -154,18 +155,21 @@ const ShortcutInput = ({shortcut = '', onChange, tabIndex}) => {
   };
 
   const openMenu = () => {
-    const {Menu} = require('electron').remote;
-    const menu = Menu.buildFromTemplate(presets.map(accelerator => ({
-      label: accelerator.split('+').map(key => metaCharacters.get(key) || key).join(''),
-      click: () => {
-        onChange(accelerator);
-      }
-    })));
-
     const {left, top} = boxRef.current.getBoundingClientRect();
-    menu.popup({
-      x: Math.round(left),
-      y: Math.round(top)
+
+    ipcRenderer.callMain('show-menu', {
+      options: presets.map(accelerator => ({
+        label: accelerator.split('+').map(key => metaCharacters.get(key) || key).join(''),
+        actionId: accelerator,
+      })),
+      popup: {
+        x: Math.round(left),
+        y: Math.round(top)
+      }
+    }).then(result => {
+      if (result) {
+        onChange(result);
+      }
     });
   };
 

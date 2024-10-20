@@ -6,6 +6,7 @@ import {getAudioDevices, getDefaultInputDevice} from '../utils/devices';
 import {settings} from '../common/settings';
 import {defaultInputDeviceId} from '../common/constants';
 import {hasMicrophoneAccess} from '../common/system-permissions';
+import {ipcMain} from 'electron-better-ipc';
 
 const getCogMenuTemplate = async (): Promise<MenuOptions> => [
   getAboutMenuItem(),
@@ -93,6 +94,13 @@ const getMicrophoneItem = async (): Promise<MenuOptions[number]> => {
     visible: hasMicrophoneAccess()
   };
 };
+
+export function initializeCogMenu() {
+  ipcMain.answerRenderer('open-cog-menu', async () => {
+    const menu = await getCogMenu();
+    menu.popup();
+  });
+}
 
 export const getCogMenu = async () => {
   return Menu.buildFromTemplate(

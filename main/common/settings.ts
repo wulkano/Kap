@@ -2,6 +2,8 @@
 
 import {homedir} from 'os';
 import Store from 'electron-store';
+import {ipcMain as ipc} from 'electron';
+import {ipcMain} from 'electron-better-ipc';
 
 const {defaultInputDeviceId} = require('./constants');
 const shortcutToAccelerator = require('../utils/shortcut-to-accelerator');
@@ -141,3 +143,35 @@ if (settings.has('cropperShortcut')) {
 
 settings.set('cropper' as any, {});
 settings.set('actionBar' as any, {});
+
+ipc.on('get-setting', (event, key) => {
+  event.returnValue = settings.get(key);
+});
+
+ipc.on('set-setting', (_, args) => {
+  settings.set(args.key, args.value);
+});
+
+ipc.on('get-settings-store', event => {
+  event.returnValue = settings.store;
+});
+
+ipcMain.answerRenderer<string>('subscribe-setting', (key, window) => {
+  const unsubscribeChange = settings.onDidChange(key as keyof Settings, value => {
+    ipcMain.callRenderer<{key: string; value: unknown}>(window, 'setting-changed', {key, value});
+  });
+
+  const unsubscribe = ipcMain.answerRenderer<string>('unsubscribe-setting', (unsubscribeKey, unsubscribeWindow) => {
+    if (key === unsubscribeKey && window.id === unsubscribeWindow.id) {
+      cleanup();
+    }
+  });
+
+  const cleanup = () => {
+    unsubscribeChange();
+    unsubscribe();
+    window.off('closed', cleanup);
+  };
+
+  window.on('closed', cleanup);
+});

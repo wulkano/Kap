@@ -12,6 +12,7 @@ import Select from '../item/select';
 import ShortcutInput from '../shortcut-input';
 
 import Category from './category';
+import {ipcRenderer} from 'electron-better-ipc';
 
 class General extends React.Component {
   static defaultProps = {
@@ -23,8 +24,8 @@ class General extends React.Component {
   state = {};
 
   componentDidMount() {
-    this.setState({
-      showCursorSupported: electron.remote.require('macos-version').isGreaterThanOrEqualTo('10.13')
+    ipcRenderer.callMain('show-cursor-supported').then(showCursorSupported => {
+      this.setState({showCursorSupported});
     });
   }
 

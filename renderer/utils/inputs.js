@@ -1,4 +1,3 @@
-import electron from 'electron';
 import _ from 'lodash';
 
 let screenWidth = 0;
@@ -9,7 +8,6 @@ export const setScreenSize = (width, height) => {
   screenHeight = height;
 };
 
-const {remote} = electron;
 const debounceTimeout = 500;
 export const minWidth = 20;
 export const minHeight = 20;
@@ -137,24 +135,16 @@ export const RATIOS = [
   '1:1'
 ];
 
-const buildAspectRatioMenu = ({setRatio, ratio}) => {
-  if (!remote) {
-    return;
-  }
-
-  const {Menu, MenuItem} = remote;
+const buildAspectRatioMenu = ({ratio}) => {
   const selectedRatio = ratio.join(':');
-  const menu = new Menu();
+  const menuOptions = [];
 
   for (const r of RATIOS) {
-    menu.append(
-      new MenuItem({
-        label: r,
-        type: 'radio',
-        checked: r === selectedRatio,
-        click: () => setRatio(r.split(':').map(d => Number.parseInt(d, 10)))
-      })
-    );
+    menuOptions.push({
+      label: r,
+      type: 'radio',
+      checked: r === selectedRatio
+    });
   }
 
   const customOption = RATIOS.includes(selectedRatio) ? {
@@ -168,8 +158,8 @@ const buildAspectRatioMenu = ({setRatio, ratio}) => {
     checked: true
   };
 
-  menu.append(new MenuItem(customOption));
-  return menu;
+  menuOptions.push(customOption);
+  return menuOptions;
 };
 
 const handleInputKeyPress = (onChange, min, max) => event => {

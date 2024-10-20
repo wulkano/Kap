@@ -17,6 +17,7 @@ import {askForTargetFilePath} from './plugins/built-in/save-file-plugin';
 import path from 'path';
 import {ensureDockIsShowingSync} from './utils/dock';
 import {windowManager} from './windows/manager';
+import {flags} from './common/flags';
 
 export interface ExportOptions {
   plugin: InstalledPlugin;
@@ -328,5 +329,20 @@ export const setUpExportsListeners = () => {
         }
       });
     }
+  });
+
+  ipc.answerRenderer('show-exports-background-dialog', async (_, window) => {
+    if (!flags.get('backgroundEditorConversion')) {
+      return;
+    }
+
+    await dialog.showMessageBox(window, {
+      type: 'info',
+      message: 'Your export will continue in the background. You can access it through the Export History window.',
+      buttons: ['Ok'],
+      defaultId: 0
+    });
+
+    flags.set('backgroundEditorConversion', true);
   });
 };

@@ -1,4 +1,4 @@
-import {app} from 'electron';
+import {app, shell} from 'electron';
 import {EventEmitter} from 'events';
 import path from 'path';
 import fs from 'fs';
@@ -11,6 +11,7 @@ import {notify} from '../utils/notifications';
 import packageJson from 'package-json';
 import {NormalizedPackageJson} from 'read-pkg';
 import {windowManager} from '../windows/manager';
+import {ipcMain} from 'electron-better-ipc';
 
 const got = require('got');
 
@@ -214,3 +215,49 @@ export class Plugins extends EventEmitter {
 }
 
 export const plugins = new Plugins();
+
+const mapPlugin = (plugin: NpmPlugin) => {
+  const isInstalledPlugin = plugin instanceof InstalledPlugin;
+
+  return {
+    name: plugin.name,
+    prettyName: plugin.prettyName,
+    version: plugin.version,
+    description: plugin.description,
+    isCompatible: plugin.isCompatible,
+    hasConfig: isInstalledPlugin ? plugin.hasConfig : undefined,
+    isInstalled: plugin.isInstalled,
+    kapVersion: plugin.kapVersion,
+    macosVersion: plugin.macosVersion,
+    isValid: isInstalledPlugin ? plugin.isValid : undefined,
+    link: plugin.link,
+    isSymLink: isInstalledPlugin ? plugin.isSymLink : undefined
+  };
+};
+
+ipcMain.answerRenderer('get-installed-plugins', () => {
+  return plugins.installedPlugins.sort((a, b) => a.prettyName.localeCompare(b.prettyName)).map(plugin => mapPlugin(plugin));
+});
+
+ipcMain.answerRenderer('get-npm-plugins', async () => {
+  const npmPlugins = await plugins.getFromNpm();
+  return npmPlugins.map(plugin => mapPlugin(plugin));
+});
+
+ipcMain.answerRenderer<{pluginName: string}>('install-plugin', async ({pluginName}) => {
+  const plugin = await plugins.install(pluginName);
+  return plugin ? mapPlugin(plugin) : undefined;
+});
+
+ipcMain.answerRenderer<{pluginName: string}>('uninstall-plugin', async ({pluginName}) => {
+  const plugin = await plugins.uninstall(pluginName);
+  return plugin ? mapPlugin(plugin) : undefined;
+});
+
+ipcMain.answerRenderer<{pluginName: string}>('open-plugin-config', async ({pluginName}) => {
+  return plugins.openPluginConfig(pluginName);
+});
+
+ipcMain.answerRenderer('open-plugins-folder', async () => {
+  shell.openPath(plugins.pluginsDir);
+});

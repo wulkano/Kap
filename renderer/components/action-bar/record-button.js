@@ -1,10 +1,10 @@
-import electron from 'electron';
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import {connect, CropperContainer} from '../../containers';
 import {handleKeyboardActivation} from '../../utils/inputs';
+import {ipcRenderer} from 'electron-better-ipc';
 
 const getMediaNode = async deviceId => new Promise((resolve, reject) => {
   navigator.getUserMedia({
@@ -97,12 +97,9 @@ const RecordButton = ({
     event.stopPropagation();
 
     if (cropperExists) {
-      const {remote} = electron;
-      const {startRecording} = remote.require('./aperture');
-
       willStartRecording();
 
-      startRecording({
+      ipcRenderer.callMain('start-recording', {
         cropperBounds: {
           x,
           y,

@@ -26,7 +26,6 @@ const showDialog = async (options: DialogOptions) => new Promise<number | void>(
     useContentSize: true,
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true,
       contextIsolation: false
     }
   });

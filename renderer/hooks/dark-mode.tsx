@@ -1,16 +1,20 @@
+import {ipcRenderer} from 'electron-better-ipc';
 import {useState, useEffect} from 'react';
 
 const useDarkMode = () => {
-  const {darkMode} = require('electron-util');
-  const [isDarkMode, setIsDarkMode] = useState(darkMode.isEnabled);
+  const [isDarkMode, setIsDarkMode] = useState<boolean | undefined>(undefined);
 
   useEffect(() => {
-    return darkMode.onChange(() => {
-      setIsDarkMode(darkMode.isEnabled);
+    ipcRenderer.callMain<never, boolean>('get-dark-mode').then(value => {
+      setIsDarkMode(value);
     });
-  }, []);
 
-  return isDarkMode;
+    return ipcRenderer.answerMain<boolean>('dark-mode-changed', value => {
+      setIsDarkMode(value);
+    });
+  });
+
+  return {isDarkMode, isReady: isDarkMode !== undefined};
 };
 
 export default useDarkMode;

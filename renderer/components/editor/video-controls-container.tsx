@@ -1,10 +1,9 @@
 import {createContainer} from 'unstated-next';
-import electron from 'electron';
 import {useRef, useState, useEffect} from 'react';
+import {ipcRenderer} from 'electron-better-ipc';
 
 const useVideoControls = () => {
   const videoRef = useRef<HTMLVideoElement>();
-  const currentWindow = electron.remote.getCurrentWindow();
   const wasPaused = useRef(true);
   const transitioningPauseState = useRef<Promise<void>>();
 
@@ -55,9 +54,11 @@ const useVideoControls = () => {
   const videoProps = {
     onCanPlayThrough: hasStarted ? undefined : () => {
       setHasStarted(true);
-      if (currentWindow.isFocused()) {
-        play();
-      }
+      ipcRenderer.callMain<never, {isFocused: boolean}>('get-window-info').then(windowInfo => {
+        if (windowInfo.isFocused) {
+          play();
+        }
+      });
     },
     onLoadedData: () => {
       const hasAudio = (videoRef.current as any).webkitAudioDecodedByteCount > 0 || Boolean(
@@ -88,12 +89,15 @@ const useVideoControls = () => {
       }
     };
 
-    currentWindow.addListener('blur', blurListener);
-    currentWindow.addListener('focus', focusListener);
+    ipcRenderer.callMain('focus-events');
+
+    const unsubscribeFocus = ipcRenderer.answerMain('window-focus', focusListener);
+    const unsubscribeBlur = ipcRenderer.answerMain('window-blur', blurListener);
 
     return () => {
-      currentWindow.removeListener('blur', blurListener);
-      currentWindow.removeListener('focus', focusListener);
+      unsubscribeFocus();
+      unsubscribeBlur();
+      ipcRenderer.callMain('stop-focus-events');
     };
   }, []);
 
