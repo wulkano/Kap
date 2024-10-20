@@ -80,9 +80,14 @@ const Video = () => {
   };
 
   return (
-    <div onContextMenu={onContextMenu}>
+    <div className="video-container" onContextMenu={onContextMenu}>
       <video ref={videoRef} preload="auto" src={src} {...videoProps}/>
       <style jsx>{`
+        .video-container {
+          display: flex;
+          flex: 1;
+        }
+
         video {
           width: 100%;
           height: 100%;

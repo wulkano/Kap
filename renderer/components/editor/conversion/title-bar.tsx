@@ -8,7 +8,6 @@ import IconMenu from '../../icon-menu';
 import {ipcRenderer} from 'electron-better-ipc';
 
 const TitleBar = ({conversion, cancel, copy, retry, showInFolder}: {conversion: UseConversionState; cancel: () => any; copy: () => any; retry: () => any; showInFolder: () => void}) => {
-  const {api} = require('electron-util');
   const shouldClose = async () => {
     if (conversion.status === ExportStatus.inProgress) {
       await ipcRenderer.callMain('show-exports-background-dialog');
@@ -95,6 +94,7 @@ const TitleBar = ({conversion, cancel, copy, retry, showInFolder}: {conversion: 
           display: flex;
           align-items: center;
           justify-content: center;
+          -webkit-app-region: no-drag;
         }
 
         .button {

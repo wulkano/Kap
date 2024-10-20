@@ -42,9 +42,10 @@ const EditorPreview = () => {
           transition: top 0.12s ease-in-out;
           display: flex;
           z-index: 10;
+          -webkit-app-region: drag;
         }
 
-        .preview-hover-container:hover .title-bar {
+        .preview-hover-container .title-bar {
           top: 0;
         }
 
