@@ -47,7 +47,6 @@ const openCropper = (display: Display, activeDisplayId?: number) => {
     show: false,
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true,
       contextIsolation: false
     }
   });

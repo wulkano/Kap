@@ -68,6 +68,7 @@ class PreferencesNavigation extends React.Component {
             border: 1px solid transparent;
             outline: none;
             padding-right: 8px;
+            -webkit-app-region: no-drag;
           }
 
           .nav-item.active {

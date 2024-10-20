@@ -51,7 +51,6 @@ export default class KapWindow<State = any> {
       ...rest,
       webPreferences: {
         nodeIntegration: true,
-        enableRemoteModule: true,
         contextIsolation: false,
         ...rest.webPreferences
       },

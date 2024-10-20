@@ -7,7 +7,7 @@ import toMilliseconds from '@sindresorhus/to-milliseconds';
 import './windows/load';
 import {initializeSentryListeners} from './utils/sentry';
 
-require('electron-timber').hookConsole({main: true, renderer: true});
+// require('electron-timber').hookConsole({main: true, renderer: true});
 
 import {settings} from './common/settings';
 import {plugins} from './plugins';
@@ -21,7 +21,7 @@ import {handleDeepLink} from './utils/deep-linking';
 import {hasActiveRecording, cleanPastRecordings} from './recording-history';
 import {setupRemoteStates} from './remote-states';
 import {setUpExportsListeners} from './export';
-import {windowManager} from './windows/manager';
+// import {windowManager} from './windows/manager';
 import {setupProtocol} from './utils/protocol';
 import {initializeAperture, stopRecordingWithNoEdit} from './aperture';
 import {initializeWindows} from './utils/windows';
@@ -128,15 +128,15 @@ const checkForUpdates = () => {
     ensureScreenCapturePermissions() &&
     (!settings.get('recordAudio') || hasMicrophoneAccess())
   ) {
-    windowManager.cropper?.open();
+    // windowManager.cropper?.open();
   }
 
   checkForUpdates();
 })();
 
-app.on('window-all-closed', (event: any) => {
+app.on('window-all-closed', () => {
   app.dock.hide();
-  event.preventDefault();
+  // event.preventDefault();
 });
 
 app.on('will-finish-launching', () => {

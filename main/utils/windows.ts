@@ -4,7 +4,7 @@ import {windowManager} from '../windows/manager';
 import {ipcMain} from 'electron-better-ipc';
 
 const {getWindows, activateWindow} = require('mac-windows');
-const {getAppIconListByPid} = require('node-mac-app-icon');
+// const {getAppIconListByPid} = require('node-mac-app-icon');
 
 export interface MacWindow {
   pid: number;
@@ -37,13 +37,17 @@ const isValidApp = ({ownerName}: MacWindow) => !APP_BLACKLIST.includes(ownerName
 
 const getWindowList = async () => {
   const windows = await getWindows() as MacWindow[];
-  const images = await getAppIconListByPid(windows.map(win => win.pid), {
-    size: 16,
-    failOnError: false
-  }) as Array<{
+  const images = [] as Array<{
     pid: number;
     icon: Buffer;
   }>;
+  // const images = await getAppIconListByPid(windows.map(win => win.pid), {
+  //   size: 16,
+  //   failOnError: false
+  // }) as Array<{
+  //   pid: number;
+  //   icon: Buffer;
+  // }>;
 
   let maxLastUsed = 0;
 
