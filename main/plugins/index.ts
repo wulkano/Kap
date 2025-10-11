@@ -133,13 +133,13 @@ export class Plugins extends EventEmitter {
   }
 
   async getFromNpm() {
-    const url = 'https://api.npms.io/v2/search?q=keywords:kap-plugin+not:deprecated';
+    const url = 'https://registry.npmjs.com/-/v1/search?text=keywords:kap-plugin+not:deprecated';
     const response = (await got(url, {json: true})) as {
-      body: {results: Array<{package: NormalizedPackageJson}>};
+      body: {objects: Array<{package: NormalizedPackageJson}>};
     };
     const installed = this.pluginNames;
 
-    return Promise.all(response.body.results
+    return Promise.all(response.body.objects
       .map(x => x.package)
       .filter(x => x.name.startsWith('kap-'))
       .filter(x => !installed.includes(x.name)) // Filter out installed plugins
