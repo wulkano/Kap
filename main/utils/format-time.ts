@@ -16,7 +16,7 @@ const formatTime = (time: number, options: any) => {
 const format = (time: number, {showMilliseconds} = {showMilliseconds: false}) => {
   const formatString = `${time >= 60 * 60 ? 'hh:m' : ''}m:ss${showMilliseconds ? '.SS' : ''}`;
 
-  return moment().startOf('day').millisecond(time * 1000).format(formatString);
+  return moment().startOf('day').add(time, 'seconds').format(formatString);
 };
 
 export default formatTime;
