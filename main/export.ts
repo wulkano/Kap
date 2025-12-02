@@ -60,6 +60,11 @@ export default class Export extends (EventEmitter as new () => TypedEventEmitter
 
     try {
       await action;
+
+      if (this.context.isCanceled) {
+        return;
+      }
+
       this.status = ExportStatus.completed;
       this.text = 'Export completed';
       this.emit('updated', this.data);
