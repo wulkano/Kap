@@ -10,7 +10,7 @@ process.env.TZ = 'America/New_York';
 export const app = {
   getPath: (name: string) => path.resolve(temporaryDir, name),
   isPackaged: false,
-  getVersion: ''
+  getVersion: () => '3.0.0'
 };
 
 export const shell = {
@@ -22,3 +22,11 @@ export const clipboard = {
 };
 
 export const remote = {};
+
+export const Menu = {
+  getApplicationMenu: () => ({
+    getMenuItemById: () => ({
+      enabled: false
+    })
+  })
+};

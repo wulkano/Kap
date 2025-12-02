@@ -30,8 +30,30 @@ const clearMock = sinon.fake(
 export default class Store {
   get = getMock;
   set = setMock;
+  has = sinon.fake((key: string) => key in mocks || key in store);
   delete = deleteMock;
-  clear = clearMock;
+
+  constructor(private readonly options?: any) {
+    this.initDefaults();
+  }
+
+  private initDefaults() {
+    if (this.options?.schema) {
+      for (const [key, value] of Object.entries(this.options.schema)) {
+        if ((value as any).default !== undefined) {
+          store[key] = (value as any).default;
+        }
+      }
+    }
+  }
+
+  clear = () => {
+    for (const key of Object.keys(store)) {
+      delete store[key];
+    }
+
+    this.initDefaults();
+  };
 
   get store() {
     return {

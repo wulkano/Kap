@@ -131,7 +131,8 @@
     "xo": "^0.38.2"
   },
   "_moduleAliases": {
-    "electron": "test/mocks/electron.ts"
+    "electron": "test/mocks/electron.ts",
+    "electron-store": "test/mocks/electron-store.ts"
   },
   "ava": {
     "files": [
