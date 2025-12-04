@@ -18,7 +18,10 @@ const copyToClipboard = {
   formats: [
     'gif',
     'apng',
-    'mp4'
+    'mp4',
+    'webm',
+    'av1',
+    'hevc'
   ],
   action
 };
