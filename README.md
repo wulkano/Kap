@@ -34,6 +34,20 @@ Read the [contribution guide](contributing.md).
 
 For more info on how to create plugins, read the [plugins docs](docs/plugins.md).
 
+## Troubleshooting
+
+### Screen Recording permission loop on macOS
+
+If Kap keeps asking for Screen Recording permissions even after you've enabled them, try this workaround from the community thread in [#1120](https://github.com/wulkano/Kap/issues/1120):
+
+1. Quit Kap completely (Activity Monitor can help ensure no Kap process is still running).
+2. Open **System Settings** (or **System Preferences**) → **Privacy & Security** → **Screen Recording**.
+3. Remove Kap from the allowed apps list.
+4. Reinstall Kap.
+5. Launch Kap and grant Screen Recording permission again when prompted.
+
+For several users this clears stale permission state and resolves the prompt loop.
+
 ## Dev builds
 
 Download [`main`](https://kap-artifacts.now.sh/main) or builds for any other branch using: `https://kap-artifacts.now.sh/<branch>`. Note that these builds are unsupported and may have issues.
