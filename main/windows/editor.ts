@@ -72,6 +72,15 @@ const open = async (video: Video) => {
             id: MenuItemId.saveOriginal,
             accelerator: 'Command+S',
             click: async () => saveOriginal(video)
+          }, {
+            type: 'separator'
+          }, {
+            label: 'Discard Recording',
+            id: MenuItemId.discardRecording,
+            accelerator: 'Command+D',
+            click: () => {
+              editorKapWindow.browserWindow.close();
+            }
           });
         }
       }
