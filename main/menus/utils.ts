@@ -14,6 +14,7 @@ export enum MenuItemId {
   help = 'help',
   app = 'app',
   saveOriginal = 'saveOriginal',
+  discardRecording = 'discardRecording',
   plugins = 'plugins',
   audioDevices = 'audioDevices',
   stopRecording = 'stopRecording',
