@@ -141,7 +141,7 @@ const convertToWebm = (options: ConvertOptions) => convert(options.outputPath, {
   // http://wiki.webmproject.org/ffmpeg
   // https://trac.ffmpeg.org/wiki/Encode/VP9
   '-threads', Math.max(os.cpus().length - 1, 1).toString(),
-  '-deadline', 'good', // `best` is twice as slow and only slighty better
+  '-deadline', 'good', // `best` is twice as slow and only slightly better
   '-b:v', '1M', // Bitrate (same as the MP4)
   '-codec:v', 'vp9',
   '-codec:a', 'vorbis',
