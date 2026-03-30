@@ -105,7 +105,7 @@ The `action` function is where you implement the behavior of your service. The f
 - `.notify(text, action)`: Show a notification. Optionally pass in a function that is called with the event when the notification is clicked.
 - `.setProgress(text, percentage)`: Update progress information in the Kap export window. Use this whenever you have long-running jobs, like uploading. The `percentage` should be a number between `0` and `1`.
 - `.openConfigFile()`: Open the plugin config file in the user’s editor.
-- `.cancel()`: Indicate that the plugin operation canceled for some reason. [Example.](https://github.com/wulkano/kap/blob/efc32d12f381615c9fcfc41065d9c2ee200e8975/app/src/main/save-file-service.js#L28-L31) If the cancelation was not the result of a user gesture, use `.notify()` to inform the user why it was canceled.
+- `.cancel()`: Indicate that the plugin operation canceled for some reason. [Example.](https://github.com/wulkano/kap/blob/efc32d12f381615c9fcfc41065d9c2ee200e8975/app/src/main/save-file-service.js#L28-L31) If the cancellation was not the result of a user gesture, use `.notify()` to inform the user why it was canceled.
 - `.waitForDeepLink()`: Returns a Promise that resolves when a deep link for this plugin is opened. The link should be in the format `kap://plugins/{pluginName}/{rest}`, where `pluginName` is the npm package name and `rest` is the string the Promise will resolve with. This is useful for [OAuth flows](#oauth).
 
 #### Notes
@@ -194,12 +194,12 @@ const reverseAction = async context => {
 - `.copyToClipboard(text)`: Copy text to the clipboard. If you for example copy a link to the uploaded recording to the clipboard, don’t forget to `.notify()` the user about it.
 - `.notify(text, action)`: Show a notification. Optionally pass in a function that is called with the event when the notification is clicked.
 - `.openConfigFile()`: Open the plugin config file in the user’s editor.
-- `.cancel()`: Indicate that the plugin operation canceled for some reason. [Example.](https://github.com/wulkano/kap/blob/efc32d12f381615c9fcfc41065d9c2ee200e8975/app/src/main/save-file-service.js#L28-L31) If the cancelation was not the result of a user gesture, use `.notify()` to inform the user why it was canceled.
+- `.cancel()`: Indicate that the plugin operation canceled for some reason. [Example.](https://github.com/wulkano/kap/blob/efc32d12f381615c9fcfc41065d9c2ee200e8975/app/src/main/save-file-service.js#L28-L31) If the cancellation was not the result of a user gesture, use `.notify()` to inform the user why it was canceled.
 - `.waitForDeepLink()`: Returns a Promise that resolves when a deep link for this plugin is opened. The link should be in the format `kap://plugins/{pluginName}/{rest}`, where `pluginName` is the npm package name and `rest` is the string the Promise will resolve with. This is useful for [OAuth flows](#oauth).
 
 #### Notes
 
-It is highly recomended that an edit service uses a [PCancelable](https://github.com/sindresorhus/p-cancelable) function as the action, so Kap can cancel it in case the user decides to cancel the export.
+It is highly recommended that an edit service uses a [PCancelable](https://github.com/sindresorhus/p-cancelable) function as the action, so Kap can cancel it in case the user decides to cancel the export.
 
 Example:
 
@@ -295,7 +295,7 @@ The hook functions receive a `context` argument with some metadata and utility m
 - `.copyToClipboard(text)`: Copy text to the clipboard. If you for example copy a link to the uploaded recording to the clipboard, don’t forget to `.notify()` the user about it.
 - `.notify(text, action)`: Show a notification. Optionally pass in a function that is called with the event when the notification is clicked.
 - `.openConfigFile()`: Open the plugin config file in the user’s editor.
-- `.cancel()`: Indicate that the plugin operation canceled for some reason. [Example.](https://github.com/wulkano/kap/blob/efc32d12f381615c9fcfc41065d9c2ee200e8975/app/src/main/save-file-service.js#L28-L31) If the cancelation was not the result of a user gesture, use `.notify()` to inform the user why it was canceled.
+- `.cancel()`: Indicate that the plugin operation canceled for some reason. [Example.](https://github.com/wulkano/kap/blob/efc32d12f381615c9fcfc41065d9c2ee200e8975/app/src/main/save-file-service.js#L28-L31) If the cancellation was not the result of a user gesture, use `.notify()` to inform the user why it was canceled.
 - `.waitForDeepLink()`: Returns a Promise that resolves when a deep link for this plugin is opened. The link should be in the format `kap://plugins/{pluginName}/{rest}`, where `pluginName` is the npm package name and `rest` is the string the Promise will resolve with. This is useful for [OAuth flows](#oauth).
 
 Example plugins: [`kap-do-not-disturb`](https://github.com/karaggeorge/kap-do-not-disturb), [`kap-hide-desktop-icons`](https://github.com/karaggeorge/kap-hide-desktop-icons)
