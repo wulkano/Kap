@@ -1,10 +1,12 @@
 import Store from 'electron-store';
-import {EditorOptionsRemoteState, ExportOptions, ExportOptionsPlugin, Format, RemoteStateHandler} from '../common/types';
+import {ConversionOptions, EditorOptionsRemoteState, ExportOptions, ExportOptionsPlugin, Format, RemoteStateHandler} from '../common/types';
 import {formats} from '../common/constants';
 
 import {plugins} from '../plugins';
 import {apps} from '../plugins/built-in/open-with-plugin';
 import {prettifyFormat} from '../utils/formats';
+import {Video} from '../video';
+import {estimateGifSize} from '../utils/gif-size-estimate';
 
 const exportUsageHistory = new Store<{[key in Format]: {lastUsed: number; plugins: Record<string, number>}}>({
   name: 'export-usage-history',
@@ -53,6 +55,8 @@ const fpsUsageHistory = new Store<{[key in Format]: number}>({
     }
   }
 });
+
+const gifSizeEstimateProcesses = new Map<string, ReturnType<typeof estimateGifSize>>();
 
 const getEditOptions = () => {
   return plugins.editPlugins.flatMap(
@@ -133,6 +137,35 @@ const editorOptionsRemoteState: RemoteStateHandler<EditorOptionsRemoteState> = s
       fpsUsageHistory.set(format, fps);
       state.fpsHistory = fpsUsageHistory.store;
       sendUpdate(state);
+    },
+    estimateGifSize: async (id: string, {filePath, conversionOptions}: {
+      filePath: string;
+      conversionOptions: ConversionOptions;
+    }) => {
+      const video = Video.fromId(filePath);
+
+      if (!video) {
+        return;
+      }
+
+      gifSizeEstimateProcesses.get(id)?.cancel();
+
+      const process = estimateGifSize(video, conversionOptions);
+      gifSizeEstimateProcesses.set(id, process);
+
+      try {
+        return await process;
+      } catch (error) {
+        if ((error as any)?.isCanceled) {
+          return;
+        }
+
+        throw error;
+      } finally {
+        if (gifSizeEstimateProcesses.get(id) === process) {
+          gifSizeEstimateProcesses.delete(id);
+        }
+      }
     }
   };
 

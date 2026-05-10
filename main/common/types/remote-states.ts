@@ -1,5 +1,5 @@
 import {App, Format} from './base';
-import {ExportStatus} from './conversion-options';
+import {ConversionOptions, ExportStatus} from './conversion-options';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type RemoteState<State = any, Actions extends Record<string, (...args: any[]) => any> = {}> = {
@@ -59,6 +59,10 @@ export type EditorOptionsRemoteState = RemoteState<ExportOptions, {
     format: Format;
     fps: number;
   }) => void;
+  estimateGifSize: ({filePath, conversionOptions}: {
+    filePath: string;
+    conversionOptions: ConversionOptions;
+  }) => Promise<string | undefined>;
 }>;
 
 export interface ExportState {
