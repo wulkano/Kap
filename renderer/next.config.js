@@ -12,7 +12,9 @@ module.exports = (nextConfig) => {
         ]
       });
 
-      config.target = 'electron-renderer';
+      if (!options.isServer) {
+        config.target = 'electron-renderer';
+      }
       config.devtool = 'cheap-module-source-map';
 
       if (typeof nextConfig.webpack === 'function') {

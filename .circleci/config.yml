@@ -2,9 +2,19 @@ version: 2
 jobs:
   build:
     macos:
-      xcode: '13.4.1'
+      xcode: '14.3.1'
+    resource_class: m4pro.medium
     steps:
       - checkout
+      - run:
+          name: Use Node 16
+          command: |
+            nvm install 16.20.2
+            nvm alias default 16.20.2
+            echo 'export PATH="$HOME/.nvm/versions/node/v16.20.2/bin:$PATH"' >> "$BASH_ENV"
+      - run:
+          name: Install native build tools
+          command: brew install automake
       - run: yarn
       - run: mkdir -p ~/reports
       - run: yarn lint
