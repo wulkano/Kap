@@ -9,6 +9,26 @@ import {shake} from '../../../utils/inputs';
 import Select, {Separator} from './select';
 
 const percentValues = [100, 75, 50, 33, 25, 20, 10];
+const estimatedGifCompressionFactor = 0.33;
+const estimatedGifOverheadBytes = 48 * 1024;
+
+const formatBytes = (bytes: number) => {
+  if (!Number.isFinite(bytes) || bytes <= 0) {
+    return '0 B';
+  }
+
+  const units = ['B', 'KB', 'MB', 'GB'];
+  let value = bytes;
+  let unitIndex = 0;
+
+  while (value >= 1024 && unitIndex < units.length - 1) {
+    value /= 1024;
+    unitIndex++;
+  }
+
+  const decimals = value >= 10 || unitIndex === 0 ? 0 : 1;
+  return `${value.toFixed(decimals)} ${units[unitIndex]}`;
+};
 
 const {className: keyboardInputClass, styles: keyboardInputStyles} = css.resolve`
   height: 24px;
@@ -40,7 +60,7 @@ const {className: keyboardInputClass, styles: keyboardInputStyles} = css.resolve
 `;
 
 const LeftOptions = () => {
-  const {width, height, setDimensions, fps, updateFps, originalFps} = OptionsContainer.useContainer();
+  const {width, height, setDimensions, fps, updateFps, originalFps, format} = OptionsContainer.useContainer();
   const metadata = VideoMetadataContainer.useContainer();
 
   const [widthValue, setWidthValue] = useState<string>();
@@ -161,6 +181,17 @@ const LeftOptions = () => {
   };
 
   const percentLabel = `${Math.round((width / metadata.width) * 100)}%`;
+  const estimatedGifSize = useMemo(() => {
+    if (format !== 'gif' || !fps || !metadata.duration || !width || !height) {
+      return;
+    }
+
+    const frameCount = Math.max(Math.round(metadata.duration * fps), 1);
+    const rawBytes = width * height * frameCount;
+    const estimatedBytes = (rawBytes * estimatedGifCompressionFactor) + estimatedGifOverheadBytes;
+
+    return formatBytes(estimatedBytes);
+  }, [format, fps, metadata.duration, width, height]);
 
   return (
     <div className="container">
@@ -192,6 +223,12 @@ const LeftOptions = () => {
       <div className="fps">
         <Slider value={fps} min={5} max={originalFps} onChange={updateFps}/>
       </div>
+      {estimatedGifSize && (
+        <>
+          <div className="label estimate-label">Est. GIF size</div>
+          <div className="estimate-value">~{estimatedGifSize}</div>
+        </>
+      )}
       {keyboardInputStyles}
       <style jsx>{`
           .container {
@@ -216,6 +253,17 @@ const LeftOptions = () => {
           .fps {
             height: 24px;
             width: 32px;
+          }
+
+          .estimate-label {
+            margin-left: 10px;
+            margin-right: 6px;
+          }
+
+          .estimate-value {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.9);
+            white-space: nowrap;
           }
 
           .option {
