@@ -1,104 +1,86 @@
 import PCancelable from 'p-cancelable';
 import tempy from 'tempy';
-import {compress, convert} from './process';
+import {convert, gifski} from './process';
 import {areDimensionsEven, conditionalArgs, ConvertOptions, makeEven} from './utils';
 import {settings} from '../common/settings';
 import os from 'os';
 import {Format} from '../common/types';
 import fs from 'fs';
 
-// `time ffmpeg -i original.mp4 -vf fps=30,scale=480:-1::flags=lanczos,palettegen palette.png`
-// `time ffmpeg -i original.mp4 -i palette.png -filter_complex 'fps=30,scale=-1:-1:flags=lanczos[x]; [x][1:v]paletteuse' palette.gif`
+// GIF export: trim the clip with ffmpeg if a range is selected, then encode it
+// with gifski. gifski reads video directly (its bundled binary statically links
+// FFmpeg) and handles fps resampling and scaling itself, so no intermediate image
+// frames are needed. It is multithreaded and higher quality than ffmpeg's
+// palettegen/paletteuse pipeline, and its binary is universal (x86_64 + arm64) —
+// so this also drops the x86_64-only gifsicle dependency that triggered the macOS
+// Intel/Rosetta deprecation warning on Apple Silicon.
 const convertToGif = PCancelable.fn(async (options: ConvertOptions, onCancel: PCancelable.OnCancelFunction) => {
-  const palettePath = tempy.file({extension: 'png'});
-
-  const paletteProcess = convert(palettePath, {shouldTrack: false}, conditionalArgs(
-    '-i', options.inputPath,
-    '-vf', `fps=${options.fps}${options.shouldCrop ? `,scale=${options.width}:${options.height}:flags=lanczos` : ''},palettegen`,
-    {
-      args: [
-        '-ss',
-        options.startTime.toString(),
-        '-to',
-        options.endTime.toString()
-      ],
-      if: options.shouldCrop
-    },
-    palettePath
-  ));
-
-  onCancel(() => {
-    paletteProcess.cancel();
-  });
-
-  await paletteProcess;
-
-  // Sometimes if the clip is too short or fps too low, the palette is not generated
-  const hasPalette = fs.existsSync(palettePath);
-
   const shouldLoop = settings.get('loopExports');
+  const useLossy = settings.get('lossyCompression', false);
+  // GIF frame delays are stored in 1/100s units, so 50fps (2 centiseconds per
+  // frame) is the highest cleanly representable rate. Higher rates such as 60fps
+  // can't be stored and get mangled into slow motion, so cap the GIF fps at 50.
+  const fps = Math.min(options.fps, 50);
 
-  const conversionProcess = convert(options.outputPath, {
-    onProgress: (progress, estimate) => {
-      options.onProgress('Converting', progress, estimate);
-    },
-    startTime: options.startTime,
-    endTime: options.endTime
-  }, conditionalArgs(
-    '-i', options.inputPath,
-    {
-      args: [
-        '-i',
-        palettePath,
-        '-filter_complex',
-        `fps=${options.fps}${options.shouldCrop ? `,scale=${options.width}:${options.height}:flags=lanczos` : ''}[x]; [x][1:v]paletteuse`
-      ],
-      if: hasPalette
-    },
-    {
-      args: [
-        '-vf',
-        `fps=${options.fps}${options.shouldCrop ? `,scale=${options.width}:${options.height}:flags=lanczos` : ''}`
-      ],
-      if: !hasPalette
-    },
-    '-loop', shouldLoop ? '0' : '-1', // 0 == forever; -1 == no loop
-    {
-      args: [
-        '-ss',
-        options.startTime.toString(),
-        '-to',
-        options.endTime.toString()
-      ],
-      if: options.shouldCrop
-    },
-    options.outputPath
-  ));
+  // Because gifski can't trim, use ffmpeg to cut the selected range into a
+  // temporary clip when needed; otherwise hand the input straight to gifski.
+  let gifskiInput = options.inputPath;
+  let trimmedPath: string | undefined;
 
-  onCancel(() => {
-    conversionProcess.cancel();
-  });
+  try {
+    if (options.shouldCrop) {
+      trimmedPath = tempy.file({extension: 'mp4'});
 
-  await conversionProcess;
+      const trimProcess = convert(trimmedPath, {
+        onProgress: (progress, estimate) => {
+          options.onProgress('Converting', progress, estimate);
+        },
+        startTime: options.startTime,
+        endTime: options.endTime
+      }, conditionalArgs(
+        '-i', options.inputPath,
+        '-ss', options.startTime.toString(),
+        '-to', options.endTime.toString(),
+        '-an', // GIFs have no audio track
+        '-crf', '18', // Near-lossless intermediate; gifski re-quantizes to GIF anyway
+        trimmedPath
+      ));
 
-  const compressProcess = compress(options.outputPath, {
-    onProgress: (progress, estimate) => {
-      options.onProgress('Compressing', progress, estimate);
-    },
-    startTime: options.startTime,
-    endTime: options.endTime
-  }, [
-    '--batch',
-    options.outputPath
-  ]);
+      onCancel(() => {
+        trimProcess.cancel();
+      });
 
-  onCancel(() => {
-    compressProcess.cancel();
-  });
+      await trimProcess;
+      gifskiInput = trimmedPath;
+    }
 
-  await compressProcess;
+    // By default gifski downscales output to ~800x600 unless the target size is
+    // set explicitly, so always pass the export dimensions through.
+    const gifProcess = gifski(options.outputPath, {}, conditionalArgs(
+      '--quiet',
+      '--fps', fps.toString(),
+      '--quality', useLossy ? '70' : '90',
+      '--width', options.width.toString(),
+      '--height', options.height.toString(),
+      {args: ['--repeat', '-1'], if: !shouldLoop}, // -1 == no loop; gifski's default 0 == loop forever
+      '-o', options.outputPath,
+      gifskiInput
+    ));
 
-  return options.outputPath;
+    onCancel(() => {
+      gifProcess.cancel();
+    });
+
+    await gifProcess;
+
+    return options.outputPath;
+  } finally {
+    // Remove the temporary trimmed clip (if any), whether the export succeeded,
+    // failed, or was cancelled.
+    if (trimmedPath) {
+      fs.rmSync(trimmedPath, {force: true});
+    }
+  }
 });
 
 // eslint-disable-next-line @typescript-eslint/promise-function-async
