@@ -8,6 +8,7 @@ import VideoTimeContainer from '../video-time-container';
 import VideoControlsContainer from '../video-controls-container';
 import useSharePlugins from 'hooks/editor/use-share-plugins';
 import useEditorOptions from 'hooks/editor/use-editor-options';
+import GifSizeEstimate from './gif-size-estimate';
 
 const FormatSelect = () => {
   const {formats, format, updateFormat} = OptionsContainer.useContainer();
@@ -195,6 +196,7 @@ const RightOptions = () => {
       <EditPluginsControl/>
       <div className="format"><FormatSelect/></div>
       <div className="plugin"><PluginsSelect/></div>
+      <GifSizeEstimate/>
       <ConvertButton/>
       <style jsx>{`
           .container {

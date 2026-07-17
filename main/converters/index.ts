@@ -23,7 +23,7 @@ const croppingHandlers = new Map([
 // eslint-disable-next-line @typescript-eslint/promise-function-async
 export const convertTo = (
   format: Format,
-  options: Except<ConvertOptions, 'outputPath'> & {defaultFileName: string},
+  options: Except<ConvertOptions, 'outputPath'> & {defaultFileName: string; outputPath?: string},
   encoding: Encoding = Encoding.h264
 ) => {
   if (!converters.has(encoding)) {
@@ -36,12 +36,14 @@ export const convertTo = (
     throw new Error(`Unsupported file format for ${encoding}: ${format}`);
   }
 
-  track(`file/export/encoding/${encoding}`);
-  track(`file/export/format/${format}`);
+  if (options.shouldTrack !== false) {
+    track(`file/export/encoding/${encoding}`);
+    track(`file/export/format/${format}`);
+  }
 
   const conversionOptions = {
-    outputPath: path.join(tempy.directory(), `${options.defaultFileName}.${getFormatExtension(format)}`),
-    ...options
+    ...options,
+    outputPath: options.outputPath ?? path.join(tempy.directory(), `${options.defaultFileName}.${getFormatExtension(format)}`)
   };
 
   if (options.editService) {
