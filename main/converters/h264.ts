@@ -12,93 +12,99 @@ import fs from 'fs';
 const convertToGif = PCancelable.fn(async (options: ConvertOptions, onCancel: PCancelable.OnCancelFunction) => {
   const palettePath = tempy.file({extension: 'png'});
 
-  const paletteProcess = convert(palettePath, {shouldTrack: false}, conditionalArgs(
-    '-i', options.inputPath,
-    '-vf', `fps=${options.fps}${options.shouldCrop ? `,scale=${options.width}:${options.height}:flags=lanczos` : ''},palettegen`,
-    {
-      args: [
-        '-ss',
-        options.startTime.toString(),
-        '-to',
-        options.endTime.toString()
-      ],
-      if: options.shouldCrop
-    },
-    palettePath
-  ));
+  try {
+    const paletteProcess = convert(palettePath, {shouldTrack: false}, conditionalArgs(
+      '-i', options.inputPath,
+      '-vf', `fps=${options.fps}${options.shouldCrop ? `,scale=${options.width}:${options.height}:flags=lanczos` : ''},palettegen`,
+      {
+        args: [
+          '-ss',
+          options.startTime.toString(),
+          '-to',
+          options.endTime.toString()
+        ],
+        if: options.shouldCrop
+      },
+      palettePath
+    ));
 
-  onCancel(() => {
-    paletteProcess.cancel();
-  });
+    onCancel(() => {
+      paletteProcess.cancel();
+    });
 
-  await paletteProcess;
+    await paletteProcess;
 
-  // Sometimes if the clip is too short or fps too low, the palette is not generated
-  const hasPalette = fs.existsSync(palettePath);
+    // Sometimes if the clip is too short or fps too low, the palette is not generated
+    const hasPalette = fs.existsSync(palettePath);
 
-  const shouldLoop = settings.get('loopExports');
+    const shouldLoop = settings.get('loopExports');
 
-  const conversionProcess = convert(options.outputPath, {
-    onProgress: (progress, estimate) => {
-      options.onProgress('Converting', progress, estimate);
-    },
-    startTime: options.startTime,
-    endTime: options.endTime
-  }, conditionalArgs(
-    '-i', options.inputPath,
-    {
-      args: [
-        '-i',
-        palettePath,
-        '-filter_complex',
-        `fps=${options.fps}${options.shouldCrop ? `,scale=${options.width}:${options.height}:flags=lanczos` : ''}[x]; [x][1:v]paletteuse`
-      ],
-      if: hasPalette
-    },
-    {
-      args: [
-        '-vf',
-        `fps=${options.fps}${options.shouldCrop ? `,scale=${options.width}:${options.height}:flags=lanczos` : ''}`
-      ],
-      if: !hasPalette
-    },
-    '-loop', shouldLoop ? '0' : '-1', // 0 == forever; -1 == no loop
-    {
-      args: [
-        '-ss',
-        options.startTime.toString(),
-        '-to',
-        options.endTime.toString()
-      ],
-      if: options.shouldCrop
-    },
-    options.outputPath
-  ));
+    const conversionProcess = convert(options.outputPath, {
+      shouldTrack: options.shouldTrack,
+      onProgress: (progress, estimate) => {
+        options.onProgress('Converting', progress, estimate);
+      },
+      startTime: options.startTime,
+      endTime: options.endTime
+    }, conditionalArgs(
+      '-i', options.inputPath,
+      {
+        args: [
+          '-i',
+          palettePath,
+          '-filter_complex',
+          `fps=${options.fps}${options.shouldCrop ? `,scale=${options.width}:${options.height}:flags=lanczos` : ''}[x]; [x][1:v]paletteuse`
+        ],
+        if: hasPalette
+      },
+      {
+        args: [
+          '-vf',
+          `fps=${options.fps}${options.shouldCrop ? `,scale=${options.width}:${options.height}:flags=lanczos` : ''}`
+        ],
+        if: !hasPalette
+      },
+      '-loop', shouldLoop ? '0' : '-1', // 0 == forever; -1 == no loop
+      {
+        args: [
+          '-ss',
+          options.startTime.toString(),
+          '-to',
+          options.endTime.toString()
+        ],
+        if: options.shouldCrop
+      },
+      options.outputPath
+    ));
 
-  onCancel(() => {
-    conversionProcess.cancel();
-  });
+    onCancel(() => {
+      conversionProcess.cancel();
+    });
 
-  await conversionProcess;
+    await conversionProcess;
 
-  const compressProcess = compress(options.outputPath, {
-    onProgress: (progress, estimate) => {
-      options.onProgress('Compressing', progress, estimate);
-    },
-    startTime: options.startTime,
-    endTime: options.endTime
-  }, [
-    '--batch',
-    options.outputPath
-  ]);
+    const compressProcess = compress(options.outputPath, {
+      shouldTrack: options.shouldTrack,
+      onProgress: (progress, estimate) => {
+        options.onProgress('Compressing', progress, estimate);
+      },
+      startTime: options.startTime,
+      endTime: options.endTime
+    }, [
+      '--batch',
+      options.outputPath
+    ]);
 
-  onCancel(() => {
-    compressProcess.cancel();
-  });
+    onCancel(() => {
+      compressProcess.cancel();
+    });
 
-  await compressProcess;
+    await compressProcess;
 
-  return options.outputPath;
+    return options.outputPath;
+  } finally {
+    await fs.promises.unlink(palettePath).catch(() => undefined);
+  }
 });
 
 // eslint-disable-next-line @typescript-eslint/promise-function-async

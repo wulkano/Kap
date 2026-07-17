@@ -1,5 +1,5 @@
 import {App, Format} from './base';
-import {ExportStatus} from './conversion-options';
+import {ConversionOptions, ExportStatus} from './conversion-options';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type RemoteState<State = any, Actions extends Record<string, (...args: any[]) => any> = {}> = {
@@ -17,9 +17,10 @@ export type RemoteStateHook<Base extends RemoteState> = Base extends RemoteState
 
 export type RemoteStateHandler<Base extends RemoteState> = Base extends RemoteState<infer State, infer Actions> ? (sendUpdate: (state: State, id?: string) => void) => {
   actions: {
-    [Key in keyof Actions]: Actions[Key] extends (...args: any[]) => any ? (id: string, ...args: Parameters<Actions[Key]>) => void : never
+    [Key in keyof Actions]: Actions[Key] extends (...args: any[]) => infer Result ? (id: string, ...args: Parameters<Actions[Key]>) => Result : never
   };
   getState: (id: string) => State | undefined;
+  subscribe?: (id: string) => undefined | (() => void);
 } : never;
 
 export interface ExportOptionsPlugin {
@@ -59,6 +60,15 @@ export type EditorOptionsRemoteState = RemoteState<ExportOptions, {
     format: Format;
     fps: number;
   }) => void;
+  estimateGifSize: ({filePath, conversionOptions}: {
+    filePath: string;
+    conversionOptions: ConversionOptions;
+  }) => Promise<{
+    bytes: number;
+    sampleCount: number;
+    sampledDuration: number;
+  } | undefined>;
+  cancelGifSizeEstimate: () => void;
 }>;
 
 export interface ExportState {

@@ -13,6 +13,7 @@ export interface ConvertOptions {
   shouldMute: boolean;
   onCancel: () => void;
   onProgress: (action: string, progress: number, estimate?: string) => void;
+  shouldTrack?: boolean;
   editService?: {
     pluginName: string;
     serviceTitle: string;
