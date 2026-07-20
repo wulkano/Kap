@@ -2,9 +2,33 @@ version: 2
 jobs:
   build:
     macos:
-      xcode: '13.4.1'
+      xcode: '14.3.1'
+    resource_class: m4pro.medium
     steps:
       - checkout
+      - run:
+          name: Use Node.js 16
+          command: |
+            nvm install 16
+            nvm alias default 16
+            {
+              echo 'export NVM_DIR="$HOME/.nvm"'
+              echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"'
+              echo 'nvm use 16 >/dev/null'
+            } >> "$BASH_ENV"
+            nvm use 16
+            npm install --global yarn@1.22.19
+            node --version
+            yarn --version
+      - run:
+          name: Install native build tools
+          command: |
+            export HOMEBREW_NO_AUTO_UPDATE=1
+            export HOMEBREW_NO_INSTALL_CLEANUP=1
+            brew install automake libtool pkg-config || true
+            echo 'export PATH="/opt/homebrew/opt/libtool/libexec/gnubin:$PATH"' >> "$BASH_ENV"
+            export PATH="/opt/homebrew/opt/libtool/libexec/gnubin:$PATH"
+            command -v aclocal
       - run: yarn
       - run: mkdir -p ~/reports
       - run: yarn lint

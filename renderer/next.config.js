@@ -12,7 +12,11 @@ module.exports = (nextConfig) => {
         ]
       });
 
-      config.target = 'electron-renderer';
+      // The server build only produces the static HTML shell. Keep its default
+      // Node target so Electron-only modules are never evaluated there.
+      if (!options.isServer) {
+        config.target = 'electron-renderer';
+      }
       config.devtool = 'cheap-module-source-map';
 
       if (typeof nextConfig.webpack === 'function') {
