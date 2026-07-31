@@ -214,7 +214,7 @@ const disableCroppers = () => {
 
   for (const cropper of croppers.values()) {
     cropper.removeAllListeners('blur');
-    cropper.setIgnoreMouseEvents(true);
+    cropper.setIgnoreMouseEvents(true, {forward: true});
     cropper.setVisibleOnAllWorkspaces(true);
   }
 };
