@@ -44,6 +44,10 @@ app.on('open-file', (event, path) => {
   }
 });
 
+app.on('activate', () => {
+  windowManager.cropper?.open();
+});
+
 const initializePlugins = async () => {
   if (!is.development) {
     try {

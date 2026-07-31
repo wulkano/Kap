@@ -1,5 +1,5 @@
 import {systemPreferences, shell, dialog, app} from 'electron';
-const {hasScreenCapturePermission, hasPromptedForPermission} = require('mac-screen-capture-permissions');
+const {hasScreenCapturePermission} = require('mac-screen-capture-permissions');
 const {ensureDockIsShowing} = require('../utils/dock');
 
 let isDialogShowing = false;
@@ -73,17 +73,14 @@ const screenCaptureFallback = promptSystemPreferences({
 });
 
 export const ensureScreenCapturePermissions = (fallback = screenCaptureFallback) => {
-  const hadAsked = hasPromptedForPermission();
-
   const hasAccess = hasScreenCapturePermission();
 
   if (hasAccess) {
     return true;
   }
 
-  fallback({hasAsked: !hadAsked});
+  fallback();
   return false;
 };
 
 export const hasScreenCaptureAccess = () => hasScreenCapturePermission();
-
