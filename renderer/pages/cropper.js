@@ -78,7 +78,12 @@ export default class CropperPage extends React.Component {
   handleKeyEvent = event => {
     switch (event.key) {
       case 'Escape':
-        this.remote.getCurrentWindow().close();
+        if (cropperContainer.state.isRecording) {
+          this.remote.require('./aperture').stopRecording();
+        } else {
+          this.remote.getCurrentWindow().close();
+        }
+
         break;
       case 'Shift':
         if (event.type === 'keydown' && !event.defaultPrevented) {
