@@ -4,6 +4,7 @@ import VideoMetadataContainer from './video-metadata-container';
 import VideoControlsContainer from './video-controls-container';
 import useEditorWindowState from 'hooks/editor/use-editor-window-state';
 import {ipcRenderer as ipc} from 'electron-better-ipc';
+import {t} from '../../utils/localization';
 
 const getVideoProps = (propsArray: Array<React.DetailedHTMLProps<React.VideoHTMLAttributes<HTMLVideoElement>, HTMLVideoElement>>) => {
   const handlers = new Map();
@@ -65,7 +66,7 @@ const Video = () => {
 
     const {Menu} = require('electron-util').api;
     const menu = Menu.buildFromTemplate([{
-      label: 'Snapshot',
+      label: t('Snapshot'),
       click: () => {
         ipc.callMain('save-snapshot', video.currentTime);
       }

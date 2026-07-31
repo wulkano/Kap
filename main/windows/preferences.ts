@@ -6,6 +6,7 @@ import {ipcMain as ipc} from 'electron-better-ipc';
 import {loadRoute} from '../utils/routes';
 import {track} from '../common/analytics';
 import {windowManager} from './manager';
+import {t} from '../common/localization';
 
 let prefsWindow: BrowserWindow | undefined;
 
@@ -25,7 +26,7 @@ const openPrefsWindow = async (options?: PreferencesWindowOptions) => {
   }
 
   prefsWindow = new BrowserWindow({
-    title: 'Preferences',
+    title: t('Preferences'),
     width: 480,
     height: 480,
     resizable: false,

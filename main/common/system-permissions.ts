@@ -1,4 +1,5 @@
 import {systemPreferences, shell, dialog, app} from 'electron';
+import {t} from './localization';
 const {hasScreenCapturePermission, hasPromptedForPermission} = require('mac-screen-capture-permissions');
 const {ensureDockIsShowing} = require('../utils/dock');
 
@@ -13,10 +14,10 @@ const promptSystemPreferences = (options: {message: string; detail: string; syst
   await ensureDockIsShowing(async () => {
     const {response} = await dialog.showMessageBox({
       type: 'warning',
-      buttons: ['Open System Preferences', 'Cancel'],
+      buttons: [t('Open System Preferences'), t('Cancel')],
       defaultId: 0,
-      message: options.message,
-      detail: options.detail,
+      message: t(options.message),
+      detail: t(options.detail),
       cancelId: 1
     });
     isDialogShowing = false;
@@ -86,4 +87,3 @@ export const ensureScreenCapturePermissions = (fallback = screenCaptureFallback)
 };
 
 export const hasScreenCaptureAccess = () => hasScreenCapturePermission();
-

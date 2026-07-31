@@ -9,6 +9,7 @@ import useConversion from '../../hooks/editor/use-conversion';
 import {ExportStatus} from '../../common/types';
 import {useShowWindow} from '../../hooks/use-show-window';
 import {MenuItemConstructorOptions} from 'electron/common';
+import {t} from '../../utils/localization';
 
 const stopPropagation = event => event.stopPropagation();
 
@@ -42,13 +43,13 @@ const Export = ({id}: {id: string}) => {
 
   const template = useMemo(() => {
     const menuTemplate: MenuItemConstructorOptions[] = [{
-      label: 'Open Original',
+      label: t('Open Original'),
       click: () => openInEditor()
     }];
 
     if (state?.canCopy) {
       menuTemplate.unshift({
-        label: 'Copy',
+        label: t('Copy'),
         click: () => copy()
       }, {
         type: 'separator'
@@ -57,7 +58,7 @@ const Export = ({id}: {id: string}) => {
 
     if (canRetry) {
       menuTemplate.unshift({
-        label: 'Retry',
+        label: t('Retry'),
         click: () => retry()
       }, {
         type: 'separator'

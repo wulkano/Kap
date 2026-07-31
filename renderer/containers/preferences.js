@@ -1,6 +1,7 @@
 import electron from 'electron';
 import {Container} from 'unstated';
 import {ipcRenderer as ipc} from 'electron-better-ipc';
+import {t} from '../utils/localization';
 // Import {defaultInputDeviceId} from 'common/constants';
 
 const defaultInputDeviceId = 'asd';
@@ -90,12 +91,12 @@ export default class PreferencesContainer extends Container {
         const buttonIndex = this.remote.dialog.showMessageBoxSync(this.remote.getCurrentWindow(), {
           type: 'question',
           buttons: [
-            'Install',
-            'Cancel'
+            t('Install'),
+            t('Cancel')
           ],
           defaultId: 0,
           cancelId: 1,
-          message: `Do you want to install the “${target.name}” plugin?`
+          message: t(`Do you want to install the “${target.name}” plugin?`)
         });
 
         if (buttonIndex === 0) {
@@ -283,5 +284,11 @@ export default class PreferencesContainer extends Container {
   setAudioInputDeviceId = id => {
     this.setState({audioInputDeviceId: id});
     this.settings.set('audioInputDeviceId', id);
+  };
+
+  setLanguage = language => {
+    this.settings.set('language', language);
+    this.remote.app.relaunch();
+    this.remote.app.exit(0);
   };
 }

@@ -3,6 +3,7 @@ import {MenuItemId, MenuOptions} from './utils';
 import {pauseRecording, resumeRecording, stopRecording} from '../aperture';
 import formatTime from '../utils/format-time';
 import {getCurrentDurationStart, getOverallDuration} from '../utils/track-duration';
+import {t} from '../common/localization';
 
 const getDurationLabel = () => {
   if (getCurrentDurationStart() <= 0) {
@@ -20,19 +21,19 @@ const getDurationMenuItem = () => ({
 
 const getStopRecordingMenuItem = () => ({
   id: MenuItemId.stopRecording,
-  label: 'Stop',
+  label: t('Stop'),
   click: stopRecording
 });
 
 const getPauseRecordingMenuItem = () => ({
   id: MenuItemId.pauseRecording,
-  label: 'Pause',
+  label: t('Pause'),
   click: pauseRecording
 });
 
 const getResumeRecordingMenuItem = () => ({
   id: MenuItemId.resumeRecording,
-  label: 'Resume',
+  label: t('Resume'),
   click: resumeRecording
 });
 

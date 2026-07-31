@@ -5,6 +5,7 @@ import delay from 'delay';
 
 import {settings} from '../common/settings';
 import {hasMicrophoneAccess, ensureMicrophonePermissions, openSystemPreferences, ensureScreenCapturePermissions} from '../common/system-permissions';
+import {t} from '../common/localization';
 import {loadRoute} from '../utils/routes';
 import {MacWindow} from '../utils/windows';
 
@@ -100,10 +101,10 @@ const openCropperWindow = async () => {
     const granted = await ensureMicrophonePermissions(async () => {
       const {response} = await dialog.showMessageBox({
         type: 'warning',
-        buttons: ['Open System Preferences', 'Continue'],
+        buttons: [t('Open System Preferences'), t('Continue')],
         defaultId: 1,
-        message: 'Kap cannot access the microphone.',
-        detail: 'Audio recording is enabled but Kap does not have access to the microphone. Continue without audio or grant Kap access to the microphone the System Preferences.',
+        message: t('Kap cannot access the microphone.'),
+        detail: t('Audio recording is enabled but Kap does not have access to the microphone. Continue without audio or grant Kap access to the microphone the System Preferences.'),
         cancelId: 2
       });
 
