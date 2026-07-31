@@ -55,7 +55,9 @@ class General extends React.Component {
       category,
       lossyCompression,
       shortcuts,
-      shortcutMap
+      shortcutMap,
+      language,
+      setLanguage
     } = this.props;
 
     const {showCursorSupported} = this.state;
@@ -71,6 +73,20 @@ class General extends React.Component {
 
     return (
       <Category>
+        <Item
+          key="language"
+          title="Language"
+          subtitle="Choose the interface language"
+        >
+          <Select
+            tabIndex={tabIndex}
+            options={[
+              {label: 'English', value: 'en'},
+              {label: '简体中文', value: 'zh-CN'}
+            ]}
+            selected={language}
+            onSelect={setLanguage}/>
+        </Item>
         {
           showCursorSupported &&
           <Item
@@ -227,7 +243,9 @@ General.propTypes = {
   category: PropTypes.string,
   shortcutMap: PropTypes.object,
   shortcuts: PropTypes.object,
-  lossyCompression: PropTypes.bool
+  lossyCompression: PropTypes.bool,
+  language: PropTypes.string,
+  setLanguage: PropTypes.elementType.isRequired
 };
 
 export default connect(
@@ -247,7 +265,8 @@ export default connect(
     category,
     lossyCompression,
     shortcuts,
-    shortcutMap
+    shortcutMap,
+    language
   }) => ({
     showCursor,
     highlightClicks,
@@ -263,7 +282,8 @@ export default connect(
     category,
     lossyCompression,
     shortcuts,
-    shortcutMap
+    shortcutMap,
+    language
   }),
   ({
     toggleSetting,
@@ -272,7 +292,8 @@ export default connect(
     pickKapturesDir,
     setOpenOnStartup,
     updateShortcut,
-    toggleShortcuts
+    toggleShortcuts,
+    setLanguage
   }) => ({
     toggleSetting,
     toggleRecordAudio,
@@ -280,6 +301,7 @@ export default connect(
     pickKapturesDir,
     setOpenOnStartup,
     updateShortcut,
-    toggleShortcuts
+    toggleShortcuts,
+    setLanguage
   })
 )(General);

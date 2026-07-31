@@ -1,6 +1,7 @@
 import {appMenu} from 'electron-util';
 import {getAboutMenuItem, getExportHistoryMenuItem, getOpenFileMenuItem, getPreferencesMenuItem, getSendFeedbackMenuItem} from './common';
 import {MenuItemId, MenuOptions} from './utils';
+import {t} from '../common/localization';
 
 const getAppMenuItem = () => {
   const appMenuItem = appMenu([getPreferencesMenuItem()]);
@@ -15,6 +16,7 @@ export const defaultApplicationMenu = (): MenuOptions => [
   getAppMenuItem(),
   {
     role: 'fileMenu',
+    label: t('File'),
     id: MenuItemId.file,
     submenu: [
       getOpenFileMenuItem(),
@@ -28,10 +30,12 @@ export const defaultApplicationMenu = (): MenuOptions => [
   },
   {
     role: 'editMenu',
+    label: t('Edit'),
     id: MenuItemId.edit
   },
   {
     role: 'windowMenu',
+    label: t('Window'),
     id: MenuItemId.window,
     submenu: [
       {
@@ -54,7 +58,7 @@ export const defaultApplicationMenu = (): MenuOptions => [
   },
   {
     id: MenuItemId.help,
-    label: 'Help',
+    label: t('Help'),
     role: 'help',
     submenu: [getSendFeedbackMenuItem()]
   }

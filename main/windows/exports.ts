@@ -1,5 +1,6 @@
 import KapWindow from './kap-window';
 import {windowManager} from './manager';
+import {t} from '../common/localization';
 
 let exportsKapWindow: KapWindow | undefined;
 
@@ -8,7 +9,7 @@ const openExportsWindow = async () => {
     exportsKapWindow.browserWindow.focus();
   } else {
     exportsKapWindow = new KapWindow({
-      title: 'Exports',
+      title: t('Exports'),
       width: 320,
       height: 360,
       resizable: false,

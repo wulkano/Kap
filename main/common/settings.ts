@@ -16,6 +16,7 @@ const shortcutSchema = {
 };
 
 interface Settings {
+  language: 'en' | 'zh-CN';
   kapturesDir: string;
   allowAnalytics: boolean;
   showCursor: boolean;
@@ -42,6 +43,14 @@ interface Settings {
 
 export const settings = new Store<Settings>({
   schema: {
+    language: {
+      type: 'string',
+      enum: [
+        'en',
+        'zh-CN'
+      ],
+      default: 'en'
+    },
     kapturesDir: {
       type: 'string',
       default: `${homedir()}/Movies/Kaptures`

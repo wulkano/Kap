@@ -6,17 +6,18 @@ import {supportedVideoExtensions} from '../common/constants';
 import {getCurrentMenuItem, MenuItemId} from './utils';
 import {openFiles} from '../utils/open-files';
 import {windowManager} from '../windows/manager';
+import {t} from '../common/localization';
 
 export const getPreferencesMenuItem = () => ({
   id: MenuItemId.preferences,
-  label: 'Preferences…',
+  label: t('Preferences…'),
   accelerator: 'Command+,',
   click: () => windowManager.preferences?.open()
 });
 
 export const getAboutMenuItem = () => ({
   id: MenuItemId.about,
-  label: `About ${app.name}`,
+  label: t(`About ${app.name}`),
   click: () => {
     windowManager.cropper?.close();
     app.focus();
@@ -26,7 +27,7 @@ export const getAboutMenuItem = () => ({
 
 export const getOpenFileMenuItem = () => ({
   id: MenuItemId.openVideo,
-  label: 'Open Video…',
+  label: t('Open Video…'),
   accelerator: 'Command+O',
   click: async () => {
     windowManager.cropper?.close();
@@ -35,7 +36,7 @@ export const getOpenFileMenuItem = () => ({
 
     app.focus();
     const {canceled, filePaths} = await dialog.showOpenDialog({
-      filters: [{name: 'Videos', extensions: supportedVideoExtensions}],
+      filters: [{name: t('Videos'), extensions: supportedVideoExtensions}],
       properties: ['openFile', 'multiSelections']
     });
 
@@ -46,7 +47,7 @@ export const getOpenFileMenuItem = () => ({
 });
 
 export const getExportHistoryMenuItem = () => ({
-  label: 'Export History',
+  label: t('Export History'),
   click: () => windowManager.exports?.open(),
   enabled: getCurrentMenuItem(MenuItemId.exportHistory)?.enabled ?? false,
   id: MenuItemId.exportHistory
@@ -54,7 +55,7 @@ export const getExportHistoryMenuItem = () => ({
 
 export const getSendFeedbackMenuItem = () => ({
   id: MenuItemId.sendFeedback,
-  label: 'Send Feedback…',
+  label: t('Send Feedback…'),
   click() {
     openNewGitHubIssue({
       user: 'wulkano',
@@ -91,4 +92,3 @@ Workaround:           A workaround for the issue if you've found on. (this will 
 
 <!-- If you have additional information, enter it below. -->
 `;
-

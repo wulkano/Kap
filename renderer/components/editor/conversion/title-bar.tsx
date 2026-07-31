@@ -7,6 +7,7 @@ import {ExportStatus} from '../../../common/types';
 import {useMemo} from 'react';
 import {template} from 'lodash';
 import IconMenu from '../../icon-menu';
+import {t} from '../../../utils/localization';
 
 const TitleBar = ({conversion, cancel, copy, retry, showInFolder}: {conversion: UseConversionState; cancel: () => any; copy: () => any; retry: () => any; showInFolder: () => void}) => {
   const {api} = require('electron-util');
@@ -14,8 +15,8 @@ const TitleBar = ({conversion, cancel, copy, retry, showInFolder}: {conversion: 
     if (conversion.status === ExportStatus.inProgress && !flags.get('backgroundEditorConversion')) {
       await api.dialog.showMessageBox(remote.getCurrentWindow(), {
         type: 'info',
-        message: 'Your export will continue in the background. You can access it through the Export History window.',
-        buttons: ['Ok'],
+        message: t('Your export will continue in the background. You can access it through the Export History window.'),
+        buttons: [t('OK')],
         defaultId: 0
       });
       flags.set('backgroundEditorConversion', true);
@@ -29,7 +30,7 @@ const TitleBar = ({conversion, cancel, copy, retry, showInFolder}: {conversion: 
 
     if (conversion?.canCopy) {
       template.push({
-        label: 'Copy',
+        label: t('Copy'),
         click: () => copy()
       }, {
         type: 'separator'
@@ -38,7 +39,7 @@ const TitleBar = ({conversion, cancel, copy, retry, showInFolder}: {conversion: 
 
     if (conversion?.status === ExportStatus.completed) {
       template.push({
-        label: 'Show in Finder',
+        label: t('Show in Finder'),
         click: () => showInFolder()
       });
     }

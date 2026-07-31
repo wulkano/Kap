@@ -2,6 +2,7 @@ import {DropdownArrowIcon, CancelIcon} from '../../../vectors';
 import classNames from 'classnames';
 import {useRef} from 'react';
 import {remote, MenuItemConstructorOptions, NativeImage} from 'electron';
+import {t} from '../../../utils/localization';
 
 type Option<T> = {
   label: string;
@@ -57,14 +58,14 @@ const Select = <T, >(props: Props<T>) => {
 
       if (option.subMenu) {
         return {
-          label: option.label,
+          label: t(option.label),
           submenu: option.subMenu.map(opt => convertToMenuTemplate(opt)),
           checked: option.checked
         };
       }
 
       return {
-        label: option.label,
+        label: t(option.label),
         type: option.type as any || 'checkbox',
         checked: option.checked ?? (option.value === value),
         click: option.click ?? (() => {

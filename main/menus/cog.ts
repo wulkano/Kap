@@ -6,6 +6,7 @@ import {getAudioDevices, getDefaultInputDevice} from '../utils/devices';
 import {settings} from '../common/settings';
 import {defaultInputDeviceId} from '../common/constants';
 import {hasMicrophoneAccess} from '../common/system-permissions';
+import {t} from '../common/localization';
 
 const getCogMenuTemplate = async (): Promise<MenuOptions> => [
   getAboutMenuItem(),
@@ -48,7 +49,7 @@ const getPluginsItem = (): MenuOptions[number] => {
 
   return {
     id: MenuItemId.plugins,
-    label: 'Plugins',
+    label: t('Plugins'),
     submenu: items,
     visible: items.length > 0
   };
@@ -67,10 +68,10 @@ const getMicrophoneItem = async (): Promise<MenuOptions[number]> => {
 
   return {
     id: MenuItemId.audioDevices,
-    label: 'Microphone',
+    label: t('Microphone'),
     submenu: [
       {
-        label: 'None',
+        label: t('None'),
         type: 'checkbox',
         checked: !isRecordAudioEnabled,
         click: () => {
@@ -78,7 +79,7 @@ const getMicrophoneItem = async (): Promise<MenuOptions[number]> => {
         }
       },
       ...[
-        {name: `System Default${currentDefaultDevice ? ` (${currentDefaultDevice.name})` : ''}`, id: defaultInputDeviceId},
+        {name: t(`System Default${currentDefaultDevice ? ` (${currentDefaultDevice.name})` : ''}`), id: defaultInputDeviceId},
         ...devices
       ].map(device => ({
         label: device.name,
