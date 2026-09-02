@@ -17,6 +17,8 @@ import {askForTargetFilePath} from './plugins/built-in/save-file-plugin';
 import path from 'path';
 import {ensureDockIsShowingSync} from './utils/dock';
 import {windowManager} from './windows/manager';
+import {estimateGifSize, GifSizeEstimateOptions} from './gif-size-estimator';
+import prettyBytes from 'pretty-bytes';
 
 export interface ExportOptions {
   plugin: InstalledPlugin;
@@ -238,6 +240,9 @@ interface ExportsEvents {
   updated: (state: ExportState) => void;
 }
 
+// Store active estimation processes to allow cancellation
+const activeEstimations = new Map<string, PCancelable<number>>();
+
 export const setUpExportsListeners = () => {
   ipcMain.on('drag-export', async (event: any, id: string) => {
     const exportMap = Export.exportsMap.get(id);
@@ -248,6 +253,52 @@ export const setUpExportsListeners = () => {
         file: exportMap?.finalFilePath ?? conversion.convertedFilePath,
         icon: await conversion.video.getDragIcon(conversion.options)
       });
+    }
+  });
+
+  ipc.answerRenderer('estimate-gif-size', async (options: GifSizeEstimateOptions & {estimationId: string}) => {
+    const {estimationId, ...estimateOptions} = options;
+
+    // Cancel any previous estimation with the same ID
+    const previousEstimation = activeEstimations.get(estimationId);
+    if (previousEstimation && !previousEstimation.isCanceled) {
+      previousEstimation.cancel();
+    }
+
+    try {
+      const estimation = estimateGifSize(estimateOptions);
+      activeEstimations.set(estimationId, estimation);
+
+      const sizeInBytes = await estimation;
+      activeEstimations.delete(estimationId);
+
+      return {
+        success: true,
+        size: sizeInBytes,
+        formattedSize: prettyBytes(sizeInBytes)
+      };
+    } catch (error: any) {
+      activeEstimations.delete(estimationId);
+
+      if (error?.isCanceled) {
+        return {
+          success: false,
+          canceled: true
+        };
+      }
+
+      return {
+        success: false,
+        error: error?.message || 'Unknown error'
+      };
+    }
+  });
+
+  ipc.answerRenderer('cancel-gif-size-estimation', async (estimationId: string) => {
+    const estimation = activeEstimations.get(estimationId);
+    if (estimation && !estimation.isCanceled) {
+      estimation.cancel();
+      activeEstimations.delete(estimationId);
     }
   });
 
