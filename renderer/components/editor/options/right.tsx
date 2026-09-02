@@ -8,6 +8,7 @@ import VideoTimeContainer from '../video-time-container';
 import VideoControlsContainer from '../video-controls-container';
 import useSharePlugins from 'hooks/editor/use-share-plugins';
 import useEditorOptions from 'hooks/editor/use-editor-options';
+import {useGifSizeEstimate} from 'hooks/editor/use-gif-size-estimate';
 
 const FormatSelect = () => {
   const {formats, format, updateFormat} = OptionsContainer.useContainer();
@@ -121,6 +122,42 @@ const EditPluginsControl = () => {
   );
 };
 
+const GifSizeEstimate = () => {
+  const options = OptionsContainer.useContainer();
+  const {filePath} = useEditorWindowState();
+  const {startTime, endTime} = VideoTimeContainer.useContainer();
+  const {isMuted} = VideoControlsContainer.useContainer();
+
+  const {formattedSize, isEstimating} = useGifSizeEstimate({
+    inputPath: filePath,
+    startTime,
+    endTime,
+    width: options.width,
+    height: options.height,
+    fps: options.fps,
+    shouldMute: isMuted,
+    format: options.format
+  });
+
+  if (!formattedSize && !isEstimating) {
+    return null;
+  }
+
+  return (
+    <div className="gif-size-estimate">
+      {isEstimating ? 'Estimating…' : `GIF ~${formattedSize}`}
+      <style jsx>{`
+        .gif-size-estimate {
+          font-size: 12px;
+          color: #aaaaaa;
+          margin-right: 8px;
+          white-space: nowrap;
+        }
+      `}</style>
+    </div>
+  );
+};
+
 const ConvertButton = () => {
   const {startConversion} = useConversionIdContext();
   const options = OptionsContainer.useContainer();
@@ -195,6 +232,7 @@ const RightOptions = () => {
       <EditPluginsControl/>
       <div className="format"><FormatSelect/></div>
       <div className="plugin"><PluginsSelect/></div>
+      <GifSizeEstimate/>
       <ConvertButton/>
       <style jsx>{`
           .container {
