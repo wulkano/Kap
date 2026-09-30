@@ -4,3 +4,5 @@ node_modules
 /app/dist
 /dist
 /dist-js
+/native/*/.build
+/native/*/.swiftpm

@@ -25,7 +25,7 @@
     "build": "yarn build-main && yarn build-renderer",
     "dist": "npm run build && electron-builder",
     "pack": "npm run build && electron-builder --dir",
-    "postinstall": "electron-builder install-app-deps",
+    "postinstall": "electron-builder install-app-deps && node build/build-native-helpers.js",
     "sentry-version": "echo \"$npm_package_name@$npm_package_version\"",
     "dev": "next dev renderer"
   },
