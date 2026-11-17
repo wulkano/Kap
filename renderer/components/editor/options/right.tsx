@@ -1,6 +1,7 @@
 import {GearIcon} from '../../../vectors';
 import OptionsContainer from '../options-container';
 import Select from './select';
+import EstimatedSize from './estimated-size';
 import {ipcRenderer as ipc} from 'electron-better-ipc';
 import useConversionIdContext from 'hooks/editor/use-conversion-id';
 import useEditorWindowState from 'hooks/editor/use-editor-window-state';
@@ -195,6 +196,7 @@ const RightOptions = () => {
       <EditPluginsControl/>
       <div className="format"><FormatSelect/></div>
       <div className="plugin"><PluginsSelect/></div>
+      <EstimatedSize/>
       <ConvertButton/>
       <style jsx>{`
           .container {
