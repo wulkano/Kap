@@ -1,11 +1,15 @@
 import {ipcMain, dialog, app} from 'electron';
+import fs from 'fs';
 import {EventEmitter} from 'events';
 import PCancelable, {CancelError, OnCancelFunction} from 'p-cancelable';
+import tempy from 'tempy';
 import Conversion from './conversion';
 import {InstalledPlugin} from './plugins/plugin';
 import {ShareService} from './plugins/service';
 import {ShareServiceContext} from './plugins/service-context';
 import {prettifyFormat} from './utils/formats';
+import {estimateGifSizeBytes, getGifSampleWindow} from './utils/estimate-gif-size';
+import {convertToGif} from './converters/h264';
 import {ipcMain as ipc} from 'electron-better-ipc';
 import {setExportMenuItemState} from './menus/utils';
 import {Video} from './video';
@@ -304,6 +308,62 @@ export const setUpExportsListeners = () => {
     newExport.start();
 
     return newExport.id;
+  });
+
+  // The in-flight GIF size sample, if any. A new estimate cancels the
+  // previous one, so a burst of option changes only ever exports one sample.
+  let currentGifSizeSample: PCancelable<string> | undefined;
+
+  // Estimate the size of a GIF export by running the exact GIF pipeline
+  // (ffmpeg palette + gifsicle) over the first second of the trimmed clip
+  // and scaling the result to the full clip, as suggested in
+  // https://github.com/wulkano/kap/issues/172. A failed or cancelled sample
+  // just means no estimate is shown.
+  ipc.answerRenderer('estimate-gif-size', async ({filePath, width, height, fps, startTime, endTime}: {
+    filePath: string;
+    width: number;
+    height: number;
+    fps: number;
+    startTime: number;
+    endTime: number;
+  }) => {
+    const {sampleStart, sampleEnd, sampleFrames, totalFrames} = getGifSampleWindow({startTime, endTime, fps});
+
+    currentGifSizeSample?.cancel();
+
+    const sample = convertToGif({
+      inputPath: filePath,
+      outputPath: tempy.file({extension: 'gif'}),
+      shouldCrop: true,
+      startTime: sampleStart,
+      endTime: sampleEnd,
+      width,
+      height,
+      fps,
+      shouldMute: true,
+      onCancel: () => {},
+      onProgress: () => {}
+    });
+
+    currentGifSizeSample = sample;
+
+    try {
+      const outputPath = await sample;
+      const {size} = fs.statSync(outputPath);
+      fs.unlinkSync(outputPath);
+
+      return {
+        estimatedBytes: estimateGifSizeBytes({sampleBytes: size, sampleFrames, totalFrames}),
+        sampleFrames,
+        totalFrames
+      };
+    } catch {
+      return undefined;
+    } finally {
+      if (currentGifSizeSample === sample) {
+        currentGifSizeSample = undefined;
+      }
+    }
   });
 
   app.on('before-quit', event => {
